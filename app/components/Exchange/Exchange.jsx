@@ -2033,7 +2033,7 @@ class Exchange extends React.Component {
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <Tabs
                 animated={false}
-                defaultKey={"limit"}
+                defaultActiveKey={"scaled"}
                 className={cnames(
                     verticalOrderForm && !smallScreen
                         ? ""
@@ -2167,7 +2167,13 @@ class Exchange extends React.Component {
                     tab={counterpart.translate("exchange.scaled")}
                     key={"scaled"}
                 >
-                    <ScaledOrderTab />
+                    <ScaledOrderTab
+                        currentAccount={currentAccount}
+                        createScaledOrder={this._createScaledOrder}
+                        type={"bid"}
+                        quoteAsset={quote}
+                        baseAsset={base}
+                    />
                 </Tabs.TabPane>
             </Tabs>
         );
@@ -2176,7 +2182,7 @@ class Exchange extends React.Component {
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <Tabs
                 animated={false}
-                defaultKey={"limit"}
+                defaultActiveKey={"scaled"}
                 className={cnames(
                     verticalOrderForm && !smallScreen
                         ? ""
@@ -2317,7 +2323,13 @@ class Exchange extends React.Component {
                     tab={counterpart.translate("exchange.scaled")}
                     key={"scaled"}
                 >
-                    <ScaledOrderTab />
+                    <ScaledOrderTab
+                        currentAccount={currentAccount}
+                        createScaledOrder={this._createScaledOrder}
+                        type="ask"
+                        baseAsset={base}
+                        quoteAsset={quote}
+                    />
                 </Tabs.TabPane>
             </Tabs>
         );

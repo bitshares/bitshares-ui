@@ -184,6 +184,27 @@ p.order-table-title {
 
 form.order-form {
     padding: 10px;
+
+    .ant-form-item {
+        margin-bottom: 0;
+    }
+
+    .ant-form-item-label {
+        text-align: left;
+        font-family: Roboto Medium, Monospaced Number, Chinese Quote,
+            -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, PingFang SC,
+            Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+            sans-serif;
+
+        label {
+            font-size: 90% !important;
+        }
+    }
+
+    .ant-input-group-addon {
+        text-align: left;
+        width: 60% !important;
+    }
 }
 
 #market-charts {

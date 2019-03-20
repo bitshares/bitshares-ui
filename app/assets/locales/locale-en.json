@@ -1456,7 +1456,7 @@
             "urlNamed": "%(name)s should be url",
             "oneOf": "The field should be one of: %(list)s",
             "oneOfNamed": "%(name)s should be one of: %(list)s",
-            "balance": "Insufficient balance. Available only: %(balance)s",
+            "balance": "Insufficient balance. Available only: %(balance)s %(symbol)s",
 
             "test": ""
         }
