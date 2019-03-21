@@ -332,14 +332,6 @@ export const settingsAPIs = {
             contact: "keybase:rnglab"
         },
         {
-            url: "wss://la.dexnode.net/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Los Angeles",
-            operator: "Witness: Sahkan",
-            contact: "telegram:Sahkan_bitshares"
-        },
-        {
             url: "wss://dexnode.net/ws",
             region: "Northern America",
             country: "U.S.A.",
