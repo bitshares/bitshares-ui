@@ -633,6 +633,22 @@ class ScaledOrderTab extends Component {
         ) {
             this.formRef.props.form.resetFields();
         }
+
+        if (
+            this.props.lastClickedPrice &&
+            this.props.lastClickedPrice !== prevProps.lastClickedPrice
+        ) {
+            if (
+                this.formRef &&
+                this.formRef.props &&
+                this.formRef.props.form &&
+                this.formRef.props.form.setFieldsValue
+            ) {
+                this.formRef.props.form.setFieldsValue({
+                    priceLower: Number(this.props.lastClickedPrice)
+                });
+            }
+        }
     }
 
     prepareOrders(values) {
