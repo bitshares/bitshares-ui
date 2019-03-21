@@ -183,7 +183,12 @@ class DirectDebit extends Component {
                       const assetSymbol = ChainStore.getAsset(
                           item.withdrawal_limit.asset_id
                       ).get("symbol");
-
+                      const authorizedAccountName = ChainStore.getAccountName(
+                          item.authorized_account
+                      );
+                      const withdrawFromAccount = ChainStore.getAccount(
+                          item.withdraw_from_account
+                      );
                       return {
                           key: item.id,
                           id: item.id,
@@ -192,9 +197,7 @@ class DirectDebit extends Component {
                               currentAccount.get("id")
                                   ? "payee"
                                   : "payer",
-                          authorized: ChainStore.getAccountName(
-                              item.authorized_account
-                          ), // is it ok?
+                          authorized: authorizedAccountName,
                           limit:
                               item.withdrawal_limit.amount + " " + assetSymbol,
                           until: new Date(item.expiration + "Z").toISOString(),
@@ -203,7 +206,11 @@ class DirectDebit extends Component {
                               item.claimed_this_period +
                               " " +
                               assetSymbol,
-                          rawData: item
+                          rawData: {
+                              ...item,
+                              authorizedAccountName,
+                              withdrawFromAccount
+                          }
                       };
                   })
                   .filter(item => {
