@@ -4,6 +4,7 @@ import counterpart from "counterpart";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
 import {Link} from "react-router-dom";
 import {Select, Icon} from "bitshares-ui-style-guide";
+import utils from "common/utils";
 
 function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     let coinToGatewayMapping = {};
@@ -134,13 +135,59 @@ function gatewaySelector(args) {
         gatewayStatus,
         nAvailableGateways,
         error,
-        onGatewayChanged
+        onGatewayChanged,
+        selectedAsset = null,
+        balances = null,
+        assets = null
     } = args;
 
-    let supportLink = !!selectedGateway
+    let balancesByAssetAndGateway = {};
+    if (balances && assets) {
+        balances.forEach(balance => {
+            if (!!balance && !!balance.toJS) {
+                let asset = assets.get(balance.get("asset_type"));
+
+                if (asset) {
+                    let symbolSplit = asset.symbol.split(".");
+
+                    if (symbolSplit.length == 2) {
+                        let symbol = symbolSplit[1];
+                        let gateway = symbolSplit[0];
+
+                        if (!balancesByAssetAndGateway[symbol])
+                            balancesByAssetAndGateway[symbol] = {};
+                        balancesByAssetAndGateway[symbol][
+                            gateway
+                        ] = [
+                            balance.get("balance"),
+                            asset
+                        ];
+                    }
+                }
+            }
+        });
+    }
+
+    let supportLink = !!selectedGateway && !!gatewayStatus[selectedGateway]
         ? "/help/gateways/" +
           gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
         : null;
+
+    let gateways = [];
+    Object.keys(gatewayStatus).map((key) => {
+        gateways.push(gatewayStatus[key]);
+
+        // Set to full name to work with <Select>
+        if(gatewayStatus[key].id == selectedGateway) {
+            selectedGateway = gatewayStatus[key].name;
+        }
+    });
+
+    gateways.sort((a, b) => {
+        if (a.name > b.name) return 1;
+        else if (a.name < b.name) return -1;
+        else return 0;
+    });
 
     return (
         <div>
@@ -178,26 +225,28 @@ function gatewaySelector(args) {
 
                     <div className="inline-label input-wrapper">
                         <Select 
+                            optionLabelProp={"value"}
                             onChange={onGatewayChanged}
                             placeholder={counterpart.translate("modal.deposit_withdraw.select_gateway")} 
                             value={selectedGateway}
                             style={{width: "100%"}}
                         >
-                            {/* 
-                                NOTE 1
-                                If we have a withdraw, it would be very nice to have
-                                the value of each gateway aligned to the right so
-                                the user doesn't have to select a gateway to see the balance 
-
-                                NOTE 2
-                                This list should be sorted alphabetically to limit
-                                any possible siding of a gateway.
-                            */}
-                            {Object.keys(gatewayStatus).map((key, i) => {
-                                if (gatewayStatus[key].options.enabled) {
+                            {gateways.map(g => {
+                                if (g.options.enabled) {
                                     return (
-                                        <Select.Option key={gatewayStatus[key].id}>
-                                            {gatewayStatus[key].name}
+                                        <Select.Option 
+                                            key={g.name}
+                                            value={g.id}
+                                        >
+                                            {g.name}
+                                            {balancesByAssetAndGateway && balancesByAssetAndGateway[selectedAsset] && balancesByAssetAndGateway[selectedAsset][g.id] ? (
+                                                <span style={{float: "right"}}> 
+                                                    {utils.format_asset(
+                                                        balancesByAssetAndGateway[selectedAsset][g.id][0],
+                                                        balancesByAssetAndGateway[selectedAsset][g.id][1]
+                                                    )}
+                                                </span>
+                                            ) : null}
                                         </Select.Option>
                                     );
                                 }
