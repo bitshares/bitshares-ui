@@ -25,7 +25,7 @@
         "deposit_address": "Su dirección de depósito es su nombre de cuenta",
         "deposit_withdraw": "Depositar/Retirar",
         "eq_value": "Estimada",
-        "eq_value_header": "Valor ({activo})",
+        "eq_value_header": "Valor ({asset})",
         "errors": {
             "invalid": "Nombre de cuenta no válido",
             "memo_missing": "No tiene control de la tecla de nota para esta cuenta. Para utilizar una nota, configure la tecla de nota de cuenta en una tecla que controle utilizando la página Permisos.",
