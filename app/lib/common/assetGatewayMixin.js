@@ -1,8 +1,9 @@
 import React from "react";
 import Translate from "react-translate-component";
-import Icon from "../../components/Icon/Icon";
+import counterpart from "counterpart";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
 import {Link} from "react-router-dom";
+import {Select, Icon} from "bitshares-ui-style-guide";
 
 function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     let coinToGatewayMapping = {};
@@ -136,18 +137,6 @@ function gatewaySelector(args) {
         onGatewayChanged
     } = args;
 
-    let selectGatewayList = Object.keys(gatewayStatus).map((key, i) => {
-        if (gatewayStatus[key].options.enabled)
-            return (
-                <option
-                    value={gatewayStatus[key].id}
-                    key={gatewayStatus[key].id}
-                >
-                    {gatewayStatus[key].name}
-                </option>
-            );
-    });
-
     let supportLink = !!selectedGateway
         ? "/help/gateways/" +
           gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
@@ -162,10 +151,7 @@ function gatewaySelector(args) {
                         {selectedGateway ? (
                             <Link to={supportLink} style={{cursor: "pointer"}}>
                                 &nbsp;
-                                <Icon
-                                    name="question-circle"
-                                    title="icons.question_circle"
-                                />
+                                <Icon type="question-circle" />
                             </Link>
                         ) : null}
                         <span className="floatRight error-msg">
@@ -191,32 +177,32 @@ function gatewaySelector(args) {
                     </label>
 
                     <div className="inline-label input-wrapper">
-                        <select
-                            role="combobox"
-                            className="selectWrapper"
-                            value={!selectedGateway ? "" : selectedGateway}
+                        <Select 
                             onChange={onGatewayChanged}
-                            id="gatewaySelector"
-                            style={{cursor: "default"}}
+                            placeholder={counterpart.translate("modal.deposit_withdraw.select_gateway")} 
+                            value={selectedGateway}
+                            style={{width: "100%"}}
                         >
-                            {!selectedGateway && nAvailableGateways != 0 ? (
-                                <Translate
-                                    component="option"
-                                    value=""
-                                    content="modal.deposit_withdraw.select_gateway"
-                                />
-                            ) : null}
-                            {selectGatewayList}
-                        </select>
-                        <Icon
-                            name="chevron-down"
-                            title="icons.chevron_down.gateways"
-                            style={{
-                                position: "absolute",
-                                right: "10px",
-                                top: "10px"
-                            }}
-                        />
+                            {/* 
+                                NOTE 1
+                                If we have a withdraw, it would be very nice to have
+                                the value of each gateway aligned to the right so
+                                the user doesn't have to select a gateway to see the balance 
+
+                                NOTE 2
+                                This list should be sorted alphabetically to limit
+                                any possible siding of a gateway.
+                            */}
+                            {Object.keys(gatewayStatus).map((key, i) => {
+                                if (gatewayStatus[key].options.enabled) {
+                                    return (
+                                        <Select.Option key={gatewayStatus[key].id}>
+                                            {gatewayStatus[key].name}
+                                        </Select.Option>
+                                    );
+                                }
+                            })}
+                        </Select>
                     </div>
                 </section>
             </div>
