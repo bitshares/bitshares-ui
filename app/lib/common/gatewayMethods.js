@@ -425,7 +425,8 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 depositFeePercentageLowAmounts:
                     outputCoin.depositFeePercentageLowAmounts,
                 info: outputCoin.info,
-                tradingPairInfo
+                tradingPairInfo,
+                scoring: outputCoin.scoring
             });
         }
     });

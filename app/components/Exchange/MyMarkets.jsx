@@ -27,7 +27,8 @@ let lastLookup = new Date();
 
 class MarketGroup extends React.Component {
     static defaultProps = {
-        maxRows: 20
+        maxRows: 20,
+        backedCoinsInfo: {}
     };
 
     constructor(props) {
@@ -232,6 +233,17 @@ class MarketGroup extends React.Component {
                         </th>
                     );
 
+                case "benchmark":
+                    return (
+                        <th
+                            key={header.name}
+                            style={{textAlign: "right"}}
+                            className={"benchmarkItem"}
+                        >
+                            BENCHMARK
+                        </th>
+                    );
+
                 default:
                     return <th key={header.name} />;
             }
@@ -277,6 +289,7 @@ class MarketGroup extends React.Component {
                         onCheckMarket={this._onToggleUserMarket.bind(this)}
                         location={this.props.location}
                         history={this.props.history}
+                        quoteInfo={this.props.backedCoinsInfo[market.quote]}
                     />
                 );
             })
@@ -1016,6 +1029,7 @@ class MyMarkets extends React.Component {
                                     findMarketTab={!myMarketTab}
                                     location={this.props.location}
                                     history={this.props.history}
+                                    backedCoinsInfo={this.props.backedCoinsInfo}
                                 />
                             );
                         })}
@@ -1036,6 +1050,7 @@ class MyMarkets extends React.Component {
                             findMarketTab={!myMarketTab}
                             location={this.props.location}
                             history={this.props.history}
+                            backedCoinsInfo={this.props.backedCoinsInfo}
                         />
                     ) : null}
                 </div>

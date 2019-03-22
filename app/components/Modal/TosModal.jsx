@@ -15,6 +15,7 @@ import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs";
 import sha256 from "js-sha256";
 import LoadingIndicator from "../LoadingIndicator";
+import notify from "actions/NotificationActions";
 
 class TosModal extends React.Component {
     constructor(props) {
@@ -51,7 +52,13 @@ class TosModal extends React.Component {
             !nextProps.accounts.get(nextProps.currentAccount)
         ) {
             this.isFetchingAccount = true;
-            CryptoBridgeActions.getAccount(nextProps.account);
+            CryptoBridgeActions.getAccount(nextProps.account).catch(err => {
+                notify.addNotification({
+                    message: err,
+                    level: "error",
+                    autoDismiss: 10
+                });
+            });
         } else if (
             nextProps.locked &&
             nextProps.accounts.get(nextProps.currentAccount)

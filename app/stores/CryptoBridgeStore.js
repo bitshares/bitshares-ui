@@ -23,6 +23,7 @@ class CryptoBridgeStore extends BaseStore {
         });
 
         this._export(
+            "getAccount",
             "getAccountRequiresForcedAction",
             "getAccountRequiresKycAction",
             "getAccountRequiresKycForcedAction",
@@ -81,13 +82,13 @@ class CryptoBridgeStore extends BaseStore {
     }
 
     getAccountRequiresTosAction(accountName) {
-        const {account} = this.accounts.get(accountName, {});
+        const account = this.getAccount(accountName);
 
         return !account || account.terms.status !== "complete";
     }
 
     getAccountRequiresKycAction(accountName) {
-        const {account} = this.accounts.get(accountName, {});
+        const account = this.getAccount(accountName);
 
         return (
             !account ||
@@ -96,7 +97,7 @@ class CryptoBridgeStore extends BaseStore {
     }
 
     getAccountRequiresKycAction(accountName) {
-        const {account} = this.accounts.get(accountName, {});
+        const account = this.getAccount(accountName);
 
         return (
             !account ||
@@ -105,7 +106,7 @@ class CryptoBridgeStore extends BaseStore {
     }
 
     getAccountRequiresKycForcedAction(accountName) {
-        const {account} = this.accounts.get(accountName, {});
+        const account = this.getAccount(accountName);
 
         return (
             !account ||
@@ -115,8 +116,14 @@ class CryptoBridgeStore extends BaseStore {
         );
     }
 
-    getAccountRequiresTosForcedAction(accountName) {
+    getAccount(accountName) {
         const {account} = this.accounts.get(accountName, {});
+
+        return account;
+    }
+
+    getAccountRequiresTosForcedAction(accountName) {
+        const account = this.getAccount(accountName);
 
         return (
             !account ||
@@ -138,7 +145,7 @@ class CryptoBridgeStore extends BaseStore {
     }
 
     getAccountKycIsPending(accountName) {
-        const {account} = this.accounts.get(accountName, {});
+        const account = this.getAccount(accountName);
 
         return account && account.kyc.status === "pending";
     }

@@ -88,6 +88,7 @@ export default class ExchangeHeader extends React.Component {
     render() {
         const {
             quoteAsset,
+            quoteAssetInfo,
             baseAsset,
             starredMarkets,
             hasPrediction,
@@ -197,6 +198,13 @@ export default class ExchangeHeader extends React.Component {
         let isBaseSelected =
             !!this.state.selectedMarketPickerAsset &&
             this.state.selectedMarketPickerAsset == baseSymbol;
+
+        const benchmarkScoring = quoteAssetInfo.scoring || {};
+
+        const benchmarkScore = benchmarkScoring.score;
+        const benchmarkUrl = benchmarkScoring.url;
+        const benchmarkInfo =
+            'This project has been selected for "benchmark" status awarded to assets who meet quality criteria common to a partnership between CryptoBridge and the DARC (Digital Asset Resource Center).';
 
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
@@ -445,6 +453,103 @@ export default class ExchangeHeader extends React.Component {
                                         market={marketID}
                                         content="exchange.squeeze"
                                     />
+                                ) : null}
+                                {benchmarkScore ? (
+                                    <li
+                                        style={{padding: "10px 0"}}
+                                        className={"benchmarkItem"}
+                                    >
+                                        <img
+                                            data-tip={benchmarkInfo}
+                                            data-html={true}
+                                            data-place="bottom"
+                                            src={`${__BASE_URL__}img/benchmark.png`}
+                                            style={{
+                                                maxWidth: 48,
+                                                float: "left",
+                                                marginRight: 10
+                                            }}
+                                        />
+                                        <table
+                                            className="benchmarkTooltip exchangeHeader"
+                                            style={{
+                                                fontSize: "12px",
+                                                float: "left",
+                                                marginRight: 10
+                                            }}
+                                        >
+                                            <tbody>
+                                                <tr>
+                                                    <th>Community:</th>
+                                                    <td>
+                                                        {
+                                                            benchmarkScore.community
+                                                        }
+                                                    </td>
+                                                    <td>/5</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Decentralized:</th>
+                                                    <td>
+                                                        {
+                                                            benchmarkScore.decentralized
+                                                        }
+                                                    </td>
+                                                    <td>/5</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Execution:</th>
+                                                    <td>
+                                                        {
+                                                            benchmarkScore.execution
+                                                        }
+                                                    </td>
+                                                    <td>/5</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table className="benchmarkTooltip exchangeHeader">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Governance:</th>
+                                                    <td>
+                                                        {
+                                                            benchmarkScore.governance
+                                                        }
+                                                    </td>
+                                                    <td>/5</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Technology:</th>
+                                                    <td>
+                                                        {
+                                                            benchmarkScore.technology
+                                                        }
+                                                    </td>
+                                                    <td>/5</td>
+                                                </tr>
+                                                <tr>
+                                                    <td
+                                                        colSpan="3"
+                                                        style={{
+                                                            textAlign: "right"
+                                                        }}
+                                                    >
+                                                        <a
+                                                            href={benchmarkUrl}
+                                                            target={"_blank"}
+                                                            style={{
+                                                                textDecoration:
+                                                                    "none"
+                                                            }}
+                                                        >
+                                                            &raquo; about
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </li>
                                 ) : null}
                             </ul>
                             <ul className="market-stats stats top-stats">

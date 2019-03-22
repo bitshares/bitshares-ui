@@ -333,7 +333,8 @@ module.exports = function(env) {
                         path.resolve(
                             root_dir,
                             "app/assets/language-dropdown/img"
-                        )
+                        ),
+                        path.resolve(root_dir, "app/assets/other")
                     ],
                     use: [
                         {
