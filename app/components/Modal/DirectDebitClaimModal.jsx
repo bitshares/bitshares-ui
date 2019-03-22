@@ -12,7 +12,7 @@ import {
     checkBalance,
     shouldPayFeeWithAssetAsync
 } from "common/trxHelper";
-import BalanceComponent from "../Utility/BalanceComponent";
+import LimitToWithdraw from "../Utility/LimitToWithdraw";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
@@ -101,8 +101,8 @@ class DirectDebitClaimModal extends React.Component {
             } else {
                 currentPeriodNum = Math.ceil(timePassed / periodMs);
 
-                currentPeriodExpires =
-                    timeStart + periodMs * 1000 * currentPeriodNum;
+                currentPeriodExpires = timeStart + periodMs * currentPeriodNum;
+                console.log(currentPeriodExpires);
             }
 
             this.setState({
@@ -186,7 +186,7 @@ class DirectDebitClaimModal extends React.Component {
     }
 
     _setTotal(asset_id, balance_id) {
-        const {feeAmount} = this.state;
+        /* const {feeAmount} = this.state;
         let balanceObject = ChainStore.getObject(balance_id);
         let transferAsset = ChainStore.getObject(asset_id);
 
@@ -204,7 +204,7 @@ class DirectDebitClaimModal extends React.Component {
                 {maxAmount: true, amount: balance.getAmount({real: true})},
                 this._checkBalance
             );
-        }
+        } */
     }
 
     _getAvailableAssets(state = this.state) {
@@ -369,8 +369,10 @@ class DirectDebitClaimModal extends React.Component {
         // Estimate fee
         let fee = this.state.feeAmount.getAmount({real: true});
 
+        // balance of current asset
         if (from_account && from_account.get("balances")) {
             let account_balances = from_account.get("balances").toJS();
+            console.log("account_balances", account_balances);
 
             let _error = this.state.balanceError ? "has-error" : "";
             if (asset_types.length === 1)
@@ -378,12 +380,13 @@ class DirectDebitClaimModal extends React.Component {
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
                 let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
+                console.log("current_asset_id", current_asset_id);
 
                 balance = (
                     <span>
                         <Translate
                             component="span"
-                            content="transfer.available"
+                            content="showcases.direct_debit.limit"
                         />
                         :{" "}
                         <span
@@ -400,8 +403,15 @@ class DirectDebitClaimModal extends React.Component {
                                 feeID
                             )}
                         >
-                            <BalanceComponent
-                                balance={account_balances[current_asset_id]}
+                            <LimitToWithdraw
+                                amount={
+                                    withdrawal_limit && withdrawal_limit.amount
+                                }
+                                assetId={
+                                    withdrawal_limit &&
+                                    withdrawal_limit.asset_id
+                                }
+                                // balance={account_balances[current_asset_id]}
                             />
                         </span>
                     </span>
