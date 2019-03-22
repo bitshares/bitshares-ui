@@ -18,6 +18,13 @@ import counterpart from "counterpart";
 import {Validation} from "../../services/Validation/Validation";
 import assetUtils from "../../lib/common/asset_utils";
 import {checkFeeStatusAsync} from "../../lib/common/trxHelper";
+import PriceText from "../Utility/PriceText";
+import {
+    preciseAdd,
+    preciseDivide,
+    preciseMultiply,
+    preciseMinus
+} from "../../services/Math";
 
 class ScaledOrderForm extends Component {
     constructor(props) {
@@ -27,6 +34,9 @@ class ScaledOrderForm extends Component {
             orderCount: 1,
             feeAssets: []
         };
+
+        this.handleClickBalance = this.handleClickBalance.bind(this);
+        this.handleCurrentPriceClick = this.handleCurrentPriceClick.bind(this);
     }
 
     componentDidMount() {
@@ -251,19 +261,70 @@ class ScaledOrderForm extends Component {
         )
             return 0;
 
-        const step = ((priceUpper - priceLower) / (orderCount - 1)).toFixed(6);
+        const step = preciseDivide(
+            preciseMinus(priceUpper, priceLower),
+            preciseMinus(orderCount, 1)
+        );
 
-        const amountPerOrder = amount / orderCount;
+        const amountPerOrder = preciseDivide(amount, orderCount);
 
         let total = 0;
 
         for (let i = 0; i < orderCount; i += 1) {
-            total += Number(
-                (amountPerOrder * (priceLower + step * i)).toFixed(6)
+            // total += amountPerOrder * (priceLower + step * i);
+            total = preciseAdd(
+                total,
+                preciseMultiply(
+                    amountPerOrder,
+                    preciseAdd(priceLower, preciseMultiply(step, i))
+                )
             );
         }
 
-        return total.toFixed(6);
+        return total;
+    }
+
+    _getQuantityFromTotal(total) {
+        const formValues = this._getFormValues();
+
+        const priceLower = Number(formValues.priceLower);
+        const priceUpper = Number(formValues.priceUpper);
+        const orderCount = Number(formValues.orderCount);
+
+        const isCorrect = value => !isNaN(value);
+
+        if (
+            !isCorrect(priceLower) ||
+            !isCorrect(priceUpper) ||
+            !isCorrect(total) ||
+            !isCorrect(orderCount) ||
+            orderCount <= 0 ||
+            priceLower >= priceUpper
+        )
+            return 0;
+
+        const step = preciseDivide(
+            preciseMinus(priceUpper, priceLower),
+            preciseMinus(orderCount, 1)
+        );
+
+        let sum = 0;
+
+        for (let i = 0; i < orderCount; i += 1) {
+            // sum + ((priceLower + step * i) / orderCount)
+
+            sum = preciseAdd(
+                sum,
+                Number(
+                    preciseDivide(
+                        preciseAdd(priceLower, preciseMultiply(step, i)),
+                        orderCount
+                    )
+                )
+            );
+        }
+
+        return preciseDivide(total, sum);
     }
 
     _getPreviewDataSource() {
@@ -304,6 +365,24 @@ class ScaledOrderForm extends Component {
         return action === SCALED_ORDER_ACTION_TYPES.BUY
             ? dataSource.reverse()
             : dataSource;
+    }
+
+    handleClickBalance() {
+        if (this.props.type === "bid") {
+            this.props.form.setFieldsValue({
+                amount: this._getQuantityFromTotal(this.props.baseAssetBalance)
+            });
+        } else {
+            this.props.form.setFieldsValue({
+                amount: this.props.quoteAssetBalance
+            });
+        }
+    }
+
+    handleCurrentPriceClick() {
+        this.props.form.setFieldsValue({
+            priceLower: this.props.currentPrice
+        });
     }
 
     render() {
@@ -506,7 +585,16 @@ class ScaledOrderForm extends Component {
                 Validation.Rules.min({min: 1, name: "Orders Count"})
             ]
         })(
-            <Input style={{width: "100%"}} placeholder="0" autoComplete="off" />
+            <Input
+                style={{width: "100%"}}
+                placeholder="0"
+                autoComplete="off"
+                addonAfter={counterpart.translate("scaled_orders.order_s")}
+            />
+        );
+
+        const lastPriceLabel = counterpart.translate(
+            isBid ? "exchange.lowest_ask" : "exchange.highest_bid"
         );
 
         return (
@@ -601,6 +689,50 @@ class ScaledOrderForm extends Component {
                             {marketFeeInput}
                         </Form.Item>
                     ) : null}
+
+                    <Form.Item label={lastPriceLabel} {...formItemProps}>
+                        <span
+                            style={{
+                                borderBottom: "#A09F9F 1px dotted",
+                                cursor: "pointer"
+                            }}
+                            onClick={this.handleCurrentPriceClick}
+                        >
+                            <PriceText
+                                price={this.props.currentPrice}
+                                quote={quote}
+                                base={base}
+                            />{" "}
+                            <AssetNameWrapper name={base.get("symbol")} noTip />
+                            /
+                            <AssetNameWrapper
+                                name={quote.get("symbol")}
+                                noTip
+                            />
+                        </span>
+                    </Form.Item>
+
+                    <Form.Item label="Balance" {...formItemProps}>
+                        <span
+                            style={{
+                                borderBottom: "#A09F9F 1px dotted",
+                                cursor: "pointer"
+                            }}
+                            onClick={this.handleClickBalance}
+                        >
+                            {!isBid
+                                ? this.props.quoteAssetBalance
+                                : this.props.baseAssetBalance}{" "}
+                            <AssetNameWrapper
+                                name={
+                                    !isBid
+                                        ? quote.get("symbol")
+                                        : base.get("symbol")
+                                }
+                                noTip
+                            />
+                        </span>
+                    </Form.Item>
 
                     <Button onClick={this.props.handleSubmit}>BUY</Button>
                 </Form>
@@ -744,7 +876,7 @@ class ScaledOrderTab extends Component {
         this.formRef = ref;
     }
 
-    _getBalanceByAssetId(assetId) {
+    _getBalanceByAssetId(assetId, precision) {
         let balance = 0;
 
         let balances = this.props.currentAccount.get("balances");
@@ -752,9 +884,7 @@ class ScaledOrderTab extends Component {
         if (balances.get(assetId) !== undefined) {
             let balanceObj = ChainStore.getObject(balances.get(assetId));
 
-            balance =
-                balanceObj.get("balance") /
-                Math.pow(10, this.props.baseAsset.get("precision"));
+            balance = balanceObj.get("balance") / Math.pow(10, precision);
         }
 
         return balance;
@@ -762,10 +892,12 @@ class ScaledOrderTab extends Component {
 
     render() {
         let baseAssetBalance = this._getBalanceByAssetId(
-            this.props.baseAsset.get("id")
+            this.props.baseAsset.get("id"),
+            this.props.baseAsset.get("precision")
         );
         let quoteAssetBalance = this._getBalanceByAssetId(
-            this.props.quoteAsset.get("id")
+            this.props.quoteAsset.get("id"),
+            this.props.quoteAsset.get("precision")
         );
 
         return (

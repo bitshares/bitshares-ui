@@ -1480,6 +1480,7 @@
             "flat": "Flat"
         },
         "order_count": "Order Count",
+        "order_s": "Order(s)",
         "action": {
             "title": "Action",
             "buy": "Buy",

@@ -2168,6 +2168,7 @@ class Exchange extends React.Component {
                     key={"scaled"}
                 >
                     <ScaledOrderTab
+                        currentPrice={lowestAsk.getPrice()}
                         lastClickedPrice={
                             this.state.ask && this.state.ask.priceText
                         }
@@ -2327,6 +2328,7 @@ class Exchange extends React.Component {
                     key={"scaled"}
                 >
                     <ScaledOrderTab
+                        currentPrice={highestBid.getPrice()}
                         lastClickedPrice={
                             this.state.ask && this.state.ask.priceText
                         }
