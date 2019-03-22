@@ -734,7 +734,13 @@ class ScaledOrderForm extends Component {
                         </span>
                     </Form.Item>
 
-                    <Button onClick={this.props.handleSubmit}>BUY</Button>
+                    <Button onClick={this.props.handleSubmit} type="primary">
+                        {counterpart.translate(
+                            isBid
+                                ? "scaled_orders.action.buy"
+                                : "scaled_orders.action.sell"
+                        )}
+                    </Button>
                 </Form>
             </div>
         );
