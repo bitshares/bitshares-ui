@@ -42,7 +42,6 @@ import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
-import ScaledOrder from "./ScaledOrder";
 import counterpart from "counterpart";
 
 class Exchange extends React.Component {
@@ -3583,14 +3582,6 @@ class Exchange extends React.Component {
                     visible={this.state.isPriceAlertModalVisible}
                     showModal={this.showPriceAlertModal}
                     hideModal={this.hidePriceAlertModal}
-                />
-
-                <ScaledOrder
-                    createScaledOrder={this._createScaledOrder}
-                    visible={this.state.isScaledOrderModalVisible}
-                    hideModal={this.hideScaledOrderModal}
-                    quoteAsset={this.props.quoteAsset.get("id")}
-                    baseAsset={this.props.baseAsset.get("id")}
                 />
             </div>
         );
