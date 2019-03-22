@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import Translate from "react-translate-component";
 import {
     Input,
     Form,
