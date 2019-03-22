@@ -4,4 +4,5 @@ require("babel-polyfill");
 require("whatwg-fetch");
 require("indexeddbshim");
 require("./asset-symbols/symbols.js");
+require("./other/other.js");
 require("./language-dropdown/flags.js");

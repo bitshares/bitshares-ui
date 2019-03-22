@@ -110,6 +110,12 @@ const ExistingAccount = Loadable({
     loading: LoadingIndicator
 });
 
+const BenchmarkPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "benchmark" */ "./components/CryptoBridge/Benchmark"),
+    loading: LoadingIndicator
+});
+
 import LoginSelector from "./components/LoginSelector";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 
@@ -349,6 +355,11 @@ class App extends React.Component {
                                     component={LoginSelector}
                                 />
                                 <Route path="/news" exact component={News} />
+
+                                <Route
+                                    path="/benchmark"
+                                    component={BenchmarkPage}
+                                />
 
                                 {/* Explorer routes */}
                                 <Route

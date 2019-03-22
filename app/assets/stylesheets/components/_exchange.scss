@@ -748,3 +748,36 @@ tbody.orderbook > tr.my-order > td {
         }
     }
 }
+
+.benchmarkMarketRow {
+    .marketName,
+    .benchmarkInfo {
+        color: inherit; //TODO defince benchmark color
+    }
+}
+
+.benchmarkTooltip {
+    th,
+    td {
+        padding: 1px 4px;
+    }
+
+    thead {
+        background-color: #666;
+        color: #fff !important;
+        th {
+            font-weight: normal;
+        }
+        td {
+            padding-left: 5px;
+        }
+    }
+    tbody {
+        th {
+            font-weight: bold;
+        }
+        td {
+            padding-left: 5px;
+        }
+    }
+}
