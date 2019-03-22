@@ -116,20 +116,6 @@ class DirectDebit extends Component {
 
     componentWillMount() {
         this._update();
-        let currentAccount = ChainStore.getAccount(this.props.currentAccount);
-
-        if (!this.state.from_name) this.setState({from_name: currentAccount});
-        estimateFeeAsync("proposal_create").then(fee => {
-            this.setState({
-                proposal_fee: new Asset({amount: fee}).getAmount({real: true})
-            });
-        });
-        // for peer 1 and peer 2 there is also calculation of memo cost (no memo set atm)
-        estimateFeeAsync("transfer").then(fee => {
-            this.setState({
-                transfer_fee: new Asset({amount: fee}).getAmount({real: true})
-            });
-        });
     }
 
     showModal = operation => () => {
@@ -200,7 +186,13 @@ class DirectDebit extends Component {
                           authorized: authorizedAccountName,
                           limit:
                               item.withdrawal_limit.amount + " " + assetSymbol,
-                          until: new Date(item.expiration + "Z").toISOString(),
+                          until: counterpart.localize(
+                              new Date(item.expiration + "Z"),
+                              {
+                                  type: "date",
+                                  format: "full"
+                              }
+                          ),
                           available:
                               item.withdrawal_limit.amount -
                               item.claimed_this_period +

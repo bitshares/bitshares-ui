@@ -2,7 +2,6 @@ import React from "react";
 import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
-
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -18,6 +17,7 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import moment from "moment";
 
 class DirectDebitClaimModal extends React.Component {
     constructor(props) {
@@ -48,7 +48,8 @@ class DirectDebitClaimModal extends React.Component {
             maxAmount: false,
             permissionId: "",
             balanceError: false,
-            withdrawal_limit: null
+            withdrawal_limit: null,
+            current_period_expires: ""
         };
     }
 
@@ -77,19 +78,40 @@ class DirectDebitClaimModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         const {operation, isModalVisible} = this.props;
-        // console.log("operation", this.props.operation);
+        console.log("operation", this.props.operation);
 
         if (
             isModalVisible &&
             operation &&
             prevState.permissionId !== operation.payload.id
         ) {
+            const timeStart = moment
+                .utc(operation.payload.period_start_time)
+                .valueOf();
+
+            const timePassed = new Date().getTime() - timeStart;
+
+            let currentPeriodNum;
+            let currentPeriodExpires = "";
+
+            const periodMs = operation.payload.withdrawal_period_sec * 1000;
+            if (timePassed < 0) {
+                console.log("first period is not started");
+                // validation error?
+            } else {
+                currentPeriodNum = Math.ceil(timePassed / periodMs);
+
+                currentPeriodExpires =
+                    timeStart + periodMs * 1000 * currentPeriodNum;
+            }
+
             this.setState({
                 to_account: ChainStore.getAccount(this.props.currentAccount),
                 from_account: operation.payload.withdrawFromAccount,
                 from_name: operation.payload.withdrawFromAccount.get("name"),
                 permissionId: operation.payload.id,
-                withdrawal_limit: operation.payload.withdrawal_limit
+                withdrawal_limit: operation.payload.withdrawal_limit,
+                current_period_expires_date: currentPeriodExpires
             });
         }
     }
@@ -333,7 +355,8 @@ class DirectDebitClaimModal extends React.Component {
             feeAsset,
             fee_asset_id,
             balanceError,
-            withdrawal_limit
+            withdrawal_limit,
+            current_period_expires_date
         } = this.state;
 
         const {operation} = this.props;
@@ -421,6 +444,7 @@ class DirectDebitClaimModal extends React.Component {
             !isAmountValid ||
             !asset ||
             balanceError ||
+            !current_period_expires_date ||
             from_account.get("id") == to_account.get("id");
         return (
             <Modal
@@ -461,23 +485,35 @@ class DirectDebitClaimModal extends React.Component {
                             </div>
                         </div>
                         <div className="content-block transfer-input">
-                            {/*  LIMIT  */}
-                            <AmountSelector
-                                label="showcases.direct_debit.limit_per_period"
-                                amount={
-                                    withdrawal_limit && withdrawal_limit.amount
-                                }
-                                asset={
-                                    withdrawal_limit &&
-                                    withdrawal_limit.asset_id
-                                }
-                                assets={
-                                    withdrawal_limit && [
-                                        withdrawal_limit.asset_id
-                                    ]
+                            {/*  CURRENT PERIOD EXPIRES  */}
+                            <label className="left-label">
+                                {counterpart.translate(
+                                    "showcases.direct_debit.current_period_expires"
+                                )}
+                            </label>
+                            <input
+                                type="text"
+                                value={
+                                    current_period_expires_date
+                                        ? counterpart.localize(
+                                              new Date(
+                                                  current_period_expires_date
+                                              ),
+                                              {
+                                                  type: "date",
+                                                  format: "full"
+                                              }
+                                          )
+                                        : counterpart.translate(
+                                              "showcases.direct_debit.first_period_not_started"
+                                          )
                                 }
                                 disabled
-                                allowNaN={true}
+                                className={
+                                    current_period_expires_date
+                                        ? ""
+                                        : "error-area"
+                                }
                             />
                         </div>
                         <div className="content-block transfer-input">

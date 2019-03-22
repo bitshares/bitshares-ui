@@ -1883,7 +1883,9 @@
             "create_new_mandate": "Create new mandate",
             "update_mandate": "Update existing mandate",
             "claim_funds": "Claim funds",
-            "amount_to_withdraw": "Amount to withdraw"
+            "amount_to_withdraw": "Amount to withdraw",
+            "current_period_expires": "Current period expires on",
+            "first_period_not_started": "First period is not started!"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
