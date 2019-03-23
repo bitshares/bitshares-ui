@@ -47,24 +47,19 @@ class Borrow extends Component {
         this.showBorrowModal = this.showBorrowModal.bind(this);
         this.hideBorrowModal = this.hideBorrowModal.bind(this);
     }
-    componentWillMount() {}
-    componentWillReceiveProps(np) {}
-    getAccount() {}
 
-    showBorrowModal(asset) {
+    showBorrowModal() {
         // needs a known account
         if (!this.props.currentAccount) {
             WalletUnlockActions.unlock()
                 .then(() => {
                     this.setState({
-                        assetToBorrow: this.props.bitAssets[0],
                         isBorrowBaseModalVisible: true
                     });
                 })
                 .catch(() => {});
         } else {
             this.setState({
-                assetToBorrow: this.props.bitAssets[0],
                 isBorrowBaseModalVisible: true
             });
         }
@@ -72,7 +67,6 @@ class Borrow extends Component {
 
     hideBorrowModal() {
         this.setState({
-            assetToBorrow: null,
             isBorrowBaseModalVisible: false
         });
     }
@@ -197,6 +191,7 @@ class Borrow extends Component {
                 style={{
                     align: "center",
                     display: "flex",
+                    paddingTop: "1rem",
                     justifyContent: "center"
                 }}
                 onKeyDown={this.onKeyDown.bind(this)}
@@ -206,8 +201,8 @@ class Borrow extends Component {
                         borderRadius: "50px",
                         width: "70%",
                         maxWidth: "70rem",
-                        paddingTop: "2rem",
-                        paddingBottom: "2rem"
+                        paddingTop: "1rem",
+                        paddingBottom: "1rem"
                     }}
                 >
                     <div
@@ -303,35 +298,51 @@ class Borrow extends Component {
                     </div>
                     <div className="steps-action">
                         {current < steps.length && (
-                            <Button
-                                type="primary"
-                                onClick={() => this.next()}
-                                tabIndex="0"
-                                ref="borrowdiv"
-                                onKeyDown={this.onKeyDown.bind(this)}
+                            <Tooltip
+                                title={
+                                    current == 0
+                                        ? counterpart.translate(
+                                              "showcases.borrow.navigate_with_keys"
+                                          )
+                                        : null
+                                }
                             >
-                                {current == 0 && (
-                                    <Translate
-                                        content={"showcases.borrow.get_started"}
-                                    />
-                                )}
-                                {current > 0 &&
-                                    current < steps.length - 1 && (
+                                <Button
+                                    type="primary"
+                                    onClick={() => this.next()}
+                                    tabIndex="0"
+                                    ref="next"
+                                    onKeyDown={this.onKeyDown.bind(this)}
+                                >
+                                    {current == 0 && (
                                         <Translate
-                                            content={"showcases.borrow.next"}
+                                            content={
+                                                "showcases.borrow.get_started"
+                                            }
                                         />
                                     )}
-                                {current === steps.length - 1 && (
-                                    <Translate
-                                        content={"showcases.borrow.do_it"}
-                                    />
-                                )}
-                            </Button>
+                                    {current > 0 &&
+                                        current < steps.length - 1 && (
+                                            <Translate
+                                                content={
+                                                    "showcases.borrow.next"
+                                                }
+                                            />
+                                        )}
+                                    {current === steps.length - 1 && (
+                                        <Translate
+                                            content={"showcases.borrow.do_it"}
+                                        />
+                                    )}
+                                </Button>
+                            </Tooltip>
                         )}
                         {current > 0 && (
                             <Button
                                 style={{marginLeft: 8}}
                                 onClick={() => this.prev()}
+                                ref="previous"
+                                onKeyDown={this.onKeyDown.bind(this)}
                             >
                                 <Translate
                                     content={"showcases.borrow.previous"}
@@ -341,7 +352,7 @@ class Borrow extends Component {
                     </div>
                 </Card>
                 {accountLoaded &&
-                    !!this.state.assetToBorrow && (
+                    !!selectedAssetObject && (
                         <BorrowModal
                             visible={this.state.isBorrowBaseModalVisible}
                             hideModal={this.hideBorrowModal}
@@ -367,16 +378,24 @@ class Borrow extends Component {
     }
 
     focusDiv() {
-        if (!!this.refs.borrowdiv) {
-            ReactDOM.findDOMNode(this.refs.borrowdiv).focus();
+        let current = this.state.step;
+        let steps = this.steps;
+        if (current < steps.length && !!this.refs.next) {
+            ReactDOM.findDOMNode(this.refs.next).focus();
+        } else if (current == steps.length && !!this.refs.previous) {
+            ReactDOM.findDOMNode(this.refs.previous).focus();
         }
     }
 
     onKeyDown(e) {
         // arrow up/down button should select next/previous list element
-        if (e.keyCode === 38 || e.keyCode === 39 || e.key == "ArrowRight") {
+        if (e.keyCode === 39 || e.key == "ArrowRight") {
+            e.preventDefault();
+            e.stopPropagation();
             this.next();
-        } else if (e.keyCode === 40 || e.key == "ArrowLeft") {
+        } else if (e.keyCode === 37 || e.key == "ArrowLeft") {
+            e.preventDefault();
+            e.stopPropagation();
             this.prev();
         }
     }
@@ -384,7 +403,7 @@ class Borrow extends Component {
 
 Borrow = debounceRender(Borrow, 50, {leading: false});
 
-Borrow = connect(
+export default connect(
     Borrow,
     {
         listenTo() {
@@ -399,21 +418,3 @@ Borrow = connect(
         }
     }
 );
-
-export default (Borrow = AssetWrapper(Borrow, {
-    propNames: ["bitAssets"],
-    defaultProps: {
-        bitAssets: [
-            "1.3.103",
-            "1.3.113",
-            "1.3.120",
-            "1.3.121",
-            "1.3.958",
-            "1.3.1325",
-            "1.3.1362",
-            "1.3.105",
-            "1.3.106"
-        ]
-    },
-    asList: true
-}));

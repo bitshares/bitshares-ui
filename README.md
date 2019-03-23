@@ -90,7 +90,7 @@ Clone this repository, run `docker-compose up` and visit localhost:8080
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Code of Conduct
-This repo has a Code of Conduct that should be followed by everyone. 
+This repository has a Code of Conduct that should be followed by everyone. 
 Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 **Please keep comments constructive and clean**
@@ -101,7 +101,7 @@ The BitShares UI is integrated with BrowserStack (https://www.browserstack.com) 
 ![image](https://user-images.githubusercontent.com/33128181/48697885-05f8d880-ebe6-11e8-95a2-d87516cbb3d9.png)
 
 ## Release Branches
-Development is processed through milestones, by 2 week intervals.
+Development is processed through two week milestones.
 There are three branches that forms the current release process.
 
 ### Develop
@@ -111,16 +111,14 @@ New commits are automatically deployed to this branch and published for review.
 Available for browsing on https://develop.bitshares.org/
 
 ### Staging (Current Release Candidate)
-At the end of each milestone, `develop` branch is pushed to staging and forms the Release Candidate. Milestone 180601 forms the 180615-RC*.
+At the end of each milestone, `develop` branch is pushed to staging and forms the Release Candidate. The date of the RC forms the name, ie. 190214-RC*.
 
-Application breaking issues and bugs should be submitted to the issue tracker. PRs should be pushed to `staging`.
-
-New commits are automatically deployed to this branch and published for review.
+Application breaking issues and bugs should be submitted to the issue tracker and PRs should be pushed to `staging`.
 
 Available for browsing on https://staging.bitshares.org/
 
 ### Master (stable)
-When all issues to the current RC, `staging` branch is released to the stable `master` branch.
+When all issues to the current RC are fixed, `staging` branch is released to the stable `master` branch.
 
 Available for browsing on https://wallet.bitshares.org/, which is the official reference wallet for Bitshares.
 

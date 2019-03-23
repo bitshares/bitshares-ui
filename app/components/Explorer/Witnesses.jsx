@@ -1,7 +1,6 @@
 import counterpart from "counterpart";
 import React from "react";
 import Immutable from "immutable";
-import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import {ChainStore} from "bitsharesjs";
@@ -14,6 +13,7 @@ import SettingsStore from "stores/SettingsStore";
 import classNames from "classnames";
 import {withRouter} from "react-router-dom";
 import {Table, Icon, Input, Popover} from "bitshares-ui-style-guide";
+import sanitize from "sanitize";
 
 require("./witnesses.scss");
 
@@ -201,7 +201,10 @@ class WitnessList extends React.Component {
                         rank: ranks[a.get("id")],
                         name: witness.get("name"),
                         signing_key: witness_data.get("signing_key"),
-                        url: witness_data.get("url"),
+                        url: sanitize(witness_data.get("url"), {
+                            whiteList: [], // empty, means filter out all tags
+                            stripIgnoreTag: true // filter out all HTML not in the whilelist
+                        }),
                         lastConfirmedBlock: {
                             id: witness_data.get("last_confirmed_block_num"),
                             timestamp: last_aslot_time.getTime()

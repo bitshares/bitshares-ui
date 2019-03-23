@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {getWalletName} from "branding";
-import {Alert, Checkbox} from "bitshares-ui-style-guide";
+import {Alert, Checkbox, Tooltip} from "bitshares-ui-style-guide";
 
 /* Dummy input to trick Chrome into disabling auto-complete */
 export const DisableChromeAutocomplete = () => (
@@ -29,20 +29,15 @@ export const KeyFileLabel = ({showUseOtherWalletLink, onUseOtherWallet}) => (
 );
 
 export class StyledUpload extends React.Component {
-    handleLabelClick = () => this.refs.input.click();
     render() {
         return (
-            <label
-                onClick={this.handleLabelClick}
-                className="upload-button themed-input"
-            >
+            <label className="upload-button themed-input">
                 <Translate content="wallet.restore_key_file" />
                 <UploadButtonLogo />
                 <input
                     type="file"
                     onClick={stopPropagation}
                     onChange={this.props.onFileChosen}
-                    ref="input"
                     accept=".bin"
                 />
             </label>
@@ -93,21 +88,20 @@ export const BackupWarning = ({onChange, checked}) => (
 );
 
 export const LoginButtons = ({onLogin, backupLogin}) => (
-    <button
-        className="button"
-        data-place="bottom"
-        data-html
-        data-tip={counterpart.translate("tooltip.login", {
+    <Tooltip
+        placement="bottom"
+        title={counterpart.translate("tooltip.login", {
             wallet_name: getWalletName()
         })}
-        onClick={onLogin}
     >
-        <Translate
-            content={
-                backupLogin ? "wallet.backup_login" : "header.unlock_short"
-            }
-        />
-    </button>
+        <button className="button" onClick={onLogin}>
+            <Translate
+                content={
+                    backupLogin ? "wallet.backup_login" : "header.unlock_short"
+                }
+            />
+        </button>
+    </Tooltip>
 );
 
 export class CustomPasswordInput extends React.Component {

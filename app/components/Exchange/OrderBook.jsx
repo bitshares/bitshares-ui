@@ -11,7 +11,7 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
-import {Select, Icon as AntIcon} from "bitshares-ui-style-guide";
+import {Select, Icon as AntIcon, Tooltip} from "bitshares-ui-style-guide";
 
 /**
  * @array: orderRows
@@ -358,26 +358,32 @@ class GroupOrderLimitSelector extends React.Component {
             );
         } else {
             return (
-                <select
-                    value={this.state.groupLimit}
-                    onChange={this.props.handleGroupOrderLimitChange}
-                    data-tip={
+                <Tooltip
+                    placement="bottom"
+                    title={
                         noGroupsAvailable
                             ? translator.translate(
                                   "tooltip.no_groups_available"
                               )
                             : null
                     }
-                    className="settings-select"
-                    style={noGroupsAvailable ? {cursor: "not-allowed"} : null}
                 >
-                    <Translate
-                        content="exchange.group_order_limit"
-                        component="option"
-                        value="0"
-                    />
-                    {trackedGroupsOptionsList}
-                </select>
+                    <select
+                        value={this.state.groupLimit}
+                        onChange={this.props.handleGroupOrderLimitChange}
+                        className="settings-select"
+                        style={
+                            noGroupsAvailable ? {cursor: "not-allowed"} : null
+                        }
+                    >
+                        <Translate
+                            content="exchange.group_order_limit"
+                            component="option"
+                            value="0"
+                        />
+                        {trackedGroupsOptionsList}
+                    </select>
+                </Tooltip>
             );
         }
     }
@@ -907,9 +913,9 @@ class OrderBook extends React.Component {
                         <div>
                             <div
                                 className="exchange-content-header ask"
-                                data-intro={translator.translate(
-                                    "walkthrough.sell_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.sell_orders"
+                                //)}
                             >
                                 <Translate content="exchange.asks" />
                                 {flipOrderBook &&
@@ -1054,9 +1060,9 @@ class OrderBook extends React.Component {
                         <div>
                             <div
                                 className="exchange-content-header bid"
-                                data-intro={translator.translate(
-                                    "walkthrough.buy_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.buy_orders"
+                                //)}
                             >
                                 <Translate content="exchange.bids" />
                                 {!flipOrderBook &&
@@ -1263,9 +1269,9 @@ class OrderBook extends React.Component {
                                 className="sticky-table-row orderbook-latest-price"
                                 ref={this.centerText}
                                 style={{padding: 0}}
-                                data-intro={translator.translate(
-                                    "walkthrough.vertical_order"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.vertical_order"
+                                //)}
                             >
                                 <div className="cell right">
                                     <span
@@ -1285,9 +1291,9 @@ class OrderBook extends React.Component {
                                     <span style={{width: 75}}>
                                         {!this.props.hideFunctionButtons ? (
                                             <Icon
-                                                data-intro={translator.translate(
-                                                    "walkthrough.vertical_lock"
-                                                )}
+                                                //data-intro={translator.translate(
+                                                //    "walkthrough.vertical_lock"
+                                                //)}
                                                 className="lock-unlock clickable icon-fill"
                                                 onClick={this.toggleAutoScroll}
                                                 name={

@@ -4,6 +4,7 @@ import asset_utils from "common/asset_utils";
 import AssetWrapper from "./AssetWrapper";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import {Popover} from "bitshares-ui-style-guide";
 
 class AssetName extends React.Component {
     static propTypes = {
@@ -73,7 +74,9 @@ class AssetName extends React.Component {
             } catch (e) {}
             if (isBitAsset && name === "CNY") {
                 optional =
-                    optional + counterpart.translate("gateway.assets.bitcny");
+                    optional +
+                    " " +
+                    counterpart.translate("gateway.assets.bitcny");
             }
 
             const upperCasePrefix =
@@ -82,35 +85,44 @@ class AssetName extends React.Component {
                     : !!prefix
                         ? prefix.toUpperCase()
                         : prefix;
-            let tooltip = noTip
-                ? null
-                : `<div><strong>${upperCasePrefix ||
-                      ""}${replacedName.toUpperCase()}</strong><br />${
-                      includeBitAssetDescription
-                          ? ""
-                          : "<br />" +
-                            (desc.short ? desc.short : desc.main || "")
-                  }${
-                      !isBitAsset || includeBitAssetDescription ? optional : ""
-                  }</div>`;
-
-            return (
+            let assetDiv = (
                 <div
                     className={
                         "inline-block" +
                         (this.props.noTip ? "" : " tooltip") +
                         (customClass ? " " + customClass : "")
                     }
-                    data-tip={tooltip}
-                    data-place={this.props.dataPlace}
-                    data-html={true}
                 >
                     <span className="asset-prefix-replaced">{prefix}</span>
                     <span>{replacedName}</span>
                 </div>
             );
+            if (!!noTip) {
+                return assetDiv;
+            } else {
+                let title =
+                    (upperCasePrefix || "") + replacedName.toUpperCase();
+                let popoverContent = (
+                    <div style={{maxWidth: "25rem"}}>
+                        {desc.short ? desc.short : desc.main || ""}
+                        {optional !== "" && <br />}
+                        {optional !== "" && <br />}
+                        {optional}
+                    </div>
+                );
+                return (
+                    <Popover
+                        placement={this.props.dataPlace}
+                        content={popoverContent}
+                        title={title}
+                        trigger="hover"
+                    >
+                        {assetDiv}
+                    </Popover>
+                );
+            }
         } else {
-            return (
+            let assetDiv = (
                 <span className={customClass ? customClass : null}>
                     <span className={!noPrefix ? "asset-prefix-replaced" : ""}>
                         {!noPrefix ? prefix : null}
@@ -118,6 +130,34 @@ class AssetName extends React.Component {
                     <span>{replacedName}</span>
                 </span>
             );
+            if (!!noTip) {
+                return assetDiv;
+            } else {
+                let desc = null;
+                if (replacedName == "BTS") {
+                    desc = {main: counterpart.translate("assets.BTS")};
+                } else {
+                    desc = asset_utils.parseDescription(
+                        asset.getIn(["options", "description"])
+                    );
+                }
+                let title = (prefix || "") + replacedName.toUpperCase();
+                let popoverContent = (
+                    <div style={{maxWidth: "25rem"}}>
+                        {desc.short ? desc.short : desc.main || ""}
+                    </div>
+                );
+                return (
+                    <Popover
+                        placement={this.props.dataPlace}
+                        content={popoverContent}
+                        title={title}
+                        trigger="hover"
+                    >
+                        {assetDiv}
+                    </Popover>
+                );
+            }
         }
     }
 }

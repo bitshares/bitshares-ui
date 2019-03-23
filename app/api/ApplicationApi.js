@@ -103,6 +103,7 @@ const ApplicationApi = {
                 );
             }
         }
+        return memo;
     },
 
     _create_transfer_op({
@@ -112,7 +113,7 @@ const ApplicationApi = {
         amount,
         asset,
         memo,
-        propose_account = null, // should be called memo_sender, but is not for compatibility reasons with transfer
+        propose_account = null, // should be called memo_sender, but is not for compatibility reasons with transfer. Is set to "from_account" for non proposals
         encrypt_memo = true,
         optional_nonce = null,
         fee_asset_id = "1.3.0",
@@ -120,10 +121,11 @@ const ApplicationApi = {
     }) {
         let unlock_promise = WalletUnlockActions.unlock();
 
+        let memo_sender_account = propose_account || from_account;
         return Promise.all([
             FetchChain("getAccount", from_account),
             FetchChain("getAccount", to_account),
-            FetchChain("getAccount", propose_account),
+            FetchChain("getAccount", memo_sender_account),
             FetchChain("getAsset", asset),
             FetchChain("getAsset", fee_asset_id),
             unlock_promise
@@ -132,10 +134,15 @@ const ApplicationApi = {
                 let [
                     chain_from,
                     chain_to,
-                    chain_propose_account,
+                    chain_memo_sender,
                     chain_asset,
                     chain_fee_asset
                 ] = res;
+
+                let chain_propose_account = null;
+                if (propose_account) {
+                    chain_propose_account = chain_memo_sender;
+                }
 
                 let memo_object;
                 if (memo) {
@@ -143,7 +150,7 @@ const ApplicationApi = {
                         chain_memo_sender,
                         encrypt_memo
                     );
-                    let memo_to = this._get_memo_keys(chain_to, encrypt_memo);
+                    let memo_to = this._get_memo_keys(chain_to, false);
                     if (!!memo_sender.public_key && !!memo_to.public_key) {
                         let nonce =
                             optional_nonce == null
@@ -204,6 +211,7 @@ const ApplicationApi = {
                     chain_from,
                     chain_to,
                     chain_propose_account,
+                    chain_memo_sender,
                     chain_asset,
                     chain_fee_asset
                 };
@@ -214,8 +222,8 @@ const ApplicationApi = {
     },
 
     /**
-        @param propose_account (or null) pays the fee to create the proposal, also used as memo from
-    */
+     @param propose_account (or null) pays the fee to create the proposal, also used as memo from
+     */
     transfer({
         // OBJECT: { ... }
         from_account,
@@ -230,7 +238,6 @@ const ApplicationApi = {
         fee_asset_id = "1.3.0",
         transactionBuilder = null
     }) {
-        let memo_sender = propose_account || from_account;
         if (transactionBuilder == null) {
             transactionBuilder = new TransactionBuilder();
         }
@@ -240,7 +247,7 @@ const ApplicationApi = {
             amount,
             asset,
             memo,
-            memo_sender,
+            propose_account,
             encrypt_memo,
             optional_nonce,
             fee_asset_id,
@@ -260,7 +267,9 @@ const ApplicationApi = {
                             }
                         );
                     } else {
-                        transactionBuilder.add_operation(transfer_obj);
+                        transactionBuilder.add_operation(
+                            transfer_obj.transfer_op
+                        );
                     }
                     return WalletDb.process_transaction(
                         transactionBuilder,

@@ -363,15 +363,18 @@ class MarketsTable extends React.Component {
                         </tr>
                     }
                     rows={
-                        !marketRows.length ? [(
-                            <tr className="table-empty" key={"tr-table-empty"}>
-                                <td colSpan={showFlip ? 7 : 6}>
-                                    <Translate content="dashboard.table_empty" />
-                                </td>
-                            </tr>
-                        )] : (
-                            marketRows
-                        )
+                        !marketRows.length
+                            ? [
+                                  <tr
+                                      className="table-empty"
+                                      key={"tr-table-empty"}
+                                  >
+                                      <td colSpan={showFlip ? 7 : 6}>
+                                          <Translate content="dashboard.table_empty" />
+                                      </td>
+                                  </tr>
+                              ]
+                            : marketRows
                     }
                     pageSize={25}
                     label="utility.total_x_markets"
