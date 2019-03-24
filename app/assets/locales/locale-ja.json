@@ -1841,6 +1841,7 @@
         "latest_price": "これはこの市場における最新の価格です。",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",

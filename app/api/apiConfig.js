@@ -339,14 +339,6 @@ export const settingsAPIs = {
             contact: "keybase:rnglab"
         },
         {
-            url: "wss://la.dexnode.net/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Los Angeles",
-            operator: "Witness: Sahkan",
-            contact: "telegram:Sahkan_bitshares"
-        },
-        {
             url: "wss://dexnode.net/ws",
             region: "Northern America",
             country: "U.S.A.",
@@ -502,22 +494,6 @@ export const settingsAPIs = {
             location: "Hangzhou",
             operator: "Witness: magicwallet.witness",
             contact: "telegram:plus_wave"
-        },
-        {
-            url: "wss://de.bts.dcn.cx/ws",
-            region: "Western Europe",
-            country: "Germany",
-            location: "Nuremberg",
-            operator: "Witness: fla01",
-            contact: "telegram:Otherego;telegram:BarefootMouse"
-        },
-        {
-            url: "wss://fi.bts.dcn.cx/ws",
-            region: "Northern Europe",
-            country: "Finland",
-            location: "Helsinki",
-            operator: "Witness: fla01",
-            contact: "telegram:Otherego;telegram:BarefootMouse"
         },
         {
             url: "wss://crazybit.online",
@@ -695,14 +671,6 @@ export const settingsAPIs = {
             location: "Paris",
             operator: "Witness: zapata42-witness",
             contact: "telegram:Zapata_42"
-        },
-        {
-            url: "wss://testnet.bts.dcn.cx/ws",
-            region: "TESTNET - Europe",
-            country: "Germany / Finland",
-            location: "Nurenberg / Helsinki",
-            operator: "Witness: fla-test",
-            contact: "telegram:Otherego;telegram:BarefootMouse"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,

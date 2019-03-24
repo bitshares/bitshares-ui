@@ -10,6 +10,7 @@ import AltContainer from "alt-container";
 import MarketUtils from "common/market_utils";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
+import {Link, withRouter} from "react-router-dom";
 
 Treemap(ReactHighcharts.Highcharts);
 Heatmap(ReactHighcharts.Highcharts);
@@ -37,7 +38,8 @@ class AccountTreemap extends React.Component {
             balanceObjects,
             core_asset,
             marketStats,
-            preferredAsset
+            preferredAsset,
+            history
         } = this.props;
 
         let accountBalances = null;
@@ -104,17 +106,18 @@ class AccountTreemap extends React.Component {
                 * the total value of the account
                 */
                     if (percent < 0.5) return null;
-
-                    return finalValue >= 1
-                        ? {
-                              name: `${asset.get("symbol")} (${
-                                  totalValue === 0 ? 0 : percent.toFixed(2)
-                              }%)`,
-                              value: finalValue,
-                              color: ReactHighcharts.Highcharts.getOptions()
-                                  .colors[index]
-                          }
-                        : null;
+                    if (finalValue < 1) return null;
+                    const symbol = asset.get("symbol");
+                    return {
+                        symbol: symbol,
+                        name: `${symbol} (${
+                            totalValue === 0 ? 0 : percent.toFixed(2)
+                        }%)`,
+                        value: finalValue,
+                        color: ReactHighcharts.Highcharts.getOptions().colors[
+                            index
+                        ]
+                    };
                 })
                 .filter(n => !!n);
         }
@@ -159,6 +162,17 @@ class AccountTreemap extends React.Component {
                             )} ${preferredAsset.get("symbol")}`;
                         }
                     }
+                },
+                series: {
+                    cursor: "pointer",
+                    point: {
+                        events: {
+                            click: function() {
+                                const link = `/asset/${this.symbol}`;
+                                history.push(link);
+                            }
+                        }
+                    }
                 }
             },
             series: [
@@ -185,6 +199,21 @@ class AccountTreemap extends React.Component {
 
         return (
             <div className="account-treemap">
+                <div className="account-treemap--legend">
+                    {accountBalances.map(({name, symbol, color}, key) => {
+                        return (
+                            <Link key={key} to={`/asset/${symbol}`}>
+                                <div className="legend-item">
+                                    <div
+                                        className="legend-square"
+                                        style={{backgroundColor: color}}
+                                    />
+                                    {name}
+                                </div>
+                            </Link>
+                        );
+                    })}
+                </div>
                 <ReactHighcharts config={config} />
             </div>
         );
@@ -220,7 +249,7 @@ class AccountTreemapBalanceWrapper extends React.Component {
 
 AccountTreemapBalanceWrapper = BindToChainState(AccountTreemapBalanceWrapper);
 
-export default class AccountTreemapWrapper extends React.Component {
+class AccountTreemapWrapper extends React.Component {
     render() {
         return (
             <AltContainer
@@ -242,3 +271,5 @@ export default class AccountTreemapWrapper extends React.Component {
         );
     }
 }
+
+export default withRouter(AccountTreemapWrapper);

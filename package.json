@@ -1,7 +1,9 @@
 {
 
     "name": "BitShares2-light",
+
     "version": "2.0.190227",
+
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/TatchCapital/Tatch-Cloud-Wallet.0.Beta.6.ParaBellum.3",
     "author": "Tatch Capital Limited",
