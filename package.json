@@ -1,15 +1,10 @@
 {
+
     "name": "BitShares2-light",
     "version": "2.0.190227",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
-    "homepage": "https://github.com/bitshares/bitshares-ui",
-    "author": "BitShares UI Worker <ui-dev@bitshares.org>",
-    "contributors": [
-        "Sigve Kvalsvik",
-        "James Calfee",
-        "Dan Larimer",
-        "Valentine Zavgorodnev"
-    ],
+    "homepage": "https://github.com/TatchCapital/Tatch-Cloud-Wallet.0.Beta.6.ParaBellum.3",
+    "author": "Tatch Capital Limited",
     "license": "MIT",
     "engines": {
         "node": ">=10.x",

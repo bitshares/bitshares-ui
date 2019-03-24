@@ -9,7 +9,7 @@
  * @returns {string}
  */
 export function getWalletName() {
-    return "BitShares";
+    return "Tatch Cloud Wallet";
 }
 
 /**
@@ -17,7 +17,7 @@ export function getWalletName() {
  * @returns {string}
  */
 export function getWalletURL() {
-    return "https://wallet.bitshares.org";
+    return "https://wallet.tatchcapital.com";
 }
 
 /**
@@ -27,7 +27,7 @@ export function getWalletURL() {
  */
 export function getFaucet() {
     return {
-        url: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
+        url: "https://faucet.bitshares.eu/3a2df26c1bc74473", // 2017-12-infrastructure worker proposal
         show: true,
         editable: false
     };
@@ -47,7 +47,7 @@ export function getLogo() {
  */
 export function getDefaultTheme() {
     // possible ["darkTheme", "lightTheme", "midnightTheme"]
-    return "darkTheme";
+    return "midnightTheme";
 }
 
 /**
@@ -66,7 +66,7 @@ export function getDefaultLogin() {
  */
 export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
-        return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
+        return ["TATCH.EUR", "TATCH.USD", "TATCH.BTC", "TATCH.NLG"];
     else if (chainId === "39f5e2ed") return ["TEST"];
     // unknown chain id: (need to return at least one unit)
     else return ["BTS"];
@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BTC", "ETH", "BTS", "USD", "CNY"];
+    return ["TATCH.USD", "TATCH.EUR", "TATCH.NLG", "TATCH.BTC", "BTS"];
 }
 
 /**
@@ -90,108 +90,29 @@ export function getMyMarketsBases() {
 export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
-            "BTC",
             "BTS",
-            "CNY",
-            "EUR",
-            "GOLD",
-            "KRW",
-            "RUBLE",
-            "SILVER",
-            "USD"
         ],
-        bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
-        gdexTokens: ["GDEX.BTC", "GDEX.BTO", "GDEX.EOS", "GDEX.ETH"],
-        openledgerTokens: [
-            "OBITS",
-            "OPEN.BTC",
-            "OPEN.DASH",
-            "OPEN.DGD",
-            "OPEN.DOGE",
-            "OPEN.EOS",
-            "OPEN.EOSDAC",
-            "OPEN.ETH",
-            "OPEN.EURT",
-            "OPEN.GAME",
-            "OPEN.GRC",
-            "OPEN.INCNT",
-            "OPEN.KRM",
-            "OPEN.LISK",
-            "OPEN.LTC",
-            "OPEN.MAID",
-            "OPEN.MKR",
-            "OPEN.NEO",
-            "OPEN.OMG",
-            "OPEN.SBD",
-            "OPEN.STEEM",
-            "OPEN.TUSD",
-            "OPEN.USDT",
-            "OPEN.WAVES",
-            "OPEN.XMR",
-            "OPEN.ZEC",
-            "OPEN.ZRX"
-        ],
-        rudexTokens: [
-            "PPY",
-            "RUDEX.DCT",
-            "RUDEX.DGB",
-            "RUDEX.GBG",
-            "RUDEX.GOLOS",
-            "RUDEX.KRM",
-            "RUDEX.MUSE",
-            "RUDEX.SBD",
-            "RUDEX.STEEM",
-            "RUDEX.TT"
-        ],
-        sparkTokens: ["ZEPH", "SPARKDEX.ETH", "SPARKDEX.BTC"],
-        xbtsxTokens: [
-            "XBTSX.STH",
-            "XBTSX.POST",
-            "XBTSX.DOGE",
-            "XBTSX.BTC",
-            "XBTSX.LTC",
-            "XBTSX.DASH",
-            "XBTSX.KEC",
-            "XBTSX.BTG",
-            "XBTSX.XSPEC",
-            "XBTSX.NVC",
-            "XBTSX.42",
-            "XBTSX.UNI",
-            "XBTSX.NMC",
-            "XBTSX.WAVES",
-            "XBTSX.COF",
-            "XBTSX.XRUP",
-            "XBTSX.P2P",
-            "XBTSX.STEEP"
-        ],
-        otherTokens: [
-            "BKT",
-            "BLOCKPAY",
-            "BTWTY",
-            "TWENTIX",
-            "BTSR",
-            "CADASTRAL",
-            "CVCOIN",
-            "HEMPSWEET",
-            "HERO",
-            "HERTZ",
-            "ICOO",
-            "IOU.CNY",
-            "KAPITAL",
-            "KEXCOIN",
-            "OCT",
-            "SMOKE",
-            "STEALTH",
-            "YOYOW"
+	    
+        tatchTokens: [
+            "TATCHCOIN",
+            "TCLGULDEN",
+            "TCLSILVER"
+	],
+	    
+	tatchgateways: [
+	   "TATCH.EUR",
+	   "TATCH.USD",
+	   "TATCH.BTC",
+	   "TATCH.NLG",
         ]
     };
-
-    let allTokens = [];
-    for (let type in tokens) {
-        allTokens = allTokens.concat(tokens[type]);
-    }
-    return allTokens;
-}
+	
+     let allTokens = [];
+     for (let type in tokens) {
+         allTokens = allTokens.concat(tokens[type]);
+     }
+     return allTokens;
+ }
 
 /**
  * The featured markets displayed on the landing page of the UI
@@ -200,83 +121,33 @@ export function getMyMarketsQuotes() {
  */
 export function getFeaturedMarkets(quotes = []) {
     return [
-        ["USD", "BTS"],
-        ["USD", "OPEN.BTC"],
-        ["USD", "OPEN.USDT"],
-        ["USD", "OPEN.ETH"],
-        ["USD", "OPEN.DASH"],
-        ["USD", "GOLD"],
-        ["USD", "HERO"],
-        ["USD", "GDEX.BTC"],
-        ["USD", "GDEX.ETH"],
-        ["USD", "GDEX.EOS"],
-        ["USD", "GDEX.BTO"],
-        ["USD", "OPEN.EOSDAC"],
-        ["CNY", "BTS"],
-        ["CNY", "OPEN.BTC"],
-        ["CNY", "USD"],
-        ["CNY", "OPEN.ETH"],
-        ["CNY", "YOYOW"],
-        ["CNY", "OCT"],
-        ["CNY", "GDEX.BTC"],
-        ["CNY", "GDEX.ETH"],
-        ["CNY", "GDEX.EOS"],
-        ["CNY", "GDEX.BTO"],
-        ["CNY", "GDEX.BTM"],
-        ["OPEN.BTC", "BTS"],
-        ["OPEN.BTC", "OPEN.ETH"],
-        ["OPEN.BTC", "OPEN.DASH"],
-        ["OPEN.BTC", "BLOCKPAY"],
-        ["OPEN.BTC", "OPEN.DGD"],
-        ["OPEN.BTC", "OPEN.STEEM"],
-        ["BTS", "OPEN.ETH"],
-        ["BTS", "OPEN.EOS"],
-        ["BTS", "PPY"],
-        ["BTS", "OPEN.STEEM"],
-        ["BTS", "OBITS"],
-        ["BTS", "RUBLE"],
-        ["BTS", "HERO"],
-        ["BTS", "OCT"],
-        ["BTS", "SILVER"],
-        ["BTS", "GOLD"],
-        ["BTS", "BLOCKPAY"],
-        ["BTS", "BTWTY"],
-        ["BTS", "SMOKE"],
-        ["BTS", "GDEX.BTC"],
-        ["BTS", "GDEX.ETH"],
-        ["BTS", "GDEX.EOS"],
-        ["BTS", "GDEX.BTO"],
-        ["BTS", "OPEN.EOSDAC"],
-        ["KAPITAL", "OPEN.BTC"],
-        ["USD", "OPEN.STEEM"],
-        ["USD", "OPEN.MAID"],
-        ["OPEN.USDT", "OPEN.BTC"],
-        ["OPEN.BTC", "OPEN.MAID"],
-        ["BTS", "OPEN.MAID"],
-        ["BTS", "OPEN.HEAT"],
-        ["BTS", "OPEN.INCENT"],
-        ["HEMPSWEET", "OPEN.BTC"],
-        ["KAPITAL", "BTS"],
-        ["BTS", "RUDEX.STEEM"],
-        ["USD", "RUDEX.STEEM"],
-        ["BTS", "RUDEX.SBD"],
-        ["BTS", "RUDEX.KRM"],
-        ["USD", "RUDEX.KRM"],
-        ["RUBLE", "RUDEX.GOLOS"],
-        ["CNY", "RUDEX.GOLOS"],
-        ["RUBLE", "RUDEX.GBG"],
-        ["CNY", "RUDEX.GBG"],
-        ["BTS", "RUDEX.MUSE"],
-        ["BTS", "RUDEX.TT"],
-        ["BTS", "RUDEX.SCR"],
-        ["BTS", "RUDEX.ETH"],
-        ["BTS", "RUDEX.DGB"],
-        ["BTS", "XBTSX.STH"],
-        ["BTS", "XBTSX.WAVES"],
-        ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"],
-        ["BTS", "SPARKDEX.BTC"],
-        ["BTS", "SPARKDEX.ETH"]
+	["BRIDGE.LTC","TATCH.NLG"],
+	["TATCH.BTC","TATCH.NLG"],
+	["TATCH.EUR","TATCH.NLG"],
+	["TATCHCOIN","TATCH.NLG"],
+	["TCLGULDEN","TATCH.NLG"],
+	["TCLSILVER","TATCH.NLG"],
+	["BRIDGE.WSP","TATCH.NLG"],
+	["BRIDGE.PIVX","TATCH.NLG"],
+	["TATCH.BTC","TATCH.EUR"],
+	["BRIDGE.WSP","TATCH.EUR"],
+	["BRIDGE.PIVX","TATCH.EUR"],
+	["BTS","TATCH.EUR"],
+	["BRIDGE.LTC","TATCH.EUR"],
+	["TATCH.NLG","TATCH.EUR"],
+	["TATCHCOIN","TATCH.EUR"],
+	["TCLGULDEN","TATCH.EUR"],
+	["TCLSILVER","TATCH.EUR"],
+	["TATCH.BTC","TATCH.BTC"],
+	["BRIDGE.WSP","TATCH.BTC"],
+	["BRIDGE.PIVX","TATCH.BTC"],
+	["BTS","TATCH.BTC"],
+	["BITEUR","TATCH.EUR"],
+	["BRIDGE.LTC","TATCH.BTC"],
+	["TATCH.NLG","TATCH.BTC"],
+	["TATCHCOIN","TATCH.BTC"],
+	["TCLGULDEN","TATCH.BTC"],
+	["TCLSILVER","TATCH.BTC"],
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -290,13 +161,7 @@ export function getFeaturedMarkets(quotes = []) {
  */
 export function getAssetNamespaces() {
     return [
-        "OPEN.",
-        "RUDEX.",
-        "BRIDGE.",
-        "GDEX.",
-        "XBTSX.",
-        "SPARKDEX.",
-        "CITADEL."
+  "TATCH.", "BRIDGE.", "OPEN."
     ];
 }
 
@@ -306,7 +171,9 @@ export function getAssetNamespaces() {
  */
 export function getAssetHideNamespaces() {
     // e..g "OPEN.", "bit"
-    return [];
+    return [
+	"TATCH.",
+    ];
 }
 
 /**
@@ -316,15 +183,7 @@ export function getAssetHideNamespaces() {
  */
 export function allowedGateway(gateway) {
     return (
-        [
-            "OPEN",
-            "RUDEX",
-            "BRIDGE",
-            "GDEX",
-            "XBTSX",
-            "SPARKDEX",
-            "CITADEL"
-        ].indexOf(gateway) >= 0
+        ["TATCH", "BRIDGE", "OPEN", "tatch"]
     );
 }
 

@@ -20,6 +20,7 @@ import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
+import TatchGateway from "../DepositWithdraw/tatch/TatchGateway";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
@@ -43,6 +44,7 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {
             olService: props.viewSettings.get("olService", "gateway"),
             rudexService: props.viewSettings.get("rudexService", "gateway"),
+            tatchService: props.viewSettings.get("tatchService", "gateway"),
             bitsparkService: props.viewSettings.get(
                 "bitsparkService",
                 "gateway"
@@ -73,6 +75,7 @@ class AccountDepositWithdraw extends React.Component {
             ) ||
             nextState.olService !== this.state.olService ||
             nextState.rudexService !== this.state.rudexService ||
+            nextState.tatchService !== this.state.bitsparkService ||
             nextState.bitsparkService !== this.state.bitsparkService ||
             nextState.xbtsxService !== this.state.xbtsxService ||
             nextState.btService !== this.state.btService ||
@@ -116,6 +119,15 @@ class AccountDepositWithdraw extends React.Component {
         });
     }
 
+     toggleTatchService(service) {
+        this.setState({
+            bitsparkService: service
+        });
+
+        SettingsActions.changeViewSetting({
+            tatchService: service
+        });
+    }
     toggleBitSparkService(service) {
         this.setState({
             bitsparkService: service
@@ -169,6 +181,7 @@ class AccountDepositWithdraw extends React.Component {
     renderServices(
         openLedgerGatewayCoins,
         rudexGatewayCoins,
+        tatchGatewayCoins,
         bitsparkGatewayCoins,
         xbtsxGatewayCoins
     ) {
@@ -179,6 +192,7 @@ class AccountDepositWithdraw extends React.Component {
             olService,
             btService,
             rudexService,
+            tatchService,
             bitsparkService,
             xbtsxService,
             citadelService
@@ -308,6 +322,45 @@ class AccountDepositWithdraw extends React.Component {
                         <div>
                             <Translate content="gateway.rudex.coming_soon" />
                         </div>
+                    ) : null}
+                </div>
+            )
+        });
+
+        serList.push({
+            name: "Tatch Capital (TATCH.X)",
+            template: (
+                <div className="content-block">
+                    <div
+                        className="service-selector"
+                        style={{marginBottom: "2rem"}}
+                    >
+                        <ul className="button-group segmented no-margin">
+                            <li
+                                onClick={this.toggleTatchService.bind(
+                                    this,
+                                    "gateway"
+                                )}
+                                className={
+                                    tatchService === "gateway"
+                                        ? "is-active"
+                                        : ""
+                                }
+                            >
+                                <a>
+                                    <Translate content="gateway.gateway" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {tatchService === "gateway" &&
+                    tatchGatewayCoins.length ? (
+                        <TatchGateway
+                            account={account}
+                            coins={tatchGatewayCoins}
+                            provider="tatch"
+                        />
                     ) : null}
                 </div>
             )
@@ -546,6 +599,16 @@ class AccountDepositWithdraw extends React.Component {
                 return 0;
             });
 
+        let tatchGatewayCoins = this.props.tatchBackedCoins
+            .map(coin => {
+                return coin;
+            })
+            .sort((a, b) => {
+                if (a.symbol < b.symbol) return -1;
+                if (a.symbol > b.symbol) return 1;
+                return 0;
+            });
+        
         let bitsparkGatewayCoins = this.props.bitsparkBackedCoins
             .map(coin => {
                 return coin;
@@ -569,6 +632,7 @@ class AccountDepositWithdraw extends React.Component {
         let services = this.renderServices(
             openLedgerGatewayCoins,
             rudexGatewayCoins,
+            tatchGatewayCoins,
             bitsparkGatewayCoins,
             xbtsxGatewayCoins
         );
@@ -585,6 +649,7 @@ class AccountDepositWithdraw extends React.Component {
             "GDEX",
             "OPEN",
             "RUDEX",
+            "TATCH",
             "SPARKDEX",
             "TRADE",
             "BITKAPITAL",
@@ -770,6 +835,10 @@ export default connect(
                 ),
                 rudexBackedCoins: GatewayStore.getState().backedCoins.get(
                     "RUDEX",
+                    []
+                ),
+                tatchBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "TATCH",
                     []
                 ),
                 bitsparkBackedCoins: GatewayStore.getState().backedCoins.get(

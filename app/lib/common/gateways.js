@@ -4,6 +4,7 @@
  */
 
 import {
+    tatchAPIs,
     rudexAPIs,
     bitsparkAPIs,
     widechainAPIs,
@@ -42,11 +43,11 @@ export const availableGateways = {
             selected: false
         }
     },
-    SPARKDEX: {
-        id: "SPARKDEX",
-        name: "SPARKDEX",
-        baseAPI: bitsparkAPIs,
-        isEnabled: allowedGateway("SPARKDEX"),
+    TATCH: {
+        id: "TATCH",
+        name: "TATCH",
+        baseAPI: tatchAPIs,
+        isEnabled: allowedGateway("TATCH"),
         selected: false,
         options: {
             enabled: false,

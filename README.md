@@ -1,6 +1,5 @@
-BitShares-UI
+Tatch Cloud Wallet (BitShares-UI)
 ============
-[中文版](README_zh.md)
 
 This is a light wallet that connects to a BitShares API provided by the *witness_node* executable.
 
@@ -16,15 +15,16 @@ To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-nvm install v9
-nvm use v9
+nvm install v10
+nvm use v10
+
 ```
 
 Once you have Node installed, you can clone the repo:
 
 ```
-git clone https://github.com/bitshares/bitshares-ui.git
-cd bitshares-ui
+git clone https://github.com/TatchCapital/Wallet.0.Beta.2.git
+cd Wallet.0.Beta.2
 ```
 
 Before launching the GUI you will need to install the npm packages:
