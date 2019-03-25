@@ -4,36 +4,31 @@ import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
-import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {Asset} from "common/MarketClasses";
 import {debounce, isNaN} from "lodash-es";
 import {
     checkFeeStatusAsync,
-    checkBalance,
     shouldPayFeeWithAssetAsync
 } from "common/trxHelper";
 import LimitToWithdraw from "../Utility/LimitToWithdraw";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import {Modal, Button, Tooltip, Icon} from "bitshares-ui-style-guide";
 import moment from "moment";
 
 class DirectDebitClaimModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
-        this.onTrxIncluded = this.onTrxIncluded.bind(this);
         this._updateFee = debounce(this._updateFee.bind(this), 250);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
-        this._isMounted = false;
     }
 
     getInitialState() {
         return {
             to_name: "",
-            from_name: "",
             from_account: null,
             to_account: null,
             amount: "",
@@ -48,6 +43,9 @@ class DirectDebitClaimModal extends React.Component {
             maxAmount: false,
             permissionId: "",
             balanceError: false,
+            limitError: false,
+            firstPeriodError: false,
+            payerBalanceWarning: false,
             withdrawal_limit: null,
             current_period_expires: ""
         };
@@ -67,8 +65,8 @@ class DirectDebitClaimModal extends React.Component {
         const data = {
             fee: feeAsset ? feeAsset.get("id") : "1.3.0",
             withdraw_permission: permissionId,
-            withdraw_from_account: from_account,
-            withdraw_to_account: to_account,
+            withdraw_from_account: to_account,
+            withdraw_to_account: from_account,
             asset_id,
             amount,
             memo: memo ? new Buffer(memo, "utf-8") : memo
@@ -78,7 +76,6 @@ class DirectDebitClaimModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         const {operation, isModalVisible} = this.props;
-        console.log("operation", this.props.operation);
 
         if (
             isModalVisible &&
@@ -97,27 +94,29 @@ class DirectDebitClaimModal extends React.Component {
             const periodMs = operation.payload.withdrawal_period_sec * 1000;
             if (timePassed < 0) {
                 console.log("first period is not started");
-                // validation error?
             } else {
                 currentPeriodNum = Math.ceil(timePassed / periodMs);
-
                 currentPeriodExpires = timeStart + periodMs * currentPeriodNum;
-                console.log(currentPeriodExpires);
             }
 
-            this.setState({
-                to_account: ChainStore.getAccount(this.props.currentAccount),
-                from_account: operation.payload.withdrawFromAccount,
-                from_name: operation.payload.withdrawFromAccount.get("name"),
-                permissionId: operation.payload.id,
-                withdrawal_limit: operation.payload.withdrawal_limit,
-                current_period_expires_date: currentPeriodExpires
-            });
+            this.setState(
+                {
+                    from_account: ChainStore.getAccount(
+                        this.props.currentAccount
+                    ),
+                    to_account: operation.payload.withdrawFromAccount,
+                    to_name: operation.payload.withdrawFromAccount.get("name"),
+                    permissionId: operation.payload.id,
+                    withdrawal_limit: operation.payload.withdrawal_limit,
+                    current_period_expires_date: currentPeriodExpires
+                },
+                this._checkFeeStatus
+            );
         }
     }
 
     _checkBalance() {
-        const {feeAmount, amount, from_account, asset} = this.state;
+        const {feeAmount, from_account, asset} = this.state;
         if (!asset || !from_account) return;
         this._updateFee();
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
@@ -135,20 +134,22 @@ class DirectDebitClaimModal extends React.Component {
             this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
         }
         if (!balanceObject || !feeAmount) return;
-        if (!amount) return this.setState({balanceError: false});
-        const hasBalance = checkBalance(
-            amount,
-            asset,
-            feeAmount,
-            balanceObject
-        );
+
+        const balanceAmount = new Asset({
+            real: balanceObject.get("balance"),
+            asset_id: asset.get("id"),
+            precision: asset.get("precision")
+        });
+        balanceAmount.minus(feeAmount);
+        const hasBalance = balanceAmount.getAmount({real: true}) > 0;
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
     }
 
     _checkFeeStatus(state = this.state) {
-        let {from_account, open} = state;
-        if (!from_account || !open) return;
+        const {from_account} = state;
+        const {isModalVisible} = this.props;
+        if (!from_account || !isModalVisible) return;
 
         const assets = Object.keys(from_account.get("balances").toJS()).sort(
             utils.sortID
@@ -160,10 +161,11 @@ class DirectDebitClaimModal extends React.Component {
                 checkFeeStatusAsync({
                     accountID: from_account.get("id"),
                     feeID: a,
+                    type: "withdraw_permission_claim",
                     options: ["price_per_kbyte"],
                     data: {
-                        type: "memo", // TODO: pick correct type
-                        content: null
+                        type: "memo",
+                        content: state.memo
                     }
                 })
             );
@@ -185,26 +187,17 @@ class DirectDebitClaimModal extends React.Component {
             });
     }
 
-    _setTotal(asset_id, balance_id) {
-        /* const {feeAmount} = this.state;
-        let balanceObject = ChainStore.getObject(balance_id);
-        let transferAsset = ChainStore.getObject(asset_id);
+    setTotalLimit = limit => () => {
+        this.setState({maxAmount: true, amount: limit}, this.checkLimit);
+    };
 
-        let balance = new Asset({
-            amount: balanceObject.get("balance"),
-            asset_id: transferAsset.get("id"),
-            precision: transferAsset.get("precision")
-        });
-
-        if (balanceObject) {
-            if (feeAmount.asset_id === balance.asset_id) {
-                balance.minus(feeAmount);
-            }
-            this.setState(
-                {maxAmount: true, amount: balance.getAmount({real: true})},
-                this._checkBalance
-            );
-        } */
+    checkLimit() {
+        const {withdrawal_limit, amount, limitError} = this.state;
+        if (amount > withdrawal_limit.amount && !limitError) {
+            this.setState({limitError: true});
+        } else if (amount <= withdrawal_limit.amount && limitError) {
+            this.setState({limitError: false});
+        }
     }
 
     _getAvailableAssets(state = this.state) {
@@ -246,7 +239,6 @@ class DirectDebitClaimModal extends React.Component {
 
     _updateFee(state = this.state) {
         if (!this.props.isModalVisible) return;
-
         let {fee_asset_id, from_account, asset_id} = state;
         const {fee_asset_types} = this._getAvailableAssets(state);
         if (
@@ -259,10 +251,11 @@ class DirectDebitClaimModal extends React.Component {
         checkFeeStatusAsync({
             accountID: from_account.get("id"),
             feeID: fee_asset_id,
+            type: "withdraw_permission_claim",
             options: ["price_per_kbyte"],
             data: {
-                type: "memo", // TODO: pick correct type
-                content: null
+                type: "memo",
+                content: state.memo
             }
         }).then(({fee, hasBalance, hasPoolBalance}) => {
             shouldPayFeeWithAssetAsync(from_account, fee).then(
@@ -296,7 +289,7 @@ class DirectDebitClaimModal extends React.Component {
                 error: null,
                 maxAmount: false
             },
-            this._checkBalance
+            this.checkLimit
         );
     };
 
@@ -307,37 +300,28 @@ class DirectDebitClaimModal extends React.Component {
         );
     }
 
-    onTrxIncluded(confirm_store_state) {
-        if (
-            confirm_store_state.included &&
-            confirm_store_state.broadcasted_transaction
-        ) {
-            // this.setState(Transfer.getInitialState());
-            TransactionConfirmStore.unlisten(this.onTrxIncluded);
-            TransactionConfirmStore.reset();
-        } else if (confirm_store_state.closed) {
-            TransactionConfirmStore.unlisten(this.onTrxIncluded);
-            TransactionConfirmStore.reset();
-        }
+    onMemoChanged(e) {
+        this.setState({memo: e.target.value}, this._checkBalance);
     }
 
-    onMemoChanged(e) {
-        let {asset_types} = this._getAvailableAssets();
-        let {to_account, from_error, maxAmount} = this.state;
-        if (
-            to_account &&
-            to_account.get("balances") &&
-            !from_error &&
-            maxAmount
-        ) {
-            let account_balances = to_account.get("balances").toJS();
-            let current_asset_id = asset_types[0];
-            this._setTotal(
-                current_asset_id,
-                account_balances[current_asset_id]
-            );
+    isPayerBalanceWarning(limitAmount) {
+        const {withdrawal_limit, to_account, payerBalanceWarning} = this.state;
+        const balanceID = to_account.getIn([
+            "balances",
+            withdrawal_limit.asset_id
+        ]);
+        if (!balanceID) {
+            if (!payerBalanceWarning) {
+                this.setState({payerBalanceWarning: true});
+            }
+            return;
         }
-        this.setState({memo: e.target.value}, this._updateFee);
+        const payerBalance = ChainStore.getObject(balanceID).get("balance");
+        if (payerBalance < limitAmount && !payerBalanceWarning) {
+            this.setState({payerBalanceWarning: true});
+        } else if (payerBalance >= limitAmount && payerBalanceWarning) {
+            this.setState({payerBalanceWarning: false});
+        }
     }
 
     render() {
@@ -351,15 +335,14 @@ class DirectDebitClaimModal extends React.Component {
             error,
             to_name,
             memo,
-            from_name,
             feeAsset,
             fee_asset_id,
             balanceError,
+            limitError,
+            payerBalanceWarning,
             withdrawal_limit,
             current_period_expires_date
         } = this.state;
-
-        const {operation} = this.props;
 
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
 
@@ -369,18 +352,25 @@ class DirectDebitClaimModal extends React.Component {
         // Estimate fee
         let fee = this.state.feeAmount.getAmount({real: true});
 
-        // balance of current asset
+        // balance
         if (from_account && from_account.get("balances")) {
-            let account_balances = from_account.get("balances").toJS();
-            console.log("account_balances", account_balances);
-
             let _error = this.state.balanceError ? "has-error" : "";
             if (asset_types.length === 1)
                 asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
                 let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
-                console.log("current_asset_id", current_asset_id);
+                const assetToWithdraw =
+                    withdrawal_limit &&
+                    ChainStore.getAsset(withdrawal_limit.asset_id);
+                const assetToWithdrawPrecision = assetToWithdraw.get(
+                    "precision"
+                );
+                const limitAmount =
+                    withdrawal_limit &&
+                    Math.pow(10, assetToWithdrawPrecision) *
+                        withdrawal_limit.amount;
+                this.isPayerBalanceWarning(limitAmount);
 
                 balance = (
                     <span>
@@ -390,30 +380,36 @@ class DirectDebitClaimModal extends React.Component {
                         />
                         :{" "}
                         <span
-                            className={_error}
+                            className={limitError ? "has-error" : ""}
                             style={{
                                 borderBottom: "#A09F9F 1px dotted",
                                 cursor: "pointer"
                             }}
-                            onClick={this._setTotal.bind(
-                                this,
-                                current_asset_id,
-                                account_balances[current_asset_id],
-                                fee,
-                                feeID
+                            onClick={this.setTotalLimit(
+                                withdrawal_limit.amount
                             )}
                         >
                             <LimitToWithdraw
-                                amount={
-                                    withdrawal_limit && withdrawal_limit.amount
-                                }
+                                amount={limitAmount}
                                 assetId={
                                     withdrawal_limit &&
                                     withdrawal_limit.asset_id
                                 }
-                                // balance={account_balances[current_asset_id]}
                             />
                         </span>
+                        &nbsp;
+                        {payerBalanceWarning && (
+                            <Tooltip
+                                placement="top"
+                                title="Limit > payer balance!"
+                            >
+                                <Icon
+                                    type="exclamation-circle"
+                                    theme="filled"
+                                    style={{color: "#fe8c00"}}
+                                />
+                            </Tooltip>
+                        )}
                     </span>
                 );
 
@@ -454,6 +450,8 @@ class DirectDebitClaimModal extends React.Component {
             !isAmountValid ||
             !asset ||
             balanceError ||
+            limitError ||
+            payerBalanceWarning ||
             !current_period_expires_date ||
             from_account.get("id") == to_account.get("id");
         return (
@@ -480,14 +478,14 @@ class DirectDebitClaimModal extends React.Component {
                 ]}
             >
                 <div className="grid-block vertical no-overflow">
-                    <form noValidate style={{paddingBottom: "50px"}}>
+                    <form noValidate>
                         <div>
                             {/* AUTHORIZED ACCOUNT */}
                             <div className="content-block">
                                 <AccountSelector
                                     label="showcases.direct_debit.authorizing_account"
-                                    accountName={from_name}
-                                    account={from_account}
+                                    accountName={to_name}
+                                    account={to_account}
                                     size={60}
                                     hideImage
                                     disabled
@@ -569,7 +567,6 @@ class DirectDebitClaimModal extends React.Component {
                                 style={{marginBottom: 0}}
                                 rows="3"
                                 value={memo}
-                                // tabIndex={tabIndex++}
                                 onChange={this.onMemoChanged.bind(this)}
                             />
                         </div>
@@ -600,7 +597,7 @@ class DirectDebitClaimModal extends React.Component {
                                                 ? "transfer.errors.insufficient"
                                                 : null
                                         }
-                                        scroll_length={2}
+                                        scroll_length={1}
                                     />
                                 </div>
                             </div>

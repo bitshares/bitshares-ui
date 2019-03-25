@@ -210,8 +210,9 @@ class DirectDebitModal extends React.Component {
     }
 
     _checkFeeStatus(state = this.state) {
-        let {from_account, open} = state;
-        if (!from_account || !open) return;
+        const {from_account} = state;
+        const {isModalVisible, operation} = this.props;
+        if (!from_account || !isModalVisible) return;
 
         const assets = Object.keys(from_account.get("balances").toJS()).sort(
             utils.sortID
@@ -223,9 +224,13 @@ class DirectDebitModal extends React.Component {
                 checkFeeStatusAsync({
                     accountID: from_account.get("id"),
                     feeID: a,
-                    options: ["price_per_kbyte"],
+                    type:
+                        operation && operation.type === "update"
+                            ? "withdraw_permission_update"
+                            : "withdraw_permission_create",
+
                     data: {
-                        type: "memo", // TODO: pick correct type
+                        type: "memo",
                         content: null
                     }
                 })
@@ -309,7 +314,7 @@ class DirectDebitModal extends React.Component {
 
     _updateFee(state = this.state) {
         if (!this.props.isModalVisible) return;
-
+        const {operation} = this.props;
         let {fee_asset_id, from_account, asset_id} = state;
         const {fee_asset_types} = this._getAvailableAssets(state);
         if (
@@ -322,9 +327,12 @@ class DirectDebitModal extends React.Component {
         checkFeeStatusAsync({
             accountID: from_account.get("id"),
             feeID: fee_asset_id,
-            options: ["price_per_kbyte"],
+            type:
+                operation && operation.type === "update"
+                    ? "withdraw_permission_update"
+                    : "withdraw_permission_create",
             data: {
-                type: "memo", // TODO: pick correct type
+                type: "memo",
                 content: null
             }
         }).then(({fee, hasBalance, hasPoolBalance}) => {
@@ -354,7 +362,6 @@ class DirectDebitModal extends React.Component {
         if (!asset) {
             return;
         }
-        //console.log("amount changed", amount, asset);
 
         this.setState(
             {
@@ -560,7 +567,7 @@ class DirectDebitModal extends React.Component {
                 ]}
             >
                 <div className="grid-block vertical no-overflow">
-                    <form noValidate style={{paddingBottom: "50px"}}>
+                    <form noValidate>
                         <div>
                             {/* AUTHORIZED ACCOUNT */}
                             <div className="content-block">

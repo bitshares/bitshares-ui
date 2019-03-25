@@ -114,7 +114,7 @@ class DirectDebit extends Component {
         });
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this._update();
     }
 
@@ -146,9 +146,13 @@ class DirectDebit extends Component {
     };
 
     _onFilter = e => {
-        // TODO:
         e.preventDefault();
         this.setState({filterString: e.target.value.toLowerCase()});
+    };
+
+    handleDeleteProposal = () => {
+        // TODO:
+        console.log("delete");
     };
 
     render() {
@@ -295,7 +299,7 @@ class DirectDebit extends Component {
                             <span>
                                 <Button
                                     style={{marginRight: "10px"}}
-                                    onClick={() => alert("cancel mandate")}
+                                    onClick={this.handleDeleteProposal}
                                 >
                                     Cancel
                                 </Button>
