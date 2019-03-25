@@ -4,8 +4,10 @@ import {
     fetchTradingPairs,
     fetchCoinsSimple,
     getBackedCoins,
-    getActiveWallets
+    getActiveWallets,
+    fetchExchanges
 } from "common/gatewayMethods";
+import { parseExchanges } from "common/gatewayApiUtils";
 import {blockTradesAPIs} from "api/apiConfig";
 
 let inProgress = {};
@@ -67,6 +69,24 @@ class GatewayActions {
         } else {
             return {};
         }
+    }
+
+    fetchCoinsNewApi() {
+        const progressKey = "fetchCoinsNewApi";
+        if (!inProgress[progressKey]) {
+            inProgress[progressKey] = true;
+            return dispatch => {
+                Promise.resolve(fetchExchanges()).then(result => {
+                    inProgress[progressKey] = false;
+                    const exchangesPairs = parseExchanges(result);
+
+                    dispatch({
+                        bitsharesExchanges: exchangesPairs
+                    });
+                });
+            };
+        }
+        return [];
     }
 
     fetchCoinsSimple({backer = "RUDEX", url = undefined} = {}) {

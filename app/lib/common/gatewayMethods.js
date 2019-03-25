@@ -46,6 +46,35 @@ export function fetchCoins(
     });
 }
 
+export function fetchExchanges(
+    url = openledgerAPIs.BASE_API_URL + openledgerAPIs.EXCHANGES
+) {
+    return fetch(url)
+        .then(reply => reply.json().then(result => result))
+        .catch(err => {
+            console.log(`fetchExchanges error from ${url}: ${err}`);
+        });
+}
+
+export function fetchIntermediateAddress(
+    exchangeId,
+    destinationAddress,
+    destinationMemo
+) {
+    const url =
+        openledgerAPIs.BASE_API_URL +
+        openledgerAPIs.GET_ADDRESS(
+            exchangeId,
+            destinationAddress,
+            destinationMemo
+        );
+    return fetch(url)
+        .then(reply => reply.json().then(result => result))
+        .catch(err => {
+            console.warn("error fetching address for exchange", err, url);
+        });
+}
+
 export function fetchCoinsSimple(
     url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
 ) {
@@ -441,6 +470,30 @@ export function validateAddress({
                 console.log("validate error:", err);
             });
     }
+}
+
+export function validateTransfer({
+    url = openledgerAPIs.BASE_API_URL,
+    exchangeId,
+    amount,
+    memo,
+    recipient
+}) {
+    if (!recipient) return new Promise(res => res());
+    const bodyString = JSON.stringify({
+        amount,
+        recipient,
+        memo
+    });
+    return fetch(`${url}exchanges/${exchangeId}/transfer/destination`, {
+        method: "post",
+        headers: new Headers({ Accept: "application/json" }),
+        body: bodyString
+    })
+        .then(reply => reply.json().then(json => json))
+        .catch(err => {
+            console.warn("validate error:", err);
+        });
 }
 
 let _conversionCache = {};

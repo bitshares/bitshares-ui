@@ -18,7 +18,11 @@ export const openledgerAPIs = {
     DEPOSIT_LIMIT: "/deposit-limits",
     ESTIMATE_OUTPUT: "/estimate-output-amount",
     ESTIMATE_INPUT: "/estimate-input-amount",
-    RPC_URL: "https://openledger.info/api/"
+    RPC_URL: "https://openledger.info/api/",
+    BASE_API_URL: "https://gateway.openledger.io/",
+    EXCHANGES: "exchanges",
+    GET_ADDRESS: (exchangeId, destinationAddress, destinationMemo) =>
+        `/exchanges/${exchangeId}/transfer/source/prototype?destination_address=${destinationAddress}&destination_memo=${destinationMemo}`
 };
 
 export const rudexAPIs = {

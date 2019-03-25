@@ -36,6 +36,7 @@ class GatewayStore {
         this.bindListeners({
             onFetchCoins: GatewayActions.fetchCoins,
             onFetchCoinsSimple: GatewayActions.fetchCoinsSimple,
+            onFetchCoinsNewApi: GatewayActions.fetchCoinsNewApi,
             onFetchPairs: GatewayActions.fetchPairs
         });
     }
@@ -52,6 +53,11 @@ class GatewayStore {
         if (down) {
             this.down = this.down.set(down, true);
         }
+    }
+
+    onFetchCoinsNewApi({ bitsharesExchanges }) {
+        this.backedCoins = this.backedCoins.set("newApi", bitsharesExchanges);
+        ss.set("backedCoins", this.backedCoins.toJS());
     }
 
     onFetchCoinsSimple({backer, coins, down} = {}) {

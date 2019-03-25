@@ -34,7 +34,9 @@ import {getGatewayStatusByAsset} from "common/gatewayUtils";
 import {availableGateways} from "common/gateways";
 import {
     validateAddress as blocktradesValidateAddress,
-    WithdrawAddresses
+    WithdrawAddresses,
+    fetchIntermediateAddress,
+    validateTransfer
 } from "lib/common/gatewayMethods";
 import AmountSelector from "components/Utility/AmountSelectorStyleGuide";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
@@ -44,6 +46,8 @@ const gatewayBoolCheck = "withdrawalAllowed";
 
 import {getAssetAndGateway, getIntermediateAccount} from "common/gatewayUtils";
 import { isObject } from "util";
+
+const OPENLEDGER_GATEWAY = "OPEN";
 
 class WithdrawModalNew extends React.Component {
     constructor(props) {
@@ -438,6 +442,45 @@ class WithdrawModalNew extends React.Component {
         return {fee_asset_types};
     }
 
+    static getMinWithdrawalValue(backingAsset) {
+        if (backingAsset.minAmount) {
+            return !!backingAsset.precision ?
+                utils.format_number(
+                    backingAsset.minAmount /
+                    utils.get_asset_precision(backingAsset.precision),
+                    backingAsset.precision,
+                    false
+                )
+                : backingAsset.minAmount;
+        }
+        return "gateFee" in backingAsset ?
+            backingAsset.gateFee * 2 || 0 + backingAsset.transactionFee || 0
+            : 0;
+
+    }
+
+    static getMaxWithdrawalValue(backingAsset) {
+        if (backingAsset.isNewApi) {
+            return Math.min(
+                backingAsset.withdrawal.amount.max,
+                backingAsset.withdrawal.limits.once
+            );
+        } else if (backingAsset.maxAmount) {
+            return backingAsset.maxAmount;
+        }
+        return null;
+    }
+
+    getIssuerAddress() {
+        const { withdrawal } = this.props;
+        const { withdraw_address, memo } = this.state;
+        return fetchIntermediateAddress(
+            withdrawal.exchangeId,
+            withdraw_address,
+            memo
+        );
+    }
+
     _checkFeeStatus(state = this.state) {
         let account = this.props.account;
         if (!account) return;
@@ -625,7 +668,7 @@ class WithdrawModalNew extends React.Component {
         }
     }
 
-    // Don't validate address on change. 
+    // Don't validate address on change.
     // Validation is done when address is selected
     onAddressChanged(inputAddress) {
         this.setState({address: inputAddress});
@@ -636,10 +679,10 @@ class WithdrawModalNew extends React.Component {
         this.setState({address: inputAddress}, this._updateFee);
     }
 
-    _getBackingAssetProps() {
-        let {selectedGateway, selectedAsset} = this.state;
+    _getBackingAssetProps(selectedGateway) {
+        let { selectedAsset } = this.state;
         return this.props.backedCoins
-            .get(selectedGateway.toUpperCase(), [])
+            .get(selectedGateway, [])
             .find(c => {
                 let backingCoin = c.backingCoinType || c.backingCoin;
 
@@ -654,26 +697,45 @@ class WithdrawModalNew extends React.Component {
     }
 
     validateAddress(address) {
-        let {selectedGateway, gatewayStatus} = this.state;
+        const { selectedGateway, gatewayStatus ,memo, quantity } = this.state;
 
         // Get Backing Asset Details for Gateway
-        let backingAsset = this._getBackingAssetProps();
+        let backingAsset;
+        if (selectedGateway.toUpperCase() === OPENLEDGER_GATEWAY) {
+            backingAsset = this._getBackingAssetProps("newApi");
+        }
+        if (!backingAsset) {
+            backingAsset = this._getBackingAssetProps(selectedGateway.toUpperCase());
+        }
 
-        blocktradesValidateAddress({
-            url: gatewayStatus[selectedGateway].baseAPI.BASE,
-            walletType: backingAsset.walletType,
-            newAddress: address,
-            output_coin_type: gatewayStatus[selectedGateway]
-                .addressValidatorAsset
-                ? this.state.selectedGateway.toLowerCase() +
-                  "." +
-                  this.state.selectedAsset.toLowerCase()
-                : null,
-            method:
+        if (backingAsset.isNewApi) {
+            validateTransfer({
+                amount: quantity,
+                recipient: address,
+                memo,
+                exchangeId: backingAsset.withdrawal.exchangeId
+            }).then(validationData => {
+                this.setState({
+                    addressError: !validationData.valid_recipient
+                });
+            });
+        } else {
+            blocktradesValidateAddress({
+                url: gatewayStatus[selectedGateway].baseAPI.BASE,
+                walletType: backingAsset.walletType,
+                newAddress: address,
+                output_coin_type: gatewayStatus[selectedGateway]
+                    .addressValidatorAsset
+                    ? this.state.selectedGateway.toLowerCase() +
+                    "." +
+                    this.state.selectedAsset.toLowerCase()
+                    : null,
+                method:
                 gatewayStatus[selectedGateway].addressValidatorMethod || null
-        }).then(isValid => {
-            this.setState({addressError: isValid ? false : true});
-        });
+            }).then(isValid => {
+                this.setState({addressError: isValid ? false : true});
+            });
+        }
     }
 
     onSelectedAddressChanged(address) {
@@ -709,7 +771,7 @@ class WithdrawModalNew extends React.Component {
         }
     }
 
-    onSubmit() {
+    onSubmit(isNewApi) {
         const {
             withdrawalCurrencyId,
             withdrawalCurrencyBalance,
@@ -818,9 +880,26 @@ class WithdrawModalNew extends React.Component {
             feeAmount ? feeAmount.asset_id : "1.3.0"
         ];
 
-        AccountActions.transfer(...args).then(() => {
-            this.props.hideModal();
-        });
+        if (isNewApi) {
+            this.getIssuerAddress().then(res => {
+                const changedArgs = [
+                    this.props.account.get("id"),
+                    res.address,
+                    sendAmount.getAmount(),
+                    withdrawalCurrencyId,
+                    res.memo,
+                    null,
+                    feeAmount ? feeAmount.asset_id : "1.3.0"
+                ];
+                AccountActions.transfer(...changedArgs).then(() => {
+                    this.props.hideModal();
+                });
+            });
+        } else {
+            AccountActions.transfer(...args).then(() => {
+                this.props.hideModal();
+            });
+        }
     }
 
     onBTSAccountNameChanged(btsAccountName) {
@@ -911,31 +990,21 @@ class WithdrawModalNew extends React.Component {
         let symbolsToInclude = [];
 
         // Get Backing Asset for Gateway
-        let backingAsset = this._getBackingAssetProps();
-
-        let minWithdraw = null;
-        let maxWithdraw = null;
-        if (backingAsset && backingAsset.minAmount) {
-            minWithdraw = !!backingAsset.precision
-                ? utils.format_number(
-                      backingAsset.minAmount /
-                          utils.get_asset_precision(backingAsset.precision),
-                      backingAsset.precision,
-                      false
-                  )
-                : backingAsset.minAmount;
-        } else if (backingAsset) {
-            minWithdraw =
-                "gateFee" in backingAsset
-                    ? backingAsset.gateFee * 2 ||
-                      0 + backingAsset.transactionFee ||
-                      0
-                    : 0;
+        let backingAsset;
+        if (selectedGateway.toUpperCase() === OPENLEDGER_GATEWAY) {
+            backingAsset = this._getBackingAssetProps("newApi");
+        }
+        if (!backingAsset) {
+            backingAsset = this._getBackingAssetProps(selectedGateway.toUpperCase());
         }
 
-        if (backingAsset && backingAsset.maxAmount) {
-            maxWithdraw = backingAsset.maxAmount;
-        }
+        const minWithdraw = backingAsset ?
+            WithdrawModalNew.getMinWithdrawalValue(backingAsset) : null;
+        const maxWithdraw = backingAsset ?
+            WithdrawModalNew.getMaxWithdrawalValue(backingAsset) : null;
+
+        const hasMemo = backingAsset && backingAsset.isNewApi ?
+            backingAsset.withdrawal.memo.enabled : true;
 
         balances.forEach(item => {
             let id = item.get("asset_type");
@@ -991,7 +1060,7 @@ class WithdrawModalNew extends React.Component {
                 footer={[
                     <Button
                         key={"submit"}
-                        onClick={this.onSubmit.bind(this)}
+                        onClick={() => this.onSubmit(backingAsset.isNewApi)}
                         disabled={shouldDisable}
                     >
                         {counterpart.translate("modal.withdraw.withdraw")}
@@ -1250,7 +1319,7 @@ class WithdrawModalNew extends React.Component {
                         ) : null}
 
                         {/*MEMO*/}
-                        {isBTS ? (
+                        {isBTS && hasMemo ? (
                             <div>
                                 <label className="left-label">
                                     <Translate content="modal.withdraw.memo" />
@@ -1270,7 +1339,7 @@ class WithdrawModalNew extends React.Component {
                                     <label className="left-label">
                                         <Translate content="transfer.fee" />
                                     </label>
-                                    <AmountSelector 
+                                    <AmountSelector
                                         asset={this.state.fee_asset_id}
                                         assets={fee_asset_types}
                                         amount={this.state.feeAmount.getAmount({ real: true })}

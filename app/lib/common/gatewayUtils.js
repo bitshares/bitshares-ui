@@ -123,6 +123,10 @@ export function updateGatewayBackers(chain = "4018d784") {
                             availableGateways[gateway].baseAPI.BASE +
                             availableGateways[gateway].baseAPI.ACTIVE_WALLETS
                     });
+
+                    if (availableGateways[gateway].id === "OPEN") {
+                        GatewayActions.fetchCoinsNewApi.defer();
+                    }
                 }
             }
         }
