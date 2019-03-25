@@ -148,6 +148,32 @@ class DirectDebitModal extends React.Component {
                     (timeEnd - timeStart) /
                     (operation.payload.withdrawal_period_sec * 1000);
 
+                const periodTypes = [
+                    {seconds: 604800, name: "Week"},
+                    {seconds: 86400, name: "Day"},
+                    {seconds: 3600, name: "Hour"},
+                    {seconds: 60, name: "Minute"}
+                ];
+
+                let periodSecs, periodName, periodAmount;
+
+                for (let i = 0; i < periodTypes.length; i++) {
+                    if (
+                        operation.payload.withdrawal_period_sec >=
+                        periodTypes[i].seconds
+                    ) {
+                        let currentPeriod = periodTypes[i];
+
+                        periodName = currentPeriod.name;
+                        periodSecs = currentPeriod.seconds;
+                        periodAmount = Math.round(
+                            operation.payload.withdrawal_period_sec /
+                                currentPeriod.seconds
+                        );
+                        break;
+                    }
+                }
+
                 this.setState({
                     to_account: toAccount,
                     to_name: toAccount.get("name"),
@@ -159,12 +185,10 @@ class DirectDebitModal extends React.Component {
                     asset_id: operation.payload.withdrawal_limit.asset_id,
                     num_of_periods: numberOfPeriods,
                     period: {
-                        amount: Math.round(
-                            operation.payload.withdrawal_period_sec / 60
-                        ),
+                        amount: periodAmount,
                         type: {
-                            seconds: 60,
-                            name: "Minute"
+                            seconds: periodSecs,
+                            name: periodName
                         }
                     },
                     period_start_time: moment.utc(
