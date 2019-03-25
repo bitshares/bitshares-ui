@@ -2028,12 +2028,38 @@ class Exchange extends React.Component {
          */
         let actionCardIndex = 0;
 
+        const buySellTitle = isBid => {
+            return (
+                <div className="exchange-content-header">
+                    <TranslateWithLinks
+                        string="exchange.buysell_formatter"
+                        noLink
+                        noTip
+                        keys={[
+                            {
+                                type: "asset",
+                                value: this.props.quoteAsset.get("symbol"),
+                                arg: "asset"
+                            },
+                            {
+                                type: "translate",
+                                value: isBid ? "exchange.buy" : "exchange.sell",
+                                arg: "direction"
+                            }
+                        ]}
+                    />
+                </div>
+            );
+        };
+
         let buyForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <Tabs
                 animated={false}
+                tabBarExtraContent={<div>{buySellTitle(true)}</div>}
                 defaultActiveKey={"scaled"}
                 className={cnames(
+                    "exchange--buy-sell-form",
                     verticalOrderForm && !smallScreen
                         ? ""
                         : centerContainerWidth > 1200
@@ -2079,11 +2105,7 @@ class Exchange extends React.Component {
                             paddingRight: mirrorPanels ? 15 : 5
                         }}
                         type="bid"
-                        hideHeader={
-                            tinyScreen || (!smallScreen && verticalOrderForm)
-                                ? true
-                                : false
-                        }
+                        hideHeader={true}
                         expirationType={expirationType["bid"]}
                         expirations={this.EXPIRATIONS}
                         expirationCustomTime={expirationCustomTime["bid"]}
@@ -2185,8 +2207,10 @@ class Exchange extends React.Component {
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <Tabs
                 animated={false}
+                tabBarExtraContent={<div>{buySellTitle(false)}</div>}
                 defaultActiveKey={"scaled"}
                 className={cnames(
+                    "exchange--buy-sell-form",
                     verticalOrderForm && !smallScreen
                         ? ""
                         : centerContainerWidth > 1200
@@ -2234,11 +2258,7 @@ class Exchange extends React.Component {
                             paddingRight: mirrorPanels ? 15 : 5
                         }}
                         type="ask"
-                        hideHeader={
-                            tinyScreen || (!smallScreen && verticalOrderForm)
-                                ? true
-                                : false
-                        }
+                        hideHeader={true}
                         amount={ask.forSaleText}
                         price={ask.priceText}
                         total={ask.toReceiveText}

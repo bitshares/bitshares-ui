@@ -211,6 +211,16 @@ form.order-form {
     }
 }
 
+.exchange--buy-sell-form {
+    // override "Extra" of Ant.Tabs (Buy/Sell Asset) to put it
+    // on left side instead of right
+    .ant-tabs-extra-content {
+        float: left !important;
+        padding: 0 15px;
+        margin-right: 12px;
+    }
+}
+
 #market-charts {
     > div.Stockcharts__wrapper {
         overflow: hidden;
@@ -585,7 +595,6 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 1rem;
     font-weight: 500;
     text-transform: uppercase;
-    padding: 10px 5px 12px 10px;
     overflow: hidden;
 }
 

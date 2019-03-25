@@ -598,30 +598,6 @@ class ScaledOrderForm extends Component {
 
         return (
             <div className="buy-sell-container" style={{padding: "5px"}}>
-                <div className="exchange-content-header exchange-content-header--buy-sell-form">
-                    <span>
-                        <TranslateWithLinks
-                            string="exchange.buysell_formatter"
-                            noLink
-                            noTip
-                            keys={[
-                                {
-                                    type: "asset",
-                                    value: quote.get("symbol"),
-                                    arg: "asset"
-                                },
-                                {
-                                    type: "translate",
-                                    value: isBid
-                                        ? "exchange.buy"
-                                        : "exchange.sell",
-                                    arg: "direction"
-                                }
-                            ]}
-                        />
-                    </span>
-                </div>
-
                 <Form
                     className="order-form"
                     layout="horizontal"
@@ -859,8 +835,6 @@ class ScaledOrderTab extends Component {
             orders,
             ChainStore.getAsset(values.feeCurrency).get("id")
         );
-
-        this.props.hideModal();
     }
 
     handleSubmit() {
