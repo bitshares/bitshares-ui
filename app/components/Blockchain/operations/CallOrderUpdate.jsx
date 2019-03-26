@@ -7,7 +7,7 @@ export const CallOrderUpdate = ({op, changeColor}) => {
     return (
         <span>
             <TranslateWithLinks
-                string="proposal.call_order_update"
+                string="operation.call_order_update"
                 keys={[
                     {
                         type: "account",

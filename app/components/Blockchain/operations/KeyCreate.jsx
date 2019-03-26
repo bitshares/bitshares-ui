@@ -4,7 +4,7 @@ import Translate from "react-translate-component";
 export const KeyCreate = () => {
     return (
         <span>
-            <Translate component="span" content="proposal.create_key" />
+            <Translate component="span" content="transaction.create_key" />
         </span>
     );
 };

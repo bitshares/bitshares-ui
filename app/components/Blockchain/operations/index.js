@@ -58,71 +58,107 @@ export default function opComponents(opType, props, opts) {
             break;
         case "limit_order_create":
             return (
-                <LimitOrderCreate {...props} changeColor={opts.changeColor} />
+                <LimitOrderCreate
+                    {...props}
+                    changeColor={opts.changeColor}
+                    fromComponent={opts.fromComponent}
+                />
             );
             break;
         case "limit_order_cancel":
-            column = (
-                <LimitOrderCancel {...props} changeColor={opts.changeColor} />
+            return (
+                <LimitOrderCancel
+                    {...props}
+                    changeColor={opts.changeColor}
+                    fromComponent={opts.fromComponent}
+                />
             );
             break;
 
         case "short_order_cancel":
-            column = (
+            return (
                 <ShortOrderCancel {...props} changeColor={opts.changeColor} />
             );
             break;
 
         case "call_order_update":
-            column = (
+            return (
                 <CallOrderUpdate {...props} changeColor={opts.changeColor} />
             );
             break;
 
         case "key_create":
-            column = <KeyCreate />;
+            return <KeyCreate />;
             break;
 
         case "account_create":
-            column = (
-                <AccountCreate {...props} linkToAccount={opts.linkToAccount} />
+            return (
+                <AccountCreate
+                    {...props}
+                    linkToAccount={opts.linkToAccount}
+                    fromComponent={opts.fromComponent}
+                />
             );
             break;
 
         case "account_update":
-            column = <AccountUpdate {...props} />;
+            return (
+                <AccountUpdate {...props} fromComponent={opts.fromComponent} />
+            );
             break;
 
         case "account_whitelist":
-            column = <AccountWhitelist {...props} />;
+            return (
+                <AccountWhitelist
+                    {...props}
+                    fromComponent={opts.fromComponent}
+                />
+            );
             break;
 
         case "account_upgrade":
-            column = (
-                <AccountUpgrade {...props} linkToAccount={opts.linkToAccount} />
+            return (
+                <AccountUpgrade
+                    {...props}
+                    linkToAccount={opts.linkToAccount}
+                    fromComponent={opts.fromComponent}
+                />
             );
             break;
 
         case "account_transfer":
-            column = (
+            return (
                 <AccountTransfer
                     {...props}
                     linkToAccount={opts.linkToAccount}
+                    fromComponent={opts.fromComponent}
                 />
             );
             break;
 
         case "asset_create":
-            column = <AssetCreate {...props} changeColor={opts.changeColor} />;
+            return (
+                <AssetCreate
+                    {...props}
+                    changeColor={opts.changeColor}
+                    fromComponent={opts.fromComponent}
+                />
+            );
             break;
 
         case "asset_update":
         case "asset_update_bitasset":
-            column = <AssetUpdate {...props} changeColor={opts.changeColor} />;
+            return (
+                <AssetUpdate
+                    {...props}
+                    changeColor={opts.changeColor}
+                    fromComponent={opts.fromComponent}
+                />
+            );
             break;
 
         case "asset_update_feed_producers":
-            column = (
+            return (
                 <AssetUpdateFeedProducers
                     {...props}
                     changeColor={opts.changeColor}
@@ -131,15 +167,15 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "asset_issue":
-            column = <AssetIssue {...props} changeColor={opts.changeColor} />;
+            return <AssetIssue {...props} changeColor={opts.changeColor} />;
             break;
 
         case "asset_reserve":
-            column = <AssetReserve {...props} />;
+            return <AssetReserve {...props} />;
             break;
 
         case "asset_fund_fee_pool":
-            column = (
+            return (
                 <AssetFundFeePool
                     {...props}
                     changeColor={opts.changeColor}
@@ -149,11 +185,11 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "asset_settle":
-            column = <AssetSettle {...props} changeColor={opts.changeColor} />;
+            return <AssetSettle {...props} changeColor={opts.changeColor} />;
             break;
 
         case "asset_global_settle":
-            column = (
+            return (
                 <AssetGlobalSettle
                     {...props}
                     changeColor={opts.changeColor}
@@ -163,7 +199,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "asset_publish_feed":
-            column = (
+            return (
                 <AssetPublishFeed
                     {...props}
                     changeColor={opts.changeColor}
@@ -173,18 +209,18 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "witness_create":
-            column = (
+            return (
                 <WitnessCreate {...props} linkToAccount={opts.linkToAccount} />
             );
 
             break;
 
         case "witness_update":
-            column = <WitnessUpdate {...props} />;
+            return <WitnessUpdate {...props} />;
             break;
 
         case "witness_withdraw_pay":
-            column = (
+            return (
                 <WitnessWithdrawPay
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -193,19 +229,21 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "proposal_create":
-            column = <ProposalCreate />;
+            return (
+                <ProposalCreate {...props} fromComponent={opts.fromComponent} />
+            );
             break;
 
         case "proposal_update":
-            column = <ProposalUpdate />;
+            return <ProposalUpdate />;
             break;
 
         case "proposal_delete":
-            column = <ProposalDelete />;
+            return <ProposalDelete />;
             break;
 
         case "withdraw_permission_create":
-            column = (
+            return (
                 <WithdrawPermissionCreate
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -214,7 +252,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "withdraw_permission_update":
-            column = (
+            return (
                 <WithdrawPermissionUpdate
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -223,7 +261,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "withdraw_permission_claim":
-            column = (
+            return (
                 <WithdrawPermissionClaim
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -232,11 +270,11 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "withdraw_permission_delete":
-            column = <WithdrawPermissionDelete />;
+            return <WithdrawPermissionDelete />;
             break;
 
         case "fill_order":
-            column = (
+            return (
                 <FillOrder
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -246,15 +284,15 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "global_parameters_update":
-            column = <GlobalParametersUpdate />;
+            return <GlobalParametersUpdate />;
             break;
 
         case "file_write":
-            column = <FileWrite />;
+            return <FileWrite />;
             break;
 
         case "vesting_balance_create":
-            column = (
+            return (
                 <VestingBalanceCreate
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -263,19 +301,19 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "vesting_balance_withdraw":
-            column = <VestingBalanceWithdraw {...props} />;
+            return <VestingBalanceWithdraw {...props} />;
             break;
 
         case "bond_create_offer":
-            column = <BondCreateOffer {...props} />;
+            return <BondCreateOffer {...props} />;
             break;
 
         case "bond_cancel_offer":
-            column = <BondCancelOffer {...props} />;
+            return <BondCancelOffer {...props} />;
             break;
 
         case "bond_accept_offer":
-            column = (
+            return (
                 <BondAcceptOffer
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -284,7 +322,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "bond_claim_collateral":
-            column = (
+            return (
                 <BondClaimCollaterial
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -293,11 +331,11 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "worker_create":
-            column = <WorkerCreate {...props} />;
+            return <WorkerCreate {...props} />;
             break;
 
         case "balance_claim":
-            column = (
+            return (
                 <BalanceClaim
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -307,7 +345,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "committee_member_create":
-            column = (
+            return (
                 <CommittyMemberCreate
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -316,7 +354,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "transfer_to_blind":
-            column = (
+            return (
                 <TransferToBlind
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -325,7 +363,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "transfer_from_blind":
-            column = (
+            return (
                 <TransferFromBlind
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -334,7 +372,7 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "asset_claim_fees":
-            column = (
+            return (
                 <AssetClaimFees
                     {...props}
                     linkToAccount={opts.linkToAccount}
@@ -344,15 +382,15 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "committee_member_update_global_parameters":
-            column = <CommitteeMemberUpdateGlobalParams />;
+            return <CommitteeMemberUpdateGlobalParams />;
             break;
 
         case "custom":
-            column = <Custom />;
+            return <Custom />;
             break;
 
         case "override_transfer":
-            column = <OverrideTransfer {...props} />;
+            return <OverrideTransfer {...props} />;
             break;
 
         default:

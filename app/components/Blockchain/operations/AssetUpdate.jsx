@@ -1,12 +1,16 @@
 import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 
-export const AssetUpdate = ({op, changeColor}) => {
+export const AssetUpdate = ({op, changeColor, fromComponent}) => {
     changeColor("warning");
 
     return (
         <TranslateWithLinks
-            string="proposal.asset_update"
+            string={
+                fromComponent === "proposed_operation"
+                    ? "proposal.asset_update"
+                    : "operation.asset_update"
+            }
             keys={[
                 {
                     type: "account",

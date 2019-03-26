@@ -3,7 +3,7 @@ import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 import MemoText from "../MemoText";
 
 export const Transfer = ({op, proposer, index, changeColor}) => {
-    changeColor("success"); // color of label
+    changeColor("success"); // color of a label
     let memoComponent = null;
 
     if (op[1].memo) {
@@ -31,7 +31,7 @@ export const Transfer = ({op, proposer, index, changeColor}) => {
                 ) : null}
                 <div>
                     <TranslateWithLinks
-                        string="proposal.transfer"
+                        string="operation.transfer"
                         keys={[
                             {
                                 type: "account",

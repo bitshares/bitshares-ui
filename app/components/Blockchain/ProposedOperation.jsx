@@ -138,6 +138,7 @@ class ProposedOperation extends React.Component {
         let line = null,
             column = null;
         column = opComponents(ops[op[0]], this.props, {
+            fromComponent: "proposed_operation",
             linkToAccount: this.linkToAccount,
             linkToAsset: this.linkToAsset,
             changeColor: this.changeColor
