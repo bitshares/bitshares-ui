@@ -3,7 +3,7 @@ import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 import MemoText from "../MemoText";
 
 export const Transfer = ({op, proposer, index, changeColor}) => {
-    changeColor("success");
+    changeColor("success"); // color of label
     let memoComponent = null;
 
     if (op[1].memo) {

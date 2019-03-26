@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import FormattedPrice from "../../Utility/FormattedPrice";
 
-export const AssetGlobalSettle = ({op, changeColor}) => {
+export const AssetGlobalSettle = ({op, changeColor, linkToAsset}) => {
     changeColor("warning");
 
     return (
@@ -12,7 +12,7 @@ export const AssetGlobalSettle = ({op, changeColor}) => {
                 content="proposal.asset_global_settle"
             />
             &nbsp;
-            {this.linkToAsset(op[1].asset_to_settle)}
+            {linkToAsset(op[1].asset_to_settle)}
             &nbsp;
             <Translate component="span" content="proposal.at" />
             &nbsp;

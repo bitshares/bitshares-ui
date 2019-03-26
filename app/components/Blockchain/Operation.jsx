@@ -22,6 +22,7 @@ import PropTypes from "prop-types";
 import {Tooltip} from "bitshares-ui-style-guide";
 
 const {operations} = grapheneChainTypes;
+import opComponents from "./operations";
 require("./operations.scss");
 
 let ops = Object.keys(operations);
@@ -71,10 +72,12 @@ class Row extends React.Component {
         let last_irreversible_block_num = dynGlobalObject.get(
             "last_irreversible_block_num"
         );
-        if (nextProps.dynGlobalObject === this.props.dynGlobalObject) {
-            return false;
-        }
-        return block > last_irreversible_block_num;
+
+        return (
+            nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
+            block > last_irreversible_block_num ||
+            this.props.color !== nextProps.color
+        );
     }
 
     render() {
@@ -169,9 +172,14 @@ class Row extends React.Component {
         );
     }
 }
+
 Row = BindToChainState(Row);
 
 class Operation extends React.Component {
+    state = {
+        labelColor: "info"
+    };
+
     static defaultProps = {
         op: [],
         current: "",
@@ -211,15 +219,23 @@ class Operation extends React.Component {
         );
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.op || !nextProps.op) {
             return false;
         }
         return (
             !utils.are_equal_shallow(nextProps.op[1], this.props.op[1]) ||
-            nextProps.marketDirections !== this.props.marketDirections
+            nextProps.marketDirections !== this.props.marketDirections ||
+            this.state.labelColor !== nextState.labelColor
         );
     }
+
+    changeColor = newColor => {
+        const {labelColor} = this.state;
+        if (labelColor !== newColor) {
+            this.setState({labelColor: newColor});
+        }
+    };
 
     render() {
         let {op, current, block} = this.props;
@@ -228,11 +244,12 @@ class Operation extends React.Component {
             color = "info";
         let memoComponent = null;
 
+        console.log("Operation component", ops[op[0]]);
         switch (
             ops[op[0]] // For a list of trx types, see chain_types.coffee
         ) {
             case "transfer":
-                if (op[1].memo) {
+                /* if (op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />;
                 }
 
@@ -252,18 +269,21 @@ class Operation extends React.Component {
                                 {
                                     type: "amount",
                                     value: op[1].amount,
-                                    arg: "amount",
-                                    decimalOffset:
-                                        op[1].amount.asset_id === "1.3.0"
-                                            ? 5
-                                            : null
+                                    arg: "amount"
+                                    // decimalOffset:
+                                    //     op[1].amount.asset_id === "1.3.0"
+                                    //         ? 5
+                                    //         : null
                                 },
                                 {type: "account", value: op[1].to, arg: "to"}
                             ]}
                         />
                         {memoComponent}
                     </span>
-                );
+                ); */
+                column = opComponents("transfer", this.props, {
+                    changeColor: this.changeColor
+                });
 
                 break;
 
@@ -1560,7 +1580,7 @@ class Operation extends React.Component {
                 includeOperationId={this.props.includeOperationId}
                 block={block}
                 type={op[0]}
-                color={color}
+                color={this.state.labelColor}
                 fee={op[1].fee}
                 hideOpLabel={this.props.hideOpLabel}
                 hideDate={this.props.hideDate}
