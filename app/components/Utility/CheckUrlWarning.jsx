@@ -1,8 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
 
-let secureLoginAddressPng = require("assets/other/secure-login-address.png");
-
 class CheckUrlWarning extends React.Component {
     render() {
         if (__ELECTRON__) {
@@ -23,7 +21,10 @@ class CheckUrlWarning extends React.Component {
                         component="span"
                     />
                 </p>
-                <img src={secureLoginAddressPng} alt="" />
+                <img
+                    src={`${__BASE_URL__}img/secure-login-address.png`}
+                    alt=""
+                />
             </div>
         );
     }

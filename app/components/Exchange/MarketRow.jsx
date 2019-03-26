@@ -15,7 +15,8 @@ let statsInterval = {};
 
 class MarketRow extends React.Component {
     static defaultProps = {
-        noSymbols: false
+        noSymbols: false,
+        quoteInfo: {}
     };
 
     constructor(props) {
@@ -74,7 +75,8 @@ class MarketRow extends React.Component {
     }
 
     render() {
-        let {quote, base, noSymbols, stats, starred} = this.props;
+        let {quote, base, noSymbols, stats, starred, quoteInfo} = this.props;
+
         if (!quote || !base) {
             return null;
         }
@@ -184,6 +186,7 @@ class MarketRow extends React.Component {
                             <td
                                 onClick={this._onClick.bind(this, marketID)}
                                 key={column.index}
+                                className={"marketName"}
                             >
                                 {this.props.name}
                             </td>
@@ -341,6 +344,38 @@ class MarketRow extends React.Component {
                             </td>
                         );
 
+                    case "benchmark":
+                        let benchmarkInfo = null;
+
+                        if (quoteInfo && quoteInfo.scoring) {
+                            const dataTip = `
+                                <span>This project has been benchmarked having met quality criteria common to a partnership between Digital Asset Resource Center (DARC) and CryptoBridge.</span>
+                            `;
+
+                            benchmarkInfo = (
+                                <span
+                                    data-tip={dataTip}
+                                    data-html={true}
+                                    data-place={"left"}
+                                >
+                                    <img
+                                        src={`${__BASE_URL__}img/benchmark.png`}
+                                        alt={""}
+                                        style={{width: 20, height: 20}}
+                                    />
+                                </span>
+                            );
+                        }
+
+                        return (
+                            <td
+                                key={column.index}
+                                className={"benchmarkInfo benchmarkItem"}
+                            >
+                                {benchmarkInfo}
+                            </td>
+                        );
+
                     default:
                         break;
                 }
@@ -352,6 +387,10 @@ class MarketRow extends React.Component {
         let className = "clickable";
         if (this.props.current) {
             className += " activeMarket";
+        }
+
+        if (quoteInfo && quoteInfo.scoring) {
+            className += " benchmarkMarketRow";
         }
 
         return (

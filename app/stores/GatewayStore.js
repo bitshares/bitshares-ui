@@ -10,8 +10,9 @@ class GatewayStore {
     constructor() {
         this.backedCoins = Immutable.Map(ss.get("backedCoins", {}));
         this.bridgeCoins = Immutable.Map(
-            Immutable.fromJS(ss.get("bridgeCoins", {}))
+            Immutable.fromJS(ss.get("bridgeCoins", []))
         );
+        this.benchmarkCoins = [];
         /**
          * bridgeInputs limits the available depositable coins through blocktrades
          * when using the "Buy" functionaility.
@@ -41,6 +42,10 @@ class GatewayStore {
     }
 
     onFetchCoins({backer, coins, backedCoins, down} = {}) {
+        if (coins) {
+            this.benchmarkCoins = coins.filter(coin => coin.scoring);
+        }
+
         if (backer && coins) {
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
 

@@ -104,7 +104,9 @@ class BuySell extends React.Component {
                 ) {
                     this.props.onSubmit.call(this, short, e);
                 } else {
-                    ZfApi.publish("tos_modal", "open");
+                    if (CryptoBridgeStore.getAccount(currentAccount)) {
+                        ZfApi.publish("tos_modal", "open");
+                    }
                 }
             }, wasLocked ? 2000 : 0);
         });

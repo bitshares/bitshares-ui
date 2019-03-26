@@ -30,7 +30,7 @@ import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import {ChainUtilities} from "chain/chainIds";
 
-var logo = require("assets/logo-cryptobridge.png");
+let logo = require("assets/logo-cryptobridge.png");
 
 // const FlagImage = ({flag, width = 20, height = 20}) => {
 //     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
@@ -1113,6 +1113,39 @@ class Header extends React.Component {
                                     </a>
                                 </li>
                             )}
+                            <li className="benchmarkItem">
+                                <a
+                                    style={{flexFlow: "row"}}
+                                    className={cnames(
+                                        active.indexOf("benchmark/") !== -1
+                                            ? null
+                                            : "column-hide-xxs",
+                                        {
+                                            active:
+                                                active.indexOf("benchmark/") !==
+                                                -1
+                                        }
+                                    )}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/benchmark"
+                                    )}
+                                >
+                                    <span
+                                        className={"icon icon-1_5x"}
+                                        style={{
+                                            position: "relative",
+                                            top: "-5px",
+                                            left: "-8px"
+                                        }}
+                                    >
+                                        <img
+                                            src={`${__BASE_URL__}img/benchmark.png`}
+                                        />
+                                    </span>
+                                    <span>Benchmark</span>
+                                </a>
+                            </li>
                             {/* Dynamic Menu Item */}
                             <li>{dynamicMenuItem}</li>
                         </ul>

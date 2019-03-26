@@ -96,12 +96,15 @@ class ExchangeContainer extends React.Component {
                     },
                     backedCoins: () => {
                         return GatewayStore.getState().backedCoins.get(
-                            "OPEN",
+                            "BRIDGE",
                             []
                         );
                     },
                     bridgeCoins: () => {
                         return GatewayStore.getState().bridgeCoins;
+                    },
+                    benchmarkCoins: () => {
+                        return GatewayStore.getState().benchmarkCoins;
                     },
                     miniDepthChart: () => {
                         return SettingsStore.getState().viewSettings.get(

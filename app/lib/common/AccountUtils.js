@@ -31,8 +31,10 @@ export const getRequestAccessOptions = access => {
     };
 };
 
-export const getRequestLoginOptions = account => {
-    const username = account.get("name");
+export const getAuthKey = account => {
+    if (!account || WalletDb.isLocked()) {
+        return null;
+    }
 
     const memoPublicKeyStr = account.getIn(["options", "memo_key"]);
     const memoPrivateKey = WalletDb.getPrivateKey(memoPublicKeyStr);
@@ -57,10 +59,21 @@ export const getRequestLoginOptions = account => {
         return null;
     }
 
+    return key;
+};
+
+export const getRequestLoginOptions = account => {
+    const key = getAuthKey(account);
+
+    if (!key) {
+        return null;
+    }
+
     const recipientPublicKey = PublicKey.fromPublicKeyString(
         __CRYPTOBRIDGE_PUB_KEY__
     );
 
+    const username = account.get("name");
     const nonce = 1;
     const password = signMemoWithKeys(
         key,

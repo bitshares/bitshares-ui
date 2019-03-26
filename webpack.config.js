@@ -242,7 +242,8 @@ module.exports = function(env) {
             filename: env.prod ? "[name].[chunkhash].js" : "[name].js",
             chunkFilename: env.prod ? "[name].[chunkhash].js" : "[name].js",
             pathinfo: !env.prod,
-            sourceMapFilename: "[name].js.map"
+            sourceMapFilename: "[name].js.map",
+            globalObject: "this"
         },
         optimization: {
             splitChunks: {
@@ -333,7 +334,8 @@ module.exports = function(env) {
                         path.resolve(
                             root_dir,
                             "app/assets/language-dropdown/img"
-                        )
+                        ),
+                        path.resolve(root_dir, "app/assets/other")
                     ],
                     use: [
                         {

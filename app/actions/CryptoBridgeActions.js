@@ -44,15 +44,25 @@ class CryptoBridgeActions {
             return Promise.reject("No user key available");
         }
 
-        return fetch(API_LOGIN_URL, options).then(response => {
-            const access = response.json();
+        return fetch(API_LOGIN_URL, options)
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else if (response.status === 403) {
+                    return response.json().then(body => {
+                        return Promise.reject(body.message);
+                    });
+                }
 
-            if (access) {
-                accessData[account.get("name")] = access;
-            }
+                return Promise.reject("Auth error");
+            })
+            .then(access => {
+                if (access) {
+                    accessData[account.get("name")] = access;
+                }
 
-            return access;
-        });
+                return access;
+            });
     }
 
     updateAccount(account, data) {

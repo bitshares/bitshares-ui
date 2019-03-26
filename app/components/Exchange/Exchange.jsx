@@ -1566,6 +1566,11 @@ class Exchange extends React.Component {
                 <ExchangeHeader
                     account={this.props.currentAccount}
                     quoteAsset={quoteAsset}
+                    quoteAssetInfo={this.props.backedCoins.find(
+                        coin =>
+                            quoteAsset &&
+                            coin.symbol === quoteAsset.get("symbol")
+                    )}
                     baseAsset={baseAsset}
                     hasPrediction={hasPrediction}
                     starredMarkets={starredMarkets}
@@ -1831,9 +1836,10 @@ class Exchange extends React.Component {
                                 columns={[
                                     {name: "star", index: 1},
                                     {name: "market", index: 2},
-                                    {name: "vol", index: 3},
-                                    {name: "price", index: 4},
-                                    {name: "change", index: 5}
+                                    {name: "benchmark", index: 3},
+                                    {name: "vol", index: 4},
+                                    {name: "price", index: 5},
+                                    {name: "change", index: 6}
                                 ]}
                                 findColumns={[
                                     {name: "market", index: 1},
@@ -1844,6 +1850,13 @@ class Exchange extends React.Component {
                                 current={`${quoteSymbol}_${baseSymbol}`}
                                 location={this.props.location}
                                 history={this.props.history}
+                                backedCoinsInfo={this.props.backedCoins.reduce(
+                                    (coins, coin) => {
+                                        coins[coin.symbol] = coin;
+                                        return coins;
+                                    },
+                                    {}
+                                )}
                             />
                         </div>
                         <div
