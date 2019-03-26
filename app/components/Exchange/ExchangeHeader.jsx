@@ -199,7 +199,10 @@ export default class ExchangeHeader extends React.Component {
             !!this.state.selectedMarketPickerAsset &&
             this.state.selectedMarketPickerAsset == baseSymbol;
 
-        const benchmarkScoring = quoteAssetInfo.scoring || {};
+        const benchmarkScoring =
+            quoteAssetInfo && quoteAssetInfo.scoring
+                ? quoteAssetInfo.scoring
+                : {};
 
         const benchmarkScore = benchmarkScoring.score;
         const benchmarkUrl = benchmarkScoring.url;

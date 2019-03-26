@@ -239,9 +239,7 @@ class MarketGroup extends React.Component {
                             key={header.name}
                             style={{textAlign: "right"}}
                             className={"benchmarkItem"}
-                        >
-                            BENCHMARK
-                        </th>
+                        />
                     );
 
                 default:
