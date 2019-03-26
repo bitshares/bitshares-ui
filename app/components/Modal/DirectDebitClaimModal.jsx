@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
@@ -16,6 +16,7 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import {Modal, Button, Tooltip, Icon} from "bitshares-ui-style-guide";
 import moment from "moment";
+import ApplicationApi from "../../api/ApplicationApi";
 
 class DirectDebitClaimModal extends React.Component {
     constructor(props) {
@@ -62,16 +63,25 @@ class DirectDebitClaimModal extends React.Component {
             asset_id,
             memo
         } = this.state;
-        const data = {
-            fee: feeAsset ? feeAsset.get("id") : "1.3.0",
-            withdraw_permission: permissionId,
-            withdraw_from_account: to_account,
-            withdraw_to_account: from_account,
+        ApplicationApi.claimWithdrawPermission(
+            permissionId,
+            from_account,
+            to_account,
             asset_id,
             amount,
-            memo: memo ? new Buffer(memo, "utf-8") : memo
-        };
-        console.log("submitting", data);
+            memo ? new Buffer(memo, "utf-8") : memo,
+            feeAsset ? feeAsset.get("id") : "1.3.0"
+        )
+            .then(result => {
+                console.log(
+                    "finish up handling successfull broadcasting",
+                    result
+                );
+                this.props.hideModal();
+            })
+            .catch(err => {
+                console.log("visualize error somehow");
+            });
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -99,13 +109,19 @@ class DirectDebitClaimModal extends React.Component {
                 currentPeriodExpires = timeStart + periodMs * currentPeriodNum;
             }
 
+            const to = ChainStore.getAccount(
+                operation.payload.authorized_account,
+                false
+            );
+            const from = ChainStore.getAccount(
+                operation.payload.withdraw_from_account,
+                false
+            );
+
             this.setState(
                 {
-                    from_account: ChainStore.getAccount(
-                        this.props.currentAccount
-                    ),
-                    to_account: operation.payload.withdrawFromAccount,
-                    to_name: operation.payload.withdrawFromAccount.get("name"),
+                    to_account: to,
+                    from_account: from,
                     permissionId: operation.payload.id,
                     withdrawal_limit: operation.payload.withdrawal_limit,
                     current_period_expires_date: currentPeriodExpires
@@ -333,7 +349,6 @@ class DirectDebitClaimModal extends React.Component {
             feeAmount,
             amount,
             error,
-            to_name,
             memo,
             feeAsset,
             fee_asset_id,
@@ -484,8 +499,8 @@ class DirectDebitClaimModal extends React.Component {
                             <div className="content-block">
                                 <AccountSelector
                                     label="showcases.direct_debit.authorizing_account"
-                                    accountName={to_name}
-                                    account={to_account}
+                                    accountName={from_account}
+                                    account={from_account}
                                     size={60}
                                     hideImage
                                     disabled

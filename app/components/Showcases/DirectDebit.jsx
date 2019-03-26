@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import {Apis} from "bitsharesjs-ws";
-import {FetchChain} from "bitsharesjs";
-import Translate from "react-translate-component";
 import {
     Input,
     Card,
@@ -13,27 +11,15 @@ import {
     Icon,
     Table
 } from "bitshares-ui-style-guide";
-import AccountSelector from "../Account/AccountSelector";
 import counterpart from "counterpart";
 import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs";
-import AmountSelector from "../Utility/AmountSelector";
-import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
-import {
-    checkFeeStatusAsync,
-    checkBalance,
-    shouldPayFeeWithAssetAsync,
-    estimateFeeAsync
-} from "common/trxHelper";
-import AccountActions from "actions/AccountActions";
-import ApplicationApi from "../../api/ApplicationApi";
 import DirectDebitModal from "../Modal/DirectDebitModal";
 import DirectDebitClaimModal from "../Modal/DirectDebitClaimModal";
 import debounceRender from "react-debounce-render";
 import {connect} from "alt-react";
-import ChainTypes from "../Utility/ChainTypes";
-import PropTypes from "prop-types";
+import LinkToAssetById from "../Utility/LinkToAssetById";
 
 class DirectDebit extends Component {
     constructor() {
@@ -86,19 +72,6 @@ class DirectDebit extends Component {
                     100
                 ])
         ]).then(results => {
-            // [{
-            //     authorized_account: "1.2.894879",
-            //     claimed_this_period: 0,
-            //     expiration: "2019-03-30T10:57:53",
-            //     id: "1.12.63",
-            //     period_start_time: "2019-03-16T10:57:53",
-            //     withdraw_from_account: "1.2.886902",
-            //     withdrawal_limit: {
-            //         amount: 1,
-            //         asset_id: "1.3.0"
-            //     },
-            //     withdrawal_period_sec: 604800
-            // }];
             let withdraw_permission_list = [];
             withdraw_permission_list = withdraw_permission_list.concat(
                 results[0]
@@ -167,65 +140,98 @@ class DirectDebit extends Component {
 
         // let smallScreen = window.innerWidth < 850 ? true : false;
 
-        let dataSource = withdraw_permission_list.length
-            ? withdraw_permission_list
-                  .map(item => {
-                      const assetSymbol = ChainStore.getAsset(
-                          item.withdrawal_limit.asset_id
-                      ).get("symbol");
-                      const authorizedAccountName = ChainStore.getAccountName(
-                          item.authorized_account
-                      );
-                      const withdrawFromAccount = ChainStore.getAccount(
-                          item.withdraw_from_account
-                      );
-                      return {
-                          key: item.id,
-                          id: item.id,
-                          type:
-                              item.authorized_account ==
-                              currentAccount.get("id")
-                                  ? "payee"
-                                  : "payer",
-                          authorized: authorizedAccountName,
-                          limit:
-                              item.withdrawal_limit.amount + " " + assetSymbol,
-                          until: counterpart.localize(
-                              new Date(item.expiration + "Z"),
-                              {
-                                  type: "date",
-                                  format: "full"
-                              }
-                          ),
-                          available:
-                              item.withdrawal_limit.amount -
-                              item.claimed_this_period +
-                              " " +
-                              assetSymbol,
-                          rawData: {
-                              ...item,
-                              authorizedAccountName,
-                              withdrawFromAccount
-                          }
-                      };
-                  })
-                  .filter(item => {
-                      return (
-                          item.authorized &&
-                          item.authorized.indexOf(this.state.filterString) !==
-                              -1
-                      );
-                  })
-            : null;
-        /* dataSource.push({
-            key: "1",
-            id: 1,
-            type: "receiver",
-            authorized: "twat124",
-            limit: "1000TEST",
-            until: JSON.stringify(new Date()),
-            available: "10000TEST"
-        }); */
+        let dataSource = null;
+        if (withdraw_permission_list.length) {
+            dataSource = withdraw_permission_list
+                .map(item => {
+                    const asset = ChainStore.getObject(
+                        item.withdrawal_limit.asset_id,
+                        false
+                    );
+                    try {
+                        // to trigger caching for modal
+                        ChainStore.getAccount(item.authorized_account, false);
+                        ChainStore.getAccount(
+                            item.withdraw_from_account,
+                            false
+                        );
+                    } catch (err) {}
+                    const authorizedAccountName = ChainStore.getAccountName(
+                        item.authorized_account
+                    );
+                    const withdrawFromAccountName = ChainStore.getAccountName(
+                        item.withdraw_from_account
+                    );
+                    let period_start = new Date(item.period_start_time + "Z");
+                    let now = new Date();
+                    let full_intervals = Math.floor(
+                        (now.getTime() - period_start.getTime()) /
+                            1000 /
+                            item.withdrawal_period_sec
+                    );
+                    // set period_start to current period end
+                    period_start.setSeconds(
+                        period_start.getSeconds() +
+                            (full_intervals + 1) * item.withdrawal_period_sec
+                    );
+                    return {
+                        key: item.id,
+                        id: item.id,
+                        type:
+                            item.authorized_account == currentAccount.get("id")
+                                ? "payee"
+                                : "payer",
+                        authorized: authorizedAccountName,
+                        from: withdrawFromAccountName,
+                        to: authorizedAccountName,
+                        limit: (
+                            <span>
+                                {utils.get_asset_amount(
+                                    item.withdrawal_limit.amount,
+                                    asset
+                                ) + " "}
+                                <LinkToAssetById
+                                    asset={item.withdrawal_limit.asset_id}
+                                />
+                            </span>
+                        ),
+                        until: counterpart.localize(period_start, {
+                            type: "date",
+                            format: "full"
+                        }),
+                        expires: counterpart.localize(
+                            new Date(item.expiration + "Z"),
+                            {
+                                type: "date",
+                                format: "full"
+                            }
+                        ),
+                        claimed:
+                            item.claimed_this_period == 0 ? (
+                                "-"
+                            ) : (
+                                <span>
+                                    {utils.get_asset_amount(
+                                        item.claimed_this_period,
+                                        asset
+                                    ) + " "}
+                                    <LinkToAssetById
+                                        asset={item.withdrawal_limit.asset_id}
+                                    />
+                                </span>
+                            ),
+                        rawData: {
+                            ...item
+                        }
+                    };
+                })
+                .filter(item => {
+                    return (
+                        item.authorized &&
+                        item.authorized.indexOf(this.state.filterString) !== -1
+                    );
+                });
+        }
 
         const columns = [
             {
@@ -237,23 +243,29 @@ class DirectDebit extends Component {
                 }
             },
             {
-                title: "Type",
-                dataIndex: "type",
-                key: "type",
+                title: "From",
+                dataIndex: "from",
+                key: "from",
                 sorter: (a, b) => {
-                    return a.type > b.type ? 1 : a.type < b.type ? -1 : 0;
+                    return a.from > b.from ? 1 : a.from < b.from ? -1 : 0;
                 }
             },
             {
-                title: "Authorized",
-                dataIndex: "authorized",
-                key: "authorized",
+                title: "To",
+                dataIndex: "to",
+                key: "to",
                 sorter: (a, b) => {
-                    return a.authorized > b.authorized
-                        ? 1
-                        : a.authorized < b.authorized
-                            ? -1
-                            : 0;
+                    return a.to > b.to ? 1 : a.to < b.to ? -1 : 0;
+                }
+            },
+            {
+                title: counterpart.translate(
+                    "showcases.direct_debit.current_period_expires"
+                ),
+                dataIndex: "until",
+                key: "until",
+                sorter: (a, b) => {
+                    return a.until > b.until ? 1 : a.until < b.until ? -1 : 0;
                 }
             },
             {
@@ -268,25 +280,25 @@ class DirectDebit extends Component {
                 }
             },
             {
-                title: "Until",
-                dataIndex: "until",
-                key: "until",
+                title: "Claimed",
+                dataIndex: "claimed",
+                key: "claimed",
                 sorter: (a, b) => {
-                    return a.until > b.until ? 1 : a.until < b.until ? -1 : 0;
+                    const available1 = a.rawData.claimed_this_period;
+                    const available2 = a.rawData.claimed_this_period;
+                    return available2 - available1;
                 }
             },
             {
-                title: "Available",
-                dataIndex: "available",
-                key: "available",
+                title: counterpart.translate("showcases.direct_debit.expires"),
+                dataIndex: "expires",
+                key: "expires",
                 sorter: (a, b) => {
-                    const available1 =
-                        a.rawData.withdrawal_limit.amount -
-                        a.rawData.claimed_this_period;
-                    const available2 =
-                        b.rawData.withdrawal_limit.amount -
-                        a.rawData.claimed_this_period;
-                    return available2 - available1;
+                    return a.expires > b.expires
+                        ? 1
+                        : a.expires < b.expires
+                            ? -1
+                            : 0;
                 }
             },
             {

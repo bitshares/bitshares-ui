@@ -90,6 +90,7 @@ class DirectDebitModal extends React.Component {
                         "finish up handling successfull broadcasting",
                         result
                     );
+                    this.props.hideModal();
                 })
                 .catch(err => {
                     console.log("visualize error somehow");
@@ -633,9 +634,12 @@ class DirectDebitModal extends React.Component {
                                 entries={["Minute", "Hour", "Day", "Week"]}
                                 values={{
                                     Minute: {seconds: 60, name: "Minute"},
-                                    Hour: {seconds: 3600, name: "Hour"},
-                                    Day: {seconds: 86400, name: "Day"},
-                                    Week: {seconds: 604800, name: "Week"}
+                                    Hour: {seconds: 60 * 60, name: "Hour"},
+                                    Day: {seconds: 60 * 60 * 24, name: "Day"},
+                                    Week: {
+                                        seconds: 60 * 60 * 24 * 7,
+                                        name: "Week"
+                                    }
                                 }}
                                 periodType={period.type}
                                 onChange={this.onPeriodChanged}

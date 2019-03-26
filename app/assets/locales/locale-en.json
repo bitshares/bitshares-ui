@@ -1869,10 +1869,11 @@
             "title_long": "Create a Collateralized Debt Position"
         },
         "direct_debit": {
-            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "description": "Setup a direct debit authorization for recurring payments. The authorization allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
             "title": "Direct debit",
             "create": "Create",
             "update": "Update",
+            "expires": "Expires",
             "claim": "Claim",
             "authorized_account": "Payee",
             "authorizing_account": "Payer",
@@ -1880,12 +1881,12 @@
             "period": "Specify period",
             "num_of_periods": "Number of periods",
             "start_date": "First period starts on",
-            "create_new_mandate": "Create new mandate",
-            "update_mandate": "Update existing mandate",
+            "create_new_mandate": "Create authorization",
+            "update_mandate": "Update existing authorization",
             "claim_funds": "Claim funds",
-            "amount_to_withdraw": "Amount to withdraw",
-            "current_period_expires": "Current period expires on",
-            "first_period_not_started": "First period is not started!",
+            "amount_to_withdraw": "Amount to collect",
+            "current_period_expires": "Current period ends",
+            "first_period_not_started": "First period has not started!",
             "limit": "limit"
         },
         "paper_wallet": {

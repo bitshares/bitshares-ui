@@ -554,6 +554,71 @@ const ApplicationApi = {
         if (!transactionBuilder.tr_buffer) {
             throw "Something went finalization the transaction, this should not happen";
         }
+    },
+
+    /**
+     * Claim from a withdrawal permission
+     *
+     * @async
+     *
+     * @param withdrawPermissionId - id of the permission
+     * @param from - account granting the permission, can be id, name or account object
+     * @param to - account claiming from the permission, can be id, name or account object
+     * @param claimAsset - id of asset to claim, id or symbol
+     * @param claimAssetAmount - int in satoshis, max amount to claim per period
+     * @param memo - optional memo
+     * @param feeAsset - what asset to use for paying the fee, id or symbol
+     * @returns {Promise<any>}
+     */
+    async claimWithdrawPermission(
+        withdrawPermissionId,
+        from,
+        to,
+        claimAsset,
+        claimAssetAmount,
+        memo = null,
+        feeAsset = "1.3.0",
+        broadcast = true
+    ) {
+        // account must be unlocked
+        await WalletUnlockActions.unlock();
+
+        // ensure all arguments are chain objects
+        let objects = {
+            from: await this._ensureAccount(from),
+            to: await this._ensureAccount(to),
+            claimAsset: await this._ensureAsset(claimAsset),
+            feeAsset: await this._ensureAsset(feeAsset)
+        };
+
+        let transactionBuilder = new TransactionBuilder();
+        let op = transactionBuilder.get_type_operation(
+            "withdraw_permission_claim",
+            {
+                fee: {
+                    amount: 0,
+                    asset_id: objects.feeAsset.get("id")
+                },
+                withdraw_permission: withdrawPermissionId,
+                withdraw_from_account: objects.from.get("id"),
+                withdraw_to_account: objects.to.get("id"),
+                amount_to_withdraw: {
+                    amount: claimAssetAmount,
+                    asset_id: objects.claimAsset.get("id")
+                },
+                memo: undefined
+            }
+        );
+
+        transactionBuilder.add_operation(op);
+        await WalletDb.process_transaction(
+            transactionBuilder,
+            ["BTS6gigTP5jtt7ace3agYBbL8gm8pCzMYGYEi9DtmUJMQ5DiFZj16"],
+            broadcast
+        );
+        if (!transactionBuilder.tr_buffer) {
+            throw "Something went finalization the transaction, this should not happen";
+        }
     }
 };
 
