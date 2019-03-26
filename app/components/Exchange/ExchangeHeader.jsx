@@ -207,7 +207,7 @@ export default class ExchangeHeader extends React.Component {
         const benchmarkScore = benchmarkScoring.score;
         const benchmarkUrl = benchmarkScoring.url;
         const benchmarkInfo =
-            'This project has been selected for "benchmark" status awarded to assets who meet quality criteria common to a partnership between CryptoBridge and the DARC (Digital Asset Resource Center).';
+            "This project has been benchmarked having met quality criteria common to a partnership between Digital Asset Resource Center (DARC) and CryptoBridge.";
 
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
@@ -489,7 +489,6 @@ export default class ExchangeHeader extends React.Component {
                                                             benchmarkScore.community
                                                         }
                                                     </td>
-                                                    <td>/5</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Decentralized:</th>
@@ -498,7 +497,6 @@ export default class ExchangeHeader extends React.Component {
                                                             benchmarkScore.decentralized
                                                         }
                                                     </td>
-                                                    <td>/5</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Execution:</th>
@@ -507,7 +505,6 @@ export default class ExchangeHeader extends React.Component {
                                                             benchmarkScore.execution
                                                         }
                                                     </td>
-                                                    <td>/5</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -520,7 +517,6 @@ export default class ExchangeHeader extends React.Component {
                                                             benchmarkScore.governance
                                                         }
                                                     </td>
-                                                    <td>/5</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Technology:</th>
@@ -529,7 +525,6 @@ export default class ExchangeHeader extends React.Component {
                                                             benchmarkScore.technology
                                                         }
                                                     </td>
-                                                    <td>/5</td>
                                                 </tr>
                                                 <tr>
                                                     <td
@@ -546,7 +541,7 @@ export default class ExchangeHeader extends React.Component {
                                                                     "none"
                                                             }}
                                                         >
-                                                            &raquo; about
+                                                            &raquo; more info
                                                         </a>
                                                     </td>
                                                 </tr>

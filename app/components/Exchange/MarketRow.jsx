@@ -348,35 +348,8 @@ class MarketRow extends React.Component {
                         let benchmarkInfo = null;
 
                         if (quoteInfo && quoteInfo.scoring) {
-                            const {score} = quoteInfo.scoring;
-
                             const dataTip = `
-                                <span>This project has been selected for "benchmark" status awarded to assets who meet quality criteria common to a partnership between CryptoBridge and the DARC (Digital Asset Resource Center).</span><br/>
-                                <table class="benchmarkTooltip" style="margin-top:5px;">
-                                    <thead>
-                                        <tr>
-                                            <th>Scoring Summary</th>
-                                            <td>out of 5</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><th>Community:</th><td><span>${
-                                            score.community
-                                        }</span></td></tr>
-                                        <tr><th>Decentralized:</th><td><span>${
-                                            score.decentralized
-                                        }</span></td></tr>
-                                        <tr><th>Execution:</th><td><span>${
-                                            score.execution
-                                        }</span></td></tr>
-                                        <tr><th>Governance:</th><td><span>${
-                                            score.governance
-                                        }</span></td></tr>
-                                        <tr><th>Technology:</th><td><span>${
-                                            score.technology
-                                        }</span></td></tr>
-                                    </tbody>
-                                </table>
+                                <span>This project has been benchmarked having met quality criteria common to a partnership between Digital Asset Resource Center (DARC) and CryptoBridge.</span>
                             `;
 
                             benchmarkInfo = (
