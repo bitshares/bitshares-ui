@@ -611,7 +611,7 @@ class SendModal extends React.Component {
             balanceError ||
             (!AccountStore.isMyAccount(from_account) && !propose);
 
-        let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
+        let tabIndex = this.props.tabIndex || 0; // Continue tabIndex on props count
 
         return !this.state.open ? null : (
             <div
@@ -684,7 +684,7 @@ class SendModal extends React.Component {
                                                 this
                                             )}
                                             size={60}
-                                            typeahead={true}
+                                            typeahead={[]}
                                             tabIndex={tabIndex++}
                                             hideImage
                                         />

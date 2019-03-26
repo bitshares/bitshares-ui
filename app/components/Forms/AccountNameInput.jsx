@@ -30,7 +30,8 @@ class AccountNameInput extends React.Component {
         this.state = {
             value: null,
             error: null,
-            existing_account: false
+            existing_account: false,
+            account_name: null
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -164,7 +165,9 @@ class AccountNameInput extends React.Component {
                         onChange={this.handleChange}
                         onKeyDown={this.onKeyDown}
                         value={
-                            this.state.account_name || this.props.initial_value
+                            this.state.account_name ||
+                            this.props.initial_value ||
+                            ""
                         }
                     />
                 </section>

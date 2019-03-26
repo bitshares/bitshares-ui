@@ -5,6 +5,7 @@ import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
+import {getAuthKey} from "common/AccountUtils";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -38,21 +39,38 @@ class TosModal extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        this.updateWithNextProps(nextProps);
+    }
+
+    updateWithNextProps(nextProps) {
         if (nextProps.terms !== this.state.termsLatest) {
             this.setState({
                 termsLatest: nextProps.terms
             });
         }
 
+        const currentAccount = ChainStore.getAccount(nextProps.currentAccount);
+
+        if (nextProps.currentAccount && !currentAccount) {
+            if (!this.updateWithNextPropsTimeout) {
+                this.updateWithNextPropsTimeout = setTimeout(() => {
+                    this.updateWithNextProps(nextProps);
+                }, 1000);
+            }
+
+            return;
+        }
+
         if (
             !this.isFetchingAccount &&
             !nextProps.locked &&
             nextProps.currentAccount &&
-            nextProps.account &&
-            !nextProps.accounts.get(nextProps.currentAccount)
+            currentAccount &&
+            !nextProps.accounts.get(nextProps.currentAccount) &&
+            getAuthKey(currentAccount)
         ) {
             this.isFetchingAccount = true;
-            CryptoBridgeActions.getAccount(nextProps.account).catch(err => {
+            CryptoBridgeActions.getAccount(currentAccount).catch(err => {
                 notify.addNotification({
                     message: err,
                     level: "error",
@@ -432,11 +450,9 @@ export default connect(TosModal, {
         const currentAccount =
             AccountStore.getState().currentAccount ||
             AccountStore.getState().passwordAccount;
-        const account = ChainStore.getAccount(currentAccount);
 
         return {
             currentAccount,
-            account,
             locked: WalletUnlockStore.getState().locked,
             accounts: CryptoBridgeStore.getState().accounts,
             terms: CryptoBridgeStore.getLatestTerms()

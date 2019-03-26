@@ -412,7 +412,7 @@ class CreateAccount extends React.Component {
                             type="checkbox"
                             id="checkbox-tos"
                             onChange={() => {}}
-                            checked={this.state.understand_tos}
+                            checked={!!this.state.understand_tos}
                             style={{
                                 pointerEvents: "none",
                                 position: "absolute"
@@ -455,7 +455,7 @@ class CreateAccount extends React.Component {
                     }}
                 >
                     <label
-                        htmlFor="checkbox-tos"
+                        htmlFor="checkbox-tos-disclaimer"
                         style={{position: "relative"}}
                         onClick={e => {
                             e.preventDefault();
@@ -467,9 +467,9 @@ class CreateAccount extends React.Component {
                     >
                         <input
                             type="checkbox"
-                            id="checkbox-tos"
+                            id="checkbox-tos-disclaimer"
                             onChange={() => {}}
-                            checked={this.state.understand_tos_disclaimer}
+                            checked={!!this.state.understand_tos_disclaimer}
                             style={{
                                 pointerEvents: "none",
                                 position: "absolute"
