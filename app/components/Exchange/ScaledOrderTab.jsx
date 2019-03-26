@@ -62,6 +62,43 @@ class ScaledOrderForm extends Component {
         }
     }
 
+    isFormValid() {
+        const formValues = this._getFormValues();
+
+        if (!formValues) return false;
+
+        if (
+            !formValues.priceLower ||
+            isNaN(Number(formValues.priceLower)) ||
+            Number(formValues.priceLower) <= 0
+        )
+            return false;
+
+        if (
+            !formValues.amount ||
+            isNaN(Number(formValues.amount)) ||
+            Number(formValues.amount) <= 0
+        )
+            return false;
+
+        if (
+            !formValues.priceUpper ||
+            isNaN(Number(formValues.priceUpper)) ||
+            Number(formValues.priceUpper) <= 0 ||
+            Number(formValues.priceUpper) <= Number(formValues.priceLower)
+        )
+            return false;
+
+        if (
+            !formValues.orderCount ||
+            isNaN(Number(formValues.orderCount)) ||
+            Number(formValues.orderCount) <= 1
+        )
+            return false;
+
+        return true;
+    }
+
     _getBaseAssetFlags() {
         return assetUtils.getFlagBooleans(
             this.props.baseAsset.getIn(["options", "flags"]),
@@ -717,7 +754,11 @@ class ScaledOrderForm extends Component {
                         </span>
                     </Form.Item>
 
-                    <Button onClick={this.props.handleSubmit} type="primary">
+                    <Button
+                        onClick={this.props.handleSubmit}
+                        type="primary"
+                        disabled={!this.isFormValid()}
+                    >
                         {counterpart.translate(
                             isBid
                                 ? "scaled_orders.action.buy"
