@@ -457,13 +457,21 @@ class ScaledOrderForm extends Component {
             />
         );
 
+        const formValues = this._getFormValues();
+
+        const priceLower = Number((formValues && formValues.priceLower) || 0);
+
         const priceUpperInput = getFieldDecorator("priceUpper", {
             validateFirst: true,
             validateTrigger: "onBlur",
             rules: [
                 Validation.Rules.required(),
                 Validation.Rules.number(),
-                Validation.Rules.min({min: 0, name: "Price", higherThan: true})
+                Validation.Rules.min({
+                    min: priceLower,
+                    name: "Price",
+                    higherThan: true
+                })
             ]
         })(
             <Input
