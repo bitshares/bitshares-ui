@@ -292,6 +292,7 @@ class ScaledOrderForm extends Component {
             !isCorrect(priceUpper) ||
             !isCorrect(amount) ||
             !isCorrect(orderCount) ||
+            orderCount <= 1 ||
             orderCount <= 0 ||
             priceLower >= priceUpper
         )
@@ -626,7 +627,11 @@ class ScaledOrderForm extends Component {
             rules: [
                 Validation.Rules.required(),
                 Validation.Rules.number(),
-                Validation.Rules.min({min: 1, name: "Orders Count"})
+                Validation.Rules.min({
+                    min: 1,
+                    name: "Orders Count",
+                    higherThan: true
+                })
             ]
         })(
             <Input
