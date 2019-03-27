@@ -124,6 +124,12 @@ class Exchange extends React.Component {
         this.psInit = true;
     }
 
+    handleOrderTypeTabChange(type, value) {
+        SettingsActions.changeViewSetting({
+            [`order-form-${type}`]: value
+        });
+    }
+
     handlePriceAlertSave(savedRules = []) {
         // add info about market asset pair
         savedRules = savedRules.map(rule => ({
@@ -2056,8 +2062,12 @@ class Exchange extends React.Component {
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <Tabs
                 animated={false}
+                activeKey={
+                    this.props.viewSettings.get("order-form-bid") || "limit"
+                }
+                onChange={this.handleOrderTypeTabChange.bind(this, "bid")}
                 tabBarExtraContent={<div>{buySellTitle(true)}</div>}
-                defaultActiveKey={"scaled"}
+                defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
                     verticalOrderForm && !smallScreen
@@ -2217,9 +2227,13 @@ class Exchange extends React.Component {
         let sellForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <Tabs
+                activeKey={
+                    this.props.viewSettings.get("order-form-ask") || "limit"
+                }
+                onChange={this.handleOrderTypeTabChange.bind(this, "ask")}
                 animated={false}
                 tabBarExtraContent={<div>{buySellTitle(false)}</div>}
-                defaultActiveKey={"scaled"}
+                defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
                     verticalOrderForm && !smallScreen
