@@ -1878,7 +1878,7 @@
         },
         "margin_price": "Dies ist der maximale Preis, der bei einen Wertausgleich (margin call) Ihrer Sicherheit bezahlt werden kann.",
         "market_fee": "Der Besitzer von %(asset)s berechnet eine Marktgebühr von %(percent)s für Kaufaufträge. Die Gebühr wird erst bezahlt, nachdem ein Auftrag ausgeführt worden ist, sie fällt nicht an, wenn ein Auftrag abgegegeben wird.",
-        "memo_tip": "Sie können eine Nachricht im Notizfeld hinterlassen. Notizen sind optional, aber werden bei Transaktionen an Börsen benötigt.",
+        "memo_tip": "Sie können eine optionale Nachricht im Notizfeld hinterlassen. Diese erlaubt persönliche Notizen und wird auch oft von Börsen genutzt um Einzahlungen (Deposits) zu identifizieren.",
         "no_groups_available": "Keine Gruppierungen verfügbar, bei Benutzung dieses API Knotens.",
         "no_price": "Es gibt keinen aktuellen Preis für diese Anlage, der benutzt werden kann.",
         "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
