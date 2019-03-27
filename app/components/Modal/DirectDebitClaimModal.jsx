@@ -499,7 +499,11 @@ class DirectDebitClaimModal extends React.Component {
                             <div className="content-block">
                                 <AccountSelector
                                     label="showcases.direct_debit.authorizing_account"
-                                    accountName={from_account}
+                                    accountName={
+                                        !!from_account
+                                            ? from_account.get("name")
+                                            : ""
+                                    }
                                     account={from_account}
                                     size={60}
                                     hideImage

@@ -18,7 +18,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import {Modal, Button} from "bitshares-ui-style-guide";
 import {DatePicker} from "antd";
 import ApplicationApi from "../../api/ApplicationApi";
 import moment from "moment";
@@ -64,6 +64,7 @@ class DirectDebitModal extends React.Component {
             from_account,
             to_account,
             amount,
+            asset,
             asset_id,
             period,
             num_of_periods,
@@ -79,24 +80,36 @@ class DirectDebitModal extends React.Component {
                 from_account,
                 to_account,
                 asset_id,
-                amount,
+                utils.convert_typed_to_satoshi(amount, asset),
                 period.type.seconds * Number(period.amount),
                 num_of_periods,
                 period_start_time.valueOf(),
                 feeAsset ? feeAsset.get("id") : "1.3.0"
             )
                 .then(result => {
-                    console.log(
-                        "finish up handling successfull broadcasting",
-                        result
-                    );
                     this.props.hideModal();
                 })
                 .catch(err => {
-                    console.log("visualize error somehow");
+                    // todo: visualize error somewhere
                 });
         } else if (operationType === "update") {
-            console.log("update trx");
+            ApplicationApi.updateWithdrawPermission(
+                permissionId,
+                from_account,
+                to_account,
+                asset_id,
+                utils.convert_typed_to_satoshi(amount, asset),
+                period.type.seconds * Number(period.amount),
+                num_of_periods,
+                period_start_time.valueOf(),
+                feeAsset ? feeAsset.get("id") : "1.3.0"
+            )
+                .then(result => {
+                    this.props.hideModal();
+                })
+                .catch(err => {
+                    // todo: visualize error somewhere
+                });
         }
     };
 
@@ -174,15 +187,18 @@ class DirectDebitModal extends React.Component {
                         break;
                     }
                 }
-
+                let asset = ChainStore.getAsset(
+                    operation.payload.withdrawal_limit.asset_id
+                );
                 this.setState({
                     to_account: toAccount,
                     to_name: toAccount.get("name"),
-                    asset: ChainStore.getAsset(
-                        operation.payload.withdrawal_limit.asset_id
-                    ),
+                    asset: asset,
                     permissionId: operation.payload.id,
-                    amount: operation.payload.withdrawal_limit.amount,
+                    amount: utils.convert_satoshi_to_typed(
+                        operation.payload.withdrawal_limit.amount,
+                        asset
+                    ),
                     asset_id: operation.payload.withdrawal_limit.asset_id,
                     num_of_periods: numberOfPeriods,
                     period: {

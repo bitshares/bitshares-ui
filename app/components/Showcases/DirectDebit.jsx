@@ -20,6 +20,7 @@ import DirectDebitClaimModal from "../Modal/DirectDebitClaimModal";
 import debounceRender from "react-debounce-render";
 import {connect} from "alt-react";
 import LinkToAssetById from "../Utility/LinkToAssetById";
+import ApplicationApi from "../../api/ApplicationApi";
 
 class DirectDebit extends Component {
     constructor() {
@@ -123,9 +124,19 @@ class DirectDebit extends Component {
         this.setState({filterString: e.target.value.toLowerCase()});
     };
 
-    handleDeleteProposal = () => {
-        // TODO:
-        console.log("delete");
+    handleDeleteProposal = permission => {
+        console.log("asdsd");
+        ApplicationApi.deleteWithdrawPermission(
+            permission.id,
+            permission.withdraw_from_account,
+            permission.authorized_account
+        )
+            .then(() => {
+                // nothing to do, user will see popup
+            })
+            .catch(err => {
+                // todo: visualize error somewhere
+            });
     };
 
     render() {
@@ -311,7 +322,11 @@ class DirectDebit extends Component {
                             <span>
                                 <Button
                                     style={{marginRight: "10px"}}
-                                    onClick={this.handleDeleteProposal}
+                                    onClick={() =>
+                                        this.handleDeleteProposal(
+                                            record.rawData
+                                        )
+                                    }
                                 >
                                     Cancel
                                 </Button>

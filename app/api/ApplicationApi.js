@@ -557,6 +557,81 @@ const ApplicationApi = {
     },
 
     /**
+     * Update a withdrawal permission
+     *
+     * @async
+     *
+     * @param withdrawPermissionId - permission to update
+     * @param from - account granting the permission, can be id, name or account object
+     * @param to - account claiming from the permission, can be id, name or account object
+     * @param limitAsset - id of asset to claim, id or symbol
+     * @param limitAssetAmount - int in satoshis, max amount to claim per period
+     * @param periodInSeconds - how many seconds does one period last?
+     * @param periodsUntilExpiration - how many periods will be done before expiration?
+     * @param periodStartTime - dateobject or timestamp, when does the first period start? defaults to now
+     * @param feeAsset - what asset to use for paying the fee, id or symbol
+     * @returns {Promise<any>}
+     */
+    async updateWithdrawPermission(
+        withdrawPermissionId,
+        from,
+        to,
+        limitAsset,
+        limitAssetAmount,
+        periodInSeconds,
+        periodsUntilExpiration,
+        periodStartTime = null,
+        feeAsset = "1.3.0",
+        broadcast = true
+    ) {
+        // default is now
+        if (periodStartTime == null) {
+            periodStartTime = new Date();
+        }
+        if (typeof periodStartTime == "number") {
+            periodStartTime = new Date(periodStartTime);
+        }
+
+        // account must be unlocked
+        await WalletUnlockActions.unlock();
+
+        // ensure all arguments are chain objects
+        let objects = {
+            from: await this._ensureAccount(from),
+            to: await this._ensureAccount(to),
+            limitAsset: await this._ensureAsset(limitAsset),
+            feeAsset: await this._ensureAsset(feeAsset)
+        };
+
+        let transactionBuilder = new TransactionBuilder();
+        let op = transactionBuilder.get_type_operation(
+            "withdraw_permission_update",
+            {
+                permission_to_update: withdrawPermissionId,
+                fee: {
+                    amount: 0,
+                    asset_id: objects.feeAsset.get("id")
+                },
+                withdraw_from_account: objects.from.get("id"),
+                authorized_account: objects.to.get("id"),
+                withdrawal_limit: {
+                    amount: limitAssetAmount,
+                    asset_id: objects.limitAsset.get("id")
+                },
+                withdrawal_period_sec: periodInSeconds,
+                periods_until_expiration: periodsUntilExpiration,
+                period_start_time: periodStartTime
+            }
+        );
+
+        transactionBuilder.add_operation(op);
+        await WalletDb.process_transaction(transactionBuilder, null, broadcast);
+        if (!transactionBuilder.tr_buffer) {
+            throw "Something went finalization the transaction, this should not happen";
+        }
+    },
+
+    /**
      * Claim from a withdrawal permission
      *
      * @async
@@ -611,11 +686,47 @@ const ApplicationApi = {
         );
 
         transactionBuilder.add_operation(op);
-        await WalletDb.process_transaction(
-            transactionBuilder,
-            ["BTS6gigTP5jtt7ace3agYBbL8gm8pCzMYGYEi9DtmUJMQ5DiFZj16"],
-            broadcast
+        await WalletDb.process_transaction(transactionBuilder, null, broadcast);
+        if (!transactionBuilder.tr_buffer) {
+            throw "Something went finalization the transaction, this should not happen";
+        }
+    },
+
+    async deleteWithdrawPermission(
+        withdrawPermissionId,
+        from,
+        to,
+        feeAsset = "1.3.0",
+        broadcast = true
+    ) {
+        console.log("asdsd asdasd");
+
+        // account must be unlocked
+        await WalletUnlockActions.unlock();
+
+        // ensure all arguments are chain objects
+        let objects = {
+            from: await this._ensureAccount(from),
+            to: await this._ensureAccount(to),
+            feeAsset: await this._ensureAsset(feeAsset)
+        };
+
+        let transactionBuilder = new TransactionBuilder();
+        let op = transactionBuilder.get_type_operation(
+            "withdraw_permission_delete",
+            {
+                fee: {
+                    amount: 0,
+                    asset_id: objects.feeAsset.get("id")
+                },
+                withdrawal_permission: withdrawPermissionId,
+                withdraw_from_account: objects.from.get("id"),
+                authorized_account: objects.to.get("id")
+            }
         );
+
+        transactionBuilder.add_operation(op);
+        await WalletDb.process_transaction(transactionBuilder, null, broadcast);
         if (!transactionBuilder.tr_buffer) {
             throw "Something went finalization the transaction, this should not happen";
         }
