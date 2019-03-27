@@ -155,7 +155,6 @@ export function getMyMarketsQuotes() {
             "XBTSX.BTG",
             "XBTSX.XSPEC",
             "XBTSX.NVC",
-            "XBTSX.42",
             "XBTSX.UNI",
             "XBTSX.NMC",
             "XBTSX.WAVES",
