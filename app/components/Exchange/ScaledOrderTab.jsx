@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import moment from "moment";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {
     Input,
@@ -24,6 +25,8 @@ import {
     preciseMultiply,
     preciseMinus
 } from "../../services/Math";
+import DatePicker from "react-datepicker2/src";
+import SettingsStore from "../../stores/SettingsStore";
 
 class ScaledOrderForm extends Component {
     constructor(props) {
@@ -460,7 +463,7 @@ class ScaledOrderForm extends Component {
 
         const formItemProps = {
             labelCol: {span: 6},
-            wrapperCol: {span: 18}
+            wrapperCol: {span: 16, offset: 2}
         };
 
         const actionRadio = getFieldDecorator("action", {
@@ -646,6 +649,18 @@ class ScaledOrderForm extends Component {
             isBid ? "exchange.lowest_ask" : "exchange.highest_bid"
         );
 
+        const minExpirationDate = moment();
+
+        const theme = SettingsStore.getState().settings.get("themes");
+
+        const expirationsOptionsList = Object.keys(this.props.expirations).map(
+            (key, i) => (
+                <option value={key} key={key}>
+                    {this.props.expirations[key].title}
+                </option>
+            )
+        );
+
         return (
             <div className="buy-sell-container" style={{padding: "5px"}}>
                 <Form
@@ -715,6 +730,42 @@ class ScaledOrderForm extends Component {
                         </Form.Item>
                     ) : null}
 
+                    <Form.Item
+                        label={counterpart.translate("transaction.expiration")}
+                        {...formItemProps}
+                    >
+                        <div
+                            className="expiration-datetime-picker scaled-orders"
+                            style={{marginTop: "5px"}}
+                        >
+                            <select
+                                className={
+                                    this.props.expirationType === "SPECIFIC"
+                                        ? "expiration-datetime-picker--select--specific"
+                                        : ""
+                                }
+                                style={{cursor: "pointer", marginTop: "5px"}}
+                                onChange={this.props.onExpirationTypeChange}
+                                value={this.props.expirationType}
+                            >
+                                {expirationsOptionsList}
+                            </select>
+                            {this.props.expirationType === "SPECIFIC" ? (
+                                <DatePicker
+                                    pickerPosition={"bottom center"}
+                                    wrapperClassName={theme}
+                                    timePicker={true}
+                                    min={minExpirationDate}
+                                    inputFormat={"Do MMM YYYY hh:mm A"}
+                                    value={this.props.expirationCustomTime}
+                                    onChange={
+                                        this.props.onExpirationCustomChange
+                                    }
+                                />
+                            ) : null}
+                        </div>
+                    </Form.Item>
+
                     <Form.Item label={lastPriceLabel} {...formItemProps}>
                         <span
                             style={{
@@ -737,7 +788,10 @@ class ScaledOrderForm extends Component {
                         </span>
                     </Form.Item>
 
-                    <Form.Item label="Balance" {...formItemProps}>
+                    <Form.Item
+                        label={counterpart.translate("exchange.balance")}
+                        {...formItemProps}
+                    >
                         <span
                             style={{
                                 borderBottom: "#A09F9F 1px dotted",
@@ -826,6 +880,17 @@ class ScaledOrderTab extends Component {
         const priceUpper = Number(values.priceUpper);
         const orderCount = Number(values.orderCount);
 
+        let expirationTime = null;
+        if (this.props.expirationType === "SPECIFIC") {
+            expirationTime = this.props.expirations[
+                this.props.expirationType
+            ].get(this.props.type);
+        } else {
+            expirationTime = this.props.expirations[
+                this.props.expirationType
+            ].get(this.props.type);
+        }
+
         const isCorrect = value => !isNaN(value);
 
         if (
@@ -881,7 +946,7 @@ class ScaledOrderTab extends Component {
                     amount: buyAmount(i)
                 }),
 
-                expirationTime: new Date().getTime() + 60 * 60 * 1000
+                expirationTime: expirationTime
             });
         }
 

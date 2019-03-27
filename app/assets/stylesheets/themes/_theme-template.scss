@@ -2175,6 +2175,12 @@
         }
     }
     .expiration-datetime-picker {
+        &.scaled-orders {
+            > div {
+                margin-top: -5px;
+            }
+        }
+
         > div {
             float: left;
             min-width: 145px;

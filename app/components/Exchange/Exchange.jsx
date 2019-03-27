@@ -2189,6 +2189,17 @@ class Exchange extends React.Component {
                     key={"scaled"}
                 >
                     <ScaledOrderTab
+                        expirationType={expirationType["bid"]}
+                        expirations={this.EXPIRATIONS}
+                        expirationCustomTime={expirationCustomTime["bid"]}
+                        onExpirationTypeChange={this._handleExpirationChange.bind(
+                            this,
+                            "bid"
+                        )}
+                        onExpirationCustomChange={this._handleCustomExpirationChange.bind(
+                            this,
+                            "bid"
+                        )}
                         currentPrice={lowestAsk.getPrice()}
                         lastClickedPrice={
                             this.state.ask && this.state.ask.priceText
@@ -2347,6 +2358,17 @@ class Exchange extends React.Component {
                     key={"scaled"}
                 >
                     <ScaledOrderTab
+                        expirationType={expirationType["ask"]}
+                        expirations={this.EXPIRATIONS}
+                        expirationCustomTime={expirationCustomTime["ask"]}
+                        onExpirationTypeChange={this._handleExpirationChange.bind(
+                            this,
+                            "ask"
+                        )}
+                        onExpirationCustomChange={this._handleCustomExpirationChange.bind(
+                            this,
+                            "ask"
+                        )}
                         currentPrice={highestBid.getPrice()}
                         lastClickedPrice={
                             this.state.ask && this.state.ask.priceText
