@@ -436,7 +436,7 @@ class ScaledOrderForm extends Component {
         const {getFieldDecorator} = this.props.form;
 
         const marketFeeSymbol = (
-            <AssetNameWrapper name={this.props.baseAsset.get("symbol")} />
+            <AssetNameWrapper name={this.props.quoteAsset.get("symbol")} />
         );
 
         const quantitySymbol = (
