@@ -136,6 +136,7 @@ class DirectDebit extends Component {
             })
             .catch(err => {
                 // todo: visualize error somewhere
+                console.error(err);
             });
     };
 

@@ -91,6 +91,7 @@ class DirectDebitModal extends React.Component {
                 })
                 .catch(err => {
                     // todo: visualize error somewhere
+                    console.error(err);
                 });
         } else if (operationType === "update") {
             ApplicationApi.updateWithdrawPermission(
@@ -109,6 +110,7 @@ class DirectDebitModal extends React.Component {
                 })
                 .catch(err => {
                     // todo: visualize error somewhere
+                    console.error(err);
                 });
         }
     };
