@@ -1880,6 +1880,7 @@
             "title": "Direct debit",
             "create": "Create",
             "update": "Update",
+            "delete": "Delete",
             "expires": "Expires",
             "claim": "Claim",
             "authorized_account": "Payee",

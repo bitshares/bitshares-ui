@@ -655,6 +655,17 @@ const ApplicationApi = {
         feeAsset = "1.3.0",
         broadcast = true
     ) {
+        console.log(
+            "claimWithdrawPermission",
+            withdrawPermissionId,
+            from,
+            to,
+            claimAsset,
+            claimAssetAmount,
+            memo,
+            feeAsset
+        );
+
         // account must be unlocked
         await WalletUnlockActions.unlock();
 
@@ -699,8 +710,6 @@ const ApplicationApi = {
         feeAsset = "1.3.0",
         broadcast = true
     ) {
-        console.log("asdsd asdasd");
-
         // account must be unlocked
         await WalletUnlockActions.unlock();
 

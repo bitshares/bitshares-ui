@@ -23,26 +23,14 @@ import LinkToAssetById from "../Utility/LinkToAssetById";
 import ApplicationApi from "../../api/ApplicationApi";
 
 class DirectDebit extends Component {
-    constructor() {
-        super();
-        this.state = {
-            from_name: "",
-            to_name: "",
-            from_account: null,
-            to_account: null,
-
-            amount_counter: [],
-            amount_index: 0,
-
-            proposal_fee: 0,
-            isModalVisible: false,
-            isClaimModalVisible: false,
-            filterString: "",
-            operationData: "",
-            operationClaimData: "",
-            withdraw_permission_list: []
-        };
-    }
+    state = {
+        isModalVisible: false,
+        isClaimModalVisible: false,
+        filterString: "",
+        operationData: "",
+        operationClaimData: "",
+        withdraw_permission_list: []
+    };
 
     componentWillReceiveProps(nextProps) {
         if (this.props.currentAccount != nextProps.currentAccount) {
@@ -80,6 +68,7 @@ class DirectDebit extends Component {
             withdraw_permission_list = withdraw_permission_list.concat(
                 results[1]
             );
+
             console.log("withdraw_permission_list", withdraw_permission_list);
 
             this.setState({
@@ -99,17 +88,17 @@ class DirectDebit extends Component {
         });
     };
 
-    showClaimModal = operation => () => {
-        this.setState({
-            isClaimModalVisible: true,
-            operationClaimData: operation
-        });
-    };
-
     hideModal = () => {
         this.setState({
             isModalVisible: false,
             operation: null
+        });
+    };
+
+    showClaimModal = operation => () => {
+        this.setState({
+            isClaimModalVisible: true,
+            operationClaimData: operation
         });
     };
 
@@ -125,7 +114,7 @@ class DirectDebit extends Component {
     };
 
     handleDeleteProposal = permission => {
-        console.log("asdsd");
+        console.log("delete permissin");
         ApplicationApi.deleteWithdrawPermission(
             permission.id,
             permission.withdraw_from_account,
@@ -146,60 +135,89 @@ class DirectDebit extends Component {
             isClaimModalVisible,
             withdraw_permission_list,
             operationData,
-            operationClaimData
+            operationClaimData,
+            filterString
         } = this.state;
         let currentAccount = ChainStore.getAccount(this.props.currentAccount);
 
-        // let smallScreen = window.innerWidth < 850 ? true : false;
-
         let dataSource = null;
+
         if (withdraw_permission_list.length) {
-            dataSource = withdraw_permission_list
-                .map(item => {
-                    const asset = ChainStore.getObject(
-                        item.withdrawal_limit.asset_id,
-                        false
-                    );
-                    try {
-                        // to trigger caching for modal
-                        ChainStore.getAccount(item.authorized_account, false);
-                        ChainStore.getAccount(
-                            item.withdraw_from_account,
-                            false
-                        );
-                    } catch (err) {}
-                    const authorizedAccountName = ChainStore.getAccountName(
-                        item.authorized_account
-                    );
-                    const withdrawFromAccountName = ChainStore.getAccountName(
-                        item.withdraw_from_account
-                    );
-                    let period_start = new Date(item.period_start_time + "Z");
-                    let now = new Date();
-                    let full_intervals = Math.floor(
-                        (now.getTime() - period_start.getTime()) /
-                            1000 /
-                            item.withdrawal_period_sec
-                    );
-                    // set period_start to current period end
-                    period_start.setSeconds(
-                        period_start.getSeconds() +
-                            (full_intervals + 1) * item.withdrawal_period_sec
-                    );
-                    return {
-                        key: item.id,
-                        id: item.id,
-                        type:
-                            item.authorized_account == currentAccount.get("id")
-                                ? "payee"
-                                : "payer",
-                        authorized: authorizedAccountName,
-                        from: withdrawFromAccountName,
-                        to: authorizedAccountName,
-                        limit: (
+            dataSource = withdraw_permission_list.map(item => {
+                const asset = ChainStore.getObject(
+                    item.withdrawal_limit.asset_id,
+                    false
+                );
+                try {
+                    // to trigger caching for modal
+                    ChainStore.getAccount(item.authorized_account, false);
+                    ChainStore.getAccount(item.withdraw_from_account, false);
+                } catch (err) {}
+                const authorizedAccountName = ChainStore.getAccountName(
+                    item.authorized_account
+                );
+                const withdrawFromAccountName = ChainStore.getAccountName(
+                    item.withdraw_from_account
+                );
+                const period_start = new Date(
+                    item.period_start_time + "Z"
+                ).getTime();
+                const now = new Date().getTime();
+                const timePassed = now - period_start;
+                let currentPeriodExpires = "";
+                const periodMs = item.withdrawal_period_sec * 1000;
+
+                if (timePassed < 0) {
+                    console.log("first period is not started");
+                } else {
+                    const currentPeriodNum = Math.ceil(timePassed / periodMs);
+                    currentPeriodExpires =
+                        period_start + periodMs * currentPeriodNum;
+                }
+
+                return {
+                    key: item.id,
+                    id: item.id,
+                    type:
+                        item.authorized_account == currentAccount.get("id")
+                            ? "payee"
+                            : "payer",
+                    authorized: authorizedAccountName,
+                    from: withdrawFromAccountName,
+                    to: authorizedAccountName,
+                    limit: (
+                        <span>
+                            {utils.get_asset_amount(
+                                item.withdrawal_limit.amount,
+                                asset
+                            ) + " "}
+                            <LinkToAssetById
+                                asset={item.withdrawal_limit.asset_id}
+                            />
+                        </span>
+                    ),
+                    until: currentPeriodExpires
+                        ? counterpart.localize(new Date(currentPeriodExpires), {
+                              type: "date",
+                              format: "full"
+                          })
+                        : counterpart.translate(
+                              "showcases.direct_debit.first_period_not_started"
+                          ),
+                    expires: counterpart.localize(
+                        new Date(item.expiration + "Z"),
+                        {
+                            type: "date",
+                            format: "full"
+                        }
+                    ),
+                    claimed:
+                        item.claimed_this_period == 0 ? (
+                            "-"
+                        ) : (
                             <span>
                                 {utils.get_asset_amount(
-                                    item.withdrawal_limit.amount,
+                                    item.claimed_this_period,
                                     asset
                                 ) + " "}
                                 <LinkToAssetById
@@ -207,40 +225,17 @@ class DirectDebit extends Component {
                                 />
                             </span>
                         ),
-                        until: counterpart.localize(period_start, {
-                            type: "date",
-                            format: "full"
-                        }),
-                        expires: counterpart.localize(
-                            new Date(item.expiration + "Z"),
-                            {
-                                type: "date",
-                                format: "full"
-                            }
-                        ),
-                        claimed:
-                            item.claimed_this_period == 0 ? (
-                                "-"
-                            ) : (
-                                <span>
-                                    {utils.get_asset_amount(
-                                        item.claimed_this_period,
-                                        asset
-                                    ) + " "}
-                                    <LinkToAssetById
-                                        asset={item.withdrawal_limit.asset_id}
-                                    />
-                                </span>
-                            ),
-                        rawData: {
-                            ...item
-                        }
-                    };
-                })
-                .filter(item => {
+                    rawData: {
+                        ...item
+                    }
+                };
+            });
+            dataSource.length &&
+                dataSource.filter(item => {
+                    // if filter is chained to map, possible bugs with initial render of table
                     return (
                         item.authorized &&
-                        item.authorized.indexOf(this.state.filterString) !== -1
+                        item.authorized.indexOf(filterString) !== -1
                     );
                 });
         }
@@ -329,7 +324,9 @@ class DirectDebit extends Component {
                                         )
                                     }
                                 >
-                                    Cancel
+                                    {counterpart.translate(
+                                        "showcases.direct_debit.delete"
+                                    )}
                                 </Button>
                                 <Button
                                     onClick={this.showModal({
@@ -337,7 +334,9 @@ class DirectDebit extends Component {
                                         payload: record.rawData
                                     })}
                                 >
-                                    Update
+                                    {counterpart.translate(
+                                        "showcases.direct_debit.update"
+                                    )}
                                 </Button>
                             </span>
                         ) : (
@@ -347,7 +346,11 @@ class DirectDebit extends Component {
                                     payload: record.rawData
                                 })}
                             >
-                                <Button>Collect</Button>
+                                <Button>
+                                    {counterpart.translate(
+                                        "showcases.direct_debit.claim"
+                                    )}
+                                </Button>
                             </span>
                         );
                     } else {
@@ -417,7 +420,7 @@ class DirectDebit extends Component {
     }
 }
 
-DirectDebit = debounceRender(DirectDebit, 50, {leading: false});
+// DirectDebit = debounceRender(DirectDebit, 50, {leading: false});
 
 export default connect(
     DirectDebit,

@@ -25,8 +25,14 @@ class PeriodSelector extends React.Component {
 
     getNumericEventValue(e) {
         var input = null;
-        if (e.target.value == "" || e.target.value == null) {
+        if (
+            e.target.value == "" ||
+            e.target.value == null ||
+            e.target.value < 0
+        ) {
             return "";
+        } else if (e.target.value === 0) {
+            return 0;
         } else if (parseFloat(e.target.value) == e.target.value) {
             input = e.target.value.trim();
         } else {

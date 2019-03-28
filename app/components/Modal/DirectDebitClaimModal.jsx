@@ -48,7 +48,8 @@ class DirectDebitClaimModal extends React.Component {
             firstPeriodError: false,
             payerBalanceWarning: false,
             withdrawal_limit: null,
-            current_period_expires: ""
+            current_period_expires: "",
+            claimedAmount: ""
         };
     }
 
@@ -60,6 +61,7 @@ class DirectDebitClaimModal extends React.Component {
             feeAsset,
             permissionId,
             amount,
+            asset,
             asset_id,
             memo
         } = this.state;
@@ -68,7 +70,7 @@ class DirectDebitClaimModal extends React.Component {
             from_account,
             to_account,
             asset_id,
-            amount,
+            utils.convert_typed_to_satoshi(amount, asset),
             memo ? new Buffer(memo, "utf-8") : memo,
             feeAsset ? feeAsset.get("id") : "1.3.0"
         )
@@ -92,9 +94,9 @@ class DirectDebitClaimModal extends React.Component {
             operation &&
             prevState.permissionId !== operation.payload.id
         ) {
-            const timeStart = moment
-                .utc(operation.payload.period_start_time)
-                .valueOf();
+            const timeStart = new Date(
+                operation.payload.period_start_time + "Z"
+            ).getTime();
 
             const timePassed = new Date().getTime() - timeStart;
 
@@ -124,7 +126,11 @@ class DirectDebitClaimModal extends React.Component {
                     from_account: from,
                     permissionId: operation.payload.id,
                     withdrawal_limit: operation.payload.withdrawal_limit,
-                    current_period_expires_date: currentPeriodExpires
+                    claimedAmount: operation.payload.claimed_this_period,
+                    current_period_expires_date: currentPeriodExpires,
+                    asset: ChainStore.getAsset(
+                        operation.payload.withdrawal_limit.asset_id
+                    )
                 },
                 this._checkFeeStatus
             );
@@ -204,14 +210,27 @@ class DirectDebitClaimModal extends React.Component {
     }
 
     setTotalLimit = limit => () => {
-        this.setState({maxAmount: true, amount: limit}, this.checkLimit);
+        const {asset, claimedAmount} = this.state;
+        let amount = utils.get_asset_amount(limit - claimedAmount, asset);
+        this.setState({maxAmount: true, amount}, this.checkLimit);
     };
 
     checkLimit() {
-        const {withdrawal_limit, amount, limitError} = this.state;
-        if (amount > withdrawal_limit.amount && !limitError) {
+        const {
+            withdrawal_limit,
+            amount,
+            limitError,
+            asset,
+            claimedAmount
+        } = this.state;
+        const limit = utils.get_asset_amount(
+            withdrawal_limit.amount - claimedAmount,
+            asset
+        );
+
+        if (amount > limit && !limitError) {
             this.setState({limitError: true});
-        } else if (amount <= withdrawal_limit.amount && limitError) {
+        } else if (amount <= limit && limitError) {
             this.setState({limitError: false});
         }
     }
@@ -320,8 +339,19 @@ class DirectDebitClaimModal extends React.Component {
         this.setState({memo: e.target.value}, this._checkBalance);
     }
 
-    isPayerBalanceWarning(limitAmount) {
-        const {withdrawal_limit, to_account, payerBalanceWarning} = this.state;
+    isPayerBalanceWarning() {
+        const {
+            withdrawal_limit,
+            asset,
+            to_account,
+            payerBalanceWarning,
+            claimedAmount
+        } = this.state;
+        const limitAmount = utils.get_asset_amount(
+            withdrawal_limit.amount,
+            asset
+        );
+
         const balanceID = to_account.getIn([
             "balances",
             withdrawal_limit.asset_id
@@ -333,9 +363,16 @@ class DirectDebitClaimModal extends React.Component {
             return;
         }
         const payerBalance = ChainStore.getObject(balanceID).get("balance");
-        if (payerBalance < limitAmount && !payerBalanceWarning) {
+
+        if (
+            payerBalance < limitAmount - claimedAmount &&
+            !payerBalanceWarning
+        ) {
             this.setState({payerBalanceWarning: true});
-        } else if (payerBalance >= limitAmount && payerBalanceWarning) {
+        } else if (
+            payerBalance >= limitAmount - claimedAmount &&
+            payerBalanceWarning
+        ) {
             this.setState({payerBalanceWarning: false});
         }
     }
@@ -356,7 +393,8 @@ class DirectDebitClaimModal extends React.Component {
             limitError,
             payerBalanceWarning,
             withdrawal_limit,
-            current_period_expires_date
+            current_period_expires_date,
+            claimedAmount
         } = this.state;
 
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
@@ -375,17 +413,17 @@ class DirectDebitClaimModal extends React.Component {
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
                 let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
-                const assetToWithdraw =
-                    withdrawal_limit &&
-                    ChainStore.getAsset(withdrawal_limit.asset_id);
-                const assetToWithdrawPrecision = assetToWithdraw.get(
-                    "precision"
-                );
-                const limitAmount =
-                    withdrawal_limit &&
-                    Math.pow(10, assetToWithdrawPrecision) *
-                        withdrawal_limit.amount;
-                this.isPayerBalanceWarning(limitAmount);
+                // const assetToWithdraw =
+                //     withdrawal_limit &&
+                //     ChainStore.getAsset(withdrawal_limit.asset_id);
+                // const assetToWithdrawPrecision = assetToWithdraw.get(
+                //     "precision"
+                // );
+                // const limitAmount =
+                //     withdrawal_limit &&
+                //     Math.pow(10, assetToWithdrawPrecision) *
+                //         withdrawal_limit.amount;
+                this.isPayerBalanceWarning();
 
                 balance = (
                     <span>
@@ -405,7 +443,7 @@ class DirectDebitClaimModal extends React.Component {
                             )}
                         >
                             <LimitToWithdraw
-                                amount={limitAmount}
+                                amount={withdrawal_limit.amount - claimedAmount}
                                 assetId={
                                     withdrawal_limit &&
                                     withdrawal_limit.asset_id

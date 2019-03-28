@@ -76,6 +76,8 @@ class DirectDebitModal extends React.Component {
         } = this.props;
 
         if (operationType === "create") {
+            console.log("time start", period_start_time.valueOf());
+
             ApplicationApi.createWithdrawPermission(
                 from_account,
                 to_account,
@@ -445,7 +447,7 @@ class DirectDebitModal extends React.Component {
 
     onNumOfPeriodsChanged = e => {
         let newValue = parseInt(e.target.value, 10);
-        if (!isNaN(newValue) && typeof newValue === "number") {
+        if (!isNaN(newValue) && typeof newValue === "number" && newValue >= 0) {
             this.setState({num_of_periods: newValue});
         }
     };
@@ -685,6 +687,7 @@ class DirectDebitModal extends React.Component {
                             </label>
                             <DatePicker
                                 value={period_start_time}
+                                showToday={false}
                                 showTime
                                 placeholder=""
                                 onChange={this.onStartDateChanged}
