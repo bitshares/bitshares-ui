@@ -155,14 +155,15 @@ export function getMyMarketsQuotes() {
             "XBTSX.BTG",
             "XBTSX.XSPEC",
             "XBTSX.NVC",
-            "XBTSX.42",
             "XBTSX.UNI",
             "XBTSX.NMC",
             "XBTSX.WAVES",
             "XBTSX.COF",
             "XBTSX.XRUP",
             "XBTSX.P2P",
-            "XBTSX.STEEP"
+            "XBTSX.STEEP",
+            "XBTSX.MDL",
+            "XBTSX.ETH"
         ],
         otherTokens: [
             "BKT",
