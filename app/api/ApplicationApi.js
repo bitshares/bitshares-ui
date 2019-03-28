@@ -194,6 +194,7 @@ const ApplicationApi = {
                 } else {
                     tr = transactionBuilder;
                 }
+
                 let transfer_op = tr.get_type_operation("transfer", {
                     fee: {
                         amount: 0,
@@ -655,17 +656,6 @@ const ApplicationApi = {
         feeAsset = "1.3.0",
         broadcast = true
     ) {
-        console.log(
-            "claimWithdrawPermission",
-            withdrawPermissionId,
-            from,
-            to,
-            claimAsset,
-            claimAssetAmount,
-            memo,
-            feeAsset
-        );
-
         // account must be unlocked
         await WalletUnlockActions.unlock();
 
@@ -676,6 +666,35 @@ const ApplicationApi = {
             claimAsset: await this._ensureAsset(claimAsset),
             feeAsset: await this._ensureAsset(feeAsset)
         };
+        let memo_object;
+        let optional_nonce = null;
+        let encrypt_memo = true;
+
+        if (memo) {
+            let memo_sender = this._get_memo_keys(objects.to, true);
+            let memo_to = this._get_memo_keys(objects.from, false);
+            if (!!memo_sender.public_key && !!memo_to.public_key) {
+                let nonce =
+                    optional_nonce == null
+                        ? TransactionHelper.unique_nonce_uint64()
+                        : optional_nonce;
+                memo_object = {
+                    from: memo_sender.public_key,
+                    to: memo_to.public_key,
+                    nonce,
+                    message: encrypt_memo
+                        ? Aes.encrypt_with_checksum(
+                              memo_sender.private_key,
+                              memo_to.public_key,
+                              nonce,
+                              memo
+                          )
+                        : Buffer.isBuffer(memo)
+                            ? memo.toString("utf-8")
+                            : memo
+                };
+            }
+        }
 
         let transactionBuilder = new TransactionBuilder();
         let op = transactionBuilder.get_type_operation(
@@ -692,7 +711,7 @@ const ApplicationApi = {
                     amount: claimAssetAmount,
                     asset_id: objects.claimAsset.get("id")
                 },
-                memo: undefined
+                memo: memo_object ? memo_object : undefined
             }
         );
 
