@@ -65,6 +65,29 @@ class OpenledgerGateway extends React.Component {
     //     return true;
     // }
 
+    getBackedAsset() {
+        let { activeCoin } = this.state;
+        // Gateway has EOS.* asset names
+        if (activeCoin.toUpperCase().indexOf("EOS.") !== -1) {
+            activeCoin = activeCoin.split(".")[1];
+        }
+        const filteredNewApiCoins = this.props.newApiCoins
+            .filter(a => this.filterCoins(a));
+
+        return filteredNewApiCoins
+            .find(c => {
+                let backingCoin = this.state.action === "deposit"
+                    ? c.backingCoinType.toUpperCase()
+                    : c.symbol;
+
+                if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
+                    backingCoin = backingCoin.split(".")[1];
+                }
+
+                return backingCoin === activeCoin;
+            });
+    }
+
     onSelectCoin(e) {
         this.setState({
             activeCoin: e.target.value
@@ -89,6 +112,16 @@ class OpenledgerGateway extends React.Component {
         });
     }
 
+    filterCoins(a) {
+        if (!a || !a.symbol) {
+            return false;
+        } else {
+            return this.state.action === "deposit"
+                ? a.depositAllowed
+                : a.withdrawalAllowed;
+        }
+    }
+
     render() {
         let {coins, account, provider} = this.props;
         let {activeCoin, action} = this.state;
@@ -96,15 +129,7 @@ class OpenledgerGateway extends React.Component {
             return <LoadingIndicator />;
         }
 
-        let filteredCoins = coins.filter(a => {
-            if (!a || !a.symbol) {
-                return false;
-            } else {
-                return action === "deposit"
-                    ? a.depositAllowed
-                    : a.withdrawalAllowed;
-            }
-        });
+        let filteredCoins = coins.filter(a => this.filterCoins(a));
 
         let coinOptions = filteredCoins
             .map(coin => {
@@ -122,11 +147,15 @@ class OpenledgerGateway extends React.Component {
                 return a !== null;
             });
 
-        let coin = filteredCoins.filter(coin => {
-            return action === "deposit"
-                ? coin.backingCoinType.toUpperCase() === activeCoin
-                : coin.symbol === activeCoin;
-        })[0];
+        let coin = this.getBackedAsset();
+
+        if (!coin) {
+            coin = filteredCoins.filter(coin => {
+                return action === "deposit"
+                    ? coin.backingCoinType.toUpperCase() === activeCoin
+                    : coin.symbol === activeCoin;
+            })[0];
+        }
 
         if (!coin) coin = filteredCoins[0];
 
@@ -137,7 +166,7 @@ class OpenledgerGateway extends React.Component {
                 support: "support@blocktrades.us"
             },
             openledger: {
-                name: coin.intermediateAccount,
+                name: coin.isNewApi ? "" : coin.intermediateAccount,
                 id: "1.2.96397",
                 support: "https://dex.openledger.io"
             }
@@ -229,8 +258,10 @@ class OpenledgerGateway extends React.Component {
                                 gateFee={coin.gateFee}
                                 receive_asset={coin.symbol}
                                 receive_coin_type={coin.symbol.toLowerCase()}
-                                supports_output_memos={coin.supportsMemos}
+                                supports_output_memos={coin.isNewApi ?
+                                    coin.withdrawal.memo.enabled : coin.supportsMemos}
                                 isAvailable={coin.isAvailable}
+                                exchangeId={coin.isNewApi ? coin.deposit.exchangeId : ""}
                                 action={this.state.action}
                             />
                             <label className="left-label">Support</label>

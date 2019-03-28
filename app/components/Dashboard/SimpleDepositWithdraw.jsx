@@ -13,7 +13,8 @@ import {
     requestDepositAddress,
     validateAddress,
     WithdrawAddresses,
-    getDepositAddress
+    getDepositAddress,
+    fetchIntermediateAddress
 } from "common/gatewayMethods";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
@@ -103,18 +104,22 @@ class DepositWithdrawContent extends DecimalChecker {
     _getDepositAddress() {
         if (!this.props.backingCoinType) return;
 
-        let receive_address = getDepositAddress({
-            coin: `open.${this.props.backingCoinType.toLowerCase()}`,
-            account: this.props.account,
-            stateCallback: this.addDepositAddress
-        });
-
-        if (!receive_address) {
-            requestDepositAddress(this._getDepositObject());
+        if (this.props.isNewApi) {
+            this.fetchAddress();
         } else {
-            this.setState({
-                receive_address
+            let receive_address = getDepositAddress({
+                coin: `open.${this.props.backingCoinType.toLowerCase()}`,
+                account: this.props.account,
+                stateCallback: this.addDepositAddress
             });
+
+            if (!receive_address) {
+                requestDepositAddress(this._getDepositObject());
+            } else {
+                this.setState({
+                    receive_address
+                });
+            }
         }
     }
 
@@ -127,12 +132,29 @@ class DepositWithdrawContent extends DecimalChecker {
         };
     }
 
+    fetchAddress() {
+        fetchIntermediateAddress(
+            this.props.deposit.exchangeId,
+            this.props.account,
+            ""
+        ).then(value => {
+            this.setState({
+                receive_address: value,
+                loading: false
+            });
+        });
+    }
+
     requestDepositAddressLoad() {
         this.setState({
             loading: true,
             emptyAddressDeposit: false
         });
-        requestDepositAddress(this._getDepositObject());
+        if (this.props.isNewApi) {
+            this.fetchAddress();
+        } else {
+            requestDepositAddress(this._getDepositObject());
+        }
     }
 
     addDepositAddress(receive_address) {
@@ -408,9 +430,10 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _getGateFee() {
-        const {gateFee, asset} = this.props;
+        const {gateFee, asset, isNewApi} = this.props;
         return new Asset({
-            real: parseFloat(gateFee ? gateFee.replace(",", "") : 0),
+            real: isNewApi ? gateFee :
+                parseFloat(gateFee ? gateFee.replace(",", "") : 0),
             asset_id: asset.get("id"),
             precision: asset.get("precision")
         });

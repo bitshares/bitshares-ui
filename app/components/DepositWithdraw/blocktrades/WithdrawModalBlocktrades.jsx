@@ -7,7 +7,12 @@ import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
-import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
+import {
+    validateAddress,
+    WithdrawAddresses,
+    fetchIntermediateAddress,
+    validateTransfer
+} from "common/gatewayMethods";
 import {ChainStore} from "bitsharesjs";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {debounce} from "lodash-es";
@@ -18,7 +23,7 @@ import PropTypes from "prop-types";
 class WithdrawModalBlocktrades extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
-        issuer: ChainTypes.ChainAccount.isRequired,
+        issuer: ChainTypes.ChainAccount,
         asset: ChainTypes.ChainAsset.isRequired,
         output_coin_name: PropTypes.string.isRequired,
         output_coin_symbol: PropTypes.string.isRequired,
@@ -27,7 +32,12 @@ class WithdrawModalBlocktrades extends React.Component {
         output_wallet_type: PropTypes.string,
         output_supports_memos: PropTypes.bool.isRequired,
         amount_to_withdraw: PropTypes.string,
-        balance: ChainTypes.ChainObject
+        balance: ChainTypes.ChainObject,
+        exchangeId: PropTypes.number
+    };
+
+    static defaultProps = {
+        exchangeId: ""
     };
 
     constructor(props) {
@@ -90,6 +100,16 @@ class WithdrawModalBlocktrades extends React.Component {
                 }
             );
         }
+    }
+
+    getIssuerAddress() {
+        const { exchangeId } = this.props;
+        const { withdraw_address, memo } = this.state;
+        return fetchIntermediateAddress(
+            exchangeId,
+            withdraw_address,
+            memo
+        );
     }
 
     showConfirmationModal() {
@@ -237,18 +257,34 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 
     _validateAddress(new_withdraw_address, props = this.props) {
-        validateAddress({
-            url: props.url,
-            walletType: props.output_wallet_type,
-            newAddress: new_withdraw_address
-        }).then(isValid => {
-            if (this.state.withdraw_address === new_withdraw_address) {
-                this.setState({
-                    withdraw_address_check_in_progress: false,
-                    withdraw_address_is_valid: isValid
-                });
-            }
-        });
+        if (props.exchangeId) {
+            validateTransfer({
+                amount: this.state.withdraw_amount,
+                recipient: new_withdraw_address,
+                memo: this.state.memo,
+                exchangeId: props.exchangeId
+            }).then(validationData => {
+                if (this.state.withdraw_address === new_withdraw_address) {
+                    this.setState({
+                        withdraw_address_check_in_progress: false,
+                        withdraw_address_is_valid: validationData.valid_recipient
+                    });
+                }
+            });
+        } else {
+            validateAddress({
+                url: props.url,
+                walletType: props.output_wallet_type,
+                newAddress: new_withdraw_address
+            }).then(isValid => {
+                if (this.state.withdraw_address === new_withdraw_address) {
+                    this.setState({
+                        withdraw_address_check_in_progress: false,
+                        withdraw_address_is_valid: isValid
+                    });
+                }
+            });
+        }
     }
 
     _checkBalance() {
@@ -354,20 +390,34 @@ class WithdrawModalBlocktrades extends React.Component {
                     sendAmount = balanceAmount;
                 }
 
-                AccountActions.transfer(
-                    this.props.account.get("id"),
-                    this.props.issuer.get("id"),
-                    sendAmount.getAmount(),
-                    asset.get("id"),
-                    this.props.output_coin_type +
+                if (this.props.exchangeId) {
+                    this.getIssuerAddress().then(res => {
+                        AccountActions.transfer(
+                            this.props.account.get("id"),
+                            res.address,
+                            sendAmount.getAmount(),
+                            asset.get("id"),
+                            res.memo,
+                            null,
+                            feeAmount ? feeAmount.asset_id : "1.3.0"
+                        );
+                    });
+                } else {
+                    AccountActions.transfer(
+                        this.props.account.get("id"),
+                        this.props.issuer.get("id"),
+                        sendAmount.getAmount(),
+                        asset.get("id"),
+                        this.props.output_coin_type +
                         ":" +
                         this.state.withdraw_address +
                         (this.state.memo
                             ? ":" + new Buffer(this.state.memo, "utf-8")
                             : ""),
-                    null,
-                    feeAmount ? feeAmount.asset_id : "1.3.0"
-                );
+                        null,
+                        feeAmount ? feeAmount.asset_id : "1.3.0"
+                    );
+                }
 
                 this.setState({
                     empty_withdraw_value: false
@@ -416,20 +466,34 @@ class WithdrawModalBlocktrades extends React.Component {
 
         const {feeAmount} = this.state;
 
-        AccountActions.transfer(
-            this.props.account.get("id"),
-            this.props.issuer.get("id"),
-            parseInt(amount * precision, 10),
-            asset.get("id"),
-            this.props.output_coin_type +
+        if (this.props.exchangeId) {
+            this.getIssuerAddress().then(res => {
+                AccountActions.transfer(
+                    this.props.account.get("id"),
+                    res.address,
+                    parseInt(amount * precision, 10),
+                    asset.get("id"),
+                    res.memo,
+                    null,
+                    feeAmount ? feeAmount.asset_id : "1.3.0"
+                );
+            });
+        } else {
+            AccountActions.transfer(
+                this.props.account.get("id"),
+                this.props.issuer.get("id"),
+                parseInt(amount * precision, 10),
+                asset.get("id"),
+                this.props.output_coin_type +
                 ":" +
                 this.state.withdraw_address +
                 (this.state.memo
                     ? ":" + new Buffer(this.state.memo, "utf-8")
                     : ""),
-            null,
-            feeAmount ? feeAmount.asset_id : "1.3.0"
-        );
+                null,
+                feeAmount ? feeAmount.asset_id : "1.3.0"
+            );
+        }
     }
 
     onDropDownList() {

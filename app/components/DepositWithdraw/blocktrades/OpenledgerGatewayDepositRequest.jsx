@@ -7,7 +7,7 @@ import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
 import AccountBalance from "../../Account/AccountBalance";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
-import {requestDepositAddress, getDepositAddress} from "common/gatewayMethods";
+import {requestDepositAddress, getDepositAddress, fetchIntermediateAddress} from "common/gatewayMethods";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
 import DisableCopyText from "../DisableCopyText";
@@ -32,11 +32,13 @@ class OpenledgerGatewayDepositRequest extends React.Component {
         deprecated_in_favor_of: ChainTypes.ChainAsset,
         deprecated_message: PropTypes.string,
         action: PropTypes.string,
-        supports_output_memos: PropTypes.bool.isRequired
+        supports_output_memos: PropTypes.bool.isRequired,
+        exchangeId: PropTypes.number
     };
 
     static defaultProps = {
-        autosubscribe: false
+        autosubscribe: false,
+        exchangeId: false
     };
 
     constructor(props) {
@@ -82,19 +84,36 @@ class OpenledgerGatewayDepositRequest extends React.Component {
         };
     }
 
-    componentWillMount() {
-        getDepositAddress({
-            coin: this.props.receive_coin_type,
-            account: this.props.account.get("name"),
-            stateCallback: this.addDepositAddress
+    getIntermediateAddress() {
+        fetchIntermediateAddress(
+            this.props.exchangeId,
+            this.props.account.get("name"),
+            ""
+        ).then(value => {
+            this.setState({
+                receive_address: value,
+                loading: false
+            });
         });
     }
 
-    componentWillReceiveProps(np) {
-        if (np.account !== this.props.account) {
+    componentDidMount() {
+        this.fetchDepositAddress();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.account !== this.props.account) {
+            this.fetchDepositAddress();
+        }
+    }
+
+    fetchDepositAddress() {
+        if (this.props.exchangeId) {
+            this.getIntermediateAddress();
+        } else {
             getDepositAddress({
-                coin: np.receive_coin_type,
-                account: np.account.get("name"),
+                coin: this.props.receive_coin_type,
+                account: this.props.account.get("name"),
                 stateCallback: this.addDepositAddress
             });
         }
@@ -119,15 +138,21 @@ class OpenledgerGatewayDepositRequest extends React.Component {
             loading: true,
             emptyAddressDeposit: false
         });
-        requestDepositAddress(this._getDepositObject());
+        if (this.props.exchangeId) {
+            this.getIntermediateAddress();
+        } else {
+            requestDepositAddress(this._getDepositObject());
+        }
     }
 
     getWithdrawModalId() {
         // console.log( "this.props.issuer: ", this.props.issuer_account.toJS() )
         // console.log( "this.receive_asset.issuer: ", this.props.receive_asset.toJS() )
+        const { exchangeId, issuer_account } = this.props;
+        const { receive_address } = this.state;
         return (
             "withdraw_asset_" +
-            this.props.issuer_account.get("name") +
+            exchangeId ? receive_address.address : issuer_account.get("name") +
             "_" +
             this.props.receive_asset.get("symbol")
         );
@@ -140,16 +165,16 @@ class OpenledgerGatewayDepositRequest extends React.Component {
     render() {
         const isDeposit = this.props.action === "deposit";
         let emptyRow = <LoadingIndicator />;
+        const { gateFee, exchangeId } = this.props;
+
         if (
             !this.props.account ||
-            !this.props.issuer_account ||
+            (!this.props.issuer_account && !exchangeId) ||
             !this.props.receive_asset
         )
             return emptyRow;
 
         let account_balances_object = this.props.account.get("balances");
-
-        const {gateFee} = this.props;
 
         let balance = "0 " + this.props.receive_asset.get("symbol");
         if (this.props.deprecated_in_favor_of) {
@@ -306,11 +331,14 @@ class OpenledgerGatewayDepositRequest extends React.Component {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            <LinkToAccountById
-                                                account={this.props.issuer_account.get(
-                                                    "id"
-                                                )}
-                                            />
+                                            {exchangeId ?
+                                                receive_address.address :
+                                                <LinkToAccountById
+                                                    account={this.props.issuer_account.get(
+                                                        "id"
+                                                    )}
+                                                />
+                                            }
                                         </td>
                                     </tr>
                                     <tr>
@@ -497,11 +525,14 @@ class OpenledgerGatewayDepositRequest extends React.Component {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            <LinkToAccountById
-                                                account={this.props.issuer_account.get(
-                                                    "id"
-                                                )}
-                                            />
+                                            {exchangeId ?
+                                                receive_address.address :
+                                                <LinkToAccountById
+                                                    account={this.props.issuer_account.get(
+                                                        "id"
+                                                    )}
+                                                />
+                                            }
                                         </td>
                                     </tr>
                                     <tr>
@@ -570,7 +601,9 @@ class OpenledgerGatewayDepositRequest extends React.Component {
                             hideModal={this.hideModal}
                             showModal={this.showModal}
                             account={this.props.account.get("name")}
-                            issuer={this.props.issuer_account.get("name")}
+                            issuer={!exchangeId ?
+                                this.props.issuer_account.get("name") :
+                                ""}
                             asset={this.props.receive_asset.get("symbol")}
                             url={this.state.url}
                             output_coin_name={this.props.deposit_asset_name}
@@ -588,6 +621,7 @@ class OpenledgerGatewayDepositRequest extends React.Component {
                                     this.props.receive_asset.get("id")
                                 ]
                             }
+                            exchangeId={exchangeId}
                         />
                     </Modal>
                 </div>

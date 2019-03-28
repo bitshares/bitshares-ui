@@ -174,7 +174,7 @@ class AccountDepositWithdraw extends React.Component {
     ) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
-        let {account} = this.props;
+        let {account, newOpenLedgerBackedCoins} = this.props;
         let {
             olService,
             btService,
@@ -227,12 +227,13 @@ class AccountDepositWithdraw extends React.Component {
 
                     {olService === "gateway" &&
                     openLedgerGatewayCoins.length ? (
-                        <OpenledgerGateway
-                            account={account}
-                            coins={openLedgerGatewayCoins}
-                            provider="openledger"
-                        />
-                    ) : null}
+                            <OpenledgerGateway
+                                account={account}
+                                coins={openLedgerGatewayCoins}
+                                newApiCoins={newOpenLedgerBackedCoins}
+                                provider="openledger"
+                            />
+                        ) : null}
 
                     {olService === "fiat" ? (
                         <div>
@@ -766,6 +767,10 @@ export default connect(
                 backedCoins: GatewayStore.getState().backedCoins,
                 openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
                     "OPEN",
+                    []
+                ),
+                newOpenLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "newApi",
                     []
                 ),
                 rudexBackedCoins: GatewayStore.getState().backedCoins.get(

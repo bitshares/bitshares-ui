@@ -103,6 +103,10 @@ class ExchangeContainer extends React.Component {
                             []
                         );
                     },
+                    newOpenLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
+                        "newApi",
+                        []
+                    ),
                     bridgeCoins: () => {
                         return GatewayStore.getState().bridgeCoins;
                     },

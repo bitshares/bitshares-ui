@@ -1838,6 +1838,30 @@ class Exchange extends React.Component {
         });
     }
 
+    getBackingAsset(base, quote) {
+        const { depositModalType } = this.state;
+        const { newOpenLedgerBackedCoins, backedCoins } = this.props;
+
+        const asset = newOpenLedgerBackedCoins.find(
+            a =>
+                a.symbol ===
+                (depositModalType === "bid"
+                    ? base.get("symbol")
+                    : quote.get("symbol"))
+        );
+
+        if (!asset) {
+            return backedCoins.find(
+                a =>
+                    a.symbol ===
+                    (depositModalType === "bid"
+                        ? base.get("symbol")
+                        : quote.get("symbol"))
+            );
+        }
+        return asset;
+    }
+
     render() {
         let {
             currentAccount,
@@ -3399,13 +3423,7 @@ class Exchange extends React.Component {
                                 ? baseBalance
                                 : quoteBalance
                         }
-                        {...this.props.backedCoins.find(
-                            a =>
-                                a.symbol ===
-                                (depositModalType === "bid"
-                                    ? base.get("symbol")
-                                    : quote.get("symbol"))
-                        )}
+                        {...this.getBackingAsset(base, quote)}
                     />
                 ) : null}
 
