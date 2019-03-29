@@ -221,6 +221,18 @@ form.order-form {
     }
 }
 
+.buy-form {
+    > div.ant-tabs-bar {
+        border-bottom: 1px solid #258a14 !important;
+    }
+}
+
+.sell-form {
+    > div.ant-tabs-bar {
+        border-bottom: 1px solid #ea340b !important;
+    }
+}
+
 #market-charts {
     > div.Stockcharts__wrapper {
         overflow: hidden;
