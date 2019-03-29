@@ -806,7 +806,7 @@ class Header extends React.Component {
                     <Translate
                         className="column-hide-small"
                         component="span"
-                        content="showcases.direct_debit.title"
+                        content="showcases.barter.title"
                     />
                 </a>
             );
