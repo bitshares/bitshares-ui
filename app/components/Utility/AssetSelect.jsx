@@ -26,15 +26,15 @@ const AssetSelectView = ({
                     content={placeholder || "utility.asset_select_placeholder"}
                 />
             }
-            value={<AssetName noTip name={value}/>}
+            value={<AssetName noTip name={value} />}
             {...props}
         >
             {assets.filter(Map.isMap).map(asset => (
-                <Select.Option key={asset.get("symbol")} value={asset.get("id")}>
-                    <AssetName
-                        noTip
-                        name={asset.get("symbol")}
-                    />
+                <Select.Option
+                    key={asset.get("symbol")}
+                    value={asset.get("id")}
+                >
+                    <AssetName noTip name={asset.get("symbol")} />
                 </Select.Option>
             ))}
         </Select>

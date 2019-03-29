@@ -156,9 +156,7 @@ function gatewaySelector(args) {
 
                         if (!balancesByAssetAndGateway[symbol])
                             balancesByAssetAndGateway[symbol] = {};
-                        balancesByAssetAndGateway[symbol][
-                            gateway
-                        ] = [
+                        balancesByAssetAndGateway[symbol][gateway] = [
                             balance.get("balance"),
                             asset
                         ];
@@ -168,17 +166,18 @@ function gatewaySelector(args) {
         });
     }
 
-    let supportLink = !!selectedGateway && !!gatewayStatus[selectedGateway]
-        ? "/help/gateways/" +
-          gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
-        : null;
+    let supportLink =
+        !!selectedGateway && !!gatewayStatus[selectedGateway]
+            ? "/help/gateways/" +
+              gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
+            : null;
 
     let gateways = [];
-    Object.keys(gatewayStatus).map((key) => {
+    Object.keys(gatewayStatus).map(key => {
         gateways.push(gatewayStatus[key]);
 
         // Set to full name to work with <Select>
-        if(gatewayStatus[key].id == selectedGateway) {
+        if (gatewayStatus[key].id == selectedGateway) {
             selectedGateway = gatewayStatus[key].name;
         }
     });
@@ -224,26 +223,38 @@ function gatewaySelector(args) {
                     </label>
 
                     <div className="inline-label input-wrapper">
-                        <Select 
+                        <Select
                             optionLabelProp={"value"}
                             onChange={onGatewayChanged}
-                            placeholder={counterpart.translate("modal.deposit_withdraw.select_gateway")} 
+                            placeholder={counterpart.translate(
+                                "modal.deposit_withdraw.select_gateway"
+                            )}
                             value={selectedGateway}
                             style={{width: "100%"}}
                         >
                             {gateways.map(g => {
                                 if (g.options.enabled) {
                                     return (
-                                        <Select.Option 
+                                        <Select.Option
                                             key={g.name}
                                             value={g.id}
                                         >
                                             {g.name}
-                                            {balancesByAssetAndGateway && balancesByAssetAndGateway[selectedAsset] && balancesByAssetAndGateway[selectedAsset][g.id] ? (
-                                                <span style={{float: "right"}}> 
+                                            {balancesByAssetAndGateway &&
+                                            balancesByAssetAndGateway[
+                                                selectedAsset
+                                            ] &&
+                                            balancesByAssetAndGateway[
+                                                selectedAsset
+                                            ][g.id] ? (
+                                                <span style={{float: "right"}}>
                                                     {utils.format_asset(
-                                                        balancesByAssetAndGateway[selectedAsset][g.id][0],
-                                                        balancesByAssetAndGateway[selectedAsset][g.id][1]
+                                                        balancesByAssetAndGateway[
+                                                            selectedAsset
+                                                        ][g.id][0],
+                                                        balancesByAssetAndGateway[
+                                                            selectedAsset
+                                                        ][g.id][1]
                                                     )}
                                                 </span>
                                             ) : null}

@@ -1879,8 +1879,33 @@
             "title_long": "Create a Collateralized Debt Position"
         },
         "direct_debit": {
-            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
-            "title": "Direct debit"
+            "description": "Setup a direct debit authorization for recurring payments. The authorization allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "title": "Direct debit",
+            "create": "Create",
+            "update": "Update",
+            "delete": "Delete",
+            "expires": "Expires",
+            "claim": "Claim",
+            "authorized_account": "Payee",
+            "authorizing_account": "Payer",
+            "limit_per_period": "Maximum amount per period",
+            "period": "Specify period",
+            "num_of_periods": "Number of periods",
+            "start_date": "First period starts on",
+            "create_new_mandate": "Create authorization",
+            "update_mandate": "Update existing authorization",
+            "claim_funds": "Claim funds",
+            "amount_to_withdraw": "Amount to collect",
+            "current_period_expires": "Current period ends",
+            "first_period_not_started": "First period has not started!",
+            "limit": "limit",
+            "tooltip": {
+                "authorized_account": "The account that is eligible to collect from your account.",
+                "limit_per_period": "The payee may collect a maximum amount of the specified asset (up to) per period. The payee can only collect once per period, even if not collected in full.",
+                "period": "One period lasts the indicated time interval, e.g. 2 weeks.",
+                "num_of_periods": "After the start time this amount of periods are available consecutively.",
+                "start_time": "The start time of the first period must be in the future when broadcasting."
+            }
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",

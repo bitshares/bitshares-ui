@@ -26,15 +26,15 @@ class DepositWithdrawAssetSelector extends React.Component {
 
         backedCoins.forEach(coin => {
             assets = assets
-                .concat(coin.map(
-                    item => {
+                .concat(
+                    coin.map(item => {
                         /* Gateway Specific Settings */
                         let [gateway, backedCoin] = item.symbol.split(".");
-            
+
                         // Return null if backedCoin is already stored
                         if (!idMap[backedCoin] && backedCoin && gateway) {
                             idMap[backedCoin] = true;
-            
+
                             return {
                                 id: backedCoin,
                                 label: backedCoin,
@@ -45,14 +45,18 @@ class DepositWithdrawAssetSelector extends React.Component {
                         } else {
                             return null;
                         }
-                    }
-                ))
-                .filter(item => { 
-                    return item; 
+                    })
+                )
+                .filter(item => {
+                    return item;
                 })
                 .filter(item => {
-                    if (item.id == "BTS") { return true; }
-                    if (include) { return include.includes(item.id); }
+                    if (item.id == "BTS") {
+                        return true;
+                    }
+                    if (include) {
+                        return include.includes(item.id);
+                    }
                     return true;
                 });
         });
@@ -64,7 +68,6 @@ class DepositWithdrawAssetSelector extends React.Component {
         this.setState({
             assets: assets
         });
-
     }
 
     getSelectedAssetArray(selectedAsset) {
@@ -73,7 +76,7 @@ class DepositWithdrawAssetSelector extends React.Component {
         let asset;
 
         assets.map(a => {
-            if(a.id == selectedAsset) {
+            if (a.id == selectedAsset) {
                 asset = a;
             }
         });
@@ -85,7 +88,7 @@ class DepositWithdrawAssetSelector extends React.Component {
         let {onSelect} = this.props;
         let asset = this.getSelectedAssetArray(selectedAsset);
 
-        if(onSelect) {
+        if (onSelect) {
             onSelect(asset);
         }
     }
@@ -94,7 +97,7 @@ class DepositWithdrawAssetSelector extends React.Component {
         let {onChange} = this.props;
         let asset = this.getSelectedAssetArray(selectedAsset);
 
-        if(onChange) {
+        if (onChange) {
             onChange(asset.id);
         }
     }
@@ -107,7 +110,7 @@ class DepositWithdrawAssetSelector extends React.Component {
         });
 
         return (
-            <Select 
+            <Select
                 onSelect={this._onSelect.bind(this)}
                 onChange={this._onInputChanged.bind(this)}
                 onSearch={this._onInputChanged.bind(this)}
@@ -115,10 +118,10 @@ class DepositWithdrawAssetSelector extends React.Component {
                     usageContext == "withdraw"
                         ? "gateway.asset_search_withdraw"
                         : "gateway.asset_search_deposit"
-                )} 
+                )}
                 value={this.props.defaultValue}
                 optionLabelProp={"value"}
-                showSearch 
+                showSearch
                 style={{width: "100%"}}
             >
                 {/* 
@@ -129,10 +132,7 @@ class DepositWithdrawAssetSelector extends React.Component {
                     this information.
                 */}
                 {coinItems.map(coin => (
-                    <Select.Option
-                        key={coin.id}
-                        value={coin.label}
-                    >
+                    <Select.Option key={coin.id} value={coin.label}>
                         {coin.label}
                     </Select.Option>
                 ))}
@@ -142,13 +142,16 @@ class DepositWithdrawAssetSelector extends React.Component {
 }
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
 
-export default connect(DepositWithdrawAssetSelector, {
-    listenTo() {
-        return [GatewayStore];
-    },
-    getProps() {
-        return {
-            backedCoins: GatewayStore.getState().backedCoins
-        };
+export default connect(
+    DepositWithdrawAssetSelector,
+    {
+        listenTo() {
+            return [GatewayStore];
+        },
+        getProps() {
+            return {
+                backedCoins: GatewayStore.getState().backedCoins
+            };
+        }
     }
-});
+);
