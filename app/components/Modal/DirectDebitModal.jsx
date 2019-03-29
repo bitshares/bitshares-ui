@@ -18,7 +18,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import {Modal, Button} from "bitshares-ui-style-guide";
+import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 import {DatePicker} from "antd";
 import ApplicationApi from "../../api/ApplicationApi";
 import moment from "moment";
@@ -50,7 +50,7 @@ class DirectDebitModal extends React.Component {
             maxAmount: false,
             num_of_periods: "",
             period: {amount: "", type: {seconds: 604800, name: "Week"}},
-            period_start_time: null,
+            period_start_time: moment().add("seconds", 120),
             permissionId: "",
             balanceError: false
         };
@@ -76,8 +76,6 @@ class DirectDebitModal extends React.Component {
         } = this.props;
 
         if (operationType === "create") {
-            console.log("time start", period_start_time.valueOf());
-
             ApplicationApi.createWithdrawPermission(
                 from_account,
                 to_account,
@@ -615,69 +613,102 @@ class DirectDebitModal extends React.Component {
                     <form noValidate>
                         <div>
                             {/* AUTHORIZED ACCOUNT */}
-                            <div className="content-block">
-                                <AccountSelector
-                                    label="showcases.direct_debit.authorized_account"
-                                    accountName={to_name}
-                                    account={to_account}
-                                    onChange={this.toChanged.bind(this)}
-                                    onAccountChanged={this.onToAccountChanged}
-                                    size={60}
-                                    typeahead={true}
-                                    hideImage
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "showcases.direct_debit.tooltip.authorized_account"
+                                )}
+                                mouseEnterDelay={0.5}
+                            >
+                                <div className="content-block">
+                                    <AccountSelector
+                                        label="showcases.direct_debit.authorized_account"
+                                        accountName={to_name}
+                                        account={to_account}
+                                        onChange={this.toChanged.bind(this)}
+                                        onAccountChanged={
+                                            this.onToAccountChanged
+                                        }
+                                        size={60}
+                                        typeahead={true}
+                                        hideImage
+                                    />
+                                </div>
+                            </Tooltip>
+                        </div>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "showcases.direct_debit.tooltip.limit_per_period"
+                            )}
+                            mouseEnterDelay={0.5}
+                        >
+                            <div className="content-block transfer-input">
+                                {/*  LIMIT */}
+                                <AmountSelector
+                                    label="showcases.direct_debit.limit_per_period"
+                                    amount={amount}
+                                    onChange={this.onAmountChanged}
+                                    asset={
+                                        asset_types.length > 0 && asset
+                                            ? asset.get("id")
+                                            : asset_id
+                                                ? asset_id
+                                                : asset_types[0]
+                                    }
+                                    assets={asset_types}
+                                    display_balance={balance}
+                                    allowNaN={true}
                                 />
                             </div>
-                        </div>
-                        <div className="content-block transfer-input">
-                            {/*  LIMIT */}
-                            <AmountSelector
-                                label="showcases.direct_debit.limit_per_period"
-                                amount={amount}
-                                onChange={this.onAmountChanged}
-                                asset={
-                                    asset_types.length > 0 && asset
-                                        ? asset.get("id")
-                                        : asset_id
-                                            ? asset_id
-                                            : asset_types[0]
-                                }
-                                assets={asset_types}
-                                display_balance={balance}
-                                allowNaN={true}
-                            />
-                        </div>
-                        <div className="content-block transfer-input">
-                            {/*  PERIOD  */}
-                            <PeriodSelector
-                                label="showcases.direct_debit.period"
-                                inputValue={period.amount}
-                                entries={["Minute", "Hour", "Day", "Week"]}
-                                values={{
-                                    Minute: {seconds: 60, name: "Minute"},
-                                    Hour: {seconds: 60 * 60, name: "Hour"},
-                                    Day: {seconds: 60 * 60 * 24, name: "Day"},
-                                    Week: {
-                                        seconds: 60 * 60 * 24 * 7,
-                                        name: "Week"
-                                    }
-                                }}
-                                periodType={period.type}
-                                onChange={this.onPeriodChanged}
-                            />
-                        </div>
-                        <div className="content-block transfer-input">
-                            {/*  NUMBEER OF PERIODS  */}
-                            <label className="left-label">
-                                {counterpart.translate(
-                                    "showcases.direct_debit.num_of_periods"
-                                )}
-                            </label>
-                            <input
-                                type="number"
-                                value={num_of_periods}
-                                onChange={this.onNumOfPeriodsChanged}
-                            />
-                        </div>
+                        </Tooltip>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "showcases.direct_debit.tooltip.period"
+                            )}
+                            mouseEnterDelay={0.5}
+                        >
+                            <div className="content-block transfer-input">
+                                {/*  PERIOD  */}
+                                <PeriodSelector
+                                    label="showcases.direct_debit.period"
+                                    inputValue={period.amount}
+                                    entries={["Minute", "Hour", "Day", "Week"]}
+                                    values={{
+                                        Minute: {seconds: 60, name: "Minute"},
+                                        Hour: {seconds: 60 * 60, name: "Hour"},
+                                        Day: {
+                                            seconds: 60 * 60 * 24,
+                                            name: "Day"
+                                        },
+                                        Week: {
+                                            seconds: 60 * 60 * 24 * 7,
+                                            name: "Week"
+                                        }
+                                    }}
+                                    periodType={period.type}
+                                    onChange={this.onPeriodChanged}
+                                />
+                            </div>
+                        </Tooltip>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "showcases.direct_debit.tooltip.num_of_periods"
+                            )}
+                            mouseEnterDelay={0.5}
+                        >
+                            <div className="content-block transfer-input">
+                                {/*  NUMBEER OF PERIODS  */}
+                                <label className="left-label">
+                                    {counterpart.translate(
+                                        "showcases.direct_debit.num_of_periods"
+                                    )}
+                                </label>
+                                <input
+                                    type="number"
+                                    value={num_of_periods}
+                                    onChange={this.onNumOfPeriodsChanged}
+                                />
+                            </div>
+                        </Tooltip>
                         <div className="content-block transfer-input">
                             {/*  START DATE  */}
                             <label className="left-label">
@@ -685,16 +716,23 @@ class DirectDebitModal extends React.Component {
                                     "showcases.direct_debit.start_date"
                                 )}
                             </label>
-                            <DatePicker
-                                value={period_start_time}
-                                showToday={false}
-                                showTime
-                                placeholder=""
-                                onChange={this.onStartDateChanged}
-                                className="date-picker-width100"
-                                style={{width: "100%"}}
-                                ref={el => this.onDatepickerRef(el)}
-                            />
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "showcases.direct_debit.tooltip.start_time"
+                                )}
+                                mouseEnterDelay={0.5}
+                            >
+                                <DatePicker
+                                    value={period_start_time}
+                                    showToday={false}
+                                    showTime
+                                    placeholder=""
+                                    onChange={this.onStartDateChanged}
+                                    className="date-picker-width100"
+                                    style={{width: "100%"}}
+                                    ref={el => this.onDatepickerRef(el)}
+                                />
+                            </Tooltip>
                         </div>
                         <div className="content-block transfer-input">
                             <div className="no-margin no-padding">

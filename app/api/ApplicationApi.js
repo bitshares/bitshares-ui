@@ -294,8 +294,6 @@ const ApplicationApi = {
                 transferData.transactionBuilder = tr;
                 transfers.push(this._create_transfer_op(transferData));
             });
-            console.log(transfers);
-
             return Promise.all(transfers)
                 .then(result => {
                     return tr.update_head_block().then(() => {

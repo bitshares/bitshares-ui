@@ -12,72 +12,78 @@ import {
     Table
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
-import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import DirectDebitModal from "../Modal/DirectDebitModal";
 import DirectDebitClaimModal from "../Modal/DirectDebitClaimModal";
-import debounceRender from "react-debounce-render";
-import {connect} from "alt-react";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import ApplicationApi from "../../api/ApplicationApi";
+import {bindToCurrentAccount, hasLoaded} from "../Utility/BindToCurrentAccount";
 
 class DirectDebit extends Component {
-    state = {
-        isModalVisible: false,
-        isClaimModalVisible: false,
-        filterString: "",
-        operationData: "",
-        operationClaimData: "",
-        withdraw_permission_list: []
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            isModalVisible: false,
+            isClaimModalVisible: false,
+            filterString: "",
+            operationData: "",
+            operationClaimData: "",
+            withdraw_permission_list: []
+        };
+    }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.currentAccount != nextProps.currentAccount) {
-            this._update(nextProps.currentAccount);
+    _update() {
+        let currentAccount = this.props.currentAccount;
+
+        if (hasLoaded(currentAccount)) {
+            // for now, fetch manually
+            Promise.all([
+                Apis.instance()
+                    .db_api()
+                    .exec("get_withdraw_permissions_by_giver", [
+                        currentAccount.get("id"),
+                        "1.12.0",
+                        100
+                    ]),
+                Apis.instance()
+                    .db_api()
+                    .exec("get_withdraw_permissions_by_recipient", [
+                        currentAccount.get("id"),
+                        "1.12.0",
+                        100
+                    ])
+            ]).then(results => {
+                let withdraw_permission_list = [];
+                withdraw_permission_list = withdraw_permission_list.concat(
+                    results[0]
+                );
+                withdraw_permission_list = withdraw_permission_list.concat(
+                    results[1]
+                );
+                withdraw_permission_list.forEach(item => {
+                    try {
+                        // to trigger caching for modal
+                        ChainStore.getAccount(item.authorized_account, false);
+                        ChainStore.getAccount(
+                            item.withdraw_from_account,
+                            false
+                        );
+                    } catch (err) {}
+                });
+                this.setState({
+                    withdraw_permission_list: withdraw_permission_list
+                });
+            });
         }
     }
 
-    _update(account = null) {
-        let currentAccount = ChainStore.getAccount(
-            account == null ? this.props.currentAccount : account
-        );
-        // fetch full accounts, contains withdraw, whcih is a list of permission objects. requires bitsharesjs in current develop branch
-
-        // for now, fetch manually
-        Promise.all([
-            Apis.instance()
-                .db_api()
-                .exec("get_withdraw_permissions_by_giver", [
-                    currentAccount.get("id"),
-                    "1.12.0",
-                    100
-                ]),
-            Apis.instance()
-                .db_api()
-                .exec("get_withdraw_permissions_by_recipient", [
-                    currentAccount.get("id"),
-                    "1.12.0",
-                    100
-                ])
-        ]).then(results => {
-            let withdraw_permission_list = [];
-            withdraw_permission_list = withdraw_permission_list.concat(
-                results[0]
-            );
-            withdraw_permission_list = withdraw_permission_list.concat(
-                results[1]
-            );
-
-            console.log("withdraw_permission_list", withdraw_permission_list);
-
-            this.setState({
-                withdraw_permission_list: withdraw_permission_list
-            });
-        });
+    componentDidMount() {
+        this._update();
     }
 
-    componentDidMount() {
+    componentWillReceiveProps() {
+        // always update, relies on push from backend when account permission change
         this._update();
     }
 
@@ -124,7 +130,7 @@ class DirectDebit extends Component {
                 // nothing to do, user will see popup
             })
             .catch(err => {
-                // todo: visualize error somewhere
+                this.setState({errorMessage: err.toString()});
                 console.error(err);
             });
     };
@@ -138,7 +144,7 @@ class DirectDebit extends Component {
             operationClaimData,
             filterString
         } = this.state;
-        let currentAccount = ChainStore.getAccount(this.props.currentAccount);
+        let currentAccount = this.props.currentAccount;
 
         let dataSource = null;
 
@@ -148,11 +154,6 @@ class DirectDebit extends Component {
                     item.withdrawal_limit.asset_id,
                     false
                 );
-                try {
-                    // to trigger caching for modal
-                    ChainStore.getAccount(item.authorized_account, false);
-                    ChainStore.getAccount(item.withdraw_from_account, false);
-                } catch (err) {}
                 const authorizedAccountName = ChainStore.getAccountName(
                     item.authorized_account
                 );
@@ -388,11 +389,19 @@ class DirectDebit extends Component {
                                         type: "create",
                                         payload: null
                                     })}
+                                    style={{
+                                        marginRight: "30px"
+                                    }}
                                 >
                                     {counterpart.translate(
                                         "showcases.direct_debit.create_new_mandate"
                                     )}
                                 </Button>
+                                {!!this.state.errorMessage && (
+                                    <span className="red">
+                                        {this.state.errorMessage}
+                                    </span>
+                                )}
                             </div>
 
                             <Table
@@ -420,20 +429,6 @@ class DirectDebit extends Component {
     }
 }
 
-// DirectDebit = debounceRender(DirectDebit, 50, {leading: false});
+DirectDebit = bindToCurrentAccount(DirectDebit);
 
-export default connect(
-    DirectDebit,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
-    }
-);
+export default DirectDebit;
