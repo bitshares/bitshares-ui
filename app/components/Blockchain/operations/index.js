@@ -17,8 +17,11 @@ import {AssetIssue} from "./AssetIssue";
 import {AssetReserve} from "./AssetReserve";
 import {AssetFundFeePool} from "./AssetFundFeePool";
 import {AssetSettle} from "./AssetSettle";
+import {AssetSettleCancel} from "./AssetSettleCancel";
 import {AssetGlobalSettle} from "./AssetGlobalSettle";
 import {AssetPublishFeed} from "./AssetPublishFeed";
+import {AssetClaimPool} from "./AssetClaimPool";
+import {AssetUpdateIssuer} from "./AssetUpdateIssuer";
 import {WitnessCreate} from "./WitnessCreate";
 import {WitnessUpdate} from "./WitnessUpdate";
 import {WitnessWithdrawPay} from "./WitnessWithdrawPay";
@@ -48,43 +51,26 @@ import {CommitteeMemberUpdateGlobalParams} from "./CommitteeMemberUpdateGlobalPa
 import {Custom} from "./Custom";
 import {OverrideTransfer} from "./OverrideTransfer";
 import {DefaultOperation} from "./DefaultOperation";
+import {BidCollateral} from "./BidCollateral";
 
 export default function opComponents(opType, props, opts) {
-    console.log("** operation params**", {opType, props, opts});
-
     switch (opType) {
         case "transfer":
-            return <Transfer {...props} changeColor={opts.changeColor} />;
+            return <Transfer {...props} {...opts} />;
             break;
         case "limit_order_create":
-            return (
-                <LimitOrderCreate
-                    {...props}
-                    changeColor={opts.changeColor}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <LimitOrderCreate {...props} {...opts} />;
             break;
         case "limit_order_cancel":
-            return (
-                <LimitOrderCancel
-                    {...props}
-                    changeColor={opts.changeColor}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <LimitOrderCancel {...props} {...opts} />;
             break;
 
         case "short_order_cancel":
-            return (
-                <ShortOrderCancel {...props} changeColor={opts.changeColor} />
-            );
+            return <ShortOrderCancel {...props} {...opts} />;
             break;
 
         case "call_order_update":
-            return (
-                <CallOrderUpdate {...props} changeColor={opts.changeColor} />
-            );
+            return <CallOrderUpdate {...props} {...opts} />;
             break;
 
         case "key_create":
@@ -92,199 +78,122 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "account_create":
-            return (
-                <AccountCreate
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <AccountCreate {...props} {...opts} />;
             break;
 
         case "account_update":
-            return (
-                <AccountUpdate {...props} fromComponent={opts.fromComponent} />
-            );
+            return <AccountUpdate {...props} {...opts} />;
             break;
 
         case "account_whitelist":
-            return (
-                <AccountWhitelist
-                    {...props}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <AccountWhitelist {...props} {...opts} />;
             break;
 
         case "account_upgrade":
-            return (
-                <AccountUpgrade
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <AccountUpgrade {...props} {...opts} />;
             break;
 
         case "account_transfer":
-            return (
-                <AccountTransfer
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <AccountTransfer {...props} {...opts} />;
             break;
 
         case "asset_create":
-            return (
-                <AssetCreate
-                    {...props}
-                    changeColor={opts.changeColor}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <AssetCreate {...props} {...opts} />;
             break;
 
         case "asset_update":
         case "asset_update_bitasset":
-            return (
-                <AssetUpdate
-                    {...props}
-                    changeColor={opts.changeColor}
-                    fromComponent={opts.fromComponent}
-                />
-            );
+            return <AssetUpdate {...props} {...opts} />;
             break;
-
+        /* -------------------------------------------------------------------------------------------- */
         case "asset_update_feed_producers":
-            return (
-                <AssetUpdateFeedProducers
-                    {...props}
-                    changeColor={opts.changeColor}
-                />
-            );
+            return <AssetUpdateFeedProducers {...props} {...opts} />;
             break;
 
         case "asset_issue":
-            return <AssetIssue {...props} changeColor={opts.changeColor} />;
+            return <AssetIssue {...props} {...opts} />;
             break;
 
         case "asset_reserve":
-            return <AssetReserve {...props} />;
+            return <AssetReserve {...props} {...opts} />;
             break;
 
         case "asset_fund_fee_pool":
-            return (
-                <AssetFundFeePool
-                    {...props}
-                    changeColor={opts.changeColor}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <AssetFundFeePool {...props} {...opts} />;
             break;
 
         case "asset_settle":
-            return <AssetSettle {...props} changeColor={opts.changeColor} />;
+            return <AssetSettle {...props} {...opts} />;
+            break;
+
+        case "asset_settle_cancel":
+            return <AssetSettleCancel {...props} />;
             break;
 
         case "asset_global_settle":
-            return (
-                <AssetGlobalSettle
-                    {...props}
-                    changeColor={opts.changeColor}
-                    linkToAsset={opts.linkToAsset}
-                />
-            );
+            return <AssetGlobalSettle {...props} {...opts} />;
             break;
 
         case "asset_publish_feed":
-            return (
-                <AssetPublishFeed
-                    {...props}
-                    changeColor={opts.changeColor}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <AssetPublishFeed {...props} {...opts} />;
+            break;
+
+        case "asset_claim_pool":
+            return <AssetClaimPool {...props} {...opts} />;
+            break;
+
+        case "asset_update_issuer":
+            return <AssetUpdateIssuer {...props} />;
             break;
 
         case "witness_create":
-            return (
-                <WitnessCreate {...props} linkToAccount={opts.linkToAccount} />
-            );
-
+            return <WitnessCreate {...props} {...opts} />;
             break;
 
         case "witness_update":
-            return <WitnessUpdate {...props} />;
+            return <WitnessUpdate {...props} {...opts} />;
             break;
 
         case "witness_withdraw_pay":
-            return (
-                <WitnessWithdrawPay
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <WitnessWithdrawPay {...props} {...opts} />;
             break;
 
         case "proposal_create":
-            return (
-                <ProposalCreate {...props} fromComponent={opts.fromComponent} />
-            );
+            return <ProposalCreate {...props} {...opts} />;
             break;
 
         case "proposal_update":
-            return <ProposalUpdate />;
+            return <ProposalUpdate {...props} {...opts} />;
             break;
 
         case "proposal_delete":
-            return <ProposalDelete />;
+            return <ProposalDelete {...props} {...opts} />;
             break;
 
         case "withdraw_permission_create":
-            return (
-                <WithdrawPermissionCreate
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <WithdrawPermissionCreate {...props} {...opts} />;
             break;
 
         case "withdraw_permission_update":
-            return (
-                <WithdrawPermissionUpdate
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <WithdrawPermissionUpdate {...props} {...opts} />;
             break;
 
         case "withdraw_permission_claim":
-            return (
-                <WithdrawPermissionClaim
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <WithdrawPermissionClaim {...props} {...opts} />;
             break;
 
         case "withdraw_permission_delete":
-            return <WithdrawPermissionDelete />;
+            return <WithdrawPermissionDelete {...props} {...opts} />;
             break;
 
         case "fill_order":
-            return (
-                <FillOrder
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                    changeColor={opts.changeColor}
-                />
-            );
+            return <FillOrder {...props} {...opts} />;
             break;
 
         case "global_parameters_update":
-            return <GlobalParametersUpdate />;
+            return (
+                <GlobalParametersUpdate fromComponent={opts.fromComponent} />
+            );
             break;
 
         case "file_write":
@@ -292,16 +201,11 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "vesting_balance_create":
-            return (
-                <VestingBalanceCreate
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <VestingBalanceCreate {...props} {...opts} />;
             break;
 
         case "vesting_balance_withdraw":
-            return <VestingBalanceWithdraw {...props} />;
+            return <VestingBalanceWithdraw {...props} {...opts} />;
             break;
 
         case "bond_create_offer":
@@ -313,84 +217,55 @@ export default function opComponents(opType, props, opts) {
             break;
 
         case "bond_accept_offer":
-            return (
-                <BondAcceptOffer
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <BondAcceptOffer {...props} {...opts} />;
             break;
 
         case "bond_claim_collateral":
-            return (
-                <BondClaimCollaterial
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <BondClaimCollaterial {...props} {...opts} />;
             break;
 
         case "worker_create":
-            return <WorkerCreate {...props} />;
+            return <WorkerCreate {...props} {...opts} />;
             break;
 
         case "balance_claim":
-            return (
-                <BalanceClaim
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                    changeColor={opts.changeColor}
-                />
-            );
+            return <BalanceClaim {...props} {...opts} />;
             break;
 
         case "committee_member_create":
-            return (
-                <CommittyMemberCreate
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <CommittyMemberCreate {...props} {...opts} />;
             break;
 
         case "transfer_to_blind":
-            return (
-                <TransferToBlind
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <TransferToBlind {...props} {...opts} />;
             break;
 
         case "transfer_from_blind":
-            return (
-                <TransferFromBlind
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                />
-            );
+            return <TransferFromBlind {...props} {...opts} />;
             break;
 
         case "asset_claim_fees":
+            return <AssetClaimFees {...props} {...opts} />;
+            break;
+
+        case "committee_member_update_global_parameters":
             return (
-                <AssetClaimFees
-                    {...props}
-                    linkToAccount={opts.linkToAccount}
-                    changeColor={opts.changeColor}
+                <CommitteeMemberUpdateGlobalParams
+                    fromComponent={opts.fromComponent}
                 />
             );
             break;
 
-        case "committee_member_update_global_parameters":
-            return <CommitteeMemberUpdateGlobalParams />;
-            break;
-
         case "custom":
-            return <Custom />;
+            return <Custom fromComponent={opts.fromComponent} />;
             break;
 
         case "override_transfer":
-            return <OverrideTransfer {...props} />;
+            return <OverrideTransfer {...props} {...opts} />;
+            break;
+
+        case "bid_collateral":
+            return <BidCollateral {...props} />;
             break;
 
         default:

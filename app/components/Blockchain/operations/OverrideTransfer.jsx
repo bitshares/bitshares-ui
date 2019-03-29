@@ -1,10 +1,14 @@
 import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 
-export const OverrideTransfer = ({op}) => {
+export const OverrideTransfer = ({op, fromComponent}) => {
     return (
         <TranslateWithLinks
-            string="proposal.override_transfer"
+            string={
+                fromComponent === "proposed_operation"
+                    ? "proposal.override_transfer"
+                    : "operation.override_transfer"
+            }
             keys={[
                 {
                     type: "account",

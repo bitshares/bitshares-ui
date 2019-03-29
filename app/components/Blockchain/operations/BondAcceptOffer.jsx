@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import FormattedAsset from "../../Utility/FormattedAsset";
 
-export const BondAcceptOffer = ({op, linkToAccount}) => {
+export const BondAcceptOffer = ({op, linkToAccount, current}) => {
     if (current === op[1].lender) {
         return (
             <span>

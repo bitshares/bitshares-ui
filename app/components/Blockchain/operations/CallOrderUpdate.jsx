@@ -1,13 +1,17 @@
 import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 
-export const CallOrderUpdate = ({op, changeColor}) => {
+export const CallOrderUpdate = ({op, changeColor, fromComponent}) => {
     changeColor("warning");
 
     return (
         <span>
             <TranslateWithLinks
-                string="operation.call_order_update"
+                string={
+                    fromComponent === "proposed_operation"
+                        ? "proposal.call_order_update"
+                        : "operation.call_order_update"
+                }
                 keys={[
                     {
                         type: "account",

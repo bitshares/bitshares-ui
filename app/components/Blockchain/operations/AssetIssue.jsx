@@ -2,18 +2,22 @@ import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 import MemoText from "../MemoText";
 
-export const AssetIssue = ({op, changeColor}) => {
+export const AssetIssue = ({op, changeColor, fromComponent}) => {
     changeColor("warning");
     let memoComponent;
     if (op[1].memo) {
         memoComponent = <MemoText memo={op[1].memo} />;
     }
-
     op[1].asset_to_issue.amount = parseInt(op[1].asset_to_issue.amount, 10);
+
     return (
         <span>
             <TranslateWithLinks
-                string="proposal.asset_issue"
+                string={
+                    fromComponent === "proposed_operation"
+                        ? "proposal.asset_issue"
+                        : "operation.asset_issue"
+                }
                 keys={[
                     {
                         type: "account",

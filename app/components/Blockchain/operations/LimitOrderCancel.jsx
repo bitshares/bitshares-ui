@@ -2,13 +2,18 @@ import React from "react";
 import Translate from "react-translate-component";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 
-export const LimitOrderCancel = ({op, changeColor, fromComponent}) => {
+export const LimitOrderCancel = ({
+    op,
+    changeColor,
+    fromComponent,
+    linkToAccount
+}) => {
     changeColor("cancel");
 
     if (fromComponent === "proposed_operation") {
         return (
             <span>
-                {this.linkToAccount(op[1].fee_paying_account)}
+                {linkToAccount(op[1].fee_paying_account)}
                 &nbsp;
                 <Translate
                     component="span"

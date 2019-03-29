@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import FormattedAsset from "../../Utility/FormattedAsset";
 
-export const BondClaimCollaterial = ({op, linkToAccount}) => {
+export const BondClaimCollaterial = ({op, linkToAccount, current}) => {
     if (current === op[1].lender) {
         return (
             <span>

@@ -1,11 +1,15 @@
 import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 
-export const AssetReserve = ({op}) => {
+export const AssetReserve = ({op, fromComponent}) => {
     return (
         <span>
             <TranslateWithLinks
-                string="proposal.asset_reserve"
+                string={
+                    fromComponent === "proposed_operation"
+                        ? "proposal.asset_reserve"
+                        : "operation.asset_reserve"
+                }
                 keys={[
                     {
                         type: "account",

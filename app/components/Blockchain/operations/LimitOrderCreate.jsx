@@ -2,8 +2,14 @@
 import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 import BindToChainState from "../../Utility/BindToChainState";
-
-export const LimitOrderCreate = ({op, changeColor, fromComponent}) => {
+import marketUtils from "common/market_utils";
+export const LimitOrderCreate = ({
+    op,
+    changeColor,
+    fromComponent,
+    marketDirections,
+    result
+}) => {
     changeColor("warning");
 
     if (fromComponent === "proposed_operation") {
@@ -60,9 +66,7 @@ export const LimitOrderCreate = ({op, changeColor, fromComponent}) => {
                             first,
                             second
                         } = marketUtils.getMarketName(base, quote);
-                        const inverted = this.props.marketDirections.get(
-                            marketName
-                        );
+                        const inverted = marketDirections.get(marketName);
 
                         const isBid =
                             o.amount_to_sell.asset_id ===
@@ -77,9 +81,9 @@ export const LimitOrderCreate = ({op, changeColor, fromComponent}) => {
                         const amount = isBid
                             ? op[1].min_to_receive
                             : op[1].amount_to_sell;
-                        let orderId = this.props.result
-                            ? typeof this.props.result[1] == "string"
-                                ? "#" + this.props.result[1].substring(4)
+                        let orderId = result
+                            ? typeof result[1] == "string"
+                                ? "#" + result[1].substring(4)
                                 : ""
                             : "";
 
