@@ -476,6 +476,8 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "limit": "Limit",
+        "scaled": "Scaled",
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -1454,7 +1456,7 @@
             "urlNamed": "%(name)s should be url",
             "oneOf": "The field should be one of: %(list)s",
             "oneOfNamed": "%(name)s should be one of: %(list)s",
-            "balance": "Insufficient balance. Available only: %(balance)s",
+            "balance": "Insufficient balance. Available only: %(balance)s %(symbol)s",
 
             "test": ""
         }
@@ -1478,6 +1480,7 @@
             "flat": "Flat"
         },
         "order_count": "Order Count",
+        "order_s": "Order(s)",
         "action": {
             "title": "Action",
             "buy": "Buy",
