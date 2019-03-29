@@ -49,7 +49,8 @@ class DirectDebitClaimModal extends React.Component {
             payerBalanceWarning: false,
             withdrawal_limit: null,
             current_period_expires: "",
-            claimedAmount: ""
+            claimedAmount: "",
+            errorMessage: null
         };
     }
 
@@ -75,14 +76,10 @@ class DirectDebitClaimModal extends React.Component {
             feeAsset ? feeAsset.get("id") : "1.3.0"
         )
             .then(result => {
-                console.log(
-                    "finish up handling successfull broadcasting",
-                    result
-                );
                 this.props.hideModal();
             })
             .catch(err => {
-                console.log("visualize error somehow");
+                this.setState({errorMessage: err});
             });
     };
 
@@ -516,6 +513,11 @@ class DirectDebitClaimModal extends React.Component {
                 overlay={true}
                 onCancel={this.props.hideModal}
                 footer={[
+                    this.state.errorMessage && (
+                        <span className={"red"} style={{marginRight: "10px"}}>
+                            {this.state.errorMessage}
+                        </span>
+                    ),
                     <Button
                         key={"send"}
                         disabled={isSubmitNotValid}
