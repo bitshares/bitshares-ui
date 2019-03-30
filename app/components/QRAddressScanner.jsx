@@ -100,7 +100,11 @@ class QRScanner extends React.Component {
 
         return (
             <div className="qr-address-scanner">
-                <Icon type="camera" onClick={this.handleClick} style={{fontSize: "24px", padding: 5}} />
+                <Icon
+                    type="camera"
+                    onClick={this.handleClick}
+                    style={{fontSize: "24px", padding: 5}}
+                />
                 <Modal
                     visible={this.state.visible}
                     className="qr-address-scanner-modal"

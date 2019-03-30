@@ -21,7 +21,14 @@ import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import QRCode from "qrcode.react";
-import {Form, Modal, Button, Tooltip, Input, Select} from "bitshares-ui-style-guide";
+import {
+    Form,
+    Modal,
+    Button,
+    Tooltip,
+    Input,
+    Select
+} from "bitshares-ui-style-guide";
 
 class SimpleDepositBlocktradesBridge extends React.Component {
     static propTypes = {
@@ -84,8 +91,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     shouldComponentUpdate(np, ns) {
-        if(
-            this.state.inputCoinType !== ns.inputCoinType || 
+        if (
+            this.state.inputCoinType !== ns.inputCoinType ||
             this.state.outputCoinType !== ns.outputCoinType
         ) {
             this._getDepositLimit(ns);
@@ -147,7 +154,10 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         let {inputCoinType, outputCoinType} = data;
 
         this.setState({limitLoading: true});
-        getDepositLimit(inputCoinType.toLowerCase(), outputCoinType.toLowerCase())
+        getDepositLimit(
+            inputCoinType.toLowerCase(),
+            outputCoinType.toLowerCase()
+        )
             .then(res => {
                 this.setState({
                     depositLimit: res.depositLimit,
@@ -179,9 +189,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         }
 
         // Catch double decimal and remove if invalid
-        if (
-            value.charAt(value.length) != value.search(".")
-        ) {
+        if (value.charAt(value.length) != value.search(".")) {
             value.substr(1);
         }
 
@@ -274,7 +282,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         });
     }
 
-
     _validateAddress(address, props = this.props) {
         validateAddress({walletType: props.walletType, newAddress: address})
             .then(isValid => {
@@ -332,8 +339,14 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                     <Form.Item label={counterpart.translate("modal.buy.asset")}>
                         <Input disabled value={receiveName} />
                     </Form.Item>
-                    <Form.Item label={counterpart.translate("modal.buy.bridge")}>
-                        <Tooltip title={counterpart.translate("tooltip.bridge_TRADE")}>
+                    <Form.Item
+                        label={counterpart.translate("modal.buy.bridge")}
+                    >
+                        <Tooltip
+                            title={counterpart.translate(
+                                "tooltip.bridge_TRADE"
+                            )}
+                        >
                             <Input
                                 disabled
                                 type="text"
@@ -345,25 +358,45 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                 {!apiError ? (
                     <span>
                         <div className="grid-block no-overflow wrap shrink">
-                            <div className="small-12 medium-6" style={{paddingRight: 5}}>
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
                                 <Form className="full-width" layout="vertical">
-                                    <Form.Item 
-                                        label={counterpart.translate("transfer.send")}
-                                        validateStatus={aboveLimit ? "error" : ""}
-                                        help={aboveLimit ? counterpart.translate("gateway.over_limit") : ""}
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "transfer.send"
+                                        )}
+                                        validateStatus={
+                                            aboveLimit ? "error" : ""
+                                        }
+                                        help={
+                                            aboveLimit
+                                                ? counterpart.translate(
+                                                      "gateway.over_limit"
+                                                  )
+                                                : ""
+                                        }
                                     >
                                         <Input
                                             value={this.state.sendAmount}
-                                            onChange={this._onAmountChange.bind(this, "input")}
+                                            onChange={this._onAmountChange.bind(
+                                                this,
+                                                "input"
+                                            )}
                                             addonAfter={
-                                                <Select 
-                                                    defaultValue={this.state.inputCoinType.toUpperCase()} 
+                                                <Select
+                                                    defaultValue={this.state.inputCoinType.toUpperCase()}
                                                     value={this.state.inputCoinType.toUpperCase()}
                                                     style={{width: 100}}
-                                                    onChange={this._setDepositAsset.bind(this)}
+                                                    onChange={this._setDepositAsset.bind(
+                                                        this
+                                                    )}
                                                 >
                                                     {bridgeAssets.map(asset => (
-                                                        <Select.Option key={asset.toUpperCase()}>
+                                                        <Select.Option
+                                                            key={asset.toUpperCase()}
+                                                        >
                                                             {asset.toUpperCase()}
                                                         </Select.Option>
                                                     ))}
@@ -373,49 +406,70 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                     </Form.Item>
                                 </Form>
                             </div>
-                            <div className="small-12 medium-6" style={{paddingRight: 5}}>
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
                                 <Form className="full-width" layout="vertical">
-                                    <Form.Item label={counterpart.translate("gateway.deposit_limit")}>
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "gateway.deposit_limit"
+                                        )}
+                                    >
                                         <Input
                                             value={this.state.depositLimit}
                                             disabled={true}
                                             addonAfter={
-                                                <Select 
-                                                    defaultValue={this.state.inputCoinType.toUpperCase()} 
+                                                <Select
+                                                    defaultValue={this.state.inputCoinType.toUpperCase()}
                                                     value={this.state.inputCoinType.toUpperCase()}
                                                     style={{width: 100}}
                                                     disabled
                                                     showArrow={false}
                                                 >
                                                     {bridgeAssets.map(asset => (
-                                                        <Select.Option key={asset.toUpperCase()}>
+                                                        <Select.Option
+                                                            key={asset.toUpperCase()}
+                                                        >
                                                             {asset.toUpperCase()}
                                                         </Select.Option>
                                                     ))}
                                                 </Select>
                                             }
-                                        />                                
+                                        />
                                     </Form.Item>
                                 </Form>
                             </div>
                         </div>
-                        
+
                         <div className="grid-block no-overflow wrap shrink">
-                            <div className="small-12 medium-6" style={{paddingRight: 5}}>
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
                                 <Form className="full-width" layout="vertical">
-                                    <Form.Item label={counterpart.translate("exchange.receive")}>
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "exchange.receive"
+                                        )}
+                                    >
                                         <Input
                                             value={this.state.receiveAmount}
-                                            onChange={this._onAmountChange.bind(this, "output")}
+                                            onChange={this._onAmountChange.bind(
+                                                this,
+                                                "output"
+                                            )}
                                             addonAfter={
-                                                <Select 
-                                                    defaultValue={receiveName} 
+                                                <Select
+                                                    defaultValue={receiveName}
                                                     value={receiveName}
                                                     style={{width: 100}}
                                                     disabled
                                                     showArrow={false}
                                                 >
-                                                    <Select.Option key={receiveName}>
+                                                    <Select.Option
+                                                        key={receiveName}
+                                                    >
                                                         {receiveName}
                                                     </Select.Option>
                                                 </Select>
@@ -424,21 +478,34 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                     </Form.Item>
                                 </Form>
                             </div>
-                            <div className="small-12 medium-6" style={{paddingRight: 5}}>
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
                                 <Form className="full-width" layout="vertical">
-                                    <Form.Item label={counterpart.translate("exchange.price")}>
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "exchange.price"
+                                        )}
+                                    >
                                         <Input
-                                            value={aboveLimit || isNaN(price) ? 0 : price}
+                                            value={
+                                                aboveLimit || isNaN(price)
+                                                    ? 0
+                                                    : price
+                                            }
                                             disabled={true}
                                             addonAfter={
-                                                <Select 
-                                                    defaultValue={priceSuffix} 
+                                                <Select
+                                                    defaultValue={priceSuffix}
                                                     value={priceSuffix}
                                                     style={{width: 125}}
                                                     disabled
                                                     showArrow={false}
                                                 >
-                                                    <Select.Option key={priceSuffix}>
+                                                    <Select.Option
+                                                        key={priceSuffix}
+                                                    >
                                                         {priceSuffix}
                                                     </Select.Option>
                                                 </Select>
@@ -448,7 +515,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                 </Form>
                             </div>
                         </div>
-                        
 
                         {!addressValue ? (
                             <div style={{textAlign: "center"}}>
@@ -510,7 +576,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                         </div>
                                     </div>
                                 ) : null}
-                            </div>)}
+                            </div>
+                        )}
                     </span>
                 ) : (
                     <Translate content="modal.deposit.address_generation_error" />

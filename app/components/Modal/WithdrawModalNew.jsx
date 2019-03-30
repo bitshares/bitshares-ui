@@ -43,7 +43,7 @@ import {ChainStore} from "bitsharesjs";
 const gatewayBoolCheck = "withdrawalAllowed";
 
 import {getAssetAndGateway, getIntermediateAccount} from "common/gatewayUtils";
-import { isObject } from "util";
+import {isObject} from "util";
 
 class WithdrawModalNew extends React.Component {
     constructor(props) {
@@ -144,7 +144,7 @@ class WithdrawModalNew extends React.Component {
             this._updateFee();
         }
 
-        if(this.state.address != "") {
+        if (this.state.address != "") {
             this.onAddressSelected(this.state.address);
         }
 
@@ -527,13 +527,16 @@ class WithdrawModalNew extends React.Component {
 
     onFeeChanged({asset}) {
         // If asset is an object, just extract asset ID
-        if(isObject(asset)) {
+        if (isObject(asset)) {
             asset = asset.get("id");
         }
 
-        this.setState({
-            fee_asset_id: asset,
-        },this._updateFee);
+        this.setState(
+            {
+                fee_asset_id: asset
+            },
+            this._updateFee
+        );
     }
 
     onAssetSelected(asset) {
@@ -625,7 +628,7 @@ class WithdrawModalNew extends React.Component {
         }
     }
 
-    // Don't validate address on change. 
+    // Don't validate address on change.
     // Validation is done when address is selected
     onAddressChanged(inputAddress) {
         this.setState({address: inputAddress});
@@ -1024,19 +1027,20 @@ class WithdrawModalNew extends React.Component {
                         <div style={{marginBottom: "1em"}}>
                             {selectedGateway
                                 ? gatewaySelector.call(this, {
-                                    selectedGateway,
-                                    gatewayStatus,
-                                    nAvailableGateways,
-                                    availableGateways:
-                                        coinToGatewayMapping[selectedAsset],
-                                    error: false,
-                                    onGatewayChanged: this.onGatewayChanged.bind(
-                                        this
-                                    ),
-                                    selectedAsset,
-                                    balances,
-                                    assets
-                                }) : null}
+                                      selectedGateway,
+                                      gatewayStatus,
+                                      nAvailableGateways,
+                                      availableGateways:
+                                          coinToGatewayMapping[selectedAsset],
+                                      error: false,
+                                      onGatewayChanged: this.onGatewayChanged.bind(
+                                          this
+                                      ),
+                                      selectedAsset,
+                                      balances,
+                                      assets
+                                  })
+                                : null}
                         </div>
 
                         {/*QUANTITY*/}
@@ -1206,10 +1210,16 @@ class WithdrawModalNew extends React.Component {
                                             showSearch
                                             style={{width: "100%"}}
                                             value={address}
-                                            onSearch={this.onAddressChanged.bind(this)}
-                                            onSelect={this.onAddressSelected.bind(this)}
+                                            onSearch={this.onAddressChanged.bind(
+                                                this
+                                            )}
+                                            onSelect={this.onAddressSelected.bind(
+                                                this
+                                            )}
                                         >
-                                            {address && storedAddresses.indexOf(address) == -1 ? (
+                                            {address &&
+                                            storedAddresses.indexOf(address) ==
+                                                -1 ? (
                                                 <Select.Option value={address}>
                                                     {address}
                                                 </Select.Option>
@@ -1223,7 +1233,9 @@ class WithdrawModalNew extends React.Component {
                                         <span>
                                             <QRScanner
                                                 label="Scan"
-                                                onSuccess={this.handleQrScanSuccess}
+                                                onSuccess={
+                                                    this.handleQrScanSuccess
+                                                }
                                             />
                                         </span>
                                     </div>
@@ -1266,14 +1278,19 @@ class WithdrawModalNew extends React.Component {
                         {/*FEE & GATEWAY FEE*/}
                         {assetAndGateway || isBTS ? (
                             <div className="grid-block no-overflow wrap shrink">
-                                <div className="small-12 medium-6" style={{paddingRight: 5}}>
+                                <div
+                                    className="small-12 medium-6"
+                                    style={{paddingRight: 5}}
+                                >
                                     <label className="left-label">
                                         <Translate content="transfer.fee" />
                                     </label>
-                                    <AmountSelector 
+                                    <AmountSelector
                                         asset={this.state.fee_asset_id}
                                         assets={fee_asset_types}
-                                        amount={this.state.feeAmount.getAmount({ real: true })}
+                                        amount={this.state.feeAmount.getAmount({
+                                            real: true
+                                        })}
                                         onChange={this.onFeeChanged.bind(this)}
                                     />
                                 </div>
@@ -1285,17 +1302,20 @@ class WithdrawModalNew extends React.Component {
                                         <ExchangeInput
                                             placeholder="0.0"
                                             id="baseMarketFee"
-                                            value={!!backingAsset && "gateFee" in
-                                                backingAsset
-                                                ? backingAsset.gateFee
-                                                : 0
+                                            value={
+                                                !!backingAsset &&
+                                                "gateFee" in backingAsset
+                                                    ? backingAsset.gateFee
+                                                    : 0
                                             }
                                             disabled
                                             addonAfter={
                                                 <span>
                                                     <AssetName
                                                         noTip
-                                                        name={backingAsset.symbol}
+                                                        name={
+                                                            backingAsset.symbol
+                                                        }
                                                     />
                                                 </span>
                                             }

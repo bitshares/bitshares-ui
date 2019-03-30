@@ -107,9 +107,10 @@ export const Messages = {
         return counterpart.translate(`validation.messages.oneOf`, {list: list});
     },
 
-    Balance: balance => {
+    Balance: (balance, symbol) => {
         return counterpart.translate(`validation.messages.balance`, {
-            balance: balance
+            balance: balance,
+            symbol: symbol
         });
     }
 };
@@ -235,6 +236,7 @@ export const Rules = {
      * @param {Object} props
      * @param {number} props.min
      * @param {string} [props.name]
+     * @param {boolean} props.higherThan - if (true) then check will be "value > min" instead of "value >= min"
      * @returns {{validator: validator, message: *}}
      */
 
@@ -257,7 +259,11 @@ export const Rules = {
             validator: (rule, value, callback) => {
                 value = Number(value);
 
-                if (isNaN(value) || value < min) return callback(false);
+                if (props && props.higherThan) {
+                    if (isNaN(value) || value <= min) return callback(false);
+                } else {
+                    if (isNaN(value) || value < min) return callback(false);
+                }
 
                 return callback();
             },
@@ -431,7 +437,7 @@ export const Rules = {
 
         return {
             validator: validation.validator,
-            message: Messages.Balance(props.balance)
+            message: Messages.Balance(props.balance, props.symbol)
         };
     }
 };
