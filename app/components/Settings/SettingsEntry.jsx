@@ -92,7 +92,6 @@ export default class SettingsEntry extends React.Component {
                         <div className="settings--notifications--group">
                             <div className="settings--notifications--item">
                                 <Checkbox
-                                    type="checkbox"
                                     id="browser_notifications.allow"
                                     checked={!!value.allow}
                                     onChange={this.handleNotificationChange(
@@ -107,7 +106,6 @@ export default class SettingsEntry extends React.Component {
                             <div className="settings--notifications--group">
                                 <div className="settings--notifications--item">
                                     <Checkbox
-                                        type="checkbox"
                                         id="browser_notifications.additional.transferToMe"
                                         disabled={!value.allow}
                                         checked={
