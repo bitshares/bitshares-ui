@@ -28,7 +28,7 @@ export const TransactionIDAndExpiry = ({id, expiration, style}) => {
     });
     return (
         <b style={style}>
-            <span>#{id} | </span>
+            <span>{id} | </span>
             <span>
                 <Translate content="proposal.expires" />: {endDate}
             </span>
@@ -68,19 +68,18 @@ class Row extends React.Component {
                         </span>
                     )}
                 </span>
-                {!hideExpiration &&
-                    this.props.expiration && (
-                        <TransactionIDAndExpiry
-                            id={id}
-                            expiration={expiration}
-                            style={{
-                                paddingTop: 5,
-                                fontSize: "0.85rem",
-                                paddingBottom: "0.5rem",
-                                display: "block"
-                            }}
-                        />
-                    )}
+                {!hideExpiration && this.props.expiration && (
+                    <TransactionIDAndExpiry
+                        id={id}
+                        expiration={expiration}
+                        style={{
+                            paddingTop: 5,
+                            fontSize: "0.85rem",
+                            paddingBottom: "0.5rem",
+                            display: "block"
+                        }}
+                    />
+                )}
             </div>
         );
     }
@@ -149,46 +148,27 @@ class ProposedOperation extends React.Component {
 
                 column = (
                     <span className="right-td">
-                        <div className="inline-block">
-                            {!!proposer && index == 0 ? (
-                                <div style={{paddingBottom: "0.5rem"}}>
-                                    <TranslateWithLinks
-                                        string="operation.proposal_create"
-                                        keys={[
-                                            {
-                                                type: "account",
-                                                value: proposer,
-                                                arg: "account"
-                                            }
-                                        ]}
-                                    />
-                                    :
-                                </div>
-                            ) : null}
-                            <div>
-                                <TranslateWithLinks
-                                    string="proposal.transfer"
-                                    keys={[
-                                        {
-                                            type: "account",
-                                            value: op[1].from,
-                                            arg: "from"
-                                        },
-                                        {
-                                            type: "amount",
-                                            value: op[1].amount,
-                                            arg: "amount"
-                                        },
-                                        {
-                                            type: "account",
-                                            value: op[1].to,
-                                            arg: "to"
-                                        }
-                                    ]}
-                                />
-                                {memoComponent}
-                            </div>
-                        </div>
+                        <TranslateWithLinks
+                            string="proposal.transfer"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].from,
+                                    arg: "from"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount"
+                                },
+                                {
+                                    type: "account",
+                                    value: op[1].to,
+                                    arg: "to"
+                                }
+                            ]}
+                        />
+                        {memoComponent}
                     </span>
                 );
 
@@ -363,8 +343,8 @@ class ProposedOperation extends React.Component {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                            ? "whitelisted_by"
-                            : "blacklisted_by";
+                        ? "whitelisted_by"
+                        : "blacklisted_by";
                 column = (
                     <span>
                         <BindToChainState.Wrapper
@@ -1221,6 +1201,27 @@ class ProposedOperation extends React.Component {
                         <Link to={`/block/${block}`}>#{block}</Link>
                     </span>
                 );
+        }
+
+        if (!!proposer && index == 0) {
+            column = (
+                <div className="inline-block">
+                    <div style={{paddingBottom: "0.5rem"}}>
+                        <TranslateWithLinks
+                            string="operation.proposal_create"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: proposer,
+                                    arg: "account"
+                                }
+                            ]}
+                        />
+                        :
+                    </div>
+                    <div>{column}</div>
+                </div>
+            );
         }
 
         if (this.props.csvExportMode) {
