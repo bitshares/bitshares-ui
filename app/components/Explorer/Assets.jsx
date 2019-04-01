@@ -13,9 +13,9 @@ import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import ls from "common/localStorage";
-import PaginatedList from "../Utility/PaginatedListOld";
 import {Apis} from "bitsharesjs-ws";
 import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
+import {List} from "antd";
 
 let accountStorage = new ls("__graphene__");
 
@@ -36,8 +36,8 @@ class Assets extends React.Component {
                 typeof accountStorage.get(`totalAssets_${chainID}`) != "object"
                     ? accountStorage.get(`totalAssets_${chainID}`)
                     : chainID && chainID === "4018d784"
-                        ? 3000
-                        : 50, // mainnet has 3000+ assets, other chains may not have that many
+                    ? 3000
+                    : 50, // mainnet has 3000+ assets, other chains may not have that many
             assetsFetched: 0,
             activeFilter: "market",
             filterSearch: props.filterSearch || "",
@@ -158,8 +158,8 @@ class Assets extends React.Component {
                         return a.symbol > b.symbol
                             ? 1
                             : a.symbol < b.symbol
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: item => {
                         return (
@@ -196,8 +196,8 @@ class Assets extends React.Component {
                         return a.currentSupply > b.currentSupply
                             ? 1
                             : a.currentSupply < b.currentSupply
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: (item, record) => {
                         return (
@@ -242,8 +242,8 @@ class Assets extends React.Component {
                         (description.market
                             ? description.market
                             : coreAsset
-                                ? coreAsset.get("symbol")
-                                : "BTS");
+                            ? coreAsset.get("symbol")
+                            : "BTS");
 
                     dataSource.push({
                         symbol: asset.symbol,
@@ -266,8 +266,8 @@ class Assets extends React.Component {
                         return a.symbol > b.symbol
                             ? 1
                             : a.symbol < b.symbol
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: item => {
                         return (
@@ -304,8 +304,8 @@ class Assets extends React.Component {
                         return a.currentSupply > b.currentSupply
                             ? 1
                             : a.currentSupply < b.currentSupply
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: (item, record) => {
                         return (
@@ -351,8 +351,8 @@ class Assets extends React.Component {
                         (description.market
                             ? description.market
                             : coreAsset
-                                ? coreAsset.get("symbol")
-                                : "BTS");
+                            ? coreAsset.get("symbol")
+                            : "BTS");
 
                     dataSource.push({
                         symbol: asset.symbol,
@@ -404,64 +404,14 @@ class Assets extends React.Component {
                         (description.market
                             ? description.market
                             : coreAsset
-                                ? coreAsset.get("symbol")
-                                : "BTS");
+                            ? coreAsset.get("symbol")
+                            : "BTS");
 
-                    return (
-                        <tr key={asset.id.split(".")[2]}>
-                            <td style={{width: "80%"}}>
-                                <div
-                                    style={{paddingTop: 10, fontWeight: "bold"}}
-                                >
-                                    <Link to={`/asset/${asset.symbol}`}>
-                                        <AssetName name={asset.symbol} />
-                                    </Link>
-                                    {description.condition ? (
-                                        <span> ({description.condition})</span>
-                                    ) : null}
-                                </div>
-                                {description ? (
-                                    <div
-                                        style={{
-                                            padding: "10px 20px 5px 0",
-                                            lineHeight: "18px"
-                                        }}
-                                    >
-                                        {description.main}
-                                    </div>
-                                ) : null}
-                                <div
-                                    style={{
-                                        padding: "0 20px 5px 0",
-                                        lineHeight: "18px"
-                                    }}
-                                >
-                                    <LinkToAccountById account={asset.issuer} />
-                                    <span>
-                                        {" "}
-                                        -{" "}
-                                        <FormattedAsset
-                                            amount={
-                                                asset.dynamic.current_supply
-                                            }
-                                            asset={asset.id}
-                                        />
-                                    </span>
-                                    {description.expiry ? (
-                                        <span> - {description.expiry}</span>
-                                    ) : null}
-                                </div>
-                            </td>
-                            <td style={{width: "20%"}}>
-                                <Link
-                                    className="button outline"
-                                    to={`/market/${marketID}`}
-                                >
-                                    <Translate content="header.exchange" />
-                                </Link>
-                            </td>
-                        </tr>
-                    );
+                    return {
+                        asset,
+                        description,
+                        marketID
+                    };
                 })
                 .toArray();
         }
@@ -540,22 +490,143 @@ class Assets extends React.Component {
                             </div>
 
                             {activeFilter == "prediction" ? (
-                                <div
-                                    className="grid-block"
+                                <List
                                     style={{paddingBottom: 20}}
-                                >
-                                    <PaginatedList rows={pm} pageSize={6} />
-                                </div>
+                                    size="large"
+                                    itemLayout="horizontal"
+                                    dataSource={pm}
+                                    renderItem={item => (
+                                        <List.Item
+                                            key={item.asset.id.split(".")[2]}
+                                            actions={[
+                                                <Link
+                                                    className="button outline"
+                                                    to={`/market/${
+                                                        item.marketID
+                                                    }`}
+                                                >
+                                                    <Translate content="header.exchange" />
+                                                </Link>
+                                            ]}
+                                        >
+                                            <List.Item.Meta
+                                                title={
+                                                    <div>
+                                                        <span
+                                                            style={{
+                                                                paddingTop: 10,
+                                                                fontWeight:
+                                                                    "bold"
+                                                            }}
+                                                        >
+                                                            <Link
+                                                                to={`/asset/${
+                                                                    item.asset
+                                                                        .symbol
+                                                                }`}
+                                                            >
+                                                                <AssetName
+                                                                    name={
+                                                                        item
+                                                                            .asset
+                                                                            .symbol
+                                                                    }
+                                                                />
+                                                            </Link>
+                                                        </span>
+                                                        {item.description
+                                                            .condition ? (
+                                                            <span>
+                                                                {" "}
+                                                                (
+                                                                {
+                                                                    item
+                                                                        .description
+                                                                        .condition
+                                                                }
+                                                                )
+                                                            </span>
+                                                        ) : null}
+                                                    </div>
+                                                }
+                                                description={
+                                                    <span>
+                                                        {item.description ? (
+                                                            <div
+                                                                style={{
+                                                                    padding:
+                                                                        "10px 20px 5px 0",
+                                                                    lineHeight:
+                                                                        "18px"
+                                                                }}
+                                                            >
+                                                                {
+                                                                    item
+                                                                        .description
+                                                                        .main
+                                                                }
+                                                            </div>
+                                                        ) : null}
+                                                        <span
+                                                            style={{
+                                                                padding:
+                                                                    "0 20px 5px 0",
+                                                                lineHeight:
+                                                                    "18px"
+                                                            }}
+                                                        >
+                                                            <LinkToAccountById
+                                                                account={
+                                                                    item.asset
+                                                                        .issuer
+                                                                }
+                                                            />
+                                                            <span>
+                                                                {" "}
+                                                                -{" "}
+                                                                <FormattedAsset
+                                                                    amount={
+                                                                        item
+                                                                            .asset
+                                                                            .dynamic
+                                                                            .current_supply
+                                                                    }
+                                                                    asset={
+                                                                        item
+                                                                            .asset
+                                                                            .id
+                                                                    }
+                                                                />
+                                                            </span>
+                                                            {item.description
+                                                                .expiry ? (
+                                                                <span>
+                                                                    {" "}
+                                                                    -{" "}
+                                                                    {
+                                                                        item
+                                                                            .description
+                                                                            .expiry
+                                                                    }
+                                                                </span>
+                                                            ) : null}
+                                                        </span>
+                                                    </span>
+                                                }
+                                            />
+                                        </List.Item>
+                                    )}
+                                    pagination={{
+                                        position: "bottom",
+                                        pageSize: 6
+                                    }}
+                                />
                             ) : (
                                 <Table
                                     style={{width: "100%", marginTop: "16px"}}
                                     rowKey="symbol"
                                     columns={columns}
                                     dataSource={dataSource}
-                                    pagination={{
-                                        position: "bottom",
-                                        pageSize: Number(this.state.rowsOnPage)
-                                    }}
                                 />
                             )}
                         </div>
