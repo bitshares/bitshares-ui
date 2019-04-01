@@ -36,6 +36,26 @@ var Utils = {
         );
     },
 
+    convert_satoshi_to_typed: function(amount, asset) {
+        if (amount === 0) return amount;
+        if (!amount) return null;
+        return (
+            amount /
+            this.get_asset_precision(
+                asset.toJS ? asset.get("precision") : asset.precision
+            )
+        );
+    },
+
+    convert_typed_to_satoshi: function(amount, asset) {
+        return (
+            amount *
+            this.get_asset_precision(
+                asset.toJS ? asset.get("precision") : asset.precision
+            )
+        );
+    },
+
     get_asset_price: function(
         quoteAmount,
         quoteAsset,

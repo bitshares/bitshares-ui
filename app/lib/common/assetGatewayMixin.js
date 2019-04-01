@@ -1,8 +1,10 @@
 import React from "react";
 import Translate from "react-translate-component";
-import Icon from "../../components/Icon/Icon";
+import counterpart from "counterpart";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
 import {Link} from "react-router-dom";
+import {Select, Icon} from "bitshares-ui-style-guide";
+import utils from "common/utils";
 
 function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     let coinToGatewayMapping = {};
@@ -133,25 +135,58 @@ function gatewaySelector(args) {
         gatewayStatus,
         nAvailableGateways,
         error,
-        onGatewayChanged
+        onGatewayChanged,
+        selectedAsset = null,
+        balances = null,
+        assets = null
     } = args;
 
-    let selectGatewayList = Object.keys(gatewayStatus).map((key, i) => {
-        if (gatewayStatus[key].options.enabled)
-            return (
-                <option
-                    value={gatewayStatus[key].id}
-                    key={gatewayStatus[key].id}
-                >
-                    {gatewayStatus[key].name}
-                </option>
-            );
+    let balancesByAssetAndGateway = {};
+    if (balances && assets) {
+        balances.forEach(balance => {
+            if (!!balance && !!balance.toJS) {
+                let asset = assets.get(balance.get("asset_type"));
+
+                if (asset) {
+                    let symbolSplit = asset.symbol.split(".");
+
+                    if (symbolSplit.length == 2) {
+                        let symbol = symbolSplit[1];
+                        let gateway = symbolSplit[0];
+
+                        if (!balancesByAssetAndGateway[symbol])
+                            balancesByAssetAndGateway[symbol] = {};
+                        balancesByAssetAndGateway[symbol][gateway] = [
+                            balance.get("balance"),
+                            asset
+                        ];
+                    }
+                }
+            }
+        });
+    }
+
+    let supportLink =
+        !!selectedGateway && !!gatewayStatus[selectedGateway]
+            ? "/help/gateways/" +
+              gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
+            : null;
+
+    let gateways = [];
+    Object.keys(gatewayStatus).map(key => {
+        gateways.push(gatewayStatus[key]);
+
+        // Set to full name to work with <Select>
+        if (gatewayStatus[key].id == selectedGateway) {
+            selectedGateway = gatewayStatus[key].name;
+        }
     });
 
-    let supportLink = !!selectedGateway
-        ? "/help/gateways/" +
-          gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
-        : null;
+    gateways.sort((a, b) => {
+        if (a.name > b.name) return 1;
+        else if (a.name < b.name) return -1;
+        else return 0;
+    });
 
     return (
         <div>
@@ -162,10 +197,7 @@ function gatewaySelector(args) {
                         {selectedGateway ? (
                             <Link to={supportLink} style={{cursor: "pointer"}}>
                                 &nbsp;
-                                <Icon
-                                    name="question-circle"
-                                    title="icons.question_circle"
-                                />
+                                <Icon type="question-circle" />
                             </Link>
                         ) : null}
                         <span className="floatRight error-msg">
@@ -191,32 +223,46 @@ function gatewaySelector(args) {
                     </label>
 
                     <div className="inline-label input-wrapper">
-                        <select
-                            role="combobox"
-                            className="selectWrapper"
-                            value={!selectedGateway ? "" : selectedGateway}
+                        <Select
+                            optionLabelProp={"value"}
                             onChange={onGatewayChanged}
-                            id="gatewaySelector"
-                            style={{cursor: "default"}}
+                            placeholder={counterpart.translate(
+                                "modal.deposit_withdraw.select_gateway"
+                            )}
+                            value={selectedGateway}
+                            style={{width: "100%"}}
                         >
-                            {!selectedGateway && nAvailableGateways != 0 ? (
-                                <Translate
-                                    component="option"
-                                    value=""
-                                    content="modal.deposit_withdraw.select_gateway"
-                                />
-                            ) : null}
-                            {selectGatewayList}
-                        </select>
-                        <Icon
-                            name="chevron-down"
-                            title="icons.chevron_down.gateways"
-                            style={{
-                                position: "absolute",
-                                right: "10px",
-                                top: "10px"
-                            }}
-                        />
+                            {gateways.map(g => {
+                                if (g.options.enabled) {
+                                    return (
+                                        <Select.Option
+                                            key={g.name}
+                                            value={g.id}
+                                        >
+                                            {g.name}
+                                            {balancesByAssetAndGateway &&
+                                            balancesByAssetAndGateway[
+                                                selectedAsset
+                                            ] &&
+                                            balancesByAssetAndGateway[
+                                                selectedAsset
+                                            ][g.id] ? (
+                                                <span style={{float: "right"}}>
+                                                    {utils.format_asset(
+                                                        balancesByAssetAndGateway[
+                                                            selectedAsset
+                                                        ][g.id][0],
+                                                        balancesByAssetAndGateway[
+                                                            selectedAsset
+                                                        ][g.id][1]
+                                                    )}
+                                                </span>
+                                            ) : null}
+                                        </Select.Option>
+                                    );
+                                }
+                            })}
+                        </Select>
                     </div>
                 </section>
             </div>

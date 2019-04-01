@@ -93,6 +93,7 @@ function accountChecker(props, propName, componentName) {
     if (props[propName]) {
         let value = props[propName];
         if (typeof value === "string") {
+            return null;
             if (
                 utils.is_object_id(value) &&
                 value.split(".")[1] === object_type.account
@@ -104,6 +105,14 @@ function accountChecker(props, propName, componentName) {
                 );
             }
         } else if (typeof value === "object") {
+            if (
+                value instanceof Map &&
+                !!value.get("name") &&
+                value.size == 1
+            ) {
+                // special case for BindToCurrentAccount
+                return null;
+            }
             // TODO: check object type (probably we should require an object to be a tcomb structure)
         } else {
             return new Error(

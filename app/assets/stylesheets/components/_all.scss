@@ -26,6 +26,8 @@
 @import "registration/account-registration";
 @import "registration/registration-selector";
 @import "login/login";
+@import "barter";
+@import "direct-debit";
 
 .lifetime {
     background: url("../fresh-bolt2.png") no-repeat 100% 50%;

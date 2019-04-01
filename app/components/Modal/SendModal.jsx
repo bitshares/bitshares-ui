@@ -2,8 +2,7 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
-import AccountSelect from "../Forms/AccountSelect";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -19,9 +18,8 @@ import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import classnames from "classnames";
 import {getWalletName} from "branding";
-import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import {Form, Modal, Button, Tooltip, Input} from "bitshares-ui-style-guide";
 
 const EqualWidthContainer = ({children}) => (
     <div
@@ -439,7 +437,7 @@ class SendModal extends React.Component {
     }
 
     fromChanged(from_name) {
-        if (this.state.propose) this.setState({from_name});
+        this.setState({from_name});
     }
 
     onFromAccountChanged(from_account) {
@@ -451,9 +449,12 @@ class SendModal extends React.Component {
     }
 
     onAmountChanged({amount, asset}) {
-        if (!asset) {
-            return;
+        if (!asset) return;
+
+        if (typeof asset !== "object") {
+            asset = ChainStore.getAsset(asset);
         }
+
         this.setState(
             {
                 amount,
@@ -467,8 +468,18 @@ class SendModal extends React.Component {
     }
 
     onFeeChanged({asset}) {
+        if (!asset) return;
+
+        if (typeof asset !== "object") {
+            asset = ChainStore.getAsset(asset);
+        }
+
         this.setState(
-            {feeAsset: asset, fee_asset_id: asset.get("id"), error: null},
+            {
+                feeAsset: asset,
+                fee_asset_id: asset.get("id"),
+                error: null
+            },
             this._updateFee
         );
     }
@@ -566,7 +577,6 @@ class SendModal extends React.Component {
             from_name === this.props.passwordAccount;
         let from_error =
             from_account && !from_my_account && !propose ? true : false;
-
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
         let balance = null;
         let balance_fee = null;
@@ -721,170 +731,133 @@ class SendModal extends React.Component {
                             />
                         </div>
                         {this.state.open ? (
-                            <form noValidate>
-                                <div>
-                                    {!!propose && (
-                                        <React.Fragment>
-                                            <div className="content-block">
-                                                <AccountSelector
-                                                    label="transfer.by"
-                                                    accountName={
-                                                        this.props
-                                                            .currentAccount
-                                                    }
-                                                    account={
-                                                        this.props
-                                                            .currentAccount
-                                                    }
-                                                    size={60}
-                                                    tabIndex={tabIndex++}
-                                                    hideImage
-                                                />
-                                            </div>
-                                            <div className="modal-separator" />
-                                        </React.Fragment>
-                                    )}
-                                    <div className="content-block">
+                            <Form className="full-width" layout="vertical">
+                                {!!propose && (
+                                    <React.Fragment>
                                         <AccountSelector
-                                            label="transfer.from"
-                                            accountName={from_name}
-                                            account={from_account}
-                                            onChange={this.fromChanged.bind(
-                                                this
-                                            )}
-                                            onAccountChanged={this.onFromAccountChanged.bind(
-                                                this
-                                            )}
-                                            size={60}
-                                            typeahead={propose || undefined}
-                                            tabIndex={tabIndex++}
-                                            hideImage
-                                        />
-                                    </div>
-                                    {/* T O */}
-                                    <div className="content-block">
-                                        <AccountSelector
-                                            label="transfer.to"
-                                            accountName={to_name}
-                                            account={to_account}
-                                            onChange={this.toChanged.bind(this)}
-                                            onAccountChanged={this.onToAccountChanged.bind(
-                                                this
-                                            )}
+                                            label="transfer.by"
+                                            accountName={
+                                                this.props.currentAccount
+                                            }
+                                            account={this.props.currentAccount}
                                             size={60}
                                             typeahead={true}
                                             tabIndex={tabIndex++}
                                             hideImage
+                                            locked={true}
                                         />
-                                    </div>
+                                        <div className="modal-separator" />
+                                    </React.Fragment>
+                                )}
 
-                                    <div className="content-block transfer-input">
-                                        {/*  A M O U N T  */}
-                                        <AmountSelector
-                                            label="transfer.amount"
-                                            amount={amount}
-                                            onChange={this.onAmountChanged.bind(
-                                                this
-                                            )}
-                                            asset={
-                                                asset_types.length > 0 && asset
-                                                    ? asset.get("id")
-                                                    : asset_id
-                                                        ? asset_id
-                                                        : asset_types[0]
-                                            }
-                                            assets={asset_types}
-                                            display_balance={balance}
-                                            tabIndex={tabIndex++}
-                                            allowNaN={true}
-                                        />
-                                    </div>
-                                    {/*  M E M O  */}
-                                    <div className="content-block transfer-input">
-                                        {memo && memo.length ? (
-                                            <label className="right-label">
-                                                {memo.length}
-                                            </label>
-                                        ) : null}
-                                        <Tooltip
-                                            placement="top"
-                                            title={counterpart.translate(
-                                                "tooltip.memo_tip"
-                                            )}
-                                        >
-                                            <Translate
-                                                className="left-label tooltip"
-                                                component="label"
-                                                content="transfer.memo"
-                                            />
-                                        </Tooltip>
-                                        <textarea
+                                <AccountSelector
+                                    label="transfer.from"
+                                    accountName={from_name}
+                                    account={from_account}
+                                    onChange={this.fromChanged.bind(this)}
+                                    onAccountChanged={this.onFromAccountChanged.bind(
+                                        this
+                                    )}
+                                    size={60}
+                                    typeahead={true}
+                                    tabIndex={tabIndex++}
+                                    hideImage
+                                    locked={!!propose ? undefined : true}
+                                />
+
+                                <AccountSelector
+                                    label="transfer.to"
+                                    accountName={to_name}
+                                    account={to_account}
+                                    onChange={this.toChanged.bind(this)}
+                                    onAccountChanged={this.onToAccountChanged.bind(
+                                        this
+                                    )}
+                                    size={60}
+                                    typeahead={true}
+                                    tabIndex={tabIndex++}
+                                    hideImage
+                                />
+
+                                <AmountSelector
+                                    label="transfer.amount"
+                                    amount={amount}
+                                    onChange={this.onAmountChanged.bind(this)}
+                                    asset={
+                                        asset_types.length > 0 && asset
+                                            ? asset.get("id")
+                                            : asset_id
+                                                ? asset_id
+                                                : asset_types[0]
+                                    }
+                                    assets={asset_types}
+                                    display_balance={balance}
+                                    tabIndex={tabIndex++}
+                                    allowNaN={true}
+                                />
+                                {memo && memo.length ? (
+                                    <label className="right-label">
+                                        {memo.length}
+                                    </label>
+                                ) : null}
+                                <Form.Item
+                                    label={counterpart.translate(
+                                        "transfer.memo"
+                                    )}
+                                    validateStatus={
+                                        memo && propose ? "warning" : ""
+                                    }
+                                    help={
+                                        memo && propose
+                                            ? counterpart.translate(
+                                                  "transfer.warn_name_unable_read_memo"
+                                              )
+                                            : ""
+                                    }
+                                >
+                                    <Tooltip
+                                        placement="top"
+                                        title={counterpart.translate(
+                                            "tooltip.memo_tip"
+                                        )}
+                                    >
+                                        <Input.TextArea
                                             style={{marginBottom: 0}}
-                                            rows="3"
+                                            rows={3}
                                             value={memo}
                                             tabIndex={tabIndex++}
                                             onChange={this.onMemoChanged.bind(
                                                 this
                                             )}
                                         />
-                                        {/* warning */}
-                                        {this.state.propose ? (
-                                            <div
-                                                className="error-area"
-                                                style={{position: "absolute"}}
-                                            >
-                                                <Translate
-                                                    content="transfer.warn_name_unable_read_memo"
-                                                    name={this.state.from_name}
-                                                />
-                                            </div>
-                                        ) : null}
-                                    </div>
+                                    </Tooltip>
+                                </Form.Item>
 
-                                    <div className="content-block transfer-input">
-                                        <div className="no-margin no-padding">
-                                            {/*  F E E  */}
-                                            <div
-                                                id="txFeeSelector"
-                                                className="small-12"
-                                            >
-                                                <AmountSelector
-                                                    label="transfer.fee"
-                                                    disabled={true}
-                                                    amount={fee}
-                                                    onChange={this.onFeeChanged.bind(
-                                                        this
-                                                    )}
-                                                    asset={
-                                                        fee_asset_types.length &&
-                                                        feeAmount
-                                                            ? feeAmount.asset_id
-                                                            : fee_asset_types.length ===
-                                                              1
-                                                                ? fee_asset_types[0]
-                                                                : fee_asset_id
-                                                                    ? fee_asset_id
-                                                                    : fee_asset_types[0]
-                                                    }
-                                                    assets={fee_asset_types}
-                                                    display_balance={
-                                                        balance_fee
-                                                    }
-                                                    tabIndex={tabIndex++}
-                                                    error={
-                                                        this.state
-                                                            .hasPoolBalance ===
-                                                        false
-                                                            ? "transfer.errors.insufficient"
-                                                            : null
-                                                    }
-                                                    scroll_length={2}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                                <AmountSelector
+                                    label="transfer.fee"
+                                    disabled={true}
+                                    amount={fee}
+                                    onChange={this.onFeeChanged.bind(this)}
+                                    asset={
+                                        fee_asset_types.length && feeAmount
+                                            ? feeAmount.asset_id
+                                            : fee_asset_types.length === 1
+                                                ? fee_asset_types[0]
+                                                : fee_asset_id
+                                                    ? fee_asset_id
+                                                    : fee_asset_types[0]
+                                    }
+                                    assets={fee_asset_types}
+                                    display_balance={balance_fee}
+                                    tabIndex={tabIndex++}
+                                    error={
+                                        this.state.hasPoolBalance === false
+                                            ? "transfer.errors.insufficient"
+                                            : null
+                                    }
+                                    scroll_length={2}
+                                />
+                            </Form>
                         ) : null}
                     </div>
                 </Modal>
