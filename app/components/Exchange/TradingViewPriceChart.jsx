@@ -31,7 +31,6 @@ export default class TradingViewPriceChart extends React.Component {
         });
 
         let disabled_features = [
-            "header_saveload",
             "symbol_info",
             "symbol_search_hot_key",
             "border_around_the_chart",
@@ -39,7 +38,7 @@ export default class TradingViewPriceChart extends React.Component {
             "header_compare"
         ];
 
-        let enabled_features = [];
+        let enabled_features = ["header_saveload"];
 
         if (this.props.mobile || !this.props.chartZoom) {
             disabled_features.push("chart_scroll");
