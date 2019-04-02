@@ -535,6 +535,7 @@ class AccountSelector extends React.Component {
                                         this.props.placeholder ||
                                         counterpart.translate("account.name")
                                     }
+                                    disabled={this.props.disabled}
                                     ref="user_input"
                                     onChange={this.onInputChanged.bind(this)}
                                     onKeyDown={this.onKeyDown.bind(this)}

@@ -45,7 +45,7 @@ class DepositModalContent extends DecimalChecker {
     }
 
     shouldComponentUpdate(np, ns) {
-        if(np.asset !== this.props.asset) {
+        if (np.asset !== this.props.asset) {
             this.setState(this._intitalState());
             this._setDepositAsset(np.asset);
         }
@@ -58,7 +58,10 @@ class DepositModalContent extends DecimalChecker {
 
     onAssetSelected(asset) {
         if (asset.gateway == "")
-            return this.setState({selectedAsset: asset.id, selectedGateway: null});
+            return this.setState({
+                selectedAsset: asset.id,
+                selectedGateway: null
+            });
 
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
