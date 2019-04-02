@@ -158,8 +158,9 @@ class BitsharesBeos extends React.Component {
                     before proceeding.
                 </p>
                 <p className="backingWarning">
-                    By clicking on the button below, you are agreeing to the
-                    above Terms of Service.
+                    By clicking on the button below and purchasing a BEOS
+                    account, you are agreeing to the terms of the BEOS LCA
+                    membership agreement.
                 </p>
                 <button
                     style={{marginRight: 10, marginBottom: 30}}
