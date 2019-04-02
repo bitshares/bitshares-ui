@@ -170,6 +170,14 @@ class BitsharesBeos extends React.Component {
                 >
                     <Translate content="gateway.bitshares_beos.transfer_button_label" />
                 </button>
+                <p>
+                    After you create your account, you can access it via the
+                    BEOS wallets here:{" "}
+                    <a href="https://get.beos.world/wallets/" target="_blank">
+                        https://get.beos.world/wallets/
+                    </a>
+                    .
+                </p>
                 <Modal
                     onCancel={this.hideModal}
                     title={counterpart.translate(
