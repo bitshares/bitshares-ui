@@ -973,7 +973,7 @@
             "rudex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Rudex bereitgestellt",
             "trade": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Blocktrades bereitgestellt",
             "win": "",
-            "xbts": ""
+            "xbts": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch XBTS bereitgestellt"
         },
         "balance": "Guthaben",
         "balance_asset": "Aktuelles %(asset)s Guthaben",

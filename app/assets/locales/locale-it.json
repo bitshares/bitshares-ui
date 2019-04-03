@@ -967,7 +967,7 @@
             "rudex": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Rudex.",
             "trade": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades.",
             "win": "",
-            "xbts": ""
+            "xbts": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da XBTS."
         },
         "balance": "Saldo attuale",
         "balance_asset": "Saldo %(asset)s attuale",

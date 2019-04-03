@@ -967,7 +967,7 @@
             "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
             "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
             "win": "",
-            "xbts": ""
+            "xbts": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 XBTS 提供的网关服务进行充值提现。"
         },
         "balance": "余额",
         "balance_asset": "当前 %(asset)s 余额",
