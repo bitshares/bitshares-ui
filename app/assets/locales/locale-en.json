@@ -1073,7 +1073,8 @@
             "memo_label": "Memo (optional)",
             "no_account_error": "BEOS account doesn't exist, create it by paying an additional %(btsAmount)s BTS. This new account will be controlled by the same keys as your BitShares account.",
             "account_creation_pending": "This account is currently in the stage of creation.",
-            "no_account_error_without_creation": "BEOS account doesn't exist, to create it please select BTS as an asset."
+            "no_account_error_without_creation": "BEOS account doesn't exist, to create it please select BTS as an asset.",
+            "multi_sig_error": "Current BTS account is multi-sig, so it cannot create a BEOS account."
         },
         "symbol": "Symbol",
         "time": "Time",

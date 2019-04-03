@@ -12,6 +12,7 @@ import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
 import {Button, Modal} from "bitshares-ui-style-guide";
 import ls from "common/localStorage";
+import {ChainStore} from "bitsharesjs";
 
 const STORAGE_KEY = "__beos__";
 let lsBeos = new ls(STORAGE_KEY);
@@ -61,7 +62,8 @@ class BitsharesBeosModal extends React.Component {
             memo: "",
             no_account_error: false,
             selectedAssetId: "1.3.0",
-            no_account_error_without_creation: false
+            no_account_error_without_creation: false,
+            multiSigError: false
         };
 
         this.showConfirmationModal = this.showConfirmationModal.bind(this);
@@ -70,6 +72,24 @@ class BitsharesBeosModal extends React.Component {
 
     componentWillMount() {
         this._updateFee();
+        let accountData = ChainStore.getAccount(this.props.account).toJS();
+        if (accountData && accountData.active && accountData.owner) {
+            if (
+                accountData.active.account_auths.lenght === 0 &&
+                accountData.active.address_auths.lenght === 0 &&
+                accountData.active.key_auths.lenght === 1 &&
+                accountData.owner.account_auths.lenght === 0 &&
+                accountData.owner.address_auths.lenght === 0 &&
+                accountData.owner.key_auths.lenght === 1
+            ) {
+                // It is ok
+            } else {
+                this.setState({
+                    multiSigError: true
+                });
+            }
+        }
+        console.log(accountData);
     }
 
     componentWillUnmount() {
@@ -939,6 +959,14 @@ class BitsharesBeosModal extends React.Component {
                                     content="gateway.bitshares_beos.no_account_error"
                                     btsAmount={this.state.btsAmount}
                                 />
+                            </p>
+                        ) : null}
+                        {this.state.multiSigError ? (
+                            <p
+                                className="has-error no-margin"
+                                style={{paddingBottom: 15}}
+                            >
+                                <Translate content="gateway.bitshares_beos.multi_sig_error" />
                             </p>
                         ) : null}
                         {this.state.no_account_error_without_creation &&
