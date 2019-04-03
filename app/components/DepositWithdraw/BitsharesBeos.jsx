@@ -137,13 +137,13 @@ class BitsharesBeos extends React.Component {
                     own control.
                 </p>
                 <p>
-                    * The BLCA trustees will do their best to keep the gateway
+                    * The BLCA directors will do their best to keep the gateway
                     operational at all times, but a malfunction either on the
                     gateway or the new BEOS chain itself could result in BTS
                     funds being locked up temporarily until the problem is
                     resolved. If you lose the keys to your BEOS account, the
-                    trustees cannot refund BTS locked up as BTS IOU tokens in
-                    your BEOS account, because the trustees cannot reclaim the
+                    directors cannot refund BTS locked up as BTS IOU tokens in
+                    your BEOS account, because the directors cannot reclaim the
                     IOU tokens and have no way to determine if the account is
                     permanently lost.
                 </p>
