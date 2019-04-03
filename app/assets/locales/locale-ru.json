@@ -520,6 +520,7 @@
         "invalid_price": "Недействительная цена",
         "invert": "Инвертировать цену",
         "latest": "Последние",
+        "limit": "Limit",
         "lowest_ask": "Самый низкий запрос",
         "maintenance": "Цена требования дополнительного обеспечения",
         "market": "Рынок",
@@ -589,6 +590,7 @@
         "receive": "Получить",
         "remove": "Удалить",
         "rsi": "Индекс относительной прочности",
+        "scaled": "Scaled",
         "search": "Искать здесь другие рынки",
         "sell": "Продать",
         "sell_description": "Продать %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s",
@@ -665,6 +667,10 @@
             }
         },
         "settle": "Погашение",
+        "settle_better_marketprice": "Market price is in favour",
+        "settle_better_settleprice": "Settlement price is in favour",
+        "settle_delay": "This asset will settle in %(hours)s hours",
+        "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Провести мгновенный расчёт",
         "settle_globally_settled_tooltip": "Этот актив попал под глобальный расчёт. Вы можете провести мгновенный расчёт по цене глобального расчёта (смотрите информацию на бирже или в подробностях об активе)",
         "settle_orders": "Ордера на погашение",
@@ -1102,6 +1108,9 @@
         "cancel": "Отменить",
         "close": "Закрыть",
         "confirm": "Подтвердить",
+        "field_type": {
+            "account": "account"
+        },
         "help": "Помощь",
         "return_to_top": "Вернуться к началу",
         "scan_qr_code": "Сканировать QR-код",
@@ -1424,6 +1433,7 @@
         "exchange_insufficient_funds_for_fees": "Недостаточно средств для оплаты комиссий",
         "exchange_insufficient_funds_to_place_order": "Недостаточно средств для размещения ордера. Вам нужно как минимум %(amount)s $(symbol)s",
         "exchange_unknown_error_place_order": "Неизвестная ошибка. Не удалось разместить ордер на %(amount)s %(symbol)s",
+        "exchange_unknown_error_place_scaled_order": "Unknown error. Failed to place Scaled Order",
         "import_keys_already_imported": "Этот кошелёк уже был импортирован",
         "import_keys_error": "В аккаунте %(account_name)s произошла ошибка при импорте приватного ключа: %(error_msg)s",
         "import_keys_error_unknown": "Ошибка при импорте ключа: %(error_msg)s",
@@ -1598,6 +1608,30 @@
         "walletNote": "Пожалуйста, имейте в виду, что BitShares не хранит пароли пользователей и не может восстановить их аккаунты в случае утери пароля.",
         "whyBinFile": "Зачем мне нужен .bin файл?"
     },
+    "scaled_orders": {
+        "action": {
+            "buy": "Buy",
+            "sell": "Sell",
+            "title": "Action"
+        },
+        "distribution": {
+            "flat": "Flat",
+            "title": "Distribution"
+        },
+        "fee": "Fee",
+        "market_fee": "Market Fee",
+        "order_count": "Order Count",
+        "order_s": "Order(s)",
+        "please_log_in": "You need to login before use Scaled Orders",
+        "preview_table": {
+            "price": "Price"
+        },
+        "price_lower": "Price Lower",
+        "price_upper": "Price Upper",
+        "quantity": "Quantity",
+        "title": "Scaled Order",
+        "total": "Total"
+    },
     "settings": {
         "access": "Доступ",
         "access_text": "",
@@ -1716,6 +1750,9 @@
             "action": "Peer 1 (%(peer_left)s) offers to send %(assets_left)s to Peer 2 (%(peer_right)s) and receives %(assets_right)s in return. ",
             "add_escrow": "Add escrow",
             "add_escrow_tooltip": "Adds or removes an escrow to this barter. This escrow will have to approve the resulting proposal as well. The escrow can serve as a witness only, or also be the custodian of Peer 1's funds.",
+            "balance_warning": "Balance Warning",
+            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s",
+            "balance_warning_tooltip": "%(peer)s does not have enough funds to execute the transfers when the proposal gets approved and executes. This is not an issue when creating the proposal, but the balances must match when executed",
             "bartering_asset": "Bartering asset",
             "description": "с Позволяет вам предложить обмен активами с другим аккаунтом; это происходит за пределами биржевого стакана и может включать в процесусловное депонирование.",
             "error_fill_in_escrow_name": "Please fill in the account name of the escrow",
@@ -1795,8 +1832,33 @@
             "title_long": "Create a Collateralized Debt Position"
         },
         "direct_debit": {
+            "amount_to_withdraw": "Amount to collect",
+            "authorized_account": "Payee",
+            "authorizing_account": "Payer",
+            "claim": "Claim",
+            "claim_funds": "Claim funds",
+            "create": "Create",
+            "create_new_mandate": "Create authorization",
+            "current_period_expires": "Current period ends",
+            "delete": "Delete",
             "description": "Задайте прямой дебетовый мандат для повторяющихся платежей. Мандат позволяет другому аккаунту переводить средства с вашего аккаунта с ограничением суммы в определенные промежутки времени.",
-            "title": "Прямой дебет"
+            "expires": "Expires",
+            "first_period_not_started": "First period has not started!",
+            "limit": "limit",
+            "limit_per_period": "Maximum amount per period",
+            "num_of_periods": "Number of periods",
+            "period": "Specify period",
+            "start_date": "First period starts on",
+            "title": "Прямой дебет",
+            "tooltip": {
+                "authorized_account": "The account that is eligible to collect from your account.",
+                "limit_per_period": "The payee may collect a maximum amount of the specified asset (up to) per period. The payee can only collect once per period, even if not collected in full.",
+                "num_of_periods": "After the start time this amount of periods are available consecutively.",
+                "period": "One period lasts the indicated time interval, e.g. 2 weeks.",
+                "start_time": "The start time of the first period must be in the future when broadcasting."
+            },
+            "update": "Update",
+            "update_mandate": "Update existing authorization"
         },
         "paper_wallet": {
             "description": "Создайте PDF-файл с напечатанными ключами вашего аккаунта (простой текст и штрих-код). Если кошелек разблокирован, в файл также добавляются приватные ключи.",
@@ -1847,7 +1909,6 @@
         "latest_price": "Это самая актуальная цена для этого рынка.",
         "legacy_explanation": "Скрывает предложения, которые дублируются, являются спамом или не были активны более 2 месяцев с момента запуска.",
         "login": "Кошелек %(wallet_name)s не предоставляет возможности использования традиционного логина, но вместо этого просто открывает и закрывает кошелек, который хранится локально <b>только</b> в Вашем браузере.<br/><br/>Каждый раз, как Вы выходите из кошелька, он закрывается, и Вы выходите из аккаунта.",
-        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Введите другой пароль или попробуйте ",
@@ -1876,6 +1937,7 @@
                 "model": "Облачный кошелек"
             }
         },
+        "login_required": "Please login to the selected account to perform this action",
         "margin_price": "Это максимальная цена, которую может быть вынуждена заплатить позиция с затребованным дополнительным обеспечением. Также она называется Squeeze Price.",
         "market_fee": "Владелец %(asset)s назначил для ордеров на покупку рыночную комиссию в размере %(percent)s%%. Эта комиссия будет вычтена из суммы, полученной Вами при выполнении ордера, в момент же размещения ордера она не взимается.",
         "memo_tip": "В поле примечания Вы можете включить любое сообщение. Примечание необязательно, но обычно необходимо для перевода на биржи.",
@@ -1883,6 +1945,7 @@
         "no_price": "Для этого актива нет доступной недавней цены, которая может быть использована для оценки его стоимости.",
         "nodes_popup": "Нажмите здесь, чтобы открыть всплывающее окно настроек доступа, позволяющее вам при необходимости переключаться между нодами",
         "over_limit": "Мост не обладает достаточным количеством желаемого актива для данного ордера на покупку",
+        "own_account": "You hold keys for this account",
         "propose_scam": "Это предложение было создано известным мошенником, не подтверждайте его!",
         "propose_tip": "Предложить другому пользователю инициировать транзакцию",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
@@ -1895,6 +1958,8 @@
             "walletModel": "Локальный кошелек обеспечивает высшую степень безопасности, но ограничивает вас использованием вашего текущего браузера и компьютера. Чтобы перенести кошелек на другой браузер или компьютер, вам нужно будет воспользоваться резервной копией или brainkey.",
             "whyBinFile": ".bin файл – это файл резервной копии. Этот файл зашифрован вашим паролем и содержит все приватные ключи вашего аккаунта. Данный файл требуется загрузить в процессе входа в аккаунт."
         },
+        "required_input": "Field requires a valid %(type)s",
+        "scam_account": "Account is suspected scammer",
         "self_help": "В зависимости от используемой в данный момент панели это откроет справочное руководство с пояснениями о том, что вы видите в данный момент, или общий справочный раздел кошелька.",
         "settle": "Погашение позволит вам обменять ваши %(asset)s на %(backingAsset)s с задержкой в %(settleDelay)s часа по цене, равной цене котировки на момент погашения.",
         "settle_price": "Это цена, при которой будут исполнятся ордера на погашение.",
@@ -1905,6 +1970,7 @@
         "sync_yes": "Данный узел синхронизирован с блокчейном",
         "target_collateral_ratio": "Установление Целевого Коэффициента Обеспечения (TCR) позволит блокчейну автоматически продавать необходимое количество вашего залога, дабы удерживать ваш коэффициент обеспечения равным или выше указанного вами TCR, когда ценность вашего залогового обеспечения падает.<br /><br />Чтобы совершать частые продажи небольших сумм, установите низкую цель (напр. < 2)<br /><br />Чтобы совершать нечастые продажи более крупных сумм, установите высокую цель (напр. > 3)",
         "transfer_actions": "Нажмите здесь, чтобы совершить перевод или разместить депозит/вывести те активы, которые это позволяют.",
+        "unlock_account_name": "Click to edit the account name, e.g. when your account is set as permission of another account.",
         "update_position": "Нажмите здесь, чтобы обновить Вашу позицию. Вы в любой момент сможете изменить уровни долга и/или обеспечения Вашей позиции.",
         "withdraw_address": "Если у Вас еще нет %(asset)s адреса, то для того чтобы завершить вывод средств, пожалуйста, найдите подходящего провайдера кошелька и создайте его.",
         "withdraw_full": "Нажмите, чтобы вывести баланс целиком"
@@ -2114,6 +2180,52 @@
         "total_x_items": "Всего из %(count)s позиций",
         "total_x_markets": "Всего %(count)s рынков",
         "total_x_operations": "Всего %(count)s операций"
+    },
+    "validation": {
+        "messages": {
+            "balance": "Insufficient balance. Available only: %(balance)s %(symbol)s",
+            "email": "The field should be email",
+            "emailNamed": "%(name)s should be email",
+            "float": "The field should be float",
+            "floatNamed": "%(name)s should be float",
+            "integer": "The field should be integer",
+            "integerNamed": "%(name)s should be integer",
+            "max": "The field should be less than %(max)s",
+            "maxNamed": "%(name)s should be less than %(max)s",
+            "min": "The field should higher than %(min)s",
+            "minNamed": "%(name)s should be higher than %(min)s",
+            "number": "The field should be number",
+            "numberNamed": "%(name)s should be number",
+            "oneOf": "The field should be one of: %(list)s",
+            "oneOfNamed": "%(name)s should be one of: %(list)s",
+            "range": "The field should be in range from %(min)s to %(max)s",
+            "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
+            "required": "The field is required",
+            "requiredNamed": "%(name)s is required",
+            "test": "",
+            "types": {
+                "array": "The field should be array",
+                "arrayNamed": "%(name)s should be array",
+                "boolean": "The field should be boolean",
+                "booleanNamed": "%(name)s should be boolean",
+                "date": "The field should be date",
+                "dateNamed": "%(name)s should be date",
+                "enum": "The field should be one of %(list)s",
+                "enumNamed": "%(name)s should be one of %(list)s",
+                "hex": "The field should be hex",
+                "hexNamed": "%(name)s should be hex",
+                "method": "The field should be method",
+                "methodNamed": "%(name)s should be method",
+                "object": "The field should be object",
+                "objectNamed": "%(name)s should be object",
+                "regexp": "The field should be regexp",
+                "regexpNamed": "%(name)s should be regexp",
+                "string": "The field should be string",
+                "stringNamed": "%(name)s should be string"
+            },
+            "url": "The field should be url",
+            "urlNamed": "%(name)s should be url"
+        }
     },
     "walkthrough": {
         "buy_form": "Разместить заявки на покупку, используя эту форму.",

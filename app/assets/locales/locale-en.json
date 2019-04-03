@@ -476,8 +476,6 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
-        "limit": "Limit",
-        "scaled": "Scaled",
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -522,6 +520,7 @@
         "invalid_price": "Invalid price",
         "invert": "Invert the price",
         "latest": "Latest",
+        "limit": "Limit",
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
         "market": "Market",
@@ -591,6 +590,7 @@
         "receive": "Receive",
         "remove": "Remove",
         "rsi": "Relative Strength Index",
+        "scaled": "Scaled",
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
@@ -667,10 +667,10 @@
             }
         },
         "settle": "Settlement",
-        "settle_delay": "This asset will settle in %(hours)s hours",
-        "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_better_marketprice": "Market price is in favour",
         "settle_better_settleprice": "Settlement price is in favour",
+        "settle_delay": "This asset will settle in %(hours)s hours",
+        "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Settle instantly",
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "Settle orders",
@@ -1108,13 +1108,13 @@
         "cancel": "Cancel",
         "close": "Close",
         "confirm": "Confirm",
+        "field_type": {
+            "account": "account"
+        },
         "help": "Help",
         "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code",
-        "set": "Set",
-        "field_type": {
-            "account": "account"
-        }
+        "set": "Set"
     },
     "header": {
         "account": "Account",
@@ -1414,53 +1414,6 @@
             "withdraw": "Withdraw"
         }
     },
-    "validation": {
-        "messages": {
-            "required": "The field is required",
-            "requiredNamed": "%(name)s is required",
-            "types": {
-                "array": "The field should be array",
-                "arrayNamed": "%(name)s should be array",
-                "regexp": "The field should be regexp",
-                "regexpNamed": "%(name)s should be regexp",
-                "date": "The field should be date",
-                "dateNamed": "%(name)s should be date",
-                "object": "The field should be object",
-                "objectNamed": "%(name)s should be object",
-                "method": "The field should be method",
-                "methodNamed": "%(name)s should be method",
-                "hex": "The field should be hex",
-                "hexNamed": "%(name)s should be hex",
-                "string": "The field should be string",
-                "stringNamed": "%(name)s should be string",
-                "boolean": "The field should be boolean",
-                "booleanNamed": "%(name)s should be boolean",
-                "enum": "The field should be one of %(list)s",
-                "enumNamed": "%(name)s should be one of %(list)s"
-            },
-            "range": "The field should be in range from %(min)s to %(max)s",
-            "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
-            "max": "The field should be less than %(max)s",
-            "maxNamed": "%(name)s should be less than %(max)s",
-            "min": "The field should higher than %(min)s",
-            "minNamed": "%(name)s should be higher than %(min)s",
-            "number": "The field should be number",
-            "numberNamed": "%(name)s should be number",
-            "integer": "The field should be integer",
-            "integerNamed": "%(name)s should be integer",
-            "float": "The field should be float",
-            "floatNamed": "%(name)s should be float",
-            "email": "The field should be email",
-            "emailNamed": "%(name)s should be email",
-            "url": "The field should be url",
-            "urlNamed": "%(name)s should be url",
-            "oneOf": "The field should be one of: %(list)s",
-            "oneOfNamed": "%(name)s should be one of: %(list)s",
-            "balance": "Insufficient balance. Available only: %(balance)s %(symbol)s",
-
-            "test": ""
-        }
-    },
     "news": {
         "author": "Author",
         "errors": {
@@ -1468,30 +1421,6 @@
         },
         "news": "News",
         "subject": "Subject"
-    },
-    "scaled_orders": {
-        "please_log_in": "You need to login before use Scaled Orders",
-        "title": "Scaled Order",
-        "price_lower": "Price Lower",
-        "price_upper": "Price Upper",
-        "quantity": "Quantity",
-        "distribution": {
-            "title": "Distribution",
-            "flat": "Flat"
-        },
-        "order_count": "Order Count",
-        "order_s": "Order(s)",
-        "action": {
-            "title": "Action",
-            "buy": "Buy",
-            "sell": "Sell"
-        },
-        "total": "Total",
-        "fee": "Fee",
-        "market_fee": "Market Fee",
-        "preview_table": {
-            "price": "Price"
-        }
     },
     "notifications": {
         "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
@@ -1502,9 +1431,9 @@
         "balance_claim_error": "Error claiming balance: %(error_msg)s",
         "exchange_enter_valid_values": "Please enter a valid amount and price",
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
-        "exchange_unknown_error_place_scaled_order": "Unknown error. Failed to place Scaled Order",
         "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
         "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
+        "exchange_unknown_error_place_scaled_order": "Unknown error. Failed to place Scaled Order",
         "import_keys_already_imported": "This wallet has already been imported",
         "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
         "import_keys_error_unknown": "Key import error: %(error_msg)s",
@@ -1679,6 +1608,30 @@
         "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
         "whyBinFile": "Why do I need a .bin file?"
     },
+    "scaled_orders": {
+        "action": {
+            "buy": "Buy",
+            "sell": "Sell",
+            "title": "Action"
+        },
+        "distribution": {
+            "flat": "Flat",
+            "title": "Distribution"
+        },
+        "fee": "Fee",
+        "market_fee": "Market Fee",
+        "order_count": "Order Count",
+        "order_s": "Order(s)",
+        "please_log_in": "You need to login before use Scaled Orders",
+        "preview_table": {
+            "price": "Price"
+        },
+        "price_lower": "Price Lower",
+        "price_upper": "Price Upper",
+        "quantity": "Quantity",
+        "title": "Scaled Order",
+        "total": "Total"
+    },
     "settings": {
         "access": "Nodes",
         "access_text": "",
@@ -1797,6 +1750,9 @@
             "action": "Peer 1 (%(peer_left)s) offers to send %(assets_left)s to Peer 2 (%(peer_right)s) and receives %(assets_right)s in return. ",
             "add_escrow": "Add escrow",
             "add_escrow_tooltip": "Adds or removes an escrow to this barter. This escrow will have to approve the resulting proposal as well. The escrow can serve as a witness only, or also be the custodian of Peer 1's funds.",
+            "balance_warning": "Balance Warning",
+            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s",
+            "balance_warning_tooltip": "%(peer)s does not have enough funds to execute the transfers when the proposal gets approved and executes. This is not an issue when creating the proposal, but the balances must match when executed",
             "bartering_asset": "Bartering asset",
             "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
             "error_fill_in_escrow_name": "Please fill in the account name of the escrow",
@@ -1818,8 +1774,6 @@
             "new_barter_tooltip": "This panel allows you to create a new barter. It utilizes the atomicity of a transaction to securely swap assets between two accounts (via transfer operations). The transaction is wrapped in a proposal and needs approval from both parties (called Peer 1 and Peer 2 below) to execute, and optionally from an escrow",
             "not_complete": "Please fill out all fields to see a description of the action here",
             "peer_left": "Peer 1",
-            "balance_warning": "Balance Warning",
-            "balance_warning_tooltip": "%(peer)s does not have enough funds to execute the transfers when the proposal gets approved and executes. This is not an issue when creating the proposal, but the balances must match when executed",
             "peer_right": "Peer 2",
             "proposal_fee": "Proposal fee",
             "proposal_fee_tooltip": "The indicated transaction fee will be paid to create the proposal to realize this barter",
@@ -1829,8 +1783,7 @@
             "send_to_escrow_tooltip": "Enabling this will send the selected funds to the escrow, and then a barter proposal is created between escrow and Peer 2",
             "title": "Barter",
             "total_fees": "Total fees: %(fee)s %(asset)s",
-            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter",
-            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s"
+            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
         },
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
@@ -1879,33 +1832,33 @@
             "title_long": "Create a Collateralized Debt Position"
         },
         "direct_debit": {
-            "description": "Setup a direct debit authorization for recurring payments. The authorization allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
-            "title": "Direct debit",
-            "create": "Create",
-            "update": "Update",
-            "delete": "Delete",
-            "expires": "Expires",
-            "claim": "Claim",
+            "amount_to_withdraw": "Amount to collect",
             "authorized_account": "Payee",
             "authorizing_account": "Payer",
-            "limit_per_period": "Maximum amount per period",
-            "period": "Specify period",
-            "num_of_periods": "Number of periods",
-            "start_date": "First period starts on",
-            "create_new_mandate": "Create authorization",
-            "update_mandate": "Update existing authorization",
+            "claim": "Claim",
             "claim_funds": "Claim funds",
-            "amount_to_withdraw": "Amount to collect",
+            "create": "Create",
+            "create_new_mandate": "Create authorization",
             "current_period_expires": "Current period ends",
+            "delete": "Delete",
+            "description": "Setup a direct debit authorization for recurring payments. The authorization allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "expires": "Expires",
             "first_period_not_started": "First period has not started!",
             "limit": "limit",
+            "limit_per_period": "Maximum amount per period",
+            "num_of_periods": "Number of periods",
+            "period": "Specify period",
+            "start_date": "First period starts on",
+            "title": "Direct debit",
             "tooltip": {
                 "authorized_account": "The account that is eligible to collect from your account.",
                 "limit_per_period": "The payee may collect a maximum amount of the specified asset (up to) per period. The payee can only collect once per period, even if not collected in full.",
-                "period": "One period lasts the indicated time interval, e.g. 2 weeks.",
                 "num_of_periods": "After the start time this amount of periods are available consecutively.",
+                "period": "One period lasts the indicated time interval, e.g. 2 weeks.",
                 "start_time": "The start time of the first period must be in the future when broadcasting."
-            }
+            },
+            "update": "Update",
+            "update_mandate": "Update existing authorization"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
@@ -1956,7 +1909,6 @@
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "This %(wallet_name)s wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
-        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -1985,6 +1937,7 @@
                 "model": "Cloud wallet"
             }
         },
+        "login_required": "Please login to the selected account to perform this action",
         "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
         "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip": "You may include an optional message in the memo field. This allows you to write personal notes and is also often used by exchanges to identify deposits.",
@@ -2017,8 +1970,8 @@
         "sync_yes": "The current node is in sync with the blockchain",
         "target_collateral_ratio": "Setting a Target Collateral Ratio (TCR) will allow the blockchain to automatically sell the required amount of your collateral in order to keep your collateral ratio at or above your defined TCR when the value of your collateral decreases.<br /><br />To frequently sell small amounts, set a low target (eg. < 2)<br /><br />To sell larger amounts infrequently, set a high target (eg. > 3)",
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
-        "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "unlock_account_name": "Click to edit the account name, e.g. when your account is set as permission of another account.",
+        "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
         "withdraw_full": "Click to withdraw the full balance"
     },
@@ -2227,6 +2180,52 @@
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
+    },
+    "validation": {
+        "messages": {
+            "balance": "Insufficient balance. Available only: %(balance)s %(symbol)s",
+            "email": "The field should be email",
+            "emailNamed": "%(name)s should be email",
+            "float": "The field should be float",
+            "floatNamed": "%(name)s should be float",
+            "integer": "The field should be integer",
+            "integerNamed": "%(name)s should be integer",
+            "max": "The field should be less than %(max)s",
+            "maxNamed": "%(name)s should be less than %(max)s",
+            "min": "The field should higher than %(min)s",
+            "minNamed": "%(name)s should be higher than %(min)s",
+            "number": "The field should be number",
+            "numberNamed": "%(name)s should be number",
+            "oneOf": "The field should be one of: %(list)s",
+            "oneOfNamed": "%(name)s should be one of: %(list)s",
+            "range": "The field should be in range from %(min)s to %(max)s",
+            "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
+            "required": "The field is required",
+            "requiredNamed": "%(name)s is required",
+            "test": "",
+            "types": {
+                "array": "The field should be array",
+                "arrayNamed": "%(name)s should be array",
+                "boolean": "The field should be boolean",
+                "booleanNamed": "%(name)s should be boolean",
+                "date": "The field should be date",
+                "dateNamed": "%(name)s should be date",
+                "enum": "The field should be one of %(list)s",
+                "enumNamed": "%(name)s should be one of %(list)s",
+                "hex": "The field should be hex",
+                "hexNamed": "%(name)s should be hex",
+                "method": "The field should be method",
+                "methodNamed": "%(name)s should be method",
+                "object": "The field should be object",
+                "objectNamed": "%(name)s should be object",
+                "regexp": "The field should be regexp",
+                "regexpNamed": "%(name)s should be regexp",
+                "string": "The field should be string",
+                "stringNamed": "%(name)s should be string"
+            },
+            "url": "The field should be url",
+            "urlNamed": "%(name)s should be url"
+        }
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",
