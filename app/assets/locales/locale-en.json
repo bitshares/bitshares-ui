@@ -1380,7 +1380,8 @@
             "amount": "Amount to burn",
             "from": "Account to burn from",
             "submit": "Burn",
-            "title": "Burn (reserve) asset"
+            "title": "Burn (reserve) asset",
+            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
         },
         "save": "save",
         "send": {

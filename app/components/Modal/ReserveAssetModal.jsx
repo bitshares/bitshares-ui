@@ -6,7 +6,7 @@ import AssetActions from "actions/AssetActions";
 import {ChainStore} from "bitsharesjs";
 import {Asset} from "common/MarketClasses";
 import AssetWrapper from "../Utility/AssetWrapper";
-import {Modal, Button, Form, Input} from "bitshares-ui-style-guide";
+import {Modal, Button, Form, Alert} from "bitshares-ui-style-guide";
 
 class ReserveAssetModal extends React.Component {
     constructor(props) {
@@ -62,8 +62,8 @@ class ReserveAssetModal extends React.Component {
             this.props.account.get("balances", []).size &&
             !!this.props.account.getIn(["balances", assetId])
                 ? ChainStore.getObject(
-                      this.props.account.getIn(["balances", assetId])
-                  )
+                    this.props.account.getIn(["balances", assetId])
+                ) 
                 : null;
         if (!currentBalance) return null;
 
@@ -81,6 +81,12 @@ class ReserveAssetModal extends React.Component {
                     </Button>
                 ]}
             >
+                <Alert 
+                    message={counterpart.translate("modal.reserve.warning_message")} 
+                    type="warning" 
+                    showIcon 
+                    style={{marginBottom: "2em"}}
+                />
                 <Form layout="vertical">
                     <AmountSelector
                         label="modal.reserve.amount"
