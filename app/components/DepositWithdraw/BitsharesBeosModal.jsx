@@ -72,7 +72,7 @@ class BitsharesBeosModal extends React.Component {
 
     componentWillMount() {
         this._updateFee();
-        this._updatemultiSigError();
+        this._updateMultiSigError();
     }
 
     componentWillUnmount() {
@@ -84,7 +84,7 @@ class BitsharesBeosModal extends React.Component {
             np.account !== this.state.from_account &&
             np.account !== this.props.account
         ) {
-            this._updatemultiSigError();
+            this._updateMultiSigError();
             this.setState(
                 {
                     from_account: np.account,
@@ -100,7 +100,7 @@ class BitsharesBeosModal extends React.Component {
         }
     }
 
-    _updatemultiSigError() {
+    _updateMultiSigError() {
         let accountData = ChainStore.getAccount(this.props.account).toJS();
         if (accountData && accountData.active && accountData.owner) {
             if (
