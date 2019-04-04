@@ -111,7 +111,9 @@ class BitsharesBeosModal extends React.Component {
                 accountData.owner.address_auths.length === 0 &&
                 accountData.owner.key_auths.length === 1
             ) {
-                // It is ok
+                this.setState({
+                    multiSigError: false
+                });
             } else {
                 this.setState({
                     multiSigError: true
