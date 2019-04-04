@@ -72,24 +72,7 @@ class BitsharesBeosModal extends React.Component {
 
     componentWillMount() {
         this._updateFee();
-        let accountData = ChainStore.getAccount(this.props.account).toJS();
-        if (accountData && accountData.active && accountData.owner) {
-            if (
-                accountData.active.account_auths.lenght === 0 &&
-                accountData.active.address_auths.lenght === 0 &&
-                accountData.active.key_auths.lenght === 1 &&
-                accountData.owner.account_auths.lenght === 0 &&
-                accountData.owner.address_auths.lenght === 0 &&
-                accountData.owner.key_auths.lenght === 1
-            ) {
-                // It is ok
-            } else {
-                this.setState({
-                    multiSigError: true
-                });
-            }
-        }
-        console.log(accountData);
+        this._updatemultiSigError();
     }
 
     componentWillUnmount() {
@@ -101,6 +84,7 @@ class BitsharesBeosModal extends React.Component {
             np.account !== this.state.from_account &&
             np.account !== this.props.account
         ) {
+            this._updatemultiSigError();
             this.setState(
                 {
                     from_account: np.account,
@@ -113,6 +97,26 @@ class BitsharesBeosModal extends React.Component {
                     this._updateFee();
                 }
             );
+        }
+    }
+
+    _updatemultiSigError() {
+        let accountData = ChainStore.getAccount(this.props.account).toJS();
+        if (accountData && accountData.active && accountData.owner) {
+            if (
+                accountData.active.account_auths.length === 0 &&
+                accountData.active.address_auths.length === 0 &&
+                accountData.active.key_auths.length === 1 &&
+                accountData.owner.account_auths.length === 0 &&
+                accountData.owner.address_auths.length === 0 &&
+                accountData.owner.key_auths.length === 1
+            ) {
+                // It is ok
+            } else {
+                this.setState({
+                    multiSigError: true
+                });
+            }
         }
     }
 
