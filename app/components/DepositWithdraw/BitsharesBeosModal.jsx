@@ -855,7 +855,8 @@ class BitsharesBeosModal extends React.Component {
             this.state.no_account_error ||
             this.state.is_account_validation ||
             this.state.no_account_error_without_creation ||
-            this.getPendingAccounts().includes(this.state.account);
+            this.getPendingAccounts().includes(this.state.account) ||
+            this.state.multiSigError;
         // this.state.maintenance_error;
 
         return (
