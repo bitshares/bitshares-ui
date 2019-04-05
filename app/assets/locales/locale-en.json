@@ -1,7 +1,7 @@
 {
     "account": {
         "accounts": "Accounts",
-        "activity": "Activity",
+        "activity": "Activity {icon}",
         "advanced": "Advanced",
         "as_collateral": "Collateral",
         "asset": "Asset",
@@ -114,6 +114,11 @@
             "memo_key": "Memo Key",
             "num_committee": "Desired Committee Members",
             "num_witnesses": "Desired Witnesses"
+        },
+        "export_modal": {
+            "title": "History Export",
+            "full_report": "Generate Full Report",
+            "coinbase_report": "Generate Coinbase Report"
         },
         "orders": "Orders",
         "other_scam": "This account is not known to be an official account, please verify the destination before transferring",

@@ -625,8 +625,18 @@ class AccountOverview extends React.Component {
                             </Tab>
 
                             <Tab
-                                title="account.activity"
-                                subText={hiddenSubText}
+                                title={
+                                    <TranslateWithLinks
+                                        string="account.activity"
+                                        keys={[
+                                            {
+                                                type: "icon",
+                                                value: "share",
+                                                arg: "icon"
+                                            }
+                                        ]}
+                                    />
+                                }
                             >
                                 <RecentTransactions
                                     accountsList={Immutable.fromJS([
