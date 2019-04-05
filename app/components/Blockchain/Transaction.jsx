@@ -82,21 +82,26 @@ class NoLinkDecorator extends React.Component {
 
 class OperationTable extends React.Component {
     render() {
-        let fee_row =
-            this.props.fee.amount > 0 ? (
-                <tr>
-                    <td>
-                        <Translate component="span" content="transfer.fee" />
-                    </td>
-                    <td>
+        let fee_row = (
+            <tr>
+                <td>
+                    <Translate component="span" content="transfer.fee" />
+                </td>
+                <td>
+                    {this.props.fee.amount > 0 ? (
                         <FormattedAsset
                             color="fee"
                             amount={this.props.fee.amount}
                             asset={this.props.fee.asset_id}
                         />
-                    </td>
-                </tr>
-            ) : null;
+                    ) : (
+                        <label>
+                            <Translate content="transfer.free" />
+                        </label>
+                    )}
+                </td>
+            </tr>
+        );
 
         return (
             <div>
