@@ -2,6 +2,7 @@ import React from "react";
 import {Pagination} from "antd";
 import counterpart from "counterpart";
 import {Table} from "bitshares-ui-style-guide";
+import "./paginated-list.scss";
 
 export default class PaginatedList extends React.Component {
     constructor(props) {
@@ -53,6 +54,7 @@ export default class PaginatedList extends React.Component {
         return (
             <div className="grid-content" style={this.props.style}>
                 <Table
+                    className="paginated-list"
                     dataSource={currentRows}
                     columns={Array.isArray(header) ? header : []}
                     footer={() => extraRow}
