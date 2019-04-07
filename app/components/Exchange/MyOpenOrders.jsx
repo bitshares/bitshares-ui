@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import counterpart from "counterpart";
 import Ps from "perfect-scrollbar";
 import OpenSettleOrders from "./OpenSettleOrders";
+import MarketsActions from "actions/MarketsActions";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import PriceText from "../Utility/PriceText";
@@ -16,11 +17,11 @@ import {LimitOrder, CallOrder} from "common/MarketClasses";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
 import FormattedPrice from "../Utility/FormattedPrice";
-const leftAlign = {textAlign: "left"};
+const leftAlign = {textAlign: "left !important"};
 const rightAlign = {textAlign: "right"};
 const centerAlign = {textAlign: "center"};
 import ReactTooltip from "react-tooltip";
-import {Tooltip} from "bitshares-ui-style-guide";
+import {Tooltip, Button} from "bitshares-ui-style-guide";
 
 class TableHeader extends React.Component {
     render() {
@@ -55,13 +56,19 @@ class TableHeader extends React.Component {
                             </span>
                         ) : null}
                     </th>
-                    <th style={leftAlign ? leftAlign : rightAlign}>
+                    <th style={leftAlign ? rightAlign : leftAlign}>
                         <Translate
                             className="header-sub-title"
                             content="transaction.expiration"
                         />
                     </th>
-                    <th style={{width: "6%"}} />
+                    <th style={{width: "6%", textAlign: "center"}}>
+                        <input 
+                            type="checkbox" 
+                            className="order-cancel-toggle"
+                            onChange={this.props.onCancelToggle}
+                        />
+                    </th>
                 </tr>
             </thead>
         ) : (
@@ -177,28 +184,22 @@ class OrderRow extends React.Component {
                             {isCall
                                 ? null
                                 : counterpart.localize(
-                                      new Date(order.expiration),
-                                      {
-                                          type: "date",
-                                          format: "short_custom"
-                                      }
-                                  )}
+                                    new Date(order.expiration),
+                                    {
+                                        type: "date",
+                                        format: "short_custom"
+                                    }
+                                )}
                         </div>
                     </Tooltip>
                 </td>
                 <td className="text-center" style={{width: "6%"}}>
                     {isCall ? null : (
-                        <a
-                            style={{marginRight: 0}}
-                            className="order-cancel"
-                            onClick={this.props.onCancel}
-                        >
-                            <Icon
-                                name="cross-circle"
-                                title="icons.cross_circle.cancel_order"
-                                className="icon-14px"
-                            />
-                        </a>
+                        <input 
+                            type="checkbox"
+                            className="orderCancel"
+                            onChange={this.props.onCheckCancel}
+                        />
                     )}
                 </td>
             </tr>
@@ -355,7 +356,8 @@ class MyOpenOrders extends React.Component {
         this.state = {
             activeTab: props.activeTab,
             rowCount: 20,
-            showAll: false
+            showAll: false,
+            selectedOrders: []
         };
         this._getOrders = this._getOrders.bind(this);
     }
@@ -389,7 +391,8 @@ class MyOpenOrders extends React.Component {
             nextProps.activeTab !== this.props.activeTab ||
             nextState.activeTab !== this.state.activeTab ||
             nextState.showAll !== this.state.showAll ||
-            nextProps.currentAccount !== this.props.currentAccount
+            nextProps.currentAccount !== this.props.currentAccount ||
+            nextState.selectedOrders !== this.state.selectedOrders
         );
     }
 
@@ -429,6 +432,72 @@ class MyOpenOrders extends React.Component {
             if (contentContainer) contentContainer.scrollTop = 0;
             Ps.update(contentContainer);
         }
+    }
+
+    onCheckCancel(orderId, evt) {
+        let {selectedOrders} = this.state;
+        let checked = evt.target.checked;
+
+        if (checked) {
+            this.setState({selectedOrders: selectedOrders.concat([orderId])});
+        } else {
+            let index = selectedOrders.indexOf(orderId);
+
+            if (index > -1) {
+                this.setState({
+                    selectedOrders: selectedOrders
+                        .slice(0, index)
+                        .concat(selectedOrders.slice(index + 1))
+                });
+            }
+        }
+    }
+
+    cancelSelected() {
+        this._cancelLimitOrders.call(this);
+    }
+
+    resetSelected() {
+        this.setState({selectedOrders: []});
+
+        let checkboxes = document.querySelectorAll(".orderCancel");
+
+        checkboxes.forEach(item => {
+            if (item.checked) item.checked = false;
+        });
+    }
+
+    onCancelToggle(evt) {
+        let checkboxes = document.querySelectorAll(".orderCancel");
+        const orders = this._getOrders();
+        let selectedOrders = [];
+
+        orders.forEach(order => {
+            selectedOrders.push(order.id);
+        });
+
+        if(evt.target.checked) {
+            this.setState({selectedOrders: selectedOrders});
+        } else {
+            this.setState({selectedOrders: []});
+        }
+
+        checkboxes.forEach(item => {
+            item.checked = evt.target.checked;
+        });
+    }
+
+    _cancelLimitOrders() {
+        MarketsActions.cancelLimitOrders(
+            this.props.currentAccount.get("id"),
+            this.state.selectedOrders
+        )
+            .then(() => {
+                this.resetSelected();
+            })
+            .catch(err => {
+                console.log("cancel orders error:", err);
+            });
     }
 
     _onSetShowAll() {
@@ -525,7 +594,7 @@ class MyOpenOrders extends React.Component {
 
     render() {
         let {base, quote, quoteSymbol, baseSymbol, settleOrders} = this.props;
-        let {activeTab, showAll, rowCount} = this.state;
+        let {activeTab, showAll, rowCount, selectedOrders} = this.state;
 
         if (!base || !quote) return null;
 
@@ -579,6 +648,7 @@ class MyOpenOrders extends React.Component {
                             base={base}
                             quote={quote}
                             onCancel={this.props.onCancel.bind(this, order.id)}
+                            onCheckCancel={this.onCheckCancel.bind(this, order.id)}
                         />
                     );
                 });
@@ -600,6 +670,7 @@ class MyOpenOrders extends React.Component {
                             base={base}
                             quote={quote}
                             onCancel={this.props.onCancel.bind(this, order.id)}
+                            onCheckCancel={this.onCheckCancel.bind(this, order.id)}
                         />
                     );
                 });
@@ -633,21 +704,34 @@ class MyOpenOrders extends React.Component {
                 </TransitionWrapper>
             );
 
+            var cancelOrderButton = 
+                <div style={{display: "grid"}}>
+                    <Button
+                        onClick={this.cancelSelected.bind(this)}
+                    >
+                        <Translate content="exchange.cancel_selected_orders" />
+                    </Button>
+                </div>;
+
             footerContainer =
                 rowsLength > 11 ? (
-                    <div className="orderbook-showall">
-                        <a onClick={this._onSetShowAll.bind(this)}>
-                            <Translate
-                                content={
-                                    showAll
-                                        ? "exchange.hide"
-                                        : "exchange.show_all_orders"
-                                }
-                                rowcount={rowsLength}
-                            />
-                        </a>
-                    </div>
-                ) : null;
+                    <React.Fragment>
+                        <div className="orderbook-showall">
+                            <a onClick={this._onSetShowAll.bind(this)}>
+                                <Translate
+                                    content={
+                                        showAll
+                                            ? "exchange.hide"
+                                            : "exchange.show_all_orders"
+                                    }
+                                    rowcount={rowsLength}
+                                />
+                            </a>
+                            
+                        </div>
+                        {selectedOrders.length > 0 ? cancelOrderButton : null}
+                    </React.Fragment>
+                ) : (selectedOrders.length > 0 ? cancelOrderButton : null);
         }
 
         {
@@ -720,6 +804,7 @@ class MyOpenOrders extends React.Component {
                                     type="sell"
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
+                                    onCancelToggle={this.onCancelToggle.bind(this)}
                                 />
                             ) : (
                                 <thead>
