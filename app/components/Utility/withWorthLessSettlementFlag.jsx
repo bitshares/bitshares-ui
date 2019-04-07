@@ -42,6 +42,8 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                     );
 
                 let settlementPrice = null;
+                let factor = 1;
+                let offset = 0;
                 if (
                     !!asset.get("bitasset") &&
                     asset.get("bitasset").get("settlement_fund") > 0
@@ -55,6 +57,8 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                         "current_feed",
                         "settlement_price"
                     ]);
+                    offset = asset.get("bitasset").get("options").get("force_settlement_offset_percent");
+                    factor = 1 - offset / 10000;
                 }
 
                 const realSettlementPrice = new Price({
@@ -68,7 +72,8 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                         amount: settlementPrice.getIn(["base", "amount"]),
                         precision: asset.get("precision")
                     })
-                }).toReal();
+                }).toReal() * factor;
+
 
                 // TODO: compare fractional price instead of real price
                 realMarketPricePromise.then(realMarketPrice =>
