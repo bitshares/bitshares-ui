@@ -741,7 +741,8 @@ class BitsharesBeosModal extends React.Component {
                 this.setPendingAccount(this.state.account);
                 this.setState({
                     is_account_creation_checkbox: false,
-                    account_creation_transfer_success_info: true
+                    account_creation_transfer_success_info: true,
+                    is_account_creation: false
                 });
                 this.validationInterval(this.state.account);
             }
