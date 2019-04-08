@@ -395,11 +395,12 @@ class RecentTransactions extends React.Component {
                                     )}
                                 >
                                     <a
-                                        className="inline-block"
+                                        className="inline-block iconLinkAndLabel"
                                         onClick={this.showModal}
                                         style={{marginLeft: "1rem"}}
                                     >
-                                        <Icon name="excel" size="1_5x" />
+                                        <Icon name="excel" size="1x" />
+                                        <Translate content="account.download_history" />
                                     </a>
                                 </Tooltip>
                             ) : null}

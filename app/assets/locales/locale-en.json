@@ -120,6 +120,7 @@
             "full_report": "Generate Full Report",
             "coinbase_report": "Generate Coinbase Report"
         },
+        "download_history": "Download History",
         "orders": "Orders",
         "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
         "overview": "Overview",
@@ -2012,7 +2013,7 @@
         "confirm": "Please confirm the transaction",
         "create_key": "Created a public key",
         "csv": "Export to .csv",
-        "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info format",
+        "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info or raw format",
         "custom": "Created a custom operation",
         "delta_collateral": "Collateral change",
         "delta_debt": "Debt change",
