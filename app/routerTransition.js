@@ -1000,7 +1000,6 @@ class DirectPinger {
     }
 
     async check(urls) {
-        console.log("check)");
         urls.forEach(item => {
             this.addURL(item);
         });
