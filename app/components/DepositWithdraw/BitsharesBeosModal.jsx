@@ -13,6 +13,7 @@ import utils from "common/utils";
 import {Button, Modal} from "bitshares-ui-style-guide";
 import ls from "common/localStorage";
 import {ChainStore} from "bitsharesjs";
+import WalletDb from "stores/WalletDb";
 
 const STORAGE_KEY = "__beos__";
 let lsBeos = new ls(STORAGE_KEY);
@@ -738,13 +739,15 @@ class BitsharesBeosModal extends React.Component {
             );
 
             if (this.state.is_account_creation) {
-                this.setPendingAccount(this.state.account);
-                this.setState({
-                    is_account_creation_checkbox: false,
-                    account_creation_transfer_success_info: true,
-                    is_account_creation: false
-                });
-                this.validationInterval(this.state.account);
+                if (!WalletDb.isLocked()) {
+                    this.setPendingAccount(this.state.account);
+                    this.setState({
+                        is_account_creation_checkbox: false,
+                        account_creation_transfer_success_info: true,
+                        is_account_creation: false
+                    });
+                    this.validationInterval(this.state.account);
+                }
             }
         } catch (e) {
             this.onMaintenance();
