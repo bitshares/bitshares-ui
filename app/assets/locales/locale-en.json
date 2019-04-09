@@ -62,6 +62,7 @@
         "member": {
             "annual": "Annual subscriber",
             "available": "Available to claim",
+            "balance_type": "Type_",
             "basic": "Basic member",
             "cashback": "Vesting balance amount",
             "claim": "Claim now",

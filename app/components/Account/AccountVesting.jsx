@@ -72,6 +72,14 @@ class VestingBalance extends React.Component {
                         </tr>
                         <tr>
                             <td>
+                                <Translate content="account.member.balance_type" />
+                            </td>
+                            <td>
+                                <span>{vb.balance_type}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <Translate content="account.member.earned" />
                             </td>
                             <td>
