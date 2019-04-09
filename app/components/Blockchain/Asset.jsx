@@ -1568,6 +1568,21 @@ class Asset extends React.Component {
                             )}
                             {sortedCollateralBids.length && ")"}
                         </th>
+                        <th>
+                            <Translate content="transaction.cumulative_borrow_amount" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
+                                <FormattedAsset
+                                    amount={1}
+                                    asset={
+                                        sortedCollateralBids[0].bid.quote
+                                            .asset_id
+                                    }
+                                    hide_amount
+                                />
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
                         <th
                             style={{textAlign: "right"}}
                             className="clickable column-hide-small"
@@ -1609,6 +1624,7 @@ class Asset extends React.Component {
                 </thead>
             );
 
+            let cumulativeDebt = 0;
             secondRows = sortedCollateralBids.map(c => {
                 let included = "no";
                 if (!!c.consideredIfRevived) {
@@ -1620,6 +1636,9 @@ class Asset extends React.Component {
                         included = "no";
                     }
                 }
+
+                cumulativeDebt += c.debt;
+
                 return (
                     <tr className="margin-row" key={c.id}>
                         <td>
@@ -1638,6 +1657,16 @@ class Asset extends React.Component {
                         <td style={{textAlign: "right"}} className="">
                             <FormattedAsset
                                 amount={c.bid.quote.amount}
+                                asset={c.bid.quote.asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <FormattedAsset
+                                amount={cumulativeDebt}
                                 asset={c.bid.quote.asset_id}
                                 hide_asset
                             />
