@@ -88,7 +88,8 @@ export default class TranslateWithLinks extends React.Component {
                                     asset={key.value.asset_id}
                                     decimalOffset={key.decimalOffset}
                                     hide_asset
-                                />&nbsp;
+                                />
+                                &nbsp;
                                 {this.linkToAsset(key.value.asset_id)}
                             </span>
                         );
@@ -136,6 +137,43 @@ export default class TranslateWithLinks extends React.Component {
                                 title={title}
                             />
                         );
+                        break;
+
+                    case "memo":
+                        const {votes, keys} = key.value;
+                        value =
+                            key.value && (votes || keys) ? (
+                                <span>
+                                    {votes.minus.length || votes.plus.length ? (
+                                        <div>
+                                            <Translate
+                                                content={"proposal.votes"}
+                                            />
+                                        </div>
+                                    ) : null}
+                                    {votes.minus.length ? (
+                                        <div>- {votes.minus.join(", ")}</div>
+                                    ) : null}
+                                    {votes.plus.length ? (
+                                        <div>+ {votes.plus.join(", ")}</div>
+                                    ) : null}
+                                    {keys.plus.length ? (
+                                        <div>
+                                            <Translate
+                                                content={"proposal.public_key"}
+                                            />
+                                            <div>+ {keys.plus.join(", ")}</div>
+                                            <div>- {keys.minus.join(", ")}</div>
+                                            <Translate
+                                                style={{color: "red"}}
+                                                content={
+                                                    "proposal.danger_operation"
+                                                }
+                                            />
+                                        </div>
+                                    ) : null}
+                                </span>
+                            ) : null;
                         break;
 
                     default:
