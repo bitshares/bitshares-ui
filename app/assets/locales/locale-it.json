@@ -1933,7 +1933,7 @@
         },
         "login_required": "Please login to the selected account to perform this action",
         "margin_price": "Questo è il prezzo massimo che una posizione con margine può essere tenuta a pagare in caso di chiamata. È anche detto Squeeze Price.",
-        "market_fee": "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
+        "market_fee": "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
         "memo_tip": "Puoi includere qualsiasi messaggio nel campo 'memo'. Il memo è facoltativo, ma in genere richiesto per i trasferimenti verso un exchange.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "Non c'è nessun prezzo disponibile per questo asset che possa essere usato per stimarne il valore.",

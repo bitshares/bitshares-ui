@@ -1939,7 +1939,7 @@
         },
         "login_required": "Please login to the selected account to perform this action",
         "margin_price": "Este es el precio máximo que una posición a margen puede pagar. Es tambien llamado precio Squeeze.",
-        "market_fee": "El proprietario de %(asset)s cobra una comisiòn de mercado de %(percent)s% para pedidos de compra. Esta comisìòn se deducirá de la cantidad que reciba cuando su pedido se ejecuta, no se paga al hacer un pedido.",
+        "market_fee": "El proprietario de %(asset)s cobra una comisiòn de mercado de %(percent)s para pedidos de compra. Esta comisìòn se deducirá de la cantidad que reciba cuando su pedido se ejecuta, no se paga al hacer un pedido.",
         "memo_tip": "En el campo notas (memo) puede incluir cualquier mensaje. Las notas son opcionales pero generalmente se requieren para transferencias a intercambios.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "No hay un precio reciente disponible para este activo que pueda usarse para estimar su valor.",

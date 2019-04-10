@@ -1933,7 +1933,7 @@
         },
         "login_required": "Please login to the selected account to perform this action",
         "margin_price": "这是触发平仓的最大价格。也被称为挤压价格。",
-        "market_fee": "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s% 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
+        "market_fee": "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
         "memo_tip": "您可以在备注里留下任意信息。备注不是必须的，但通常将资产转账到交易所时需要填写。",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "未找到该资产最近的成交价来评估价值",
