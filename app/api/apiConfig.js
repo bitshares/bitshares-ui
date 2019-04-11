@@ -180,6 +180,14 @@ export const settingsAPIs = {
             contact: "telegram:BrianZhang"
         },
         {
+            url: "wss://api.weaccount.cn",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Hangzhou",
+            operator: "Witness: btspp-witness",
+            contact: "telegram:btsplusplus"
+        },
+        {
             url: "wss://dex.rnglab.org",
             region: "Northern Europe",
             country: "Netherlands",
