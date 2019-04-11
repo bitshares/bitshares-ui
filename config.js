@@ -5,14 +5,7 @@ const config = {
     env,
     debug,
     support: {
-        url: process.env.SUPPORT_URL || "http://localhost:3000",
-        publicKey: process.env.SUPPORT_PUBLIC_KEY || "",
-        coinsApi: {
-            url: process.env.API_COINS_URL || ""
-        },
-        tradingPairsApi: {
-            url: process.env.API_TRADING_PAIRS_URL || ""
-        }
+        url: process.env.API_SUPPORT_BASE || "http://localhost:3000"
     }
 };
 

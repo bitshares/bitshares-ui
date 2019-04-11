@@ -1,93 +1,18 @@
 import React from "react";
 import counterpart from "counterpart";
+import {connect} from "alt-react";
+
 import {IssuesEnum} from "../Constants";
 import CoinsDropdown from "../CoinsDropdown";
+import GatewayStore from "stores/GatewayStore";
 import ExplorerCheck from "../ExplorerCheck";
-import {log} from "../SupportUtils";
-import config from "../../../../config";
 import ReCAPTCHA from "../../Utility/ReCAPTCHA";
-
-/**
- * Gets a Deposit Trading Pair for the specified coin type
- * @param coinType
- * @param tradingPairs
- * @returns {*}
- */
-const getDepositTradingPair = (coinType, tradingPairs) =>
-    tradingPairs.filter(
-        tradingPair => tradingPair.inputCoinType === coinType.toLowerCase()
-    );
-
-/**
- * Gets a Withdrawal Trading Pair for the specified coin type
- * @param coinType
- * @param tradingPairs
- * @returns {*}
- */
-const getWithdrawalTradingPair = (coinType, tradingPairs) =>
-    tradingPairs.filter(
-        tradingPair => tradingPair.outputCoinType === coinType.toLowerCase()
-    );
-
-/**
- * Gets the Disabled Coins message for the selected coin and IssueId
- * @param issueId
- * @param selectedCoin
- * @param tradingPairs
- * @returns {*}
- */
-const getDisabledCoinsMessage = (
-    issueId,
-    selectedCoin = null,
-    tradingPairs
-) => {
-    try {
-        if (issueId !== -1 && selectedCoin !== null && selectedCoin !== null) {
-            const {coinType} = selectedCoin;
-
-            if (issueId === IssuesEnum.DEPOSIT) {
-                const tradingPair = getDepositTradingPair(
-                    coinType,
-                    tradingPairs
-                )[0];
-                if (tradingPair.disabled) {
-                    return tradingPair.message
-                        ? tradingPair.message
-                        : counterpart.translate(
-                              "cryptobridge.support.disabled_deposits_message"
-                          );
-                }
-            } else if (issueId === IssuesEnum.WITHDRAWAL) {
-                const tradingPair = getWithdrawalTradingPair(
-                    coinType,
-                    tradingPairs
-                )[0];
-                if (tradingPair.disabled) {
-                    return tradingPair.message
-                        ? tradingPair.message
-                        : counterpart.translate(
-                              "cryptobridge.support.disabled_withdrawals_message"
-                          );
-                }
-            } else {
-                log(
-                    `DepositWithdrawForm.jsx:getDisabledCoinsMessage() - unknown IssueID (${issueId})`
-                );
-            }
-        }
-    } catch (err) {
-        log(
-            `DepositWithdrawForm.jsx:getDisabledCoinsMessage() - catch error (${err})`
-        );
-    }
-
-    return null;
-};
+import AssetInfo from "../../Utility/AssetInfo";
+import AssetTradingPairInfo from "../../Utility/AssetTraidingPairInfo";
 
 class DepositWithdrawForm extends React.Component {
     state = {
         selectedIssueId: -1,
-        disabledCoinsMessage: null,
         selectedCoin: null,
         //explorerUrl: "",
         transactionId: "",
@@ -123,52 +48,6 @@ class DepositWithdrawForm extends React.Component {
         };
     };
 
-    componentDidMount() {
-        const coinsUrl = config.support.coinsApi.url;
-        const tradingPairsUrl = config.support.tradingPairsApi.url;
-
-        const coinsPromise = fetch(coinsUrl).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                log(
-                    `DepositWithdrawForm.jsx:componentDidMount() - Could not get coins from "${coinsUrl}" (${JSON.stringify(
-                        response
-                    )})`
-                );
-                throw new Error(`Could not get coins from "${coinsUrl}"`);
-            }
-        });
-
-        const tradingPairsPromise = fetch(tradingPairsUrl).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                log(
-                    `DepositWithdrawForm.jsx:componentDidMount() - Could not get trading pairs from "${tradingPairsUrl}" (${JSON.stringify(
-                        response
-                    )})`
-                );
-                throw new Error(
-                    `Could not get trading pairs from "${tradingPairsUrl}"`
-                );
-            }
-        });
-
-        Promise.all([coinsPromise, tradingPairsPromise])
-            .then(([coins, tradingPairs]) => {
-                this.setState({
-                    coins,
-                    tradingPairs
-                });
-            })
-            .catch(error => {
-                log(
-                    `DepositWithdrawForm.jsx:componentDidMount() - Coins/TradingPairs Promise catch() error (${error})`
-                );
-            });
-    }
-
     componentDidUpdate(prevProps, prevState) {
         if (
             this.props.onChange &&
@@ -181,17 +60,8 @@ class DepositWithdrawForm extends React.Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {
         if (nextProps.selectedIssueId !== prevState.selectedIssueId) {
-            const disabledCoinsMessage = prevState.selectedCoin
-                ? getDisabledCoinsMessage(
-                      nextProps.selectedIssueId,
-                      prevState.selectedCoin,
-                      prevState.tradingPairs
-                  )
-                : null;
-
             return {
                 selectedIssueId: nextProps.selectedIssueId,
-                disabledCoinsMessage,
                 //explorerUrl: "",
                 transactionId: "",
                 transactionNotFound: false,
@@ -211,15 +81,8 @@ class DepositWithdrawForm extends React.Component {
      * @private
      */
     _handleCoinChange = selectedCoin => {
-        const disabledCoinsMessage = getDisabledCoinsMessage(
-            this.props.selectedIssueId,
-            selectedCoin,
-            this.state.tradingPairs
-        );
-
         this.setState({
             selectedCoin,
-            disabledCoinsMessage,
             //explorerUrl,
             transactionNotFound: false
         });
@@ -249,7 +112,7 @@ class DepositWithdrawForm extends React.Component {
         return (
             <div>
                 <CoinsDropdown
-                    coins={this.state.coins}
+                    coins={this.props.cryptoBridgeBackedCoins}
                     selected={
                         this.state.selectedCoin
                             ? this.state.selectedCoin.coinType
@@ -257,11 +120,25 @@ class DepositWithdrawForm extends React.Component {
                     }
                     onChange={this._handleCoinChange}
                 />
-                <div style={{color: "red", marginBottom: 20}}>
-                    {this.state.disabledCoinsMessage}
-                </div>
                 {this.state.selectedCoin !== null && (
                     <div>
+                        <AssetTradingPairInfo
+                            asset={this.state.selectedCoin}
+                            deposit={
+                                this.props.selectedIssueId ===
+                                IssuesEnum.DEPOSIT
+                            }
+                        />
+                        <AssetInfo
+                            asset={this.state.selectedCoin}
+                            type={
+                                this.props.selectedIssueId ===
+                                IssuesEnum.DEPOSIT
+                                    ? "deposit"
+                                    : "withdrawal"
+                            }
+                        />
+
                         {this.props.selectedIssueId ===
                             IssuesEnum.WITHDRAWAL && (
                             <label htmlFor="recipient_address">
@@ -406,4 +283,16 @@ class DepositWithdrawForm extends React.Component {
     }
 }
 
-export default DepositWithdrawForm;
+export default connect(DepositWithdrawForm, {
+    listenTo() {
+        return [GatewayStore];
+    },
+    getProps() {
+        return {
+            cryptoBridgeBackedCoins: GatewayStore.getState().backedCoins.get(
+                "BRIDGE",
+                []
+            )
+        };
+    }
+});
