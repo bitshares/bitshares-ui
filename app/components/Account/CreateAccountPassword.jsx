@@ -413,6 +413,11 @@ class CreateAccountPassword extends React.Component {
                             />
                             <Translate content="settings.no" />
                         </label>
+                        {this.state.us_citizen && (
+                            <div className={"label info normal"}>
+                                <Translate content="cryptobridge.account.kyc_info_register" />
+                            </div>
+                        )}
                     </section>
 
                     <br />

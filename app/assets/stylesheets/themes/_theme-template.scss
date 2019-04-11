@@ -166,6 +166,23 @@
     //   background-color: $panel-bg-color;
     // }
 
+    .label.normal {
+        white-space: normal;
+        line-height: 1.4;
+    }
+
+    .label.icon {
+        position: relative;
+        padding-right: 40px;
+
+        > .icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
     .label.success {
         color: $success-color;
         border-color: $success-color;
