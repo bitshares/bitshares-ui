@@ -81,8 +81,9 @@ class DepositWithdrawAssetSelector extends React.Component {
             if (a.id && b.id) return a.id.localeCompare(b.id);
         });
 
-        let i18n =
-            props.usageContext == "withdraw"
+        let i18n = props.placeholder
+            ? props.placeholder
+            : props.usageContext == "withdraw"
                 ? "gateway.asset_search_withdraw"
                 : "gateway.asset_search_deposit";
 

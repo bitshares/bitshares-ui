@@ -20,15 +20,28 @@ export const signMemoWithKeys = (
     }
 };
 
-export const getRequestAccessOptions = access => {
-    return {
+export const getRequestAccessOptions = (access, reCaptchaToken) => {
+    const options = {
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${access.access_token}`
+            Accept: "application/json",
+            "App-Version":
+                APP_VERSION + (APP_REVISION ? "-" + APP_REVISION : ""),
+            "App-Platform": __ELECTRON__ ? "electron" : "web"
         },
         method: "GET",
         mode: "cors"
     };
+
+    if (access) {
+        options.headers.Authorization = `Bearer ${access.access_token}`;
+    }
+
+    if (reCaptchaToken) {
+        options.headers.Recaptcha = reCaptchaToken;
+    }
+
+    return options;
 };
 
 export const getAuthKey = account => {

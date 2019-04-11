@@ -19,6 +19,12 @@ class GoogleReCAPTCHA extends React.Component {
         payload: {}
     };
 
+    constructor(props) {
+        super(props);
+
+        this.recaptchaRef = React.createRef();
+    }
+
     componentWillReceiveProps(nextProps) {
         if (
             __ELECTRON__ &&
@@ -35,6 +41,10 @@ class GoogleReCAPTCHA extends React.Component {
         }
     }
 
+    reset = () => {
+        this.recaptchaRef.current.reset();
+    };
+
     render() {
         if (__ELECTRON__) {
             return <div />;
@@ -43,6 +53,8 @@ class GoogleReCAPTCHA extends React.Component {
         return (
             <div style={{marginBottom: 20}}>
                 <ReCAPTCHA
+                    ref={this.recaptchaRef}
+                    size={this.props.size || "normal"}
                     sitekey={this.props.sitekey}
                     onChange={this.props.onChange}
                     theme={this.props.theme}
