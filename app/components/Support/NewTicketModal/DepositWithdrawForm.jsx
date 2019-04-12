@@ -115,7 +115,7 @@ class DepositWithdrawForm extends React.Component {
                     coins={this.props.cryptoBridgeBackedCoins}
                     selected={
                         this.state.selectedCoin
-                            ? this.state.selectedCoin.coinType
+                            ? this.state.selectedCoin.backingCoinType
                             : -1
                     }
                     onChange={this._handleCoinChange}

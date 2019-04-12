@@ -176,7 +176,7 @@ export default class NewTicketModal extends Component {
                 `cryptobridge.support.${ISSUES[properties.selectedIssueId]}`
             )
             .toUpperCase()}: ${properties.amount} ${
-            properties.selectedCoin.coinType
+            properties.selectedCoin.backingCoinType
         } / USER: ${properties.username}`;
 
     /**
@@ -205,7 +205,7 @@ export default class NewTicketModal extends Component {
                         ...formState,
                         username
                     }), // formState.subject
-                    coin: formState.selectedCoin.coinType,
+                    coin: formState.selectedCoin.backingCoinType,
                     transferTypeId: this.state.selectedIssueId,
                     recipientAddress: formState.recipientAddress,
                     transactionId: formState.transactionId,
