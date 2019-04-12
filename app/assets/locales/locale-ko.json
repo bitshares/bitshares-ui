@@ -754,7 +754,7 @@
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "청산 가격",
+                "settlement_price": "Price Feed",
                 "title": "Price Feed"
             },
             "price_feed_data": {

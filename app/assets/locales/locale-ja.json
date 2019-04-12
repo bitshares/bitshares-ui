@@ -754,7 +754,7 @@
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "最大ショート・スクイーズ比率 (MSSR)",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "決済価格",
+                "settlement_price": "価格フィード",
                 "title": "価格フィード"
             },
             "price_feed_data": {

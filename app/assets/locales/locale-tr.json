@@ -754,7 +754,7 @@
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maksimum kısa pozisyon sıkıştırma oranı (MSSR)",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "Uzlaşma",
+                "settlement_price": "Fiyat Yayını",
                 "title": "Fiyat Yayını"
             },
             "price_feed_data": {

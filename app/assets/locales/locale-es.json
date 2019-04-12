@@ -760,7 +760,7 @@
                 "maximum_short_squeeze_price": "Precio máximo de compresión corta (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximo short de relaciòn squeeze (MSSR)",
                 "min_feeds": "Feeds minimo",
-                "settlement_price": "Precio de liquidación",
+                "settlement_price": "Precio de Feed",
                 "title": "Precio de Feed"
             },
             "price_feed_data": {

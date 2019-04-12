@@ -754,7 +754,7 @@
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "强制平仓比例上限",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "清算价",
+                "settlement_price": "喂价",
                 "title": "喂价"
             },
             "price_feed_data": {

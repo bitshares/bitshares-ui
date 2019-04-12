@@ -760,7 +760,7 @@
                 "maximum_short_squeeze_price": "Максимальная цена короткого сжатия (MSSP)",
                 "maximum_short_squeeze_ratio": "Максимальный коэффициент краткого сжатия (MSSR)",
                 "min_feeds": "Минимум котировок",
-                "settlement_price": "Расчетная цена",
+                "settlement_price": "Поточная цена",
                 "title": "Поточная цена"
             },
             "price_feed_data": {
