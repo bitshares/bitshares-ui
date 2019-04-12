@@ -373,6 +373,16 @@ class TosModal extends React.Component {
                                             />
                                             <Translate content="settings.no" />
                                         </label>
+                                        {us_citizen && (
+                                            <div>
+                                                <Translate
+                                                    className={
+                                                        "label info normal"
+                                                    }
+                                                    content="cryptobridge.account.kyc_info_register"
+                                                />
+                                            </div>
+                                        )}
                                     </section>
                                 ) : null}
                             </div>

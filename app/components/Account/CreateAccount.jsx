@@ -365,6 +365,11 @@ class CreateAccount extends React.Component {
                         />
                         <Translate content="settings.no" />
                     </label>
+                    {this.state.us_citizen && (
+                        <div className={"label info normal"}>
+                            <Translate content="cryptobridge.account.kyc_info_register" />
+                        </div>
+                    )}
                 </section>
 
                 {/* If this is not the first account, show dropdown for fee payment account */}

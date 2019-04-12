@@ -46,6 +46,7 @@ let icons = [
     "share",
     "shuffle",
     "sun",
+    "support",
     "text",
     "thumb-tack",
     "thumb-untack",

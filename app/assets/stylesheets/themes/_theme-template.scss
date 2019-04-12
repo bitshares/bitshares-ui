@@ -1,4 +1,5 @@
 @import "../utils/utils";
+@import "../components/cb/support";
 
 @mixin theme(
     $primary-text-color,
@@ -97,6 +98,10 @@
     }
 
     #unlock_wallet_modal2 {
+        .account-selector {
+            margin-bottom: 20px;
+        }
+
         .upload-button {
             border-color: $border-color;
             span {
@@ -118,6 +123,35 @@
 
         .themed-input {
             background-color: $input-background;
+        }
+
+        .check-url-warning {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .label-check-url {
+            display: block;
+        }
+
+        .label.warning,
+        .label-check-url {
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+
+        .secure-login-image {
+            max-width: 250px;
+        }
+
+        .modal-header {
+            > img {
+                width: 80px;
+            }
+        }
+
+        .modal-content {
+            padding-top: 0;
         }
     }
 
@@ -165,6 +199,23 @@
     // select:hover {
     //   background-color: $panel-bg-color;
     // }
+
+    .label.normal {
+        white-space: normal;
+        line-height: 1.4;
+    }
+
+    .label.icon {
+        position: relative;
+        padding-right: 40px;
+
+        > .icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
 
     .label.success {
         color: $success-color;
@@ -2381,6 +2432,20 @@
             margin: 0 auto;
         }
     }
+
+    @include cb_support_styles(
+        $settings-select-bg,
+        $primary-text-color,
+        $account-dimmed,
+        $dark-text-color,
+        $link-text-color,
+        $secondary-button-bg-color,
+        $bg-color,
+        $input-background,
+        $modal-bg-color,
+        $secondary-text-color,
+        $button-bg-color
+    );
 }
 
 .rc-time-picker-panel {
