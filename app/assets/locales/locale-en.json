@@ -761,7 +761,7 @@
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "Force Settlement price",
+                "settlement_price": "Price Feed",
                 "title": "Price Feed"
             },
             "price_feed_data": {
@@ -770,7 +770,7 @@
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Published",
                 "publisher": "Publisher",
-                "settlement_price": "Settlement price",
+                "settlement_price": "Feed Price",
                 "title": "Price Feed Data"
             },
             "settlement": {

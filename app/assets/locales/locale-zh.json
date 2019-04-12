@@ -763,7 +763,7 @@
                 "maximum_short_squeeze_ratio": "强制平仓比例上限",
                 "published": "发布时间",
                 "publisher": "发布人",
-                "settlement_price": "清算价",
+                "settlement_price": "喂价",
                 "title": "喂价数据"
             },
             "settlement": {

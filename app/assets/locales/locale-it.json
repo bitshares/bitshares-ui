@@ -763,7 +763,7 @@
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Pubblicato",
                 "publisher": "Publisher",
-                "settlement_price": "Prezzo di settlement",
+                "settlement_price": "Price Feed",
                 "title": "Dati del Price Feed"
             },
             "settlement": {

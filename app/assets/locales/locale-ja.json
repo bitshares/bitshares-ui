@@ -763,7 +763,7 @@
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "公開しました",
                 "publisher": "公開者",
-                "settlement_price": "決済価格",
+                "settlement_price": "価格フィード",
                 "title": "価格フィードデータ"
             },
             "settlement": {

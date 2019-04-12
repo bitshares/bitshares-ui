@@ -763,7 +763,7 @@
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Published",
                 "publisher": "Publisher",
-                "settlement_price": "청산 가격",
+                "settlement_price": "Price Feed",
                 "title": "가격정보 데이터"
             },
             "settlement": {
