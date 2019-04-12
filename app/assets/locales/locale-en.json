@@ -2125,6 +2125,8 @@
             "are_you_us_citizen": "Are you a %(flagImg)s U.S. citizen?",
             "kyc_info":
                 "To continue using the CryptoBridge gateway, US citizens must first submit verification of their identity. Proceeding with this requirement will redirect you to our partner, Fractal. Upon completion, full functionality of your account be restored.",
+            "kyc_info_register":
+                "US citizens must submit verification of their identity.",
             "kyc_info_grace":
                 "To continue using the CryptoBridge gateway, US citizens must first submit verification of their identity. There will be a grace period allowing those who do not consent to the verification process to withdraw their funds which ends on %(deadlineDate)s. Proceeding with this requirement will redirect you to our partner, Fractal. Upon completion, full functionality of your account be restored.",
             "kyc_info_pending":
