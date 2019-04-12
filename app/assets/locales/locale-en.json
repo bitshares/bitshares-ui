@@ -448,6 +448,10 @@
     "cancel": "Cancel",
     "counterpart": {
         "formats": {
+            "datetime": {
+                "short_datetime": "%d/%m/%y %H:%M",
+                "short_datetime_us": "%m/%d/%y %H:%M"
+            },
             "date": {
                 "full": "%F %T %Z",
                 "market_history": "%e/%m %H:%M:%S",
@@ -2132,6 +2136,74 @@
                 "DO NOT APPROVE any proposals from unknown accounts. Your account may be stolen if you approve a malicious proposal.",
             "proposal_info":
                 "When in doubt, do nothing and ask questions in our Discord server %(discordLink)s"
+        },
+        "support": {
+            "title": "Support",
+            "all_tickets": "All Tickets",
+            "open": "Open",
+            "in_progress": "In Progress",
+            "waiting_for_customer": "Awaiting User Response",
+            "waiting_for_support": "Awaiting Agent Response",
+            "blocked": "Blocked",
+            "closed": "Closed",
+            "new_ticket": "New Ticket",
+            "create_ticket": "Create Ticket",
+            "cancel": "Cancel",
+            "deposit": "Deposit",
+            "deposits": "Deposits",
+            "withdrawal": "Withdrawal",
+            "withdrawals": "Withdrawals",
+            "disabled_deposits_message":
+                "Deposits have currently been disabled at the request of the coin developers.",
+            "disabled_withdrawals_message":
+                "Withdrawals have currently been disabled at the request of the coin developers.",
+            "format": "format",
+            "reply": "Reply",
+            "close_ticket": "Close Ticket",
+            "support_intro_text":
+                "CryptoBridge now offers integrated support where you can manage your support tickets in one place, and see the current status. In order to use this service, you must first log in.",
+            "have_another_issue": "I have another issue",
+            "new_ticket_intro1":
+                "Please do not open multiple tickets for the same issue - doing so could slow down the processing of your issue.",
+            "new_ticket_intro2":
+                "Before opening a new ticket, please search our FAQs to find potential solutions to your issue:",
+            "coin_list_placeholder": "Select your coin…",
+            "loading_coin_list": "Loading coin list…",
+            "explorer_instructions":
+                "Before opening a ticket, please check the blockchain explorer for your transaction:",
+            "not_see_transaction": "I do not see my transaction",
+            "faq_search_placeholder": "Please enter your search criteria…",
+            "faq_search_aria_label": "Search through the FAQs",
+            "comment_successfully_posted":
+                "Your comment has been successfully posted",
+            "enter_your_reply": "Please enter your reply…",
+            "enter_your_message": "Please enter your message…",
+            "enter_amount": "Enter amount…",
+            "enter_transaction_id": "Enter the Transaction ID…",
+            "enter_recipient_address": "Enter the recipient address…",
+            "cannot_fetch_tickets":
+                "Sorry but we cannot fetch your support tickets right now. Please refresh your browser or try again later.",
+            "cannot_fetch_comments":
+                "Sorry but we cannot fetch your support ticket comments right now. Please refresh your browser or try again later.",
+            "cannot_reply_ticket":
+                "There was a problem replying to the ticket. Please refresh your browser or try again later.",
+            "cannot_close_ticket":
+                "There was a problem closing the ticket. Please refresh your browser or try again later.",
+            "cannot_create_ticket":
+                "There was a problem creating the ticket. Please refresh your browser or try again later.",
+            "amount": "Amount",
+            "message": "Message",
+            "transaction_id": "Transaction ID",
+            "recipient_address": "Recipient Address",
+            "issue": "Issue",
+            "issues_label": "What is your issue?",
+            "issues_please_select": "Please select the issue...",
+            "processing_please_wait": "Processing. Please wait...",
+            "saving_reply_please_wait": "Saving reply. Please wait...",
+            "incomplete_form_fields": "Please complete all required fields",
+            "intro_title": "CryptoBridge Support",
+            "intro_text":
+                "If you have an issue with a deposit or withdrawal please create ticket"
         }
     }
 }

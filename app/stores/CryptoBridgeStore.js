@@ -24,6 +24,7 @@ class CryptoBridgeStore extends BaseStore {
 
         this._export(
             "getAccount",
+            "getAccountAccess",
             "getAccountRequiresForcedAction",
             "getAccountRequiresKycAction",
             "getAccountRequiresKycForcedAction",
@@ -120,6 +121,12 @@ class CryptoBridgeStore extends BaseStore {
         const {account} = this.accounts.get(accountName, {});
 
         return account;
+    }
+
+    getAccountAccess(accountName) {
+        const {access} = this.accounts.get(accountName, {});
+
+        return access;
     }
 
     getAccountRequiresTosForcedAction(accountName) {

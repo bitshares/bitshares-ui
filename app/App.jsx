@@ -110,9 +110,16 @@ const ExistingAccount = Loadable({
     loading: LoadingIndicator
 });
 
+/* CryptoBridge-specific imports */
 const BenchmarkPage = Loadable({
     loader: () =>
         import(/* webpackChunkName: "benchmark" */ "./components/CryptoBridge/Benchmark"),
+    loading: LoadingIndicator
+});
+
+const SupportPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "support" */ "./components/Support/SupportPage"),
     loading: LoadingIndicator
 });
 
@@ -356,11 +363,6 @@ class App extends React.Component {
                                 />
                                 <Route path="/news" exact component={News} />
 
-                                <Route
-                                    path="/benchmark"
-                                    component={BenchmarkPage}
-                                />
-
                                 {/* Explorer routes */}
                                 <Route
                                     path="/explorer/:tab"
@@ -412,6 +414,16 @@ class App extends React.Component {
                                     exact
                                     path="/help/:path1/:path2/:path3"
                                     component={Help}
+                                />
+                                {/* CRYPTOBRIDGE routes */}
+
+                                <Route
+                                    path="/benchmark"
+                                    component={BenchmarkPage}
+                                />
+                                <Route
+                                    path="/support/:ticketId?"
+                                    component={SupportPage}
                                 />
                                 <Route path="*" component={Page404} />
                             </Switch>
