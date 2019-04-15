@@ -639,8 +639,9 @@ class Footer extends React.Component {
                                                     ? "-"
                                                     : !activeNode.ping
                                                         ? "-"
-                                                        : activeNode.ping +
-                                                          "ms"}
+                                                        : parseInt(
+                                                              activeNode.ping
+                                                          ) + "ms"}
                                                 &nbsp;/&nbsp;
                                                 <span className="footer-block-title">
                                                     <Translate content="footer.block" />
