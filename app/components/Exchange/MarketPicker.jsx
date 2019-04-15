@@ -130,7 +130,7 @@ class MarketPickerWrapper extends Component {
         }
     }
 
-    getMarketSortParts(market) {
+    _getMarketSortComponents(market) {
         const weight = {};
         const quote = market.quote;
         if (quote.indexOf(".") !== -1) {
@@ -142,6 +142,53 @@ class MarketPickerWrapper extends Component {
         }
         if (market.issuerId === "1.2.0") weight.isCommittee = true;
         return weight;
+    }
+
+    _sortMarketsList(allMarkets, inputValue) {
+        return allMarkets.sort(([, marketA], [, marketB]) => {
+            const weightA = this._getMarketSortComponents(marketA);
+            const weightB = this._getMarketSortComponents(marketB);
+
+            if (weightA.asset !== weightB.asset) {
+                if (weightA.asset === inputValue) return -1;
+                if (weightB.asset === inputValue) return 1;
+                if (weightA.asset > weightB.asset) return -1;
+                if (weightA.asset < weightB.asset) return 1;
+            }
+
+            if (weightA.isCommittee ^ weightB.isCommittee) {
+                if (weightA.isCommittee) return -1;
+                if (weightB.isCommittee) return 1;
+            }
+
+            const aIsKnownGateway = hasGatewayPrefix(marketA.quote);
+            const bIsKnownGateway = hasGatewayPrefix(marketB.quote);
+            if (aIsKnownGateway && !bIsKnownGateway) return -1;
+            if (bIsKnownGateway && !aIsKnownGateway) return 1;
+
+            if (weightA.gateway > weightB.gateway) return 1;
+            if (weightA.gateway < weightB.gateway) return -1;
+            return 0;
+        });
+    }
+
+    _checkAndUpdateMarketList(marketsList) {
+        clearInterval(this.intervalId);
+        this.intervalId = setInterval(() => {
+            let needFetchIssuer = 0;
+            for (let [, market] of marketsList) {
+                if (!market.issuer) {
+                    market.issuer = this._fetchIssuerName(market.issuerId);
+                    if (!market.issuer) needFetchIssuer++;
+                }
+            }
+            if (needFetchIssuer) return;
+            clearInterval(this.intervalId);
+            this.setState({
+                marketsList,
+                activeSearch: false
+            });
+        }, 300);
     }
 
     assetFilter() {
@@ -198,48 +245,8 @@ class MarketPickerWrapper extends Component {
                 });
         }
 
-        const marketsList = allMarkets.sort(([, marketA], [, marketB]) => {
-            const weightA = this.getMarketSortParts(marketA);
-            const weightB = this.getMarketSortParts(marketB);
-
-            if (weightA.asset !== weightB.asset) {
-                if (weightA.asset === inputValue) return -1;
-                if (weightB.asset === inputValue) return 1;
-                if (weightA.asset > weightB.asset) return -1;
-                if (weightA.asset < weightB.asset) return 1;
-            }
-
-            if (weightA.isCommittee ^ weightB.isCommittee) {
-                if (weightA.isCommittee) return -1;
-                if (weightB.isCommittee) return 1;
-            }
-
-            const aIsKnownGateway = hasGatewayPrefix(marketA.quote);
-            const bIsKnownGateway = hasGatewayPrefix(marketB.quote);
-            if (aIsKnownGateway && !bIsKnownGateway) return -1;
-            if (bIsKnownGateway && !aIsKnownGateway) return 1;
-
-            if (weightA.gateway > weightB.gateway) return 1;
-            if (weightA.gateway < weightB.gateway) return -1;
-            return 0;
-        });
-
-        clearInterval(this.intervalId);
-        this.intervalId = setInterval(() => {
-            let needFetchIssuer = 0;
-            for (let [, market] of marketsList) {
-                if (!market.issuer) {
-                    market.issuer = this._fetchIssuerName(market.issuerId);
-                    if (!market.issuer) needFetchIssuer++;
-                }
-            }
-            if (needFetchIssuer) return;
-            clearInterval(this.intervalId);
-            this.setState({
-                marketsList,
-                activeSearch: false
-            });
-        }, 300);
+        const marketsList = this._sortMarketsList(allMarkets, inputValue);
+        this._checkAndUpdateMarketList(marketsList);
     }
 
     renderSearchBar() {
