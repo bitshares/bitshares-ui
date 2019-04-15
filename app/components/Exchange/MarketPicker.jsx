@@ -78,12 +78,18 @@ class MarketPickerWrapper extends Component {
         );
     }
 
+    componentWillUnmount() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
+    }
+
     _onInputName(getBackedAssets, e) {
         let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
 
         this.setState({
-            inputValue: e.target.value.trim(),
+            inputValue: toFind,
             activeSearch: true,
             marketsList: []
         });
@@ -112,21 +118,30 @@ class MarketPickerWrapper extends Component {
 
         this.getAssetList(quote, 10, gatewayAssets);
 
-        this.setState({
-            activeSearch: false,
-            lookupQuote: quote
-        });
+        this.setState({lookupQuote: quote});
     }
 
-    _fetchIssuer(asset) {
-        let issuer = ChainStore.getObject(asset.issuer, false, false);
-        // Issuer may sometimes not resolve at first.
-        // A waiter may be required here
+    _fetchIssuerName(issuerId) {
+        let issuer = ChainStore.getObject(issuerId, false, false);
         if (!issuer) {
             return;
         } else {
-            return issuer;
+            return issuer.get("name");
         }
+    }
+
+    getMarketSortParts(market) {
+        const weight = {};
+        const quote = market.quote;
+        if (quote.indexOf(".") !== -1) {
+            const [gateway, asset] = quote.split(".");
+            weight.gateway = gateway;
+            weight.asset = asset;
+        } else {
+            weight.asset = quote;
+        }
+        if (market.issuerId === "1.2.0") weight.isCommittee = true;
+        return weight;
     }
 
     assetFilter() {
@@ -159,7 +174,7 @@ class MarketPickerWrapper extends Component {
                     if (assetCount > 100) return;
                     assetCount++;
 
-                    let issuer = this._fetchIssuer(asset);
+                    let issuerName = this._fetchIssuerName(asset.issuer);
 
                     let base = this.props.baseAsset.get("symbol");
                     let marketID = asset.symbol + "_" + base;
@@ -176,30 +191,16 @@ class MarketPickerWrapper extends Component {
                                 quote: asset.symbol,
                                 base: base,
                                 issuerId: asset.issuer,
-                                issuer: !issuer ? null : issuer.get("name")
+                                issuer: issuerName
                             }
                         ]);
                     }
                 });
         }
 
-        function getSortParts(market) {
-            const weight = {};
-            const quote = market.quote;
-            if (quote.indexOf(".") !== -1) {
-                const [gateway, asset] = quote.split(".");
-                weight.gateway = gateway;
-                weight.asset = asset;
-            } else {
-                weight.asset = quote;
-            }
-            if (market.issuerId === "1.2.0") weight.isCommittee = true;
-            return weight;
-        }
-
         const marketsList = allMarkets.sort(([, marketA], [, marketB]) => {
-            const weightA = getSortParts(marketA);
-            const weightB = getSortParts(marketB);
+            const weightA = this.getMarketSortParts(marketA);
+            const weightB = this.getMarketSortParts(marketB);
 
             if (weightA.asset !== weightB.asset) {
                 if (weightA.asset === inputValue) return -1;
@@ -223,10 +224,22 @@ class MarketPickerWrapper extends Component {
             return 0;
         });
 
-        this.setState({
-            marketsList,
-            activeSearch: false
-        });
+        clearInterval(this.intervalId);
+        this.intervalId = setInterval(() => {
+            let needFetchIssuer = 0;
+            for (let [, market] of marketsList) {
+                if (!market.issuer) {
+                    market.issuer = this._fetchIssuerName(market.issuerId);
+                    if (!market.issuer) needFetchIssuer++;
+                }
+            }
+            if (needFetchIssuer) return;
+            clearInterval(this.intervalId);
+            this.setState({
+                marketsList,
+                activeSearch: false
+            });
+        }, 300);
     }
 
     renderSearchBar() {
