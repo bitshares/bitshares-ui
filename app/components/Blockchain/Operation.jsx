@@ -1521,6 +1521,14 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "htlc_create":
+            case "htlc_redeem":
+            case "htlc_extend":
+            case "htlc_redeemed":
+            case "htlc_refund":
+                color = "success";
+                // not yet implemented
+                break;
             default:
                 console.log("unimplemented op '" + ops[op[0]] + "':", op);
                 column = (
