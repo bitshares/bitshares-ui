@@ -11,6 +11,7 @@ import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
 const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
 import opComponents from "./operations";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 require("./operations.scss");
 
@@ -23,7 +24,7 @@ export const TransactionIDAndExpiry = ({id, expiration, style}) => {
     });
     return (
         <b style={style}>
-            <span>#{id} | </span>
+            <span>{id} | </span>
             <span>
                 <Translate content="proposal.expires" />: {endDate}
             </span>
@@ -133,7 +134,14 @@ class ProposedOperation extends React.Component {
     // TODO: add scu
 
     render() {
-        let {op, block, hideExpiration, index, csvExportMode} = this.props;
+        let {
+            op,
+            proposer,
+            block,
+            hideExpiration,
+            index,
+            csvExportMode
+        } = this.props;
         const {label_color} = this.state;
         let line = null,
             column = null;
@@ -143,6 +151,27 @@ class ProposedOperation extends React.Component {
             linkToAsset: this.linkToAsset,
             changeColor: this.changeColor
         });
+
+        if (!!proposer && index == 0) {
+            column = (
+                <div className="inline-block">
+                    <div style={{paddingBottom: "0.5rem"}}>
+                        <TranslateWithLinks
+                            string="operation.proposal_create"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: proposer,
+                                    arg: "account"
+                                }
+                            ]}
+                        />
+                        :
+                    </div>
+                    <div>{column}</div>
+                </div>
+            );
+        }
 
         if (csvExportMode) {
             const globalObject = ChainStore.getObject("2.0.0");
