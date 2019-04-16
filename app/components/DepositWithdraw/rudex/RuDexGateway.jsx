@@ -207,6 +207,7 @@ class RuDexGateway extends React.Component {
                                     href={supportUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="external-link"
                                 >
                                     {supportUrl}
                                 </a>
