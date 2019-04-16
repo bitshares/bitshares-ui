@@ -14,21 +14,6 @@ export const Transfer = ({op, proposer, index, changeColor}) => {
     return (
         <span className="right-td">
             <div className="inline-block">
-                {!!proposer && index == 0 ? (
-                    <div style={{paddingBottom: "0.5rem"}}>
-                        <TranslateWithLinks
-                            string="operation.proposal_create"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: proposer,
-                                    arg: "account"
-                                }
-                            ]}
-                        />
-                        :
-                    </div>
-                ) : null}
                 <div>
                     <TranslateWithLinks
                         string="operation.transfer"

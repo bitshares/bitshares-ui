@@ -1562,7 +1562,7 @@
         "transfer": "{from} sent {amount} to {to}",
         "transfer_account": "{account} ownership transferred to {to}",
         "unlisted_by": "{lister} unlisted the account {listee}",
-        "update_account": "{account} updated their account data",
+        "update_account": "{account} updated their account data {change}",
         "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",
         "whitelisted_by": "{lister} whitelisted the account {listee}",
         "witness_create": "{account} was upgraded to become a witness",
@@ -1601,7 +1601,7 @@
         "limit_order_create": "Place an order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell": "Place an order to sell {amount} at {price} for {account}",
         "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
-        "public_key": "Public key",
+        "public_key": "Key changes",
         "proposals": "Proposals",
         "reject": "Reject",
         "status": "Status",
@@ -1614,7 +1614,7 @@
             "owner_approvals_to_add": "Owner approvals to add",
             "owner_approvals_to_remove": "Owner approvals to remove"
         },
-        "update_account": "Update account data for {account} {memo}",
+        "update_account": "Update account data for {account} {change}",
         "updated": {
             "active_approvals_to_add": "Active approval(s) added",
             "active_approvals_to_remove": "Active approval(s) removed",

@@ -139,31 +139,41 @@ export default class TranslateWithLinks extends React.Component {
                         );
                         break;
 
-                    case "memo":
+                    case "change":
                         const {votes, keys} = key.value;
-                        value =
-                            key.value && (votes || keys) ? (
+                        if (key.value && (votes || keys)) {
+                            value = (
                                 <span>
-                                    {votes.minus.length || votes.plus.length ? (
+                                    {votes &&
+                                    (votes.minus.length ||
+                                        votes.plus.length) ? (
                                         <div>
                                             <Translate
                                                 content={"proposal.votes"}
                                             />
+                                            {votes && votes.minus.length ? (
+                                                <div>
+                                                    - {votes.minus.join(", ")}
+                                                </div>
+                                            ) : null}
+                                            {votes && votes.plus.length ? (
+                                                <div>
+                                                    + {votes.plus.join(", ")}
+                                                </div>
+                                            ) : null}
                                         </div>
                                     ) : null}
-                                    {votes.minus.length ? (
-                                        <div>- {votes.minus.join(", ")}</div>
-                                    ) : null}
-                                    {votes.plus.length ? (
-                                        <div>+ {votes.plus.join(", ")}</div>
-                                    ) : null}
-                                    {keys.plus.length ? (
+                                    {keys &&
+                                    (keys.minus.length || keys.plus.length) ? (
                                         <div>
                                             <Translate
                                                 content={"proposal.public_key"}
                                             />
-                                            <div>+ {keys.plus.join(", ")}</div>
-                                            <div>- {keys.minus.join(", ")}</div>
+                                            <div> + {keys.plus.join(", ")}</div>
+                                            <div>
+                                                {" "}
+                                                - {keys.minus.join(", ")}
+                                            </div>
                                             <Translate
                                                 style={{color: "red"}}
                                                 content={
@@ -173,7 +183,10 @@ export default class TranslateWithLinks extends React.Component {
                                         </div>
                                     ) : null}
                                 </span>
-                            ) : null;
+                            );
+                        } else {
+                            value = "";
+                        }
                         break;
 
                     default:
