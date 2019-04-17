@@ -2077,7 +2077,7 @@ class Exchange extends React.Component {
                             : centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
-                    "small-12 no-padding middle-content",
+                    "small-12 exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 2 : 3} large-order-${
                               buySellTop ? 2 : 5
@@ -2243,7 +2243,7 @@ class Exchange extends React.Component {
                             : centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
-                    "small-12 no-padding middle-content",
+                    "small-12 exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 1 : 2} large-order-${
                               buySellTop ? 1 : 4
