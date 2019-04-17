@@ -16,6 +16,7 @@ import {
     GroupedOrder,
     FillOrder
 } from "common/MarketClasses";
+import asset_utils from "../lib/common/asset_utils";
 
 // import {
 //     SettleOrder
@@ -712,9 +713,9 @@ class MarketsStore {
                 precision: this.baseAsset.get("precision")
             }
         };
-        let settlePrice = this[
-            this.invertedCalls ? "baseAsset" : "quoteAsset"
-        ].getIn(["bitasset", "current_feed", "settlement_price"]);
+        let feedPriceRaw = asset_utils.extractRawFeedPrice(
+            this[this.invertedCalls ? "baseAsset" : "quoteAsset"]
+        );
 
         try {
             let sqr = this[
@@ -736,28 +737,28 @@ class MarketsStore {
             /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
             if (
                 this.is_prediction_market &&
-                settlePrice.getIn(["base", "asset_id"]) ===
-                    settlePrice.getIn(["quote", "asset_id"])
+                feedPriceRaw.getIn(["base", "asset_id"]) ===
+                    feedPriceRaw.getIn(["quote", "asset_id"])
             ) {
                 const backingAsset = this.bitasset_options.short_backing_asset;
                 if (!assets[backingAsset])
                     assets[backingAsset] = {
                         precision: this.quoteAsset.get("precision")
                     };
-                settlePrice = settlePrice.setIn(["base", "amount"], 1);
-                settlePrice = settlePrice.setIn(
+                feedPriceRaw = feedPriceRaw.setIn(["base", "amount"], 1);
+                feedPriceRaw = feedPriceRaw.setIn(
                     ["base", "asset_id"],
                     backingAsset
                 );
-                settlePrice = settlePrice.setIn(["quote", "amount"], 1);
-                settlePrice = settlePrice.setIn(
+                feedPriceRaw = feedPriceRaw.setIn(["quote", "amount"], 1);
+                feedPriceRaw = feedPriceRaw.setIn(
                     ["quote", "asset_id"],
                     this.quoteAsset.get("id")
                 );
                 sqr = 1000;
             }
             const feedPrice = new FeedPrice({
-                priceObject: settlePrice,
+                priceObject: feedPriceRaw,
                 market_base: this.quoteAsset.get("id"),
                 sqr,
                 assets

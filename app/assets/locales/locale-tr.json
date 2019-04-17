@@ -667,6 +667,7 @@
         "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Settle instantly",
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
+        "settle_offset": "Settlement price offset: %(offset)s%",
         "settle_orders": "Emirleri öde",
         "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Kısa pozisyon",
@@ -749,21 +750,23 @@
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
+                "feed_price": "Feed price",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Sürdürme Teminat Oranı (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maksimum kısa pozisyon sıkıştırma oranı (MSSR)",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "Uzlaşma",
+                "settlement_price": "",
                 "title": "Fiyat Yayını"
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
+                "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Duyurdu",
                 "publisher": "Duyuran",
-                "settlement_price": "Uzlaşma",
+                "settlement_price": "",
                 "title": "Fiyat Yayın Verileri"
             },
             "settlement": {
@@ -785,7 +788,7 @@
                 "settle_remaining_volume": "Remaining settleable volume",
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
-                "settlement_price": "Settlement Price",
+                "settlement_price": "",
                 "title": "Settlement"
             },
             "summary": {
@@ -842,7 +845,7 @@
             "op_type": "İşlem türü",
             "previous": "Bir önceki",
             "previous_secret": "Bir önceki gizli hash",
-            "settlement_price": "Uzlaşma",
+            "settlement_price": "",
             "short_limit": "Kısa pozisyon limit",
             "time": "Zaman",
             "title": "Blok",
@@ -1376,7 +1379,8 @@
             "amount": "Rezerv miktarı",
             "from": "Rezerve yapılacak hesap",
             "submit": "Rezerve",
-            "title": "Rezerve (yakılan) dijital varlık"
+            "title": "Rezerve (yakılan) dijital varlık",
+            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
         },
         "save": "save",
         "send": {
@@ -1933,7 +1937,7 @@
         },
         "login_required": "Please login to the selected account to perform this action",
         "margin_price": "Teminat tamamlama çağrısı yapılmış pozisyonun ödemesi istenebilecek en yüksek değer",
-        "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
+        "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip": "You may include an optional message in the memo field. This allows you to write personal notes and is also often used by exchanges to identify deposits.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "Bu dijital varlığın değerini tespit etmek için piyasada yeterli veri bulunmamaktadır.",

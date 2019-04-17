@@ -301,7 +301,7 @@ class Exchange extends React.Component {
         let chart_height = ws.get("chartHeight", 620);
         if (chart_height == 620 && window.innerWidth < 640) {
             // assume user is on default setting, use smaller for mobile
-            chart_height = 400;
+            chart_height = 425;
         }
 
         return {
@@ -1665,9 +1665,16 @@ class Exchange extends React.Component {
     }
 
     onChangeChartHeight({value, increase}) {
-        const newHeight = value
+        let newHeight = value
             ? value
             : this.state.chartHeight + (increase ? 20 : -20);
+        if (newHeight < 425) {
+            newHeight = 425;
+        }
+        if (newHeight > 1000) {
+            newHeight = 1000;
+        }
+
         this.setState({
             chartHeight: newHeight
         });
@@ -2077,7 +2084,7 @@ class Exchange extends React.Component {
                             : centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
-                    "small-12 no-padding middle-content",
+                    "small-12 exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 2 : 3} large-order-${
                               buySellTop ? 2 : 5
@@ -2243,7 +2250,7 @@ class Exchange extends React.Component {
                             : centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
-                    "small-12 no-padding middle-content",
+                    "small-12 exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 1 : 2} large-order-${
                               buySellTop ? 1 : 4

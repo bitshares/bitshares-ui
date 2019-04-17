@@ -673,6 +673,7 @@
         "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Settle instantly",
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
+        "settle_offset": "Settlement price offset: %(offset)s%",
         "settle_orders": "Settle orders",
         "settlement_hint": "You are attempting to settle {long}. Current price of {market_link}",
         "short": "Short",
@@ -755,6 +756,7 @@
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
+                "feed_price": "Feed price",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
@@ -765,11 +767,12 @@
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
+                "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Published",
                 "publisher": "Publisher",
-                "settlement_price": "Settlement price",
+                "settlement_price": "Force Settlement Price",
                 "title": "Price Feed Data"
             },
             "settlement": {
@@ -791,7 +794,7 @@
                 "settle_remaining_volume": "Remaining settleable volume",
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
-                "settlement_price": "Settlement Price",
+                "settlement_price": "Force Settlement Price",
                 "title": "Settlement"
             },
             "summary": {
@@ -833,7 +836,7 @@
             "count": "Transaction count",
             "date": "Date",
             "fee_payer": "Fee paying account",
-            "feed_price": "Feed price",
+            "feed_price": "Feed Price",
             "go_to": "Go to block",
             "id": "Block ID",
             "key": "Public key",
@@ -848,7 +851,7 @@
             "op_type": "Operation type",
             "previous": "Previous",
             "previous_secret": "Previous secret",
-            "settlement_price": "Settlement price",
+            "settlement_price": "Force Settlement Price",
             "short_limit": "Short limit",
             "time": "Time",
             "title": "Block",
@@ -1382,7 +1385,8 @@
             "amount": "Amount to burn",
             "from": "Account to burn from",
             "submit": "Burn",
-            "title": "Burn (reserve) asset"
+            "title": "Burn (reserve) asset",
+            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
         },
         "save": "save",
         "send": {
@@ -1939,7 +1943,7 @@
         },
         "login_required": "Please login to the selected account to perform this action",
         "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
-        "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
+        "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip": "You may include an optional message in the memo field. This allows you to write personal notes and is also often used by exchanges to identify deposits.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",

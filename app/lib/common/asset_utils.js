@@ -94,4 +94,47 @@ export default class AssetUtils {
         }
         return parsed ? parsed : {main: description};
     }
+
+    static extractRawFeedPrice(asset) {
+        /**
+         * The naming convention is confusing!
+         *
+         * bitshares-core knows only settlement_price, which is the feed price as known from UI!
+         *
+         * UI definition:
+         *  - Feed Price: Witness fed price, given by backend as settlement_price
+         *  - Settlement Price: feed price * force settlement offset factor
+         *
+         */
+        if (!!asset.bitasset) {
+            if (asset.bitasset.settlement_price) {
+                return asset.bitasset.settlement_price;
+            } else {
+                return asset.bitasset.current_feed.settlement_price;
+            }
+        }
+        if (!!asset.current_feed) {
+            return asset.current_feed.settlement_price;
+        }
+        if (!!asset.settlement_price) {
+            return asset.settlement_price;
+        }
+        if (!!asset.get("bitasset")) {
+            if (!!asset.getIn(["bitasset", "settlement_price"])) {
+                return asset.getIn(["bitasset", "settlement_price"]);
+            } else {
+                return asset.getIn([
+                    "bitasset",
+                    "current_feed",
+                    "settlement_price"
+                ]);
+            }
+        }
+        if (!!asset.get("settlement_price")) {
+            return asset.getIn(["settlement_price"]);
+        }
+        if (!!asset.get("current_feed")) {
+            asset.getIn(["current_feed", "settlement_price"]);
+        }
+    }
 }

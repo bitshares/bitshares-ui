@@ -19,6 +19,7 @@ import {Validation} from "../../services/Validation/Validation";
 import assetUtils from "../../lib/common/asset_utils";
 import {checkFeeStatusAsync} from "../../lib/common/trxHelper";
 import PriceText from "../Utility/PriceText";
+import AssetName from "../Utility/AssetName";
 import {
     preciseAdd,
     preciseDivide,
@@ -448,17 +449,11 @@ class ScaledOrderForm extends Component {
         );
 
         const priceSymbol = (
-            <div
-                style={{
-                    maxWidth: "110px",
-                    display: "block",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis"
-                }}
-            >
-                <AssetNameWrapper name={this.props.baseAsset.get("symbol")} />/
-                <AssetNameWrapper name={this.props.quoteAsset.get("symbol")} />
-            </div>
+            <span>
+                <AssetName dataPlace="right" name={baseAsset.get("symbol")} />
+                &nbsp;/&nbsp;
+                <AssetName dataPlace="right" name={quoteAsset.get("symbol")} />
+            </span>
         );
 
         const formItemProps = {

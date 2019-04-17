@@ -22,7 +22,6 @@ class Personalize extends React.Component {
         this.state = {
             open: false,
             smallScreen: false,
-            chartHeight: props.chartHeight,
             autoScroll: props.viewSettings.get("global_AutoScroll", true)
         };
 
@@ -40,10 +39,6 @@ class Personalize extends React.Component {
     }
 
     setChartHeight(value) {
-        this.setState({
-            chartHeight: value
-        });
-
         this.props.onChangeChartHeight({
             value: value
         });
@@ -87,9 +82,7 @@ class Personalize extends React.Component {
     }
 
     render() {
-        let {chartType} = this.props;
-
-        let {chartHeight} = this.state;
+        let {chartType, chartHeight} = this.props;
 
         return (
             <Modal
@@ -192,9 +185,7 @@ class Personalize extends React.Component {
                             <InputNumber
                                 value={
                                     typeof chartHeight === "number" &&
-                                    chartHeight > 1000
-                                        ? 1000
-                                        : chartHeight
+                                    chartHeight
                                 }
                                 onChange={this.setChartHeight.bind(this)}
                             />
