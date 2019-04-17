@@ -325,10 +325,7 @@ var Utils = {
         if (toRate.toJS && this.is_object_type(toRate.get("id"), "asset")) {
             toID = toRate.get("id");
             toRate = toRate.get("bitasset")
-                ? asset_utils
-                      .extractRawFeedPrice(toRate)
-                      .toJS()
-                      .toJS()
+                ? asset_utils.extractRawFeedPrice(toRate).toJS()
                 : toRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
 
