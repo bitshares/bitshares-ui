@@ -3,6 +3,9 @@
     table {
         min-width: 1100px;
     }
+    .ant-table-placeholder {
+        min-height: 140px;
+    }
 }
 
 @media (max-width: 750px) {
