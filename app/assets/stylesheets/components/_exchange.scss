@@ -223,13 +223,13 @@ form.order-form {
 
 .buy-form {
     > div.ant-tabs-bar {
-        border-bottom: 1px solid #258a14 !important;
+        border-bottom: 1px solid #6ba583 !important;
     }
 }
 
 .sell-form {
     > div.ant-tabs-bar {
-        border-bottom: 1px solid #ea340b !important;
+        border-bottom: 1px solid #e3745b !important;
     }
 }
 
@@ -608,6 +608,19 @@ input[type="number"]::-webkit-outer-spin-button {
     font-weight: 500;
     text-transform: uppercase;
     overflow: hidden;
+}
+
+.exchange-content-header.bid,
+.exchange-content-header.ask {
+    padding: 10px;
+}
+
+.exchange-content-header.bid {
+    border-bottom: 1px solid #6ba583 !important;
+}
+
+.exchange-content-header.ask {
+    border-bottom: 1px solid #e3745b !important;
 }
 
 .exchange-padded {
