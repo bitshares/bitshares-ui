@@ -785,7 +785,7 @@
                 "settle_remaining_volume": "Remaining settleable volume",
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
-                "settlement_price": "Settlement Price",
+                "settlement_price": "",
                 "title": "Settlement"
             },
             "summary": {

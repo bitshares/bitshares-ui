@@ -754,7 +754,7 @@
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maksimum kısa pozisyon sıkıştırma oranı (MSSR)",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "Uzlaşma",
+                "settlement_price": "",
                 "title": "Fiyat Yayını"
             },
             "price_feed_data": {
@@ -763,7 +763,7 @@
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Duyurdu",
                 "publisher": "Duyuran",
-                "settlement_price": "Uzlaşma",
+                "settlement_price": "",
                 "title": "Fiyat Yayın Verileri"
             },
             "settlement": {
@@ -785,7 +785,7 @@
                 "settle_remaining_volume": "Remaining settleable volume",
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
-                "settlement_price": "Settlement Price",
+                "settlement_price": "",
                 "title": "Settlement"
             },
             "summary": {
@@ -842,7 +842,7 @@
             "op_type": "İşlem türü",
             "previous": "Bir önceki",
             "previous_secret": "Bir önceki gizli hash",
-            "settlement_price": "Uzlaşma",
+            "settlement_price": "",
             "short_limit": "Kısa pozisyon limit",
             "time": "Zaman",
             "title": "Blok",
