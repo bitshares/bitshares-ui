@@ -667,6 +667,7 @@
         "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Settle instantly",
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
+        "settle_offset": "Settlement price offset: %(offset)s%",
         "settle_orders": "Ordini settle",
         "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Short",
@@ -749,6 +750,7 @@
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
+                "feed_price": "Feed price",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Rapporto di garanzia di mantenimento (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
@@ -759,6 +761,7 @@
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
+                "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Pubblicato",
@@ -1376,7 +1379,8 @@
             "amount": "Quantità da riservare",
             "from": "Account da cui riservare",
             "submit": "Riserva",
-            "title": "Riserva (brucia) asset"
+            "title": "Riserva (brucia) asset",
+            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
         },
         "save": "save",
         "send": {

@@ -647,6 +647,9 @@
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
                 "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
+                "market_trades": "",
+                "my_trades": "",
+                "open_orders": "",
                 "order_book_grouping": "Group orders which are close together by a defined percentage",
                 "order_style": "Use vertical order book to pin it to the side panel",
                 "orderbook_auto_scroll": "Auto scroll the order book to keep center as new orders come in. Disable to allow scrolling",
@@ -657,6 +660,7 @@
                 "reduce_scrollbars": "Disable scroll bars by default",
                 "reload": "Changing this option will only affect after manually reloading",
                 "reverse_order_book": "Reverse order book to have buy orders on top",
+                "settlements": "",
                 "show_market_depth": "Zeige Markttiefe",
                 "show_price_chart": "Zeige Preisübersicht",
                 "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)"
@@ -669,6 +673,7 @@
         "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Settle instantly",
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
+        "settle_offset": "Settlement price offset: %(offset)s%",
         "settle_orders": "Verrechnungs-Auftrag",
         "settlement_hint": "You are attempting to settle {long}. Current price of {market_link}",
         "short": "Short",
@@ -751,6 +756,7 @@
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
+                "feed_price": "Feed price",
                 "global_settlement_price": "Globaler Verrechnungspreis",
                 "maintenance_collateral_ratio": "Benötigte Sicherheiten-Ratio",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
@@ -761,6 +767,7 @@
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
+                "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Veröffentlicht",
@@ -967,7 +974,9 @@
             "gdex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Gdex bereitgestellt",
             "open": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch OpenLedger bereitgestellt",
             "rudex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Rudex bereitgestellt",
-            "trade": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Blocktrades bereitgestellt"
+            "trade": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Blocktrades bereitgestellt",
+            "win": "",
+            "xbts": ""
         },
         "balance": "Guthaben",
         "balance_asset": "Aktuelles %(asset)s Guthaben",
@@ -1376,7 +1385,8 @@
             "amount": "Menge zur Vernichtung",
             "from": "Konto von der Vernichtung",
             "submit": "Vernichten",
-            "title": "Vernichten (Reserve) Anlage"
+            "title": "Vernichten (Reserve) Anlage",
+            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
         },
         "save": "save",
         "send": {
@@ -1628,6 +1638,7 @@
     },
     "settings": {
         "access": "Verbindungsknoten",
+        "access_text": "",
         "accounts": "Konten",
         "accounts_text": "Ihre Kontenliste",
         "activate": "Aktivität",
@@ -1802,7 +1813,8 @@
             },
             "steps_costs": {
                 "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text ",
-                "title": "Settlement"
+                "title": "Settlement",
+                "title_within": ""
             },
             "steps_introduction": {
                 "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
@@ -2194,6 +2206,7 @@
             "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
             "required": "The field is required",
             "requiredNamed": "%(name)s is required",
+            "test": "",
             "types": {
                 "array": "The field should be array",
                 "arrayNamed": "%(name)s should be array",
