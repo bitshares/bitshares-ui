@@ -11,14 +11,13 @@ import {
 } from "bitsharesjs";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
-import Icon from "../Icon/Icon";
 import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
 import report from "bitshares-report";
 import LoadingIndicator from "../LoadingIndicator";
-import {Tooltip} from "bitshares-ui-style-guide";
+import {Tooltip, Select, Icon} from "bitshares-ui-style-guide";
 const ops = Object.keys(operations);
 import {Link} from "react-router-dom";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -27,6 +26,8 @@ import OperationAnt from "../Blockchain/OperationAnt";
 import SettingsStore from "stores/SettingsStore";
 import {connect} from "alt-react";
 const operation = new OperationAnt();
+
+const Option = Select.Option;
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
@@ -354,9 +355,9 @@ class RecentTransactions extends React.Component {
         });
     }
 
-    _onChangeFilter(e) {
+    _onChangeFilter(value) {
         this.setState({
-            filter: e.target.value
+            filter: value
         });
     }
 
@@ -460,9 +461,9 @@ class RecentTransactions extends React.Component {
                 "vesting_balance_withdraw"
             ].map(type => {
                 return (
-                    <option value={type} key={type}>
+                    <Option value={type} key={type}>
                         {counterpart.translate("transaction.trxTypes." + type)}
-                    </option>
+                    </Option>
                 );
             });
         }
@@ -501,31 +502,28 @@ class RecentTransactions extends React.Component {
                         </div>
                     )}
                     <div className="header-selector">
-                        <div className="selector">
-                            <div className={cnames("inline-block")}>
-                                {this.props.showFilters ? (
-                                    <Tooltip
-                                        placement="bottom"
-                                        title={counterpart.translate(
-                                            "tooltip.filter_ops"
+                        <div className="filter inline-block">
+                            {this.props.showFilters ? (
+                                <Tooltip
+                                    placement="bottom"
+                                    title={counterpart.translate(
+                                        "tooltip.filter_ops"
+                                    )}
+                                >
+                                    <Select
+                                        style={{
+                                            width: "210px"
+                                        }}
+                                        value={this.state.filter}
+                                        onChange={this._onChangeFilter.bind(
+                                            this
                                         )}
                                     >
-                                        <select
-                                            style={{
-                                                paddingTop: 5,
-                                                width: "auto"
-                                            }}
-                                            className="bts-select no-margin"
-                                            value={this.state.filter}
-                                            onChange={this._onChangeFilter.bind(
-                                                this
-                                            )}
-                                        >
-                                            {options}
-                                        </select>
-                                    </Tooltip>
-                                ) : null}
-                            </div>
+                                        {options}
+                                    </Select>
+                                </Tooltip>
+                            ) : null}
+
                             {historyCount > 0 ? (
                                 <Tooltip
                                     placement="bottom"
@@ -533,13 +531,17 @@ class RecentTransactions extends React.Component {
                                         "transaction.csv_tip"
                                     )}
                                 >
-                                    <a
-                                        className="inline-block"
+                                    <Icon
+                                        type="file-excel"
+                                        theme="filled"
+                                        style={{
+                                            verticalAlign: "bottom",
+                                            fontSize: "29px",
+                                            marginLeft: "1rem",
+                                            paddingBottom: "2px"
+                                        }}
                                         onClick={this._generateCSV.bind(this)}
-                                        style={{marginLeft: "1rem"}}
-                                    >
-                                        <Icon name="excel" size="1_5x" />
-                                    </a>
+                                    />
                                 </Tooltip>
                             ) : null}
                         </div>
@@ -552,114 +554,99 @@ class RecentTransactions extends React.Component {
                             </div>
                         )}
                     </div>
-                    <div
-                        className="box-content grid-block no-margin"
-                        style={
-                            !this.props.fullHeight
-                                ? {
-                                      maxHeight: maxHeight - headerHeight
-                                  }
-                                : null
+                    <PaginatedList
+                        withTransition
+                        className={
+                            "table table-striped " +
+                            (compactView ? "compact" : "") +
+                            (this.props.dashboard
+                                ? " dashboard-table table-hover"
+                                : "")
                         }
-                        ref="transactions"
-                    >
-                        <PaginatedList
-                            withTransition
-                            className={
-                                "table table-striped " +
-                                (compactView ? "compact" : "") +
-                                (this.props.dashboard
-                                    ? " dashboard-table table-hover"
-                                    : "")
-                            }
-                            header={[
-                                {
-                                    title: (
-                                        <Translate content="account.transactions.id" />
-                                    ),
-                                    dataIndex: "id",
-                                    align: "left",
-                                    render: item => {
-                                        return (
-                                            <span
-                                                style={{whiteSpace: "nowrap"}}
-                                            >
-                                                {item}
-                                            </span>
-                                        );
-                                    }
-                                },
-                                !compactView
-                                    ? {
-                                          title: (
-                                              <Translate content="account.transactions.type" />
-                                          ),
-                                          dataIndex: "type",
-                                          align: "left"
-                                      }
-                                    : {},
-                                {
-                                    title: (
-                                        <Translate content="account.transactions.info" />
-                                    ),
-                                    dataIndex: "info",
-                                    align: "left",
-                                    render: item => {
-                                        return (
-                                            <span
-                                                style={{
-                                                    whiteSpace: "nowrap"
-                                                }}
-                                            >
-                                                {item}
-                                            </span>
-                                        );
-                                    }
-                                },
-                                !hideFee
-                                    ? {
-                                          title: (
-                                              <Translate content="account.transactions.fee" />
-                                          ),
-                                          dataIndex: "fee",
-                                          align: "left",
-                                          render: item => {
-                                              return (
-                                                  <span
-                                                      style={{
-                                                          whiteSpace: "nowrap"
-                                                      }}
-                                                  >
-                                                      {item}
-                                                  </span>
-                                              );
-                                          }
-                                      }
-                                    : {},
-                                {
-                                    title: (
-                                        <Translate
-                                            style={{whiteSpace: "nowrap"}}
-                                            content="account.transactions.time"
-                                        />
-                                    ),
-                                    dataIndex: "time",
-                                    render: item => {
-                                        return (
-                                            <span
-                                                style={{whiteSpace: "nowrap"}}
-                                            >
-                                                {item}
-                                            </span>
-                                        );
-                                    }
+                        header={[
+                            {
+                                title: (
+                                    <Translate content="account.transactions.id" />
+                                ),
+                                dataIndex: "id",
+                                align: "left",
+                                render: item => {
+                                    return (
+                                        <span style={{whiteSpace: "nowrap"}}>
+                                            {item}
+                                        </span>
+                                    );
                                 }
-                            ]}
-                            rows={display_history}
-                            label="utility.total_x_operations"
-                            extraRow={action}
-                        />
-                    </div>
+                            },
+                            !compactView
+                                ? {
+                                      title: (
+                                          <Translate content="account.transactions.type" />
+                                      ),
+                                      dataIndex: "type",
+                                      align: "left"
+                                  }
+                                : {},
+                            {
+                                title: (
+                                    <Translate content="account.transactions.info" />
+                                ),
+                                dataIndex: "info",
+                                align: "left",
+                                render: item => {
+                                    return (
+                                        <span
+                                            style={{
+                                                whiteSpace: "nowrap"
+                                            }}
+                                        >
+                                            {item}
+                                        </span>
+                                    );
+                                }
+                            },
+                            !hideFee
+                                ? {
+                                      title: (
+                                          <Translate content="account.transactions.fee" />
+                                      ),
+                                      dataIndex: "fee",
+                                      align: "left",
+                                      render: item => {
+                                          return (
+                                              <span
+                                                  style={{
+                                                      whiteSpace: "nowrap"
+                                                  }}
+                                              >
+                                                  {item}
+                                              </span>
+                                          );
+                                      }
+                                  }
+                                : {},
+                            {
+                                title: (
+                                    <Translate
+                                        style={{whiteSpace: "nowrap"}}
+                                        content="account.transactions.time"
+                                    />
+                                ),
+                                dataIndex: "time",
+                                render: item => {
+                                    return (
+                                        <span style={{whiteSpace: "nowrap"}}>
+                                            {item}
+                                        </span>
+                                    );
+                                }
+                            }
+                        ]}
+                        rows={display_history}
+                        label="utility.total_x_operations"
+                        extraRow={action}
+                    />
+
                     {this.state.fetchingAccountHistory && <LoadingIndicator />}
                 </div>
             </div>

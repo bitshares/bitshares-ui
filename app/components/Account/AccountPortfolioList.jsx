@@ -334,8 +334,8 @@ class AccountPortfolioList extends React.Component {
                 [action === "bridge_modal"
                     ? "bridgeAsset"
                     : action === "deposit_modal"
-                        ? "depositAsset"
-                        : "withdrawAsset"]: asset,
+                    ? "depositAsset"
+                    : "withdrawAsset"]: asset,
                 fiatModal
             },
             () => {
@@ -1320,7 +1320,6 @@ class AccountPortfolioList extends React.Component {
         return (
             <div>
                 <PaginatedList
-                    style={{padding: 0}}
                     className="table dashboard-table table-hover"
                     rows={this._renderBalances(
                         this.props.balanceList,
