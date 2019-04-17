@@ -2305,7 +2305,7 @@
         "create_account_password_text": "Die Schlüssel für das neue Konto beziehen sich auf Ihr Passwort.<strong> Es wird nichts im Browser oder einem zentralen Server gespeichert. Stellen Sie sicher, dass Sie Ihr Passwort nicht vergessen!</strong>",
         "create_account_text": "Der gewählte Kontoname muss einzigartig sein, da dieser auf der Blockchain öffentlich registriert wird und zur Identifikation der Transaktionen benutzt wird.",
         "create_backup": "Sicherung erstellen",
-        "create_backup_of": "Sichere Wallet (%(name)s)",
+        "create_backup_of": "Jetzt Wallet sichern",
         "create_importkeys_text": "Damit Ihre Schlüssel importiert werden können, muss als erstes eine lokale Wallet angelegt werden. Durch das Abschließen des Dialogs unterhalb, kann eine neue lokale Wallet angelegt werden.",
         "create_password": "Neues Konto durch die Benutzung eines Passwortes erstellen.",
         "create_success": "Ihre lokale Wallet wurde erfolgreich erstellt.",
