@@ -3,22 +3,19 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import AssetWrapper from "../Utility/AssetWrapper";
 import AssetName from "../Utility/AssetName";
 import BorrowModal from "../Modal/BorrowModal";
 import WalletApi from "api/WalletApi";
 import {ChainStore} from "bitsharesjs";
 import WalletDb from "stores/WalletDb";
-import Translate from "react-translate-component";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import {List} from "immutable";
 import {Link} from "react-router-dom";
-import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import Immutable from "immutable";
 import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
+import asset_utils from "../../lib/common/asset_utils";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -87,21 +84,13 @@ class MarginPosition extends React.Component {
         return (
             1 /
             utils.get_asset_price(
-                this.props.debtAsset.getIn([
-                    "bitasset",
-                    "current_feed",
-                    "settlement_price",
-                    "quote",
-                    "amount"
-                ]),
+                asset_utils
+                    .extractRawFeedPrice(this.props.debtAsset)
+                    .getIn(["quote", "amount"]),
                 this.props.collateralAsset,
-                this.props.debtAsset.getIn([
-                    "bitasset",
-                    "current_feed",
-                    "settlement_price",
-                    "base",
-                    "amount"
-                ]),
+                asset_utils
+                    .extractRawFeedPrice(this.props.debtAsset)
+                    .getIn(["base", "amount"]),
                 this.props.debtAsset
             )
         );
@@ -322,21 +311,13 @@ class MarginPosition extends React.Component {
                 <td style={alignRight} className={"column-hide-small"}>
                     {has_order ? (
                         <FormattedPrice
-                            base_amount={debtAsset.getIn([
-                                "bitasset",
-                                "current_feed",
-                                "settlement_price",
-                                "base",
-                                "amount"
-                            ])}
+                            base_amount={asset_utils
+                                .extractRawFeedPrice(debtAsset)
+                                .getIn(["base", "amount"])}
                             base_asset={co.call_price.quote.asset_id}
-                            quote_amount={debtAsset.getIn([
-                                "bitasset",
-                                "current_feed",
-                                "settlement_price",
-                                "quote",
-                                "amount"
-                            ])}
+                            quote_amount={asset_utils
+                                .extractRawFeedPrice(debtAsset)
+                                .getIn(["quote", "amount"])}
                             quote_asset={co.call_price.base.asset_id}
                             hide_symbols
                         />
