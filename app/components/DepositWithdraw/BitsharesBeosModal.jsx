@@ -325,6 +325,16 @@ class BitsharesBeosModal extends React.Component {
         }).then(response => response.json());
         validation_promise
             .then(result => {
+                if (result && result.error) {
+                    this.setState({
+                        is_account_validation: false,
+                        maintenance_error: true,
+                        is_account_creation_checkbox: false,
+                        account_validation_error: false,
+                        no_account_error: false
+                    });
+                    return;
+                }
                 if (
                     result.isValid &&
                     this.getPendingAccounts().includes(account)
@@ -412,10 +422,13 @@ class BitsharesBeosModal extends React.Component {
                 }, 200);
             })
             .catch(() => {
-                this.onAlternativeAccountValidation(
-                    this.props.beosApiUrl, // need to be set
-                    account
-                );
+                this.setState({
+                    is_account_validation: false,
+                    maintenance_error: true,
+                    is_account_creation_checkbox: false,
+                    account_validation_error: false,
+                    no_account_error: false
+                });
             });
     }
 
@@ -709,50 +722,80 @@ class BitsharesBeosModal extends React.Component {
     };
 
     async onSubmit() {
-        const asset = this.getAssetById(this.state.selectedAssetId);
-
-        let newAmountToSend = parseInt(
-            this.state.amount_to_send *
-                utils.get_asset_precision(asset.get("precision")),
-            10
-        );
-
-        const pxasset = this.getProxyAsset(asset.get("symbol"));
-        let memo;
-
-        if (pxasset === "pxbts" && this.state.is_account_creation) {
-            memo = this.createMemoForAsset(pxasset, true);
-            newAmountToSend = newAmountToSend + this.state.fee_amount_creation;
-        } else {
-            memo = this.createMemoForAsset(pxasset);
-        }
-
-        try {
-            await AccountActions.transfer(
-                this.props.account.get("id"),
-                this.props.issuer.get("id"),
-                newAmountToSend,
-                asset.get("id"),
-                memo,
-                null,
-                "1.3.0"
-            );
-
-            if (this.state.is_account_creation) {
-                if (!WalletDb.isLocked()) {
-                    this.setPendingAccount(this.state.account);
+        let validation_url =
+            "https://gateway.beos.world/api/v2/wallets/beos/address-validator?address=blocktrades";
+        let validation_promise = fetch(validation_url, {
+            method: "get",
+            headers: new Headers({Accept: "application/json"})
+        }).then(response => response.json());
+        await validation_promise
+            .then(result => {
+                if (result && result.error) {
                     this.setState({
+                        is_account_validation: false,
+                        maintenance_error: true,
                         is_account_creation_checkbox: false,
-                        account_creation_transfer_success_info: true,
-                        is_account_creation: false
+                        account_validation_error: false,
+                        no_account_error: false
                     });
-                    this.validationInterval(this.state.account);
+                    return;
                 }
-            }
-        } catch (e) {
-            this.onMaintenance();
-            throw e;
-        }
+
+                const asset = this.getAssetById(this.state.selectedAssetId);
+
+                let newAmountToSend = parseInt(
+                    this.state.amount_to_send *
+                        utils.get_asset_precision(asset.get("precision")),
+                    10
+                );
+
+                const pxasset = this.getProxyAsset(asset.get("symbol"));
+                let memo;
+
+                if (pxasset === "pxbts" && this.state.is_account_creation) {
+                    memo = this.createMemoForAsset(pxasset, true);
+                    newAmountToSend =
+                        newAmountToSend + this.state.fee_amount_creation;
+                } else {
+                    memo = this.createMemoForAsset(pxasset);
+                }
+
+                try {
+                    AccountActions.transfer(
+                        this.props.account.get("id"),
+                        this.props.issuer.get("id"),
+                        newAmountToSend,
+                        asset.get("id"),
+                        memo,
+                        null,
+                        "1.3.0"
+                    );
+
+                    if (this.state.is_account_creation) {
+                        if (!WalletDb.isLocked()) {
+                            this.setPendingAccount(this.state.account);
+                            this.setState({
+                                is_account_creation_checkbox: false,
+                                account_creation_transfer_success_info: true,
+                                is_account_creation: false
+                            });
+                            this.validationInterval(this.state.account);
+                        }
+                    }
+                } catch (e) {
+                    this.onMaintenance();
+                    throw e;
+                }
+            })
+            .catch(() => {
+                this.setState({
+                    is_account_validation: false,
+                    maintenance_error: true,
+                    is_account_creation_checkbox: false,
+                    account_validation_error: false,
+                    no_account_error: false
+                });
+            });
     }
 
     render() {
@@ -866,8 +909,8 @@ class BitsharesBeosModal extends React.Component {
             this.state.is_account_validation ||
             this.state.no_account_error_without_creation ||
             this.getPendingAccounts().includes(this.state.account) ||
-            this.state.multiSigError;
-        // this.state.maintenance_error;
+            this.state.multiSigError ||
+            this.state.maintenance_error;
 
         return (
             <div>
