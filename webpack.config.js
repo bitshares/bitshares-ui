@@ -69,9 +69,9 @@ module.exports = function(env) {
     });
     const localeRegex = new RegExp(regexString);
 
-    const isStageNet = !!process.env.__STAGENET__ || !!env.stagenet;
-    const isTestNet = !!process.env.__TESTNET__ || !!env.testnet;
-    const isDevNet = !!process.env.__DEVNET__;
+    const isStageNet = !!process.env.STAGENET || !!env.stagenet;
+    const isTestNet = !!process.env.TESTNET || !!env.testnet;
+    const isDevNet = !!process.env.DEVNET;
 
     const recaptchaSiteKey =
         process.env.RECAPTCHA_SITE_KEY ||
@@ -84,10 +84,10 @@ module.exports = function(env) {
         "BTS74ePvhPVtYw79orHZkHgfpGr5vRJ1ZPyDDZcCBEg275DGpCy8k";
 
     const walletUrl =
-        process.env.__WALLET_URL__ || "https://wallet.crypto-bridge.org";
-    const apiUrl = process.env.__API_URL__ || "https://api.crypto-bridge.org";
+        process.env.WALLET_URL || "https://wallet.crypto-bridge.org";
+    const apiUrl = process.env.API_URL || "https://api.crypto-bridge.org";
     const supportUrl =
-        process.env.__API_SUPPORT_URL__ ||
+        process.env.API_SUPPORT_URL ||
         "https://wallet.crypto-bridge.org/v1/support";
 
     var plugins = [
