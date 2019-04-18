@@ -1,8 +1,6 @@
 import alt from "alt-instance";
 import {log} from "../SupportUtils";
 import counterpart from "counterpart";
-import config from "../../../../config";
-
 import {getRequestAccessOptions} from "lib/common/AccountUtils";
 import {STATUSES} from "../Constants";
 
@@ -13,13 +11,13 @@ class SupportActions {
     getTickets(access) {
         return dispatch => {
             return fetch(
-                `${config.support.url}/tickets`,
+                `${__API_SUPPORT_URL__}/tickets`,
                 Object.assign(getRequestAccessOptions(access), {
                     method: "GET"
                 })
             )
                 .then(response => {
-                    if (response.status === 404) {
+                    if (!response || !response.ok || response.status === 404) {
                         throw new Error("tickets not found");
                     }
 
@@ -63,7 +61,7 @@ class SupportActions {
     getTicketComments(access, ticketId) {
         return dispatch => {
             return fetch(
-                `${config.support.url}/tickets/${ticketId}/comments`,
+                `${__API_SUPPORT_URL__}/tickets/${ticketId}/comments`,
                 Object.assign(getRequestAccessOptions(access), {
                     method: "GET"
                 })
@@ -100,7 +98,7 @@ class SupportActions {
     addComment(auth, ticketId, comment) {
         return dispatch => {
             return fetch(
-                `${config.support.url}/tickets/${ticketId}/comments`,
+                `${__API_SUPPORT_URL__}/tickets/${ticketId}/comments`,
                 Object.assign(
                     getRequestAccessOptions(auth.access, auth.reCaptchaToken),
                     {
@@ -144,7 +142,7 @@ class SupportActions {
             delete ticket.username;
 
             return fetch(
-                `${config.support.url}/tickets`,
+                `${__API_SUPPORT_URL__}/tickets`,
                 Object.assign(
                     getRequestAccessOptions(auth.access, auth.reCaptchaToken),
                     {
@@ -177,7 +175,7 @@ class SupportActions {
     closeTicket(access, ticketId) {
         return dispatch => {
             return fetch(
-                `${config.support.url}/tickets/${ticketId}/close`,
+                `${__API_SUPPORT_URL__}/tickets/${ticketId}/close`,
                 Object.assign(getRequestAccessOptions(access), {
                     method: "POST"
                 })

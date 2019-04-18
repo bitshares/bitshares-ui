@@ -5,7 +5,6 @@
 import counterpart from "counterpart";
 import {kebabCase} from "lodash-es";
 import {STATUSKEYS} from "./Constants";
-import config from "../../../config";
 
 /**
  * Gets the Status Key from the supplied StatusId
@@ -46,7 +45,7 @@ export const formatTimestamp = timestamp => {
  * @param level
  */
 export const log = (data, level = "error") => {
-    fetch(`${config.support.url}/logger`, {
+    fetch(`${__API_SUPPORT_URL__}/logger`, {
         headers: {
             "Content-Type": "application/json"
         },
