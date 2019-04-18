@@ -10,19 +10,6 @@ var locales = require("./app/assets/locales");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
-/* Load .env configuration so that it can be included in WebPack config */
-const envConfig = require("dotenv").config().parsed;
-let processEnv = {};
-
-for (let key in envConfig) {
-    const envValue = envConfig[key];
-    const envKey =
-        key ||
-        (!/^__(.*)__$/.test(key) ? "__" + key + "__" : key).toUpperCase();
-
-    processEnv[envKey] = JSON.stringify(envValue);
-}
-
 /*
 * For staging builds, set the version to the latest commit hash, for
 * production set it to the package version
@@ -82,9 +69,9 @@ module.exports = function(env) {
     });
     const localeRegex = new RegExp(regexString);
 
-    const isStageNet = !!process.env.__STAGENET__ || !!env.stagenet;
-    const isTestNet = !!process.env.__TESTNET__ || !!env.testnet;
-    const isDevNet = !!process.env.__DEVNET__;
+    const isStageNet = !!process.env.STAGENET || !!env.stagenet;
+    const isTestNet = !!process.env.TESTNET || !!env.testnet;
+    const isDevNet = !!process.env.DEVNET;
 
     const recaptchaSiteKey =
         process.env.RECAPTCHA_SITE_KEY ||
@@ -97,8 +84,11 @@ module.exports = function(env) {
         "BTS74ePvhPVtYw79orHZkHgfpGr5vRJ1ZPyDDZcCBEg275DGpCy8k";
 
     const walletUrl =
-        process.env.__WALLET_URL__ || "https://wallet.crypto-bridge.org";
-    const apiUrl = process.env.__API_URL__ || "https://api.crypto-bridge.org";
+        process.env.WALLET_URL || "https://wallet.crypto-bridge.org";
+    const apiUrl = process.env.API_URL || "https://api.crypto-bridge.org";
+    const supportUrl =
+        process.env.API_SUPPORT_URL ||
+        "https://wallet.crypto-bridge.org/v1/support";
 
     var plugins = [
         new HtmlWebpackPlugin({
@@ -111,37 +101,28 @@ module.exports = function(env) {
                 ELECTRON: !!env.electron
             }
         }),
-        new webpack.DefinePlugin(
-            Object.assign(
-                {},
-                {
-                    APP_VERSION: JSON.stringify(__VERSION__),
-                    APP_REVISION: JSON.stringify(`${revision.substr(0, 7)}`),
-                    __ELECTRON__: !!env.electron,
-                    __HASH_HISTORY__: !!env.hash,
-                    __BASE_URL__: JSON.stringify(baseUrl),
-                    __UI_API__: JSON.stringify(
-                        env.apiUrl || "https://ui.bitshares.eu/api"
-                    ),
-                    __API_URL__: JSON.stringify(apiUrl),
-                    __WALLET_URL__: JSON.stringify(walletUrl),
-                    __DEVNET__: isDevNet,
-                    __TESTNET__: isTestNet,
-                    __STAGENET__: isStageNet,
-                    __DEPRECATED__: !!env.deprecated,
-                    __RECAPTCHA_SITE_KEY__: JSON.stringify(recaptchaSiteKey),
-                    __CRYPTOBRIDGE_PUB_KEY__: JSON.stringify(
-                        cryptoBridgePubKey
-                    ),
-                    __BCO_ASSET_ID__: JSON.stringify(
-                        isDevNet ? "1.3.2" : "1.3.1564"
-                    ),
-                    __BCO_ASSET_PRECISION__: 7,
-                    DEFAULT_SYMBOL: "BTS",
-                    "process.env": processEnv
-                }
-            )
-        ),
+        new webpack.DefinePlugin({
+            APP_VERSION: JSON.stringify(__VERSION__),
+            APP_REVISION: JSON.stringify(`${revision.substr(0, 7)}`),
+            __ELECTRON__: !!env.electron,
+            __HASH_HISTORY__: !!env.hash,
+            __BASE_URL__: JSON.stringify(baseUrl),
+            __UI_API__: JSON.stringify(
+                env.apiUrl || "https://ui.bitshares.eu/api"
+            ),
+            __API_URL__: JSON.stringify(apiUrl),
+            __API_SUPPORT_URL__: JSON.stringify(supportUrl),
+            __WALLET_URL__: JSON.stringify(walletUrl),
+            __DEVNET__: isDevNet,
+            __TESTNET__: isTestNet,
+            __STAGENET__: isStageNet,
+            __DEPRECATED__: !!env.deprecated,
+            __RECAPTCHA_SITE_KEY__: JSON.stringify(recaptchaSiteKey),
+            __CRYPTOBRIDGE_PUB_KEY__: JSON.stringify(cryptoBridgePubKey),
+            __BCO_ASSET_ID__: JSON.stringify(isDevNet ? "1.3.2" : "1.3.1564"),
+            __BCO_ASSET_PRECISION__: 7,
+            DEFAULT_SYMBOL: "BTS"
+        }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
             localeRegex
@@ -211,9 +192,9 @@ module.exports = function(env) {
     } else {
         plugins.push(
             new webpack.DefinePlugin({
-                "process.env": Object.assign(processEnv, {
+                "process.env": {
                     NODE_ENV: JSON.stringify("development")
-                }),
+                },
                 __DEV__: true
             })
         );

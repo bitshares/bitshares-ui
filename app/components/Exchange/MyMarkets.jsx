@@ -235,11 +235,7 @@ class MarketGroup extends React.Component {
 
                 case "benchmark":
                     return (
-                        <th
-                            key={header.name}
-                            style={{textAlign: "right"}}
-                            className={"benchmarkItem"}
-                        />
+                        <th key={header.name} style={{textAlign: "right"}} />
                     );
 
                 default:

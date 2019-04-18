@@ -7,7 +7,6 @@
 import React from "react";
 import counterpart from "counterpart";
 import {log} from "./SupportUtils";
-import config from "../../../config";
 import {getRequestAccessOptions} from "lib/common/AccountUtils";
 import LoadingIndicator from "../LoadingIndicator";
 
@@ -32,7 +31,7 @@ class FaqSearch extends React.Component {
         this.setState({fetching: true});
 
         return fetch(
-            `${config.support.url}/faq/search?q=${searchTerm}`,
+            `${__API_SUPPORT_URL__}/faq/search?q=${searchTerm}`,
             Object.assign(getRequestAccessOptions(this.props.accountAccess), {
                 method: "GET"
             })

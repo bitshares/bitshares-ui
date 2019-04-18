@@ -73,7 +73,8 @@ export const cryptoBridgeAPIs = {
     TRADING_PAIRS: "/trading-pairs",
     ACCOUNTS: "/accounts",
     LOGIN: "/login",
-    TERMS: "/terms/latest"
+    TERMS: "/terms/latest",
+    SUPPORT: "/support"
 };
 
 const WSS_DEV_NODES = [

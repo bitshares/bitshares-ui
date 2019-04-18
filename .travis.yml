@@ -35,9 +35,12 @@ jobs:
       script:
         - export RECAPTCHA_SITE_KEY=$TEST_RECAPTCHA_SITE_KEY
         - export CRYPTOBRIDGE_PUB_KEY=$TEST_CRYPTOBRIDGE_PUB_KEY
-        - export API_SUPPORT_BASE=$TEST_API_SUPPORT_BASE
+        - export TESTNET=true
+        - export WALLET_URL=$TEST_WALLET_URL
+        - export API_URL=$TEST_API_URL
+        - export API_SUPPORT_URL=$TEST_API_SUPPORT_URL
         - npm install
-        - npm run build-testnet
+        - npm run build
     - stage: deploy-testnet
       script:
         - ls -la ./build/dist/
@@ -51,9 +54,12 @@ jobs:
       script:
         - export RECAPTCHA_SITE_KEY=$STAGE_RECAPTCHA_SITE_KEY
         - export CRYPTOBRIDGE_PUB_KEY=$STAGE_CRYPTOBRIDGE_PUB_KEY
-        - export API_SUPPORT_BASE=$STAGE_API_SUPPORT_BASE
+        - export STAGENET=true
+        - export WALLET_URL=$STAGE_WALLET_URL
+        - export API_URL=$STAGE_API_URL
+        - export API_SUPPORT_URL=$STAGE_API_SUPPORT_URL
         - npm install
-        - npm run build-stage
+        - npm run build
     - stage: deploy-stage
       script:
         - ls -la ./build/dist/
@@ -67,7 +73,9 @@ jobs:
       script:
         - export RECAPTCHA_SITE_KEY=$PROD_RECAPTCHA_SITE_KEY
         - export CRYPTOBRIDGE_PUB_KEY=$PROD_CRYPTOBRIDGE_PUB_KEY
-        - export API_SUPPORT_BASE=$PROD_API_SUPPORT_BASE
+        - export WALLET_URL=$PROD_WALLET_URL
+        - export API_URL=$PROD_API_URL
+        - export API_SUPPORT_URL=$PROD_API_SUPPORT_URL
         - npm install
         - npm run build
     - stage: deploy-prod
