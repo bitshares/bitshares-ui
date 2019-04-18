@@ -9,6 +9,16 @@ const compareKeys = (prev, next) => {
     return {minus, plus};
 };
 
+const getVotesName = item => {
+    const id =
+        item.get("witness_account") || item.get("committee_member_account");
+    return id
+        ? ChainStore.getAccountName(id) || id
+        : item.get("worker")
+        ? item.get("name")
+        : null;
+};
+
 export const AccountUpdate = ({op, fromComponent}) => {
     const account = op[1].account;
 
@@ -35,26 +45,17 @@ export const AccountUpdate = ({op, fromComponent}) => {
             const votesMinusData = ChainStore.getObjectsByVoteIds(
                 votesIds.minus
             );
+
             if (votesPlusData && votesMinusData) {
                 votesPlusData.forEach(item => {
                     if (item) {
-                        const id =
-                            item.get("witness_account") ||
-                            item.get("committee_member_account");
-                        const name = id
-                            ? ChainStore.getAccountName(id) || id
-                            : null;
+                        const name = getVotesName(item);
                         if (name) votesPlusNames.push(name);
                     }
                 });
                 votesMinusData.forEach(item => {
                     if (item) {
-                        const id =
-                            item.get("witness_account") ||
-                            item.get("committee_member_account");
-                        const name = id
-                            ? ChainStore.getAccountName(id) || id
-                            : null;
+                        const name = getVotesName(item);
                         if (name) votesMinusNames.push(name);
                     }
                 });
