@@ -57,7 +57,7 @@ class AssetPublishFeed extends React.Component {
             asset_id: this.props.asset.get("id"),
             mcr: this.state.mcr,
             mssr: this.state.mssr,
-            settlementPrice: this.state.settlementPrice,
+            feedPrice: this.state.feedPrice,
             cer: this.state.cer
         });
         // .then(() => {
@@ -126,11 +126,8 @@ class AssetPublishFeed extends React.Component {
                 {/* Settlement Price */}
                 <br />
                 <PriceInput
-                    onPriceChanged={this.onPriceChanged.bind(
-                        this,
-                        "settlementPrice"
-                    )}
-                    label="explorer.asset.price_feed.settlement_price"
+                    onPriceChanged={this.onPriceChanged.bind(this, "feedPrice")}
+                    label="explorer.asset.price_feed.feed_price"
                     quote={quote}
                     base={base}
                 />

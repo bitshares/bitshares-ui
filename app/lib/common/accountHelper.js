@@ -1,5 +1,6 @@
 import {FetchChain} from "bitsharesjs";
 import {FeedPrice, Asset} from "./MarketClasses";
+import asset_utils from "./asset_utils";
 
 let asyncCache = {};
 const checkMarginStatusTTL = 60000 * 1; // 1 minute
@@ -45,8 +46,7 @@ function checkMarginStatus(account) {
                             assetsMap[
                                 co.getIn(["call_price", "base", "asset_id"])
                             ];
-                        let sp =
-                            debtAsset.bitasset.current_feed.settlement_price;
+                        let sp = asset_utils.extractRawFeedPrice(debtAsset);
                         if (sp.base.asset_id === sp.quote.asset_id) {
                             status[debtAsset.id] = {ratio: null};
                         } else {
@@ -64,12 +64,12 @@ function checkMarginStatus(account) {
                                 debtAsset.bitasset.current_feed
                                     .maintenance_collateral_ratio / 1000;
                             let price = new FeedPrice({
-                                priceObject:
-                                    debtAsset.bitasset.current_feed
-                                        .settlement_price,
-                                market_base:
-                                    debtAsset.bitasset.current_feed
-                                        .settlement_price.quote.asset_id,
+                                priceObject: asset_utils.extractRawFeedPrice(
+                                    debtAsset
+                                ),
+                                market_base: asset_utils.extractRawFeedPrice(
+                                    debtAsset
+                                ).quote.asset_id,
                                 sqr:
                                     debtAsset.bitasset.current_feed
                                         .maximum_short_squeeze_ratio,

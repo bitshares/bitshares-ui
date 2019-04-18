@@ -300,6 +300,13 @@ function BindToChainState(Component, options = {}) {
                 if (prop) {
                     if (prop[0] === "#" && Number.parseInt(prop.substring(1)))
                         prop = "1.2." + prop.substring(1);
+                    if (
+                        prop instanceof Map &&
+                        !!prop.get("name") &&
+                        prop.size == 1
+                    ) {
+                        prop = prop.get("name");
+                    }
                     let new_obj = ChainStore.getAccount(
                         prop,
                         this.default_props["autosubscribe"]
@@ -383,8 +390,10 @@ function BindToChainState(Component, options = {}) {
                     props[key] ||
                     this.dynamic_props[key] ||
                     this.default_props[key];
+
                 if (prop) {
                     let new_obj = ChainStore.getBalanceObjects(prop);
+
                     if (
                         new_obj === undefined &&
                         this.required_props.indexOf(key) === -1 &&

@@ -26,6 +26,10 @@ class CryptoLinkFormatter extends React.Component {
         super(params);
 
         this.assetTemplates = {
+            BTS: {
+                template: "{address}",
+                params: []
+            },
             BTC: {
                 template: "bitcoin:{address}", // template of the link with optional variables - {address} or other component's properties names in curly braces
                 params: [

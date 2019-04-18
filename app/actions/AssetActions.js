@@ -9,13 +9,23 @@ import {gatewayPrefixes} from "common/gateways";
 let inProgress = {};
 
 class AssetActions {
-    publishFeed({publisher, asset_id, mcr, mssr, settlementPrice, cer}) {
+    publishFeed({publisher, asset_id, mcr, mssr, feedPrice, cer}) {
         let tr = WalletApi.new_transaction();
+        /**
+         * The naming convention is confusing!
+         *
+         * bitshares-core knows only settlement_price, which is the feed price as known from UI!
+         *
+         * UI definition:
+         *  - Feed Price: Witness fed price, given by backend as settlement_price
+         *  - Settlement Price: feed price * force settlement offset factor
+         *
+         */
         tr.add_type_operation("asset_publish_feed", {
             publisher,
             asset_id,
             feed: {
-                settlement_price: settlementPrice.toObject(),
+                settlement_price: feedPrice.toObject(),
                 maintenance_collateral_ratio: mcr,
                 maximum_short_squeeze_ratio: mssr,
                 core_exchange_rate: cer.toObject()

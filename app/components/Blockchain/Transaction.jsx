@@ -30,6 +30,7 @@ import {
     scroller
 } from "react-scroll";
 import {Tooltip} from "bitshares-ui-style-guide";
+import asset_utils from "../../lib/common/asset_utils";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -1311,22 +1312,26 @@ class Transaction extends React.Component {
                             <td>
                                 <Translate
                                     component="span"
-                                    content="explorer.block.settlement_price"
+                                    content="explorer.block.feed_price"
                                 />
                             </td>
                             <td>
                                 <FormattedPrice
                                     base_asset={
-                                        feed.settlement_price.base.asset_id
+                                        asset_utils.extractRawFeedPrice(feed)
+                                            .base.asset_id
                                     }
                                     quote_asset={
-                                        feed.settlement_price.quote.asset_id
+                                        asset_utils.extractRawFeedPrice(feed)
+                                            .quote.asset_id
                                     }
                                     base_amount={
-                                        feed.settlement_price.base.amount
+                                        asset_utils.extractRawFeedPrice(feed)
+                                            .base.amount
                                     }
                                     quote_amount={
-                                        feed.settlement_price.quote.amount
+                                        asset_utils.extractRawFeedPrice(feed)
+                                            .quote.amount
                                     }
                                     noPopOver
                                 />

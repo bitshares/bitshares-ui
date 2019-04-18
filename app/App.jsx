@@ -23,6 +23,7 @@ import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
 import Borrow from "./components/Showcases/Borrow";
 import Barter from "./components/Showcases/Barter";
+import DirectDebit from "./components/Showcases/DirectDebit";
 
 import {Route, Switch, Redirect} from "react-router-dom";
 
@@ -449,6 +450,10 @@ class App extends React.Component {
                                 <Route path="/borrow" component={Borrow} />
 
                                 <Route path="/barter" component={Barter} />
+                                <Route
+                                    path="/direct-debit"
+                                    component={DirectDebit}
+                                />
 
                                 <Route
                                     path="/spotlight"
