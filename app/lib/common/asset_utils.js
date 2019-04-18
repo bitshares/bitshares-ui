@@ -107,11 +107,7 @@ export default class AssetUtils {
          *
          */
         if (!!asset.bitasset) {
-            if (asset.bitasset.settlement_price) {
-                return asset.bitasset.settlement_price;
-            } else {
-                return asset.bitasset.current_feed.settlement_price;
-            }
+            return asset.bitasset.current_feed.settlement_price;
         }
         if (!!asset.current_feed) {
             return asset.current_feed.settlement_price;
@@ -120,21 +116,18 @@ export default class AssetUtils {
             return asset.settlement_price;
         }
         if (!!asset.get("bitasset")) {
-            if (!!asset.getIn(["bitasset", "settlement_price"])) {
-                return asset.getIn(["bitasset", "settlement_price"]);
-            } else {
-                return asset.getIn([
-                    "bitasset",
-                    "current_feed",
-                    "settlement_price"
-                ]);
-            }
+            return asset.getIn([
+                "bitasset",
+                "current_feed",
+                "settlement_price"
+            ]);
         }
         if (!!asset.get("settlement_price")) {
             return asset.getIn(["settlement_price"]);
         }
         if (!!asset.get("current_feed")) {
-            asset.getIn(["current_feed", "settlement_price"]);
+            return asset.getIn(["current_feed", "settlement_price"]);
         }
+        throw "Feed price not found!";
     }
 }
