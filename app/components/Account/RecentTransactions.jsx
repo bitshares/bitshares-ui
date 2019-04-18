@@ -6,6 +6,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import {ChainTypes as grapheneChainTypes, FetchChain} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
@@ -57,6 +58,7 @@ class RecentTransactions extends React.Component {
             filter: "all",
             accountHistoryError: false
         };
+        this.forceUpdate = this.forceUpdate.bind(this);
     }
 
     componentDidMount() {
@@ -66,6 +68,7 @@ class RecentTransactions extends React.Component {
 
             this._setHeaderHeight();
         }
+        ChainStore.subscribe(this.forceUpdate);
     }
 
     _setHeaderHeight() {
@@ -118,6 +121,10 @@ class RecentTransactions extends React.Component {
                 return true;
         }
         return false;
+    }
+
+    componentWillUnmount() {
+        ChainStore.unsubscribe(this.forceUpdate);
     }
 
     _onIncreaseLimit() {
