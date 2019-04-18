@@ -370,7 +370,11 @@ class MarketRow extends React.Component {
                         return (
                             <td
                                 key={column.index}
-                                className={"benchmarkInfo benchmarkItem"}
+                                className={
+                                    benchmarkInfo
+                                        ? "benchmarkInfo benchmarkItem"
+                                        : ""
+                                }
                             >
                                 {benchmarkInfo}
                             </td>
