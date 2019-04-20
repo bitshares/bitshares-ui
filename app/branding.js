@@ -295,7 +295,7 @@ export function getAssetNamespaces() {
         "OPEN.",
         "RUDEX.",
         "BRIDGE.",
-        "ESCODEX",
+        "ESCODEX.",
         "GDEX.",
         "XBTSX.",
         "SPARKDEX.",
