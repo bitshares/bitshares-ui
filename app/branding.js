@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BTC", "ETH", "BTS", "USD", "CNY"];
+    return ["ESCODEX.BLTG", "BTC", "ETH", "BTS", "USD", "CNY"];
 }
 
 /**
@@ -101,6 +101,7 @@ export function getMyMarketsQuotes() {
             "USD"
         ],
         bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
+        escodexTokens: ["ESCODEX.BLTG", "ESCODEX.BTC", "ESCODEX.ETH"],
         gdexTokens: ["GDEX.BTC", "GDEX.BTO", "GDEX.EOS", "GDEX.ETH"],
         openledgerTokens: [
             "OBITS",
@@ -307,7 +308,7 @@ export function getAssetNamespaces() {
  */
 export function getAssetHideNamespaces() {
     // e..g "OPEN.", "bit"
-    return [];
+    return ["ESCODEX."];
 }
 
 /**
@@ -322,6 +323,7 @@ export function allowedGateway(gateway) {
             "RUDEX",
             "BRIDGE",
             "GDEX",
+            "ESCODEX",
             "XBTSX",
             "SPARKDEX",
             "CITADEL"
