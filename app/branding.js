@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["ESCODEX.BLTG", "BTC", "ETH", "BTS", "USD", "CNY"];
+    return ["BTC", "ETH", "BTS", "USD", "CNY"];
 }
 
 /**
@@ -295,6 +295,7 @@ export function getAssetNamespaces() {
         "OPEN.",
         "RUDEX.",
         "BRIDGE.",
+        "ESCODEX",
         "GDEX.",
         "XBTSX.",
         "SPARKDEX.",
@@ -308,7 +309,7 @@ export function getAssetNamespaces() {
  */
 export function getAssetHideNamespaces() {
     // e..g "OPEN.", "bit"
-    return ["ESCODEX."];
+    return [];
 }
 
 /**
