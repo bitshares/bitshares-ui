@@ -445,8 +445,8 @@ class AccountVoting extends React.Component {
             let now = new Date();
 
             /* Use the last valid budget object to estimate the current budget object id.
-            ** Budget objects are created once per hour
-            */
+             ** Budget objects are created once per hour
+             */
             let currentID =
                 idIndex +
                 Math.floor(
@@ -591,7 +591,7 @@ class AccountVoting extends React.Component {
             return !hidden;
         };
 
-        let workers = workerArray.filter(a => {
+        let _workers = workerArray.filter(a => {
             if (!a) {
                 return false;
             }
@@ -600,9 +600,9 @@ class AccountVoting extends React.Component {
                 new Date(a.get("work_begin_date") + "Z") <= now
             );
         });
-        workers = workers
+        let workers = _workers
             .filter(a => {
-                return hideProposals(a, workers);
+                return hideProposals(a, _workers);
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -709,6 +709,48 @@ class AccountVoting extends React.Component {
                     />
                 );
             });
+
+        let polls = _workers
+            .filter(a => {
+                return (
+                    hideProposals(a, _workers) &&
+                    a
+                        .get("name")
+                        .toLowerCase()
+                        .includes("bsip")
+                );
+            })
+            .sort((a, b) => {
+                return this._getTotalVotes(b) - this._getTotalVotes(a);
+            })
+            .map((worker, index) => {
+                let dailyPay = parseInt(worker.get("daily_pay"), 10);
+                workerBudget = workerBudget - dailyPay;
+                let votes =
+                    worker.get("total_votes_for") -
+                    worker.get("total_votes_against");
+                if (workerBudget <= 0 && !voteThreshold) {
+                    voteThreshold = votes;
+                }
+                if (voteThreshold && votes < voteThreshold) return null;
+
+                return (
+                    <WorkerApproval
+                        preferredUnit={preferredUnit}
+                        rest={workerBudget + dailyPay}
+                        rank={index + 1}
+                        key={worker.get("id")}
+                        worker={worker.get("id")}
+                        vote_ids={
+                            this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]
+                        }
+                        onChangeVotes={this.onChangeVotes.bind(this)}
+                        proxy={hasProxy}
+                        voteThreshold={voteThreshold}
+                    />
+                );
+            })
+            .filter(a => !!a);
 
         let actionButtons = (
             <span>
@@ -990,6 +1032,28 @@ class AccountVoting extends React.Component {
                                                 <Translate content="account.votes.expired" />
                                             </div>
                                         ) : null}
+
+                                        {/*  {polls.length ? (
+                                            <div
+                                                className={cnames(
+                                                    "inline-block",
+                                                    {
+                                                        inactive:
+                                                            workerTableIndex !==
+                                                            3
+                                                    }
+                                                )}
+                                                onClick={this._setWorkerTableIndex.bind(
+                                                    this,
+                                                    3
+                                                )}
+                                            >
+                                                {counterpart.translate(
+                                                    "account.votes.polls",
+                                                    {count: polls.length}
+                                                )}
+                                            </div>
+                                        ) : null} */}
                                         <div className="inline-block">
                                             {hideLegacy}
                                         </div>
@@ -1194,8 +1258,10 @@ class AccountVoting extends React.Component {
                                         {workerTableIndex === 0
                                             ? newWorkers
                                             : workerTableIndex === 1
-                                                ? workers
-                                                : expiredWorkers}
+                                            ? workers
+                                            : workerTableIndex === 2
+                                            ? expiredWorkers
+                                            : polls}
                                     </tbody>
                                 </table>
                             </Tab>

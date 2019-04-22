@@ -331,6 +331,7 @@
             "name": "Name",
             "new": "Proposed(%(count)s)",
             "no_proxy": "No Proxy",
+            "polls": "Polls(%(count)s)",
             "proxy": "Manually enter an account as your proxy",
             "proxy_current": "Your current proxy is",
             "proxy_known": "Or choose an account as your proxy",
