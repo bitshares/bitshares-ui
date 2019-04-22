@@ -1033,7 +1033,7 @@ class AccountVoting extends React.Component {
                                             </div>
                                         ) : null}
 
-                                        {/*  {polls.length ? (
+                                        {polls.length ? (
                                             <div
                                                 className={cnames(
                                                     "inline-block",
@@ -1053,7 +1053,7 @@ class AccountVoting extends React.Component {
                                                     {count: polls.length}
                                                 )}
                                             </div>
-                                        ) : null} */}
+                                        ) : null}
                                         <div className="inline-block">
                                             {hideLegacy}
                                         </div>
