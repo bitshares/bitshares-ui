@@ -66,13 +66,14 @@ div.bordered-header {
 
 .exchange-bordered {
     border: 1px solid rgba(183, 183, 183, 0.29);
+    margin: 0;
 
-    div:first-child & {
-        margin: 0 10px 0 10px;
+    &#depth_chart {
+        padding: 5px 12px 0px 12px;
     }
 
-    div:last-child & {
-        margin: 0 10px 0 10px;
+    &#tv_chart {
+        padding-right: 12px;
     }
 }
 
