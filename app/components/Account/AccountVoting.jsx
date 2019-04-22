@@ -982,7 +982,8 @@ class AccountVoting extends React.Component {
                                             </div>
                                         </Link>
                                     </div>
-                                    <div className="selector">
+
+                                    <div className="selector inline-block">
                                         {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
                                         <div
                                             style={{paddingLeft: 10}}
@@ -1054,10 +1055,11 @@ class AccountVoting extends React.Component {
                                                 )}
                                             </div>
                                         ) : null}
-                                        <div className="inline-block">
-                                            {hideLegacy}
-                                        </div>
                                     </div>
+                                    <div className="inline-block">
+                                        {hideLegacy}
+                                    </div>
+
                                     <div style={{marginTop: "2rem"}}>
                                         {proxyInput}
                                         <div
