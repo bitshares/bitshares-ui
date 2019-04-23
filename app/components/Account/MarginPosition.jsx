@@ -299,13 +299,14 @@ class MarginPosition extends React.Component {
                 </td>
                 <td style={alignRight} className={"column-hide-small"}>
                     {has_order ? (
-                        <FormattedPrice
-                            base_amount={co.call_price.base.amount}
-                            base_asset={co.call_price.base.asset_id}
-                            quote_amount={co.call_price.quote.amount}
-                            quote_asset={co.call_price.quote.asset_id}
-                            hide_symbols
-                        />
+                        // <FormattedPrice
+                        //     base_amount={co.call_price.base.amount}
+                        //     base_asset={co.call_price.base.asset_id}
+                        //     quote_amount={co.call_price.quote.amount}
+                        //     quote_asset={co.call_price.quote.asset_id}
+                        //     hide_symbols
+                        // />
+                        <span>-</span>
                     ) : null}
                 </td>
                 <td style={alignRight} className={"column-hide-small"}>
