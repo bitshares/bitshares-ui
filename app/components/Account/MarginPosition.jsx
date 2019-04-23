@@ -306,9 +306,9 @@ class MarginPosition extends React.Component {
                 <td style={alignRight} className={"column-hide-small"}>
                     {has_order ? (
                         <FormattedPrice
-                            base_amount={collateral_amount / (mcr / 1000)}
+                            base_amount={collateral_amount}
                             base_asset={collateralAsset.get("id")}
-                            quote_amount={debt_amount}
+                            quote_amount={debt_amount * (mcr / 1000)}
                             quote_asset={debtAsset.get("id")}
                             hide_symbols
                         />

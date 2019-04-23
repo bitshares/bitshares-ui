@@ -642,22 +642,25 @@ class CallOrder {
             precisionToRatio(assets[this.collateral_id].precision);
 
         /*
-        * The call price is DEBT * MCR / COLLATERAL. This calculation is already
-        * done by the witness_node before returning the orders so it is not necessary
-        * to deal with the MCR (maintenance collateral ratio) here.
+        * The call price is DEBT * MCR / COLLATERAL. 
+        * Since bitshares-core 3.0.0 this is no longer done by the witness_node.
+        * Deal with the MCR (maintenance collateral ratio) here.
         */
 
+        let base = new Asset({
+            asset_id: this.collateral_id,
+            amount: order.collateral,
+            precision: assets[this.collateral_id].precision
+        });
+        let quote = new Asset({
+            asset_id: this.debt_id,
+            amount: order.debt * (mcr / 1000),
+            precision: assets[this.debt_id].precision
+        });
+
         this.call_price = new Price({
-            base: new Asset({
-                asset_id: this.collateral_id,
-                amount: order.collateral,
-                precision: assets[this.collateral_id].precision
-            }),
-            quote: new Asset({
-                asset_id: this.debt_id,
-                amount: order.debt * (mcr / 1000),
-                precision: assets[this.debt_id].precision
-            })
+            base,
+            quote
         });
 
         if (this.inverted) this.call_price = this.call_price.invert();

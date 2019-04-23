@@ -759,7 +759,6 @@ class MarketsStore {
             this.is_prediction_market = this[
                 this.invertedCalls ? "baseAsset" : "quoteAsset"
             ].getIn(["bitasset", "is_prediction_market"], false);
-
             this.bitasset_options = this[
                 this.invertedCalls ? "baseAsset" : "quoteAsset"
             ]
