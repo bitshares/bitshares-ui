@@ -2,7 +2,7 @@ import React from "react";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 
-import {IssuesEnum} from "../Constants";
+import {ISSUES} from "../Constants";
 import CoinsDropdown from "../CoinsDropdown";
 import GatewayStore from "stores/GatewayStore";
 import ExplorerCheck from "../ExplorerCheck";
@@ -12,7 +12,7 @@ import AssetTradingPairInfo from "../../Utility/AssetTraidingPairInfo";
 
 class DepositWithdrawForm extends React.Component {
     state = {
-        selectedIssueId: -1,
+        selectedIssueType: -1,
         selectedCoin: null,
         //explorerUrl: "",
         transactionId: "",
@@ -59,9 +59,9 @@ class DepositWithdrawForm extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.selectedIssueId !== prevState.selectedIssueId) {
+        if (nextProps.selectedIssueType !== prevState.selectedIssueType) {
             return {
-                selectedIssueId: nextProps.selectedIssueId,
+                selectedIssueType: nextProps.selectedIssueType,
                 //explorerUrl: "",
                 transactionId: "",
                 transactionNotFound: false,
@@ -111,171 +111,194 @@ class DepositWithdrawForm extends React.Component {
     render() {
         return (
             <div>
-                <CoinsDropdown
-                    coins={this.props.cryptoBridgeBackedCoins}
-                    selected={
-                        this.state.selectedCoin
-                            ? this.state.selectedCoin.backingCoinType
-                            : -1
-                    }
-                    onChange={this._handleCoinChange}
-                />
-                {this.state.selectedCoin !== null && (
+                {[ISSUES.DEPOSIT, ISSUES.WITHDRAWAL].indexOf(
+                    this.state.selectedIssueType
+                ) !== -1 && (
                     <div>
-                        <AssetTradingPairInfo
-                            asset={this.state.selectedCoin}
-                            deposit={
-                                this.props.selectedIssueId ===
-                                IssuesEnum.DEPOSIT
+                        <CoinsDropdown
+                            coins={this.props.cryptoBridgeBackedCoins}
+                            selected={
+                                this.state.selectedCoin
+                                    ? this.state.selectedCoin.backingCoinType
+                                    : -1
                             }
+                            onChange={this._handleCoinChange}
                         />
-                        <AssetInfo
-                            asset={this.state.selectedCoin}
-                            type={
-                                this.props.selectedIssueId ===
-                                IssuesEnum.DEPOSIT
-                                    ? "deposit"
-                                    : "withdrawal"
-                            }
-                        />
-
-                        {this.props.selectedIssueId ===
-                            IssuesEnum.WITHDRAWAL && (
-                            <label htmlFor="recipient_address">
-                                <span>
-                                    {counterpart.translate(
-                                        "cryptobridge.support.recipient_address"
-                                    )}
-                                </span>
-                                <input
-                                    id="recipient_address"
-                                    name="recipient_address"
-                                    type="text"
-                                    required
-                                    placeholder={counterpart.translate(
-                                        "cryptobridge.support.enter_recipient_address"
-                                    )}
-                                    onChange={event =>
-                                        this.setState({
-                                            recipientAddress: event.target.value
-                                        })
-                                    }
-                                />
-                            </label>
-                        )}
-                        {!this.state.transactionNotFound &&
-                        this.state.selectedCoin &&
-                        this.state.selectedCoin ? (
-                            <ExplorerCheck
-                                transferType={this.props.selectedIssueId}
-                                data={this.state.recipientAddress}
-                                selectedCoin={this.state.selectedCoin}
-                                onNotFound={() =>
-                                    this.setState({transactionNotFound: true})
-                                }
-                            />
-                        ) : null}
-
-                        {((this.props.selectedIssueId ===
-                            IssuesEnum.WITHDRAWAL &&
-                            this.state.transactionNotFound) ||
-                            this.props.selectedIssueId ===
-                                IssuesEnum.DEPOSIT) && (
-                            <label htmlFor="transaction_id">
-                                <span>
-                                    {counterpart.translate(
-                                        "cryptobridge.support.transaction_id"
-                                    )}
-                                </span>
-                                <div className="label-hint">
-                                    {this.props.selectedIssueId ===
-                                    IssuesEnum.WITHDRAWAL
-                                        ? ` (${counterpart.translate(
-                                              "cryptobridge.support.format"
-                                          )}: "1.11.x")`
-                                        : ""}
-                                </div>
-                                <input
-                                    id="transaction_id"
-                                    name="transaction_id"
-                                    type="text"
-                                    required={
-                                        this.props.selectedIssueId ===
-                                        IssuesEnum.DEPOSIT
-                                    }
-                                    placeholder={counterpart.translate(
-                                        "cryptobridge.support.enter_transaction_id"
-                                    )}
-                                    onChange={this._handleTransactionIdChange}
-                                />
-                            </label>
-                        )}
-                        {!this.state.transactionNotFound &&
-                            this.props.selectedIssueId ===
-                                IssuesEnum.DEPOSIT && (
-                                <ExplorerCheck
-                                    transferType={this.props.selectedIssueId}
-                                    data={this.state.transactionId}
-                                    selectedCoin={this.state.selectedCoin}
-                                    onNotFound={() =>
-                                        this.setState({
-                                            transactionNotFound: true
-                                        })
-                                    }
-                                />
-                            )}
-                        {!this.state.transactionNotFound && (
+                        {this.state.selectedCoin !== null && (
                             <div>
-                                <label htmlFor="coin_amount">
-                                    <span>
-                                        {counterpart.translate(
-                                            "cryptobridge.support.amount"
-                                        )}
-                                    </span>
-                                    <input
-                                        id="coin_amount"
-                                        name="coin_amount"
-                                        type="text"
-                                        placeholder={counterpart.translate(
-                                            "cryptobridge.support.enter_amount"
-                                        )}
-                                        required
-                                        value={this.state.amount}
-                                        onChange={event =>
+                                <AssetTradingPairInfo
+                                    asset={this.state.selectedCoin}
+                                    deposit={
+                                        this.props.selectedIssueType ===
+                                        ISSUES.DEPOSIT
+                                    }
+                                />
+                                <AssetInfo
+                                    asset={this.state.selectedCoin}
+                                    type={
+                                        this.props.selectedIssueType ===
+                                        ISSUES.DEPOSIT
+                                            ? "deposit"
+                                            : "withdrawal"
+                                    }
+                                />
+                                {this.props.selectedIssueType ===
+                                    ISSUES.WITHDRAWAL && (
+                                    <label htmlFor="recipient_address">
+                                        <span>
+                                            {counterpart.translate(
+                                                "cryptobridge.support.recipient_address"
+                                            )}
+                                        </span>
+                                        <input
+                                            id="recipient_address"
+                                            name="recipient_address"
+                                            type="text"
+                                            required
+                                            placeholder={counterpart.translate(
+                                                "cryptobridge.support.enter_recipient_address"
+                                            )}
+                                            onChange={event =>
+                                                this.setState({
+                                                    recipientAddress:
+                                                        event.target.value
+                                                })
+                                            }
+                                        />
+                                    </label>
+                                )}
+                                {!this.state.transactionNotFound &&
+                                this.state.selectedCoin &&
+                                this.state.selectedCoin ? (
+                                    <ExplorerCheck
+                                        transferType={
+                                            this.props.selectedIssueType
+                                        }
+                                        data={this.state.recipientAddress}
+                                        selectedCoin={this.state.selectedCoin}
+                                        onNotFound={() =>
                                             this.setState({
-                                                amount: event.target.value
+                                                transactionNotFound: true
                                             })
                                         }
                                     />
-                                </label>
-                                <label htmlFor="modal-new-ticket__message">
-                                    <span>
-                                        {counterpart.translate(
-                                            "cryptobridge.support.message"
-                                        )}
-                                    </span>
-                                    <textarea
-                                        id="modal-new-ticket__message"
-                                        name="modal-new-ticket__message"
-                                        className="modal-new-ticket__message"
-                                        onChange={event =>
-                                            this.setState({
-                                                message: event.target.value
-                                            })
-                                        }
-                                        placeholder={counterpart.translate(
-                                            "cryptobridge.support.enter_your_message"
-                                        )}
-                                    />
-                                </label>
-                                <div style={{marginTop: "1rem"}}>
-                                    <ReCAPTCHA
-                                        onChange={this._onRecaptchaChange}
-                                        payload={{user: this.props.account}}
-                                    />
-                                </div>
+                                ) : null}
+
+                                {((this.props.selectedIssueType ===
+                                    ISSUES.WITHDRAWAL &&
+                                    this.state.transactionNotFound) ||
+                                    this.props.selectedIssueType ===
+                                        ISSUES.DEPOSIT) && (
+                                    <label htmlFor="transaction_id">
+                                        <span>
+                                            {counterpart.translate(
+                                                "cryptobridge.support.transaction_id"
+                                            )}
+                                        </span>
+                                        <div className="label-hint">
+                                            {this.props.selectedIssueType ===
+                                            ISSUES.WITHDRAWAL
+                                                ? ` (${counterpart.translate(
+                                                      "cryptobridge.support.format"
+                                                  )}: "1.11.x")`
+                                                : ""}
+                                        </div>
+                                        <input
+                                            id="transaction_id"
+                                            name="transaction_id"
+                                            type="text"
+                                            required={
+                                                this.props.selectedIssueType ===
+                                                ISSUES.DEPOSIT
+                                            }
+                                            placeholder={counterpart.translate(
+                                                "cryptobridge.support.enter_transaction_id"
+                                            )}
+                                            onChange={
+                                                this._handleTransactionIdChange
+                                            }
+                                        />
+                                    </label>
+                                )}
+                                {!this.state.transactionNotFound &&
+                                    this.props.selectedIssueType ===
+                                        ISSUES.DEPOSIT && (
+                                        <ExplorerCheck
+                                            transferType={
+                                                this.props.selectedIssueType
+                                            }
+                                            data={this.state.transactionId}
+                                            selectedCoin={
+                                                this.state.selectedCoin
+                                            }
+                                            onNotFound={() =>
+                                                this.setState({
+                                                    transactionNotFound: true
+                                                })
+                                            }
+                                        />
+                                    )}
+                                {!this.state.transactionNotFound && (
+                                    <div>
+                                        <label htmlFor="coin_amount">
+                                            <span>
+                                                {counterpart.translate(
+                                                    "cryptobridge.support.amount"
+                                                )}
+                                            </span>
+                                            <input
+                                                id="coin_amount"
+                                                name="coin_amount"
+                                                type="text"
+                                                placeholder={counterpart.translate(
+                                                    "cryptobridge.support.enter_amount"
+                                                )}
+                                                required
+                                                value={this.state.amount}
+                                                onChange={event =>
+                                                    this.setState({
+                                                        amount:
+                                                            event.target.value
+                                                    })
+                                                }
+                                            />
+                                        </label>
+                                    </div>
+                                )}
                             </div>
                         )}
+                    </div>
+                )}
+                {(this.props.selectedIssueType === ISSUES.OTHER ||
+                    (this.state.selectedCoin !== null &&
+                        !this.state.transactionNotFound)) && (
+                    <div>
+                        <label htmlFor="modal-new-ticket__message">
+                            <span>
+                                {counterpart.translate(
+                                    "cryptobridge.support.message"
+                                )}
+                            </span>
+                            <textarea
+                                id="modal-new-ticket__message"
+                                name="modal-new-ticket__message"
+                                className="modal-new-ticket__message"
+                                onChange={event =>
+                                    this.setState({
+                                        message: event.target.value
+                                    })
+                                }
+                                placeholder={counterpart.translate(
+                                    "cryptobridge.support.enter_your_message"
+                                )}
+                            />
+                        </label>
+                        <div style={{marginTop: "1rem"}}>
+                            <ReCAPTCHA
+                                onChange={this._onRecaptchaChange}
+                                payload={{user: this.props.account}}
+                            />
+                        </div>
                     </div>
                 )}
             </div>
