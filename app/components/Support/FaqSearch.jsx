@@ -21,6 +21,12 @@ class FaqSearch extends React.Component {
         };
     }
 
+    componentWillReceiveProps(np) {
+        if (np.searchTerm !== this.props.searchTerm) {
+            this.setState({searchTerm: np.searchTerm});
+        }
+    }
+
     /**
      * Fetch search results from the Freshdesk API matching the supplied search term
      *

@@ -1,14 +1,10 @@
 /**
  * Support Constants
  */
-export const IssuesEnum = {
-    DEPOSIT: 1,
-    WITHDRAWAL: 2
-};
-
 export const ISSUES = {
-    1: "deposit",
-    2: "withdrawal"
+    DEPOSIT: "DEPOSIT",
+    WITHDRAWAL: "WITHDRAWAL",
+    OTHER: "OTHER"
 };
 
 export const STATUSES = {

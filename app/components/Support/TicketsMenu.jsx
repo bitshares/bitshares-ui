@@ -32,11 +32,19 @@ class TicketsMenu extends React.Component {
     };
 
     _renderSummary = ticket => {
-        return `${counterpart.translate(
-            `cryptobridge.support.${ISSUES[ticket.transferTypeId]}`
-        )} ${ticket.amount} ${ticket.coin
-            .replace("bridge.", "")
-            .toUpperCase()}`;
+        const type = counterpart.translate(
+            `cryptobridge.support.${
+                ISSUES[ticket.issueType.toUpperCase()]
+            }`.toLowerCase()
+        );
+        const detail =
+            ticket.amount && ticket.coin
+                ? ` ${ticket.amount} ${ticket.coin
+                      .replace("bridge.", "")
+                      .toUpperCase()}`
+                : "";
+
+        return `${type}${detail}`;
     };
 
     _renderMenuItem = ticket => {
