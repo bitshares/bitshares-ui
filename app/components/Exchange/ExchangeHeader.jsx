@@ -11,7 +11,6 @@ import {ChainStore} from "bitsharesjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
 import {Icon as AntIcon} from "bitshares-ui-style-guide";
 import {Asset, Price} from "common/MarketClasses";
-import asset_utils from "../../lib/common/asset_utils";
 
 export default class ExchangeHeader extends React.Component {
     constructor(props) {
@@ -163,8 +162,9 @@ export default class ExchangeHeader extends React.Component {
                 settlePriceTitle = "exchange.global_settle";
                 settlePriceTooltip = "tooltip.global_settle_price";
                 // if globally settled feed_price == settlement_price
-                settlePrice = asset_utils
-                    .extractRawFeedPrice(possibleBitAsset)
+                settlePrice = possibleBitAsset
+                    .get("bitasset")
+                    .get("settlement_price")
                     .toJS();
                 // add precision
                 if (settlePrice.base.asset_id == baseAsset.get("id")) {

@@ -518,7 +518,7 @@ class Asset extends React.Component {
         var currentFeed = bitAsset.current_feed;
 
         var feedPrice = this.formattedPrice(
-            assetUtils.extractRawFeedPrice(currentFeed)
+            assetUtils.extractRawFeedPrice(asset)
         );
 
         return (
@@ -636,10 +636,10 @@ class Asset extends React.Component {
              *
              */
             var settlementPrice = this.formattedPrice(
-                assetUtils.extractRawFeedPrice(bitAsset)
+                bitAsset.settlement_price
             );
             var revivePrice = this.formattedPrice(
-                assetUtils.extractRawFeedPrice(bitAsset),
+                bitAsset.settlement_price,
                 false,
                 false,
                 currentFeed.maintenance_collateral_ratio / 1000,
@@ -712,13 +712,13 @@ class Asset extends React.Component {
                 bitAsset.options.maximum_force_settlement_volume;
 
             var msspPrice = this.formattedPrice(
-                assetUtils.extractRawFeedPrice(currentFeed),
+                assetUtils.extractRawFeedPrice(asset),
                 false,
                 false,
                 currentFeed.maximum_short_squeeze_ratio / 1000
             );
             var settlePrice = this.formattedPrice(
-                assetUtils.extractRawFeedPrice(currentFeed),
+                assetUtils.extractRawFeedPrice(asset),
                 false,
                 false,
                 1 - settlementOffset / 10000

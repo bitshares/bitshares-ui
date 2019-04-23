@@ -49,7 +49,8 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                     !!asset.get("bitasset") &&
                     asset.get("bitasset").get("settlement_fund") > 0
                 ) {
-                    feedPrice = asset_utils.extractRawFeedPrice(asset);
+                    // if globally settled, feed price == settlement price
+                    feedPrice = asset.get("bitasset").get("settlement_price");
                 } else {
                     feedPrice = asset_utils.extractRawFeedPrice(asset);
                     offset = asset
