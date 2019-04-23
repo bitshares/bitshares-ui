@@ -5,7 +5,7 @@
  */
 import React from "react";
 import Translate from "react-translate-component";
-import {IssuesEnum} from "./Constants";
+import {ISSUES} from "./Constants";
 
 /**
  * Gets the Explorer URL for a specific coin
@@ -24,12 +24,12 @@ const getExplorerUrl = props => {
 
     try {
         if (data !== "" && selectedCoin !== null && transferType !== -1) {
-            if (transferType === IssuesEnum.DEPOSIT) {
+            if (transferType === ISSUES.DEPOSIT) {
                 return `${baseUrl}${transactionsUrl}`.replace(
                     /\${txId}/g,
                     data
                 );
-            } else if (transferType === IssuesEnum.WITHDRAWAL) {
+            } else if (transferType === ISSUES.WITHDRAWAL) {
                 return `${baseUrl}${addressesUrl}`.replace(
                     /\${address}/g,
                     data

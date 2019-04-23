@@ -2155,6 +2155,7 @@
             "deposits": "Deposits",
             "withdrawal": "Withdrawal",
             "withdrawals": "Withdrawals",
+            "other": "Other",
             "disabled_deposits_message":
                 "Deposits have currently been disabled at the request of the coin developers.",
             "disabled_withdrawals_message":
@@ -2164,7 +2165,8 @@
             "close_ticket": "Close Ticket",
             "support_intro_text":
                 "CryptoBridge now offers integrated support where you can manage your support tickets in one place, and see the current status. In order to use this service, you must first log in.",
-            "have_another_issue": "I have another issue",
+            "could_not_find_solution":
+                "I could not find a solution to my issue",
             "new_ticket_intro1":
                 "Please do not open multiple tickets for the same issue - doing so could slow down the processing of your issue.",
             "new_ticket_intro2":

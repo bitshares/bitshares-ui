@@ -7,7 +7,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import AccountImage from "../Account/AccountImage";
 import {getStatusKey, formatTimestamp} from "./SupportUtils";
-import {ISSUES, IssuesEnum} from "./Constants";
+import {ISSUES} from "./Constants";
 
 class Ticket extends React.Component {
     state = {};
@@ -54,23 +54,30 @@ class Ticket extends React.Component {
                 </div>
                 <Translate
                     content={`cryptobridge.support.${
-                        ISSUES[ticket.transferTypeId]
-                    }`}
+                        ISSUES[ticket.issueType.toUpperCase()]
+                    }`.toLowerCase()}
                     component="div"
                     className="ticket-item__field-value"
                 />
             </div>
-            <div className="ticket-item__field">
-                <div className="ticket-item__field-label">Coin Amount:</div>
-                <div className="ticket-item__field-value">
-                    {`${ticket.amount} ${ticket.coin
-                        .replace("bridge.", "")
-                        .toUpperCase()}`}
-                </div>
-            </div>
-            {ticket.transferTypeId === IssuesEnum.DEPOSIT
+            {ticket.amount &&
+                ticket.coin && (
+                    <div className="ticket-item__field">
+                        <div className="ticket-item__field-label">
+                            Coin Amount:
+                        </div>
+                        <div className="ticket-item__field-value">
+                            {`${ticket.amount} ${ticket.coin
+                                .replace("bridge.", "")
+                                .toUpperCase()}`}
+                        </div>
+                    </div>
+                )}
+            {ticket.issueType === ISSUES.DEPOSIT
                 ? this._renderDepositFields(ticket)
-                : this._renderWithdrawalFields(ticket)}
+                : ticket.issueType === ISSUES.WITHDRAWAL
+                    ? this._renderWithdrawalFields(ticket)
+                    : null}
         </div>
     );
 
@@ -106,20 +113,20 @@ class Ticket extends React.Component {
                             </div>
                         ) : null}
                     </div>
-                    <div className="ticket-item__field">
-                        <div className="ticket-item__field-label">
-                            Ticket ID:
+                    {ticket.key && (
+                        <div className="ticket-item__field">
+                            <div className="ticket-item__field-label">
+                                Ticket ID:
+                            </div>
+                            <div className="ticket-item__field-value">
+                                {ticket.key}
+                            </div>
                         </div>
-                        <div className="ticket-item__field-value">
-                            {ticket.key}
-                        </div>
-                    </div>
-                    {ticket.type === 1
+                    )}
+                    {ticket.issueType
                         ? this._renderTransactionFields(ticket)
                         : null}
-                    <div className="ticket-item__field ticket-item__field-message">
-                        <div className="ticket-item__field-label">Message:</div>
-                    </div>
+                    <div className="ticket-item__field ticket-item__field-message" />
                     <div
                         className="ticket-item__comment"
                         dangerouslySetInnerHTML={{

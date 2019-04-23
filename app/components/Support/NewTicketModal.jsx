@@ -9,7 +9,7 @@ import Translate from "react-translate-component";
 import LoadingIndicator from "components/LoadingIndicator";
 import FaqSearch from "./FaqSearch";
 import DepositWithdrawForm from "./NewTicketModal/DepositWithdrawForm";
-import {ISSUES, IssuesEnum} from "./Constants";
+import {ISSUES} from "./Constants";
 import SupportActions from "./actions/SupportActions";
 import Notification from "./Notification";
 import CBModal from "./CBModal";
@@ -19,7 +19,7 @@ export default class NewTicketModal extends Component {
     state = {
         searchTerm: "",
         otherIssue: false,
-        selectedIssueId: -1,
+        selectedIssueType: -1,
         isTicketCreatePending: false,
         ticketCreateError: null,
         sendClicked: false,
@@ -42,15 +42,7 @@ export default class NewTicketModal extends Component {
             searchResults: [],
             searchTerm: "",
             otherIssue: false,
-            selectedIssueId: -1
-            /*disabledCoinsMessage: null,
-            selectedCoin: -1,
-            explorerUrl: "",
-            transactionId: "",
-            transactionNotFound: false,
-            amount: 0,
-            recipientAddress: "",
-            message: ""*/
+            selectedIssueType: -1
         });
     }
 
@@ -74,15 +66,7 @@ export default class NewTicketModal extends Component {
             searchResults: [],
             searchTerm: "",
             otherIssue: true,
-            selectedIssueId: -1
-            /*disabledCoinsMessage: null,
-            selectedCoin: -1,
-            explorerUrl: "",
-            transactionId: "",
-            transactionNotFound: false,
-            amount: 0,
-            recipientAddress: "",
-            message: ""*/
+            selectedIssueType: -1
         });
     };
 
@@ -97,15 +81,14 @@ export default class NewTicketModal extends Component {
 
     /**
      * Handles Issue selection change
-     * @param selectedOption
      * @param event
      * @private
      */
     _handleIssuesChange = event => {
-        const selectedIssueId = parseInt(event.target.value);
+        const selectedIssueType = event.target.value;
 
         this.setState({
-            selectedIssueId
+            selectedIssueType
         });
     };
 
@@ -115,12 +98,12 @@ export default class NewTicketModal extends Component {
      * @type {{label, key : string, value : string}[]}
      * @private
      */
-    _getIssuesOptions = Object.keys(ISSUES).map((issueId, index) => ({
+    _getIssuesOptions = Object.keys(ISSUES).map((issueType, index) => ({
         label: counterpart.translate(
-            `cryptobridge.support.${ISSUES[issueId]}s`
+            `cryptobridge.support.${ISSUES[issueType]}`.toLowerCase()
         ),
         key: `modal-new-ticket__issues-option${index}`,
-        value: issueId
+        value: issueType
     }));
 
     /**
@@ -170,14 +153,21 @@ export default class NewTicketModal extends Component {
      * @returns {string}
      * @private
      */
-    _generateSubject = properties =>
-        `${counterpart
+    _generateSubject = properties => {
+        const type = counterpart
             .translate(
-                `cryptobridge.support.${ISSUES[properties.selectedIssueId]}`
+                `cryptobridge.support.${ISSUES[properties.selectedIssueType]}`
             )
-            .toUpperCase()}: ${properties.amount} ${
-            properties.selectedCoin.backingCoinType
-        } / USER: ${properties.username}`;
+            .toLowerCase();
+        const detail =
+            properties.amount && properties.selectedCoin
+                ? `: ${properties.amount} ${
+                      properties.selectedCoin.backingCoinType
+                  }`
+                : "";
+
+        return `${type}${detail} / USER: ${properties.username}`;
+    };
 
     /**
      * Creates a support ticket from the selection state data
@@ -187,7 +177,6 @@ export default class NewTicketModal extends Component {
      */
     _handleTicketCreate = () => {
         const {formState} = this.state;
-        let ticket = {};
         const username = this.props.account;
 
         this.setState({
@@ -195,29 +184,33 @@ export default class NewTicketModal extends Component {
             ticketCreateError: null
         });
 
-        switch (this.state.selectedIssueId) {
-            case 1:
-            case 2:
-                ticket = {
-                    // type: 1, // Transfer
-                    title: this._generateSubject({
-                        ...this.state,
-                        ...formState,
-                        username
-                    }), // formState.subject
+        let ticket = {
+            title: this._generateSubject({
+                ...this.state,
+                ...formState,
+                username
+            }),
+            issueType: `${this.state.selectedIssueType}`.toLowerCase(),
+            comment: formState.message,
+            username
+        };
+
+        switch (this.state.selectedIssueType) {
+            case ISSUES.DEPOSIT:
+            case ISSUES.WITHDRAWAL:
+                ticket = Object.assign(ticket, {
                     coin: formState.selectedCoin.backingCoinType,
-                    transferTypeId: this.state.selectedIssueId,
                     recipientAddress: formState.recipientAddress,
                     transactionId: formState.transactionId,
-                    amount: formState.amount,
-                    comment: formState.message,
-                    username
-                };
+                    amount: formState.amount
+                });
+                break;
+            case ISSUES.OTHER:
                 break;
             default:
                 log(
-                    `NewTicketModal.jsx:_handleTicketCreate() - unknown selectedIssueId (${
-                        this.state.selectedIssueId
+                    `NewTicketModal.jsx:_handleTicketCreate() - unknown selectedIssueType (${
+                        this.state.selectedIssueType
                     })`
                 );
                 break;
@@ -258,22 +251,28 @@ export default class NewTicketModal extends Component {
     _validateFormFields = () => {
         const {formState} = this.state;
 
-        if (formState && this.state.selectedIssueId !== -1) {
-            if (
-                formState.amount <= 0 ||
-                formState.selectedCoin === null ||
-                formState.message === "" ||
-                !formState.reCaptchaToken
-            ) {
+        if (formState && this.state.selectedIssueType !== -1) {
+            if (formState.message === "" || !formState.reCaptchaToken) {
                 return false;
             }
 
-            switch (this.state.selectedIssueId) {
-                case IssuesEnum.DEPOSIT:
-                    return formState.transactionId !== "";
+            switch (this.state.selectedIssueType) {
+                case ISSUES.DEPOSIT:
+                    return (
+                        formState.transactionId !== "" &&
+                        formState.selectedCoin !== null &&
+                        formState.amount >= 0
+                    );
 
-                case IssuesEnum.WITHDRAWAL:
-                    return formState.recipientAddress !== "";
+                case ISSUES.WITHDRAWAL:
+                    return (
+                        formState.recipientAddress !== "" &&
+                        formState.selectedCoin !== null &&
+                        formState.amount >= 0
+                    );
+
+                case ISSUES.OTHER:
+                    return true;
             }
         }
         return false;
@@ -335,33 +334,46 @@ export default class NewTicketModal extends Component {
                             style={{lineHeight: 1.2, marginBottom: 10}}
                         />
 
-                        <Translate
-                            content="cryptobridge.support.new_ticket_intro2"
-                            component="p"
-                            style={{lineHeight: 1.2, marginBottom: 10}}
-                        />
+                        {!this.state.otherIssue && (
+                            <div>
+                                <Translate
+                                    content="cryptobridge.support.new_ticket_intro2"
+                                    component="p"
+                                    style={{lineHeight: 1.2, marginBottom: 10}}
+                                />
 
-                        <FaqSearch
-                            searchTerm={this.state.searchTerm}
-                            onChange={this._handleSearchTerm}
-                            account={this.props.account}
-                            accountAccess={this.props.accountAccess}
-                        />
+                                <FaqSearch
+                                    searchTerm={this.state.searchTerm}
+                                    onChange={this._handleSearchTerm}
+                                    account={this.props.account}
+                                    accountAccess={this.props.accountAccess}
+                                />
+                            </div>
+                        )}
 
-                        <Translate
-                            content="cryptobridge.support.have_another_issue"
-                            component="button"
-                            className="modal-new-ticket__other-issue-button"
-                            onClick={this._handleOtherIssue}
-                        />
+                        {this.state.searchTerm &&
+                        this.state.searchTerm.length > 2 ? (
+                            <Translate
+                                content="cryptobridge.support.could_not_find_solution"
+                                component="button"
+                                className="modal-new-ticket__other-issue-button"
+                                onClick={this._handleOtherIssue}
+                            />
+                        ) : (
+                            <p />
+                        )}
 
-                        {this._renderIssuesDropdown(this.state.selectedIssueId)}
-                        {[IssuesEnum.DEPOSIT, IssuesEnum.WITHDRAWAL].indexOf(
-                            this.state.selectedIssueId
-                        ) !== -1 && (
+                        {this._renderIssuesDropdown(
+                            this.state.selectedIssueType
+                        )}
+                        {[
+                            ISSUES.DEPOSIT,
+                            ISSUES.WITHDRAWAL,
+                            ISSUES.OTHER
+                        ].indexOf(this.state.selectedIssueType) !== -1 && (
                             <DepositWithdrawForm
                                 onChange={this._onFormChange}
-                                selectedIssueId={this.state.selectedIssueId}
+                                selectedIssueType={this.state.selectedIssueType}
                             />
                         )}
                         {this.state.ticketCreateError ? (
