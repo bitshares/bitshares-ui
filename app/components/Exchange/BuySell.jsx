@@ -103,6 +103,10 @@ class BuySell extends React.Component {
         );
     }
 
+    getDatePickerRef = node => {
+        this.datePricker = node;
+    };
+
     showSettleModal() {
         this.setState({
             isSettleModalVisible: true
@@ -154,6 +158,35 @@ class BuySell extends React.Component {
         this.props.onBuy();
     }
 
+    onExpirationSelectChange = e => {
+        if (e.target.value === "SPECIFIC") {
+            this.datePricker.setOpen(true);
+        } else {
+            this.datePricker.setOpen(false);
+        }
+
+        this.props.onExpirationTypeChange(e);
+    };
+
+    onExpirationSelectClick = e => {
+        if (e.target.value === "SPECIFIC") {
+            if (this.firstClick) {
+                this.secondClick = true;
+            }
+            this.firstClick = true;
+            if (this.secondClick) {
+                this.datePricker.setOpen(true);
+                this.firstClick = false;
+                this.secondClick = false;
+            }
+        }
+    };
+
+    onExpirationSelectBlur = () => {
+        this.firstClick = false;
+        this.secondClick = false;
+    };
+
     render() {
         let {
             type,
@@ -175,6 +208,7 @@ class BuySell extends React.Component {
             hideHeader,
             verticalOrderForm
         } = this.props;
+        const { expirationCustomTime } = this.props;
 
         let clientWidth = this.refs.order_form
             ? this.refs.order_form.clientWidth
@@ -541,10 +575,20 @@ class BuySell extends React.Component {
             ? counterpart.translate("walkthrough.buy_form")
             : counterpart.translate("walkthrough.sell_form");
 
+        let expirationTip;
+
+        if (this.props.expirationType !== "SPECIFIC") {
+            expirationTip = this.props.expirations[this.props.expirationType]
+                .get();
+        }
+
         const expirationsOptionsList = Object.keys(this.props.expirations).map(
-            (key, i) => (
+            key => (
                 <option value={key} key={key}>
-                    {this.props.expirations[key].title}
+                    {key === "SPECIFIC" && expirationCustomTime !== "Specific" ?
+                        moment(expirationCustomTime)
+                            .format("Do MMM YYYY hh:mm A") :
+                        this.props.expirations[key].title}
                 </option>
             )
         );
@@ -1081,38 +1125,35 @@ class BuySell extends React.Component {
                                     content="transaction.expiration"
                                 />
                                 <div className="small-8 expiration-datetime-picker">
-                                    <select
-                                        className={
-                                            this.props.expirationType ===
-                                                "SPECIFIC" && singleColumnForm
-                                                ? "expiration-datetime-picker--select--specific"
-                                                : ""
+                                    <DatePicker
+                                        ref={this.getDatePickerRef}
+                                        className="hide"
+                                        pickerPosition={"bottom center"}
+                                        wrapperClassName={theme}
+                                        timePicker={true}
+                                        min={minExpirationDate}
+                                        inputFormat={"Do MMM YYYY hh:mm A"}
+                                        value={
+                                            expirationCustomTime !== "Specific" &&
+                                            expirationCustomTime
                                         }
-                                        style={{cursor: "pointer"}}
                                         onChange={
-                                            this.props.onExpirationTypeChange
+                                            this.props.onExpirationCustomChange
                                         }
-                                        value={this.props.expirationType}
+                                    />
+                                    <select
+                                        className="cursor-pointer"
+                                        onChange={this.onExpirationSelectChange}
+                                        onClick={this.onExpirationSelectClick}
+                                        onBlur={this.onExpirationSelectBlur}
+                                        data-tip={
+                                            expirationTip &&
+                                            moment(expirationTip)
+                                                .format("Do MMM YYYY hh:mm A")
+                                        }
                                     >
                                         {expirationsOptionsList}
                                     </select>
-                                    {this.props.expirationType ===
-                                    "SPECIFIC" ? (
-                                        <DatePicker
-                                            pickerPosition={"bottom center"}
-                                            wrapperClassName={theme}
-                                            timePicker={true}
-                                            min={minExpirationDate}
-                                            inputFormat={"Do MMM YYYY hh:mm A"}
-                                            value={
-                                                this.props.expirationCustomTime
-                                            }
-                                            onChange={
-                                                this.props
-                                                    .onExpirationCustomChange
-                                            }
-                                        />
-                                    ) : null}
                                 </div>
                             </div>
                             {!singleColumnForm ? (
