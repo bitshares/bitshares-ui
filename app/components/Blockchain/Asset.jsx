@@ -99,6 +99,12 @@ class Asset extends React.Component {
 
             if (!!feedPrice) {
                 try {
+                    let mcr = this.props.asset.getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     Apis.instance()
                         .db_api()
                         .exec("get_call_orders", [
@@ -112,6 +118,7 @@ class Asset extends React.Component {
                                     assets,
                                     this.props.asset.get("id"),
                                     feedPrice,
+                                    mcr,
                                     isPredictionMarket
                                 );
                             });
