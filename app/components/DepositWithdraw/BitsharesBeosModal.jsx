@@ -14,6 +14,7 @@ import {Button, Modal} from "bitshares-ui-style-guide";
 import ls from "common/localStorage";
 import {ChainStore} from "bitsharesjs";
 import WalletDb from "stores/WalletDb";
+import axios from "axios";
 
 const STORAGE_KEY = "__beos__";
 let lsBeos = new ls(STORAGE_KEY);
@@ -312,19 +313,27 @@ class BitsharesBeosModal extends React.Component {
 
     onAccountValidation(url, account) {
         const asset = this.getAssetById(this.state.selectedAssetId);
-
+        if (typeof this._source != typeof undefined) {
+            this._source.cancel();
+        }
+        this._source = axios.CancelToken.source();
         this.setState({
             is_account_creation_checkbox: false,
             is_account_validation: true
         });
         let validation_url =
             url + "/wallets/beos/address-validator?address=" + account;
-        let validation_promise = fetch(validation_url, {
+        return axios(validation_url, {
             method: "get",
-            headers: new Headers({Accept: "application/json"})
-        }).then(response => response.json());
-        validation_promise
+            headers: new Headers({Accept: "application/json"}),
+            cancelToken: this._source.token
+        })
             .then(result => {
+                if (result && result.data) {
+                    result = result.data;
+                } else {
+                    return;
+                }
                 if (result && result.error) {
                     this.setState({
                         is_account_validation: false,
@@ -421,14 +430,24 @@ class BitsharesBeosModal extends React.Component {
                     }
                 }, 200);
             })
-            .catch(() => {
-                this.setState({
-                    is_account_validation: false,
-                    maintenance_error: true,
-                    is_account_creation_checkbox: false,
-                    account_validation_error: false,
-                    no_account_error: false
-                });
+            .catch(error => {
+                if (axios.isCancel(error)) {
+                    this.setState({
+                        is_account_validation: true,
+                        maintenance_error: false,
+                        is_account_creation_checkbox: false,
+                        account_validation_error: false,
+                        no_account_error: false
+                    });
+                } else {
+                    this.setState({
+                        is_account_validation: false,
+                        maintenance_error: true,
+                        is_account_creation_checkbox: false,
+                        account_validation_error: false,
+                        no_account_error: false
+                    });
+                }
             });
     }
 
