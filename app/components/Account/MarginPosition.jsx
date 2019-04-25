@@ -231,6 +231,12 @@ class MarginPosition extends React.Component {
             "settlement_fund"
         ]);
 
+        let mcr = this.props.debtAsset.getIn([
+            "bitasset",
+            "current_feed",
+            "maintenance_collateral_ratio"
+        ]);
+
         let hasGlobalSettlement = settlement_fund > 0 ? true : false;
 
         const balance_asset = has_order
@@ -265,7 +271,7 @@ class MarginPosition extends React.Component {
                 </td>
                 <td style={alignRight} className="column-hide-medium">
                     <FormattedAsset
-                        decimalOffset={5}
+                        decimalOffset={3}
                         amount={collateral_amount}
                         asset={collateral_asset}
                     />
@@ -300,10 +306,10 @@ class MarginPosition extends React.Component {
                 <td style={alignRight} className={"column-hide-small"}>
                     {has_order ? (
                         <FormattedPrice
-                            base_amount={co.call_price.base.amount}
-                            base_asset={co.call_price.base.asset_id}
-                            quote_amount={co.call_price.quote.amount}
-                            quote_asset={co.call_price.quote.asset_id}
+                            base_amount={collateral_amount}
+                            base_asset={collateralAsset.get("id")}
+                            quote_amount={debt_amount * (mcr / 1000)}
+                            quote_asset={debtAsset.get("id")}
                             hide_symbols
                         />
                     ) : null}

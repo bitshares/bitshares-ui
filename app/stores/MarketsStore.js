@@ -374,17 +374,27 @@ class MarketsStore {
             result.calls.forEach(call => {
                 // ChainStore._updateObject(call, false, false);
                 try {
+                    let mcr = this[
+                        this.invertedCalls ? "baseAsset" : "quoteAsset"
+                    ].getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     let callOrder = new CallOrder(
                         call,
                         assets,
                         this.quoteAsset.get("id"),
                         this.feedPrice,
+                        mcr,
                         this.is_prediction_market
                     );
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call.id,
-                            callOrder
+                            callOrder,
+                            mcr
                         );
                     }
                 } catch (err) {
@@ -574,18 +584,28 @@ class MarketsStore {
                     }
                 };
                 try {
+                    let mcr = this[
+                        this.invertedCalls ? "baseAsset" : "quoteAsset"
+                    ].getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     let callOrder = new CallOrder(
                         call_order,
                         assets,
                         this.quoteAsset.get("id"),
-                        this.feedPrice
+                        this.feedPrice,
+                        mcr
                     );
                     // console.log("**** onCallOrderUpdate **", call_order, "isMarginCalled:", callOrder.isMarginCalled());
 
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call_order.id,
-                            callOrder
+                            callOrder,
+                            mcr
                         );
 
                         // Update orderbook
@@ -651,11 +671,20 @@ class MarketsStore {
             this.allCallOrders.forEach(call => {
                 // ChainStore._updateObject(call, false, false);
                 try {
+                    let mcr = this[
+                        this.invertedCalls ? "baseAsset" : "quoteAsset"
+                    ].getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     let callOrder = new CallOrder(
                         call,
                         assets,
                         this.quoteAsset.get("id"),
                         this.feedPrice,
+                        mcr,
                         this.is_prediction_market
                     );
                     if (callOrder.isMarginCalled()) {
@@ -665,7 +694,8 @@ class MarketsStore {
                                 call,
                                 assets,
                                 this.quoteAsset.get("id"),
-                                this.feedPrice
+                                this.feedPrice,
+                                mcr
                             )
                         );
                     }
