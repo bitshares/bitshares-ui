@@ -2154,6 +2154,7 @@
             "deposits": "入金",
             "withdrawal": "出金",
             "withdrawals": "出金",
+            "other": "その他",
             "disabled_deposits_message":
                 "コインの開発者の要望により入金は現在無効になっています。",
             "disabled_withdrawals_message":
@@ -2163,7 +2164,8 @@
             "close_ticket": "チケットをクローズ",
             "support_intro_text":
                 "CryptoBridgeでは、サポートチケットを一箇所で管理し現在のステータスを確認できるサポートシステムを採用しています。このサービスを利用するにはまずログインしてください。",
-            "have_another_issue": "別の問題です",
+            "could_not_find_solution":
+                "問題の解決策が見つかりませんでした",
             "new_ticket_intro1":
                 "同じ問題に対して複数のチケットを作成しないでください。複数作成すると問題の処理が遅くなる場合があります。",
             "new_ticket_intro2":
