@@ -1,14 +1,14 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.190424-rc1",
+    "version": "2.0.190424",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
-    "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
+    "author": "BitShares UI Worker <ui-dev@bitshares.org>",
     "contributors": [
-        "BitShares UI Worker",
+        "Sigve Kvalsvik",
         "James Calfee",
         "Dan Larimer",
-        "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
+        "Valentine Zavgorodnev"
     ],
     "license": "MIT",
     "engines": {
