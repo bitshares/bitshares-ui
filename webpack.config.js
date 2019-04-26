@@ -88,7 +88,7 @@ module.exports = function(env) {
     const apiUrl = process.env.API_URL || "https://api.crypto-bridge.org";
     const supportUrl =
         process.env.API_SUPPORT_URL ||
-        "https://wallet.crypto-bridge.org/v1/support";
+        "https://api.crypto-bridge.org/v1/support";
 
     var plugins = [
         new HtmlWebpackPlugin({
