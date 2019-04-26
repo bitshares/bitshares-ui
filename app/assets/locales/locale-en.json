@@ -2208,6 +2208,9 @@
             "intro_title": "CryptoBridge Support",
             "intro_text":
                 "If you have an issue with a deposit or withdrawal please create ticket"
+        },
+        "benchmark": {
+            "title": "Benchmark"
         }
     }
 }

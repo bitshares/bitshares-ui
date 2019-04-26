@@ -154,11 +154,12 @@ export default class NewTicketModal extends Component {
      * @private
      */
     _generateSubject = properties => {
-        const type = counterpart
-            .translate(
-                `cryptobridge.support.${ISSUES[properties.selectedIssueType]}`
-            )
-            .toLowerCase();
+        const type = counterpart.translate(
+            `cryptobridge.support.${
+                ISSUES[properties.selectedIssueType]
+            }`.toLowerCase(),
+            {locale: "en"}
+        );
         const detail =
             properties.amount && properties.selectedCoin
                 ? `: ${properties.amount} ${

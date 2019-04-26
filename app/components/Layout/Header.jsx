@@ -544,7 +544,7 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("support") !== -1) {
+        if (active.indexOf("support(deprecated)") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
@@ -759,6 +759,32 @@ class Header extends React.Component {
                         className="column-hide-small"
                         component="span"
                         content="account.permissions"
+                    />
+                </a>
+            );
+        }
+        if (active.indexOf("/benchmark") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/benchmark") !== -1
+                    })}
+                >
+                    <span
+                        className={"icon icon-1_5x"}
+                        style={{
+                            position: "relative",
+                            top: "-5px",
+                            left: "-8px"
+                        }}
+                    >
+                        <img src={`${__BASE_URL__}img/benchmark.png`} />
+                    </span>
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="cryptobridge.benchmark.title"
                     />
                 </a>
             );
@@ -1113,59 +1139,35 @@ class Header extends React.Component {
                                     </span>
                                 </a>
                             </li>
-                            {!!createAccountLink ? null : (
-                                <li className="column-hide-small">
-                                    <a
-                                        style={{flexFlow: "row"}}
-                                        onClick={this._showSend.bind(this)}
-                                    >
-                                        <Icon
-                                            size="1_5x"
-                                            style={{
-                                                position: "relative",
-                                                top: 0,
-                                                left: -8
-                                            }}
-                                            name="transfer"
-                                            title="icons.transfer"
-                                        />
-                                        <span>
-                                            <Translate content="header.payments" />
-                                        </span>
-                                    </a>
-                                </li>
-                            )}
-                            <li className="benchmarkItem">
+                            <li className="column-hide-small">
                                 <a
                                     style={{flexFlow: "row"}}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/support"
+                                    )}
                                     className={cnames(
-                                        active.indexOf("benchmark/") !== -1
+                                        active.indexOf("support") !== -1
                                             ? null
                                             : "column-hide-xxs",
                                         {
                                             active:
-                                                active.indexOf("benchmark/") !==
-                                                -1
+                                                active.indexOf("support") !== -1
                                         }
                                     )}
-                                    onClick={this._onNavigate.bind(
-                                        this,
-                                        "/benchmark"
-                                    )}
                                 >
-                                    <span
-                                        className={"icon icon-1_5x"}
+                                    <Icon
+                                        size="1_5x"
                                         style={{
                                             position: "relative",
-                                            top: "-5px",
-                                            left: "-8px"
+                                            top: 0,
+                                            left: -8
                                         }}
-                                    >
-                                        <img
-                                            src={`${__BASE_URL__}img/benchmark.png`}
-                                        />
+                                        name="support"
+                                    />
+                                    <span>
+                                        <Translate content="cryptobridge.support.title" />
                                     </span>
-                                    <span>Benchmark</span>
                                 </a>
                             </li>
                             {/* Dynamic Menu Item */}
@@ -1601,6 +1603,27 @@ class Header extends React.Component {
                                     </li>
                                 ) : null}
 
+                                {!!createAccountLink ? null : (
+                                    <li
+                                        onClick={
+                                            !enableDepositWithdraw
+                                                ? () => {}
+                                                : this._showSend.bind(this)
+                                        }
+                                    >
+                                        <div className="table-cell">
+                                            <Icon
+                                                size="2x"
+                                                name="transfer"
+                                                title="icons.transfer"
+                                            />
+                                        </div>
+                                        <div className="table-cell">
+                                            <Translate content="header.payments" />
+                                        </div>
+                                    </li>
+                                )}
+
                                 <li
                                     className={cnames(
                                         {
@@ -1660,6 +1683,32 @@ class Header extends React.Component {
                                     className={cnames(
                                         {
                                             active:
+                                                active.indexOf("/benchmark") !==
+                                                -1
+                                        },
+                                        "divider"
+                                    )}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/benchmark"
+                                    )}
+                                >
+                                    <div className="table-cell">
+                                        <span className={"icon icon-2x"}>
+                                            <img
+                                                src={`${__BASE_URL__}img/benchmark.png`}
+                                            />
+                                        </span>
+                                    </div>
+                                    <div className="table-cell">
+                                        <Translate content="cryptobridge.benchmark.title" />
+                                    </div>
+                                </li>
+
+                                <li
+                                    className={cnames(
+                                        {
+                                            active:
                                                 active.indexOf("/support") !==
                                                 -1
                                         },
@@ -1688,7 +1737,7 @@ class Header extends React.Component {
                                     })}
                                     onClick={this._onClickOut.bind(
                                         this,
-                                        "https://medium.com/@cryptobridge"
+                                        "https://crypto-bridge.org/blog/"
                                     )}
                                 >
                                     <div className="table-cell">

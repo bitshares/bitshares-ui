@@ -2137,6 +2137,76 @@
                 "不明なアカウントからの提案を絶対に承認しないでください。悪意ある提案を承認した場合はアカウントが盗まれる可能性があります。",
             "proposal_info":
                 "わからない場合は、何もせず私たちのDiscordサーバー%(discordLink)sで尋ねてください。"
+        },
+        "support": {
+            "title": "サポート",
+            "all_tickets": "全チケット",
+            "open": "オープン",
+            "in_progress": "処理中",
+            "waiting_for_customer": "ユーザーの応答待ち",
+            "waiting_for_support": "担当者の応答待ち",
+            "blocked": "ブロック中",
+            "closed": "クローズ済み",
+            "new_ticket": "新しいチケット",
+            "create_ticket": "チケットを作成",
+            "cancel": "キャンセル",
+            "deposit": "入金",
+            "deposits": "入金",
+            "withdrawal": "出金",
+            "withdrawals": "出金",
+            "other": "その他",
+            "disabled_deposits_message":
+                "コインの開発者の要望により入金は現在無効になっています。",
+            "disabled_withdrawals_message":
+                "コインの開発者の要望により出金は現在無効になっています。",
+            "format": "フォーマット",
+            "reply": "返信",
+            "close_ticket": "チケットをクローズ",
+            "support_intro_text":
+                "CryptoBridgeでは、サポートチケットを一箇所で管理し現在のステータスを確認できるサポートシステムを採用しています。このサービスを利用するにはまずログインしてください。",
+            "could_not_find_solution":
+                "問題の解決策が見つかりませんでした",
+            "new_ticket_intro1":
+                "同じ問題に対して複数のチケットを作成しないでください。複数作成すると問題の処理が遅くなる場合があります。",
+            "new_ticket_intro2":
+                "新しいチケットを作成する前に、FAQを検索してください。問題を解決できる可能性があります:",
+            "coin_list_placeholder": "コインを選択してください…",
+            "loading_coin_list": "コインリストをロード中です…",
+            "explorer_instructions":
+                "チケットを作成する前にあなたのトランザクションをブロックチェーンエクスプローラで確認してください:",
+            "not_see_transaction": "トランザクションが見つかりません",
+            "faq_search_placeholder": "検索条件を入力してください…",
+            "faq_search_aria_label": "FAQを検索します",
+            "comment_successfully_posted":
+                "コメントが投稿されました",
+            "enter_your_reply": "返信を入力してください…",
+            "enter_your_message": "英語でメッセージを入力してください…",
+            "enter_amount": "数量を入力してください…",
+            "enter_transaction_id": "トランザクションIDを入力してください…",
+            "enter_recipient_address": "受け取りアドレスを入力してください…",
+            "cannot_fetch_tickets":
+                "申し訳ありませんが、現在サポートチケットを取得することができません。後ほどブラウザをリフレッシュして再度試してください。",
+            "cannot_fetch_comments":
+                "申し訳ありませんが、現在サポートチケットのコメントを取得することができません。後ほどブラウザをリフレッシュして再度試してください。",
+            "cannot_reply_ticket":
+                "チケットへの返信で問題が発生しました。ブラウザをリフレッシュして再度試してください。",
+            "cannot_close_ticket":
+                "チケットのクローズで問題が発生しました。ブラウザをリフレッシュして再度試してください。",
+            "cannot_create_ticket":
+                "チケットの作成で問題が発生しました。ブラウザをリフレッシュして再度試してください。",
+            "amount": "数量",
+            "message": "メッセージ (英語でお願いします)",
+            "transaction_id": "トランザクションID",
+            "recipient_address": "受け取りアドレス",
+            "issue": "問題",
+            "issues_label": "あなたの問題は何でしょうか？",
+            "issues_please_select": "問題の種類を選択してください...",
+            "processing_please_wait": "処理しています。お待ちください...",
+            "saving_reply_please_wait": "返信を保存しています。お待ちください...",
+            "incomplete_form_fields": "すべての必要なフィールドに入力してください",
+            "intro_title": "CryptoBridgeサポート",
+            "intro_text":
+                "入出金で問題が発生した場合はチケットを作成してください"
         }
     }
 }
