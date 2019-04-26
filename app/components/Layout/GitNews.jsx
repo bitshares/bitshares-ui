@@ -5,7 +5,7 @@ export default class GitNews extends React.Component {
     constructor() {
         super();
         this.state = {
-            news: ""
+            news: {}
         };
     }
 
@@ -15,7 +15,7 @@ export default class GitNews extends React.Component {
 
     getNews() {
         fetch(
-            "https://api.github.com/repos/bitshares/bitshares-ui/contents/news.json"
+            "https://api.github.com/repos/blockchainprojects/bitshares-ui/contents/news.json?ref=news_feed_on_the_very_top"
         )
             .then(res => {
                 return res.json();
@@ -28,27 +28,32 @@ export default class GitNews extends React.Component {
             );
     }
 
-    onClose = e => {
-        console.log(e, "I was closed.");
-    };
-
     render() {
         const {news} = this.state;
-        return Object.keys(news).reduce((result, item) => {
-            const now = Date.now();
-            const begin = new Date(item.begin_date.split(".").reverse());
-            const end = new Date(item.end_date.split(".").reverse());
-            if (begin <= now && now <= end)
-                return [
-                    ...result,
-                    <Alert
-                        type={type}
-                        message={item.content}
-                        banner
-                        closable={item.type === "notification"}
-                        onClose={this.onClose}
-                    />
-                ];
-        });
+        const renderAlert = Object.keys(news).length
+            ? Object.values(news).map((item, index) => {
+                  let now = new Date();
+                  now.setHours(0, 0, 0, 0);
+                  now = now.getTime();
+                  const type = item.type === "critical" ? "error" : item.type;
+                  const begin = new Date(
+                      item.begin_date.split(".").reverse()
+                  ).getTime();
+                  const end = new Date(
+                      item.end_date.split(".").reverse()
+                  ).getTime();
+                  if (now >= begin && now <= end)
+                      return (
+                          <Alert
+                              key={index}
+                              type={type}
+                              message={item.content}
+                              banner
+                              closable={type === "info"}
+                          />
+                      );
+              })
+            : null;
+        return renderAlert;
     }
 }
