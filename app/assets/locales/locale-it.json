@@ -2178,6 +2178,78 @@
                 "NON APPROVARE alcuna proposta da account sconosciuti. Il tuo account potrebbe essere rubato se approvi una proposta malevola.",
             "Proposal_info":
                 "In caso di dubbi, non fare nulla e porre domande nel nostro server Discord %(discordLink)s"
+        },
+        "support": {
+            "title": "Supporto",
+            "all_tickets": "Tutti i Ticket",
+            "open": "Aperti",
+            "in_progress": "In lavorazione",
+            "waiting_for_customer": "In attesa di risposta dal cliente",
+            "waiting_for_support": "In attesa di risposta dall'agente",
+            "blocked": "Bloccati",
+            "closed": "Chiusi",
+            "new_ticket": "Nuovo Ticket",
+            "create_ticket": "Crea un nuovo Ticket",
+            "cancel": "Annulla",
+            "deposit": "Deposito",
+            "deposits": "Depositi",
+            "withdrawal": "Prelievo",
+            "withdrawals": "Prelievi",
+            "other": "Altro",
+            "disabled_deposits_message":
+                "I depositi sono disabilitati per richiesta degli sviluppatori della coin.",
+            "disabled_withdrawals_message":
+                "I prelievi sono disabilitati per richiesta degli sviluppatori della coin.",
+            "format": "formatta",
+            "reply": "Rispondi",
+            "close_ticket": "Chiudi Ticket",
+            "support_intro_text":
+                "CryptoBridge ora offre il supporto integrato, dove puoi gestire i tuoi Ticket di supporto in un unico posto, e controllare il loro stato. Per utilizzare il servizio devi effettuare il login.",
+            "could_not_find_solution": "Non trovo alcuna soluzione.",
+            "new_ticket_intro1":
+                "Per favore non aprire più di un ticket per la stessa ragione, questo potrebbe rallentare il nostro lavoro!",
+            "new_ticket_intro2":
+                "Prima di aprire un nuovo ticket, per favore cerca tra le nostre FAQ potenziali soluzioni al tuo problema:",
+            "coin_list_placeholder": "Seleziona l'asset...",
+            "loading_coin_list": "Caricamento lista…",
+            "explorer_instructions":
+                "Prima di aprire un ticket, per favore controlla la tua transazione sull'esploratore di blocchi:",
+            "not_see_transaction": "Non vedo la mia transazione",
+            "faq_search_placeholder":
+                "Per favore inserisci i tuoi termini di ricerca…",
+            "faq_search_aria_label": "Cerca nelle FAQ",
+            "comment_successfully_posted":
+                "Il tuo commento è stato aggiunto correttamente",
+            "enter_your_reply": "Per favore inserisci la tua risposta…",
+            "enter_your_message": "Per favore inserisci il tuo messaggio…",
+            "enter_amount": "Inserisci la quantità…",
+            "enter_transaction_id": "Inserisci l'ID della transazione…",
+            "enter_recipient_address": "Inserisci l'indirizzo di destinazione…",
+            "cannot_fetch_tickets":
+                "Ci dispiace ma non riusciamo a recuperare i tuoi ticket. Per favore aggiorna la pagina del browser o riprova più tardi.",
+            "cannot_fetch_comments":
+                "Ci dispiace ma non riusciamo a recuperare i commenti al tuo ticket. Per favore aggiorna la pagina del browser o riprova più tardi.",
+            "cannot_reply_ticket":
+                "C'è stato un problema nella risposta al tuo ticket. Per favore aggiorna la pagina del browser o riprova più tardi.",
+            "cannot_close_ticket":
+                "C'è stato un problema nel chiusura del tuo ticket. Per favore aggiorna la pagina del browser o riprova più tardi.",
+            "cannot_create_ticket":
+                "C'è stato un problema nell'apertura del tuo ticket. Per favore aggiorna la pagina del browser o riprova più tardi.",
+            "amount": "Quantità",
+            "message": "Messaggio",
+            "transaction_id": "ID della transazione",
+            "recipient_address": "Indirizzo destinatario",
+            "issue": "Problema",
+            "issues_label": "Quale è il tuo problema?",
+            "issues_please_select":
+                "Per favore seleziona il tipo di problema...",
+            "processing_please_wait": "Per favore attendi...",
+            "saving_reply_please_wait": "Salvando la risposta. Attendi...",
+            "incomplete_form_fields":
+                "Per favore inserisci tutti i dati richiesti",
+            "intro_title": "CryptoBridge Support",
+            "intro_text":
+                "Se hai un problema di deposito o prelievo per favore crea un nuovo ticket."
         }
     }
 }
