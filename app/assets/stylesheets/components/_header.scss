@@ -175,7 +175,8 @@ ul.dropdown.header-menu {
         }
         > div:first-of-type {
             padding-top: 5px;
-            > span.icon > svg {
+            > span.icon > svg,
+            img {
                 height: 1.5rem;
                 width: 1.5rem;
             }
