@@ -66,7 +66,13 @@ class SupportActions {
                     method: "GET"
                 })
             )
-                .then(response => response.json())
+                .then(response => {
+                    if (!response || !response.ok || response.status === 404) {
+                        throw new Error("comments not found");
+                    }
+
+                    return response.json();
+                })
                 .then(response => {
                     if (response.isBoom) {
                         throw new Error("Not a valid response");
@@ -86,6 +92,7 @@ class SupportActions {
                     );
 
                     dispatch({
+                        comments: [],
                         isCommentsFetchPending: false,
                         commentsFetchingError: counterpart.translate(
                             "cryptobridge.support.cannot_fetch_comments"
