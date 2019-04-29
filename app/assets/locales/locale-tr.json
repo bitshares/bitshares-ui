@@ -970,7 +970,7 @@
             "rudex": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için Rudex tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "trade": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "win": "",
-            "xbts": ""
+            "xbtsx": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için XBTS tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz."
         },
         "balance": "Mevcut Bakiye",
         "balance_asset": "Current %(asset)s balance",

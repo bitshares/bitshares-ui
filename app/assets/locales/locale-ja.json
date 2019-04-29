@@ -970,7 +970,7 @@
             "rudex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Rudexによって提供されるゲートウェイサービスによって入出金が可能です。",
             "trade": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
             "win": "",
-            "xbts": ""
+            "xbtsx": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、XBTSによって提供されるゲートウェイサービスによって入出金が可能です。"
         },
         "balance": "現在の残高",
         "balance_asset": "現在の%(asset)s残高",
