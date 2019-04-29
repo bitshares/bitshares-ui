@@ -140,12 +140,14 @@ export default class TranslateWithLinks extends React.Component {
                         break;
 
                     case "date":
-
-                        value = counterpart.localize(key.value, {
-                            type: "date",
-                            format: "full"
-                        });
-
+                        if (key.value === null) {
+                            value = "-";
+                        } else {
+                            value = counterpart.localize(key.value, {
+                                type: "date",
+                                format: "full"
+                            });
+                        }
                         break;
 
                     default:

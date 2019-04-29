@@ -1534,9 +1534,13 @@ class Operation extends React.Component {
 
                 let expiryTime = new Date();
 
-                expiryTime.setTime(
-                    block_time.getTime() + op[1].claim_period_seconds * 1000
-                );
+                if (block_time === null) {
+                    expiryTime = null;
+                } else {
+                    expiryTime.setTime(
+                        block_time.getTime() + op[1].claim_period_seconds * 1000
+                    );
+                }
 
                 column = (
                     <span className="right-td">
@@ -1569,7 +1573,6 @@ class Operation extends React.Component {
                 );
                 break;
             case "htlc_redeem":
-
                 color = "success";
                 column = (
                     <span className="right-td">
