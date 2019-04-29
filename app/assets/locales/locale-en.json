@@ -1503,9 +1503,10 @@
         "witness_update": "{account} update its witness info",
         "worker_create": "{account} created a worker proposal with daily pay of {pay}",
         "htlc_create":"{from} locked {amount} for {to} to claim until {lock_period}",
-        "htlc_redeem":"{redeemer} claimed to redeem HTLC",
-        "htlc_redeemed":"{to} redeemed {amount} from HTLC created by {from}",
-        "htlc_extend":"{update_issuer} added {seconds_to_add} seconds to claim period"
+        "htlc_redeem":"{redeemer} request to redeem {amount} from HTLC {htlc_id}",
+        "htlc_redeemed":"{to} redeemed HTLC {htlc_id} of {from}",
+        "htlc_extend":"{update_issuer} added {seconds_to_add} seconds to claim period of HTLC {htlc_id}",
+        "htlc_refund":"{to} got refund of HTLC {htlc_id}"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
@@ -2118,7 +2119,8 @@
             "htlc_create":"HTLC create",
             "htlc_redeem":"HTLC redeem",
             "htlc_redeemed":"HTLC redeemed",
-            "htlc_extend":"HTLC extend"
+            "htlc_extend":"HTLC extend",
+            "htlc_refund":"HTLC refund"
         },
         "vesting_balance_create": "created vesting balance of",
         "waiting": "Waiting for confirmation..",

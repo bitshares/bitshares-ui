@@ -2157,7 +2157,12 @@ class Transaction extends React.Component {
                     );
 
                     break;
-
+                    case "htlc_create":
+                    break;
+                    case "htlc_redeem":
+                    break;
+                    case "htlc_extend":
+                    break;
                 default:
                     console.log("unimplemented tx op:", op);
 

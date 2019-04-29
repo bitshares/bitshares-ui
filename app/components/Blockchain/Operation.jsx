@@ -1569,6 +1569,7 @@ class Operation extends React.Component {
                 );
                 break;
             case "htlc_redeem":
+                color = "success";
                 column = (
                     <span className="right-td">
                         <TranslateWithLinks
@@ -1578,6 +1579,10 @@ class Operation extends React.Component {
                                     type: "account",
                                     value: op[1].redeemer,
                                     arg: "redeemer"
+                                },
+                                {
+                                    value: op[1].htlc_id,
+                                    arg: "htlc_id"
                                 }
                             ]}
                         />
@@ -1599,6 +1604,10 @@ class Operation extends React.Component {
                                     type: "date",
                                     arg: "seconds_to_add",
                                     value: op[1].seconds_to_add
+                                },
+                                {
+                                    value: op[1].htlc_id,
+                                    arg: "htlc_id"
                                 }
                             ]}
                         />
@@ -1606,7 +1615,6 @@ class Operation extends React.Component {
                 );
                 break;
             case "htlc_redeemed":
-                color = "success";
                 column = (
                     <span className="right-td">
                         <TranslateWithLinks
@@ -1630,6 +1638,31 @@ class Operation extends React.Component {
                                         op[1].amount.asset_id === "1.3.0"
                                             ? 5
                                             : null
+                                },
+                                {
+                                    value: op[1].htlc_id,
+                                    arg: "htlc_id"
+                                }
+                            ]}
+                        />
+                    </span>
+                );
+                break;
+            case "htlc_refund":
+                color = "warning";
+                column = (
+                    <span className="right-td">
+                        <TranslateWithLinks
+                            string="operation.htlc_refund"
+                            keys={[
+                                {
+                                    value: op[1].htlc_id,
+                                    arg: "htlc_id"
+                                },
+                                {
+                                    type: "account",
+                                    value: op[1].to,
+                                    arg: "to"
                                 }
                             ]}
                         />
