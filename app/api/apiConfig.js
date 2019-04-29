@@ -506,6 +506,15 @@ export const settingsAPIs = {
             contact: "telegram:Zapata_42"
         }
     ],
+    ES_WRAPPER_LIST: [
+        {
+            url: "https://wrapper.elasticsearch.bitshares.ws",
+            region: "Western Europe",
+            country: "Germany",
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
+        }
+    ],
     DEFAULT_FAUCET: getFaucet().url,
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu"
 };

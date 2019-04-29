@@ -115,6 +115,14 @@
             "num_committee": "Desired Committee Members",
             "num_witnesses": "Desired Witnesses"
         },
+        "export_modal": {
+            "title": "History Export",
+            "use_custom": "Use custom wrapper",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "coinbase_report": "CoinTracking.info Report"
+        },
+        "download_history": "Download History",
         "orders": "Orders",
         "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
         "overview": "Overview",
@@ -2011,7 +2019,7 @@
         "confirm": "Please confirm the transaction",
         "create_key": "Created a public key",
         "csv": "Export to .csv",
-        "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info format",
+        "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info or raw format",
         "custom": "Created a custom operation",
         "delta_collateral": "Collateral change",
         "delta_debt": "Debt change",
