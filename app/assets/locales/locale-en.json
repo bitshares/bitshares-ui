@@ -1,7 +1,7 @@
 {
     "account": {
         "accounts": "Accounts",
-        "activity": "Activity {icon}",
+        "activity": "Activity",
         "advanced": "Advanced",
         "as_collateral": "Collateral",
         "asset": "Asset",
@@ -117,8 +117,10 @@
         },
         "export_modal": {
             "title": "History Export",
-            "full_report": "Generate Full Report",
-            "coinbase_report": "Generate Coinbase Report"
+            "use_custom": "Use custom wrapper",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "coinbase_report": "CoinTracking.info Report"
         },
         "download_history": "Download History",
         "orders": "Orders",

@@ -166,8 +166,7 @@ class AccountHistoryExporter {
                     resolve(opHistory);
                 })
                 .catch(err => {
-                    console.warn("query failed", err);
-                    resolve([]);
+                    reject(err);
                 });
         });
     }

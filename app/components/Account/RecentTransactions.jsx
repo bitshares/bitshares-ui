@@ -14,11 +14,12 @@ import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
 const alignLeft = {textAlign: "left"};
 import LoadingIndicator from "../LoadingIndicator";
-import {Tooltip, Modal, Button, Input} from "bitshares-ui-style-guide";
+import {Tooltip, Modal, Button, Select, Input} from "bitshares-ui-style-guide";
 import AccountHistoryExporter, {
     FULL,
     COINBASE
 } from "../../services/AccountHistoryExporter";
+import {settingsAPIs} from "api/apiConfig";
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
@@ -47,6 +48,7 @@ class RecentTransactions extends React.Component {
 
     constructor(props) {
         super();
+
         this.state = {
             limit: props.limit,
             fetchingAccountHistory: false,
@@ -54,10 +56,21 @@ class RecentTransactions extends React.Component {
             filter: "all",
             accountHistoryError: false,
             showModal: false,
-            esNode: "https://wrapper.elasticsearch.bitshares.ws"
+            esNodeCustom: false,
+            esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
         };
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
+
+        this.useCustom = counterpart.translate(
+            "account.export_modal.use_custom"
+        );
+
+        // https://eswrapper.bitshares.eu/ is not alive
+        // https://wrapper.elasticsearch.bitshares.ws/ is not alive
+        // http://bts-es.clockwork.gr:5000/ is alive
+        // https://explorer.bitshares-kibana.info/ is not alive
+        // http://185.208.208.184:5000/es/ is alive
+        this.showExportModal = this.showExportModal.bind(this);
+        this.hideExportModal = this.hideExportModal.bind(this);
         this.esNodeChange = this.esNodeChange.bind(this);
         this._generateCSV = this._generateCSV.bind(this);
     }
@@ -72,18 +85,31 @@ class RecentTransactions extends React.Component {
     }
 
     esNodeChange(e) {
-        this.setState({
-            esNode: e.target.value
-        });
+        let newValue = null;
+        if (e.target) {
+            newValue = e.target.value;
+        } else {
+            newValue = e;
+        }
+        if (newValue == this.useCustom) {
+            this.setState({
+                esNode: "",
+                esNodeCustom: true
+            });
+        } else {
+            this.setState({
+                esNode: newValue
+            });
+        }
     }
 
-    showModal() {
+    showExportModal() {
         this.setState({
             showModal: true
         });
     }
 
-    hideModal() {
+    hideExportModal() {
         this.setState({
             showModal: false
         });
@@ -140,6 +166,7 @@ class RecentTransactions extends React.Component {
         }
         if (this.state.showModal !== nextState.showModal) return true;
         if (this.state.esNode !== nextState.esNode) return true;
+        if (this.state.esNodeCustom !== nextState.esNodeCustom) return true;
         return false;
     }
 
@@ -201,24 +228,32 @@ class RecentTransactions extends React.Component {
         if (__DEV__) {
             console.log("intializing fetching of ES data");
         }
+        try {
+            const AHE = new AccountHistoryExporter();
 
-        const AHE = new AccountHistoryExporter();
+            this.setState({
+                fetchingAccountHistory: true,
+                showModal: false
+            });
 
-        this.setState({
-            fetchingAccountHistory: true,
-            showModal: false
-        });
+            await AHE.generateCSV(
+                this.props.accountsList,
+                this.state.esNode,
+                exportType
+            );
 
-        await AHE.generateCSV(
-            this.props.accountsList,
-            this.state.esNode,
-            exportType
-        );
-
-        this.setState({
-            fetchingAccountHistory: false,
-            accountHistoryError: null
-        });
+            this.setState({
+                fetchingAccountHistory: false,
+                accountHistoryError: null
+            });
+        } catch (err) {
+            this.setState({
+                fetchingAccountHistory: false,
+                accountHistoryError: err,
+                esNodeCustom: false,
+                esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
+            });
+        }
     }
 
     _onChangeFilter(e) {
@@ -337,14 +372,36 @@ class RecentTransactions extends React.Component {
                     ref="modal"
                     footer={footer}
                     overlay={true}
-                    onCancel={this.hideModal}
+                    onCancel={this.hideExportModal}
                     noCloseBtn={true}
                 >
-                    <Input
-                        type="text"
-                        value={this.state.esNode}
-                        onChange={this.esNodeChange}
-                    />
+                    <p>
+                        <Translate content="account.export_modal.description" />
+                    </p>
+                    {this.state.esNodeCustom ? (
+                        <Input
+                            type="text"
+                            value={this.state.esNode}
+                            onChange={this.esNodeChange}
+                        />
+                    ) : (
+                        <Select
+                            showSearch
+                            value={this.state.esNode}
+                            onChange={this.esNodeChange}
+                            style={{
+                                width: "100%"
+                            }}
+                        >
+                            {settingsAPIs.ES_WRAPPER_LIST.concat([
+                                {url: this.useCustom}
+                            ]).map(wrapper => (
+                                <Select.Option key={wrapper.url}>
+                                    {wrapper.url}
+                                </Select.Option>
+                            ))}
+                        </Select>
+                    )}
                 </Modal>
 
                 <div className="generic-bordered-box">
@@ -396,7 +453,7 @@ class RecentTransactions extends React.Component {
                                 >
                                     <a
                                         className="inline-block iconLinkAndLabel"
-                                        onClick={this.showModal}
+                                        onClick={this.showExportModal}
                                         style={{marginLeft: "1rem"}}
                                     >
                                         <Icon name="excel" size="1x" />
@@ -418,9 +475,7 @@ class RecentTransactions extends React.Component {
                         className="box-content grid-block no-margin"
                         style={
                             !this.props.fullHeight
-                                ? {
-                                      maxHeight: maxHeight - headerHeight
-                                  }
+                                ? {maxHeight: maxHeight - headerHeight}
                                 : null
                         }
                         ref="transactions"
