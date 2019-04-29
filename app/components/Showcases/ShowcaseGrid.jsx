@@ -86,11 +86,14 @@ class ShowcaseGrid extends Component {
             },
             {
                 title: "showcases.direct_debit.title",
-                target: () => {},
+                target: event => {
+                    thiz.props.history.push("/direct-debit");
+                },
                 description: "showcases.direct_debit.description",
                 icon: "direct_debit",
-                disabled: true,
-                comingSoon: true
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.timed_transfer.title",

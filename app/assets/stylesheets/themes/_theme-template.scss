@@ -1422,14 +1422,12 @@
     }
     .exchange-content-header {
         color: $light-text-color;
-        border-bottom: 1px solid $button-bg-color;
-        &.bid {
-            border-bottom: 1px solid $bid-color;
-        }
-        &.ask {
-            border-bottom: 1px solid $ask-color;
-        }
     }
+
+    .exchange-content-header--buy-sell-form {
+        border-bottom: 0 !important;
+    }
+
     // .block-content-header {
     // //text-transform: uppercase;
     // @include RobotoLight;
@@ -2177,6 +2175,12 @@
         }
     }
     .expiration-datetime-picker {
+        &.scaled-orders {
+            > div {
+                margin-top: -5px;
+            }
+        }
+
         > div {
             float: left;
             min-width: 145px;

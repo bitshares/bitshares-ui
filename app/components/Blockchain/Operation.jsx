@@ -20,6 +20,7 @@ import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import PropTypes from "prop-types";
 import {Tooltip} from "bitshares-ui-style-guide";
+import asset_utils from "../../lib/common/asset_utils";
 
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
@@ -779,7 +780,9 @@ class Operation extends React.Component {
                                 },
                                 {
                                     type: "price",
-                                    value: op[1].feed.settlement_price,
+                                    value: asset_utils.extractRawFeedPrice(
+                                        op[1].feed
+                                    ),
                                     arg: "price"
                                 }
                             ]}

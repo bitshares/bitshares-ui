@@ -300,6 +300,13 @@ function BindToChainState(Component, options = {}) {
                 if (prop) {
                     if (prop[0] === "#" && Number.parseInt(prop.substring(1)))
                         prop = "1.2." + prop.substring(1);
+                    if (
+                        prop instanceof Map &&
+                        !!prop.get("name") &&
+                        prop.size == 1
+                    ) {
+                        prop = prop.get("name");
+                    }
                     let new_obj = ChainStore.getAccount(
                         prop,
                         this.default_props["autosubscribe"]
