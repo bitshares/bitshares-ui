@@ -23,14 +23,16 @@ class GoogleReCAPTCHA extends React.Component {
         super(props);
 
         this.recaptchaRef = React.createRef();
+        this.lastPayload = null;
     }
 
     componentWillReceiveProps(nextProps) {
         if (
             __ELECTRON__ &&
-            JSON.stringify(nextProps.payload) !==
-                JSON.stringify(this.props.payload)
+            JSON.stringify(nextProps.payload) !== this.lastPayload
         ) {
+            this.lastPayload = JSON.stringify(nextProps.payload);
+
             this.props.onChange(
                 jwt.sign(
                     Object.assign(nextProps.payload, {ts: Date.now()}),
