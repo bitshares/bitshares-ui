@@ -42,7 +42,8 @@ class Footer extends React.Component {
     componentDidMount() {
         this.checkNewVersionAvailable.call(this);
 
-        this.downloadLink = "https://crypto-bridge.org/#download";
+        this.downloadLink =
+            "https://github.com/CryptoBridge/cryptobridge-ui/releases";
     }
 
     shouldComponentUpdate(nextProps, nextState) {
