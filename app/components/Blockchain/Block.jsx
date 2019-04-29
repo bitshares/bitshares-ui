@@ -31,7 +31,7 @@ class TransactionList extends React.Component {
                         id={`tx_${index}`}
                         name={`tx_${index}`}
                     >
-                        <Transaction key={index} trx={trx} index={index} />
+                        <Transaction block={block} key={index} trx={trx} index={index} />
                     </Element>
                 );
             });
