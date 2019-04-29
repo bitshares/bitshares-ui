@@ -61,6 +61,14 @@ class VestingBalance extends React.Component {
                     <tbody>
                         <tr>
                             <td>
+                                <Translate content="account.member.balance_type" />
+                            </td>
+                            <td>
+                                <span>{vb.balance_type}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <Translate content="account.member.cashback" />
                             </td>
                             <td>
@@ -68,14 +76,6 @@ class VestingBalance extends React.Component {
                                     amount={vb.balance.amount}
                                     asset={vb.balance.asset_id}
                                 />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="account.member.balance_type" />
-                            </td>
-                            <td>
-                                <span>{vb.balance_type}</span>
                             </td>
                         </tr>
                         <tr>
