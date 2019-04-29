@@ -80,7 +80,7 @@ class HtlcActions {
         let tr = WalletApi.new_transaction();
 
         tr.add_type_operation("htlc_redeem", {
-            preimage: preimage,
+            preimage: new Buffer(preimage).toString("hex"),
             fee: {
                 amount: 0,
                 asset_id: "1.3.0"
