@@ -1503,8 +1503,8 @@
         "witness_update": "{account} update its witness info",
         "worker_create": "{account} created a worker proposal with daily pay of {pay}",
         "htlc_create": "{from} locked {amount} for {to} to claim until {lock_period}",
-        "htlc_redeem": "{redeemer} request to redeem {amount} from HTLC {htlc_id}",
-        "htlc_redeemed": "{to} redeemed HTLC {htlc_id} of {from}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
         "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to claim period of HTLC {htlc_id}",
         "htlc_refund": "{to} got refund of HTLC {htlc_id}"
     },

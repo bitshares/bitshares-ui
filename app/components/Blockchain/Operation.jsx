@@ -1569,6 +1569,7 @@ class Operation extends React.Component {
                 );
                 break;
             case "htlc_redeem":
+
                 color = "success";
                 column = (
                     <span className="right-td">

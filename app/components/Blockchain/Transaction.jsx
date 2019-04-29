@@ -2259,12 +2259,9 @@ class Transaction extends React.Component {
                                     content="htlc.redeemer"
                                 />
                             </td>
-                            <td>
-                                <td>{this.linkToAccount(op[1].redeemer)}</td>
-                            </td>
+                            <td>{this.linkToAccount(op[1].redeemer)}</td>
                         </tr>
                     );
-
 
                     break;
                 case "htlc_extend":
@@ -2287,11 +2284,7 @@ class Transaction extends React.Component {
                                     content="htlc.update_issuer"
                                 />
                             </td>
-                            <td>
-                                <td>
-                                    {this.linkToAccount(op[1].update_issuer)}
-                                </td>
-                            </td>
+                            <td>{this.linkToAccount(op[1].update_issuer)}</td>
                         </tr>
                     );
 
