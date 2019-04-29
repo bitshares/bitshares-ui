@@ -1520,14 +1520,122 @@ class Operation extends React.Component {
                     />
                 );
                 break;
-
+            //
             case "htlc_create":
+                const globalObject = ChainStore.getObject("2.0.0");
+                const dynGlobalObject = ChainStore.getObject("2.1.0");
+                const block_time = utils.calc_block_time(
+                    block,
+                    globalObject,
+                    dynGlobalObject
+                );
+
+                op[1].amount.amount = parseFloat(op[1].amount.amount);
+
+                let expiryTime = new Date();
+
+                expiryTime.setTime(
+                    block_time.getTime() + op[1].claim_period_seconds * 1000
+                );
+
+                column = (
+                    <span className="right-td">
+                        <TranslateWithLinks
+                            string="operation.htlc_create"
+                            keys={[
+                                {
+                                    type: "date",
+                                    arg: "lock_period",
+                                    value: expiryTime
+                                },
+                                {
+                                    type: "account",
+                                    value: op[1].from,
+                                    arg: "from"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount",
+                                    decimalOffset:
+                                        op[1].amount.asset_id === "1.3.0"
+                                            ? 5
+                                            : null
+                                },
+                                {type: "account", value: op[1].to, arg: "to"}
+                            ]}
+                        />
+                    </span>
+                );
+                break;
             case "htlc_redeem":
+                column = (
+                    <span className="right-td">
+                        <TranslateWithLinks
+                            string="operation.htlc_redeem"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].redeemer,
+                                    arg: "redeemer"
+                                }
+                            ]}
+                        />
+                    </span>
+                );
+                break;
             case "htlc_extend":
+                column = (
+                    <span className="right-td">
+                        <TranslateWithLinks
+                            string="operation.htlc_extend"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].update_issuer,
+                                    arg: "update_issuer"
+                                },
+                                {
+                                    type: "date",
+                                    arg: "seconds_to_add",
+                                    value: op[1].seconds_to_add
+                                }
+                            ]}
+                        />
+                    </span>
+                );
+                break;
             case "htlc_redeemed":
-            case "htlc_refund":
                 color = "success";
-                // not yet implemented
+                column = (
+                    <span className="right-td">
+                        <TranslateWithLinks
+                            string="operation.htlc_redeemed"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].to,
+                                    arg: "to"
+                                },
+                                {
+                                    type: "account",
+                                    value: op[1].from,
+                                    arg: "from"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount",
+                                    decimalOffset:
+                                        op[1].amount.asset_id === "1.3.0"
+                                            ? 5
+                                            : null
+                                }
+                            ]}
+                        />
+                    </span>
+                );
+
                 break;
             default:
                 console.log("unimplemented op '" + ops[op[0]] + "':", op);
