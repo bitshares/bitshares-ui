@@ -63,11 +63,18 @@ class TableHeader extends React.Component {
                         />
                     </th>
                     <th style={{width: "6%", textAlign: "center"}}>
-                        <input 
-                            type="checkbox" 
-                            className="order-cancel-toggle"
-                            onChange={this.props.onCancelToggle}
-                        />
+                        <Tooltip
+                            title={counterpart.translate(
+                                "exchange.cancel_selected_orders"
+                            )}
+                            placement="left"
+                        >
+                            <input
+                                type="checkbox"
+                                className="order-cancel-toggle"
+                                onChange={this.props.onCancelToggle}
+                            />
+                        </Tooltip>
                     </th>
                 </tr>
             </thead>
@@ -184,22 +191,29 @@ class OrderRow extends React.Component {
                             {isCall
                                 ? null
                                 : counterpart.localize(
-                                    new Date(order.expiration),
-                                    {
-                                        type: "date",
-                                        format: "short_custom"
-                                    }
-                                )}
+                                      new Date(order.expiration),
+                                      {
+                                          type: "date",
+                                          format: "short_custom"
+                                      }
+                                  )}
                         </div>
                     </Tooltip>
                 </td>
                 <td className="text-center" style={{width: "6%"}}>
                     {isCall ? null : (
-                        <input 
-                            type="checkbox"
-                            className="orderCancel"
-                            onChange={this.props.onCheckCancel}
-                        />
+                        <Tooltip
+                            title={counterpart.translate(
+                                "exchange.cancel_selected_orders"
+                            )}
+                            placement="left"
+                        >
+                            <input
+                                type="checkbox"
+                                className="orderCancel"
+                                onChange={this.props.onCheckCancel}
+                            />
+                        </Tooltip>
                     )}
                 </td>
             </tr>
@@ -476,7 +490,7 @@ class MyOpenOrders extends React.Component {
             selectedOrders.push(order.id);
         });
 
-        if(evt.target.checked) {
+        if (evt.target.checked) {
             this.setState({selectedOrders: selectedOrders});
         } else {
             this.setState({selectedOrders: []});
@@ -648,7 +662,10 @@ class MyOpenOrders extends React.Component {
                             base={base}
                             quote={quote}
                             onCancel={this.props.onCancel.bind(this, order.id)}
-                            onCheckCancel={this.onCheckCancel.bind(this, order.id)}
+                            onCheckCancel={this.onCheckCancel.bind(
+                                this,
+                                order.id
+                            )}
                         />
                     );
                 });
@@ -670,7 +687,10 @@ class MyOpenOrders extends React.Component {
                             base={base}
                             quote={quote}
                             onCancel={this.props.onCancel.bind(this, order.id)}
-                            onCheckCancel={this.onCheckCancel.bind(this, order.id)}
+                            onCheckCancel={this.onCheckCancel.bind(
+                                this,
+                                order.id
+                            )}
                         />
                     );
                 });
@@ -704,14 +724,13 @@ class MyOpenOrders extends React.Component {
                 </TransitionWrapper>
             );
 
-            var cancelOrderButton = 
+            var cancelOrderButton = (
                 <div style={{display: "grid"}}>
-                    <Button
-                        onClick={this.cancelSelected.bind(this)}
-                    >
+                    <Button onClick={this.cancelSelected.bind(this)}>
                         <Translate content="exchange.cancel_selected_orders" />
                     </Button>
-                </div>;
+                </div>
+            );
 
             footerContainer =
                 rowsLength > 11 ? (
@@ -727,11 +746,12 @@ class MyOpenOrders extends React.Component {
                                     rowcount={rowsLength}
                                 />
                             </a>
-                            
                         </div>
                         {selectedOrders.length > 0 ? cancelOrderButton : null}
                     </React.Fragment>
-                ) : (selectedOrders.length > 0 ? cancelOrderButton : null);
+                ) : selectedOrders.length > 0 ? (
+                    cancelOrderButton
+                ) : null;
         }
 
         {
@@ -804,7 +824,9 @@ class MyOpenOrders extends React.Component {
                                     type="sell"
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    onCancelToggle={this.onCancelToggle.bind(this)}
+                                    onCancelToggle={this.onCancelToggle.bind(
+                                        this
+                                    )}
                                 />
                             ) : (
                                 <thead>
