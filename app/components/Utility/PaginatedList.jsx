@@ -52,9 +52,8 @@ export default class PaginatedList extends React.Component {
         }
 
         return (
-            <div className="grid-content" style={this.props.style}>
+            <div className="paginated-list" style={this.props.style}>
                 <Table
-                    className="paginated-list"
                     dataSource={currentRows}
                     columns={Array.isArray(header) ? header : []}
                     footer={() => extraRow}

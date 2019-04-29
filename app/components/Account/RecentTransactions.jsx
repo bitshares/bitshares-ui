@@ -11,13 +11,14 @@ import {
 } from "bitsharesjs";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
+import Icon from "../Icon/Icon";
 import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
 import report from "bitshares-report";
 import LoadingIndicator from "../LoadingIndicator";
-import {Tooltip, Select, Icon} from "bitshares-ui-style-guide";
+import {Tooltip, Select} from "bitshares-ui-style-guide";
 const ops = Object.keys(operations);
 import {Link} from "react-router-dom";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -531,17 +532,16 @@ class RecentTransactions extends React.Component {
                                         "transaction.csv_tip"
                                     )}
                                 >
-                                    <Icon
-                                        type="file-excel"
-                                        theme="filled"
-                                        style={{
-                                            verticalAlign: "bottom",
-                                            fontSize: "29px",
-                                            marginLeft: "1rem",
-                                            paddingBottom: "2px"
-                                        }}
+                                    <div
+                                        className="inline-block"
                                         onClick={this._generateCSV.bind(this)}
-                                    />
+                                        style={{
+                                            marginLeft: "1rem",
+                                            verticalAlign: "top"
+                                        }}
+                                    >
+                                        <Icon name="excel" size="1_5x" />
+                                    </div>
                                 </Tooltip>
                             ) : null}
                         </div>
