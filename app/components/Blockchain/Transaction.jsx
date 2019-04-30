@@ -2233,7 +2233,21 @@ class Transaction extends React.Component {
                                 />
                             </td>
                             <td>
-                                <span>{op[1].preimage_hash}</span>
+                                <Tooltip
+                                    placement="bottom"
+                                    title={counterpart.translate(
+                                        "htlc.preimage_hash_explanation"
+                                    )}
+                                >
+                                    <span>
+                                        {"(" +
+                                            op[1].preimage_size +
+                                            ", " +
+                                            op[1].preimage_hash[0] +
+                                            "): " +
+                                            op[1].preimage_hash[1]}
+                                    </span>
+                                </Tooltip>
                             </td>
                         </tr>
                     );

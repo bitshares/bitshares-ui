@@ -2452,6 +2452,6 @@
         "redeemer": "Redeemer",
         "preimage": "Preimage",
         "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
-        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed."
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'"
     }
 }

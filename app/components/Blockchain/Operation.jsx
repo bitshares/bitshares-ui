@@ -1547,6 +1547,7 @@ class Operation extends React.Component {
                 expiryTime.setTime(
                     block_time.getTime() + op[1].claim_period_seconds * 1000
                 );
+
                 column = (
                     <React.Fragment>
                         <span className="right-td">
@@ -1597,10 +1598,12 @@ class Operation extends React.Component {
                                     {counterpart.translate(
                                         "htlc.preimage_hash"
                                     ) +
-                                        "(" +
+                                        " (" +
                                         op[1].preimage_size +
+                                        ", " +
+                                        op[1].preimage_hash[0] +
                                         "): " +
-                                        op[1].preimage_hash}
+                                        op[1].preimage_hash[1]}
                                 </span>
                             </Tooltip>
                         </div>
