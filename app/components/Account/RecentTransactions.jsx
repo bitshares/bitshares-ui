@@ -23,6 +23,13 @@ import {settingsAPIs} from "api/apiConfig";
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
+        if (a.trx_in_block !== b.trx_in_block) {
+            return a.trx_in_block - b.trx_in_block;
+        }
+
+        if (a.op_in_trx !== b.op_in_trx) {
+            return a.op_in_trx - b.op_in_trx;
+        }
         return a.virtual_op - b.virtual_op;
     } else {
         return a.block_num - b.block_num;
