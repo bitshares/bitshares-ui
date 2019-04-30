@@ -2263,6 +2263,18 @@ class Transaction extends React.Component {
                         </tr>
                     );
 
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="htlc.preimage"
+                                />
+                            </td>
+                            <td>{this.linkToAccount(op[1].preimage)}</td>
+                        </tr>
+                    );
+
                     break;
                 case "htlc_extend":
                     rows.push(

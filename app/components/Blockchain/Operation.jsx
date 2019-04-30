@@ -1524,73 +1524,127 @@ class Operation extends React.Component {
             case "htlc_create":
                 const globalObject = ChainStore.getObject("2.0.0");
                 const dynGlobalObject = ChainStore.getObject("2.1.0");
-                const block_time = utils.calc_block_time(
+                let block_time = utils.calc_block_time(
                     block,
                     globalObject,
                     dynGlobalObject
                 );
+                let estimated = false;
+                if (!block_time) {
+                    block_time = utils.calc_block_time(
+                        block,
+                        globalObject,
+                        dynGlobalObject,
+                        true
+                    );
+                    estimated = true;
+                }
 
                 op[1].amount.amount = parseFloat(op[1].amount.amount);
 
                 let expiryTime = new Date();
 
-                if (block_time === null) {
-                    expiryTime = null;
-                } else {
-                    expiryTime.setTime(
-                        block_time.getTime() + op[1].claim_period_seconds * 1000
-                    );
-                }
-
+                expiryTime.setTime(
+                    block_time.getTime() + op[1].claim_period_seconds * 1000
+                );
                 column = (
-                    <span className="right-td">
-                        <TranslateWithLinks
-                            string="operation.htlc_create"
-                            keys={[
-                                {
-                                    type: "date",
-                                    arg: "lock_period",
-                                    value: expiryTime
-                                },
-                                {
-                                    type: "account",
-                                    value: op[1].from,
-                                    arg: "from"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].amount,
-                                    arg: "amount",
-                                    decimalOffset:
-                                        op[1].amount.asset_id === "1.3.0"
-                                            ? 5
-                                            : null
-                                },
-                                {type: "account", value: op[1].to, arg: "to"}
-                            ]}
-                        />
-                    </span>
+                    <React.Fragment>
+                        <span className="right-td">
+                            <TranslateWithLinks
+                                string="operation.htlc_create"
+                                keys={[
+                                    {
+                                        type: "date",
+                                        arg: "lock_period",
+                                        value: expiryTime
+                                    },
+                                    {
+                                        type: "account",
+                                        value: op[1].from,
+                                        arg: "from"
+                                    },
+                                    {
+                                        type: "amount",
+                                        value: op[1].amount,
+                                        arg: "amount",
+                                        decimalOffset:
+                                            op[1].amount.asset_id === "1.3.0"
+                                                ? 5
+                                                : null
+                                    },
+                                    {
+                                        type: "account",
+                                        value: op[1].to,
+                                        arg: "to"
+                                    }
+                                ]}
+                            />
+                            <Tooltip title={"Estimated"}>
+                                {estimated ? "*" : ""}
+                            </Tooltip>
+                        </span>
+                        <div
+                            className="memo"
+                            style={{paddingTop: 5, cursor: "help"}}
+                        >
+                            <Tooltip
+                                placement="bottom"
+                                title={counterpart.translate(
+                                    "htlc.preimage_hash_explanation"
+                                )}
+                            >
+                                <span className="inline-block">
+                                    {counterpart.translate(
+                                        "htlc.preimage_hash"
+                                    ) +
+                                        "(" +
+                                        op[1].preimage_size +
+                                        "): " +
+                                        op[1].preimage_hash}
+                                </span>
+                            </Tooltip>
+                        </div>
+                    </React.Fragment>
                 );
                 break;
             case "htlc_redeem":
                 color = "success";
                 column = (
-                    <span className="right-td">
-                        <TranslateWithLinks
-                            string="operation.htlc_redeem"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].redeemer,
-                                    arg: "redeemer"
-                                },
-                                {
-                                    value: op[1].htlc_id,
-                                    arg: "htlc_id"
-                                }
-                            ]}
-                        />
-                    </span>
+                    <React.Fragment>
+                        <span className="right-td">
+                            <TranslateWithLinks
+                                string="operation.htlc_redeem"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: op[1].redeemer,
+                                        arg: "redeemer"
+                                    },
+                                    {
+                                        value: op[1].htlc_id,
+                                        arg: "htlc_id"
+                                    }
+                                ]}
+                            />
+                        </span>
+                        <div
+                            className="memo"
+                            style={{paddingTop: 5, cursor: "help"}}
+                        >
+                            <Tooltip
+                                placement="bottom"
+                                title={counterpart.translate(
+                                    "htlc.preimage_explanation"
+                                )}
+                            >
+                                <span className="inline-block">
+                                    {counterpart.translate("htlc.preimage") +
+                                        ": " +
+                                        op[1].preimage}
+                                </span>
+                            </Tooltip>
+                        </div>
+                    </React.Fragment>
                 );
                 break;
             case "htlc_extend":
