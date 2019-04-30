@@ -88,18 +88,20 @@ class MarketPickerWrapper extends Component {
         let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
 
-        this.setState({
-            inputValue: toFind,
-            activeSearch: true,
-            marketsList: []
-        });
-
-        /* Don't lookup invalid asset names */
         if (!isValidName) {
+            /* Don't lookup invalid asset names */
             this.setState({
-                activeSearch: false
+                inputValue: toFind,
+                activeSearch: false,
+                marketsList: []
             });
             return;
+        } else {
+            this.setState({
+                inputValue: toFind,
+                activeSearch: true,
+                marketsList: []
+            });
         }
 
         if (this.state.inputValue !== toFind) {
@@ -115,6 +117,10 @@ class MarketPickerWrapper extends Component {
         if (!value && value !== "") return;
 
         let quote = value.toUpperCase();
+
+        if (quote.startsWith("BIT") && quote.length >= 6) {
+            quote = value.substr(3, quote.length - 1);
+        }
 
         this.getAssetList(quote, 10, gatewayAssets);
 
@@ -145,6 +151,9 @@ class MarketPickerWrapper extends Component {
     }
 
     _sortMarketsList(allMarkets, inputValue) {
+        if (inputValue.startsWith("BIT") && inputValue.length >= 6) {
+            inputValue = inputValue.substr(3, inputValue.length - 1);
+        }
         return allMarkets.sort(([, marketA], [, marketB]) => {
             const weightA = this._getMarketSortComponents(marketA);
             const weightB = this._getMarketSortComponents(marketB);
