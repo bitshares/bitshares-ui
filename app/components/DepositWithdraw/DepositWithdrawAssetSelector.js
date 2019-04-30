@@ -131,11 +131,20 @@ class DepositWithdrawAssetSelector extends React.Component {
                     user doesn't have to select a specific gateway to view
                     this information.
                 */}
-                {coinItems.map(coin => (
+
+                {coinItems.length > 0 ? coinItems.map(coin => (
                     <Select.Option key={coin.id} value={coin.label}>
                         {coin.label}
                     </Select.Option>
-                ))}
+                )) : (
+                    <Select.Option disabled key={0} value={0}>
+                        {counterpart.translate(
+                            usageContext == "withdraw"
+                                ? "modal.withdraw.no_assets"
+                                : "modal.deposit.no_assets"
+                        )}
+                    </Select.Option>
+                )}
             </Select>
         );
     }
