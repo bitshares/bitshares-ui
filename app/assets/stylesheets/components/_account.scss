@@ -499,3 +499,13 @@ div.tabs-container {
 
 .account-input-style-guide {
 }
+
+.recent-transactions {
+    .iconLinkAndLabel {
+        span {
+            font-weight: bold;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+        }
+    }
+}

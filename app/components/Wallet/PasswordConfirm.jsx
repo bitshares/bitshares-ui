@@ -3,6 +3,10 @@ import Translate from "react-translate-component";
 import Immutable from "immutable";
 import cname from "classnames";
 import PropTypes from "prop-types";
+import counterpart from "counterpart";
+import {Form} from "bitshares-ui-style-guide";
+
+const FormItem = Form.Item;
 
 export default class PasswordConfirm extends Component {
     static propTypes = {
@@ -64,40 +68,40 @@ export default class PasswordConfirm extends Component {
 
         return (
             <div className={cname({"has-error": errors.size})}>
-                <Translate
-                    component="label"
-                    content={
+                <FormItem
+                    label={counterpart.translate(
                         newPassword ? "wallet.new_password" : "wallet.password"
-                    }
-                />
-                <section>
-                    <input
-                        type="password"
-                        id="current-password"
-                        autoComplete="current-password"
-                        ref="firstPassword"
-                        onChange={this.formChange.bind(this)}
-                        value={password}
-                        tabIndex={tabIndex++}
-                    />
-                </section>
+                    )}
+                >
+                    <section>
+                        <input
+                            type="password"
+                            id="current-password"
+                            autoComplete="current-password"
+                            ref="firstPassword"
+                            onChange={this.formChange.bind(this)}
+                            value={password}
+                            tabIndex={tabIndex++}
+                        />
+                    </section>
+                </FormItem>
 
-                <Translate
-                    component="label"
-                    content={
+                <FormItem
+                    label={counterpart.translate(
                         newPassword ? "wallet.new_confirm" : "wallet.confirm"
-                    }
-                />
-                <section>
-                    <input
-                        type="password"
-                        id="new-password"
-                        autoComplete="new-password"
-                        onChange={this.formChange.bind(this)}
-                        value={confirm}
-                        tabIndex={tabIndex++}
-                    />
-                </section>
+                    )}
+                >
+                    <section>
+                        <input
+                            type="password"
+                            id="new-password"
+                            autoComplete="new-password"
+                            onChange={this.formChange.bind(this)}
+                            value={confirm}
+                            tabIndex={tabIndex++}
+                        />
+                    </section>
+                </FormItem>
 
                 <div style={{paddingBottom: 10}}>
                     {errors.get("password_match") ||
