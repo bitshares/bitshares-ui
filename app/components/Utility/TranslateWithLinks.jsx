@@ -89,7 +89,8 @@ export default class TranslateWithLinks extends React.Component {
                                     asset={key.value.asset_id}
                                     decimalOffset={key.decimalOffset}
                                     hide_asset
-                                />&nbsp;
+                                />
+                                &nbsp;
                                 {this.linkToAsset(key.value.asset_id)}
                             </span>
                         );
@@ -137,6 +138,17 @@ export default class TranslateWithLinks extends React.Component {
                                 title={title}
                             />
                         );
+                        break;
+
+                    case "date":
+                        if (key.value === null) {
+                            value = "-";
+                        } else {
+                            value = counterpart.localize(key.value, {
+                                type: "date",
+                                format: "full"
+                            });
+                        }
                         break;
 
                     case "delay":
