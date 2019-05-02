@@ -1568,7 +1568,7 @@ class Asset extends React.Component {
                             )}
                             {sortedCollateralBids.length && ")"}
                         </th>
-                        <th>
+                        <th className="column-hide-small">
                             <Translate content="transaction.cumulative_borrow_amount" />
                             {sortedCollateralBids.length && " ("}
                             {sortedCollateralBids.length && (
