@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.190522-rc1",
+    "version": "3.1.190522-rc1",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -241,7 +241,7 @@
         "husky": "^0.14.3",
         "jest-cli": "^24.7.1",
         "less-plugin-precompile-import": "git+https://github.com/gibbsfromncis/less-plugin-precompile-import.git#166550452515c03c0d497cae97bf58ba15ca1f84",
-        "markdown-loader": "^2.0.2",
+        "markdown-loader": "^5.0.0",
         "mini-css-extract-plugin": "^0.4.0",
         "mocha": "^5.1.1",
         "node-libs-browser": "^1.0.0",
