@@ -132,13 +132,11 @@ class DepositWithdrawAssetSelector extends React.Component {
                     this information.
                 */}
 
-                {coinItems.length > 0 ? (
-                    coinItems.map(coin => (
-                        <Select.Option key={coin.id} value={coin.label}>
-                            {coin.label}
-                        </Select.Option>
-                    ))
-                ) : (
+                {coinItems.length > 0 ? coinItems.map(coin => (
+                    <Select.Option key={coin.id} value={coin.label}>
+                        {coin.label}
+                    </Select.Option>
+                )) : (
                     <Select.Option disabled key={0} value={0}>
                         {counterpart.translate(
                             usageContext == "withdraw"
