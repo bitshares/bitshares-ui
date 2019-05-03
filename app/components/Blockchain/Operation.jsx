@@ -709,11 +709,6 @@ class Operation extends React.Component {
                                             quote: quoteAmount
                                         },
                                         arg: "price"
-                                    },
-                                    {
-                                        type: "delay",
-                                        value: baseAmount,
-                                        arg: "delay"
                                     }
                                 ]}
                             />
@@ -734,11 +729,6 @@ class Operation extends React.Component {
                                         type: "amount",
                                         value: op[1].amount,
                                         arg: "amount"
-                                    },
-                                    {
-                                        type: "delay",
-                                        value: op[1].amount,
-                                        arg: "delay"
                                     }
                                 ]}
                             />

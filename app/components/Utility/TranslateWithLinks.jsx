@@ -9,7 +9,6 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
-import EstimatedDelay from "../Utility/EstimatedDelay";
 
 /**
  *  Given a string and a list of interpolation parameters, this component
@@ -149,15 +148,6 @@ export default class TranslateWithLinks extends React.Component {
                                 format: "full"
                             });
                         }
-                        break;
-
-                    case "delay":
-                        value = (
-                            <EstimatedDelay
-                                asset={key.value.asset_id}
-                                amount={key.value.amount}
-                            />
-                        );
                         break;
 
                     default:
