@@ -1485,7 +1485,7 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}. Estimated delay: {delay} hours",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
-        "asset_settle_instant": "{account} settled {amount} instantly at {price}. Estimated delay: {delay} hours",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}.",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers": "{account} updated the feed producers for the asset {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
