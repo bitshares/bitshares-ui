@@ -124,11 +124,13 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
 class ModalContent extends React.Component {
     static propTypes = {
         asset: PropTypes.instanceOf(Immutable.Map),
+        core: PropTypes.instanceOf(Immutable.Map),
         account: PropTypes.instanceOf(Immutable.Map)
     };
 
     static defaultProps = {
         asset: Immutable.Map(),
+        core: Immutable.Map(),
         account: Immutable.Map()
     };
 
@@ -153,11 +155,14 @@ class ModalContent extends React.Component {
         }
     }
 
-    getMaxRemainingVolume() {
-        const { getDynamicObject, asset } = this.props;
+    getSettlementInfo() {
+        const { getDynamicObject, asset, core } = this.props;
         const dynamic = getDynamicObject(asset.get("dynamic_asset_data_id"));
         const currentSupply = dynamic && dynamic.size ?
             dynamic.get("current_supply") :
+            0;
+        const maintenanceInterval = core && core.size ?
+            core.getIn(["parameters", "maintenance_interval"]) :
             0;
         const bitAsset = asset.get("bitasset").toJS();
         const currentSettled = bitAsset.force_settled_volume;
@@ -166,7 +171,13 @@ class ModalContent extends React.Component {
         const remainingVolume = !currentSettled ?
             maxSettlementVolume :
             maxSettlementVolume - currentSettled;
-        return { maxSettlementVolume, remainingVolume };
+        const settlementDelay = bitAsset.options.force_settlement_delay_sec;
+        return {
+            maxSettlementVolume,
+            remainingVolume,
+            maintenanceInterval,
+            settlementDelay
+        };
     }
 
     onAmountChanged({amount, asset}) {
@@ -309,7 +320,16 @@ class ModalContent extends React.Component {
             </Button>
         ];
 
-        const { maxSettlementVolume, remainingVolume } = this.getMaxRemainingVolume();
+        const {
+            maxSettlementVolume,
+            remainingVolume,
+            settlementDelay,
+            maintenanceInterval
+        } = this.getSettlementInfo();
+
+        const estimatedDelay = !isGlobalSettled ? (settlementDelay +
+            Math.floor(amount / maxSettlementVolume) *
+            maintenanceInterval) / 3600 : 0;
 
         return (
             <Modal
@@ -337,8 +357,12 @@ class ModalContent extends React.Component {
                             "exchange.settle_delay",
                             {
                                 hours: options.force_settlement_delay_sec / 3600
-                            }
-                        )}
+                            })}
+                        description={estimatedDelay ? counterpart.translate(
+                            "modal.settle.delay",
+                            {
+                                amount: estimatedDelay
+                            }) : null}
                         type="info"
                         showIcon
                     />
@@ -389,7 +413,9 @@ class ModalContent extends React.Component {
 }
 
 ModalContent = AssetWrapper(ModalContent, {
-    propNames: ["asset"], withDynamic: true
+    propNames: ["asset", "core"],
+    withDynamic: true,
+    defaultProps: { core: "2.0.0" }
 });
 
 class SettleModal extends React.Component {

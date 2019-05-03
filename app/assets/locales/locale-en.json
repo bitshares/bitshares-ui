@@ -1409,7 +1409,8 @@
             "submit": "Settle asset",
             "title": "Request settlement of %(asset)s",
             "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
-            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s"
+            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
+            "delay": "Estimated delay: %(amount)s hours"
         },
         "withdraw": {
             "address": "Withdraw to Address",
