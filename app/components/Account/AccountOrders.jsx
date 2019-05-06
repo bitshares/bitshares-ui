@@ -495,7 +495,7 @@ class AccountOrders extends React.Component {
             if (marketOrders[market].length) {
                 tables = tables.concat(
                     marketOrders[market].sort((a, b) => {
-                        return a.props.price - b.props.price;
+                        return a.price - b.price;
                     })
                 );
                 // tables.push(

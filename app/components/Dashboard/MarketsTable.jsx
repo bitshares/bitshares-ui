@@ -8,7 +8,8 @@ import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import utils from "common/utils";
 import PaginatedList from "../Utility/PaginatedList";
-import {Input, Icon, Tooltip} from "bitshares-ui-style-guide";
+import {Input, Tooltip} from "bitshares-ui-style-guide";
+import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
 import {Link} from "react-router-dom";
 
@@ -19,12 +20,13 @@ class MarketsTable extends React.Component {
             filter: "",
             showFlip: false,
             showHidden: false,
-            markets: [],
-            sortBy: "volumeQuote",
-            sortDirection: true
+            markets: []
         };
 
         this.update = this.update.bind(this);
+        for (let key in this.sortFunctions) {
+            this.sortFunctions[key] = this.sortFunctions[key].bind(this);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -38,13 +40,6 @@ class MarketsTable extends React.Component {
 
     componentWillUnmount() {
         ChainStore.unsubscribe(this.update);
-    }
-
-    _onToggleSort(key) {
-        if (key === this.state.sortBy) {
-            return this.setState({sortDirection: !this.state.sortDirection});
-        }
-        this.setState({sortBy: key});
     }
 
     update(nextProps = null) {
@@ -108,6 +103,63 @@ class MarketsTable extends React.Component {
         });
     }
 
+    sort(aPrice, bPrice) {
+        const convert = price => {
+            price = price.replace(/\,/g, "");
+            if (price.includes("k")) price = price.replace(/k/g, "") * 1000;
+            return price;
+        };
+        aPrice = convert(aPrice);
+        bPrice = convert(bPrice);
+
+        if (aPrice === null && bPrice !== null) {
+            return 1;
+        } else if (aPrice !== null && bPrice === null) {
+            return -1;
+        } else {
+            return aPrice - bPrice;
+        }
+    }
+
+    sortFunctions = {
+        alphabetic: function(a, b, force) {
+            if (a.key > b.key) return force ? 1 : -1;
+            if (a.key < b.key) return force ? -1 : 1;
+            return 0;
+        },
+        priceValue: function(a, b) {
+            let aPrice = a.price.props.children;
+            let bPrice = b.price.props.children;
+            if (aPrice && bPrice) {
+                return this.sort(aPrice, bPrice);
+            } else {
+                return this.sortFunctions.alphabetic(a, b, true);
+            }
+        },
+        volumeValue: function(a, b) {
+            let aPrice = a.volume;
+            let bPrice = b.volume;
+            if (aPrice && bPrice) {
+                return this.sort(aPrice, bPrice);
+            } else {
+                return this.sortFunctions.alphabetic(a, b, true);
+            }
+        },
+        changeValue: function(a, b) {
+            let aValue = a.hour_24.props.children[0];
+            let bValue = b.hour_24.props.children[0];
+
+            if (aValue && bValue) {
+                let aChange =
+                    parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
+                let bChange =
+                    parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
+
+                return aChange - bChange;
+            }
+        }
+    };
+
     getHeader() {
         const {showFlip, showHidden} = this.state;
         return [
@@ -153,69 +205,30 @@ class MarketsTable extends React.Component {
                       }
                   },
             {
-                title: (
-                    <Translate
-                        content="exchange.price"
-                        onClick={this._onToggleSort.bind(this, "price")}
-                    />
-                ),
+                title: <Translate content="exchange.price" />,
                 dataIndex: "price",
                 align: "right",
+                sorter: this.sortFunctions.priceValue,
                 render: item => {
-                    return (
-                        <span
-                            className={cnames("column-hide-small is-sortable", {
-                                "is-active": this.state.sortBy === "price"
-                            })}
-                            style={{whiteSpace: "nowrap"}}
-                        >
-                            {item}
-                        </span>
-                    );
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="account.hour_24_short"
-                        onClick={this._onToggleSort.bind(this, "change")}
-                    />
-                ),
+                title: <Translate content="account.hour_24_short" />,
                 dataIndex: "hour_24",
                 align: "right",
+                sorter: this.sortFunctions.changeValue,
                 render: item => {
-                    return (
-                        <span
-                            className={cnames("is-sortable", {
-                                "is-active": this.state.sortBy === "change"
-                            })}
-                            style={{whiteSpace: "nowrap"}}
-                        >
-                            {item}
-                        </span>
-                    );
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="exchange.volume"
-                        onClick={this._onToggleSort.bind(this, "volumeQuote")}
-                    />
-                ),
+                title: <Translate content="exchange.volume" />,
                 dataIndex: "volume",
                 align: "right",
+                sorter: this.sortFunctions.volumeValue,
                 render: item => {
-                    return (
-                        <span
-                            className={cnames("is-sortable", {
-                                "is-active": this.state.sortBy === "volumeQuote"
-                            })}
-                            style={{whiteSpace: "nowrap"}}
-                        >
-                            {item}
-                        </span>
-                    );
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
                 }
             },
             showFlip
@@ -305,6 +318,10 @@ class MarketsTable extends React.Component {
 
         let marketID = `${quote}_${base}`;
 
+        const starClass = this.props.starredMarkets.has(marketID)
+            ? "gold-star"
+            : "grey-star";
+
         return {
             key: marketID,
             star: (
@@ -312,12 +329,9 @@ class MarketsTable extends React.Component {
                     onClick={this._toggleFavoriteMarket.bind(this, quote, base)}
                 >
                     <Icon
-                        type="star"
-                        theme={
-                            this.props.starredMarkets.has(marketID)
-                                ? "filled"
-                                : null
-                        }
+                        style={{cursor: "pointer"}}
+                        className={starClass}
+                        name="fi-star"
                         title="icons.fi_star.market"
                     />
                 </div>
@@ -362,15 +376,22 @@ class MarketsTable extends React.Component {
                     style={{textAlign: "right"}}
                     className={cnames(changeClass)}
                 >
-                    {!marketStats ? null : marketStats.change}%
+                    {!marketStats || !marketStats.change
+                        ? null
+                        : marketStats.change}
+                    %
                 </span>
             ),
-            volume: !marketStats
-                ? null
-                : utils.format_volume(marketStats.volumeQuote, basePrecision),
+            volume:
+                !marketStats || !marketStats.volumeQuote
+                    ? null
+                    : utils.format_volume(
+                          marketStats.volumeQuote,
+                          basePrecision
+                      ),
             flip:
                 inverted === null || !this.props.isFavorite ? null : (
-                    <td className="column-hide-small">
+                    <span className="column-hide-small">
                         <a
                             onClick={this._handleFlip.bind(
                                 this,
@@ -380,7 +401,7 @@ class MarketsTable extends React.Component {
                         >
                             <Icon name="shuffle" title="icons.shuffle" />
                         </a>
-                    </td>
+                    </span>
                 ),
             hide: (
                 <Tooltip
@@ -395,8 +416,13 @@ class MarketsTable extends React.Component {
                     onClick={this._handleHide.bind(this, row, !row.isHidden)}
                 >
                     <Icon
-                        type={isHidden ? "plus-circle" : "close-circle"}
-                        style={{height: "14px"}}
+                        name={isHidden ? "plus-circle" : "cross-circle"}
+                        title={
+                            isHidden
+                                ? "icons.plus_circle.show_market"
+                                : "icons.cross_circle.hide_market"
+                        }
+                        className="icon-14px"
                     />
                 </Tooltip>
             )
@@ -404,65 +430,18 @@ class MarketsTable extends React.Component {
     }
 
     render() {
-        let {markets, showFlip, showHidden, filter} = this.state;
+        let {markets, showHidden, filter} = this.state;
 
         const marketRows = markets
             .filter(m => {
                 if (!!filter || m.isStarred) return true;
                 if (
-                    this.props.onlyLiquid &&
+                    this.props.onlyLiquid ||
                     (m.marketStats && "volumeBase" in m.marketStats)
                 ) {
-                    return !!m.marketStats.volumeBase;
+                    return !!m.marketStats.volumeBase || false;
                 } else {
                     return true;
-                }
-            })
-            .sort((a, b) => {
-                const {sortBy, sortDirection} = this.state;
-
-                switch (sortBy) {
-                    case "price":
-                        if (a.marketStats.price && b.marketStats.price) {
-                            if (sortDirection) {
-                                return (
-                                    b.marketStats.price.toReal() -
-                                    a.marketStats.price.toReal()
-                                );
-                            }
-
-                            return (
-                                a.marketStats.price.toReal() -
-                                b.marketStats.price.toReal()
-                            );
-                        }
-                        break;
-
-                    case "change":
-                        if (sortDirection) {
-                            return (
-                                parseFloat(b.marketStats[sortBy]) -
-                                parseFloat(a.marketStats[sortBy])
-                            );
-                        } else {
-                            return (
-                                parseFloat(a.marketStats[sortBy]) -
-                                parseFloat(b.marketStats[sortBy])
-                            );
-                        }
-
-                        break;
-
-                    default:
-                        if (sortDirection) {
-                            return (
-                                b.marketStats[sortBy] - a.marketStats[sortBy]
-                            );
-                        } else {
-                            return (
-                                a.marketStats[sortBy] - b.marketStats[sortBy]
-                            );
-                        }
                 }
             })
             .map(row => {
