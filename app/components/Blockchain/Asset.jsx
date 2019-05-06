@@ -27,6 +27,7 @@ import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
 import {Tooltip, Icon, Table, Tabs as AntTabs} from "bitshares-ui-style-guide";
 // TODO: Replace remaining old style Tabs with new
+import MarketsActions from "actions/MarketsActions";
 
 class AssetFlag extends React.Component {
     render() {
@@ -316,7 +317,12 @@ class Asset extends React.Component {
                 var marketName = market + "/" + symbol;
                 return (
                     <span key={marketID}>
-                        <Link to={`/market/${marketID}`}>{marketName}</Link>
+                        <Link
+                            to={`/market/${marketID}`}
+                            onClick={() => MarketsActions.switchMarket()}
+                        >
+                            {marketName}
+                        </Link>
                         &nbsp;
                     </span>
                 );
@@ -349,8 +355,8 @@ class Asset extends React.Component {
         let preferredMarket = description.market
             ? description.market
             : core_asset
-                ? core_asset.get("symbol")
-                : "BTS";
+            ? core_asset.get("symbol")
+            : "BTS";
         if (isPrediction) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
@@ -387,6 +393,7 @@ class Asset extends React.Component {
                 <Link
                     className="button market-button"
                     to={`/market/${asset.symbol}_${preferredMarket}`}
+                    onClick={() => MarketsActions.switchMarket()}
                 >
                     <Translate content="exchange.market" />
                 </Link>

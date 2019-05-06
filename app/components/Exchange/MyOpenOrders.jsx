@@ -94,8 +94,8 @@ class ExchangeOrderRow extends React.Component {
         let tdClass = isCall
             ? "orderHistoryCall"
             : isBid
-                ? "orderHistoryBid"
-                : "orderHistoryAsk";
+            ? "orderHistoryBid"
+            : "orderHistoryAsk";
 
         return (
             <tr key={order.id}>

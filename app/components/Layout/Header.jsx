@@ -29,6 +29,7 @@ import {withRouter} from "react-router-dom";
 import {Notification} from "bitshares-ui-style-guide";
 import AccountBrowsingMode from "../Account/AccountBrowsingMode";
 import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
+import MarketsActions from "actions/MarketsActions";
 
 import {getLogo} from "branding";
 var logo = getLogo();
@@ -209,6 +210,7 @@ class Header extends React.Component {
             });
         }
 
+        MarketsActions.switchMarket();
         this.props.history.push(route);
         this._closeDropdown();
     }

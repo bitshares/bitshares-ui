@@ -14,6 +14,7 @@ import {Asset, Price} from "common/MarketClasses";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
 import {Tooltip} from "bitshares-ui-style-guide";
+import MarketsActions from "actions/MarketsActions";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -91,6 +92,7 @@ class FormattedPrice extends React.Component {
         e.preventDefault();
         const {marketName, first, second} = this.state;
         const inverted = this.props.marketDirections.get(marketName);
+        MarketsActions.switchMarket();
         this.props.history.push(
             `/market/${
                 !inverted ? first.get("symbol") : second.get("symbol")
