@@ -550,6 +550,8 @@ class AccountVoting extends React.Component {
             );
         }
 
+        let pollWorkerBudget = workerBudget;
+
         let now = new Date();
         let workerArray = this._getWorkerArray();
 
@@ -725,11 +727,11 @@ class AccountVoting extends React.Component {
             })
             .map((worker, index) => {
                 let dailyPay = parseInt(worker.get("daily_pay"), 10);
-                workerBudget = workerBudget - dailyPay;
+                pollWorkerBudget = pollWorkerBudget - dailyPay;
                 let votes =
                     worker.get("total_votes_for") -
                     worker.get("total_votes_against");
-                if (workerBudget <= 0 && !voteThreshold) {
+                if (pollWorkerBudget <= 0 && !voteThreshold) {
                     voteThreshold = votes;
                 }
                 if (voteThreshold && votes < voteThreshold) return null;
@@ -737,7 +739,7 @@ class AccountVoting extends React.Component {
                 return (
                     <WorkerApproval
                         preferredUnit={preferredUnit}
-                        rest={workerBudget + dailyPay}
+                        rest={pollWorkerBudget + dailyPay}
                         rank={index + 1}
                         key={worker.get("id")}
                         worker={worker.get("id")}
