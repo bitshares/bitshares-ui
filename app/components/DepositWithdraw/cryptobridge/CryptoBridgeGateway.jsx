@@ -86,7 +86,7 @@ class CryptoBridgeGateway extends React.Component {
         const coinIssuer = {
             name: "cryptobridge",
             id: __TESTNET__ || __DEVNET__ ? "1.2.18" : "1.2.374566",
-            support: "support@crypto-bridge.org"
+            support: "https://wallet.crypto-bridge.org/support"
         };
 
         if (!coins.length) {
@@ -265,7 +265,7 @@ class CryptoBridgeGateway extends React.Component {
                                 <br />
                                 <br />
                                 <a
-                                    href={"mailto:" + coinIssuer.support}
+                                    href={coinIssuer.support}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
