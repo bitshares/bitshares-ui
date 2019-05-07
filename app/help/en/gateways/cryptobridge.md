@@ -6,4 +6,4 @@ CryptoBridge is a gateway service built on the Bitshares Exchange. A gateway ser
 [https://crypto-bridge.org](https://crypto-bridge.org)
 
 ## Support
-For support, please contact Crypto Bridge support at support@crypto-bridge.org
+For support, please contact Crypto Bridge support at [https://wallet.crypto-bridge.org/support](https://wallet.crypto-bridge.org/support)
