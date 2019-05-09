@@ -513,8 +513,7 @@ class RecentTransactions extends React.Component {
                                         className="inline-block iconLinkAndLabel"
                                         onClick={this.showExportModal}
                                         style={{
-                                            marginLeft: "1rem",
-                                            verticalAlign: "top"
+                                            marginLeft: "1rem"
                                         }}
                                     >
                                         <Icon name="excel" size="1x" />
