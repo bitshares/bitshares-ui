@@ -39,7 +39,9 @@ export default class BrowserSupportModal extends React.Component {
                     <br />
 
                     <p>
-                        <a onClick={this._openLink}>Google Chrome</a>
+                        <a className="external-link" onClick={this._openLink}>
+                            Google Chrome
+                        </a>
                     </p>
                 </div>
             </Modal>

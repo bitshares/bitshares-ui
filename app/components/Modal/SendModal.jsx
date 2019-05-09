@@ -414,7 +414,9 @@ class SendModal extends React.Component {
                 should =>
                     should
                         ? this.setState(
-                              {fee_asset_id: asset_id},
+                              {
+                                  fee_asset_id: asset_id
+                              },
                               this._updateFee
                           )
                         : this.setState({
@@ -740,10 +742,9 @@ class SendModal extends React.Component {
                                                 this.props.currentAccount
                                             }
                                             account={this.props.currentAccount}
-                                            size={60}
+                                            size={35}
                                             typeahead={true}
                                             tabIndex={tabIndex++}
-                                            hideImage
                                             locked={true}
                                         />
                                         <div className="modal-separator" />
@@ -758,10 +759,9 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onFromAccountChanged.bind(
                                         this
                                     )}
-                                    size={60}
+                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
-                                    hideImage
                                     locked={!!propose ? undefined : true}
                                 />
 
@@ -773,10 +773,9 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onToAccountChanged.bind(
                                         this
                                     )}
-                                    size={60}
+                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
-                                    hideImage
                                 />
 
                                 <AmountSelector

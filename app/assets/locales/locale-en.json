@@ -62,6 +62,7 @@
         "member": {
             "annual": "Annual subscriber",
             "available": "Available to claim",
+            "balance_type": "Type",
             "basic": "Basic member",
             "cashback": "Vesting balance amount",
             "claim": "Claim now",
@@ -115,6 +116,14 @@
             "num_committee": "Desired Committee Members",
             "num_witnesses": "Desired Witnesses"
         },
+        "export_modal": {
+            "title": "History Export",
+            "use_custom": "Use custom wrapper",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "coinbase_report": "CoinTracking.info Report"
+        },
+        "download_history": "Download History",
         "orders": "Orders",
         "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
         "overview": "Overview",
@@ -489,6 +498,7 @@
         "buy_min": "Buy at least",
         "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
+        "cancel_selected_orders": "Cancel selected order(s)",
         "call": "Call Price",
         "change": "Change",
         "chart_height": "Chart height (pixels)",
@@ -976,7 +986,7 @@
             "rudex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Rudex.",
             "trade": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
             "win": "",
-            "xbts": ""
+            "xbtsx": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by XBTS."
         },
         "balance": "Current balance",
         "balance_asset": "Current %(asset)s balance",
@@ -1332,6 +1342,7 @@
             "close": "Close",
             "header": "Deposit to %(account_name)s",
             "header_short": "Deposit",
+            "no_assets": "No depositable assets available",
             "submit": "Deposit"
         },
         "deposit_withdraw": {
@@ -1411,6 +1422,7 @@
             "gateway_fee": "Gateway Fee",
             "header": "Withdraw",
             "memo": "Memo",
+            "no_assets": "No withdrawable assets available",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
@@ -1505,7 +1517,12 @@
         "witness_pay": "Withdrew witness pay to account",
         "witness_receive": "Received witness from witness",
         "witness_update": "{account} update its witness info",
-        "worker_create": "{account} created a worker proposal with daily pay of {pay}"
+        "worker_create": "{account} created a worker proposal with daily pay of {pay}",
+        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
+        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
+        "htlc_refund": "{to} got refund of HTLC {htlc_id}"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
@@ -1994,6 +2011,7 @@
         "bond_create_offer": "Created bond offer",
         "bond_pay_collateral": "Paid collateral of",
         "borrow_amount": "Debt",
+        "cumulative_borrow_amount": "Cumulative Debt",
         "borrower": "Borrower",
         "broadcast_fail": "Failed to broadcast the transaction: %(message)s",
         "broadcast_success": "Transaction has been broadcast",
@@ -2011,7 +2029,7 @@
         "confirm": "Please confirm the transaction",
         "create_key": "Created a public key",
         "csv": "Export to .csv",
-        "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info format",
+        "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info or raw format",
         "custom": "Created a custom operation",
         "delta_collateral": "Collateral change",
         "delta_debt": "Debt change",
@@ -2028,6 +2046,9 @@
             "_none": "Free of Charge",
             "basic_fee": "Basic Fee",
             "fee": "Regular Transaction Fee",
+            "fee_per_day": "Price per day",
+            "fee_per_kb": "Price per KByte Transaction Size",
+            "price_per_output": "Price per recipient",
             "long_symbol": "Longer Symbols",
             "membership_annual_fee": "Annual Membership",
             "membership_lifetime_fee": "Lifetime Membership",
@@ -2114,7 +2135,12 @@
             "witness_create": "Create witness",
             "witness_update": "Update witness",
             "witness_withdraw_pay": "Witness pay withdrawal",
-            "worker_create": "Create worker"
+            "worker_create": "Create worker",
+            "htlc_create": "HTLC create",
+            "htlc_redeem": "HTLC redeem",
+            "htlc_redeemed": "HTLC redeemed",
+            "htlc_extend": "HTLC extend",
+            "htlc_refund": "HTLC refund"
         },
         "vesting_balance_create": "created vesting balance of",
         "waiting": "Waiting for confirmation..",
@@ -2159,6 +2185,7 @@
         },
         "explict_price": "Explict price:",
         "fee": "Fee",
+        "free": "Free",
         "final": "Final balance",
         "from": "From",
         "header": "Transfer details",
@@ -2435,5 +2462,17 @@
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
         "wallet_password": "Login anywhere using your password"
+    },
+    "htlc": {
+        "claim_period": "Seconds to claim",
+        "claim_period_due": "Claimable until",
+        "preimage_hash": "Preimage hash",
+        "id": "HTLC id",
+        "update_issuer": "Update issuer",
+        "seconds_to_add": "Add seconds to claim period",
+        "redeemer": "Redeemer",
+        "preimage": "Preimage",
+        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'"
     }
 }

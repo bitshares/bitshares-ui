@@ -38,7 +38,7 @@ function adjust_links(str) {
         if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0)
             return `<a href="${text}" onclick="_onClickLink(event)"`;
         if (text.indexOf("http") === 0)
-            return `<a href="${text}" rel="noopener noreferrer" target="_blank"`;
+            return `<a href="${text}" rel="noopener noreferrer" class="external-link" target="_blank"`;
         let page = endsWith(text, ".md")
             ? text.substr(0, text.length - 3)
             : text;
