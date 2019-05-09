@@ -1881,6 +1881,30 @@
             "update": "Update",
             "update_mandate": "Update existing authorization"
         },
+        "htlc": {
+            "actions": "Actions",
+            "amount": "Amount",
+            "claim": "Claim",
+            "redeem_htlc": "Redeem HTLC",
+            "create_htlc": "Create HTLC",
+            "expiration": "Expiration",
+            "expiration_date": "Expiration date",
+            "expires": "Expires",
+            "extend": "Extend",
+            "extend_htlc": "Extend HTLC",
+            "from": "From",
+            "hash": "Hash",
+            "preimage": "Preimage",
+            "preimage_secret_button": "Enter secret preimage",
+            "sender": "Sender",
+            "size": "Size",
+            "recipient": "Recepient",
+            "to": "To",
+            "tooltip": {
+                "preimage_input": "Field requires a secret preimage",
+                "preimage_button": "Please click to enter secret preimage"
+            }
+        },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
