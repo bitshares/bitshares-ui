@@ -155,8 +155,7 @@ class News extends React.Component {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
-        api
-            .getDiscussionsByBlog(query)
+        api.getDiscussionsByBlog(query)
             .then(discussions => {
                 this.orderDiscussions(discussions);
             })

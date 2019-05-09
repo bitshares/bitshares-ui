@@ -124,7 +124,8 @@ class RuDexGateway extends React.Component {
                             >
                                 <Translate
                                     content={"gateway.choose_" + action}
-                                />:{" "}
+                                />
+                                :{" "}
                             </label>
                             <select
                                 className="external-coin-types bts-select"
@@ -270,13 +271,16 @@ class RuDexGateway extends React.Component {
     }
 }
 
-export default connect(RuDexGateway, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    RuDexGateway,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);
