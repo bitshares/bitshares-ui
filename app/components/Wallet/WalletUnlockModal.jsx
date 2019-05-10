@@ -308,7 +308,7 @@ class WalletUnlockModal extends React.Component {
         this.props.history.push(path);
     };
 
-    handleCreateWallet = () => this.closeRedirect("/create-account/wallet");
+    handleCreateWallet = () => this.closeRedirect("/registration/local");
 
     handleRestoreOther = () => this.closeRedirect("/settings/restore");
 
