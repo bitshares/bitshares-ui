@@ -70,10 +70,6 @@ class LoginSelector extends React.Component {
         this.unmounted = true;
     }
 
-    onSelect(route) {
-        this.props.history.push("/create-account/" + route);
-    }
-
     handleLanguageSelect(locale) {
         IntlActions.switchLocale(locale);
         this.setState({
@@ -213,17 +209,6 @@ class LoginSelector extends React.Component {
                                 />
                             </h5>
                         </div>
-
-                        <Route
-                            path="/create-account/wallet"
-                            exact
-                            component={CreateAccount}
-                        />
-                        <Route
-                            path="/create-account/password"
-                            exact
-                            component={CreateAccountPassword}
-                        />
                     </div>
                 </div>
             </div>
