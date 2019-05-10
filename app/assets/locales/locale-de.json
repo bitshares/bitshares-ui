@@ -106,9 +106,10 @@
         "no_price": "--",
         "open_orders": "Offene Aufträge",
         "optional": {
-            "formatter": "Optional, {restore_link} oder erstellen Sie ein Konto mit {restore_form}.",
+            "formatter": "Optional, {restore_link} oder {restore_link_brain}.",
             "restore_form": "Formular",
-            "restore_link": "stellen Sie Ihr Konto wiederher"
+            "restore_link": "stellen Sie Ihr Konto wiederher",
+            "restore_link_brain": "stellen Sie Ihr Konto mit dem Brain-Key wieder her"
         },
         "options": {
             "memo_key": "Notitz-Schlüssel",

@@ -163,7 +163,7 @@ class LoginSelector extends React.Component {
                         <div className="grid-block account-login-options">
                             <Link
                                 id="account_login_button"
-                                to="/create-account/password"
+                                to="/registration"
                                 className="button primary"
                                 data-intro={translator.translate(
                                     "walkthrough.create_cloud_wallet"
@@ -172,20 +172,16 @@ class LoginSelector extends React.Component {
                                 <Translate content="header.create_account" />
                             </Link>
 
-                            <span
+                            <Link
+                                id="account_login_button"
+                                to="/login"
                                 className="button hollow primary"
-                                onClick={() => {
-                                    SettingsActions.changeSetting.defer({
-                                        setting: "passwordLogin",
-                                        value: true
-                                    });
-                                    WalletUnlockActions.unlock().catch(
-                                        () => {}
-                                    );
-                                }}
+                                data-intro={translator.translate(
+                                    "walkthrough.create_cloud_wallet"
+                                )}
                             >
                                 <Translate content="header.unlock_short" />
-                            </span>
+                            </Link>
                         </div>
 
                         <div className="additional-account-options">
@@ -205,13 +201,13 @@ class LoginSelector extends React.Component {
                                         },
                                         {
                                             type: "link",
-                                            value: "/create-account/wallet",
+                                            value: "/create-wallet-brainkey",
                                             translation:
-                                                "account.optional.restore_form",
+                                                "account.optional.restore_link_brain",
                                             dataIntro: translator.translate(
                                                 "walkthrough.create_local_wallet"
                                             ),
-                                            arg: "restore_form"
+                                            arg: "restore_link_brain"
                                         }
                                     ]}
                                 />

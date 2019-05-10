@@ -106,9 +106,10 @@
         "no_price": "--",
         "open_orders": "Ordenes abiertas",
         "optional": {
-            "formatter": "Opcionalmente, {restore_link} o crea una cuenta usando el {restore_form}.",
+            "formatter": "Opcionalmente, {restore_link} o {restore_link_brain}.",
             "restore_form": "forma avanzada",
-            "restore_link": "restaurar su cuenta"
+            "restore_link": "restaurar su cuenta",
+            "restore_link_brain": "restaura tu cuenta usando la tecla cerebral"
         },
         "options": {
             "memo_key": "Llave Memo",

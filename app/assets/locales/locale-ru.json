@@ -108,7 +108,8 @@
         "optional": {
             "formatter": "При необходимости {restore_link} или создайте аккаунт с помощью {restore_form}.",
             "restore_form": "расширенная форма",
-            "restore_link": "восстановить аккаунт"
+            "restore_link": "восстановить аккаунт из резервной копии",
+            "restore_link_brain": "восстановить аккаунт, используя ключ"
         },
         "options": {
             "memo_key": "Мемо-ключ",
