@@ -1904,7 +1904,7 @@
         "filter_ops": "Benutzen Sie diese Liste um den Verlauf nach Tätigkeiten zu filtern.",
         "follow_user": "Sie folgen diesen Benutzer",
         "follow_user_add": "Klicken, um diesen Benutzer zu folgen.",
-        "gateway": "Gateways sichern Einzahlungen durch 100% echte Anlagen.",
+        "gateway": "Gateways sichern Einzahlungen durch 100%% echte Anlagen.",
         "generate": "Diese Passwort wurde durch Ihren Browser lokal erzeugt.<br /><br /><strong>Nur Sie haben darauf Zugriff</strong>.<br /><br /> Kopieren Sie dieses Passwort und sichern Sie es an einem sicheren Ort.",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
