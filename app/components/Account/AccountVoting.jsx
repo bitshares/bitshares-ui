@@ -650,10 +650,8 @@ class AccountVoting extends React.Component {
         };
         let polls = mappedWorkers
             .filter(a => {
-                return a
-                    .get("name")
-                    .toLowerCase()
-                    .includes("bsip");
+                let lowercase = a.get("name").toLowerCase();
+                return lowercase.includes("bsip") || lowercase.includes("poll");
             })
             .map((worker, index) => {
                 return (
@@ -677,10 +675,8 @@ class AccountVoting extends React.Component {
 
         // remove polls
         mappedWorkers = mappedWorkers.filter(a => {
-            return !a
-                .get("name")
-                .toLowerCase()
-                .includes("bsip");
+            let lowercase = a.get("name").toLowerCase();
+            return !lowercase.includes("bsip") && !lowercase.includes("poll");
         });
 
         let onGoingWorkers = mappedWorkers.filter(a => {
