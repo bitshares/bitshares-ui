@@ -416,13 +416,34 @@ var Utils = {
         return inverse ? intB - intA : intA - intB;
     },
 
-    calc_block_time(block_number, globalObject, dynGlobalObject) {
-        if (!globalObject || !dynGlobalObject) return null;
-        const block_interval = globalObject
-            .get("parameters")
-            .get("block_interval");
-        const head_block = dynGlobalObject.get("head_block_number");
-        const head_block_time = new Date(dynGlobalObject.get("time") + "Z");
+    calc_block_time(
+        block_number,
+        globalObject,
+        dynGlobalObject,
+        estimate = false
+    ) {
+        let block_interval = null;
+        let head_block = null;
+        let head_block_time = null;
+        if (!estimate && (!globalObject || !dynGlobalObject)) {
+            return null;
+        }
+        // estimate what is unknown, i.e. fix a block and assume interval and constant production with equal parameters
+        if (!globalObject) {
+            block_interval = 3;
+        } else {
+            block_interval = globalObject
+                .get("parameters")
+                .get("block_interval");
+        }
+        if (!dynGlobalObject) {
+            // mainnet estimation
+            head_block = 37025190;
+            head_block_time = new Date("2019-04-30T07:55:24Z");
+        } else {
+            head_block = dynGlobalObject.get("head_block_number");
+            head_block_time = new Date(dynGlobalObject.get("time") + "Z");
+        }
         const seconds_below = (head_block - block_number) * block_interval;
         return new Date(head_block_time - seconds_below * 1000);
     },

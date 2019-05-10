@@ -1,12 +1,13 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
-import cname from "classnames";
 import WalletDb from "stores/WalletDb";
 import PasswordConfirm from "./PasswordConfirm";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
-import {Notification} from "bitshares-ui-style-guide";
+import {Button, Form, Input, Notification} from "bitshares-ui-style-guide";
+
+const FormItem = Form.Item;
 
 export default class WalletChangePassword extends Component {
     constructor() {
@@ -67,9 +68,9 @@ export default class WalletChangePassword extends Component {
                     <Translate component="p" content="wallet.change_success" />
                     <Translate component="p" content="wallet.change_backup" />
                     <Link to="/wallet/backup/create">
-                        <div className="button outline">
+                        <Button>
                             <Translate content="wallet.create_backup" />
-                        </div>
+                        </Button>
                     </Link>
                 </div>
             );
@@ -86,21 +87,18 @@ export default class WalletChangePassword extends Component {
                         newPassword={true}
                         onValid={this.onNewPassword.bind(this)}
                     >
-                        <button
-                            className={cname("button outline", {
-                                disabled: !ready
-                            })}
-                            type="submit"
+                        <Button
+                            type="primary"
+                            disabled={!ready}
+                            htmlType="submit"
+                            style={{marginRight: "16px"}}
                             onClick={this.onAccept.bind(this)}
                         >
                             <Translate content="wallet.accept" />
-                        </button>
-                        <div
-                            className="button outline"
-                            onClick={this._onCancel.bind(this)}
-                        >
+                        </Button>
+                        <Button onClick={this._onCancel.bind(this)}>
                             <Translate content="wallet.cancel" />
-                        </div>
+                        </Button>
                     </PasswordConfirm>
                 </WalletPassword>
             </span>
@@ -152,26 +150,29 @@ class WalletPassword extends Component {
             return <div className="grid-content">{this.props.children}</div>;
         } else {
             return (
-                <form onSubmit={this.onPassword.bind(this)}>
-                    <label>
-                        <Translate content="wallet.existing_password" />
-                    </label>
-                    <section>
-                        <input
-                            placeholder={counterpart.translate(
-                                "wallet.current_pass"
-                            )}
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            onChange={this.formChange.bind(this)}
-                            value={this.state.password}
-                        />
-                    </section>
-                    <button className="button outline">
-                        <Translate content="wallet.submit" />
-                    </button>
-                </form>
+                <Form onSubmit={this.onPassword.bind(this)}>
+                    <FormItem
+                        label={counterpart.translate(
+                            "wallet.existing_password"
+                        )}
+                    >
+                        <section>
+                            <Input
+                                placeholder={counterpart.translate(
+                                    "wallet.current_pass"
+                                )}
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                onChange={this.formChange.bind(this)}
+                                value={this.state.password}
+                            />
+                        </section>
+                        <Button type="primary">
+                            <Translate content="wallet.submit" />
+                        </Button>
+                    </FormItem>
+                </Form>
             );
         }
     }

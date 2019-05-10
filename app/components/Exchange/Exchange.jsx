@@ -563,6 +563,8 @@ class Exchange extends React.Component {
     }
 
     shouldComponentUpdate(np, ns) {
+        let {expirationType} = this.state;
+
         this._forceRender(np, ns);
 
         if (!np.marketReady && !this.props.marketReady) {
@@ -570,6 +572,24 @@ class Exchange extends React.Component {
         }
         let propsChanged = false;
         let stateChanged = false;
+
+        if (
+            np.quoteAsset !== this.props.quoteAsset ||
+            np.baseAsset !== this.props.baseAsset
+        ) {
+            this.setState({
+                expirationType: {
+                    bid:
+                        expirationType["bid"] == "SPECIFIC"
+                            ? expirationType["bid"]
+                            : "YEAR",
+                    ask:
+                        expirationType["ask"] == "SPECIFIC"
+                            ? expirationType["ask"]
+                            : "YEAR"
+                }
+            });
+        }
 
         for (let key in np) {
             if (np.hasOwnProperty(key)) {
