@@ -1408,7 +1408,10 @@
         "settle": {
             "amount": "Amount to settle",
             "submit": "Settle asset",
-            "title": "Request settlement of %(asset)s"
+            "title": "Request settlement of %(asset)s",
+            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
+            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
+            "delay": "Estimated delay: %(amount)s hours"
         },
         "withdraw": {
             "address": "Withdraw to Address",
@@ -1484,7 +1487,7 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
-        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}.",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers": "{account} updated the feed producers for the asset {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",

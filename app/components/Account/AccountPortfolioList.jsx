@@ -1308,7 +1308,7 @@ class AccountPortfolioList extends React.Component {
                 hideModal={this.hideSettleModal}
                 showModal={this.showSettleModal}
                 asset={this.state.settleAsset}
-                account={this.props.account.get("name")}
+                account={this.props.account}
             />
         );
     }

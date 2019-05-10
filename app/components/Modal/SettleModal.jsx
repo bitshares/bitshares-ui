@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
+import Immutable from "immutable";
+import PropTypes from "prop-types";
 import Translate from "react-translate-component";
-import ChainTypes from "../Utility/ChainTypes";
 import AssetName from "../Utility/AssetName";
 import MarketLink from "../Utility/MarketLink";
-import BindToChainState from "../Utility/BindToChainState";
 import BalanceComponent from "../Utility/BalanceComponent";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
@@ -14,6 +14,8 @@ import withWorthLessSettlementFlag from "../Utility/withWorthLessSettlementFlag"
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {Alert, Form, Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 import utils from "common/utils";
+import AssetWrapper from "../Utility/AssetWrapper";
+
 
 const WorthLessSettlementWarning = withWorthLessSettlementFlag(
     ({
@@ -121,8 +123,15 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
 
 class ModalContent extends React.Component {
     static propTypes = {
-        asset: ChainTypes.ChainAsset.isRequired,
-        account: ChainTypes.ChainAccount.isRequired
+        asset: PropTypes.instanceOf(Immutable.Map),
+        core: PropTypes.instanceOf(Immutable.Map),
+        account: PropTypes.instanceOf(Immutable.Map)
+    };
+
+    static defaultProps = {
+        asset: Immutable.Map(),
+        core: Immutable.Map(),
+        account: Immutable.Map()
     };
 
     constructor() {
@@ -144,6 +153,31 @@ class ModalContent extends React.Component {
                 amount: 0
             });
         }
+    }
+
+    getSettlementInfo() {
+        const { getDynamicObject, asset, core } = this.props;
+        const dynamic = getDynamicObject(asset.get("dynamic_asset_data_id"));
+        const currentSupply = dynamic && dynamic.size ?
+            dynamic.get("current_supply") :
+            0;
+        const maintenanceInterval = core && core.size ?
+            core.getIn(["parameters", "maintenance_interval"]) :
+            0;
+        const bitAsset = asset.get("bitasset").toJS();
+        const currentSettled = bitAsset.force_settled_volume;
+        const maxSettlementVolume = currentSupply *
+            (bitAsset.options.maximum_force_settlement_volume / 10000);
+        const remainingVolume = !currentSettled ?
+            maxSettlementVolume :
+            maxSettlementVolume - currentSettled;
+        const settlementDelay = bitAsset.options.force_settlement_delay_sec;
+        return {
+            maxSettlementVolume,
+            remainingVolume,
+            maintenanceInterval,
+            settlementDelay
+        };
     }
 
     onAmountChanged({amount, asset}) {
@@ -290,6 +324,17 @@ class ModalContent extends React.Component {
             </Button>
         ];
 
+        const {
+            maxSettlementVolume,
+            remainingVolume,
+            settlementDelay,
+            maintenanceInterval
+        } = this.getSettlementInfo();
+
+        const estimatedDelay = !isGlobalSettled ? (settlementDelay +
+            Math.floor(amount / maxSettlementVolume) *
+            maintenanceInterval) / 3600 : 0;
+
         return (
             <Modal
                 title={counterpart.translate("modal.settle.title", {
@@ -316,8 +361,12 @@ class ModalContent extends React.Component {
                             "exchange.settle_delay",
                             {
                                 hours: options.force_settlement_delay_sec / 3600
-                            }
-                        )}
+                            })}
+                        description={estimatedDelay ? counterpart.translate(
+                            "modal.settle.delay",
+                            {
+                                amount: estimatedDelay
+                            }) : null}
                         type="info"
                         showIcon
                     />
@@ -341,13 +390,41 @@ class ModalContent extends React.Component {
                         asset={assetID}
                         assets={[assetID]}
                         tabIndex={1}
+                        style={
+                            amount > remainingVolume ?
+                                { "margin-bottom": "0" } :
+                                {}
+                        }
                     />
+                    {amount > remainingVolume ?
+                        <Fragment>
+                            <Translate
+                                className="facolor-info"
+                                content="modal.settle.max_volume"
+                                amount={maxSettlementVolume}
+                                asset={assetFullName}
+                            />
+                            <br/>
+                            <Translate
+                                className="facolor-info"
+                                content="modal.settle.remaining_volume"
+                                amount={remainingVolume}
+                                asset={assetFullName}
+                            />
+                        </Fragment> :
+                        null}
+
                 </Form>
             </Modal>
         );
     }
 }
-ModalContent = BindToChainState(ModalContent);
+
+ModalContent = AssetWrapper(ModalContent, {
+    propNames: ["asset", "core"],
+    withDynamic: true,
+    defaultProps: { core: "2.0.0" }
+});
 
 class SettleModal extends React.Component {
     render() {
