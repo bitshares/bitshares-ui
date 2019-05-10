@@ -1,5 +1,5 @@
 import React from "react";
-import {OrderRow, TableHeader} from "../Exchange/MyOpenOrders";
+import {TableHeader} from "../Exchange/MyOpenOrders";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs";
@@ -11,6 +11,7 @@ import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
 import PaginatedList from "../Utility/PaginatedList";
 import {Input, Icon} from "bitshares-ui-style-guide";
+import AccountOrderRow from "./AccountOrderRow";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -214,7 +215,7 @@ class AccountOrders extends React.Component {
                 }
 
                 marketOrders[marketName].push(
-                    <OrderRow
+                    <AccountOrderRow
                         ref={markets[marketName].base.symbol}
                         key={order.id}
                         order={limitOrder}
