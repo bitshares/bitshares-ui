@@ -1,5 +1,4 @@
 import React from "react";
-import {TableHeader} from "../Exchange/MyOpenOrders";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs";
@@ -11,6 +10,7 @@ import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
 import PaginatedList from "../Utility/PaginatedList";
 import {Input, Icon} from "bitshares-ui-style-guide";
+import AccountTableHeader from "./AccountTableHeader";
 import AccountOrderRow from "./AccountOrderRow";
 
 class AccountOrders extends React.Component {
@@ -296,9 +296,7 @@ class AccountOrders extends React.Component {
                     pageSize={20}
                     className="table table-striped dashboard-table table-hover"
                     header={
-                        <TableHeader
-                            settings={this.props.settings}
-                            dashboard
+                        <AccountTableHeader
                             isMyAccount={this.props.isMyAccount}
                         />
                     }

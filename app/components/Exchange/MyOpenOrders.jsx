@@ -13,44 +13,37 @@ import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
 const rightAlign = {textAlign: "right"};
-const centerAlign = {textAlign: "center"};
 import ReactTooltip from "react-tooltip";
 import {Tooltip} from "bitshares-ui-style-guide";
 
-class TableHeader extends React.Component {
+class ExchangeTableHeader extends React.Component {
     render() {
-        let {
-            baseSymbol,
-            quoteSymbol,
-            dashboard,
-            isMyAccount,
-            leftAlign
-        } = this.props;
+        let {baseSymbol, quoteSymbol, isMyAccount} = this.props;
 
-        return !dashboard ? (
+        return (
             <thead>
                 <tr>
-                    <th style={leftAlign ? leftAlign : rightAlign}>
+                    <th style={rightAlign}>
                         <Translate
                             className="header-sub-title"
                             content="exchange.price"
                         />
                     </th>
-                    <th style={leftAlign ? leftAlign : rightAlign}>
+                    <th style={rightAlign}>
                         {baseSymbol ? (
                             <span className="header-sub-title">
                                 <AssetName dataPlace="top" name={quoteSymbol} />
                             </span>
                         ) : null}
                     </th>
-                    <th style={leftAlign ? leftAlign : rightAlign}>
+                    <th style={rightAlign}>
                         {baseSymbol ? (
                             <span className="header-sub-title">
                                 <AssetName dataPlace="top" name={baseSymbol} />
                             </span>
                         ) : null}
                     </th>
-                    <th style={leftAlign ? leftAlign : rightAlign}>
+                    <th style={rightAlign}>
                         <Translate
                             className="header-sub-title"
                             content="transaction.expiration"
@@ -59,37 +52,11 @@ class TableHeader extends React.Component {
                     <th style={{width: "6%"}} />
                 </tr>
             </thead>
-        ) : (
-            <tr>
-                {isMyAccount ? (
-                    <th id="cancelAllOrders" style={{cursor: "pointer"}}>
-                        <Translate content="wallet.cancel" />
-                    </th>
-                ) : null}
-                <th>
-                    <Translate content="account.trade" />
-                </th>
-                <th style={leftAlign}>
-                    <Translate content="transaction.order_id" />
-                </th>
-                <th style={leftAlign} colSpan="4">
-                    <Translate content="exchange.description" />
-                </th>
-                <th style={leftAlign}>
-                    <Translate content="exchange.price" />
-                </th>
-                <th style={leftAlign}>
-                    <Translate content="exchange.price_market" />
-                </th>
-                <th style={{textAlign: "right"}}>
-                    <Translate content="exchange.value" />
-                </th>
-            </tr>
         );
     }
 }
 
-TableHeader.defaultProps = {
+ExchangeTableHeader.defaultProps = {
     quoteSymbol: null,
     baseSymbol: null
 };
@@ -548,8 +515,7 @@ class MyOpenOrders extends React.Component {
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
                         <table className="table order-table text-right fixed-table market-right-padding">
                             {activeTab == "my_orders" ? (
-                                <TableHeader
-                                    type="sell"
+                                <ExchangeTableHeader
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                 />
@@ -627,4 +593,4 @@ MyOpenOrders.propTypes = {
     baseSymbol: PropTypes.string.isRequired
 };
 
-export {TableHeader, MyOpenOrders};
+export {MyOpenOrders};
