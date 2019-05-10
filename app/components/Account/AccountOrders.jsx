@@ -136,7 +136,6 @@ class AccountOrders extends React.Component {
     render() {
         let {account, marketDirections} = this.props;
         let {filterValue, selectedOrders} = this.state;
-        let cancel = counterpart.translate("account.perm.cancel");
         let markets = {};
 
         let marketOrders = {};
@@ -221,12 +220,8 @@ class AccountOrders extends React.Component {
                         order={limitOrder}
                         base={marketBase}
                         quote={marketQuote}
-                        cancel_text={cancel}
-                        showSymbols={false}
-                        invert={true}
                         onCancel={this._cancelLimitOrder.bind(this, order.id)}
                         price={limitOrder.getPrice()}
-                        dashboard
                         isMyAccount={this.props.isMyAccount}
                         settings={this.props.settings}
                         onFlip={this.onFlip.bind(this, marketName)}

@@ -22,15 +22,7 @@ class AccountOrderRow extends React.Component {
     }
 
     render() {
-        let {
-            base,
-            quote,
-            order,
-            showSymbols,
-            dashboard,
-            isMyAccount,
-            settings
-        } = this.props;
+        let {base, quote, order, dashboard, isMyAccount, settings} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
 
@@ -180,9 +172,5 @@ class AccountOrderRow extends React.Component {
         );
     }
 }
-
-AccountOrderRow.defaultProps = {
-    showSymbols: false
-};
 
 export default AccountOrderRow;
