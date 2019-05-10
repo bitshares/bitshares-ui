@@ -17,7 +17,8 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Input, Icon, Switch} from "bitshares-ui-style-guide";
+import {Input, Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -489,16 +490,24 @@ class AccountOverview extends React.Component {
                                         )}
                                         style={{cursor: "pointer"}}
                                     >
-                                        <Switch
-                                            style={{margin: 16}}
-                                            checked={
-                                                this.state.hideFishingProposals
-                                            }
-                                            onChange={this._toggleHideProposal.bind(
-                                                this
+                                        <Tooltip
+                                            title={counterpart.translate(
+                                                "tooltip.propose_unhide"
                                             )}
-                                        />
-                                        <Translate content="account.deactivate_suspicious_proposals" />
+                                            placement="bottom"
+                                        >
+                                            <Switch
+                                                style={{margin: 16}}
+                                                checked={
+                                                    this.state
+                                                        .hideFishingProposals
+                                                }
+                                                onChange={this._toggleHideProposal.bind(
+                                                    this
+                                                )}
+                                            />
+                                            <Translate content="account.deactivate_suspicious_proposals" />
+                                        </Tooltip>
                                     </div>
                                     <Proposals
                                         className="dashboard-table"
