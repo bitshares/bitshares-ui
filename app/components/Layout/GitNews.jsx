@@ -33,15 +33,9 @@ export default class GitNews extends React.Component {
         const renderAlert = Object.keys(news).length
             ? Object.values(news).map((item, index) => {
                   let now = new Date();
-                  now.setHours(0, 0, 0, 0);
-                  now = now.getTime();
                   const type = item.type === "critical" ? "error" : item.type;
-                  const begin = new Date(
-                      item.begin_date.split(".").reverse()
-                  ).getTime();
-                  const end = new Date(
-                      item.end_date.split(".").reverse()
-                  ).getTime();
+                  const begin = new Date(item.begin_date.split(".").reverse());
+                  const end = new Date(item.end_date.split(".").reverse());
                   if (now >= begin && now <= end)
                       return (
                           <Alert
