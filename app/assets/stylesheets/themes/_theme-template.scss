@@ -1713,6 +1713,14 @@
         margin-left: 0;
         margin-bottom: 0;
     }
+    .settings-container {
+        // hardcode style overriding for style-guide labels of Form.Item
+        .ant-form-item-label label {
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+    }
     .settings--notifications {
         .settings--notifications--group {
             .settings--notifications--item {

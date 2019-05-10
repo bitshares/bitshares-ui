@@ -389,7 +389,13 @@ class Settings extends React.Component {
 
         return (
             <Form layout={"vertical"}>
-                <div className={this.props.deprecated ? "" : "grid-block"}>
+                <div
+                    className={
+                        this.props.deprecated
+                            ? ""
+                            : "grid-block settings-container"
+                    }
+                >
                     <div className="grid-block main-content margin-block wrap">
                         <div
                             className="grid-content shrink settings-menu"
