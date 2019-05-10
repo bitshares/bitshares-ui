@@ -101,7 +101,9 @@ class WorkerApproval extends React.Component {
                             paddingLeft: 0
                         }}
                     >
-                        {!isExpired ? rank : "-"}
+                        {!isExpired
+                            ? rank
+                            : counterpart.translate("account.votes.expired")}
                     </td>
                 )}
 
@@ -167,7 +169,9 @@ class WorkerApproval extends React.Component {
                         style={{textAlign: "right"}}
                         className="hide-column-small"
                     >
-                        {utils.format_number(fundedPercent, 2)}%
+                        {isExpired
+                            ? "-"
+                            : utils.format_number(fundedPercent, 2) + "%"}
                     </td>
                 )}
 
@@ -183,7 +187,11 @@ class WorkerApproval extends React.Component {
                 {!isPoll && (isExpired || isProposed) ? null : (
                     <td style={{textAlign: "right"}}>
                         {this.props.rest <= 0 ? (
-                            "0.00"
+                            isExpired ? (
+                                "-"
+                            ) : (
+                                "0.00"
+                            )
                         ) : (
                             <EquivalentValueComponent
                                 hide_asset
