@@ -606,9 +606,6 @@ class AccountVoting extends React.Component {
             );
         }
 
-        let pollWorkerBudget = workerBudget;
-
-        let now = new Date();
         let workerArray = this._getWorkerArray();
         let {mappedWorkers, voteThreshold} = this._getMappedWorkers(
             workerArray,
@@ -664,6 +661,7 @@ class AccountVoting extends React.Component {
                         preferredUnit={preferredUnit}
                         rest={worker.remainingPayout}
                         rank={index + 1}
+                        poll={true}
                         key={worker.get("id")}
                         worker={worker.get("id")}
                         vote_ids={

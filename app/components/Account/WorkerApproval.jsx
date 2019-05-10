@@ -14,11 +14,13 @@ class WorkerApproval extends React.Component {
         worker: ChainTypes.ChainObject.isRequired,
         onAddVote: PropTypes.func, /// called with vote id to add
         onRemoveVote: PropTypes.func, /// called with vote id to remove
-        vote_ids: PropTypes.object /// Set of items currently being voted for
+        vote_ids: PropTypes.object, /// Set of items currently being voted for
+        poll: PropTypes.bool // is this an opinion worker?
     };
 
     static defaultProps = {
-        tempComponent: "tr"
+        tempComponent: "tr",
+        poll: false
     };
 
     constructor(props) {
@@ -70,7 +72,7 @@ class WorkerApproval extends React.Component {
         if (worker.daily_pay < this.props.rest) {
             fundedPercent = 100;
         } else if (this.props.rest > 0) {
-            fundedPercent = this.props.rest / worker.daily_pay * 100;
+            fundedPercent = (this.props.rest / worker.daily_pay) * 100;
         }
 
         let startDate = counterpart.localize(
@@ -88,9 +90,10 @@ class WorkerApproval extends React.Component {
         let isProposed =
             (!isExpired && total_votes < this.props.voteThreshold) ||
             !hasStarted;
+        let isPoll = !!this.props.poll;
         return (
             <tr className={approvalState ? "" : "unsupported"}>
-                {isExpired ? null : (
+                {!isPoll && isExpired ? null : (
                     <td
                         style={{
                             textAlign: "right",
@@ -98,7 +101,7 @@ class WorkerApproval extends React.Component {
                             paddingLeft: 0
                         }}
                     >
-                        {rank}
+                        {!isExpired ? rank : "-"}
                     </td>
                 )}
 
@@ -141,7 +144,7 @@ class WorkerApproval extends React.Component {
                     />
                 </td>
 
-                {!isProposed ? null : (
+                {!isProposed || isPoll ? null : (
                     <td style={{textAlign: "right"}}>
                         <FormattedAsset
                             amount={Math.max(
@@ -159,7 +162,7 @@ class WorkerApproval extends React.Component {
                     {startDate} - {endDate}
                 </td>
 
-                {isExpired || isProposed ? null : (
+                {!isPoll && (isExpired || isProposed) ? null : (
                     <td
                         style={{textAlign: "right"}}
                         className="hide-column-small"
@@ -177,7 +180,7 @@ class WorkerApproval extends React.Component {
                     />
                 </td>
 
-                {isExpired || isProposed ? null : (
+                {!isPoll && (isExpired || isProposed) ? null : (
                     <td style={{textAlign: "right"}}>
                         {this.props.rest <= 0 ? (
                             "0.00"
