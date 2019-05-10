@@ -6,7 +6,6 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import counterpart from "counterpart";
-import SettingsStore from "stores/SettingsStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
@@ -14,7 +13,7 @@ import AssetName from "../Utility/AssetName";
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
-import DatePicker from "react-datepicker2/src/";
+import { DatePicker } from "antd";
 import moment from "moment";
 import Icon from "../Icon/Icon";
 import SettleModal from "../Modal/SettleModal";
@@ -160,9 +159,9 @@ class BuySell extends React.Component {
 
     onExpirationSelectChange = e => {
         if (e.target.value === "SPECIFIC") {
-            this.datePricker.setOpen(true);
+            this.datePricker.picker.handleOpenChange(true);
         } else {
-            this.datePricker.setOpen(false);
+            this.datePricker.picker.handleOpenChange(false);
         }
 
         this.props.onExpirationTypeChange(e);
@@ -175,7 +174,7 @@ class BuySell extends React.Component {
             }
             this.firstClick = true;
             if (this.secondClick) {
-                this.datePricker.setOpen(true);
+                this.datePricker.picker.handleOpenChange(true);
                 this.firstClick = false;
                 this.secondClick = false;
             }
@@ -593,10 +592,6 @@ class BuySell extends React.Component {
             )
         );
 
-        // datepicker puts on the end of body so it's out of theme scope
-        // so theme is used on wrapperClassName
-        const theme = SettingsStore.getState().settings.get("themes");
-        const minExpirationDate = moment();
         const containerClass = "small-12";
         let formContent;
 
@@ -1127,12 +1122,11 @@ class BuySell extends React.Component {
                                 <div className="small-8 expiration-datetime-picker">
                                     <DatePicker
                                         ref={this.getDatePickerRef}
-                                        className="hide"
-                                        pickerPosition={"bottom center"}
-                                        wrapperClassName={theme}
-                                        timePicker={true}
-                                        min={minExpirationDate}
-                                        inputFormat={"Do MMM YYYY hh:mm A"}
+                                        className="expiration-datetime-picker--hidden"
+                                        showTime
+                                        showToday={false}
+                                        disabledDate={current =>
+                                            current < moment().add(2, "minutes")}
                                         value={
                                             expirationCustomTime !== "Specific" &&
                                             expirationCustomTime

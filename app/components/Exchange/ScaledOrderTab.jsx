@@ -26,8 +26,7 @@ import {
     preciseMultiply,
     preciseMinus
 } from "../../services/Math";
-import DatePicker from "react-datepicker2/src";
-import SettingsStore from "../../stores/SettingsStore";
+import { DatePicker } from "antd";
 
 class ScaledOrderForm extends Component {
     constructor(props) {
@@ -432,9 +431,9 @@ class ScaledOrderForm extends Component {
 
     onExpirationSelectChange = e => {
         if (e.target.value === "SPECIFIC") {
-            this.datePricker.setOpen(true);
+            this.datePricker.picker.handleOpenChange(true);
         } else {
-            this.datePricker.setOpen(false);
+            this.datePricker.picker.handleOpenChange(false);
         }
 
         this.props.onExpirationTypeChange(e);
@@ -447,7 +446,7 @@ class ScaledOrderForm extends Component {
             }
             this.firstClick = true;
             if (this.secondClick) {
-                this.datePricker.setOpen(true);
+                this.datePricker.picker.handleOpenChange(true);
                 this.firstClick = false;
                 this.secondClick = false;
             }
@@ -677,10 +676,6 @@ class ScaledOrderForm extends Component {
             isBid ? "exchange.lowest_ask" : "exchange.highest_bid"
         );
 
-        const minExpirationDate = moment();
-
-        const theme = SettingsStore.getState().settings.get("themes");
-
         let expirationTip;
 
         if (this.props.expirationType !== "SPECIFIC") {
@@ -778,12 +773,11 @@ class ScaledOrderForm extends Component {
                         >
                             <DatePicker
                                 ref={this.getDatePickerRef}
-                                className="hide"
-                                pickerPosition={"bottom center"}
-                                wrapperClassName={theme}
-                                timePicker={true}
-                                min={minExpirationDate}
-                                inputFormat={"Do MMM YYYY hh:mm A"}
+                                className="expiration-datetime-picker--hidden"
+                                showTime
+                                showToday={false}
+                                disabledDate={current =>
+                                    current < moment().add(2, "minutes")}
                                 value={
                                     expirationCustomTime !== "Specific" &&
                                     expirationCustomTime
