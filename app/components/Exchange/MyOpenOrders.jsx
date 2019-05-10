@@ -106,14 +106,7 @@ class ExchangeOrderRow extends React.Component {
     }
 
     render() {
-        let {
-            base,
-            quote,
-            order,
-            showSymbols,
-            isMyAccount,
-            settings
-        } = this.props;
+        let {base, quote, order} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
         let tdClass = isCall
@@ -121,12 +114,6 @@ class ExchangeOrderRow extends React.Component {
             : isBid
                 ? "orderHistoryBid"
                 : "orderHistoryAsk";
-
-        let priceSymbol = showSymbols ? (
-            <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span>
-        ) : null;
-        let valueSymbol = showSymbols ? " " + base.get("symbol") : null;
-        let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
         return (
             <tr key={order.id}>
@@ -136,7 +123,6 @@ class ExchangeOrderRow extends React.Component {
                         base={base}
                         quote={quote}
                     />
-                    {priceSymbol}
                 </td>
                 <td>
                     {utils.format_number(
@@ -145,7 +131,6 @@ class ExchangeOrderRow extends React.Component {
                         ]().getAmount({real: true}),
                         quote.get("precision")
                     )}{" "}
-                    {amountSymbol}
                 </td>
                 <td>
                     {utils.format_number(
@@ -154,7 +139,6 @@ class ExchangeOrderRow extends React.Component {
                         ]().getAmount({real: true}),
                         base.get("precision")
                     )}{" "}
-                    {valueSymbol}
                 </td>
                 <td>
                     <Tooltip title={order.expiration.toLocaleString()}>
@@ -196,10 +180,6 @@ class ExchangeOrderRow extends React.Component {
         );
     }
 }
-
-ExchangeOrderRow.defaultProps = {
-    showSymbols: false
-};
 
 class MyOpenOrders extends React.Component {
     constructor(props) {
