@@ -2,7 +2,7 @@
     "0": {
         "type": "warning",
         "begin_date": "26.04.2019",
-        "end_date": "26.04.2019",
+        "end_date": "26.05.2019",
         "content": "Warning!"
     },
     "1": {
@@ -14,13 +14,13 @@
     "3": {
         "type": "critical",
         "begin_date": "25.04.2019",
-        "end_date": "26.04.2019",
+        "end_date": "26.05.2019",
         "content": "CRITICAL! 25-26"
     },
     "4": {
         "type": "critical",
         "begin_date": "27.04.2019",
-        "end_date": "28.04.2019",
+        "end_date": "28.05.2019",
         "content": "CRITICAL! 27-28"
     },
     "5": {
