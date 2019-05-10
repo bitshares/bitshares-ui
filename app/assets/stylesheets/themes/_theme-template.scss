@@ -59,7 +59,8 @@
     $positive-color-alternative,
     $separator-line,
     $medium-color,
-    $dark-help-text
+    $dark-help-text,
+    $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
     .showcases-grid {
@@ -1718,7 +1719,7 @@
         .ant-form-item-label label {
             font-weight: 500 !important;
             text-transform: uppercase !important;
-            color: rgba(255, 255, 255, 0.5) !important;
+            color: $settings-label-color !important;
         }
     }
     .settings--notifications {
