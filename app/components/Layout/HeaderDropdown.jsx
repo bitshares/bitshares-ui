@@ -77,8 +77,8 @@ export default class DropDownMenu extends React.Component {
                         })}
                         onClick={this.props.onNavigate.bind(
                             this,
-                            `/create-account/${
-                                !passwordLogin ? "wallet" : "password"
+                            `/registration/${
+                                !passwordLogin ? "local" : "cloud"
                             }`
                         )}
                     >
