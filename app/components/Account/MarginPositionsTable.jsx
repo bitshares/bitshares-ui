@@ -10,6 +10,7 @@ import utils from "common/utils";
 import {List} from "immutable";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import Immutable from "immutable";
+import { Tooltip } from "bitshares-ui-style-guide";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -224,7 +225,15 @@ const MarginPositionsTable = ({
                         </div>
                     </th>
                     <th>
-                        <Translate content="borrow.target_collateral_ratio" />
+                        <Tooltip
+                            placement="top"
+                            title={counterpart.translate(
+                                "borrow.target_collateral_ratio")}
+                        >
+                            {counterpart.translate(
+                                "borrow.target_collateral_ratio_short"
+                            )}
+                        </Tooltip>
                     </th>
                     <th>
                         <TranslateWithLinks

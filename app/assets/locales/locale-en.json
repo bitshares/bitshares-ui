@@ -452,6 +452,7 @@
         "no_valid": "No valid feeds for %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
         "target_collateral_ratio": "Target Collateral Ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "%(asset_symbol)s Margin",
         "update": "Update",
         "use_max": "Use Max"
