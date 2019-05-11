@@ -16,16 +16,55 @@
     }
 
     // animation principle taken from https://gist.github.com/webarthur/0fb22721264562c7aa74b07c7fe0f227
-    &.collapsible-table-collapsed .ant-table-tbody,
-    &.collapsible-table-uncollapsed .ant-table-tbody {
-        opacity: 0;
-        transform: translateY(-100%);
-        transition: 0.15s ease-in-out;
+    @keyframes collapse {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+    }
+
+    @keyframes uncollapse {
+        from {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    &.collapsible-table-collapsed .ant-table-tbody {
+        animation: collapse 0.15s ease-in-out forwards;
     }
 
     &.collapsible-table-uncollapsed .ant-table-tbody {
-        opacity: 1;
-        transform: translateY(0);
+        animation: uncollapse 0.15s ease-in-out forwards;
+    }
+
+    &.collapsible-table-collapsed-animation-completed .ant-table-tbody {
+        display: none;
+    }
+
+    &.collapsible-table-collapsed {
+        .ant-table-footer,
+        .ant-table-pagination {
+            opacity: 0;
+            transition: 0.15s ease-in-out;
+        }
+    }
+
+    &.collapsible-table-collapsed-animation-completed {
+        .ant-table-footer,
+        .ant-table-pagination {
+            display: none;
+        }
     }
 
     .ant-table-thead {

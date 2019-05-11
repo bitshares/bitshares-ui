@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import ReactDOM from "react-dom";
 import {Table} from "bitshares-ui-style-guide";
 
 class CollapsibleTable extends React.Component {
@@ -6,8 +7,28 @@ class CollapsibleTable extends React.Component {
         super(props);
 
         this.state = {
-            isCollapsed: props.isCollapsed || false
+            isCollapsed: props.isCollapsed || false,
+            isCollapseAnimationCompleted: props.isCollapsed || false
         };
+    }
+
+    componentDidMount() {
+        // This quite ugly way of tracking animation is required to add display: none at the end of the animation
+        // otherwise collapsed element will take place on the page at the end of the animation
+        // There's no possibility to manipulate with display property on animation directly in CSS
+        let dom = ReactDOM.findDOMNode(this);
+        let tbody = dom.querySelector(".ant-table-tbody");
+
+        let onAnimationEnd = () => {
+            this.setState({
+                isCollapseAnimationCompleted: this.state.isCollapsed
+            });
+        };
+
+        tbody.addEventListener("animationend", onAnimationEnd);
+        tbody.addEventListener("webkitAnimationEnd", onAnimationEnd);
+        tbody.addEventListener("oAnimationEnd", onAnimationEnd);
+        tbody.addEventListener("MSAnimationEnd", onAnimationEnd);
     }
 
     render() {
@@ -24,6 +45,10 @@ class CollapsibleTable extends React.Component {
             handlers.onClick = event => {
                 this.setState({
                     isCollapsed: !this.state.isCollapsed
+                });
+
+                this.setState({
+                    isCollapseAnimationCompleted: false
                 });
 
                 if (innerOnHeaderRow) {
@@ -45,6 +70,11 @@ class CollapsibleTable extends React.Component {
                     this.state.isCollapsed
                         ? "collapsible-table-collapsed"
                         : "collapsible-table-uncollapsed"
+                }
+                ${
+                    this.state.isCollapseAnimationCompleted
+                        ? "collapsible-table-collapsed-animation-completed"
+                        : null
                 }`}
             />
         );
