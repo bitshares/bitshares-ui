@@ -62,8 +62,8 @@ class ReserveAssetModal extends React.Component {
             this.props.account.get("balances", []).size &&
             !!this.props.account.getIn(["balances", assetId])
                 ? ChainStore.getObject(
-                    this.props.account.getIn(["balances", assetId])
-                ) 
+                      this.props.account.getIn(["balances", assetId])
+                  )
                 : null;
         if (!currentBalance) return null;
 
@@ -81,10 +81,12 @@ class ReserveAssetModal extends React.Component {
                     </Button>
                 ]}
             >
-                <Alert 
-                    message={counterpart.translate("modal.reserve.warning_message")} 
-                    type="warning" 
-                    showIcon 
+                <Alert
+                    message={counterpart.translate(
+                        "modal.reserve.warning_message"
+                    )}
+                    type="warning"
+                    showIcon
                     style={{marginBottom: "2em"}}
                 />
                 <Form layout="vertical">

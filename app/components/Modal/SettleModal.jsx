@@ -207,8 +207,12 @@ class ModalContent extends React.Component {
             asset.get("bitasset").get("settlement_fund") > 0 ? true : false;
 
         let offset = 0;
-        if(!isGlobalSettled) {
-            offset = asset.get("bitasset").get("options").get("force_settlement_offset_percent") / 100;
+        if (!isGlobalSettled) {
+            offset =
+                asset
+                    .get("bitasset")
+                    .get("options")
+                    .get("force_settlement_offset_percent") / 100;
         }
 
         // TODO
@@ -320,9 +324,13 @@ class ModalContent extends React.Component {
                 )}
                 <WorthLessSettlementWarning asset={assetID} />
                 <br />
-                {!isGlobalSettled ? 
-                    <Translate component="div" content="exchange.settle_offset" offset={offset} />
-                    : null}
+                {!isGlobalSettled ? (
+                    <Translate
+                        component="div"
+                        content="exchange.settle_offset"
+                        offset={offset}
+                    />
+                ) : null}
                 <br />
                 <Form className="full-width" layout="vertical">
                     <AmountSelector
