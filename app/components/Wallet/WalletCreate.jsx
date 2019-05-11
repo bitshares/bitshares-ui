@@ -1,16 +1,17 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
-import BrainkeyInput from "components/Wallet/BrainkeyInput";
-import PasswordConfirm from "components/Wallet/PasswordConfirm";
+import BrainkeyInput from "components/Wallet/BrainkeyInputStyleGuide";
+import PasswordConfirm from "components/Wallet/PasswordConfirmStyleGuide";
 import WalletDb from "stores/WalletDb";
 import WalletManagerStore from "stores/WalletManagerStore";
 import WalletActions from "actions/WalletActions";
 import {connect} from "alt-react";
-import cname from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import PropTypes from "prop-types";
 import {getWalletName} from "branding";
+import { Button, Form, Input } from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class CreateNewWallet extends Component {
     static propTypes = {
@@ -53,7 +54,7 @@ class CreateNewWallet extends Component {
         this.setState({brnkey}, this.validate);
     }
 
-    onSubmit(e) {
+    onSubmit = e => {
         e.preventDefault();
 
         let {
@@ -80,9 +81,9 @@ class CreateNewWallet extends Component {
             value: false
         });
         this.setState({create_submitted: true});
-    }
+    };
 
-    formChange(event) {
+    formChange = event => {
         let key_id = event.target.id;
         let value = event.target.value;
         if (key_id === "wallet_public_name") {
@@ -97,7 +98,7 @@ class CreateNewWallet extends Component {
         this.state[key_id] = value;
         this.setState(this.state);
         this.validate();
-    }
+    };
 
     validate(state = this.state) {
         let errors = state.errors;
@@ -106,15 +107,11 @@ class CreateNewWallet extends Component {
             ? null
             : `Wallet ${state.wallet_public_name.toUpperCase()} exists, please change the name`;
 
-        var isValid =
+        let isValid =
             errors.wallet_public_name === null && state.valid_password !== null;
         if (state.custom_brainkey && isValid) isValid = state.brnkey !== null;
         this.setState({isValid, errors});
     }
-    //
-    // onDone() {
-    //     window.history.back();
-    // }
 
     render() {
         let state = this.state;
@@ -141,10 +138,10 @@ class CreateNewWallet extends Component {
 
         return (
             <div>
-                <form
+                <Form
                     style={{maxWidth: "40rem"}}
-                    onSubmit={this.onSubmit.bind(this)}
-                    onChange={this.formChange.bind(this)}
+                    onSubmit={this.onSubmit}
+                    onChange={this.formChange}
                     noValidate
                 >
                     <div
@@ -169,60 +166,59 @@ class CreateNewWallet extends Component {
                     </div>
                     <PasswordConfirm onValid={this.onPassword.bind(this)} />
                     {has_wallet ? (
-                        <div className="no-overflow">
-                            <br />
-                            <section>
-                                <label>
-                                    <Translate content="wallet.name" />
-                                </label>
-                                <input
-                                    tabIndex={3}
-                                    type="text"
-                                    id="wallet_public_name"
-                                    defaultValue={this.state.wallet_public_name}
-                                />
-                            </section>
-                            <div className="has-error">
-                                {errors.wallet_public_name}
+                        <Form.Item
+                            label={counterpart.translate("wallet.name")}
+                        >
+                            <div className="no-overflow">
+                                <section>
+                                    <Input
+                                        tabIndex={3}
+                                        type="text"
+                                        id="wallet_public_name"
+                                        defaultValue={this.state.wallet_public_name}
+                                    />
+                                    <div className="has-error">
+                                        {errors.wallet_public_name}
+                                    </div>
+                                </section>
                             </div>
-                            <br />
-                        </div>
+                        </Form.Item>
                     ) : null}
 
                     <div className="no-overflow">
                         {this.state.custom_brainkey ? (
                             <div>
-                                <label>
-                                    <Translate content="wallet.brainkey" />
-                                </label>
-                                <BrainkeyInput
-                                    tabIndex={4}
-                                    onChange={this.onBrainkey.bind(this)}
-                                    errorCallback={warn => {
-                                        let {errors} = this.state;
-                                        errors.validBrainkey = warn;
-                                        this.setState({
-                                            errors
-                                        });
-                                    }}
-                                />
+                                <Form.Item
+                                    label={counterpart.translate("wallet.brainkey")}
+                                >
+                                    <BrainkeyInput
+                                        tabIndex={4}
+                                        onChange={this.onBrainkey.bind(this)}
+                                        errorCallback={warn => {
+                                            let {errors} = this.state;
+                                            errors.validBrainkey = warn;
+                                            this.setState({
+                                                errors
+                                            });
+                                        }}
+                                    />
+                                </Form.Item>
                             </div>
                         ) : null}
 
-                        <button
-                            className={cname("button", {
-                                disabled: !this.state.isValid
-                            })}
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            disabled={!this.state.isValid}
                         >
                             <Translate content="wallet.create_wallet" />
-                        </button>
+                        </Button>
 
-                        <button
-                            className="button secondary"
+                        <Button
                             onClick={this.onBack.bind(this)}
                         >
                             <Translate content="wallet.cancel" />
-                        </button>
+                        </Button>
                     </div>
 
                     {!this.state.custom_brainkey ? (
@@ -234,7 +230,7 @@ class CreateNewWallet extends Component {
                             </label>
                         </div>
                     ) : null}
-                </form>
+                </Form>
             </div>
         );
     }
