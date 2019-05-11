@@ -84,6 +84,12 @@ $explorer--assets--bg: $bg-color;
 
 // * * *
 
+// * * * * Settings
+
+$settings-label-color: rgba(0, 0, 0, 0.65);
+
+//
+
 .lightTheme {
     @include theme(
         $explorer-tab-content-background-color,
@@ -143,7 +149,8 @@ $explorer--assets--bg: $bg-color;
         $positive-color-alternative,
         $separator-line,
         $medium-color,
-        $dark-help-text
+        $dark-help-text,
+        $settings-label-color
     );
 
     .change-up {
