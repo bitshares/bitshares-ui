@@ -3,12 +3,12 @@
     "version": "3.1.190522-rc1",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
-    "author": "BitShares UI Worker <ui-dev@bitshares.org>",
+    "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
     "contributors": [
-        "Sigve Kvalsvik",
+        "BitShares UI Worker",
         "James Calfee",
         "Dan Larimer",
-        "Valentine Zavgorodnev"
+        "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
     ],
     "license": "MIT",
     "engines": {
