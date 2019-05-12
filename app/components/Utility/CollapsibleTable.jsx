@@ -43,6 +43,12 @@ class CollapsibleTable extends React.Component {
             }
 
             handlers.onClick = event => {
+                // Do nothing if selectable column is clicked
+                let className = event.target.getAttribute("class");
+                if (className && className.includes("ant-checkbox-input")) {
+                    return;
+                }
+
                 this.setState({
                     isCollapsed: !this.state.isCollapsed
                 });
