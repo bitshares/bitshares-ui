@@ -262,6 +262,14 @@ div.header-selector {
     > .selector div:last-of-type {
         border-right: 0px;
     }
+    > .group-by {
+        float: right;
+        line-height: 32px;
+
+        .text {
+            margin-right: 10px;
+        }
+    }
 }
 
 div.account-tabs {
@@ -388,6 +396,10 @@ table.table.dashboard-table {
             }
         }
     }
+}
+
+.grid-wrapper {
+    margin-bottom: 20px;
 }
 
 .ant-table-content .ant-table-footer .total-value {

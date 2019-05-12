@@ -9,8 +9,10 @@ import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
 import PaginatedList from "../Utility/PaginatedList";
-import {Input, Icon, Table} from "bitshares-ui-style-guide";
+import {Input, Icon, Table, Switch} from "bitshares-ui-style-guide";
 import AccountOrderRowDescription from "./AccountOrderRowDescription";
+import CollapsibleTable from "../Utility/CollapsibleTable";
+import {groupBy} from "lodash-es";
 
 import {Link} from "react-router-dom";
 import {MarketPrice} from "../Utility/MarketPrice";
@@ -24,7 +26,8 @@ class AccountOrders extends React.Component {
 
         this.state = {
             selectedOrders: [],
-            filterValue: ""
+            filterValue: "",
+            areAssetsGrouped: false
         };
     }
 
@@ -97,18 +100,6 @@ class AccountOrders extends React.Component {
         // Sort by price first
         dataSource.sort((a, b) => {
             return a.order.getPrice() - b.order.getPrice();
-        });
-
-        // And then - by market. This way, all records will be grouped by market, but sorted by price inside
-        dataSource.sort((a, b) => {
-            if (a.marketName > b.marketName) {
-                return 1;
-            }
-            if (a.marketName < b.marketName) {
-                return -1;
-            }
-
-            return 0;
         });
 
         return dataSource;
@@ -214,6 +205,84 @@ class AccountOrders extends React.Component {
         ];
     }
 
+    _formatTables(dataSource, columns, areAssetsGrouped) {
+        let pagination = {
+            hideOnSinglePage: true,
+            pageSize: 20,
+            showTotal: (total, range) =>
+                counterpart.translate("utility.total_x_items", {
+                    count: total
+                })
+        };
+
+        let footer = () => this.props.children;
+
+        let rowSelection = this.props.isMyAccount
+            ? {
+                  // Uncomment the following line to show translated text as a cancellable column header instead of checkbox
+                  //columnTitle: counterpart.translate("wallet.cancel")
+                  onChange: (selectedRowKeys, selectedRows) => {
+                      this.setState({selectedOrders: selectedRowKeys});
+                  },
+                  // Required in order resetSelected to work
+                  selectedRowKeys: this.state.selectedOrders
+              }
+            : null;
+
+        let tables = [];
+
+        if (areAssetsGrouped) {
+            // Group by market name - this will group all records from the same market, no matter is it sell or buy order
+            // And then group by base market ID - this will separate buy and sell records on the same market
+            let grouped = groupBy(
+                dataSource,
+                dataItem => dataItem.marketName + dataItem.base.get("id")
+            );
+
+            for (let [key, value] of Object.entries(grouped)) {
+                tables.push(
+                    <div className="grid-content grid-wrapper" key={key}>
+                        <CollapsibleTable
+                            columns={columns}
+                            dataSource={value}
+                            rowSelection={rowSelection}
+                            pagination={pagination}
+                            footer={footer}
+                            isCollapsed={true}
+                        />
+                    </div>
+                );
+            }
+        } else {
+            // Sorting by market after sorting by price is required only for single table.
+            // This way, all records will be grouped by market, but sorted by price inside.
+            dataSource.sort((a, b) => {
+                if (a.marketName > b.marketName) {
+                    return 1;
+                }
+                if (a.marketName < b.marketName) {
+                    return -1;
+                }
+
+                return 0;
+            });
+
+            tables.push(
+                <div className="grid-content grid-wrapper" key="groupedTable">
+                    <Table
+                        columns={columns}
+                        dataSource={dataSource}
+                        rowSelection={rowSelection}
+                        pagination={pagination}
+                        footer={footer}
+                    />
+                </div>
+            );
+        }
+
+        return tables;
+    }
+
     _cancelLimitOrders(orderId) {
         MarketsActions.cancelLimitOrders(
             this.props.account.get("id"),
@@ -259,32 +328,19 @@ class AccountOrders extends React.Component {
             orders = this._getFilteredOrders.call(this);
         }
 
-        let pagination = {
-            hideOnSinglePage: true,
-            pageSize: 20,
-            showTotal: (total, range) =>
-                counterpart.translate("utility.total_x_items", {
-                    count: total
-                })
-        };
-
-        let footer = () => this.props.children;
-
         let columns = this._getColumns();
 
         let dataSource = this._getDataSource(orders);
 
-        let rowSelection = this.props.isMyAccount
-            ? {
-                  // Uncomment the following line to show translated text as a cancellable column header instead of checkbox
-                  //columnTitle: counterpart.translate("wallet.cancel")
-                  onChange: (selectedRowKeys, selectedRows) => {
-                      this.setState({selectedOrders: selectedRowKeys});
-                  },
-                  // Required in order resetSelected to work
-                  selectedRowKeys: this.state.selectedOrders
-              }
-            : null;
+        let tables = this._formatTables(
+            dataSource,
+            columns,
+            this.state.areAssetsGrouped
+        );
+
+        let onGroupChange = (checked, evt) => {
+            this.setState({areAssetsGrouped: checked});
+        };
 
         return (
             <div
@@ -320,17 +376,16 @@ class AccountOrders extends React.Component {
                             <Translate content="account.submit_orders" />
                         </button>
                     ) : null}
+                    {orders && ordersCount ? (
+                        <div className="group-by">
+                            <Translate content="account.group_by_asset" />
+                            <span className="text">:</span>
+                            <Switch onChange={onGroupChange} />
+                        </div>
+                    ) : null}
                 </div>
 
-                <div className="grid-content">
-                    <Table
-                        columns={columns}
-                        dataSource={dataSource}
-                        rowSelection={rowSelection}
-                        pagination={pagination}
-                        footer={footer}
-                    />
-                </div>
+                {tables}
             </div>
         );
     }

@@ -38,6 +38,7 @@
         "existing_user": "Существующий пользователь",
         "filter_orders": "Фильтрация",
         "follow": "Добавить контакт",
+        "group_by_asset": "Группировать по активу",
         "hidden_accounts_row": "Скрытые аккаунты",
         "hide_hidden": "Активные",
         "hide_ignored": "Не отображать скрытые аккаунты",
