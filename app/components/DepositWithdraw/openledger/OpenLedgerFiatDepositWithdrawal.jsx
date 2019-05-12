@@ -146,6 +146,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                         href="https://openledger.info/v/"
                         rel="noopener noreferrer"
                         target="_blank"
+                        className="external-link"
                     >
                         here
                     </a>{" "}
@@ -196,6 +197,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                         href="https://openledger.info/v/"
                         rel="noopener noreferrer"
                         target="_blank"
+                        className="external-link"
                     >
                         here
                     </a>{" "}

@@ -66,13 +66,14 @@ div.bordered-header {
 
 .exchange-bordered {
     border: 1px solid rgba(183, 183, 183, 0.29);
+    margin: 0;
 
-    div:first-child & {
-        margin: 0 10px 0 10px;
+    &#depth_chart {
+        padding: 5px 12px 0px 12px;
     }
 
-    div:last-child & {
-        margin: 0 10px 0 10px;
+    &#tv_chart {
+        padding-right: 12px;
     }
 }
 
@@ -110,4 +111,15 @@ div.bordered-header {
 
 .grid-content.app-tables > .content-block {
     margin-bottom: 0 !important;
+}
+
+.external-link:after {
+    content: "";
+    margin-left: 5px;
+    background: url("data:image/svg+xml;utf8, <svg version='1.1' xmlns='http://www.w3.org/2000/svg' fill='rgb(224, 224, 224)' width='32' height='32' viewBox='0 0 32 32'><path d='M8 20s1.838-6 12-6v6l12-8-12-8v6c-8 0-12 4.99-12 10zm14 4H4V12h3.934c.315-.372.654-.729 1.015-1.068 1.374-1.287 3.018-2.27 4.879-2.932H.001v20h26v-8.395l-4 2.667V24z'></path></svg>")
+        no-repeat left 2px;
+    background-size: 16px 16px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
 }

@@ -83,21 +83,26 @@ class NoLinkDecorator extends React.Component {
 
 class OperationTable extends React.Component {
     render() {
-        let fee_row =
-            this.props.fee.amount > 0 ? (
-                <tr>
-                    <td>
-                        <Translate component="span" content="transfer.fee" />
-                    </td>
-                    <td>
+        let fee_row = (
+            <tr>
+                <td>
+                    <Translate component="span" content="transfer.fee" />
+                </td>
+                <td>
+                    {this.props.fee.amount > 0 ? (
                         <FormattedAsset
                             color="fee"
                             amount={this.props.fee.amount}
                             asset={this.props.fee.asset_id}
                         />
-                    </td>
-                </tr>
-            ) : null;
+                    ) : (
+                        <label>
+                            <Translate content="transfer.free" />
+                        </label>
+                    )}
+                </td>
+            </tr>
+        );
 
         return (
             <div>
@@ -2162,7 +2167,178 @@ class Transaction extends React.Component {
                     );
 
                     break;
+                case "htlc_create":
+                    // add claim period to block time
+                    let claim_due = new Date(
+                        this.props.block.timestamp.getTime() +
+                            op[1].claim_period_seconds * 1000
+                    );
 
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.from"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].from} />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.to"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].to} />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.amount"
+                                />
+                            </td>
+                            <td>
+                                <FormattedAsset
+                                    amount={op[1].amount.amount}
+                                    asset={op[1].amount.asset_id}
+                                />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="htlc.claim_period_due"
+                                />
+                            </td>
+                            <td>
+                                <FormattedDate
+                                    value={claim_due}
+                                    format="full"
+                                />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="htlc.preimage_hash"
+                                />
+                            </td>
+                            <td>
+                                <Tooltip
+                                    placement="bottom"
+                                    title={counterpart.translate(
+                                        "htlc.preimage_hash_explanation"
+                                    )}
+                                >
+                                    <span>
+                                        {"(" +
+                                            op[1].preimage_size +
+                                            ", " +
+                                            op[1].preimage_hash[0] +
+                                            "): " +
+                                            op[1].preimage_hash[1]}
+                                    </span>
+                                </Tooltip>
+                            </td>
+                        </tr>
+                    );
+
+                    break;
+                case "htlc_redeem":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate component="span" content="htlc.id" />
+                            </td>
+                            <td>
+                                <span>{op[1].htlc_id}</span>
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="htlc.redeemer"
+                                />
+                            </td>
+                            <td>{this.linkToAccount(op[1].redeemer)}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="htlc.preimage"
+                                />
+                            </td>
+                            <td>{this.linkToAccount(op[1].preimage)}</td>
+                        </tr>
+                    );
+
+                    break;
+                case "htlc_extend":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate component="span" content="htlc.id" />
+                            </td>
+                            <td>
+                                <span>{op[1].htlc_id}</span>
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="htlc.update_issuer"
+                                />
+                            </td>
+                            <td>{this.linkToAccount(op[1].update_issuer)}</td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="htlc.seconds_to_add"
+                                />
+                            </td>
+                            <td>
+                                <span>{op[1].seconds_to_add}</span>
+                            </td>
+                        </tr>
+                    );
+
+                    break;
                 default:
                     console.log("unimplemented tx op:", op);
 

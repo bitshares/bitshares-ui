@@ -1483,7 +1483,7 @@ class BuySell extends React.Component {
                             hideModal={this.hideSettleModal}
                             showModal={this.showSettleModal}
                             asset={otherAsset.get("id")}
-                            account={this.props.currentAccount.get("name")}
+                            account={this.props.currentAccount}
                         />
                     )}
             </div>

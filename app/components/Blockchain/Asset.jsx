@@ -99,6 +99,12 @@ class Asset extends React.Component {
 
             if (!!feedPrice) {
                 try {
+                    let mcr = this.props.asset.getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     Apis.instance()
                         .db_api()
                         .exec("get_call_orders", [
@@ -112,6 +118,7 @@ class Asset extends React.Component {
                                     assets,
                                     this.props.asset.get("id"),
                                     feedPrice,
+                                    mcr,
                                     isPredictionMarket
                                 );
                             });
@@ -364,7 +371,7 @@ class Asset extends React.Component {
         if (asset.symbol === core_asset.get("symbol")) preferredMarket = "USD";
         if (urls && urls.length) {
             urls.forEach(url => {
-                let markdownUrl = `<a target="_blank" rel="noopener noreferrer" href="${url}">${url}</a>`;
+                let markdownUrl = `<a target="_blank" class="external-link" rel="noopener noreferrer" href="${url}">${url}</a>`;
                 desc = desc.replace(url, markdownUrl);
             });
         }
@@ -1568,6 +1575,21 @@ class Asset extends React.Component {
                             )}
                             {sortedCollateralBids.length && ")"}
                         </th>
+                        <th className="column-hide-small">
+                            <Translate content="transaction.cumulative_borrow_amount" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
+                                <FormattedAsset
+                                    amount={1}
+                                    asset={
+                                        sortedCollateralBids[0].bid.quote
+                                            .asset_id
+                                    }
+                                    hide_amount
+                                />
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
                         <th
                             style={{textAlign: "right"}}
                             className="clickable column-hide-small"
@@ -1609,6 +1631,7 @@ class Asset extends React.Component {
                 </thead>
             );
 
+            let cumulativeDebt = 0;
             secondRows = sortedCollateralBids.map(c => {
                 let included = "no";
                 if (!!c.consideredIfRevived) {
@@ -1620,6 +1643,9 @@ class Asset extends React.Component {
                         included = "no";
                     }
                 }
+
+                cumulativeDebt += c.debt;
+
                 return (
                     <tr className="margin-row" key={c.id}>
                         <td>
@@ -1638,6 +1664,16 @@ class Asset extends React.Component {
                         <td style={{textAlign: "right"}} className="">
                             <FormattedAsset
                                 amount={c.bid.quote.amount}
+                                asset={c.bid.quote.asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <FormattedAsset
+                                amount={cumulativeDebt}
                                 asset={c.bid.quote.asset_id}
                                 hide_asset
                             />

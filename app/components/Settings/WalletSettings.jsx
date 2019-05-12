@@ -4,6 +4,9 @@ import BalanceClaimActive from "../Wallet/BalanceClaimActive";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
+import {Form, Button} from "bitshares-ui-style-guide";
+
+const FormItem = Form.Item;
 
 export default class WalletSettings extends React.Component {
     constructor() {
@@ -46,48 +49,48 @@ export default class WalletSettings extends React.Component {
                 <ChangeActiveWallet />
                 <WalletDelete />
 
-                <section style={{padding: "15px 0"}} className="block-list">
-                    <header>
-                        <Translate content="wallet.balance_claims" />:
-                    </header>
-                </section>
-
-                <div style={{paddingBottom: 10}}>
-                    <Translate content="settings.lookup_text" />:
-                </div>
-                <div
-                    className="button outline"
-                    onClick={this.onLookup.bind(this)}
+                <FormItem
+                    label={counterpart.translate("wallet.balance_claims")}
+                    className="no-offset"
+                    style={{padding: "15px 0"}}
                 >
-                    <Translate content="wallet.balance_claim_lookup" />
-                </div>
+                    <div style={{paddingBottom: 10}}>
+                        <Translate content="settings.lookup_text" />:
+                    </div>
+                    <Button onClick={this.onLookup.bind(this)}>
+                        <Translate content="wallet.balance_claim_lookup" />
+                    </Button>
+                </FormItem>
 
                 {lookupActive ? <BalanceClaimActive /> : null}
 
-                <section style={{padding: "15px 0"}} className="block-list">
-                    <header>
-                        <Translate content="wallet.brainkey_seq_reset" />:
-                    </header>
-                </section>
-                <div style={{paddingBottom: 10}}>
-                    <p>
-                        <Translate
-                            unsafe
-                            content="wallet.brainkey_seq_reset_text"
-                        />
-                    </p>
-                    <div
-                        className="button outline"
-                        onClick={this.onResetBrainkeySequence.bind(this)}
-                    >
-                        <Translate content="wallet.brainkey_seq_reset_button" />
-                    </div>
-                    {this.state.resetMessage ? (
-                        <p style={{paddingTop: 10}} className="facolor-success">
-                            {this.state.resetMessage}
+                <FormItem
+                    label={counterpart.translate("wallet.brainkey_seq_reset")}
+                    className="no-offset"
+                    style={{paddingBottom: "15px"}}
+                >
+                    <div style={{paddingBottom: 10}}>
+                        <p>
+                            <Translate
+                                unsafe
+                                content="wallet.brainkey_seq_reset_text"
+                            />
                         </p>
-                    ) : null}
-                </div>
+                        <Button
+                            onClick={this.onResetBrainkeySequence.bind(this)}
+                        >
+                            <Translate content="wallet.brainkey_seq_reset_button" />
+                        </Button>
+                        {this.state.resetMessage ? (
+                            <p
+                                style={{paddingTop: 10}}
+                                className="facolor-success"
+                            >
+                                {this.state.resetMessage}
+                            </p>
+                        ) : null}
+                    </div>
+                </FormItem>
             </div>
         );
     }

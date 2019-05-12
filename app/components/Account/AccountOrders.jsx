@@ -9,11 +9,10 @@ import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
 import PaginatedList from "../Utility/PaginatedList";
-import {Input, Icon as AntIcon, Table} from "bitshares-ui-style-guide";
+import {Input, Icon, Table} from "bitshares-ui-style-guide";
 import AccountOrderRowDescription from "./AccountOrderRowDescription";
 
 import {Link} from "react-router-dom";
-import Icon from "../Icon/Icon";
 import {MarketPrice} from "../Utility/MarketPrice";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
@@ -134,11 +133,7 @@ class AccountOrders extends React.Component {
                                 "symbol"
                             )}_${dataItem.base.get("symbol")}`}
                         >
-                            <Icon
-                                name="trade"
-                                title="icons.trade.trade"
-                                className="icon-14px"
-                            />
+                            <Icon type="bar-chart" />
                         </Link>
                     );
                 }
@@ -305,7 +300,7 @@ class AccountOrders extends React.Component {
                                     "account.filter_orders"
                                 )}
                                 onChange={this.setFilterValue.bind(this)}
-                                addonAfter={<AntIcon type="search" />}
+                                addonAfter={<Icon type="search" />}
                             />
                         </div>
                     ) : null}

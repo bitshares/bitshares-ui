@@ -445,8 +445,8 @@ class AccountVoting extends React.Component {
             let now = new Date();
 
             /* Use the last valid budget object to estimate the current budget object id.
-            ** Budget objects are created once per hour
-            */
+             ** Budget objects are created once per hour
+             */
             let currentID =
                 idIndex +
                 Math.floor(
@@ -516,6 +516,62 @@ class AccountVoting extends React.Component {
         });
     }
 
+    _getMappedWorkers(workers, maxDailyPayout) {
+        let now = new Date();
+        let remainingDailyPayout = maxDailyPayout;
+        let voteThreshold = undefined;
+        let mapped = workers
+            .filter(a => {
+                if (!a) {
+                    return false;
+                } else {
+                    return true;
+                }
+            })
+            .sort((a, b) => {
+                // first sort by votes so payout order is correct
+                return this._getTotalVotes(b) - this._getTotalVotes(a);
+            })
+            .map((worker, index) => {
+                worker.isOngoing =
+                    new Date(worker.get("work_end_date") + "Z") > now &&
+                    new Date(worker.get("work_begin_date") + "Z") <= now;
+                worker.isUpcoming =
+                    new Date(worker.get("work_begin_date") + "Z") > now;
+                worker.isExpired =
+                    new Date(worker.get("work_end_date") + "Z") <= now;
+                let dailyPay = parseInt(worker.get("daily_pay"), 10);
+                worker.votes =
+                    worker.get("total_votes_for") -
+                    worker.get("total_votes_against");
+                if (remainingDailyPayout > 0 && worker.isOngoing) {
+                    worker.active = true;
+                    remainingDailyPayout = remainingDailyPayout - dailyPay;
+                    if (remainingDailyPayout <= 0 && !voteThreshold) {
+                        // remember when workers become inactive
+                        voteThreshold = worker.votes;
+                    }
+                    worker.remainingPayout = remainingDailyPayout + dailyPay;
+                } else {
+                    worker.active = false;
+                    worker.remainingPayout = 0;
+                }
+                return worker;
+            })
+            .sort((a, b) => {
+                // sort out expired
+                if (a.isExpired !== b.isExpired) {
+                    return a.isExpired ? 1 : -1;
+                } else {
+                    return this._getTotalVotes(b) - this._getTotalVotes(a);
+                }
+            });
+        return {
+            mappedWorkers: mapped,
+            voteThreshold: voteThreshold
+        };
+    }
+
     render() {
         let {workerTableIndex, prev_proxy_account_id} = this.state;
         const accountHasProxy = !!prev_proxy_account_id;
@@ -550,10 +606,12 @@ class AccountVoting extends React.Component {
             );
         }
 
-        let now = new Date();
         let workerArray = this._getWorkerArray();
+        let {mappedWorkers, voteThreshold} = this._getMappedWorkers(
+            workerArray,
+            workerBudget
+        );
 
-        let voteThreshold = 0;
         const hideProposals = (filteredWorker, compareWith) => {
             if (!this.state.hideLegacyProposals) {
                 return true;
@@ -590,38 +648,49 @@ class AccountVoting extends React.Component {
 
             return !hidden;
         };
-
-        let workers = workerArray.filter(a => {
-            if (!a) {
-                return false;
-            }
-            return (
-                new Date(a.get("work_end_date") + "Z") > now &&
-                new Date(a.get("work_begin_date") + "Z") <= now
-            );
-        });
-        workers = workers
+        let polls = mappedWorkers
             .filter(a => {
-                return hideProposals(a, workers);
-            })
-            .sort((a, b) => {
-                return this._getTotalVotes(b) - this._getTotalVotes(a);
+                let lowercase = a.get("name").toLowerCase();
+                return lowercase.includes("bsip") || lowercase.includes("poll");
             })
             .map((worker, index) => {
-                let dailyPay = parseInt(worker.get("daily_pay"), 10);
-                workerBudget = workerBudget - dailyPay;
-                let votes =
-                    worker.get("total_votes_for") -
-                    worker.get("total_votes_against");
-                if (workerBudget <= 0 && !voteThreshold) {
-                    voteThreshold = votes;
-                }
-                if (voteThreshold && votes < voteThreshold) return null;
-
                 return (
                     <WorkerApproval
                         preferredUnit={preferredUnit}
-                        rest={workerBudget + dailyPay}
+                        rest={worker.remainingPayout}
+                        rank={index + 1}
+                        poll={true}
+                        key={worker.get("id")}
+                        worker={worker.get("id")}
+                        vote_ids={
+                            this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]
+                        }
+                        onChangeVotes={this.onChangeVotes.bind(this)}
+                        proxy={hasProxy}
+                        voteThreshold={voteThreshold}
+                    />
+                );
+            })
+            .filter(a => !!a);
+
+        // remove polls
+        mappedWorkers = mappedWorkers.filter(a => {
+            let lowercase = a.get("name").toLowerCase();
+            return !lowercase.includes("bsip") && !lowercase.includes("poll");
+        });
+
+        let onGoingWorkers = mappedWorkers.filter(a => {
+            return a.isOngoing;
+        });
+        let activeWorkers = mappedWorkers
+            .filter(a => {
+                return a.active && a.isOngoing;
+            })
+            .map((worker, index) => {
+                return (
+                    <WorkerApproval
+                        preferredUnit={preferredUnit}
+                        rest={worker.remainingPayout}
                         rank={index + 1}
                         key={worker.get("id")}
                         worker={worker.get("id")}
@@ -636,31 +705,15 @@ class AccountVoting extends React.Component {
             })
             .filter(a => !!a);
 
-        // unusedBudget = Math.max(0, workerBudget);
-
-        let newWorkers = workerArray.filter(a => {
-            if (!a) {
-                return false;
-            }
-
-            let votes = a.get("total_votes_for") - a.get("total_votes_against");
-            return (
-                (new Date(a.get("work_end_date") + "Z") > now &&
-                    votes < voteThreshold) ||
-                new Date(a.get("work_begin_date") + "Z") > now
-            );
-        });
-        newWorkers = newWorkers
+        let newWorkers = mappedWorkers
             .filter(a => {
-                return hideProposals(a, newWorkers);
-            })
-            .sort((a, b) => {
-                return this._getTotalVotes(b) - this._getTotalVotes(a);
+                return (
+                    !a.active &&
+                    !a.isExpired &&
+                    hideProposals(a, onGoingWorkers)
+                );
             })
             .map((worker, index) => {
-                // let dailyPay = parseInt(worker.get("daily_pay"), 10);
-                // workerBudget = workerBudget - dailyPay;
-
                 return (
                     <WorkerApproval
                         preferredUnit={preferredUnit}
@@ -680,19 +733,9 @@ class AccountVoting extends React.Component {
 
         let expiredWorkers = workerArray
             .filter(a => {
-                if (!a) {
-                    return false;
-                }
-
-                return new Date(a.get("work_end_date") + "Z") <= now;
-            })
-            .sort((a, b) => {
-                return this._getTotalVotes(b) - this._getTotalVotes(a);
+                return a.isExpired;
             })
             .map((worker, index) => {
-                // let dailyPay = parseInt(worker.get("daily_pay"), 10);
-                // workerBudget = workerBudget - dailyPay;
-
                 return (
                     <WorkerApproval
                         preferredUnit={preferredUnit}
@@ -940,7 +983,8 @@ class AccountVoting extends React.Component {
                                             </div>
                                         </Link>
                                     </div>
-                                    <div className="selector">
+
+                                    <div className="selector inline-block">
                                         {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
                                         <div
                                             style={{paddingLeft: 10}}
@@ -968,7 +1012,7 @@ class AccountVoting extends React.Component {
                                         >
                                             {counterpart.translate(
                                                 "account.votes.active",
-                                                {count: workers.length}
+                                                {count: activeWorkers.length}
                                             )}
                                         </div>
 
@@ -990,10 +1034,33 @@ class AccountVoting extends React.Component {
                                                 <Translate content="account.votes.expired" />
                                             </div>
                                         ) : null}
-                                        <div className="inline-block">
-                                            {hideLegacy}
-                                        </div>
+
+                                        {polls.length ? (
+                                            <div
+                                                className={cnames(
+                                                    "inline-block",
+                                                    {
+                                                        inactive:
+                                                            workerTableIndex !==
+                                                            3
+                                                    }
+                                                )}
+                                                onClick={this._setWorkerTableIndex.bind(
+                                                    this,
+                                                    3
+                                                )}
+                                            >
+                                                {counterpart.translate(
+                                                    "account.votes.polls",
+                                                    {count: polls.length}
+                                                )}
+                                            </div>
+                                        ) : null}
                                     </div>
+                                    <div className="inline-block">
+                                        {hideLegacy}
+                                    </div>
+
                                     <div style={{marginTop: "2rem"}}>
                                         {proxyInput}
                                         <div
@@ -1006,24 +1073,6 @@ class AccountVoting extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* {showExpired ? null : (
-                                <div style={{paddingTop: 10, paddingBottom: 20}}>
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <Translate content="account.votes.total_budget" />:</td>
-                                                <td style={{paddingLeft: 20, textAlign: "right"}}>
-                                                    &nbsp;{globalObject ? <FormattedAsset amount={totalBudget} asset="1.3.0" decimalOffset={5}/> : null}
-                                                    <span>&nbsp;({globalObject ? <EquivalentValueComponent fromAsset="1.3.0" toAsset={preferredUnit} amount={totalBudget}/> : null})</span>
-                                                </td></tr>
-                                            <tr>
-                                                <td><Translate content="account.votes.unused_budget" />:</td>
-                                                <td style={{paddingLeft: 20, textAlign: "right"}}> {globalObject ? <FormattedAsset amount={unusedBudget} asset="1.3.0" decimalOffset={5}/> : null}</td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>)} */}
 
                                 <table className="table dashboard-table table-hover">
                                     {workerTableIndex ===
@@ -1194,8 +1243,10 @@ class AccountVoting extends React.Component {
                                         {workerTableIndex === 0
                                             ? newWorkers
                                             : workerTableIndex === 1
-                                                ? workers
-                                                : expiredWorkers}
+                                                ? activeWorkers
+                                                : workerTableIndex === 2
+                                                    ? expiredWorkers
+                                                    : polls}
                                     </tbody>
                                 </table>
                             </Tab>
