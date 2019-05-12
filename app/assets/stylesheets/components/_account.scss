@@ -390,6 +390,16 @@ table.table.dashboard-table {
     }
 }
 
+.ant-table-content .ant-table-footer .total-value {
+    text-align: right;
+
+    .text {
+        margin-right: 20px;
+        text-transform: uppercase;
+        @include RobotoMedium;
+    }
+}
+
 div.header-selector > div.new-worker-button {
     padding-left: 0;
     padding-top: 10px;

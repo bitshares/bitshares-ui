@@ -9,9 +9,15 @@ import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
 import PaginatedList from "../Utility/PaginatedList";
-import {Input, Icon} from "bitshares-ui-style-guide";
-import AccountTableHeader from "./AccountTableHeader";
-import AccountOrderRow from "./AccountOrderRow";
+import {Input, Icon as AntIcon, Table} from "bitshares-ui-style-guide";
+import AccountOrderRowDescription from "./AccountOrderRowDescription";
+
+import {Link} from "react-router-dom";
+import Icon from "../Icon/Icon";
+import {MarketPrice} from "../Utility/MarketPrice";
+import FormattedPrice from "../Utility/FormattedPrice";
+import AssetName from "../Utility/AssetName";
+import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -21,28 +27,6 @@ class AccountOrders extends React.Component {
             selectedOrders: [],
             filterValue: ""
         };
-    }
-
-    componentDidMount() {
-        let cancelHeader = document.getElementById("cancelAllOrders");
-
-        if (cancelHeader) {
-            cancelHeader.addEventListener(
-                "click",
-                function() {
-                    let orders = this._getFilteredOrders.call(this);
-                    orders = orders.toJS ? orders.toJS() : orders;
-
-                    this.setState({selectedOrders: orders});
-
-                    let checkboxes = document.querySelectorAll(".orderCancel");
-
-                    checkboxes.forEach(item => {
-                        if (!item.checked) item.checked = true;
-                    });
-                }.bind(this)
-            );
-        }
     }
 
     _getFilteredOrders() {
@@ -65,16 +49,174 @@ class AccountOrders extends React.Component {
         });
     }
 
-    _cancelLimitOrder(orderID, e) {
-        e.preventDefault();
+    _getDataSource(orders) {
+        let dataSource = [];
 
-        MarketsActions.cancelLimitOrder(
-            this.props.account.get("id"),
-            orderID, // order id to cancel
-            false // Don't show normal confirms
-        ).catch(err => {
-            console.log("cancel order error:", err);
+        orders.forEach(orderID => {
+            let order = ChainStore.getObject(orderID).toJS();
+            let base = ChainStore.getAsset(order.sell_price.base.asset_id);
+            let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+
+            if (base && quote) {
+                let assets = {
+                    [base.get("id")]: {precision: base.get("precision")},
+                    [quote.get("id")]: {precision: quote.get("precision")}
+                };
+
+                const {marketName} = marketUtils.getMarketName(base, quote);
+                const direction = this.props.marketDirections.get(marketName);
+
+                let marketQuoteId = direction
+                    ? quote.get("id")
+                    : base.get("id");
+                let marketBaseId = direction ? base.get("id") : quote.get("id");
+
+                let limitOrder = new LimitOrder(order, assets, marketQuoteId);
+
+                let marketBase = ChainStore.getAsset(marketBaseId);
+                let marketQuote = ChainStore.getAsset(marketQuoteId);
+
+                let isBid = limitOrder.isBid();
+                let dataItem = {
+                    key: order.id,
+                    order: limitOrder,
+                    isBid: isBid,
+                    quote: marketQuote,
+                    base: marketBase,
+                    marketName: marketName,
+                    preferredUnit: this.props.settings
+                        ? this.props.settings.get("unit")
+                        : "1.3.0",
+                    quoteColor: !isBid ? "value negative" : "value positive",
+                    baseColor: isBid ? "value negative" : "value positive"
+                };
+
+                dataSource.push(dataItem);
+            }
         });
+
+        // Sort by price first
+        dataSource.sort((a, b) => {
+            return a.order.getPrice() - b.order.getPrice();
+        });
+
+        // And then - by market. This way, all records will be grouped by market, but sorted by price inside
+        dataSource.sort((a, b) => {
+            if (a.marketName > b.marketName) {
+                return 1;
+            }
+            if (a.marketName < b.marketName) {
+                return -1;
+            }
+
+            return 0;
+        });
+
+        return dataSource;
+    }
+
+    _getColumns() {
+        let onCell = (dataItem, rowIndex) => {
+            return {
+                onClick: this.onFlip.bind(this, dataItem.marketName)
+            };
+        };
+
+        return [
+            {
+                key: "trade",
+                title: counterpart.translate("account.trade"),
+                align: "center",
+                render: dataItem => {
+                    return (
+                        <Link
+                            to={`/market/${dataItem.quote.get(
+                                "symbol"
+                            )}_${dataItem.base.get("symbol")}`}
+                        >
+                            <Icon
+                                name="trade"
+                                title="icons.trade.trade"
+                                className="icon-14px"
+                            />
+                        </Link>
+                    );
+                }
+            },
+            {
+                key: "orderID",
+                title: counterpart.translate("transaction.order_id"),
+                render: dataItem => "#" + dataItem.order.id.substring(4)
+            },
+            {
+                key: "description",
+                title: counterpart.translate("exchange.description"),
+                render: dataItem => (
+                    <AccountOrderRowDescription {...dataItem} />
+                ),
+                onCell: onCell,
+                className: "clickable"
+            },
+            {
+                key: "price",
+                title: counterpart.translate("exchange.price"),
+                render: dataItem => (
+                    <FormattedPrice
+                        base_amount={dataItem.order.sellPrice().base.amount}
+                        base_asset={dataItem.order.sellPrice().base.asset_id}
+                        quote_amount={dataItem.order.sellPrice().quote.amount}
+                        quote_asset={dataItem.order.sellPrice().quote.asset_id}
+                        force_direction={dataItem.base.get("symbol")}
+                        hide_symbols
+                    />
+                ),
+                onCell: onCell,
+                className: "clickable"
+            },
+            {
+                key: "marketPrice",
+                title: counterpart.translate("exchange.price_market"),
+                render: dataItem =>
+                    dataItem.isBid ? (
+                        <MarketPrice
+                            base={dataItem.base.get("id")}
+                            quote={dataItem.quote.get("id")}
+                            force_direction={dataItem.base.get("symbol")}
+                            hide_symbols
+                            hide_asset
+                        />
+                    ) : (
+                        <MarketPrice
+                            base={dataItem.base.get("id")}
+                            quote={dataItem.quote.get("id")}
+                            force_direction={dataItem.base.get("symbol")}
+                            hide_symbols
+                            hide_asset
+                        />
+                    ),
+                onCell: onCell,
+                className: "clickable"
+            },
+            {
+                key: "value",
+                title: counterpart.translate("exchange.value"),
+                align: "right",
+                render: dataItem => (
+                    <div>
+                        <EquivalentValueComponent
+                            hide_asset
+                            amount={dataItem.order.amountForSale().getAmount()}
+                            fromAsset={dataItem.order.amountForSale().asset_id}
+                            noDecimals={true}
+                            toAsset={dataItem.preferredUnit}
+                        />{" "}
+                        <AssetName name={dataItem.preferredUnit} />
+                    </div>
+                ),
+                onCell: onCell,
+                className: "clickable"
+            }
+        ];
     }
 
     _cancelLimitOrders(orderId) {
@@ -96,37 +238,12 @@ class AccountOrders extends React.Component {
         SettingsActions.changeMarketDirection(setting);
     }
 
-    onCheckCancel(orderId, evt) {
-        let {selectedOrders} = this.state;
-        let checked = evt.target.checked;
-
-        if (checked) {
-            this.setState({selectedOrders: selectedOrders.concat([orderId])});
-        } else {
-            let index = selectedOrders.indexOf(orderId);
-
-            if (index > -1) {
-                this.setState({
-                    selectedOrders: selectedOrders
-                        .slice(0, index)
-                        .concat(selectedOrders.slice(index + 1))
-                });
-            }
-        }
-    }
-
     setFilterValue(evt) {
         this.setState({filterValue: evt.target.value.toLowerCase()});
     }
 
     resetSelected() {
         this.setState({selectedOrders: []});
-
-        let checkboxes = document.querySelectorAll(".orderCancel");
-
-        checkboxes.forEach(item => {
-            if (item.checked) item.checked = false;
-        });
     }
 
     cancelSelected() {
@@ -134,11 +251,8 @@ class AccountOrders extends React.Component {
     }
 
     render() {
-        let {account, marketDirections} = this.props;
+        let {account} = this.props;
         let {filterValue, selectedOrders} = this.state;
-        let markets = {};
-
-        let marketOrders = {};
 
         if (!account.get("orders")) {
             return null;
@@ -150,111 +264,32 @@ class AccountOrders extends React.Component {
             orders = this._getFilteredOrders.call(this);
         }
 
-        orders.forEach(orderID => {
-            let order = ChainStore.getObject(orderID).toJS();
-            let base = ChainStore.getAsset(order.sell_price.base.asset_id);
-            let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+        let pagination = {
+            hideOnSinglePage: true,
+            pageSize: 20,
+            showTotal: (total, range) =>
+                counterpart.translate("utility.total_x_items", {
+                    count: total
+                })
+        };
 
-            if (base && quote) {
-                let assets = {
-                    [base.get("id")]: {precision: base.get("precision")},
-                    [quote.get("id")]: {precision: quote.get("precision")}
-                };
-                // let baseID = parseInt(order.sell_price.base.asset_id.split(".")[2], 10);
-                // let quoteID = parseInt(order.sell_price.quote.asset_id.split(".")[2], 10);
+        let footer = () => this.props.children;
 
-                // let marketName = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
-                const {marketName} = marketUtils.getMarketName(base, quote);
-                const direction = marketDirections.get(marketName);
+        let columns = this._getColumns();
 
-                if (!markets[marketName]) {
-                    if (direction) {
-                        markets[marketName] = {
-                            base: {
-                                id: base.get("id"),
-                                symbol: base.get("symbol"),
-                                precision: base.get("precision")
-                            },
-                            quote: {
-                                id: quote.get("id"),
-                                symbol: quote.get("symbol"),
-                                precision: quote.get("precision")
-                            }
-                        };
-                    } else {
-                        markets[marketName] = {
-                            base: {
-                                id: quote.get("id"),
-                                symbol: quote.get("symbol"),
-                                precision: quote.get("precision")
-                            },
-                            quote: {
-                                id: base.get("id"),
-                                symbol: base.get("symbol"),
-                                precision: base.get("precision")
-                            }
-                        };
-                    }
-                }
-                let limitOrder = new LimitOrder(
-                    order,
-                    assets,
-                    markets[marketName].quote.id
-                );
+        let dataSource = this._getDataSource(orders);
 
-                let marketBase = ChainStore.getAsset(
-                    markets[marketName].base.id
-                );
-                let marketQuote = ChainStore.getAsset(
-                    markets[marketName].quote.id
-                );
-
-                if (!marketOrders[marketName]) {
-                    marketOrders[marketName] = [];
-                }
-
-                marketOrders[marketName].push(
-                    <AccountOrderRow
-                        ref={markets[marketName].base.symbol}
-                        key={order.id}
-                        order={limitOrder}
-                        base={marketBase}
-                        quote={marketQuote}
-                        onCancel={this._cancelLimitOrder.bind(this, order.id)}
-                        price={limitOrder.getPrice()}
-                        isMyAccount={this.props.isMyAccount}
-                        settings={this.props.settings}
-                        onFlip={this.onFlip.bind(this, marketName)}
-                        onCheckCancel={this.onCheckCancel.bind(this, order.id)}
-                    />
-                );
-            }
-        });
-
-        let tables = [];
-
-        for (let market in marketOrders) {
-            if (marketOrders[market].length) {
-                tables = tables.concat(
-                    marketOrders[market].sort((a, b) => {
-                        return a.props.price - b.props.price;
-                    })
-                );
-                // tables.push(
-                //     <tbody key={market}>
-                //         {/* {marketIndex > 0 ? <tr><td colSpan={this.props.isMyAccount ? "7" : "6"}><span style={{visibility: "hidden"}}>H</span></td></tr> : null} */}
-                //         {marketOrders[market].sort((a, b) => {
-                //             return a.props.price - b.props.price;
-                //         })}
-                //     </tbody>
-                // );
-                // marketIndex++;
-            }
-        }
-
-        // tables.sort((a, b) => {
-        //     return parseInt(a.key, 10) - parseInt(b.key, 10);
-        // })
+        let rowSelection = this.props.isMyAccount
+            ? {
+                  // Uncomment the following line to show translated text as a cancellable column header instead of checkbox
+                  //columnTitle: counterpart.translate("wallet.cancel")
+                  onChange: (selectedRowKeys, selectedRows) => {
+                      this.setState({selectedOrders: selectedRowKeys});
+                  },
+                  // Required in order resetSelected to work
+                  selectedRowKeys: this.state.selectedOrders
+              }
+            : null;
 
         return (
             <div
@@ -270,7 +305,7 @@ class AccountOrders extends React.Component {
                                     "account.filter_orders"
                                 )}
                                 onChange={this.setFilterValue.bind(this)}
-                                addonAfter={<Icon type="search" />}
+                                addonAfter={<AntIcon type="search" />}
                             />
                         </div>
                     ) : null}
@@ -292,17 +327,15 @@ class AccountOrders extends React.Component {
                     ) : null}
                 </div>
 
-                <PaginatedList
-                    pageSize={20}
-                    className="table table-striped dashboard-table table-hover"
-                    header={
-                        <AccountTableHeader
-                            isMyAccount={this.props.isMyAccount}
-                        />
-                    }
-                    rows={tables}
-                    extraRow={this.props.children}
-                />
+                <div className="grid-content">
+                    <Table
+                        columns={columns}
+                        dataSource={dataSource}
+                        rowSelection={rowSelection}
+                        pagination={pagination}
+                        footer={footer}
+                    />
+                </div>
             </div>
         );
     }
