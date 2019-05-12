@@ -1814,7 +1814,7 @@ class Asset extends React.Component {
                 cumulativeColl +=
                     c.collateral / Math.pow(10, c.getCollateral().precision);
                 cumulativeDebt +=
-                    c.debt / Math.pow(10, c.amountToReceive().precision); // / c.amountToReceive().precision;
+                    c.debt / Math.pow(10, c.amountToReceive().precision);
 
                 return (
                     <tr className="margin-row" key={c.id}>
