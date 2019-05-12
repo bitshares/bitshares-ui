@@ -23,6 +23,7 @@ import AssetOwnerUpdate from "./AssetOwnerUpdate";
 import AssetPublishFeed from "./AssetPublishFeed";
 import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class AssetFlag extends React.Component {
     render() {
@@ -1807,29 +1808,52 @@ class Asset extends React.Component {
                 </thead>
             );
 
+            let cumulativeDebt = 0;
+            let cumulativeColl = 0;
             secondRows = sortedCallOrders.map(c => {
+                cumulativeColl +=
+                    c.collateral / Math.pow(10, c.getCollateral().precision);
+                cumulativeDebt +=
+                    c.debt / Math.pow(10, c.amountToReceive().precision); // / c.amountToReceive().precision;
+
                 return (
                     <tr className="margin-row" key={c.id}>
                         <td>
                             <LinkToAccountById account={c.borrower} />
                         </td>
-                        <td
-                            style={{textAlign: "right"}}
-                            className="column-hide-small"
+                        <Tooltip
+                            title={utils.format_number(
+                                cumulativeColl,
+                                c.getCollateral().precision
+                            )}
+                            placement="right"
                         >
-                            <FormattedAsset
-                                amount={c.collateral}
-                                asset={c.getCollateral().asset_id}
-                                hide_asset
-                            />
-                        </td>
-                        <td style={{textAlign: "right"}}>
-                            <FormattedAsset
-                                amount={c.debt}
-                                asset={c.amountToReceive().asset_id}
-                                hide_asset
-                            />
-                        </td>
+                            <td
+                                style={{textAlign: "right"}}
+                                className="column-hide-small"
+                            >
+                                <FormattedAsset
+                                    amount={c.collateral}
+                                    asset={c.getCollateral().asset_id}
+                                    hide_asset
+                                />
+                            </td>
+                        </Tooltip>
+                        <Tooltip
+                            title={utils.format_number(
+                                cumulativeDebt,
+                                c.amountToReceive().precision
+                            )}
+                            placement="right"
+                        >
+                            <td style={{textAlign: "right"}}>
+                                <FormattedAsset
+                                    amount={c.debt}
+                                    asset={c.amountToReceive().asset_id}
+                                    hide_asset
+                                />
+                            </td>
+                        </Tooltip>
                         <td
                             style={{textAlign: "right", paddingRight: 10}}
                             className="column-hide-small"
