@@ -1126,10 +1126,11 @@ class BuySell extends React.Component {
                                         showTime
                                         showToday={false}
                                         disabledDate={current =>
-                                            current < moment().add(2, "minutes")}
+                                            current < moment().add(59, "minutes")}
                                         value={
-                                            expirationCustomTime !== "Specific" &&
-                                            expirationCustomTime
+                                            expirationCustomTime !== "Specific" ?
+                                                expirationCustomTime :
+                                                moment().add(1, "hour")
                                         }
                                         onChange={
                                             this.props.onExpirationCustomChange
@@ -1145,6 +1146,7 @@ class BuySell extends React.Component {
                                             moment(expirationTip)
                                                 .format("Do MMM YYYY hh:mm A")
                                         }
+                                        value={this.props.expirationType}
                                     >
                                         {expirationsOptionsList}
                                     </select>
