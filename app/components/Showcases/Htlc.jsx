@@ -29,7 +29,7 @@ class Htlc extends Component {
     _update() {
         let currentAccount = this.props.currentAccount;
 
-        if (currentAccount) {
+        if (hasLoaded(currentAccount)) {
             let htlc_list = currentAccount
                 .get("history")
                 .toJS()
@@ -128,7 +128,7 @@ class Htlc extends Component {
                             <LinkToAssetById asset={amount.asset_id} />
                         </span>
                     ),
-                    hash: preimage_hash,
+                    hash: preimage_hash[1],
                     expires: counterpart.localize(new Date(expiration + "Z"), {
                         type: "date",
                         format: "full"

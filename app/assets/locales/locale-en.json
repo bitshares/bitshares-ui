@@ -1889,11 +1889,17 @@
             "create_htlc": "Create HTLC",
             "expiration": "Expiration",
             "expiration_date": "Expiration date",
+            "expiration_period": {
+                "one_day": "One day",
+                "two_days": "Two days",
+                "one_week": "One week"
+            },
             "expires": "Expires",
             "extend": "Extend",
             "extend_htlc": "Extend HTLC",
             "from": "From",
             "hash": "Hash",
+            "howto": "Some explanation and howto on Preimage",
             "preimage": "Preimage",
             "preimage_secret_button": "Enter secret preimage",
             "sender": "Sender",
