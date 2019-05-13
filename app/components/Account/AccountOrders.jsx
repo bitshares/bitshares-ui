@@ -12,13 +12,15 @@ import PaginatedList from "../Utility/PaginatedList";
 import {Input, Icon, Table, Switch} from "bitshares-ui-style-guide";
 import AccountOrderRowDescription from "./AccountOrderRowDescription";
 import CollapsibleTable from "../Utility/CollapsibleTable";
-import {groupBy} from "lodash-es";
+import {groupBy, sumBy, meanBy} from "lodash-es";
+import {FormattedNumber} from "react-intl";
 
 import {Link} from "react-router-dom";
 import {MarketPrice} from "../Utility/MarketPrice";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
+import utils from "common/utils";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -105,13 +107,130 @@ class AccountOrders extends React.Component {
         return dataSource;
     }
 
-    _getColumns() {
+    _getColumns(areAssetsGrouped, groupedDataItems) {
         let onCell = (dataItem, rowIndex) => {
             return {
                 onClick: this.onFlip.bind(this, dataItem.marketName)
             };
         };
 
+        let firstDataItem,
+            operation,
+            forText,
+            baseAsset,
+            quoteAsset,
+            baseName,
+            quoteName,
+            averagePrice,
+            marketPrice,
+            value;
+
+        let getBaseAsset = dataItem =>
+            dataItem.order[
+                dataItem.isBid ? "amountToReceive" : "amountForSale"
+            ]().getAmount({real: true});
+        let formatBaseAsset = baseAsset =>
+            utils.format_number(
+                baseAsset,
+                firstDataItem.base.get("precision"),
+                false
+            );
+
+        let getQuoteAsset = dataItem =>
+            dataItem.order[
+                dataItem.isBid ? "amountForSale" : "amountToReceive"
+            ]().getAmount({real: true});
+        let formatQuoteAsset = quoteAsset =>
+            utils.format_number(
+                quoteAsset,
+                firstDataItem.quote.get("precision"),
+                false
+            );
+
+        let formatMarketPrice = dataItem => (
+            <MarketPrice
+                base={dataItem.base.get("id")}
+                quote={dataItem.quote.get("id")}
+                force_direction={dataItem.base.get("symbol")}
+                hide_symbols
+                hide_asset
+            />
+        );
+
+        if (areAssetsGrouped) {
+            // Assuming that first element always exist because data items were passed as grouped
+            firstDataItem = groupedDataItems[0];
+
+            operation = counterpart.translate(
+                "exchange." + (firstDataItem.isBid ? "buy" : "sell")
+            );
+            forText = counterpart.translate("transaction.for");
+
+            baseAsset = formatBaseAsset(sumBy(groupedDataItems, getBaseAsset));
+            quoteAsset = formatQuoteAsset(
+                sumBy(groupedDataItems, getQuoteAsset)
+            );
+
+            let quoteColor = !firstDataItem.isBid
+                ? "value negative"
+                : "value positive";
+            let baseColor = firstDataItem.isBid
+                ? "value negative"
+                : "value positive";
+
+            baseName = (
+                <AssetName
+                    noTip
+                    customClass={quoteColor}
+                    name={firstDataItem.quote.get("symbol")}
+                />
+            );
+            quoteName = (
+                <AssetName
+                    noTip
+                    customClass={baseColor}
+                    name={firstDataItem.base.get("symbol")}
+                />
+            );
+
+            averagePrice = meanBy(groupedDataItems, dataItem =>
+                dataItem.order.sellPrice().toReal(true)
+            );
+
+            // Taken from FormattedPrice internal logic
+            let decimals = Math.min(
+                8,
+                firstDataItem.order.sellPrice().base.precision
+            );
+            averagePrice = (
+                <FormattedNumber
+                    value={averagePrice}
+                    minimumFractionDigits={Math.max(2, decimals)}
+                    maximumFractionDigits={Math.max(2, decimals)}
+                />
+            );
+
+            marketPrice = formatMarketPrice(firstDataItem);
+
+            let valueAmount = sumBy(groupedDataItems, dataItem =>
+                dataItem.order.amountForSale().getAmount()
+            );
+
+            value = (
+                <div>
+                    <EquivalentValueComponent
+                        hide_asset
+                        amount={valueAmount}
+                        fromAsset={firstDataItem.order.amountForSale().asset_id}
+                        noDecimals={true}
+                        toAsset={firstDataItem.preferredUnit}
+                    />{" "}
+                    <AssetName name={firstDataItem.preferredUnit} />
+                </div>
+            );
+        }
+
+        // Conditional array items: https://stackoverflow.com/a/47771259
         return [
             {
                 key: "trade",
@@ -134,18 +253,69 @@ class AccountOrders extends React.Component {
                 title: counterpart.translate("transaction.order_id"),
                 render: dataItem => "#" + dataItem.order.id.substring(4)
             },
-            {
-                key: "description",
-                title: counterpart.translate("exchange.description"),
-                render: dataItem => (
-                    <AccountOrderRowDescription {...dataItem} />
-                ),
-                onCell: onCell,
-                className: "clickable"
-            },
+            ...(areAssetsGrouped
+                ? [
+                      {
+                          key: "operation",
+                          title: operation,
+                          render: dataItem => operation,
+                          onCell: onCell,
+                          className: "clickable"
+                      },
+                      {
+                          key: "baseAsset",
+                          title: baseAsset,
+                          render: dataItem =>
+                              formatBaseAsset(getBaseAsset(dataItem)),
+                          onCell: onCell,
+                          className: "clickable"
+                      },
+                      {
+                          key: "baseName",
+                          title: baseName,
+                          render: dataItem => baseName,
+                          onCell: onCell,
+                          className: "clickable"
+                      },
+                      {
+                          key: "for",
+                          title: forText,
+                          render: dataItem => forText,
+                          onCell: onCell,
+                          className: "clickable"
+                      },
+                      {
+                          key: "quoteAsset",
+                          title: quoteAsset,
+                          render: dataItem =>
+                              formatQuoteAsset(getQuoteAsset(dataItem)),
+                          onCell: onCell,
+                          className: "clickable"
+                      },
+                      {
+                          key: "quoteName",
+                          title: quoteName,
+                          render: dataItem => quoteName,
+                          onCell: onCell,
+                          className: "clickable"
+                      }
+                  ]
+                : [
+                      {
+                          key: "description",
+                          title: counterpart.translate("exchange.description"),
+                          render: dataItem => (
+                              <AccountOrderRowDescription {...dataItem} />
+                          ),
+                          onCell: onCell,
+                          className: "clickable"
+                      }
+                  ]),
             {
                 key: "price",
-                title: counterpart.translate("exchange.price"),
+                title: areAssetsGrouped
+                    ? averagePrice
+                    : counterpart.translate("exchange.price"),
                 render: dataItem => (
                     <FormattedPrice
                         base_amount={dataItem.order.sellPrice().base.amount}
@@ -161,31 +331,18 @@ class AccountOrders extends React.Component {
             },
             {
                 key: "marketPrice",
-                title: counterpart.translate("exchange.price_market"),
-                render: dataItem =>
-                    dataItem.isBid ? (
-                        <MarketPrice
-                            base={dataItem.base.get("id")}
-                            quote={dataItem.quote.get("id")}
-                            force_direction={dataItem.base.get("symbol")}
-                            hide_symbols
-                            hide_asset
-                        />
-                    ) : (
-                        <MarketPrice
-                            base={dataItem.base.get("id")}
-                            quote={dataItem.quote.get("id")}
-                            force_direction={dataItem.base.get("symbol")}
-                            hide_symbols
-                            hide_asset
-                        />
-                    ),
+                title: areAssetsGrouped
+                    ? marketPrice
+                    : counterpart.translate("exchange.price_market"),
+                render: formatMarketPrice,
                 onCell: onCell,
                 className: "clickable"
             },
             {
                 key: "value",
-                title: counterpart.translate("exchange.value"),
+                title: areAssetsGrouped
+                    ? value
+                    : counterpart.translate("exchange.value"),
                 align: "right",
                 render: dataItem => (
                     <div>
@@ -205,7 +362,7 @@ class AccountOrders extends React.Component {
         ];
     }
 
-    _formatTables(dataSource, columns, areAssetsGrouped) {
+    _formatTables(dataSource, areAssetsGrouped) {
         let pagination = {
             hideOnSinglePage: true,
             pageSize: 20,
@@ -223,6 +380,7 @@ class AccountOrders extends React.Component {
                   //columnTitle: counterpart.translate("wallet.cancel")
                   onChange: (selectedRowKeys, selectedRows) => {
                       this.setState({selectedOrders: selectedRowKeys});
+                      console.log("srk", selectedRowKeys);
                   },
                   // Required in order resetSelected to work
                   selectedRowKeys: this.state.selectedOrders
@@ -240,6 +398,7 @@ class AccountOrders extends React.Component {
             );
 
             for (let [key, value] of Object.entries(grouped)) {
+                let columns = this._getColumns(areAssetsGrouped, value);
                 tables.push(
                     <div className="grid-content grid-wrapper" key={key}>
                         <CollapsibleTable
@@ -247,7 +406,6 @@ class AccountOrders extends React.Component {
                             dataSource={value}
                             rowSelection={rowSelection}
                             pagination={pagination}
-                            footer={footer}
                             isCollapsed={true}
                         />
                     </div>
@@ -266,6 +424,8 @@ class AccountOrders extends React.Component {
 
                 return 0;
             });
+
+            let columns = this._getColumns(areAssetsGrouped, dataSource);
 
             tables.push(
                 <div className="grid-content grid-wrapper" key="groupedTable">
@@ -328,13 +488,10 @@ class AccountOrders extends React.Component {
             orders = this._getFilteredOrders.call(this);
         }
 
-        let columns = this._getColumns();
-
         let dataSource = this._getDataSource(orders);
 
         let tables = this._formatTables(
             dataSource,
-            columns,
             this.state.areAssetsGrouped
         );
 
