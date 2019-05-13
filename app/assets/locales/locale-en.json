@@ -452,6 +452,8 @@
         "no_valid": "No valid feeds for %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
         "target_collateral_ratio": "Target Collateral Ratio",
+        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "%(asset_symbol)s Margin",
         "update": "Update",
         "use_max": "Use Max"
@@ -1921,7 +1923,7 @@
         "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "To complete the deposit, go to your external %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
         "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
-        "feed_price": "This is the current external feed price",
+        "feed_price": "This is the current external feed price (median of all feed prices given by witnesses)",
         "filter_ops": "Use this list to filter your history by operation type.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",

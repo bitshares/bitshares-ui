@@ -217,6 +217,14 @@ class MarginPosition extends React.Component {
         }
     }
 
+    _getTargetCollateralRatio() {
+        const co = this.props.object && this.props.object.toJS();
+
+        return co && !isNaN(co.target_collateral_ratio)
+            ? co.target_collateral_ratio / 1000
+            : 0;
+    }
+
     render() {
         let {debtAsset, collateralAsset, object} = this.props;
 
@@ -247,6 +255,7 @@ class MarginPosition extends React.Component {
         const collateral_asset = has_order
             ? co.call_price.base.asset_id
             : collateralAsset.get("id");
+        const target_collateral_ratio = this._getTargetCollateralRatio();
 
         return (
             <tr className="margin-row">
@@ -287,6 +296,11 @@ class MarginPosition extends React.Component {
                 ) : (
                     <td />
                 )}
+                <td>
+                    {target_collateral_ratio
+                        ? utils.format_number(target_collateral_ratio, 2)
+                        : null}
+                </td>
                 <td style={alignRight}>
                     {has_order ? (
                         <TotalBalanceValue
