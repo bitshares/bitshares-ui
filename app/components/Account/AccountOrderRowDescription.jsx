@@ -11,39 +11,13 @@ class AccountOrderRowDescription extends React.Component {
         let quoteColor = !isBid ? "value negative" : "value positive";
         let baseColor = isBid ? "value negative" : "value positive";
 
-        return isBid ? (
+        return (
             <Translate
-                content="exchange.buy_description"
-                baseAsset={utils.format_number(
-                    order.amountToReceive().getAmount({real: true}),
-                    base.get("precision"),
-                    false
-                )}
-                quoteAsset={utils.format_number(
-                    order[
-                        isBid ? "amountForSale" : "amountToReceive"
-                    ]().getAmount({real: true}),
-                    quote.get("precision"),
-                    false
-                )}
-                baseName={
-                    <AssetName
-                        noTip
-                        customClass={quoteColor}
-                        name={quote.get("symbol")}
-                    />
+                content={
+                    isBid
+                        ? "exchange.buy_description"
+                        : "exchange.sell_description"
                 }
-                quoteName={
-                    <AssetName
-                        noTip
-                        customClass={baseColor}
-                        name={base.get("symbol")}
-                    />
-                }
-            />
-        ) : (
-            <Translate
-                content="exchange.sell_description"
                 baseAsset={utils.format_number(
                     order[
                         isBid ? "amountToReceive" : "amountForSale"
