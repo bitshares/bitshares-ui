@@ -315,9 +315,15 @@ class AccountOrders extends React.Component {
                   ]),
             {
                 key: "price",
-                title: areAssetsGrouped
-                    ? averagePrice
-                    : counterpart.translate("exchange.price"),
+                title: areAssetsGrouped ? (
+                    <div>
+                        <Translate content="account.average_price" />
+                        <br />
+                        {averagePrice}
+                    </div>
+                ) : (
+                    counterpart.translate("exchange.price")
+                ),
                 align: areAssetsGrouped ? "right" : "left",
                 render: dataItem => (
                     <FormattedPrice
@@ -334,9 +340,15 @@ class AccountOrders extends React.Component {
             },
             {
                 key: "marketPrice",
-                title: areAssetsGrouped
-                    ? marketPrice
-                    : counterpart.translate("exchange.price_market"),
+                title: areAssetsGrouped ? (
+                    <div>
+                        <Translate content="exchange.price_market" />
+                        <br />
+                        {marketPrice}
+                    </div>
+                ) : (
+                    counterpart.translate("exchange.price_market")
+                ),
                 align: areAssetsGrouped ? "right" : "left",
                 render: formatMarketPrice,
                 onCell: onCell,
@@ -344,9 +356,15 @@ class AccountOrders extends React.Component {
             },
             {
                 key: "value",
-                title: areAssetsGrouped
-                    ? value
-                    : counterpart.translate("exchange.value"),
+                title: areAssetsGrouped ? (
+                    <div>
+                        <Translate content="exchange.value" />
+                        <br />
+                        {value}
+                    </div>
+                ) : (
+                    counterpart.translate("exchange.value")
+                ),
                 align: "right",
                 render: dataItem => (
                     <div>
