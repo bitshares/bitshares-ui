@@ -17,12 +17,14 @@ class AmountSelector extends DecimalChecker {
         onChange: PropTypes.func,
         tabIndex: PropTypes.number,
         error: PropTypes.string,
-        scroll_length: PropTypes.number
+        scroll_length: PropTypes.number,
+        selectDisabled: PropTypes.bool
     };
 
     static defaultProps = {
         disabled: false,
-        tabIndex: 0
+        tabIndex: 0,
+        selectDisabled: false
     };
 
     componentDidMount() {
@@ -108,6 +110,9 @@ class AmountSelector extends DecimalChecker {
                             value={this.props.asset.get("symbol")}
                             assets={Immutable.List(this.props.assets)}
                             onChange={this.onAssetChange.bind(this)}
+                            disabled={
+                                this.props.selectDisabled ? true : undefined
+                            }
                         />
                     ) : null}
                 </Input.Group>

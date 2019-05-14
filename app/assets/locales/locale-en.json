@@ -1904,11 +1904,15 @@
             "preimage_secret_button": "Enter secret preimage",
             "sender": "Sender",
             "size": "Size",
-            "recipient": "Recepient",
+            "recipient": "Recipient",
             "to": "To",
             "tooltip": {
                 "preimage_input": "Field requires a secret preimage",
-                "preimage_button": "Please click to enter secret preimage"
+                "preimage_button": "Please click to enter secret preimage",
+                "new_random": "Roll the dice and create a new random string.",
+                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
+                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
+                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
             }
         },
         "paper_wallet": {

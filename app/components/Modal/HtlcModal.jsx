@@ -1,7 +1,7 @@
 import React from "react";
 import Translate from "react-translate-component";
 import {ChainStore, key} from "bitsharesjs";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import cnames from "classnames";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
@@ -19,13 +19,15 @@ import counterpart from "counterpart";
 import CopyButton from "../Utility/CopyButton";
 import {connect} from "alt-react";
 import {
+    Form,
     Modal,
     Button,
     Select,
     Input,
-    Icon as AntIcon
+    Icon as AntIcon,
+    DatePicker,
+    Tooltip
 } from "bitshares-ui-style-guide";
-import {DatePicker} from "antd";
 import moment from "moment";
 import HtlcActions from "actions/HtlcActions";
 import "../../assets/stylesheets/components/_htlc.scss";
@@ -34,14 +36,13 @@ class Preimage extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.InitialState();
-        this.preimageInput = React.createRef();
     }
 
     InitialState() {
         return {
             activeSercret: false,
             preimage: "",
-            ciphers: ["sha256", "ripemd160", "sha1"],
+            ciphers: ["sha256", "ripemd160"],
             cipher: "sha256",
             hash: "",
             size: ""
@@ -49,15 +50,13 @@ class Preimage extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (
-            !this.props.isModalVisible &&
-            prevProps.isModalVisible !== this.props.isModalVisible
-        ) {
-            this.setState(this.InitialState()); // reset state
-        }
         if (prevState.hash !== this.props.hash && this.props.isRedeem) {
             this.setState({hash: this.props.hash});
         }
+    }
+
+    componentDidMount() {
+        this.generateRandom({target: {}});
     }
 
     onClick() {
@@ -88,42 +87,50 @@ class Preimage extends React.Component {
     }
 
     generateRandom(e) {
-        e.target.value = ("P" + key.get_random_key().toWif()).substr(0, 30);
+        e.target.value = key
+            .get_random_key()
+            .toWif()
+            .substr(10, 30);
         this.onInputChanged(e);
     }
 
     render() {
+        let label = (
+            <React.Fragment>
+                {counterpart.translate(this.props.label)}
+                <AntIcon
+                    className="inline-block"
+                    style={{fontSize: "1rem", marginLeft: "10px"}}
+                    type={"edit"}
+                    onClick={this.onClick.bind(this)}
+                />
+            </React.Fragment>
+        );
         return (
-            <div className="grid-block vertical no-overflow">
-                <div>
-                    <label className="left-label inline-block">
-                        {counterpart.translate(this.props.label)}
-                    </label>
-                    <AntIcon
-                        className="inline-block"
-                        style={{fontSize: "1rem", marginLeft: "10px"}}
-                        type={"edit"}
-                        onClick={this.onClick.bind(this)}
-                    />
-                </div>
-                <h6>{counterpart.translate("showcases.htlc.howto")}</h6>
-
+            <Form.Item label={label}>
+                <span>{counterpart.translate("showcases.htlc.howto")}</span>
                 <Input.Group className="content-block transfer-input preimage-row">
-                    <Input
-                        style={{width: "60%"}}
-                        name="preimage"
-                        id="preimage"
-                        type="text"
-                        onChange={this.onInputChanged.bind(this)}
-                        value={this.state.preimage}
-                        placeholder={counterpart.translate(
-                            "showcases.htlc.preimage"
+                    <Tooltip
+                        title={counterpart.translate(
+                            "showcases.htlc.tooltip.preimage_random"
                         )}
-                        disabled={!this.state.activeSercret}
-                    />
+                    >
+                        <Input
+                            style={{width: "60%"}}
+                            name="preimage"
+                            id="preimage"
+                            type="text"
+                            onChange={this.onInputChanged.bind(this)}
+                            value={this.state.preimage}
+                            placeholder={counterpart.translate(
+                                "showcases.htlc.preimage"
+                            )}
+                            readOnly={!this.state.activeSercret}
+                        />
+                    </Tooltip>
                     <Select
                         optionLabelProp={"value"}
-                        style={{width: "20%"}}
+                        style={{width: "19.5%"}}
                         onChange={this.onInputChanged.bind(this)}
                         value={this.state.cipher}
                     >
@@ -145,31 +152,45 @@ class Preimage extends React.Component {
                 </Input.Group>
 
                 <Input.Group className="content-block transfer-input preimage-row">
-                    <Input
-                        style={{width: "79%"}}
-                        name="hash"
-                        id="hash"
-                        type="text"
-                        value={this.state.hash || ""}
-                        placeholder={counterpart.translate(
-                            "showcases.htlc.hash"
+                    <Tooltip
+                        title={counterpart.translate(
+                            "showcases.htlc.tooltip.preimage_hash"
                         )}
-                        readOnly={true}
-                    />
-                    <Input
-                        style={{width: "53px"}}
-                        name="size"
-                        id="size"
-                        type="text"
-                        value={this.state.size || ""}
-                        placeholder={counterpart.translate(
-                            "showcases.htlc.size"
+                    >
+                        <Input
+                            style={{width: "78%"}}
+                            name="hash"
+                            id="hash"
+                            type="text"
+                            value={this.state.hash || ""}
+                            placeholder={counterpart.translate(
+                                "showcases.htlc.hash"
+                            )}
+                            readOnly={true}
+                        />
+                    </Tooltip>
+                    <Tooltip
+                        title={counterpart.translate(
+                            "showcases.htlc.tooltip.preimage_size"
                         )}
-                        readOnly={true}
-                    />
-                    <CopyButton text={this.state.hash} />
+                    >
+                        <Input
+                            style={{width: "53px", marginRight: "0.2rem"}}
+                            name="size"
+                            id="size"
+                            type="text"
+                            value={this.state.size || ""}
+                            placeholder={counterpart.translate(
+                                "showcases.htlc.size"
+                            )}
+                            readOnly={true}
+                        />
+                    </Tooltip>
+                    <div style={{float: "right"}}>
+                        <CopyButton text={this.state.hash} />
+                    </div>
                 </Input.Group>
-            </div>
+            </Form.Item>
         );
     }
 }
@@ -208,7 +229,9 @@ class HtlcModal extends React.Component {
             cipher: null,
             claim_period: 86400,
             period: "one_day",
-            expirationDate: null
+            expirationDate: moment()
+                .add("seconds", 180)
+                .add(1, "day")
         };
     }
 
@@ -344,7 +367,7 @@ class HtlcModal extends React.Component {
                         asset
                     ),
                     asset_id: amount.asset_id,
-                    period_start_time: expiration,
+                    period_start_time: period_start,
                     hash: preimage_hash[1]
                 });
             }
@@ -404,8 +427,8 @@ class HtlcModal extends React.Component {
                         operation && operation.type === "create"
                             ? "htlc_create"
                             : operation && operation.type === "redeem"
-                            ? "htlc_redeem"
-                            : "htlc_extend",
+                                ? "htlc_redeem"
+                                : "htlc_extend",
                     data: {
                         type: "memo",
                         content: null
@@ -508,23 +531,27 @@ class HtlcModal extends React.Component {
                 operation && operation.type === "create"
                     ? "htlc_create"
                     : operation && operation.type === "redeem"
-                    ? "htlc_redeem"
-                    : "htlc_extend",
+                        ? "htlc_redeem"
+                        : "htlc_extend",
             data: {
                 type: "memo",
                 content: null
             }
         }).then(({fee, hasBalance, hasPoolBalance}) => {
-            shouldPayFeeWithAssetAsync(from_account, fee).then(should =>
-                should
-                    ? this.setState({fee_asset_id: asset_id}, this._updateFee)
-                    : this.setState({
-                          feeAmount: fee,
-                          fee_asset_id: fee.asset_id,
-                          hasBalance,
-                          hasPoolBalance,
-                          error: !hasBalance || !hasPoolBalance
-                      })
+            shouldPayFeeWithAssetAsync(from_account, fee).then(
+                should =>
+                    should
+                        ? this.setState(
+                              {fee_asset_id: asset_id},
+                              this._updateFee
+                          )
+                        : this.setState({
+                              feeAmount: fee,
+                              fee_asset_id: fee.asset_id,
+                              hasBalance,
+                              hasPoolBalance,
+                              error: !hasBalance || !hasPoolBalance
+                          })
             );
         });
     }
@@ -606,12 +633,26 @@ class HtlcModal extends React.Component {
     }
 
     setPeriod = days => {
+        let estimatedExpiry = moment().add(days, "day");
         let period = "one_day";
-        if (days === 2) {
-            period = "two_days";
-        } else if (days === 7) period = "one_week";
-        const claim_period = days * 60 * 60 * 24; //convert day to seconds
-        this.setState({claim_period, period, expirationDate: null});
+        const claim_period = days * 60 * 60 * 24; // convert day to seconds
+        switch (days) {
+            case 1:
+                period = "one_day";
+                break;
+            case 2:
+                period = "two_days";
+                break;
+            case 7:
+                period = "one_week";
+                break;
+        }
+
+        this.setState({
+            claim_period,
+            period,
+            expirationDate: estimatedExpiry
+        });
     };
 
     render() {
@@ -726,15 +767,58 @@ class HtlcModal extends React.Component {
             from_account.get("id") == to_account.get("id") ||
             !((cipher && preimage) || hash) ||
             !claim_period;
+        let modalTitle =
+            operation && operation.type === "create"
+                ? counterpart.translate("showcases.htlc.create_htlc")
+                : isExtend
+                    ? counterpart.translate("showcases.htlc.extend_htlc")
+                    : counterpart.translate("showcases.htlc.redeem_htlc");
+        let sendButtonText =
+            operation && operation.type === "create"
+                ? counterpart.translate("showcases.direct_debit.create")
+                : counterpart.translate("showcases.direct_debit.update");
+
+        const amountHeader = (
+            <div className="form-input-header--label">
+                {counterpart.translate("showcases.htlc.expiration_date")}
+                <div className="form-input-header--right">
+                    <span
+                        className={cnames("period-row", {
+                            "is-active": this.state.period === "one_day"
+                        })}
+                        onClick={() => this.setPeriod(1)}
+                    >
+                        {counterpart.translate(
+                            "showcases.htlc.expiration_period.one_day"
+                        )}
+                    </span>
+                    <span
+                        className={cnames("period-row", {
+                            "is-active": this.state.period === "two_days"
+                        })}
+                        onClick={() => this.setPeriod(2)}
+                    >
+                        {counterpart.translate(
+                            "showcases.htlc.expiration_period.two_days"
+                        )}
+                    </span>
+                    <span
+                        className={cnames("period-row", {
+                            "is-active": this.state.period === "one_week"
+                        })}
+                        onClick={() => this.setPeriod(7)}
+                    >
+                        {counterpart.translate(
+                            "showcases.htlc.expiration_period.one_week"
+                        )}
+                    </span>
+                </div>
+            </div>
+        );
+
         return (
             <Modal
-                title={
-                    operation && operation.type === "create"
-                        ? counterpart.translate("showcases.htlc.create_htlc")
-                        : isExtend
-                        ? counterpart.translate("showcases.htlc.extend_htlc")
-                        : counterpart.translate("showcases.htlc.redeem_htlc")
-                }
+                title={modalTitle}
                 visible={this.props.isModalVisible}
                 overlay={true}
                 onCancel={this.props.hideModal}
@@ -746,13 +830,7 @@ class HtlcModal extends React.Component {
                             !isSubmitNotValid ? this.onSubmit.bind(this) : null
                         }
                     >
-                        {operation && operation.type === "create"
-                            ? counterpart.translate(
-                                  "showcases.direct_debit.create"
-                              )
-                            : counterpart.translate(
-                                  "showcases.direct_debit.update"
-                              )}
+                        {sendButtonText}
                     </Button>,
                     <Button key="Cancel" onClick={this.props.hideModal}>
                         <Translate component="span" content="transfer.cancel" />
@@ -760,64 +838,61 @@ class HtlcModal extends React.Component {
                 ]}
             >
                 <div className="grid-block vertical no-overflow">
-                    <div noValidate>
+                    <Form className="full-width" layout="vertical">
                         {/* Sender */}
                         {isRedeem ? (
-                            <div className="content-block">
-                                <AccountSelector
-                                    label="showcases.htlc.sender"
-                                    accountName={from_name}
-                                    account={from_account}
-                                    size={60}
-                                    typeahead={true}
-                                    hideImage
-                                    disabled={true}
-                                />
-                            </div>
+                            <AccountSelector
+                                label="showcases.htlc.sender"
+                                accountName={from_name}
+                                account={from_account}
+                                size={60}
+                                typeahead={true}
+                                hideImage
+                                disabled={true}
+                            />
                         ) : null}
 
-                        <div>
-                            {/* Recipient */}
-                            <div className="content-block">
-                                <AccountSelector
-                                    label="showcases.htlc.recipient"
-                                    accountName={to_name}
-                                    account={to_account}
-                                    onChange={this.toChanged.bind(this)}
-                                    onAccountChanged={this.onToAccountChanged}
-                                    size={60}
-                                    typeahead={true}
-                                    hideImage
-                                    disabled={isExtend || isRedeem}
-                                />
-                            </div>
-                        </div>
+                        <AccountSelector
+                            label="showcases.htlc.recipient"
+                            accountName={to_name}
+                            account={to_account}
+                            onChange={this.toChanged.bind(this)}
+                            onAccountChanged={this.onToAccountChanged}
+                            size={60}
+                            typeahead={true}
+                            hideImage
+                            disabled={isExtend || isRedeem}
+                        />
 
                         {!isRedeem ? (
-                            <div className="content-block transfer-input">
-                                {/* Amount */}
-                                <AmountSelector
-                                    label="showcases.htlc.amount"
-                                    amount={amount}
-                                    onChange={this.onAmountChanged}
-                                    asset={
-                                        asset_types.length > 0 && asset
-                                            ? asset.get("id")
-                                            : asset_id
+                            <AmountSelector
+                                label="showcases.htlc.amount"
+                                amount={amount}
+                                onChange={this.onAmountChanged.bind(this)}
+                                asset={
+                                    asset_types.length > 0 && asset
+                                        ? asset.get("id")
+                                        : asset_id
                                             ? asset_id
                                             : asset_types[0]
-                                    }
-                                    assets={asset_types}
-                                    display_balance={balance}
-                                    allowNaN={true}
-                                    disabled={isExtend || isRedeem}
-                                />
-                            </div>
+                                }
+                                assets={asset_types}
+                                display_balance={
+                                    isExtend || isRedeem ? undefined : balance
+                                }
+                                allowNaN={true}
+                                disabled={isExtend || isRedeem}
+                                selectDisabled={isExtend || isRedeem}
+                            />
                         ) : null}
 
-                        <div className="content-block transfer-input">
-                            {/*  Preimage */}
-                            {isExtend ? (
+                        {/*  Preimage */}
+                        {isExtend ? (
+                            <Form.Item
+                                label={counterpart.translate(
+                                    "showcases.htlc.preimage"
+                                )}
+                            >
                                 <Input
                                     type="text"
                                     value={hash || ""}
@@ -827,89 +902,27 @@ class HtlcModal extends React.Component {
                                     readOnly={true}
                                     disabled={true}
                                 />
-                            ) : (
-                                <Preimage
-                                    label="showcases.htlc.preimage"
-                                    onAction={this.onHashCreate.bind(this)}
-                                    action_label="showcases.htlc.preimage_secret_button"
-                                    isModalVisible={this.props.isModalVisible}
-                                    hash={hash}
-                                    size={size}
-                                    isRedeem={isRedeem}
-                                />
-                            )}
-                        </div>
+                            </Form.Item>
+                        ) : (
+                            <Preimage
+                                label="showcases.htlc.preimage"
+                                onAction={this.onHashCreate.bind(this)}
+                                action_label="showcases.htlc.preimage_secret_button"
+                                isModalVisible={this.props.isModalVisible}
+                                hash={hash}
+                                size={size}
+                                isRedeem={isRedeem}
+                            />
+                        )}
 
                         {!isRedeem ? (
                             <div>
-                                <div className="content-block transfer-input">
-                                    {/*  Expiration  */}
-                                    <div>
-                                        <label className="left-label inline-block">
-                                            {counterpart.translate(
-                                                "showcases.htlc.expiration_date"
-                                            )}
-                                        </label>
-                                        <div
-                                            className="inline-block"
-                                            style={{float: "right"}}
-                                        >
-                                            <span
-                                                className={cnames(
-                                                    "period-row",
-                                                    {
-                                                        "is-active":
-                                                            this.state
-                                                                .period ===
-                                                            "one_day"
-                                                    }
-                                                )}
-                                                onClick={() =>
-                                                    this.setPeriod(1)
-                                                }
-                                            >
-                                                {counterpart.translate(
-                                                    "showcases.htlc.expiration_period.one_day"
-                                                )}
-                                            </span>
-                                            <span
-                                                className={cnames(
-                                                    "period-row",
-                                                    {
-                                                        "is-active":
-                                                            this.state
-                                                                .period ===
-                                                            "two_days"
-                                                    }
-                                                )}
-                                                onClick={() =>
-                                                    this.setPeriod(2)
-                                                }
-                                            >
-                                                {counterpart.translate(
-                                                    "showcases.htlc.expiration_period.two_days"
-                                                )}
-                                            </span>
-                                            <span
-                                                className={cnames(
-                                                    "period-row",
-                                                    {
-                                                        "is-active":
-                                                            this.state
-                                                                .period ===
-                                                            "one_week"
-                                                    }
-                                                )}
-                                                onClick={() =>
-                                                    this.setPeriod(7)
-                                                }
-                                            >
-                                                {counterpart.translate(
-                                                    "showcases.htlc.expiration_period.one_week"
-                                                )}
-                                            </span>
-                                        </div>
-                                    </div>
+                                {/*  Expiration  */}
+                                <Form.Item
+                                    label={amountHeader}
+                                    validateStatus={""}
+                                    className="form-input-header"
+                                >
                                     <DatePicker
                                         showToday={true}
                                         showTime
@@ -924,7 +937,7 @@ class HtlcModal extends React.Component {
                                         }
                                         value={expirationDate}
                                     />
-                                </div>
+                                </Form.Item>
                                 <div className="content-block transfer-input">
                                     <div className="no-margin no-padding">
                                         {/*  F E E  */}
@@ -945,10 +958,10 @@ class HtlcModal extends React.Component {
                                                         ? feeAmount.asset_id
                                                         : fee_asset_types.length ===
                                                           1
-                                                        ? fee_asset_types[0]
-                                                        : fee_asset_id
-                                                        ? fee_asset_id
-                                                        : fee_asset_types[0]
+                                                            ? fee_asset_types[0]
+                                                            : fee_asset_id
+                                                                ? fee_asset_id
+                                                                : fee_asset_types[0]
                                                 }
                                                 assets={fee_asset_types}
                                                 display_balance={balance_fee}
@@ -967,7 +980,7 @@ class HtlcModal extends React.Component {
                                 </div>
                             </div>
                         ) : null}
-                    </div>
+                    </Form>
                 </div>
             </Modal>
         );
