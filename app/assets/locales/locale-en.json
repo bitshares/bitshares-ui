@@ -391,7 +391,8 @@
             "empty_white_by": "No accounts have whitelisted %(account)s.",
             "title": "Whitelist",
             "white_by": "Whitelisted by",
-            "whitelist_authorities": "Whitelist authority"
+            "whitelist_authorities": "Whitelist authority",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -824,7 +825,8 @@
                 "blacklist_markets": "Market blacklist",
                 "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities",
                 "whitelist_authorities": "Whitelist authorities",
-                "whitelist_markets": "Market whitelist"
+                "whitelist_markets": "Market whitelist",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist"
             }
         },
         "assets": {

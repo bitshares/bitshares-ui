@@ -229,7 +229,8 @@ class AssetActions {
         isBitAsset,
         is_prediction_market,
         bitasset_opts,
-        description
+        description,
+        reward_percent
     ) {
         // Create asset action here...
         console.log(
@@ -288,7 +289,10 @@ class AssetActions {
                 whitelist_markets: [],
                 blacklist_markets: [],
                 description: description,
-                extensions: null
+                extensions: {
+                    reward_percent: reward_percent,
+                    whitelist_market_fee_sharing: []
+                }
             },
             is_prediction_market: is_prediction_market,
             extensions: null
@@ -331,7 +335,8 @@ class AssetActions {
         auths,
         feedProducers,
         originalFeedProducers,
-        assetChanged
+        assetChanged,
+        reward_percent
     ) {
         // Create asset action here...
         let tr = WalletApi.new_transaction();
@@ -388,7 +393,10 @@ class AssetActions {
                     blacklist_authorities: auths.blacklist_authorities.toJS(),
                     whitelist_markets: auths.whitelist_markets.toJS(),
                     blacklist_markets: auths.blacklist_markets.toJS(),
-                    extensions: asset.getIn(["options", "extensions"]),
+                    extensions: {
+                        reward_percent: reward_percent,
+                        whitelist_market_fee_sharing: auths.whitelist_market_fee_sharing.toJS()
+                    },
                     core_exchange_rate: {
                         quote: {
                             amount: cr_quote_amount,

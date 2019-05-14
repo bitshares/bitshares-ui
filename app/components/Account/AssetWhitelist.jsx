@@ -16,12 +16,13 @@ class AssetWhitelist extends React.Component {
 
         this.state = {
             listType: props.assetWhiteListType,
-            accountTable: props.assetWhiteListType.indexOf("market") === -1,
+            accountTable: props.assetWhiteListType.indexOf("markets") === -1,
             listTypes: [
                 "whitelist_authorities",
                 "blacklist_authorities",
                 "whitelist_markets",
-                "blacklist_markets"
+                "blacklist_markets",
+                "whitelist_market_fee_sharing"
             ],
             assetInput: null,
             asset_id: null
@@ -190,7 +191,7 @@ class AssetWhitelist extends React.Component {
     _onSwitchType(type) {
         this.setState({
             listType: type,
-            accountTable: type.indexOf("market") === -1
+            accountTable: type.indexOf("markets") === -1
         });
         SettingsActions.changeViewSetting({
             assetWhiteListType: type
@@ -239,16 +240,19 @@ class AssetWhitelist extends React.Component {
     }
 }
 
-export default connect(AssetWhitelist, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            assetWhiteListType: SettingsStore.getState().viewSettings.get(
-                "assetWhiteListType",
-                "whitelist_authorities"
-            )
-        };
+export default connect(
+    AssetWhitelist,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                assetWhiteListType: SettingsStore.getState().viewSettings.get(
+                    "assetWhiteListType",
+                    "whitelist_authorities"
+                )
+            };
+        }
     }
-});
+);

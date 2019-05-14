@@ -296,7 +296,8 @@ class AccountAssetCreate extends React.Component {
             core_exchange_rate,
             isBitAsset,
             is_prediction_market,
-            bitasset_opts
+            bitasset_opts,
+            reward_percent
         } = this.state;
 
         let {account} = this.props;
@@ -321,7 +322,8 @@ class AccountAssetCreate extends React.Component {
             isBitAsset,
             is_prediction_market,
             bitasset_opts,
-            description
+            description,
+            reward_percent
         ).then(result => {
             console.log(
                 "... AssetActions.createAsset(account_id, update)",

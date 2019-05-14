@@ -24,6 +24,7 @@ import AssetFeedProducers from "./AssetFeedProducers";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {withRouter} from "react-router-dom";
 import {Modal, Button, Notification, Switch} from "bitshares-ui-style-guide";
+import Immutable from "immutable";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
@@ -117,6 +118,12 @@ class AccountAssetUpdate extends React.Component {
             core_exchange_rate.base.asset_id
         ).get("symbol");
 
+        let whitelist_market_fee_sharing_val = props.asset.getIn([
+            "options",
+            "extensions",
+            "whitelist_market_fee_sharing"
+        ]);
+
         return {
             isAssetUpdateConfirmationModalVisible: false,
             update: {
@@ -163,6 +170,10 @@ class AccountAssetUpdate extends React.Component {
                 "options",
                 "whitelist_markets"
             ]),
+            whitelist_market_fee_sharing:
+                whitelist_market_fee_sharing_val != null
+                    ? whitelist_market_fee_sharing_val
+                    : new Immutable.List([]),
             blacklist_markets: props.asset.getIn([
                 "options",
                 "blacklist_markets"
@@ -216,7 +227,9 @@ class AccountAssetUpdate extends React.Component {
             JSON.stringify(s.whitelist_markets) !==
                 JSON.stringify(p.whitelist_markets) ||
             JSON.stringify(s.blacklist_markets) !==
-                JSON.stringify(p.blacklist_markets)
+                JSON.stringify(p.blacklist_markets) ||
+            JSON.stringify(s.whitelist_market_fee_sharing) !==
+                JSON.stringify(p.whitelist_market_fee_sharing)
         );
     }
 
@@ -358,8 +371,12 @@ class AccountAssetUpdate extends React.Component {
             whitelist_authorities: this.state.whitelist_authorities,
             blacklist_authorities: this.state.blacklist_authorities,
             whitelist_markets: this.state.whitelist_markets,
-            blacklist_markets: this.state.blacklist_markets
+            blacklist_markets: this.state.blacklist_markets,
+            whitelist_market_fee_sharing: this.state
+                .whitelist_market_fee_sharing
         };
+
+        console.log("on account update init : ", auths);
 
         let feedProducersJS = isBitAsset ? feedProducers.toJS() : null;
         let originalFeedProducersJS = isBitAsset
@@ -756,9 +773,13 @@ class AccountAssetUpdate extends React.Component {
     }
 
     onChangeList(key, action = "add", id) {
+        console.log("op " + action + " on key `" + key + "`. id = " + id);
+
         let current = this.state[key];
         if (action === "add" && !current.includes(id)) {
             current = current.push(id);
+
+            console.log("current = " + current);
         } else if (action === "remove" && current.includes(id)) {
             current = current.remove(current.indexOf(id));
         }
@@ -1189,6 +1210,9 @@ class AccountAssetUpdate extends React.Component {
                                     }
                                     whitelist_markets={
                                         this.state.whitelist_markets
+                                    }
+                                    whitelist_market_fee_sharing={
+                                        this.state.whitelist_market_fee_sharing
                                     }
                                     blacklist_markets={
                                         this.state.blacklist_markets
