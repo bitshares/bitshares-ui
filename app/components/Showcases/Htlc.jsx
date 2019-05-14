@@ -6,14 +6,16 @@ import {
     Row,
     Button,
     Icon,
-    Table
+    Table,
+    Tooltip
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import utils from "common/utils";
 import HtlcModal from "../Modal/HtlcModal";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import {bindToCurrentAccount, hasLoaded} from "../Utility/BindToCurrentAccount";
+import HtlcActions from "../../actions/HtlcActions";
 
 class Htlc extends Component {
     constructor(props) {
@@ -26,23 +28,29 @@ class Htlc extends Component {
         };
     }
 
-    _update() {
+    async _update() {
         let currentAccount = this.props.currentAccount;
 
         if (hasLoaded(currentAccount)) {
-            let htlc_list = currentAccount
-                .get("history")
-                .toJS()
-                .filter(tr => tr.op[0] === 49);
+            let htlc_list = await HtlcActions.getHTLCs(
+                currentAccount.get("id")
+            );
 
-            htlc_list.forEach(item => {
+            for (let i = 0; i < htlc_list.length; i++) {
+                let item = htlc_list[i];
                 try {
-                    // to trigger caching for modal
-                    ChainStore.getAsset(item.op[1].amount.asset_id, false);
-                    ChainStore.getAccount(item.op[1].from, false);
-                    ChainStore.getAccount(item.op[1].to, false);
+                    await FetchChainObjects(
+                        ChainStore.getObject,
+                        [item.transfer.asset_id],
+                        undefined,
+                        {}
+                    );
+                    await FetchChainObjects(ChainStore.getAccountName, [
+                        item.transfer.from,
+                        item.transfer.to
+                    ]);
                 } catch (err) {}
-            });
+            }
 
             this.setState({
                 htlc_list
@@ -91,31 +99,23 @@ class Htlc extends Component {
 
         if (htlc_list.length) {
             dataSource = htlc_list.map(item => {
-                const {
-                    to,
-                    from,
-                    amount,
-                    claim_period_seconds,
-                    preimage_hash
-                } = item.op[1];
+                const to = item.transfer.to;
+                const from = item.transfer.from;
+                const amount = {
+                    amount: item.transfer.amount,
+                    asset_id: item.transfer.asset_id
+                };
+                const expiration = new Date(
+                    item.conditions.time_lock.expiration
+                );
 
-                const asset = ChainStore.getAsset(amount.asset_id, false);
+                const asset = ChainStore.getAsset(amount, false);
                 const toAccountName = ChainStore.getAccountName(to) || to;
                 const fromAccountName = ChainStore.getAccountName(from) || from;
-                const globalObject = ChainStore.getObject("2.0.0");
-                const dynGlobalObject = ChainStore.getObject("2.1.0");
-                let block_time = utils.calc_block_time(
-                    item.block_num,
-                    globalObject,
-                    dynGlobalObject
-                );
-                const period_start = new Date(block_time).getTime();
-                const periodMs = claim_period_seconds * 1000;
-                const expiration = new Date(period_start + periodMs);
 
                 return {
-                    key: item.result[1],
-                    id: item.result[1],
+                    key: item.id,
+                    id: item.id,
                     type: to == currentAccount.get("id") ? "payee" : "payer",
                     from: fromAccountName,
                     to: toAccountName,
@@ -128,8 +128,23 @@ class Htlc extends Component {
                             <LinkToAssetById asset={amount.asset_id} />
                         </span>
                     ),
-                    hash: preimage_hash[1],
-                    expires: counterpart.localize(new Date(expiration + "Z"), {
+                    hash: (
+                        <Tooltip
+                            title={counterpart.translate(
+                                "htlc.preimage_hash_explanation"
+                            )}
+                        >
+                            <span>
+                                {"(" +
+                                    item.conditions.hash_lock.preimage_size +
+                                    "," +
+                                    item.conditions.hash_lock.preimage_hash[0] +
+                                    "): " +
+                                    item.conditions.hash_lock.preimage_hash[1]}
+                            </span>
+                        </Tooltip>
+                    ),
+                    expires: counterpart.localize(expiration, {
                         type: "date",
                         format: "full"
                     }),
@@ -194,8 +209,8 @@ class Htlc extends Component {
                     return a.expires > b.expires
                         ? 1
                         : a.expires < b.expires
-                        ? -1
-                        : 0;
+                            ? -1
+                            : 0;
                 }
             },
             {

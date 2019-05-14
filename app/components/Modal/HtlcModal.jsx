@@ -55,10 +55,6 @@ class Preimage extends React.Component {
         }
     }
 
-    componentDidMount() {
-        this.generateRandom({target: {}});
-    }
-
     onClick() {
         this.setState(
             {
@@ -270,7 +266,7 @@ class HtlcModal extends React.Component {
                 });
         } else if (operationType === "redeem") {
             HtlcActions.redeem({
-                htlc_id: this.props.operation.payload.result[1],
+                htlc_id: this.props.operation.payload.id,
                 user_id: to_account.get("id"),
                 preimage: preimage
             })
@@ -283,7 +279,7 @@ class HtlcModal extends React.Component {
                 });
         } else if (operationType === "extend") {
             HtlcActions.extend({
-                htlc_id: this.props.operation.payload.result[1],
+                htlc_id: this.props.operation.payload.id,
                 user_id: from_account.get("id"),
                 seconds_to_add: claim_period
             })
@@ -299,6 +295,9 @@ class HtlcModal extends React.Component {
 
     componentDidMount() {
         this._isMounted = true;
+        if (this.state.preimage) {
+            this.refs.preimage.generateRandom({target: {}});
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -331,29 +330,21 @@ class HtlcModal extends React.Component {
             operation.type !== "create" &&
             operation.payload.id !== prevState.htlcId
         ) {
-            const {
-                to,
-                from,
-                amount,
-                claim_period_seconds,
-                preimage_hash
-            } = operation.payload.op[1];
+            const to = operation.payload.transfer.to;
+            const from = operation.payload.transfer.from;
+            const amount = {
+                amount: operation.payload.transfer.amount,
+                asset_id: operation.payload.transfer.asset_id
+            };
+            const expiration = new Date(
+                operation.payload.conditions.time_lock.expiration
+            );
 
             const toAccount = ChainStore.getAccount(to);
             const fromAccount = ChainStore.getAccount(from);
 
             if (toAccount && fromAccount && toAccount.get && fromAccount.get) {
                 const asset = ChainStore.getAsset(amount.asset_id, false);
-                const globalObject = ChainStore.getObject("2.0.0");
-                const dynGlobalObject = ChainStore.getObject("2.1.0");
-                let block_time = utils.calc_block_time(
-                    operation.payload.block_num,
-                    globalObject,
-                    dynGlobalObject
-                );
-                const period_start = new Date(block_time).getTime();
-                const periodMs = claim_period_seconds * 1000;
-                const expiration = new Date(period_start + periodMs);
 
                 this.setState({
                     to_account: toAccount,
@@ -367,8 +358,9 @@ class HtlcModal extends React.Component {
                         asset
                     ),
                     asset_id: amount.asset_id,
-                    period_start_time: period_start,
-                    hash: preimage_hash[1]
+                    period_start_time: expiration, // no selection for that
+                    hash:
+                        operation.payload.conditions.hash_lock.preimage_hash[1]
                 });
             }
         }
@@ -905,6 +897,7 @@ class HtlcModal extends React.Component {
                             </Form.Item>
                         ) : (
                             <Preimage
+                                ref={"preimage"}
                                 label="showcases.htlc.preimage"
                                 onAction={this.onHashCreate.bind(this)}
                                 action_label="showcases.htlc.preimage_secret_button"
