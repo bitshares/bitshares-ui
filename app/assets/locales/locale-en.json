@@ -1899,7 +1899,7 @@
             "extend_htlc": "Extend HTLC",
             "from": "From",
             "hash": "Hash",
-            "howto": "Some explanation and howto on Preimage",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
             "preimage": "Preimage",
             "preimage_secret_button": "Enter secret preimage",
             "sender": "Sender",

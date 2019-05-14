@@ -23,7 +23,7 @@ class Htlc extends Component {
         this.state = {
             isModalVisible: false,
             filterString: "",
-            operationData: "",
+            operationData: undefined,
             htlc_list: []
         };
     }
@@ -108,11 +108,9 @@ class Htlc extends Component {
                 const expiration = new Date(
                     item.conditions.time_lock.expiration
                 );
-
                 const asset = ChainStore.getAsset(amount, false);
                 const toAccountName = ChainStore.getAccountName(to) || to;
                 const fromAccountName = ChainStore.getAccountName(from) || from;
-
                 return {
                     key: item.id,
                     id: item.id,
@@ -310,6 +308,7 @@ class Htlc extends Component {
                         isModalVisible={isModalVisible}
                         hideModal={this.hideModal}
                         operation={operationData}
+                        fromAccount={this.props.currentAccount}
                     />
                 </Card>
             </div>

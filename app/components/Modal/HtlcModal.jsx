@@ -3,7 +3,6 @@ import Translate from "react-translate-component";
 import {ChainStore, key} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import cnames from "classnames";
-import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {Asset} from "common/MarketClasses";
@@ -17,7 +16,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import CopyButton from "../Utility/CopyButton";
-import {connect} from "alt-react";
+
 import {
     Form,
     Modal,
@@ -31,14 +30,17 @@ import {
 import moment from "moment";
 import HtlcActions from "actions/HtlcActions";
 import "../../assets/stylesheets/components/_htlc.scss";
+import ChainTypes from "../Utility/ChainTypes";
+import PropTypes from "prop-types";
+import {hasLoaded} from "../Utility/BindToCurrentAccount";
 
 class Preimage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = this.InitialState();
+        this.state = this.getInitialState();
     }
 
-    InitialState() {
+    getInitialState() {
         return {
             activeSercret: false,
             preimage: "",
@@ -52,6 +54,9 @@ class Preimage extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.hash !== this.props.hash && this.props.isRedeem) {
             this.setState({hash: this.props.hash});
+        }
+        if (!prevState.hash && !this.state.hash && !this.props.hash) {
+            this.generateRandom({target: {}});
         }
     }
 
@@ -104,7 +109,11 @@ class Preimage extends React.Component {
         );
         return (
             <Form.Item label={label}>
-                <span>{counterpart.translate("showcases.htlc.howto")}</span>
+                <span>
+                    {counterpart.translate(
+                        "showcases.htlc.preimage_has_been_created"
+                    )}
+                </span>
                 <Input.Group className="content-block transfer-input preimage-row">
                     <Tooltip
                         title={counterpart.translate(
@@ -136,14 +145,28 @@ class Preimage extends React.Component {
                             </Select.Option>
                         ))}
                     </Select>
-                    <Button
-                        type="primary"
-                        icon="deployment-unit"
-                        style={{verticalAlign: "top"}}
-                        onClick={this.generateRandom.bind(this)}
-                    />
+                    <Tooltip
+                        title={counterpart.translate(
+                            "showcases.htlc.tooltip.new_random"
+                        )}
+                    >
+                        <Button
+                            type="primary"
+                            icon="deployment-unit"
+                            style={{verticalAlign: "top"}}
+                            onClick={this.generateRandom.bind(this)}
+                        />
+                    </Tooltip>
                     <div style={{float: "right"}}>
-                        <CopyButton text={this.state.preimage} />
+                        <CopyButton
+                            dataPlace="top"
+                            text={
+                                "preimage: " +
+                                this.state.preimage +
+                                " hash type: " +
+                                this.state.cipher
+                            }
+                        />
                     </div>
                 </Input.Group>
 
@@ -183,7 +206,15 @@ class Preimage extends React.Component {
                         />
                     </Tooltip>
                     <div style={{float: "right"}}>
-                        <CopyButton text={this.state.hash} />
+                        <CopyButton
+                            dataPlace="top"
+                            text={
+                                "hash: " +
+                                this.state.hash +
+                                " preimage size: " +
+                                this.state.size
+                            }
+                        />
                     </div>
                 </Input.Group>
             </Form.Item>
@@ -191,6 +222,13 @@ class Preimage extends React.Component {
     }
 }
 class HtlcModal extends React.Component {
+    static propTypes = {
+        isModalVisible: PropTypes.bool.isRequired,
+        hideModal: PropTypes.func.isRequired,
+        fromAccount: ChainTypes.ChainObject.isRequired,
+        operation: PropTypes.object // optional, only when editing
+    };
+
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
@@ -198,7 +236,6 @@ class HtlcModal extends React.Component {
         this._updateFee = debounce(this._updateFee.bind(this), 250);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
-        this._isMounted = false;
     }
 
     getInitialState() {
@@ -293,37 +330,28 @@ class HtlcModal extends React.Component {
         }
     };
 
-    componentDidMount() {
-        this._isMounted = true;
-        if (this.state.preimage) {
-            this.refs.preimage.generateRandom({target: {}});
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (nextProps.fromAccount && !hasLoaded(nextProps.fromAccount)) {
+            return false;
         }
+        return true;
     }
 
     componentDidUpdate(prevProps, prevState) {
         const {operation} = this.props;
-        if (
-            this.props.isModalVisible &&
-            prevProps.isModalVisible !== this.props.isModalVisible
-        ) {
+        if (this.props.fromAccount !== prevProps.fromAccount) {
+            // refesh balances and fee
+            // write props to state
             this.setState(
                 {
-                    from_account: ChainStore.getAccount(
-                        this.props.currentAccount
-                    )
+                    from_account: this.props.fromAccount
                 },
                 () => {
                     this._updateFee();
                     this._checkFeeStatus(this.state);
                 }
             );
-        } else if (
-            !this.props.isModalVisible &&
-            prevProps.isModalVisible !== this.props.isModalVisible
-        ) {
-            this.setState(this.getInitialState()); // reset state
         }
-
         // extend and redeem operations
         if (
             operation &&
@@ -339,13 +367,10 @@ class HtlcModal extends React.Component {
             const expiration = new Date(
                 operation.payload.conditions.time_lock.expiration
             );
-
             const toAccount = ChainStore.getAccount(to);
             const fromAccount = ChainStore.getAccount(from);
-
             if (toAccount && fromAccount && toAccount.get && fromAccount.get) {
                 const asset = ChainStore.getAsset(amount.asset_id, false);
-
                 this.setState({
                     to_account: toAccount,
                     to_name: toAccount.get("name"),
@@ -364,10 +389,6 @@ class HtlcModal extends React.Component {
                 });
             }
         }
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
     }
 
     _checkBalance() {
@@ -980,17 +1001,4 @@ class HtlcModal extends React.Component {
     }
 }
 
-export default connect(
-    HtlcModal,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount
-            };
-        }
-    }
-);
+export default HtlcModal;
