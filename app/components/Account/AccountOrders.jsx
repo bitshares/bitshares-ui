@@ -200,7 +200,9 @@ class AccountOrders extends React.Component {
             // Taken from FormattedPrice internal logic
             let decimals = Math.min(
                 8,
-                firstDataItem.order.sellPrice().base.precision
+                firstDataItem.order.sellPrice()[
+                    firstDataItem.isBid ? "base" : "quote"
+                ].precision
             );
             averagePrice = (
                 <FormattedNumber
