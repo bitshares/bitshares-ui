@@ -402,6 +402,16 @@ table.table.dashboard-table {
     margin-bottom: 20px;
 }
 
+.groupColumn {
+    // !important used to override theme styles
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+
+    // "Fit to content" hack: https://stackoverflow.com/questions/11267154/fit-cell-width-to-content
+    width: 1%;
+    white-space: nowrap;
+}
+
 .ant-table-content .ant-table-footer .total-value {
     text-align: right;
 

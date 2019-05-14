@@ -260,7 +260,7 @@ class AccountOrders extends React.Component {
                           title: operation,
                           render: dataItem => operation,
                           onCell: onCell,
-                          className: "clickable"
+                          className: "clickable groupColumn"
                       },
                       {
                           key: "baseAsset",
@@ -268,21 +268,21 @@ class AccountOrders extends React.Component {
                           render: dataItem =>
                               formatBaseAsset(getBaseAsset(dataItem)),
                           onCell: onCell,
-                          className: "clickable"
+                          className: "clickable groupColumn"
                       },
                       {
                           key: "baseName",
                           title: baseName,
                           render: dataItem => baseName,
                           onCell: onCell,
-                          className: "clickable"
+                          className: "clickable groupColumn"
                       },
                       {
                           key: "for",
                           title: forText,
                           render: dataItem => forText,
                           onCell: onCell,
-                          className: "clickable"
+                          className: "clickable groupColumn"
                       },
                       {
                           key: "quoteAsset",
@@ -290,14 +290,14 @@ class AccountOrders extends React.Component {
                           render: dataItem =>
                               formatQuoteAsset(getQuoteAsset(dataItem)),
                           onCell: onCell,
-                          className: "clickable"
+                          className: "clickable groupColumn"
                       },
                       {
                           key: "quoteName",
                           title: quoteName,
                           render: dataItem => quoteName,
                           onCell: onCell,
-                          className: "clickable"
+                          className: "clickable groupColumn"
                       }
                   ]
                 : [
@@ -316,6 +316,7 @@ class AccountOrders extends React.Component {
                 title: areAssetsGrouped
                     ? averagePrice
                     : counterpart.translate("exchange.price"),
+                align: areAssetsGrouped ? "right" : "left",
                 render: dataItem => (
                     <FormattedPrice
                         base_amount={dataItem.order.sellPrice().base.amount}
@@ -334,6 +335,7 @@ class AccountOrders extends React.Component {
                 title: areAssetsGrouped
                     ? marketPrice
                     : counterpart.translate("exchange.price_market"),
+                align: areAssetsGrouped ? "right" : "left",
                 render: formatMarketPrice,
                 onCell: onCell,
                 className: "clickable"
