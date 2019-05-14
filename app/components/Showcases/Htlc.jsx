@@ -67,7 +67,25 @@ class Htlc extends Component {
         this._update();
     }
 
-    showModal = operation => () => {
+    showModal = operation => async () => {
+        if (operation.payload) {
+            // cache for modal
+            await FetchChainObjects(
+                ChainStore.getAccount,
+                [operation.payload.transfer.to],
+                undefined,
+                {}
+            );
+            await FetchChainObjects(
+                ChainStore.getAccount,
+                [operation.payload.transfer.from],
+                undefined,
+                {}
+            );
+            await FetchChainObjects(ChainStore.getAsset, [
+                operation.payload.transfer.asset_id
+            ]);
+        }
         this.setState({
             isModalVisible: true,
             operationData: operation

@@ -35,6 +35,16 @@ import PropTypes from "prop-types";
 import {hasLoaded} from "../Utility/BindToCurrentAccount";
 
 class Preimage extends React.Component {
+    static propTypes = {
+        hash: PropTypes.string,
+        size: PropTypes.string
+    };
+
+    static defaultProps = {
+        hash: null,
+        size: null
+    };
+
     constructor(props) {
         super(props);
         this.state = this.getInitialState();
@@ -46,31 +56,34 @@ class Preimage extends React.Component {
             preimage: "",
             ciphers: ["sha256", "ripemd160"],
             cipher: "sha256",
-            hash: "",
-            size: ""
+            hash: this.props.hash,
+            size: this.props.size
         };
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.hash !== this.props.hash && this.props.isRedeem) {
-            this.setState({hash: this.props.hash});
+    componentDidMount() {
+        if (this.props.size || this.props.hash) {
+            this.setState({size: this.props.size, hash: this.props.hash});
         }
-        if (!prevState.hash && !this.state.hash && !this.props.hash) {
+        if (!this.props.hash) {
+            // make sure there is always a hash if no hash given
             this.generateRandom({target: {}});
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            (this.props.size && this.props.size !== this.state.size) ||
+            (this.props.hash && this.props.hash !== this.state.hash)
+        ) {
+            this.setState({size: this.props.size, hash: this.props.hash});
+        }
+    }
+
     onClick() {
-        this.setState(
-            {
-                activeSercret: !this.state.activeSercret,
-                preimage: "",
-                cipher: "sha256",
-                hash: "",
-                size: ""
-            },
-            this.props.onAction({preimage: null, cipher: null})
-        );
+        this.setState({
+            activeSercret: !this.state.activeSercret
+        });
     }
 
     onInputChanged(e) {
@@ -117,7 +130,9 @@ class Preimage extends React.Component {
                 <Input.Group className="content-block transfer-input preimage-row">
                     <Tooltip
                         title={counterpart.translate(
-                            "showcases.htlc.tooltip.preimage_random"
+                            this.props.hash
+                                ? "showcases.htlc.tooltip.enter_preimage"
+                                : "showcases.htlc.tooltip.preimage_random"
                         )}
                     >
                         <Input
@@ -128,9 +143,15 @@ class Preimage extends React.Component {
                             onChange={this.onInputChanged.bind(this)}
                             value={this.state.preimage}
                             placeholder={counterpart.translate(
-                                "showcases.htlc.preimage"
+                                this.props.hash
+                                    ? "showcases.htlc.enter_secret_preimage"
+                                    : "showcases.htlc.preimage"
                             )}
-                            readOnly={!this.state.activeSercret}
+                            readOnly={
+                                this.props.hash
+                                    ? false
+                                    : !this.state.activeSercret
+                            }
                         />
                     </Tooltip>
                     <Select
@@ -186,6 +207,7 @@ class Preimage extends React.Component {
                                 "showcases.htlc.hash"
                             )}
                             readOnly={true}
+                            disabled={this.props.isRedeem ? true : undefined}
                         />
                     </Tooltip>
                     <Tooltip
@@ -203,6 +225,7 @@ class Preimage extends React.Component {
                                 "showcases.htlc.size"
                             )}
                             readOnly={true}
+                            disabled={this.props.isRedeem ? true : undefined}
                         />
                     </Tooltip>
                     <div style={{float: "right"}}>
@@ -337,6 +360,51 @@ class HtlcModal extends React.Component {
         return true;
     }
 
+    componentDidMount() {
+        let operation = this.props.operation;
+        if (operation && operation.payload) {
+            this._syncOperation(operation);
+        }
+    }
+
+    _syncOperation(operation) {
+        const to = operation.payload.transfer.to;
+        const from = operation.payload.transfer.from;
+        const amount = {
+            amount: operation.payload.transfer.amount,
+            asset_id: operation.payload.transfer.asset_id
+        };
+        const expiration = new Date(
+            operation.payload.conditions.time_lock.expiration
+        );
+        const toAccount = ChainStore.getAccount(to);
+        const fromAccount = ChainStore.getAccount(from);
+        if (toAccount && fromAccount && toAccount.get && fromAccount.get) {
+            const asset = ChainStore.getAsset(amount.asset_id, false);
+            this.setState({
+                to_account: toAccount,
+                to_name: toAccount.get("name"),
+                from_account: fromAccount,
+                from_name: fromAccount.get("name"),
+                asset: asset,
+
+                amount: utils.convert_satoshi_to_typed(amount.amount, asset),
+                asset_id: amount.asset_id,
+                period_start_time: expiration, // no selection for that
+                htlcId: operation.payload.id,
+                hash: operation.payload.conditions.hash_lock.preimage_hash[1],
+                size: operation.payload.conditions.hash_lock.preimage_hash[0]
+            });
+        } else {
+            // ensure it's always in-sync
+            this.setState({
+                htlcId: operation.payload.id,
+                hash: operation.payload.conditions.hash_lock.preimage_hash[1],
+                size: operation.payload.conditions.hash_lock.preimage_hash[0]
+            });
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
         const {operation} = this.props;
         if (this.props.fromAccount !== prevProps.fromAccount) {
@@ -353,41 +421,8 @@ class HtlcModal extends React.Component {
             );
         }
         // extend and redeem operations
-        if (
-            operation &&
-            operation.type !== "create" &&
-            operation.payload.id !== prevState.htlcId
-        ) {
-            const to = operation.payload.transfer.to;
-            const from = operation.payload.transfer.from;
-            const amount = {
-                amount: operation.payload.transfer.amount,
-                asset_id: operation.payload.transfer.asset_id
-            };
-            const expiration = new Date(
-                operation.payload.conditions.time_lock.expiration
-            );
-            const toAccount = ChainStore.getAccount(to);
-            const fromAccount = ChainStore.getAccount(from);
-            if (toAccount && fromAccount && toAccount.get && fromAccount.get) {
-                const asset = ChainStore.getAsset(amount.asset_id, false);
-                this.setState({
-                    to_account: toAccount,
-                    to_name: toAccount.get("name"),
-                    from_account: fromAccount,
-                    from_name: fromAccount.get("name"),
-                    asset: asset,
-                    htlcId: operation.payload.id,
-                    amount: utils.convert_satoshi_to_typed(
-                        amount.amount,
-                        asset
-                    ),
-                    asset_id: amount.asset_id,
-                    period_start_time: expiration, // no selection for that
-                    hash:
-                        operation.payload.conditions.hash_lock.preimage_hash[1]
-                });
-            }
+        if (operation !== prevProps.operation && operation.type !== "create") {
+            this._syncOperation(operation);
         }
     }
 
@@ -918,14 +953,10 @@ class HtlcModal extends React.Component {
                             </Form.Item>
                         ) : (
                             <Preimage
-                                ref={"preimage"}
                                 label="showcases.htlc.preimage"
                                 onAction={this.onHashCreate.bind(this)}
-                                action_label="showcases.htlc.preimage_secret_button"
-                                isModalVisible={this.props.isModalVisible}
                                 hash={hash}
                                 size={size}
-                                isRedeem={isRedeem}
                             />
                         )}
 
