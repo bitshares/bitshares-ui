@@ -233,6 +233,14 @@
             }
         }
     }
+    .form-input-header {
+        .form-input-header--label {
+        }
+        .form-input-header--right {
+            float: right;
+            cursor: pointer;
+        }
+    }
     .dark-text-color {
         color: $dark-text-color;
     }

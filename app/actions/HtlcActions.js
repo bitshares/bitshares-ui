@@ -3,11 +3,39 @@ import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore, hash} from "bitsharesjs";
+import {ChainStore, hash, FetchChainObjects} from "bitsharesjs";
 import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
 let inProgress = {};
 
+const calculateHash = ({cipher, preimage}) => {
+    let preimage_hash_cipher = -1;
+    let preimage_hash_calculated = "";
+    switch (cipher) {
+        case "sha256":
+            preimage_hash_cipher = 2;
+            preimage_hash_calculated = hash.sha256(preimage);
+
+            break;
+        case "ripemd160":
+            preimage_hash_cipher = 0;
+            preimage_hash_calculated = hash.ripemd160(preimage);
+
+            break;
+        case "sha1":
+            throw new Error(
+                "sha1 is not considered a secure hashing algorithm, plaase use sha256"
+            );
+
+            preimage_hash_cipher = 1;
+            preimage_hash_calculated = hash.sha1(preimage);
+
+            break;
+        default:
+            throw new Error("Wrong cipher name provided when creating htlc op");
+    }
+    return {preimage_hash_cipher, preimage_hash_calculated};
+};
 class HtlcActions {
     create({
         from_account_id,
@@ -18,32 +46,12 @@ class HtlcActions {
         preimage,
         cipher
     }) {
-        let tr = WalletApi.new_transaction();
+        const tr = WalletApi.new_transaction();
 
-        let preimage_hash_cipher = -1;
-        var preimage_hash_calculated = "";
-
-        switch (cipher) {
-            case "sha256":
-                preimage_hash_cipher = 2;
-                preimage_hash_calculated = hash.sha256(preimage);
-
-                break;
-            case "ripemd160":
-                preimage_hash_cipher = 0;
-                preimage_hash_calculated = hash.ripemd160(preimage);
-
-                break;
-            case "sha1":
-                preimage_hash_cipher = 1;
-                preimage_hash_calculated = hash.sha1(preimage);
-
-                break;
-            default:
-                throw new Error(
-                    "Wrong cipher name provided when creating htlc op"
-                );
-        }
+        const {preimage_hash_cipher, preimage_hash_calculated} = calculateHash({
+            cipher,
+            preimage
+        });
 
         tr.add_type_operation("htlc_create", {
             from: from_account_id,
@@ -130,6 +138,42 @@ class HtlcActions {
                     dispatch(false);
                 });
         };
+    }
+
+    calculateHash({preimage, cipher}) {
+        const {preimage_hash_calculated} = calculateHash({cipher, preimage});
+        const size = preimage_hash_calculated.length;
+        let hash = new Buffer(preimage_hash_calculated).toString("hex");
+        return {hash, size};
+    }
+
+    async getHTLCs(accountId) {
+        let htlcs = [];
+        for (let i = 1; i < 300; i = i + 10) {
+            let ids = [];
+            for (let j = i; j < i + 10; j++) {
+                ids.push("1.16." + j);
+            }
+            let map = {};
+            let objects = await FetchChainObjects(
+                ChainStore.getObject,
+                ids,
+                undefined,
+                map
+            );
+            objects.forEach(item => {
+                if (item) {
+                    item = item.toJS();
+                    if (
+                        item.transfer.to == accountId ||
+                        item.transfer.from == accountId
+                    ) {
+                        htlcs.push(item);
+                    }
+                }
+            });
+        }
+        return htlcs;
     }
 }
 

@@ -1665,7 +1665,7 @@ class Operation extends React.Component {
                                     arg: "update_issuer"
                                 },
                                 {
-                                    type: "date",
+                                    type: "timespan",
                                     arg: "seconds_to_add",
                                     value: op[1].seconds_to_add
                                 },
