@@ -88,6 +88,7 @@ class AccountOrders extends React.Component {
                     quote: marketQuote,
                     base: marketBase,
                     marketName: marketName,
+                    marketDirection: direction,
                     preferredUnit: this.props.settings
                         ? this.props.settings.get("unit")
                         : "1.3.0",
@@ -102,6 +103,19 @@ class AccountOrders extends React.Component {
         // Sort by price first
         dataSource.sort((a, b) => {
             return a.order.getPrice() - b.order.getPrice();
+        });
+
+        // And then sort by market name - this way all records will be sorted by price inside, but by the market outside.
+        dataSource.sort((a, b) => {
+            if (a.marketName > b.marketName) {
+                return 1;
+            }
+            if (a.marketName < b.marketName) {
+                return -1;
+            }
+
+            // Trick only for grouped orders on the same market, which preserves tables order on direction change
+            return a.marketDirection ? 1 : -1;
         });
 
         return dataSource;
@@ -414,9 +428,15 @@ class AccountOrders extends React.Component {
         if (areAssetsGrouped) {
             // Group by market name - this will group all records from the same market, no matter is it sell or buy order
             // And then group by base market ID - this will separate buy and sell records on the same market
+            // Don't forget to count the direction - this allows to consider table as the same one when direction changes
             let grouped = groupBy(
                 dataSource,
-                dataItem => dataItem.marketName + dataItem.base.get("id")
+                dataItem =>
+                    dataItem.marketName +
+                    "_" +
+                    (dataItem.marketDirection
+                        ? dataItem.base.get("id")
+                        : dataItem.quote.get("id"))
             );
 
             for (let [key, value] of Object.entries(grouped)) {
@@ -434,19 +454,6 @@ class AccountOrders extends React.Component {
                 );
             }
         } else {
-            // Sorting by market after sorting by price is required only for single table.
-            // This way, all records will be grouped by market, but sorted by price inside.
-            dataSource.sort((a, b) => {
-                if (a.marketName > b.marketName) {
-                    return 1;
-                }
-                if (a.marketName < b.marketName) {
-                    return -1;
-                }
-
-                return 0;
-            });
-
             let columns = this._getColumns(areAssetsGrouped, dataSource);
 
             tables.push(
