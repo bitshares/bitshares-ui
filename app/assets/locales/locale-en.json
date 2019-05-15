@@ -1882,6 +1882,8 @@
             "update_mandate": "Update existing authorization"
         },
         "htlc": {
+            "title": "Hashed Time-Locked Contracts",
+            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "actions": "Actions",
             "amount": "Amount",
             "claim": "Claim",
