@@ -3,6 +3,7 @@ import debounceRender from "react-debounce-render";
 import BalanceComponent from "../Utility/BalanceComponent";
 import {BalanceValueComponent} from "../Utility/EquivalentValueComponent";
 import {Market24HourChangeComponent} from "../Utility/MarketChangeComponent";
+import FormattedAsset from "../Utility/FormattedAsset";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import {Link} from "react-router-dom";
@@ -68,6 +69,7 @@ class AccountPortfolioList extends React.Component {
         this.priceRefs = {};
         this.valueRefs = {};
         this.changeRefs = {};
+        this.ordersRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
@@ -292,6 +294,13 @@ class AccountPortfolioList extends React.Component {
 
                 return direction ? aChange - bChange : bChange - aChange;
             }
+        },
+        inOrders: function(a, b, force = false) {
+            if (Number(this.ordersRefs[a.key]) < Number(this.ordersRefs[b.key]))
+                return this.props.sortDirection || force ? -1 : 1;
+
+            if (Number(this.ordersRefs[a.key]) > Number(this.ordersRefs[b.key]))
+                return this.props.sortDirection || force ? 1 : -1;
         }
     };
 
@@ -334,8 +343,8 @@ class AccountPortfolioList extends React.Component {
                 [action === "bridge_modal"
                     ? "bridgeAsset"
                     : action === "deposit_modal"
-                    ? "depositAsset"
-                    : "withdrawAsset"]: asset,
+                        ? "depositAsset"
+                        : "withdrawAsset"]: asset,
                 fiatModal
             },
             () => {
@@ -533,6 +542,17 @@ class AccountPortfolioList extends React.Component {
                 align: "right",
                 sorter: this.sortFunctions.priceValue,
                 sortOrder: portfolioSort === "price" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="account.inOrders" />,
+                dataIndex: "inOrders",
+                align: "right",
+                sorter: this.sortFunctions.inOrders,
+                sortOrder:
+                    portfolioSort === "inOrders" && portfolioSortDirection,
                 render: item => {
                     return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
                 }
@@ -873,6 +893,10 @@ class AccountPortfolioList extends React.Component {
                 asset
             );
 
+            this.ordersRefs[asset.get("symbol")] = hasOnOrder
+                ? orders[asset.get("id")]
+                : 0;
+
             {
                 /* Asset and Backing Asset Prefixes */
             }
@@ -941,6 +965,14 @@ class AccountPortfolioList extends React.Component {
                         pulsate={{reverse: true, fill: "forwards"}}
                         hide_symbols
                     />
+                ),
+                inOrders: hasOnOrder ? (
+                    <FormattedAsset
+                        amount={orders[asset.get("id")]}
+                        asset={asset.get("id")}
+                    />
+                ) : (
+                    "--"
                 ),
                 hour24: (
                     <Market24HourChangeComponent
