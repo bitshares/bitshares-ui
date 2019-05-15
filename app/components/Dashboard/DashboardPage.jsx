@@ -57,7 +57,7 @@ class DashboardPage extends React.Component {
                     <div className="padding">
                         <p style={{float: "right", textAlign: "right"}}>
                             {account.get("name")} referral link:<br />
-                            {`https://wallet.cryptobridge.org/?r=${account
+                            {`https://wallet.crypto-bridge.org/?r=${account
                                 .get("id")
                                 .replace(/^1.2./, "")}`}
                             <br />
