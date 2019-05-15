@@ -266,7 +266,6 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "RUDEX.GOLOS"],
         ["RUBLE", "RUDEX.GBG"],
         ["CNY", "RUDEX.GBG"],
-        ["BTS", "RUDEX.MUSE"],
         ["BTS", "RUDEX.TT"],
         ["BTS", "RUDEX.SCR"],
         ["BTS", "RUDEX.ETH"],
