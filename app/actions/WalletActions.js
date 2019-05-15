@@ -146,6 +146,10 @@ class WalletActions {
                     waiver
                 };
 
+                if (referrer) {
+                    body.referrer = referrer;
+                }
+
                 let create_account_promise = fetch(
                     faucetAddress +
                         cryptoBridgeAPIs.API_VERSION_V2 +
@@ -247,6 +251,10 @@ class WalletActions {
                 terms_hash,
                 waiver
             };
+
+            if (referrer) {
+                body.referrer = referrer;
+            }
 
             let create_account_promise = fetch(
                 faucetAddress +
