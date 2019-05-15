@@ -24,14 +24,26 @@ class Htlc extends Component {
             isModalVisible: false,
             filterString: "",
             operationData: undefined,
-            htlc_list: []
+            htlc_list: [],
+            tableIsLoading: false
         };
+        this.hasLoadedOnce = null;
     }
 
     async _update() {
         let currentAccount = this.props.currentAccount;
 
-        if (hasLoaded(currentAccount)) {
+        if (
+            hasLoaded(currentAccount) &&
+            this.hasLoadedOnce !== currentAccount.get("id")
+        ) {
+            if (__DEV__) {
+                console.log("Loading HTLC table for", currentAccount.get("id"));
+            }
+            this.hasLoadedOnce = currentAccount.get("id");
+            this.setState({
+                tableIsLoading: true
+            });
             let htlc_list = await HtlcActions.getHTLCs(
                 currentAccount.get("id")
             );
@@ -53,7 +65,8 @@ class Htlc extends Component {
             }
 
             this.setState({
-                htlc_list
+                htlc_list,
+                tableIsLoading: false
             });
         }
     }
@@ -62,7 +75,7 @@ class Htlc extends Component {
         this._update();
     }
 
-    componentWillReceiveProps() {
+    componentDidUpdate(prevProps) {
         // always update, relies on push from backend when account permission change
         this._update();
     }
@@ -126,7 +139,7 @@ class Htlc extends Component {
                 const expiration = new Date(
                     item.conditions.time_lock.expiration
                 );
-                const asset = ChainStore.getAsset(amount, false);
+                const asset = ChainStore.getAsset(amount.asset_id, false);
                 const toAccountName = ChainStore.getAccountName(to) || to;
                 const fromAccountName = ChainStore.getAccountName(from) || from;
                 return {
@@ -318,6 +331,7 @@ class Htlc extends Component {
                                 dataSource={dataSource}
                                 pagination={false}
                                 className="direct-debit-table"
+                                loading={this.state.tableIsLoading}
                             />
                         </Col>
                     </Row>

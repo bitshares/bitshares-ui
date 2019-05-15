@@ -37,7 +37,7 @@ import {hasLoaded} from "../Utility/BindToCurrentAccount";
 class Preimage extends React.Component {
     static propTypes = {
         hash: PropTypes.string,
-        size: PropTypes.string
+        size: PropTypes.number
     };
 
     static defaultProps = {
@@ -48,6 +48,7 @@ class Preimage extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState();
+        this.hasRandomHash = false;
     }
 
     getInitialState() {
@@ -63,9 +64,13 @@ class Preimage extends React.Component {
 
     componentDidMount() {
         if (this.props.size || this.props.hash) {
-            this.setState({size: this.props.size, hash: this.props.hash});
+            this.setState({
+                size: this.props.size,
+                hash: this.props.hash,
+                preimage: ""
+            });
         }
-        if (!this.props.hash) {
+        if (!this.props.hash && !this.hasRandomHash) {
             // make sure there is always a hash if no hash given
             this.generateRandom({target: {}});
         }
@@ -76,7 +81,18 @@ class Preimage extends React.Component {
             (this.props.size && this.props.size !== this.state.size) ||
             (this.props.hash && this.props.hash !== this.state.hash)
         ) {
-            this.setState({size: this.props.size, hash: this.props.hash});
+            this.setState({
+                size: this.props.size,
+                hash: this.props.hash,
+                preimage: ""
+            });
+        }
+        if (prevProps.hash !== this.props.hash && !this.props.hash) {
+            this.hasRandomHash = false;
+        }
+        if (!this.props.hash && !this.hasRandomHash) {
+            // make sure there is always a hash if no hash given
+            this.generateRandom({target: {}});
         }
     }
 
@@ -90,17 +106,24 @@ class Preimage extends React.Component {
         let {preimage, cipher} = this.state;
         if (e.target) {
             preimage = e.target.value;
+            this.hashingInProgress = false;
         } else {
             cipher = e;
         }
         const {hash} = HtlcActions.calculateHash({preimage, cipher});
         this.setState(
-            {hash, size: preimage.length, preimage, cipher},
+            {
+                hash,
+                size: preimage.length,
+                preimage,
+                cipher
+            },
             this.props.onAction({preimage, cipher})
         );
     }
 
     generateRandom(e) {
+        this.hasRandomHash = true;
         e.target.value = key
             .get_random_key()
             .toWif()
@@ -360,49 +383,61 @@ class HtlcModal extends React.Component {
         return true;
     }
 
-    componentDidMount() {
-        let operation = this.props.operation;
-        if (operation && operation.payload) {
-            this._syncOperation(operation);
-        }
-    }
-
     _syncOperation(operation) {
-        const to = operation.payload.transfer.to;
-        const from = operation.payload.transfer.from;
-        const amount = {
-            amount: operation.payload.transfer.amount,
-            asset_id: operation.payload.transfer.asset_id
-        };
-        const expiration = new Date(
-            operation.payload.conditions.time_lock.expiration
-        );
-        const toAccount = ChainStore.getAccount(to);
-        const fromAccount = ChainStore.getAccount(from);
-        if (toAccount && fromAccount && toAccount.get && fromAccount.get) {
-            const asset = ChainStore.getAsset(amount.asset_id, false);
-            this.setState({
-                to_account: toAccount,
-                to_name: toAccount.get("name"),
-                from_account: fromAccount,
-                from_name: fromAccount.get("name"),
-                asset: asset,
+        if (operation && operation.payload && operation.type !== "create") {
+            const to = operation.payload.transfer.to;
+            const from = operation.payload.transfer.from;
+            const amount = {
+                amount: operation.payload.transfer.amount,
+                asset_id: operation.payload.transfer.asset_id
+            };
+            const expiration = new Date(
+                operation.payload.conditions.time_lock.expiration
+            );
+            const toAccount = ChainStore.getAccount(to);
+            const fromAccount = ChainStore.getAccount(from);
+            if (toAccount && fromAccount && toAccount.get && fromAccount.get) {
+                const asset = ChainStore.getAsset(amount.asset_id, false);
+                this.setState({
+                    to_account: toAccount,
+                    to_name: toAccount.get("name"),
+                    from_account: fromAccount,
+                    from_name: fromAccount.get("name"),
+                    asset: asset,
 
-                amount: utils.convert_satoshi_to_typed(amount.amount, asset),
-                asset_id: amount.asset_id,
-                period_start_time: expiration, // no selection for that
-                htlcId: operation.payload.id,
-                hash: operation.payload.conditions.hash_lock.preimage_hash[1],
-                size: operation.payload.conditions.hash_lock.preimage_hash[0]
-            });
+                    amount: utils.convert_satoshi_to_typed(
+                        amount.amount,
+                        asset
+                    ),
+                    asset_id: amount.asset_id,
+                    period_start_time: expiration, // no selection for that
+                    htlcId: operation.payload.id,
+                    hash:
+                        operation.payload.conditions.hash_lock.preimage_hash[1],
+                    size:
+                        operation.payload.conditions.hash_lock.preimage_hash[0]
+                });
+            } else {
+                this.setState({
+                    htlcId: operation.payload.id,
+                    hash:
+                        operation.payload.conditions.hash_lock.preimage_hash[1],
+                    size:
+                        operation.payload.conditions.hash_lock.preimage_hash[0]
+                });
+            }
         } else {
             // ensure it's always in-sync
             this.setState({
-                htlcId: operation.payload.id,
-                hash: operation.payload.conditions.hash_lock.preimage_hash[1],
-                size: operation.payload.conditions.hash_lock.preimage_hash[0]
+                htlcId: null,
+                hash: null,
+                size: null
             });
         }
+    }
+
+    componentDidMount() {
+        this._syncOperation(this.props.operation);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -420,8 +455,7 @@ class HtlcModal extends React.Component {
                 }
             );
         }
-        // extend and redeem operations
-        if (operation !== prevProps.operation && operation.type !== "create") {
+        if (prevProps.operation !== this.props.operation) {
             this._syncOperation(operation);
         }
     }
@@ -613,6 +647,10 @@ class HtlcModal extends React.Component {
             return;
         }
 
+        if (typeof asset !== "object") {
+            asset = ChainStore.getAsset(asset);
+        }
+
         this.setState(
             {
                 amount,
@@ -630,6 +668,9 @@ class HtlcModal extends React.Component {
     };
 
     onFeeChanged({asset}) {
+        if (typeof asset !== "object") {
+            asset = ChainStore.getAsset(asset);
+        }
         this.setState(
             {feeAsset: asset, fee_asset_id: asset.get("id"), error: null},
             this._updateFee
