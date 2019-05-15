@@ -416,7 +416,6 @@ class AccountOrders extends React.Component {
                   //columnTitle: counterpart.translate("wallet.cancel")
                   onChange: (selectedRowKeys, selectedRows) => {
                       this.setState({selectedOrders: selectedRowKeys});
-                      console.log("srk", selectedRowKeys);
                   },
                   // Required in order resetSelected to work
                   selectedRowKeys: this.state.selectedOrders
