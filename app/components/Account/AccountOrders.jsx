@@ -441,7 +441,7 @@ class AccountOrders extends React.Component {
             for (let [key, value] of Object.entries(grouped)) {
                 let columns = this._getColumns(areAssetsGrouped, value);
                 tables.push(
-                    <div className="grid-content grid-wrapper" key={key}>
+                    <div className="grid-wrapper" key={key}>
                         <CollapsibleTable
                             columns={columns}
                             dataSource={value}
@@ -456,7 +456,7 @@ class AccountOrders extends React.Component {
             let columns = this._getColumns(areAssetsGrouped, dataSource);
 
             tables.push(
-                <div className="grid-content grid-wrapper" key="groupedTable">
+                <div className="grid-wrapper" key="groupedTable">
                     <Table
                         columns={columns}
                         dataSource={dataSource}
