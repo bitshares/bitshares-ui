@@ -12,10 +12,23 @@ import {StarredMarkets, CryptoBridgeMarkets} from "./Markets";
 import CryptoBridgeNews from "./CryptoBridgeNews";
 
 import Translate from "react-translate-component";
+import {ChainStore} from "bitsharesjs";
 
 class DashboardPage extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            account: props.account
+        };
+    }
+
     componentWillMount() {
         CryptoBridgeActions.getNews.defer();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({account: nextProps.account});
     }
 
     render() {
@@ -23,7 +36,8 @@ class DashboardPage extends React.Component {
             myActiveAccounts,
             myHiddenAccounts,
             accountsReady,
-            passwordAccount
+            passwordAccount,
+            account
         } = this.props;
         if (!accountsReady) {
             return <LoadingIndicator />;
@@ -39,6 +53,25 @@ class DashboardPage extends React.Component {
 
         return (
             <div>
+                {!account ? null : (
+                    <div className="padding">
+                        <p style={{float: "right", textAlign: "right"}}>
+                            {account.get("name")} referral link:<br />
+                            {`https://wallet.cryptobridge.org/?r=${account
+                                .get("id")
+                                .replace(/^1.2./, "")}`}
+                            <br />
+                            <a
+                                href={
+                                    "https://crypto-bridge.org/referral-program/"
+                                }
+                                target={"_blank"}
+                            >
+                                &raquo; about our referral program
+                            </a>
+                        </p>
+                    </div>
+                )}
                 <div className="padding">
                     <h3>
                         <Translate content="cryptobridge.general.news" />
@@ -92,10 +125,17 @@ export default connect(DashboardPage, {
             myHiddenAccounts,
             passwordAccount,
             accountsLoaded,
-            refsLoaded
+            refsLoaded,
+            currentAccount
         } = AccountStore.getState();
 
+        const account = ChainStore.getAccount(
+            currentAccount || passwordAccount,
+            null
+        );
+
         return {
+            account,
             myActiveAccounts,
             myHiddenAccounts,
             passwordAccount,
