@@ -3,6 +3,7 @@ import {Apis} from "bitsharesjs-ws";
 
 import AssetWrapper from "./AssetWrapper";
 import {Asset, Price} from "common/MarketClasses";
+import asset_utils from "../../lib/common/asset_utils";
 
 const withShortBackingAsset = WrappedComponent => {
     const WrappedComponentWithShortBackingAsset = AssetWrapper(
@@ -34,41 +35,43 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                 const realMarketPricePromise = Apis.instance()
                     .db_api()
                     .exec("get_order_book", [shortBackingAssetId, assetId, 1])
-                    .then(
-                        orderBook =>
-                            orderBook.bids.length === 0
-                                ? 0
-                                : Number(orderBook.bids[0].price)
+                    .then(orderBook =>
+                        orderBook.bids.length === 0
+                            ? 0
+                            : Number(orderBook.bids[0].price)
                     );
 
-                let settlementPrice = null;
+                let feedPrice = null;
+                let factor = 1;
+                let offset = 0;
                 if (
                     !!asset.get("bitasset") &&
                     asset.get("bitasset").get("settlement_fund") > 0
                 ) {
-                    settlementPrice = asset
-                        .get("bitasset")
-                        .get("settlement_price");
+                    // if globally settled, feed price == settlement price
+                    feedPrice = asset.get("bitasset").get("settlement_price");
                 } else {
-                    settlementPrice = asset.getIn([
-                        "bitasset",
-                        "current_feed",
-                        "settlement_price"
-                    ]);
+                    feedPrice = asset_utils.extractRawFeedPrice(asset);
+                    offset = asset
+                        .get("bitasset")
+                        .get("options")
+                        .get("force_settlement_offset_percent");
+                    factor = 1 - offset / 10000;
                 }
 
-                const realSettlementPrice = new Price({
-                    base: new Asset({
-                        asset_id: shortBackingAssetId,
-                        amount: settlementPrice.getIn(["quote", "amount"]),
-                        preicision: shortBackingAsset.get("precision")
-                    }),
-                    quote: new Asset({
-                        asset_id: assetId,
-                        amount: settlementPrice.getIn(["base", "amount"]),
-                        precision: asset.get("precision")
-                    })
-                }).toReal();
+                const realSettlementPrice =
+                    new Price({
+                        base: new Asset({
+                            asset_id: shortBackingAssetId,
+                            amount: feedPrice.getIn(["quote", "amount"]),
+                            preicision: shortBackingAsset.get("precision")
+                        }),
+                        quote: new Asset({
+                            asset_id: assetId,
+                            amount: feedPrice.getIn(["base", "amount"]),
+                            precision: asset.get("precision")
+                        })
+                    }).toReal() * factor;
 
                 // TODO: compare fractional price instead of real price
                 realMarketPricePromise.then(realMarketPrice =>

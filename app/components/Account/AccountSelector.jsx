@@ -22,7 +22,7 @@ import {
     Form
 } from "bitshares-ui-style-guide";
 
-/**
+/*
  * @brief Allows the user to enter an account by name or #ID
  *
  * This component is designed to be stateless as possible.  It's primary responsbility is to
@@ -241,8 +241,8 @@ class AccountSelector extends React.Component {
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
                     : account.accountType === "id"
-                        ? account.get("name")
-                        : null;
+                    ? account.get("name")
+                    : null;
         }
 
         // Without Typeahead Error Handling
@@ -397,13 +397,13 @@ class AccountSelector extends React.Component {
         let editableInput = !!this.state.locked
             ? false
             : this.props.editable != null
-                ? this.props.editable
-                : undefined;
+            ? this.props.editable
+            : undefined;
         let disabledInput = !!this.state.locked
             ? true
             : this.props.disabled != null
-                ? this.props.disabled
-                : undefined;
+            ? this.props.disabled
+            : undefined;
 
         return (
             <Form
@@ -431,7 +431,7 @@ class AccountSelector extends React.Component {
                                 className={cnames(
                                     "right-label",
                                     account &&
-                                    (account.isFavorite || account.isOwn)
+                                        (account.isFavorite || account.isOwn)
                                         ? "positive"
                                         : null,
                                     account && account.isKnownScammer
@@ -535,6 +535,7 @@ class AccountSelector extends React.Component {
                                         this.props.placeholder ||
                                         counterpart.translate("account.name")
                                     }
+                                    disabled={this.props.disabled}
                                     ref="user_input"
                                     onChange={this.onInputChanged.bind(this)}
                                     onKeyDown={this.onKeyDown.bind(this)}

@@ -11,7 +11,6 @@ import LinkToAssetById from "../Utility/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
-import account_constants from "chain/account_constants";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import PropTypes from "prop-types";

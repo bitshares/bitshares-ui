@@ -33,7 +33,7 @@ const ReusableLink = ({data, url, isLink = false}) => (
         rel="noreferrer noopener"
         target="_blank"
         style={{display: "block"}}
-        className={!isLink ? "primary-text" : ""}
+        className={!isLink ? "primary-text" : "external-link"}
     >
         {sanitize(data, {
             whiteList: [], // empty, means filter out all tags
@@ -155,8 +155,7 @@ class News extends React.Component {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
-        api
-            .getDiscussionsByBlog(query)
+        api.getDiscussionsByBlog(query)
             .then(discussions => {
                 this.orderDiscussions(discussions);
             })
@@ -180,13 +179,12 @@ class News extends React.Component {
                             <div className="grid-block vertical">
                                 {isWrong && <SomethingWentWrong />}
                                 {isLoading ? <LoadingIndicator /> : null}
-                                {!isWrong &&
-                                    !isLoading && (
-                                        <NewsTable
-                                            width={width}
-                                            data={discussions}
-                                        />
-                                    )}
+                                {!isWrong && !isLoading && (
+                                    <NewsTable
+                                        width={width}
+                                        data={discussions}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>

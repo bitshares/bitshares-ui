@@ -31,7 +31,12 @@ class TransactionList extends React.Component {
                         id={`tx_${index}`}
                         name={`tx_${index}`}
                     >
-                        <Transaction key={index} trx={trx} index={index} />
+                        <Transaction
+                            block={block}
+                            key={index}
+                            trx={trx}
+                            index={index}
+                        />
                     </Element>
                 );
             });
@@ -199,7 +204,8 @@ class Block extends React.Component {
                                     <Translate
                                         component="span"
                                         content="explorer.block.date"
-                                    />:{" "}
+                                    />
+                                    :{" "}
                                     {block ? (
                                         <FormattedDate
                                             value={block.timestamp}
@@ -211,7 +217,8 @@ class Block extends React.Component {
                                     <Translate
                                         component="span"
                                         content="explorer.block.witness"
-                                    />:{" "}
+                                    />
+                                    :{" "}
                                     {block ? (
                                         <LinkToWitnessById
                                             witness={block.witness}
@@ -222,14 +229,15 @@ class Block extends React.Component {
                                     <Translate
                                         component="span"
                                         content="explorer.block.previous"
-                                    />: {block ? block.previous : null}
+                                    />
+                                    : {block ? block.previous : null}
                                 </li>
                                 <li>
                                     <Translate
                                         component="span"
                                         content="explorer.block.transactions"
-                                    />:{" "}
-                                    {block ? block.transactions.length : null}
+                                    />
+                                    : {block ? block.transactions.length : null}
                                 </li>
                             </ul>
                             <div

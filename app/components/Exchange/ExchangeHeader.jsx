@@ -91,14 +91,18 @@ export default class ExchangeHeader extends React.Component {
         const dayChange = marketStats.get("change");
 
         const dayChangeClass =
-            parseFloat(dayChange) === 0
+            parseFloat(dayChange) === 0 || isNaN(dayChange)
                 ? ""
                 : parseFloat(dayChange) < 0
-                    ? "negative"
-                    : "positive";
+                ? "negative"
+                : "positive";
         const volumeBase = marketStats.get("volumeBase");
         const volumeQuote = marketStats.get("volumeQuote");
-        const dayChangeWithSign = dayChange > 0 ? "+" + dayChange : dayChange;
+        const dayChangeWithSign = isNaN(dayChange)
+            ? undefined
+            : dayChange > 0
+            ? "+" + dayChange
+            : dayChange;
 
         const volume24h = this.state.volumeShowQuote ? volumeQuote : volumeBase;
         const volume24hAsset = this.state.volumeShowQuote
@@ -150,13 +154,14 @@ export default class ExchangeHeader extends React.Component {
                 baseId == "1.3.0"
                     ? quoteAsset
                     : quoteId == "1.3.0"
-                        ? baseAsset
-                        : quoteAsset;
+                    ? baseAsset
+                    : quoteAsset;
 
             // globally settled
             if (possibleBitAsset.get("bitasset").get("settlement_fund") > 0) {
                 settlePriceTitle = "exchange.global_settle";
                 settlePriceTooltip = "tooltip.global_settle_price";
+                // if globally settled feed_price == settlement_price
                 settlePrice = possibleBitAsset
                     .get("bitasset")
                     .get("settlement_price")
@@ -271,8 +276,7 @@ export default class ExchangeHeader extends React.Component {
                                 </div>
                             ) : (
                                 <a className="market-symbol">
-                                    <span
-                                    >{`${quoteSymbol} : ${baseSymbol}`}</span>
+                                    <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
                                 </a>
                             )}
                             <div className="label-actions">
@@ -345,11 +349,13 @@ export default class ExchangeHeader extends React.Component {
                                 >
                                     <span>
                                         <b className="value">
-                                            {marketReady
-                                                ? dayChangeWithSign
-                                                : 0}
+                                            {dayChangeWithSign
+                                                ? marketReady
+                                                    ? dayChangeWithSign
+                                                    : 0
+                                                : "-"}
                                         </b>
-                                        <span> %</span>
+                                        {dayChangeWithSign && <span> %</span>}
                                     </span>
                                     <Translate
                                         component="div"

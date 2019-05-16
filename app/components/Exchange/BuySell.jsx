@@ -49,13 +49,13 @@ class BuySell extends React.Component {
     }
 
     /*
-    * Force re-rendering component when state changes.
-    * This is required for an updated value of component width
-    *
-    * It will trigger a re-render twice
-    * - Once when state is changed
-    * - Once when forceReRender is set to false
-    */
+     * Force re-rendering component when state changes.
+     * This is required for an updated value of component width
+     *
+     * It will trigger a re-render twice
+     * - Once when state is changed
+     * - Once when forceReRender is set to false
+     */
     _forceRender(np) {
         if (this.state.forceReRender) {
             this.setState({
@@ -462,10 +462,10 @@ class BuySell extends React.Component {
             isBid && quoteMarketFee
                 ? quoteMarketFee
                 : !isBid && baseMarketFee
-                    ? baseMarketFee
-                    : quoteMarketFee || baseMarketFee
-                        ? emptyCell
-                        : null;
+                ? baseMarketFee
+                : quoteMarketFee || baseMarketFee
+                ? emptyCell
+                : null;
 
         let hasBalance = isBid
             ? balanceAmount.getAmount({real: true}) >= parseFloat(total)
@@ -491,10 +491,10 @@ class BuySell extends React.Component {
         let disabledText = invalidPrice
             ? counterpart.translate("exchange.invalid_price")
             : invalidAmount
-                ? counterpart.translate("exchange.invalid_amount")
-                : noBalance
-                    ? counterpart.translate("exchange.no_balance")
-                    : null;
+            ? counterpart.translate("exchange.invalid_amount")
+            : noBalance
+            ? counterpart.translate("exchange.no_balance")
+            : null;
 
         // Fee asset selection
         if (
@@ -974,7 +974,12 @@ class BuySell extends React.Component {
                     //data-intro={dataIntro}
                 >
                     {!hideHeader ? (
-                        <div className={"exchange-content-header " + type}>
+                        <div
+                            className={
+                                "exchange-content-header exchange-content-header--buy-sell-form " +
+                                type
+                            }
+                        >
                             <span>
                                 <TranslateWithLinks
                                     string="exchange.buysell_formatter"
@@ -991,42 +996,12 @@ class BuySell extends React.Component {
                                             value: isPredictionMarket
                                                 ? "exchange.short"
                                                 : isBid
-                                                    ? "exchange.buy"
-                                                    : "exchange.sell",
+                                                ? "exchange.buy"
+                                                : "exchange.sell",
                                             arg: "direction"
                                         }
                                     ]}
                                 />
-                            </span>
-                            <span style={{float: "right"}}>
-                                {currentAccount ? (
-                                    <a
-                                        href="javascript:void(0);"
-                                        onClick={
-                                            this.props.showScaledOrderModal
-                                        }
-                                        style={{textTransform: "none"}}
-                                    >
-                                        {counterpart.translate(
-                                            "scaled_orders.title"
-                                        )}
-                                    </a>
-                                ) : (
-                                    <Tooltip
-                                        title={counterpart.translate(
-                                            "scaled_orders.please_log_in"
-                                        )}
-                                    >
-                                        <a
-                                            href="javascript:void(0);"
-                                            style={{textTransform: "none"}}
-                                        >
-                                            {counterpart.translate(
-                                                "scaled_orders.title"
-                                            )}
-                                        </a>
-                                    </Tooltip>
-                                )}
                             </span>
                             {/* <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span> */}
                             {this.props.onFlip &&
@@ -1501,16 +1476,15 @@ class BuySell extends React.Component {
                     </form>
                 </div>
 
-                {isGloballySettled &&
-                    !!this.props.currentAccount && (
-                        <SettleModal
-                            visible={this.state.isSettleModalVisible}
-                            hideModal={this.hideSettleModal}
-                            showModal={this.showSettleModal}
-                            asset={otherAsset.get("id")}
-                            account={this.props.currentAccount.get("name")}
-                        />
-                    )}
+                {isGloballySettled && !!this.props.currentAccount && (
+                    <SettleModal
+                        visible={this.state.isSettleModalVisible}
+                        hideModal={this.hideSettleModal}
+                        showModal={this.showSettleModal}
+                        asset={otherAsset.get("id")}
+                        account={this.props.currentAccount.get("name")}
+                    />
+                )}
             </div>
         );
     }

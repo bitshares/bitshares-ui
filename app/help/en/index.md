@@ -32,5 +32,9 @@ of this application.
  * [Trading](dex/trading.md)
  * [Short Selling BitAssets](dex/shorting.md)
 
+## Development
+ * [Bitshares UI Github](https://github.com/bitshares/bitshares-ui)
+ * [HackTheDEX](introduction/hackthedex.md)
+
 ----------
 [Glossary](glossary.md)

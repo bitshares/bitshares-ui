@@ -300,6 +300,13 @@ function BindToChainState(Component, options = {}) {
                 if (prop) {
                     if (prop[0] === "#" && Number.parseInt(prop.substring(1)))
                         prop = "1.2." + prop.substring(1);
+                    if (
+                        prop instanceof Map &&
+                        !!prop.get("name") &&
+                        prop.size == 1
+                    ) {
+                        prop = prop.get("name");
+                    }
                     let new_obj = ChainStore.getAccount(
                         prop,
                         this.default_props["autosubscribe"]
@@ -566,10 +573,10 @@ function BindToChainState(Component, options = {}) {
             let stateChanged = false;
 
             /*
-            * are_equal_shallow won't correctly compare null to undefined, so
-            * we need to work around it by assigning a non-falsy value instead
-            * of null before making the comparison
-            */
+             * are_equal_shallow won't correctly compare null to undefined, so
+             * we need to work around it by assigning a non-falsy value instead
+             * of null before making the comparison
+             */
             function replaceNull(state) {
                 let temp = {};
                 for (let key in state) {

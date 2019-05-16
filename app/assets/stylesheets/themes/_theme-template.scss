@@ -199,6 +199,9 @@
         background-color: $settings-select-bg;
         color: $settings-select-color;
     }
+    .settings--select {
+        width: 100%;
+    }
     .settings-input {
         /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
     .block-list and it uses on many places. To keep everything OK and do not break something I just do
@@ -829,8 +832,12 @@
             .settings-select {
                 @extend .settings-select;
             }
-            > input.settings-input[type="text"] {
+            > input.settings-input[type="text"]#{$ant-fix} {
                 @extend .settings-input;
+            }
+            > input.settings--input[type="text"] {
+                max-width: 100%;
+                width: 100%;
             }
         }
     }
@@ -1351,7 +1358,7 @@
         border-bottom-color: $secondary-text-color !important;
     }
     // Block List (section)
-    section.block-list input[type="text"],
+    section.block-list input[type="text"]#{$ant-fix},
     section.block-list input[type="password"] {
         border-bottom: 1px solid $panel-bg-color;
         background-color: transparent;
@@ -1422,14 +1429,12 @@
     }
     .exchange-content-header {
         color: $light-text-color;
-        border-bottom: 1px solid $button-bg-color;
-        &.bid {
-            border-bottom: 1px solid $bid-color;
-        }
-        &.ask {
-            border-bottom: 1px solid $ask-color;
-        }
     }
+
+    .exchange-content-header--buy-sell-form {
+        border-bottom: 0 !important;
+    }
+
     // .block-content-header {
     // //text-transform: uppercase;
     // @include RobotoLight;
@@ -1678,7 +1683,9 @@
         border-bottom: 1px solid lighten($bg-color, 4%);
         border-top: 1px solid lighten($bg-color, 4%);
     }
-
+    div.ant-row.ant-form-item.no-offset {
+        margin-bottom: 0;
+    }
     // Settings
     .settings-menu {
         > ul {
@@ -1700,6 +1707,10 @@
                 }
             }
         }
+    }
+    .unstyled-list {
+        list-style: none;
+        margin-left: 0;
     }
     .settings--notifications {
         .settings--notifications--group {
@@ -2177,6 +2188,12 @@
         }
     }
     .expiration-datetime-picker {
+        &.scaled-orders {
+            > div {
+                margin-top: -5px;
+            }
+        }
+
         > div {
             float: left;
             min-width: 145px;

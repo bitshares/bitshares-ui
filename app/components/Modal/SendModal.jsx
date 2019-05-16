@@ -410,20 +410,21 @@ class SendModal extends React.Component {
                 content: state.memo
             }
         }).then(({fee, hasBalance, hasPoolBalance}) =>
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {fee_asset_id: asset_id},
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should =>
+                should
+                    ? this.setState(
+                          {
+                              fee_asset_id: asset_id
+                          },
+                          this._updateFee
+                      )
+                    : this.setState({
+                          feeAmount: fee,
+                          fee_asset_id: fee.asset_id,
+                          hasBalance,
+                          hasPoolBalance,
+                          error: !hasBalance || !hasPoolBalance
+                      })
             )
         );
     }
@@ -577,7 +578,6 @@ class SendModal extends React.Component {
             from_name === this.props.passwordAccount;
         let from_error =
             from_account && !from_my_account && !propose ? true : false;
-
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
         let balance = null;
         let balance_fee = null;
@@ -741,10 +741,9 @@ class SendModal extends React.Component {
                                                 this.props.currentAccount
                                             }
                                             account={this.props.currentAccount}
-                                            size={60}
+                                            size={35}
                                             typeahead={true}
                                             tabIndex={tabIndex++}
-                                            hideImage
                                             locked={true}
                                         />
                                         <div className="modal-separator" />
@@ -759,10 +758,9 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onFromAccountChanged.bind(
                                         this
                                     )}
-                                    size={60}
+                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
-                                    hideImage
                                     locked={!!propose ? undefined : true}
                                 />
 
@@ -774,10 +772,9 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onToAccountChanged.bind(
                                         this
                                     )}
-                                    size={60}
+                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
-                                    hideImage
                                 />
 
                                 <AmountSelector
@@ -788,8 +785,8 @@ class SendModal extends React.Component {
                                         asset_types.length > 0 && asset
                                             ? asset.get("id")
                                             : asset_id
-                                                ? asset_id
-                                                : asset_types[0]
+                                            ? asset_id
+                                            : asset_types[0]
                                     }
                                     assets={asset_types}
                                     display_balance={balance}
@@ -843,10 +840,10 @@ class SendModal extends React.Component {
                                         fee_asset_types.length && feeAmount
                                             ? feeAmount.asset_id
                                             : fee_asset_types.length === 1
-                                                ? fee_asset_types[0]
-                                                : fee_asset_id
-                                                    ? fee_asset_id
-                                                    : fee_asset_types[0]
+                                            ? fee_asset_types[0]
+                                            : fee_asset_id
+                                            ? fee_asset_id
+                                            : fee_asset_types[0]
                                     }
                                     assets={fee_asset_types}
                                     display_balance={balance_fee}
