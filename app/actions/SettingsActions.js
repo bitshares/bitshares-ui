@@ -84,6 +84,10 @@ class SettingsActions {
     setPriceAlert(value) {
         return value;
     }
+
+    hideGitNews(value) {
+        return value;
+    }
 }
 
 export default alt.createActions(SettingsActions);

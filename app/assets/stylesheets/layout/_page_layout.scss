@@ -126,8 +126,20 @@ div.bordered-header {
 
 .git-info {
     text-align: center;
-    .ant-alert-icon {
+    position: relative;
+
+    .ant-alert .ant-alert-icon {
         position: static !important;
         margin-right: 10px;
+    }
+    .close-icon {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        overflow: hidden;
+        font-size: 12px;
+        line-height: 22px !important;
+        cursor: pointer;
+        color: black !important;
     }
 }

@@ -55,7 +55,8 @@ class SettingsStore {
             onSetUserMarket: SettingsActions.setUserMarket,
             onUpdateLatencies: SettingsActions.updateLatencies,
             onModifyPreferedBases: SettingsActions.modifyPreferedBases,
-            onUpdateUnits: SettingsActions.updateUnits
+            onUpdateUnits: SettingsActions.updateUnits,
+            onHideGitNews: SettingsActions.hideGitNews
         });
 
         this.initDone = false;
@@ -88,6 +89,8 @@ class SettingsStore {
         this.exchange = fromJS(ss.get("exchange", {}));
 
         this.priceAlert = fromJS(ss.get("priceAlert", []));
+
+        this.hiddenGitNews = Immutable.List(ss.get("hiddenGitNews", []));
     }
 
     /**
@@ -438,9 +441,9 @@ class SettingsStore {
             };
             let coreAsset = coreAssets[this.starredKey] || "BTS";
             /*
-            * Update units depending on the chain, also make sure the 0 index
-            * asset is always the correct CORE asset name
-            */
+             * Update units depending on the chain, also make sure the 0 index
+             * asset is always the correct CORE asset name
+             */
             this.onUpdateUnits();
             this.defaults.unit[0] = coreAsset;
 
@@ -756,6 +759,13 @@ class SettingsStore {
         this.defaults.unit = getUnits(this._getChainId());
         if (this.defaults.unit.indexOf(this.settings.get("unit")) === -1) {
             this.settings = this.settings.set("unit", this.defaults.unit[0]);
+        }
+    }
+
+    onHideGitNews(payload) {
+        if (payload && this.hiddenGitNews.indexOf(payload)) {
+            this.hiddenGitNews = this.hiddenGitNews.push(payload);
+            ss.set("hiddenGitNews", this.hiddenGitNews.toJS());
         }
     }
 }
