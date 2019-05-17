@@ -414,7 +414,9 @@ class SendModal extends React.Component {
                 should =>
                     should
                         ? this.setState(
-                              {fee_asset_id: asset_id},
+                              {
+                                  fee_asset_id: asset_id
+                              },
                               this._updateFee
                           )
                         : this.setState({
@@ -577,7 +579,6 @@ class SendModal extends React.Component {
             from_name === this.props.passwordAccount;
         let from_error =
             from_account && !from_my_account && !propose ? true : false;
-
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
         let balance = null;
         let balance_fee = null;
@@ -741,10 +742,9 @@ class SendModal extends React.Component {
                                                 this.props.currentAccount
                                             }
                                             account={this.props.currentAccount}
-                                            size={60}
+                                            size={35}
                                             typeahead={true}
                                             tabIndex={tabIndex++}
-                                            hideImage
                                             locked={true}
                                         />
                                         <div className="modal-separator" />
@@ -759,10 +759,9 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onFromAccountChanged.bind(
                                         this
                                     )}
-                                    size={60}
+                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
-                                    hideImage
                                     locked={!!propose ? undefined : true}
                                 />
 
@@ -774,10 +773,9 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onToAccountChanged.bind(
                                         this
                                     )}
-                                    size={60}
+                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
-                                    hideImage
                                 />
 
                                 <AmountSelector

@@ -248,7 +248,7 @@ const MarginPositionsTable = ({
                         </div>
                     </th>
                     <th style={alignRight} className="column-hide-small">
-                        <Translate content="exchange.price" />
+                        <Translate content="exchange.feed_price" />
                     </th>
                     <th className="column-hide-small" style={alignLeft}>
                         <Translate content="explorer.assets.units" />

@@ -122,7 +122,7 @@ div#CenterContent {
     > thead > tr > th {
         font-size: 14px;
         padding: 5px 5px;
-        text-align: right !important;
+        text-align: right;
     }
 
     > tbody > tr > td {
@@ -184,6 +184,53 @@ p.order-table-title {
 
 form.order-form {
     padding: 10px;
+
+    .ant-form-item {
+        margin-bottom: 0;
+    }
+
+    .ant-input {
+        text-align: right;
+    }
+
+    .ant-form-item-label {
+        text-align: left;
+        font-family: Roboto Medium, Monospaced Number, Chinese Quote,
+            -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, PingFang SC,
+            Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+            sans-serif;
+
+        label {
+            font-size: 90% !important;
+        }
+    }
+
+    .ant-input-group-addon {
+        text-align: left;
+        width: 60% !important;
+    }
+}
+
+.exchange--buy-sell-form {
+    // override "Extra" of Ant.Tabs (Buy/Sell Asset) to put it
+    // on left side instead of right
+    .ant-tabs-extra-content {
+        float: left !important;
+        padding: 0 15px;
+        margin-right: 12px;
+    }
+}
+
+.buy-form {
+    > div.ant-tabs-bar {
+        border-bottom: 1px solid #6ba583 !important;
+    }
+}
+
+.sell-form {
+    > div.ant-tabs-bar {
+        border-bottom: 1px solid #e3745b !important;
+    }
 }
 
 #market-charts {
@@ -560,12 +607,24 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 1rem;
     font-weight: 500;
     text-transform: uppercase;
-    padding: 10px 5px 12px 10px;
     overflow: hidden;
 }
 
+.exchange-content-header.bid,
+.exchange-content-header.ask {
+    padding: 10px;
+}
+
+.exchange-content-header.bid {
+    border-bottom: 1px solid #6ba583 !important;
+}
+
+.exchange-content-header.ask {
+    border-bottom: 1px solid #e3745b !important;
+}
+
 .exchange-padded {
-    padding-right: 5px !important;
+    padding-right: 15px !important;
 }
 
 .mymarkets-base-select {

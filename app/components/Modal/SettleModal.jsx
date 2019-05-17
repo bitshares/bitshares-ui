@@ -24,12 +24,18 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
         settlementPrice
     }) => {
         marketPrice = utils.format_number(marketPrice, asset.get("precision"));
-        settlementPrice = utils.format_number(settlementPrice, asset.get("precision"));
+        settlementPrice = utils.format_number(
+            settlementPrice,
+            asset.get("precision")
+        );
         switch (worthLessSettlement) {
             case true:
                 return (
-                    <div> 
-                        <Translate component="h2" content="exchange.settle_better_marketprice" />
+                    <div>
+                        <Translate
+                            component="h2"
+                            content="exchange.settle_better_marketprice"
+                        />
                         <span>
                             <TranslateWithLinks
                                 string="exchange.worth_less_settlement_warning"
@@ -38,7 +44,9 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
                                         value: (
                                             <MarketLink
                                                 base={asset.get("id")}
-                                                quote={shortBackingAsset.get("id")}
+                                                quote={shortBackingAsset.get(
+                                                    "id"
+                                                )}
                                             />
                                         ),
                                         arg: "market_link"
@@ -65,7 +73,10 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
             default:
                 return (
                     <div>
-                        <Translate component="h2" content="exchange.settle_better_settleprice" />
+                        <Translate
+                            component="h2"
+                            content="exchange.settle_better_settleprice"
+                        />
                         <span>
                             <TranslateWithLinks
                                 string="exchange.settlement_hint"
@@ -74,14 +85,18 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
                                         value: (
                                             <MarketLink
                                                 base={asset.get("id")}
-                                                quote={shortBackingAsset.get("id")}
+                                                quote={shortBackingAsset.get(
+                                                    "id"
+                                                )}
                                             />
                                         ),
                                         arg: "market_link"
                                     },
                                     {
                                         value: (
-                                            <AssetName name={asset.get("symbol")} />
+                                            <AssetName
+                                                name={asset.get("symbol")}
+                                            />
                                         ),
                                         arg: "long"
                                     }
@@ -184,11 +199,27 @@ class ModalContent extends React.Component {
         }
 
         let options =
-        asset && asset.getIn(["bitasset", "options"])
-            ? asset.getIn(["bitasset", "options"]).toJS()
-            : null;
+            asset && asset.getIn(["bitasset", "options"])
+                ? asset.getIn(["bitasset", "options"]).toJS()
+                : null;
 
-        let isGlobalSettled = asset.get("bitasset").get("settlement_fund") > 0 ? true : false;
+        let isGlobalSettled =
+            asset.get("bitasset").get("settlement_fund") > 0 ? true : false;
+
+        let offset = 0;
+        if (!isGlobalSettled) {
+            offset =
+                asset
+                    .get("bitasset")
+                    .get("options")
+                    .get("force_settlement_offset_percent") / 100;
+        }
+
+        // TODO
+        // Check if force_settled_volume exceeds maximum_force_settlement_volume
+        // Requires Dynamic Object for Total Supply
+        // var maxSettlementVolume = asset.get("bitasset").get("options").get("maximum_force_settlement_volume");
+        // var currentSettled = asset.get("bitasset").get("force_settled_volume");
 
         let assetID = asset.get("id");
 
@@ -272,24 +303,34 @@ class ModalContent extends React.Component {
                 ref="settlement_modal"
             >
                 {isGlobalSettled ? (
-                    <Alert 
+                    <Alert
                         message={counterpart.translate(
                             "exchange.settle_delay_globally_settled"
-                        )} 
-                        type="warning" 
-                        showIcon 
+                        )}
+                        type="warning"
+                        showIcon
                     />
                 ) : (
-                    <Alert 
+                    <Alert
                         message={counterpart.translate(
-                            "exchange.settle_delay", {
-                                hours: options.force_settlement_delay_sec /3600
-                            })} 
-                        type="info" 
-                        showIcon 
+                            "exchange.settle_delay",
+                            {
+                                hours: options.force_settlement_delay_sec / 3600
+                            }
+                        )}
+                        type="info"
+                        showIcon
                     />
                 )}
                 <WorthLessSettlementWarning asset={assetID} />
+                <br />
+                {!isGlobalSettled ? (
+                    <Translate
+                        component="div"
+                        content="exchange.settle_offset"
+                        offset={offset}
+                    />
+                ) : null}
                 <br />
                 <Form className="full-width" layout="vertical">
                     <AmountSelector

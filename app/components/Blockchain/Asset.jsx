@@ -99,6 +99,12 @@ class Asset extends React.Component {
 
             if (!!feedPrice) {
                 try {
+                    let mcr = this.props.asset.getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     Apis.instance()
                         .db_api()
                         .exec("get_call_orders", [
@@ -112,6 +118,7 @@ class Asset extends React.Component {
                                     assets,
                                     this.props.asset.get("id"),
                                     feedPrice,
+                                    mcr,
                                     isPredictionMarket
                                 );
                             });
@@ -161,16 +168,13 @@ class Asset extends React.Component {
             "current_feed",
             "maximum_short_squeeze_ratio"
         ]);
-        let settlePrice = this.props.asset.getIn([
-            "bitasset",
-            "current_feed",
-            "settlement_price"
-        ]);
+
+        let feedPriceRaw = assetUtils.extractRawFeedPrice(this.props.asset);
 
         // if there has been no feed price, settlePrice has 0 amount
         if (
-            settlePrice.getIn(["base", "amount"]) == 0 &&
-            settlePrice.getIn(["quote", "amount"]) == 0
+            feedPriceRaw.getIn(["base", "amount"]) == 0 &&
+            feedPriceRaw.getIn(["quote", "amount"]) == 0
         ) {
             return null;
         }
@@ -180,21 +184,21 @@ class Asset extends React.Component {
         /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
         if (
             isPredictionMarket &&
-            settlePrice.getIn(["base", "asset_id"]) ===
-                settlePrice.getIn(["quote", "asset_id"])
+            feedPriceRaw.getIn(["base", "asset_id"]) ===
+                feedPriceRaw.getIn(["quote", "asset_id"])
         ) {
             if (!assets[this.props.backingAsset.get("id")]) {
                 assets[this.props.backingAsset.get("id")] = {
                     precision: this.props.asset.get("precision")
                 };
             }
-            settlePrice = settlePrice.setIn(["base", "amount"], 1);
-            settlePrice = settlePrice.setIn(
+            feedPriceRaw = feedPriceRaw.setIn(["base", "amount"], 1);
+            feedPriceRaw = feedPriceRaw.setIn(
                 ["base", "asset_id"],
                 this.props.backingAsset.get("id")
             );
-            settlePrice = settlePrice.setIn(["quote", "amount"], 1);
-            settlePrice = settlePrice.setIn(
+            feedPriceRaw = feedPriceRaw.setIn(["quote", "amount"], 1);
+            feedPriceRaw = feedPriceRaw.setIn(
                 ["quote", "asset_id"],
                 this.props.asset.get("id")
             );
@@ -202,13 +206,13 @@ class Asset extends React.Component {
         }
 
         // Catch Invalid SettlePrice object
-        if (settlePrice.toJS) {
-            let settleObject = settlePrice.toJS();
+        if (feedPriceRaw.toJS) {
+            let settleObject = feedPriceRaw.toJS();
             if (!assets[settleObject.base.asset_id]) return;
         }
 
         feedPrice = new FeedPrice({
-            priceObject: settlePrice,
+            priceObject: feedPriceRaw,
             market_base: this.props.asset.get("id"),
             sqr,
             assets
@@ -367,7 +371,7 @@ class Asset extends React.Component {
         if (asset.symbol === core_asset.get("symbol")) preferredMarket = "USD";
         if (urls && urls.length) {
             urls.forEach(url => {
-                let markdownUrl = `<a target="_blank" rel="noopener noreferrer" href="${url}">${url}</a>`;
+                let markdownUrl = `<a target="_blank" class="external-link" rel="noopener noreferrer" href="${url}">${url}</a>`;
                 desc = desc.replace(url, markdownUrl);
             });
         }
@@ -519,7 +523,10 @@ class Asset extends React.Component {
         var bitAsset = asset.bitasset;
         if (!("current_feed" in bitAsset)) return <div header={title} />;
         var currentFeed = bitAsset.current_feed;
-        var feedPrice = this.formattedPrice(currentFeed.settlement_price);
+
+        var feedPrice = this.formattedPrice(
+            assetUtils.extractRawFeedPrice(asset)
+        );
 
         return (
             <div className="asset-card no-padding">
@@ -630,6 +637,11 @@ class Asset extends React.Component {
              * Global Settled Assets
              */
             var settlementFund = bitAsset.settlement_fund;
+
+            /**
+             * In globally settled assets the force settlement offset is 0
+             *
+             */
             var settlementPrice = this.formattedPrice(
                 bitAsset.settlement_price
             );
@@ -707,13 +719,13 @@ class Asset extends React.Component {
                 bitAsset.options.maximum_force_settlement_volume;
 
             var msspPrice = this.formattedPrice(
-                currentFeed.settlement_price,
+                assetUtils.extractRawFeedPrice(asset),
                 false,
                 false,
                 currentFeed.maximum_short_squeeze_ratio / 1000
             );
             var settlePrice = this.formattedPrice(
-                currentFeed.settlement_price,
+                assetUtils.extractRawFeedPrice(asset),
                 false,
                 false,
                 1 - settlementOffset / 10000
@@ -1417,7 +1429,7 @@ class Asset extends React.Component {
         }
 
         var rows = [];
-        var settlement_price_header = feeds[0][1][1].settlement_price;
+        var feed_price_header = assetUtils.extractRawFeedPrice(feeds[0][1][1]);
         var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
         let header = (
             <thead>
@@ -1426,14 +1438,9 @@ class Asset extends React.Component {
                         <Translate content="explorer.asset.price_feed_data.publisher" />
                     </th>
                     <th style={{textAlign: "right"}}>
-                        <Translate content="explorer.asset.price_feed_data.settlement_price" />
+                        <Translate content="explorer.asset.price_feed_data.feed_price" />
                         <br />(
-                        {this.formattedPrice(
-                            settlement_price_header,
-                            false,
-                            true
-                        )}
-                        )
+                        {this.formattedPrice(feed_price_header, false, true)})
                     </th>
                     <th
                         style={{textAlign: "right"}}
@@ -1467,7 +1474,7 @@ class Asset extends React.Component {
             var feed = feeds[i];
             var publisher = feed[0];
             var publishDate = new Date(feed[1][0] + "Z");
-            var settlement_price = feed[1][1].settlement_price;
+            var feed_price = assetUtils.extractRawFeedPrice(feed[1][1]);
             var core_exchange_rate = feed[1][1].core_exchange_rate;
             var maintenance_collateral_ratio =
                 "" + feed[1][1].maintenance_collateral_ratio / 1000;
@@ -1479,7 +1486,7 @@ class Asset extends React.Component {
                         <LinkToAccountById account={publisher} />
                     </td>
                     <td style={{textAlign: "right"}}>
-                        {this.formattedPrice(settlement_price, true)}
+                        {this.formattedPrice(feed_price, true)}
                     </td>
                     <td
                         style={{textAlign: "right"}}
@@ -1568,6 +1575,21 @@ class Asset extends React.Component {
                             )}
                             {sortedCollateralBids.length && ")"}
                         </th>
+                        <th className="column-hide-small">
+                            <Translate content="transaction.cumulative_borrow_amount" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
+                                <FormattedAsset
+                                    amount={1}
+                                    asset={
+                                        sortedCollateralBids[0].bid.quote
+                                            .asset_id
+                                    }
+                                    hide_amount
+                                />
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
                         <th
                             style={{textAlign: "right"}}
                             className="clickable column-hide-small"
@@ -1609,6 +1631,7 @@ class Asset extends React.Component {
                 </thead>
             );
 
+            let cumulativeDebt = 0;
             secondRows = sortedCollateralBids.map(c => {
                 let included = "no";
                 if (!!c.consideredIfRevived) {
@@ -1620,6 +1643,9 @@ class Asset extends React.Component {
                         included = "no";
                     }
                 }
+
+                cumulativeDebt += c.debt;
+
                 return (
                     <tr className="margin-row" key={c.id}>
                         <td>
@@ -1638,6 +1664,16 @@ class Asset extends React.Component {
                         <td style={{textAlign: "right"}} className="">
                             <FormattedAsset
                                 amount={c.bid.quote.amount}
+                                asset={c.bid.quote.asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <FormattedAsset
+                                amount={cumulativeDebt}
                                 asset={c.bid.quote.asset_id}
                                 hide_asset
                             />

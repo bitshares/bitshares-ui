@@ -1,24 +1,24 @@
 $border-color: rgba(128, 128, 128, 0.45);
 
 .green {
-      color: #7bd500!important;
-      
-      .icon { 
-          > svg {
-              > path {
-                  fill: #7bd500!important;
-              }
-          }
-      }
+    color: #7bd500 !important;
+
+    .icon {
+        > svg {
+            > path {
+                fill: #7bd500 !important;
+            }
+        }
+    }
 }
 
 .red {
-    color: #E6001F!important;
-    
-    .icon { 
+    color: #e6001f !important;
+
+    .icon {
         > svg {
             > path {
-                fill: #E6001F!important;
+                fill: #e6001f !important;
             }
         }
     }
