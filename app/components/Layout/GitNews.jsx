@@ -1,5 +1,7 @@
 import React from "react";
 import {Alert} from "bitshares-ui-style-guide";
+import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import asset_utils from "../../lib/common/asset_utils";
 
 export default class GitNews extends React.Component {
     constructor() {
@@ -10,10 +12,11 @@ export default class GitNews extends React.Component {
     }
 
     componentDidMount() {
-        this.getNews.call(this);
+        //this.getNewsThroughAsset("NOTIFICATIONS");
+        this.getNewsFromGitHub.call(this);
     }
 
-    getNews() {
+    getNewsFromGitHub() {
         fetch(
             "https://api.github.com/repos/blockchainprojects/bitshares-ui/contents/news.json?ref=news_feed_on_the_very_top"
         )
@@ -28,26 +31,44 @@ export default class GitNews extends React.Component {
             );
     }
 
+    getNewsThroughAsset(assetSymbolOrId) {
+        FetchChainObjects(ChainStore.getAsset, [assetSymbolOrId]).then(
+            asset => {
+                asset = asset[0].toJS();
+                console.log(asset);
+                let notification = asset_utils.parseDescription(
+                    asset.options.description
+                );
+                notification = notification.main.split(
+                    "This asset is used to display notifications for the BitShares UI deployed under bitshares.org"
+                );
+                notification = JSON.parse(notification[1]);
+                this.setState({news: [notification]});
+            }
+        );
+    }
+
     render() {
         const {news} = this.state;
-        const renderAlert = Object.keys(news).length
-            ? Object.values(news).map((item, index) => {
-                  let now = new Date();
-                  const type = item.type === "critical" ? "error" : item.type;
-                  const begin = new Date(item.begin_date.split(".").reverse());
-                  const end = new Date(item.end_date.split(".").reverse());
-                  if (now >= begin && now <= end)
-                      return (
-                          <Alert
-                              key={index}
-                              type={type}
-                              message={item.content}
-                              banner
-                              closable={type === "info"}
-                          />
-                      );
-              })
-            : null;
+        if (!Object.keys(news).length) {
+            return null;
+        }
+        const renderAlert = Object.values(news).map((item, index) => {
+            let now = new Date();
+            const type = item.type === "critical" ? "error" : item.type; // info & warning
+            const begin = new Date(item.begin_date.split(".").reverse());
+            const end = new Date(item.end_date.split(".").reverse());
+            if (now >= begin && now <= end)
+                return (
+                    <Alert
+                        key={index}
+                        type={type}
+                        message={item.content}
+                        banner
+                        closable={type === "info"}
+                    />
+                );
+        });
         return renderAlert;
     }
 }
