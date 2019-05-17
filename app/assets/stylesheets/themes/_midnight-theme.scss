@@ -86,6 +86,12 @@ $explorer--assets--bg: $bg-color;
 
 // * * *
 
+// * * * * Settings
+
+$settings-label-color: rgba(255, 255, 255, 0.5);
+
+//
+
 .midnightTheme {
     @include theme(
         $explorer-tab-content-background-color,
@@ -145,6 +151,7 @@ $explorer--assets--bg: $bg-color;
         $positive-color-alternative,
         $separator-line,
         $medium-color,
-        $dark-help-text
+        $dark-help-text,
+        $settings-label-color
     );
 }

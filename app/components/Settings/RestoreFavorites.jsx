@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
-import {Notification} from "bitshares-ui-style-guide";
+import {Button, Notification} from "bitshares-ui-style-guide";
 
 class RestoreFavorites extends React.Component {
     constructor(props) {
@@ -83,12 +83,12 @@ class RestoreFavorites extends React.Component {
 
                 {state.json && (
                     <p>
-                        <button
+                        <Button
+                            type={"primary"}
                             onClick={this.finish.bind(this)}
-                            className="button success"
                         >
                             <Translate content="settings.backup_favorites_finish" />
-                        </button>
+                        </Button>
                     </p>
                 )}
             </div>

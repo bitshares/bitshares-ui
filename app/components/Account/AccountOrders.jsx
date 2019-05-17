@@ -1,5 +1,4 @@
 import React from "react";
-import {OrderRow, TableHeader} from "../Exchange/MyOpenOrders";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs";
@@ -11,6 +10,12 @@ import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
 import PaginatedList from "../Utility/PaginatedList";
 import {Input, Icon} from "bitshares-ui-style-guide";
+import AssetName from "../Utility/AssetName";
+import {Link} from "react-router-dom";
+import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
+import {MarketPrice} from "../Utility/MarketPrice";
+import FormattedPrice from "../Utility/FormattedPrice";
+import utils from "common/utils";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -131,11 +136,81 @@ class AccountOrders extends React.Component {
     cancelSelected() {
         this._cancelLimitOrders.call(this);
     }
+    getHeader() {
+        const {isMyAccount} = this.props;
+        return [
+            isMyAccount
+                ? {
+                      title: <Translate content="wallet.cancel" />,
+                      dataIndex: "cancel",
+                      render: item => {
+                          return isMyAccount ? (
+                              <span
+                                  style={{
+                                      whiteSpace: "nowrap",
+                                      cursor: "pointer"
+                                  }}
+                              >
+                                  {item}
+                              </span>
+                          ) : null;
+                      }
+                  }
+                : {},
+            {
+                title: <Translate content="account.trade" />,
+                dataIndex: "trade",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="transaction.order_id" />,
+                dataIndex: "order_id",
+                align: "left",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="exchange.description" />,
+                dataIndex: "description",
+                align: "left",
+                width: "30%",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="exchange.price" />,
+                dataIndex: "price",
+                align: "left",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="exchange.price_market" />,
+                dataIndex: "price_market",
+                align: "left",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="exchange.value" />,
+                dataIndex: "value",
+                align: "right",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            }
+        ];
+    }
 
     render() {
         let {account, marketDirections} = this.props;
         let {filterValue, selectedOrders} = this.state;
-        let cancel = counterpart.translate("account.perm.cancel");
         let markets = {};
 
         let marketOrders = {};
@@ -154,6 +229,7 @@ class AccountOrders extends React.Component {
             let order = ChainStore.getObject(orderID).toJS();
             let base = ChainStore.getAsset(order.sell_price.base.asset_id);
             let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+            let {settings} = this.props;
 
             if (base && quote) {
                 let assets = {
@@ -213,8 +289,186 @@ class AccountOrders extends React.Component {
                     marketOrders[marketName] = [];
                 }
 
+                const isBid = limitOrder.isBid();
+                const isCall = limitOrder.isCall();
+                let preferredUnit = settings ? settings.get("unit") : "1.3.0";
+                let quoteColor = !isBid ? "value negative" : "value positive";
+                let baseColor = isBid ? "value negative" : "value positive";
+
                 marketOrders[marketName].push(
-                    <OrderRow
+                    {
+                        key: limitOrder.id,
+                        cancel: isCall ? null : (
+                            <span
+                                style={{marginRight: 0}}
+                                className="order-cancel"
+                            >
+                                <input
+                                    type="checkbox"
+                                    className="orderCancel"
+                                    onChange={this.onCheckCancel.bind(
+                                        this,
+                                        limitOrder.id
+                                    )}
+                                />
+                            </span>
+                        ),
+                        trade: (
+                            <Link
+                                to={`/market/${marketQuote.get(
+                                    "symbol"
+                                )}_${marketBase.get("symbol")}`}
+                            >
+                                <Icon
+                                    type="bar-chart"
+                                    name="trade"
+                                    title="icons.trade.trade"
+                                    className="icon-14px"
+                                />
+                            </Link>
+                        ),
+                        order_id: <span>#{limitOrder.id.substring(4)}</span>,
+                        description: (
+                            <div onClick={this.onFlip.bind(this, marketName)}>
+                                {isBid ? (
+                                    <Translate
+                                        content="exchange.buy_description"
+                                        baseAsset={utils.format_number(
+                                            limitOrder[
+                                                isBid
+                                                    ? "amountToReceive"
+                                                    : "amountForSale"
+                                            ]().getAmount({real: true}),
+                                            marketBase.get("precision"),
+                                            false
+                                        )}
+                                        quoteAsset={utils.format_number(
+                                            limitOrder[
+                                                isBid
+                                                    ? "amountForSale"
+                                                    : "amountToReceive"
+                                            ]().getAmount({real: true}),
+                                            marketQuote.get("precision"),
+                                            false
+                                        )}
+                                        baseName={
+                                            <AssetName
+                                                noTip
+                                                customClass={quoteColor}
+                                                name={marketQuote.get("symbol")}
+                                            />
+                                        }
+                                        quoteName={
+                                            <AssetName
+                                                noTip
+                                                customClass={baseColor}
+                                                name={marketBase.get("symbol")}
+                                            />
+                                        }
+                                    />
+                                ) : (
+                                    <Translate
+                                        content="exchange.sell_description"
+                                        baseAsset={utils.format_number(
+                                            limitOrder[
+                                                isBid
+                                                    ? "amountToReceive"
+                                                    : "amountForSale"
+                                            ]().getAmount({real: true}),
+                                            marketBase.get("precision"),
+                                            false
+                                        )}
+                                        quoteAsset={utils.format_number(
+                                            limitOrder[
+                                                isBid
+                                                    ? "amountForSale"
+                                                    : "amountToReceive"
+                                            ]().getAmount({real: true}),
+                                            marketQuote.get("precision"),
+                                            false
+                                        )}
+                                        baseName={
+                                            <AssetName
+                                                noTip
+                                                customClass={quoteColor}
+                                                name={marketQuote.get("symbol")}
+                                            />
+                                        }
+                                        quoteName={
+                                            <AssetName
+                                                noTip
+                                                customClass={baseColor}
+                                                name={marketBase.get("symbol")}
+                                            />
+                                        }
+                                    />
+                                )}
+                            </div>
+                        ),
+                        price: (
+                            <div onClick={this.onFlip.bind(this, marketName)}>
+                                <FormattedPrice
+                                    base_amount={
+                                        limitOrder.sellPrice().base.amount
+                                    }
+                                    base_asset={
+                                        limitOrder.sellPrice().base.asset_id
+                                    }
+                                    quote_amount={
+                                        limitOrder.sellPrice().quote.amount
+                                    }
+                                    quote_asset={
+                                        limitOrder.sellPrice().quote.asset_id
+                                    }
+                                    force_direction={marketBase.get("symbol")}
+                                    hide_symbols
+                                />
+                            </div>
+                        ),
+                        price_market: (
+                            <div onClick={this.onFlip.bind(this, marketName)}>
+                                {isBid ? (
+                                    <MarketPrice
+                                        base={marketBase.get("id")}
+                                        quote={marketQuote.get("id")}
+                                        force_direction={marketBase.get(
+                                            "symbol"
+                                        )}
+                                        hide_symbols
+                                        hide_asset
+                                    />
+                                ) : (
+                                    <MarketPrice
+                                        base={marketBase.get("id")}
+                                        quote={marketQuote.get("id")}
+                                        force_direction={marketBase.get(
+                                            "symbol"
+                                        )}
+                                        hide_symbols
+                                        hide_asset
+                                    />
+                                )}
+                            </div>
+                        ),
+                        value: (
+                            <div onClick={this.onFlip.bind(this, marketName)}>
+                                <EquivalentValueComponent
+                                    hide_asset
+                                    amount={limitOrder
+                                        .amountForSale()
+                                        .getAmount()}
+                                    fromAsset={
+                                        limitOrder.amountForSale().asset_id
+                                    }
+                                    noDecimals={true}
+                                    toAsset={preferredUnit}
+                                />{" "}
+                                <AssetName name={preferredUnit} />
+                            </div>
+                        )
+                    }
+
+                    /* <OrderRow
                         ref={markets[marketName].base.symbol}
                         key={order.id}
                         order={limitOrder}
@@ -230,7 +484,7 @@ class AccountOrders extends React.Component {
                         settings={this.props.settings}
                         onFlip={this.onFlip.bind(this, marketName)}
                         onCheckCancel={this.onCheckCancel.bind(this, order.id)}
-                    />
+                    /> */
                 );
             }
         });
@@ -241,7 +495,7 @@ class AccountOrders extends React.Component {
             if (marketOrders[market].length) {
                 tables = tables.concat(
                     marketOrders[market].sort((a, b) => {
-                        return a.props.price - b.props.price;
+                        return a.price - b.price;
                     })
                 );
                 // tables.push(
@@ -299,13 +553,7 @@ class AccountOrders extends React.Component {
                 <PaginatedList
                     pageSize={20}
                     className="table table-striped dashboard-table table-hover"
-                    header={
-                        <TableHeader
-                            settings={this.props.settings}
-                            dashboard
-                            isMyAccount={this.props.isMyAccount}
-                        />
-                    }
+                    header={this.getHeader()}
                     rows={tables}
                     extraRow={this.props.children}
                 />

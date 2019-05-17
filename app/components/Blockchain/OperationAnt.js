@@ -1,32 +1,17 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {Link} from "react-router-dom";
-import classNames from "classnames";
 import Translate from "react-translate-component";
-import counterpart from "counterpart";
 import utils from "common/utils";
-import BlockTime from "./BlockTime";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
-import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
+import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import ProposedOperation from "./ProposedOperation";
 import marketUtils from "common/market_utils";
-import {connect} from "alt-react";
-import SettingsStore from "stores/SettingsStore";
-import PropTypes from "prop-types";
-import {Tooltip} from "bitshares-ui-style-guide";
-import asset_utils from "../../lib/common/asset_utils";
-
-const {operations} = grapheneChainTypes;
-require("./operations.scss");
-
-let ops = Object.keys(operations);
-let listings = account_constants.account_listing;
 
 const ShortObjectId = ({objectId}) => {
     if (typeof objectId === "string") {
@@ -37,163 +22,7 @@ const ShortObjectId = ({objectId}) => {
     return objectId;
 };
 
-class TransactionLabel extends React.Component {
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.color !== this.props.color ||
-            nextProps.type !== this.props.type
-        );
-    }
-    render() {
-        let trxTypes = counterpart.translate("transaction.trxTypes");
-        let labelClass = classNames("label", this.props.color || "info");
-        return (
-            <span className={labelClass}>{trxTypes[ops[this.props.type]]}</span>
-        );
-    }
-}
-
-class Row extends React.Component {
-    static propTypes = {
-        dynGlobalObject: ChainTypes.ChainObject.isRequired
-    };
-
-    static defaultProps = {
-        dynGlobalObject: "2.1.0",
-        tempComponent: "tr"
-    };
-
-    constructor(props) {
-        super(props);
-    }
-
-    shouldComponentUpdate(nextProps) {
-        let {block, dynGlobalObject} = this.props;
-        let last_irreversible_block_num = dynGlobalObject.get(
-            "last_irreversible_block_num"
-        );
-        if (nextProps.dynGlobalObject === this.props.dynGlobalObject) {
-            return false;
-        }
-        return block > last_irreversible_block_num;
-    }
-
-    render() {
-        let {block, fee, color, type, hideOpLabel, hidePending} = this.props;
-
-        let last_irreversible_block_num = this.props.dynGlobalObject.get(
-            "last_irreversible_block_num"
-        );
-        let pending = null;
-        if (!hidePending && block > last_irreversible_block_num) {
-            pending = (
-                <span>
-                    (
-                    <Translate
-                        content="operation.pending"
-                        blocks={block - last_irreversible_block_num}
-                    />
-                    )
-                </span>
-            );
-        }
-
-        fee.amount = parseInt(fee.amount, 10);
-
-        return (
-            <tr>
-                {this.props.includeOperationId ? (
-                    <td style={{textAlign: "left"}}>
-                        {/* {this.props.block}#{this.props.txIndex}<br /> */}
-                        {this.props.operationId}
-                    </td>
-                ) : null}
-                {hideOpLabel ? null : (
-                    <td
-                        style={{textAlign: "left"}}
-                        className="left-td column-hide-tiny"
-                    >
-                        <Tooltip
-                            placement="bottom"
-                            title={counterpart.translate("tooltip.show_block", {
-                                block: utils.format_number(this.props.block, 0)
-                            })}
-                        >
-                            <Link
-                                className="inline-block"
-                                to={`/block/${this.props.block}/${
-                                    this.props.txIndex
-                                }`}
-                            >
-                                <TransactionLabel color={color} type={type} />
-                            </Link>
-                        </Tooltip>
-                    </td>
-                )}
-
-                <td style={{padding: "8px 5px", textAlign: "left"}}>
-                    <div>
-                        <span>{this.props.info}</span>
-                    </div>
-                    <div style={{fontSize: 14, paddingTop: 5}}>
-                        {/*<span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>*/}
-                        {/*{!this.props.hideFee ? (
-                            <span className="facolor-fee">
-                                {" "}
-                                -{" "}
-                                <FormattedAsset
-                                    amount={fee.amount}
-                                    asset={fee.asset_id}
-                                />
-                            </span>
-                        ) : null}*/}
-                        {pending ? <span> - {pending}</span> : null}
-                    </div>
-                </td>
-                {!this.props.hideFee && (
-                    <td style={{textAlign: "left"}}>
-                        <FormattedAsset
-                            amount={fee.amount}
-                            asset={fee.asset_id}
-                        />
-                    </td>
-                )}
-                <td>
-                    {!this.props.hideDate ? (
-                        <BlockTime
-                            block_number={block}
-                            fullDate={this.props.fullDate}
-                        />
-                    ) : null}
-                </td>
-            </tr>
-        );
-    }
-}
-Row = BindToChainState(Row);
-
-class Operation extends React.Component {
-    static defaultProps = {
-        op: [],
-        current: "",
-        block: null,
-        hideOpLabel: false,
-        csvExportMode: false
-    };
-
-    static propTypes = {
-        op: PropTypes.array.isRequired,
-        current: PropTypes.string,
-        block: PropTypes.number,
-        csvExportMode: PropTypes.bool
-    };
-
-    componentWillReceiveProps(np) {
-        if (np.marketDirections !== this.props.marketDirections) {
-            this.forceUpdate();
-        }
-    }
-
+class Operation {
     linkToAccount(name_or_id) {
         if (!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ? (
@@ -212,20 +41,11 @@ class Operation extends React.Component {
         );
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (!this.props.op || !nextProps.op) {
-            return false;
-        }
-        return (
-            !utils.are_equal_shallow(nextProps.op[1], this.props.op[1]) ||
-            nextProps.marketDirections !== this.props.marketDirections
-        );
-    }
-
-    render() {
-        let {op, current, block} = this.props;
-        let line = null,
-            column = null,
+    getColumn(op, current, block, result, marketDirections) {
+        const {operations} = grapheneChainTypes;
+        let ops = Object.keys(operations);
+        let listings = account_constants.account_listing;
+        let column = null,
             color = "info";
         let memoComponent = null;
 
@@ -296,7 +116,7 @@ class Operation extends React.Component {
                                     first,
                                     second
                                 } = marketUtils.getMarketName(base, quote);
-                                const inverted = this.props.marketDirections.get(
+                                const inverted = marketDirections.get(
                                     marketName
                                 );
                                 // const paySymbol = base.get("symbol");
@@ -317,10 +137,9 @@ class Operation extends React.Component {
                                 const amount = isBid
                                     ? op[1].min_to_receive
                                     : op[1].amount_to_sell;
-                                let orderId = this.props.result
-                                    ? typeof this.props.result[1] == "string"
-                                        ? "#" +
-                                          this.props.result[1].substring(4)
+                                let orderId = result
+                                    ? typeof result[1] == "string"
+                                        ? "#" + result[1].substring(4)
                                         : ""
                                     : "";
 
@@ -471,8 +290,8 @@ class Operation extends React.Component {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                            ? "whitelisted_by"
-                            : "blacklisted_by";
+                        ? "whitelisted_by"
+                        : "blacklisted_by";
                 column = (
                     <span>
                         <TranslateWithLinks
@@ -682,11 +501,8 @@ class Operation extends React.Component {
                 color = "warning";
                 const baseAmount = op[1].amount;
                 const instantSettleCode = 2;
-                if (
-                    this.props.result &&
-                    this.props.result[0] == instantSettleCode
-                ) {
-                    const quoteAmount = this.props.result[1];
+                if (result && result[0] == instantSettleCode) {
+                    const quoteAmount = result[1];
                     column = (
                         <span>
                             <TranslateWithLinks
@@ -780,9 +596,7 @@ class Operation extends React.Component {
                                 },
                                 {
                                     type: "price",
-                                    value: asset_utils.extractRawFeedPrice(
-                                        op[1].feed
-                                    ),
+                                    value: op[1].feed.settlement_price,
                                     arg: "price"
                                 }
                             ]}
@@ -885,9 +699,9 @@ class Operation extends React.Component {
                                         arg: "account"
                                     },
                                     {
-                                        value: this.props.result ? (
+                                        value: result ? (
                                             <ShortObjectId
-                                                objectId={this.props.result[1]}
+                                                objectId={result[1]}
                                             />
                                         ) : (
                                             ""
@@ -1111,7 +925,7 @@ class Operation extends React.Component {
                                     first,
                                     second
                                 } = marketUtils.getMarketName(base, quote);
-                                const inverted = this.props.marketDirections.get(
+                                const inverted = marketDirections.get(
                                     marketName
                                 );
                                 const isBid =
@@ -1523,217 +1337,7 @@ class Operation extends React.Component {
                     />
                 );
                 break;
-            //
-            case "htlc_create":
-                const globalObject = ChainStore.getObject("2.0.0");
-                const dynGlobalObject = ChainStore.getObject("2.1.0");
-                let block_time = utils.calc_block_time(
-                    block,
-                    globalObject,
-                    dynGlobalObject
-                );
-                let estimated = false;
-                if (!block_time) {
-                    block_time = utils.calc_block_time(
-                        block,
-                        globalObject,
-                        dynGlobalObject,
-                        true
-                    );
-                    estimated = true;
-                }
 
-                op[1].amount.amount = parseFloat(op[1].amount.amount);
-
-                let expiryTime = new Date();
-
-                expiryTime.setTime(
-                    block_time.getTime() + op[1].claim_period_seconds * 1000
-                );
-
-                column = (
-                    <React.Fragment>
-                        <span className="right-td">
-                            <TranslateWithLinks
-                                string="operation.htlc_create"
-                                keys={[
-                                    {
-                                        type: "date",
-                                        arg: "lock_period",
-                                        value: expiryTime
-                                    },
-                                    {
-                                        type: "account",
-                                        value: op[1].from,
-                                        arg: "from"
-                                    },
-                                    {
-                                        type: "amount",
-                                        value: op[1].amount,
-                                        arg: "amount",
-                                        decimalOffset:
-                                            op[1].amount.asset_id === "1.3.0"
-                                                ? 5
-                                                : null
-                                    },
-                                    {
-                                        type: "account",
-                                        value: op[1].to,
-                                        arg: "to"
-                                    }
-                                ]}
-                            />
-                            <Tooltip title={"Estimated"}>
-                                {estimated ? "*" : ""}
-                            </Tooltip>
-                        </span>
-                        <div
-                            className="memo"
-                            style={{paddingTop: 5, cursor: "help"}}
-                        >
-                            <Tooltip
-                                placement="bottom"
-                                title={counterpart.translate(
-                                    "htlc.preimage_hash_explanation"
-                                )}
-                            >
-                                <span className="inline-block">
-                                    {counterpart.translate(
-                                        "htlc.preimage_hash"
-                                    ) +
-                                        " (" +
-                                        op[1].preimage_size +
-                                        ", " +
-                                        op[1].preimage_hash[0] +
-                                        "): " +
-                                        op[1].preimage_hash[1]}
-                                </span>
-                            </Tooltip>
-                        </div>
-                    </React.Fragment>
-                );
-                break;
-            case "htlc_redeem":
-                color = "success";
-                column = (
-                    <React.Fragment>
-                        <span className="right-td">
-                            <TranslateWithLinks
-                                string="operation.htlc_redeem"
-                                keys={[
-                                    {
-                                        type: "account",
-                                        value: op[1].redeemer,
-                                        arg: "redeemer"
-                                    },
-                                    {
-                                        value: op[1].htlc_id,
-                                        arg: "htlc_id"
-                                    }
-                                ]}
-                            />
-                        </span>
-                        <div
-                            className="memo"
-                            style={{paddingTop: 5, cursor: "help"}}
-                        >
-                            <Tooltip
-                                placement="bottom"
-                                title={counterpart.translate(
-                                    "htlc.preimage_explanation"
-                                )}
-                            >
-                                <span className="inline-block">
-                                    {counterpart.translate("htlc.preimage") +
-                                        ": " +
-                                        op[1].preimage}
-                                </span>
-                            </Tooltip>
-                        </div>
-                    </React.Fragment>
-                );
-                break;
-            case "htlc_extend":
-                column = (
-                    <span className="right-td">
-                        <TranslateWithLinks
-                            string="operation.htlc_extend"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].update_issuer,
-                                    arg: "update_issuer"
-                                },
-                                {
-                                    type: "timespan",
-                                    arg: "seconds_to_add",
-                                    value: op[1].seconds_to_add
-                                },
-                                {
-                                    value: op[1].htlc_id,
-                                    arg: "htlc_id"
-                                }
-                            ]}
-                        />
-                    </span>
-                );
-                break;
-            case "htlc_redeemed":
-                column = (
-                    <span className="right-td">
-                        <TranslateWithLinks
-                            string="operation.htlc_redeemed"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].to,
-                                    arg: "to"
-                                },
-                                {
-                                    type: "account",
-                                    value: op[1].from,
-                                    arg: "from"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].amount,
-                                    arg: "amount",
-                                    decimalOffset:
-                                        op[1].amount.asset_id === "1.3.0"
-                                            ? 5
-                                            : null
-                                },
-                                {
-                                    value: op[1].htlc_id,
-                                    arg: "htlc_id"
-                                }
-                            ]}
-                        />
-                    </span>
-                );
-                break;
-            case "htlc_refund":
-                color = "warning";
-                column = (
-                    <span className="right-td">
-                        <TranslateWithLinks
-                            string="operation.htlc_refund"
-                            keys={[
-                                {
-                                    value: op[1].htlc_id,
-                                    arg: "htlc_id"
-                                },
-                                {
-                                    type: "account",
-                                    value: op[1].to,
-                                    arg: "to"
-                                }
-                            ]}
-                        />
-                    </span>
-                );
-
-                break;
             default:
                 console.log("unimplemented op '" + ops[op[0]] + "':", op);
                 column = (
@@ -1742,64 +1346,8 @@ class Operation extends React.Component {
                     </span>
                 );
         }
-
-        if (this.props.csvExportMode) {
-            const globalObject = ChainStore.getObject("2.0.0");
-            const dynGlobalObject = ChainStore.getObject("2.1.0");
-            const block_time = utils.calc_block_time(
-                block,
-                globalObject,
-                dynGlobalObject
-            );
-            return (
-                <div>
-                    <div>{block_time ? block_time.toLocaleString() : ""}</div>
-                    <div>{ops[op[0]]}</div>
-                    <div>{column}</div>
-                    <div>
-                        <FormattedAsset
-                            amount={parseInt(op[1].fee.amount, 10)}
-                            asset={op[1].fee.asset_id}
-                        />
-                    </div>
-                </div>
-            );
-        }
-
-        line = column ? (
-            <Row
-                operationId={this.props.operationId}
-                txIndex={this.props.txIndex}
-                includeOperationId={this.props.includeOperationId}
-                block={block}
-                type={op[0]}
-                color={color}
-                fee={op[1].fee}
-                hideOpLabel={this.props.hideOpLabel}
-                hideDate={this.props.hideDate}
-                info={column}
-                hideFee={this.props.hideFee}
-                hidePending={this.props.hidePending}
-                fullDate={this.props.fullDate}
-            />
-        ) : null;
-
-        return line ? line : <tr />;
+        return {column, color};
     }
 }
-
-Operation = connect(
-    Operation,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                marketDirections: SettingsStore.getState().marketDirections
-            };
-        }
-    }
-);
 
 export default Operation;

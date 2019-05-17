@@ -337,6 +337,7 @@ class GdexGateway extends React.Component {
                         href={issuer.ticket}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="external-link"
                     >
                         {issuer.ticket}
                     </a>
@@ -357,6 +358,7 @@ class GdexGateway extends React.Component {
                         href={issuer.telgram}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="external-link"
                     >
                         {issuer.telgram}
                     </a>

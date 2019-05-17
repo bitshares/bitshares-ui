@@ -982,7 +982,7 @@ class MyMarkets extends React.Component {
                                         placeholder={counterpart.translate(
                                             "exchange.filter"
                                         )}
-                                        maxLength="16"
+                                        maxLength={16}
                                         name="focus"
                                         required="required"
                                         value={this.state.myMarketFilter}
@@ -1052,7 +1052,7 @@ class MyMarkets extends React.Component {
                                             placeholder={counterpart.translate(
                                                 "exchange.search"
                                             )}
-                                            maxLength="16"
+                                            maxLength={16}
                                             tabIndex={2}
                                             ref="findSearchInput"
                                         />

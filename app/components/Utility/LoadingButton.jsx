@@ -3,6 +3,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
 import {findDOMNode} from "react-dom";
 import PropTypes from "prop-types";
+import {Button} from "bitshares-ui-style-guide";
 
 /** This component gives a convenient way to indicate loading.
  *
@@ -331,7 +332,7 @@ class LoadingButton extends React.Component {
             <div style={this.props.style}>
                 {leftElement != null && leftElement}
                 <span style={{float: "left"}}>
-                    <button
+                    <Button
                         ref={instance => {
                             this.loadingButton = instance;
                         }}
@@ -343,7 +344,7 @@ class LoadingButton extends React.Component {
                         style={buttonStyle}
                     >
                         {buttonInner}
-                    </button>
+                    </Button>
                 </span>
                 {rightElement != null && rightElement}
                 <div style={{clear: "both"}} />

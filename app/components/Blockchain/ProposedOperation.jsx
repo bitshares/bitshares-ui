@@ -16,6 +16,7 @@ import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
+import asset_utils from "../../lib/common/asset_utils";
 
 require("./operations.scss");
 
@@ -627,16 +628,20 @@ class ProposedOperation extends React.Component {
                         &nbsp;
                         <FormattedPrice
                             base_asset={
-                                op[1].feed.settlement_price.base.asset_id
+                                asset_utils.extractRawFeedPrice(op[1].feed).base
+                                    .asset_id
                             }
                             quote_asset={
-                                op[1].feed.settlement_price.quote.asset_id
+                                asset_utils.extractRawFeedPrice(op[1].feed)
+                                    .quote.asset_id
                             }
                             base_amount={
-                                op[1].feed.settlement_price.base.amount
+                                asset_utils.extractRawFeedPrice(op[1].feed).base
+                                    .amount
                             }
                             quote_amount={
-                                op[1].feed.settlement_price.quote.amount
+                                asset_utils.extractRawFeedPrice(op[1].feed)
+                                    .quote.amount
                             }
                         />
                     </span>

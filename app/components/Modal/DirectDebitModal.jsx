@@ -731,6 +731,10 @@ class DirectDebitModal extends React.Component {
                                     className="date-picker-width100"
                                     style={{width: "100%"}}
                                     ref={el => this.onDatepickerRef(el)}
+                                    disabledDate={current =>
+                                        current &&
+                                        current < moment().add(2, "minutes")
+                                    }
                                 />
                             </Tooltip>
                         </div>

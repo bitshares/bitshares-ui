@@ -490,7 +490,7 @@ class Footer extends React.Component {
                                     {__GIT_BRANCH__ === "staging" ? (
                                         <a
                                             href={`https://github.com/bitshares/bitshares-ui/commit/${version.trim()}`}
-                                            className="version"
+                                            className="version external-link"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
@@ -639,8 +639,9 @@ class Footer extends React.Component {
                                                     ? "-"
                                                     : !activeNode.ping
                                                         ? "-"
-                                                        : activeNode.ping +
-                                                          "ms"}
+                                                        : parseInt(
+                                                              activeNode.ping
+                                                          ) + "ms"}
                                                 &nbsp;/&nbsp;
                                                 <span className="footer-block-title">
                                                     <Translate content="footer.block" />

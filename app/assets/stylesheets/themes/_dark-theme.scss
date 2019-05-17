@@ -86,6 +86,12 @@ $separator-line: rgba(23, 26, 37, 0.3);
 
 // * * *
 
+// * * * * Settings
+
+$settings-label-color: rgba(255, 255, 255, 0.5);
+
+//
+
 .darkTheme {
     @include theme(
         $explorer-tab-content-background-color,
@@ -145,6 +151,7 @@ $separator-line: rgba(23, 26, 37, 0.3);
         $positive-color-alternative,
         $separator-line,
         $medium-color,
-        $dark-help-text
+        $dark-help-text,
+        $settings-label-color
     );
 }

@@ -180,6 +180,14 @@ export const settingsAPIs = {
             contact: "telegram:BrianZhang"
         },
         {
+            url: "wss://api.weaccount.cn",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Hangzhou",
+            operator: "Witness: btspp-witness",
+            contact: "telegram:btsplusplus"
+        },
+        {
             url: "wss://dex.rnglab.org",
             region: "Northern Europe",
             country: "Netherlands",
@@ -480,6 +488,86 @@ export const settingsAPIs = {
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
         },
+        {
+            url: "wss://master.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "New Jersey",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://new-york.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "New York",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://chicago.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Chicago",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://seattle.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Seattle",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://losangeles.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Los Angeles",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://atlanta.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Atlanta",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://siliconvalley.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Silicon Valley",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://dallas.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Dallas",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://miami.us.api.bitshares.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Miami",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://toronto.ca.api.bitshares.org/ws",
+            region: "Canada",
+            country: "Canada",
+            location: "Toronto",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
@@ -504,6 +592,15 @@ export const settingsAPIs = {
             location: "Paris",
             operator: "Witness: zapata42-witness",
             contact: "telegram:Zapata_42"
+        }
+    ],
+    ES_WRAPPER_LIST: [
+        {
+            url: "https://wrapper.elasticsearch.bitshares.ws",
+            region: "Western Europe",
+            country: "Germany",
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,

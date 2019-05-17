@@ -59,7 +59,8 @@
     $positive-color-alternative,
     $separator-line,
     $medium-color,
-    $dark-help-text
+    $dark-help-text,
+    $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
     .showcases-grid {
@@ -199,6 +200,9 @@
         background-color: $settings-select-bg;
         color: $settings-select-color;
     }
+    .settings--select {
+        width: 100%;
+    }
     .settings-input {
         /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
     .block-list and it uses on many places. To keep everything OK and do not break something I just do
@@ -227,6 +231,14 @@
             &:hover {
                 color: $link-text-color;
             }
+        }
+    }
+    .form-input-header {
+        .form-input-header--label {
+        }
+        .form-input-header--right {
+            float: right;
+            cursor: pointer;
         }
     }
     .dark-text-color {
@@ -829,8 +841,12 @@
             .settings-select {
                 @extend .settings-select;
             }
-            > input.settings-input[type="text"] {
+            > input.settings-input[type="text"]#{$ant-fix} {
                 @extend .settings-input;
+            }
+            > input.settings--input[type="text"] {
+                max-width: 100%;
+                width: 100%;
             }
         }
     }
@@ -1351,7 +1367,7 @@
         border-bottom-color: $secondary-text-color !important;
     }
     // Block List (section)
-    section.block-list input[type="text"],
+    section.block-list input[type="text"]#{$ant-fix},
     section.block-list input[type="password"] {
         border-bottom: 1px solid $panel-bg-color;
         background-color: transparent;
@@ -1676,7 +1692,9 @@
         border-bottom: 1px solid lighten($bg-color, 4%);
         border-top: 1px solid lighten($bg-color, 4%);
     }
-
+    div.ant-row.ant-form-item.no-offset {
+        margin-bottom: 0;
+    }
     // Settings
     .settings-menu {
         > ul {
@@ -1697,6 +1715,19 @@
                     background-color: $settings-menu-active-bg;
                 }
             }
+        }
+    }
+    .unstyled-list {
+        list-style: none;
+        margin-left: 0;
+        margin-bottom: 0;
+    }
+    .settings-container {
+        // hardcode style overriding for style-guide labels of Form.Item
+        .ant-form-item-label label {
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+            color: $settings-label-color !important;
         }
     }
     .settings--notifications {

@@ -245,6 +245,11 @@ class OpenledgerGateway extends React.Component {
                                             : "mailto:") + issuer.support
                                     }
                                     rel="noopener noreferrer"
+                                    className={
+                                        issuer.support.indexOf("@") === -1
+                                            ? "external-link"
+                                            : ""
+                                    }
                                 >
                                     {issuer.support}
                                 </a>
