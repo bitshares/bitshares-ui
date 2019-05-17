@@ -2,6 +2,7 @@ import React from "react";
 import {Alert} from "bitshares-ui-style-guide";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import asset_utils from "../../lib/common/asset_utils";
+import {Carousel} from "antd";
 
 export default class GitNews extends React.Component {
     constructor() {
@@ -66,9 +67,14 @@ export default class GitNews extends React.Component {
                         message={item.content}
                         banner
                         closable={type === "info"}
+                        className="git-info"
                     />
                 );
         });
-        return renderAlert;
+        return (
+            <Carousel autoplaySpeed={15000} autoplay dots={false}>
+                {renderAlert}
+            </Carousel>
+        );
     }
 }

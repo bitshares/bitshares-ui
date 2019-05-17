@@ -123,3 +123,11 @@ div.bordered-header {
     height: 16px;
     display: inline-block;
 }
+
+.git-info {
+    text-align: center;
+    .ant-alert-icon {
+        position: static !important;
+        margin-right: 10px;
+    }
+}
