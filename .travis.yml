@@ -24,6 +24,11 @@ stages:
   - name: deploy-stage
     if: branch = master
 
+  - name: build-preview
+    if: branch = feature/cb-1648-upstream
+  - name: deploy-preview
+    if: branch = feature/cb-1648-upstream
+
   - name: build-prod
     if: tag =~ /^v\d+\.\d+(\.\d+)?$/
   - name: deploy-prod
@@ -68,6 +73,25 @@ jobs:
         - export AWS_SECRET_ACCESS_KEY=$STAGE_AWS_SECRET_ACCESS_KEY
         - aws s3 rm s3://wallet.stage.crypto-bridge.org/index.html
         - aws s3 sync ./build/dist/ s3://wallet.stage.crypto-bridge.org/ --delete --exclude "assets/*"
+
+    - stage: build-preview
+      script:
+        - export RECAPTCHA_SITE_KEY=$PREVIEW_RECAPTCHA_SITE_KEY
+        - export CRYPTOBRIDGE_PUB_KEY=$PREVIEW_CRYPTOBRIDGE_PUB_KEY
+        - export CHAIN_ID=$PREVIEW_CHAIN_ID
+        - export WALLET_URL=$PREVIEW_WALLET_URL
+        - export API_URL=$PREVIEW_API_URL
+        - export API_SUPPORT_URL=$PREVIEW_API_SUPPORT_URL
+        - npm install
+        - npm run build
+    - stage: deploy-preview
+      script:
+        - ls -la ./build/dist/
+        - cat ./build/dist/index.html
+        - export AWS_ACCESS_KEY_ID=$PREVIEW_AWS_ACCESS_KEY_ID
+        - export AWS_SECRET_ACCESS_KEY=$PREVIEW_AWS_SECRET_ACCESS_KEY
+        - aws s3 rm s3://wallet.preview.crypto-bridge.org/index.html
+        - aws s3 sync ./build/dist/ s3://wallet.preview.crypto-bridge.org/ --delete --exclude "assets/*"
 
     - stage: build-prod
       script:
