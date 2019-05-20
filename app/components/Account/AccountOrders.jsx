@@ -207,9 +207,10 @@ class AccountOrders extends React.Component {
                 />
             );
 
-            averagePrice = meanBy(groupedDataItems, dataItem =>
-                dataItem.order.sellPrice().toReal(true)
-            );
+            averagePrice = meanBy(groupedDataItems, dataItem => {
+                let price = dataItem.order.sellPrice().toReal(true);
+                return !dataItem.marketDirection ? price : 1 / price;
+            });
 
             // Taken from FormattedPrice internal logic
             let decimals = Math.min(
