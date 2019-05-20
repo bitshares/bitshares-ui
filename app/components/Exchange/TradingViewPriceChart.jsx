@@ -2,14 +2,27 @@ import React from "react";
 const TradingView = require("../../../charting_library/charting_library.min.js");
 import colors from "assets/colors";
 import {getResolutionsFromBuckets, getTVTimezone} from "./tradingViewClasses";
+import {Modal, Input, Table, Button} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 // import {connect} from "alt-react";
 // import MarketsStore from "stores/MarketsStore";
 
 export default class TradingViewPriceChart extends React.Component {
+    constructor(props) {
+        super();
+        this.state = {
+            charts: [],
+            showSaveModal: false,
+            showLoadModal: false
+        };
+        this.layoutName = React.createRef();
+        this.hideModal = this.hideModal.bind(this);
+    }
     loadTradingView(props) {
         const {dataFeed} = props;
         let themeColors = colors[props.theme];
+        const that = this;
 
         if (!dataFeed) return;
         if (!!this.tvWidget) return;
@@ -35,10 +48,11 @@ export default class TradingViewPriceChart extends React.Component {
             "symbol_search_hot_key",
             "border_around_the_chart",
             "header_symbol_search",
-            "header_compare"
+            "header_compare",
+            "header_saveload"
         ];
 
-        let enabled_features = ["header_saveload"];
+        let enabled_features = [];
 
         if (this.props.mobile || !this.props.chartZoom) {
             disabled_features.push("chart_scroll");
@@ -110,6 +124,21 @@ export default class TradingViewPriceChart extends React.Component {
         this.tvWidget.onChartReady(() => {
             if (__DEV__) console.log("*** Chart Ready ***");
             if (__DEV__) console.timeEnd("*** Chart load time: ");
+            this.tvWidget
+                .createButton()
+                .attr("title", "Load custom charts")
+                .on("click", () => {
+                    that.setState({showLoadModal: true});
+                })
+                .append("<span>Load Chart</span>");
+            this.tvWidget
+                .createButton()
+                .attr("title", "Save Custom charts")
+                .on("click", () => {
+                    that.setState({showSaveModal: true});
+                })
+                .append("<span>Save Chart</span>");
+
             dataFeed.update({
                 onMarketChange: this._setSymbol.bind(this)
             });
@@ -146,7 +175,9 @@ export default class TradingViewPriceChart extends React.Component {
         this.props.dataFeed.clearSubs();
     }
 
-    shouldComponentUpdate(np) {
+    shouldComponentUpdate(np, state) {
+        if (state.showLoadModal !== this.state.showLoadModal) return true;
+        if (state.showSaveModal !== this.state.showSaveModal) return true;
         if (np.chartHeight !== this.props.chartHeight) return true;
         if (!!this.tvWidget) return false;
         if (!np.marketReady) return false;
@@ -157,7 +188,57 @@ export default class TradingViewPriceChart extends React.Component {
         console.log("Test wheel interception");
     }
 
+    onSubmitConfirmation(e) {
+        const {layoutName} = this;
+        const that = this;
+        this.tvWidget.save(function(object) {
+            let chart = {};
+            chart.object = object;
+            chart.name = layoutName.current.state.value || "";
+            chart.symbol =
+                that.props.quoteSymbol + " / " + that.props.baseSymbol;
+            chart.modified = new Date().toLocaleDateString("en-US");
+            that.setState(
+                {charts: [...that.state.charts, chart], showSaveModal: false},
+                (that.layoutName.current.state.value = null)
+            );
+        });
+    }
+    hideModal() {
+        this.setState(
+            {showSaveModal: false, showLoadModal: false},
+            (this.layoutName.current.state.value = null)
+        );
+    }
+
     render() {
+        const columns = [
+            {
+                title: "Layout Name",
+                dataIndex: "name",
+                key: "name"
+            },
+            {
+                title: "Modified",
+                dataIndex: "modified",
+                key: "modified"
+            },
+            {
+                title: "Active Symbol",
+                dataIndex: "symbol",
+                key: "symbol"
+            }
+        ];
+
+        const onRow = (record, rowIndex) => {
+            return {
+                onClick: event => {
+                    this.tvWidget.load(record.object);
+                    this.hideModal();
+                }
+            };
+        };
+
         return (
             <div className="small-12">
                 <div
@@ -165,6 +246,45 @@ export default class TradingViewPriceChart extends React.Component {
                     style={{height: this.props.chartHeight + "px"}}
                     id="tv_chart"
                 />
+                <Modal
+                    title={"Load Chart Layout"}
+                    closable={false}
+                    visible={this.state.showLoadModal}
+                    footer={[
+                        <Button key="cancel" onClick={this.hideModal}>
+                            {counterpart.translate("modal.close")}
+                        </Button>
+                    ]}
+                >
+                    <Table
+                        dataSource={this.state.charts}
+                        columns={columns}
+                        onRow={onRow}
+                    />
+                </Modal>
+                <Modal
+                    title={"Save New Chart Layout "}
+                    closable={false}
+                    visible={this.state.showSaveModal}
+                    footer={[
+                        <Button
+                            key="submit"
+                            type="primary"
+                            onClick={this.onSubmitConfirmation.bind(this)}
+                        >
+                            {counterpart.translate("modal.save")}
+                        </Button>,
+                        <Button key="cancel" onClick={this.hideModal}>
+                            {counterpart.translate("modal.close")}
+                        </Button>
+                    ]}
+                >
+                    <Input
+                        placeholder="Enter Chart Layout Name"
+                        ref={this.layoutName}
+                        onPressEnter={this.onSubmitConfirmation.bind(this)}
+                    />
+                </Modal>
             </div>
         );
     }
