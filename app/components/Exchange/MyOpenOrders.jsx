@@ -139,8 +139,8 @@ class OrderRow extends React.Component {
         let tdClass = isCall
             ? "orderHistoryCall"
             : isBid
-                ? "orderHistoryBid"
-                : "orderHistoryAsk";
+            ? "orderHistoryBid"
+            : "orderHistoryAsk";
 
         let priceSymbol = showSymbols ? (
             <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span>

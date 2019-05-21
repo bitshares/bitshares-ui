@@ -311,10 +311,10 @@ class MarketsTable extends React.Component {
         let changeClass = !marketStats
             ? ""
             : parseFloat(marketStats.change) > 0
-            ? "change-up"
-            : parseFloat(marketStats.change) < 0
-            ? "change-down"
-            : "";
+                ? "change-up"
+                : parseFloat(marketStats.change) < 0
+                    ? "change-down"
+                    : "";
 
         let marketID = `${quote}_${base}`;
 

@@ -1516,7 +1516,7 @@
         "transfer": "{from} sent {amount} to {to}",
         "transfer_account": "{account} ownership transferred to {to}",
         "unlisted_by": "{lister} unlisted the account {listee}",
-        "update_account": "{account} updated their account data",
+        "update_account": "{account} updated their account data {change}",
         "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",
         "whitelisted_by": "{lister} whitelisted the account {listee}",
         "witness_create": "{account} was upgraded to become a witness",
@@ -1551,14 +1551,24 @@
         "asset_settle": "Request a settlement of {amount} for {account}",
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
+        "changes_to_active": "Changes to active",
+        "changes_to_owner": "Changes to owner",
+        "changes_to_memo": "Changes to memo",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
         "delete": "Permanently reject",
+        "danger_operation": "Dangerous operation",
+        "set_threshold": "Set threshold to %(threshold)s",
+        "add": "Add",
+        "remove": "Remove",
+        "add_vote": "Add vote for",
+        "remove_vote": "Remove vote for",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy": "Place an order to buy {amount} at {price} for {account}",
         "limit_order_create": "Place an order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell": "Place an order to sell {amount} at {price} for {account}",
         "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "permission_changes": "Permission changes",
         "proposals": "Proposals",
         "reject": "Reject",
         "status": "Status",
@@ -1571,7 +1581,7 @@
             "owner_approvals_to_add": "Owner approvals to add",
             "owner_approvals_to_remove": "Owner approvals to remove"
         },
-        "update_account": "Update account data for {account}",
+        "update_account": "Update account data for {account} {change}",
         "updated": {
             "active_approvals_to_add": "Active approval(s) added",
             "active_approvals_to_remove": "Active approval(s) removed",
@@ -1580,7 +1590,8 @@
             "owner_approvals_to_add": "Owner approval(s) added",
             "owner_approvals_to_remove": "Owner approval(s) removed"
         },
-        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
+        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
+        "votes": "Votes"
     },
     "proposal_create": {
         "expiration_time": "Expiration time",

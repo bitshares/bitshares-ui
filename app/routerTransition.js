@@ -485,9 +485,9 @@ class RouterTransitioner {
         });
 
         /*
-        * We've somehow filtered out all nodes, revert to the full list of
-        * nodes in that case
-        */
+         * We've somehow filtered out all nodes, revert to the full list of
+         * nodes in that case
+         */
         if (!filtered.length) {
             console.warn("No nodes length, returning all of them");
             return this.getAllApiServers();
