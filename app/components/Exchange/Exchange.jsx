@@ -66,8 +66,8 @@ class Exchange extends React.Component {
                 ask: props.exchange.getIn(["lastExpiration", "ask"]) || "YEAR"
             },
             expirationCustomTime: {
-                bid: moment().add(1, "day"),
-                ask: moment().add(1, "day")
+                bid: "Specific",
+                ask: "Specific"
             },
             feeStatus: {}
         };
