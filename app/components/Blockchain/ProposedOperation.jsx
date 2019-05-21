@@ -12,6 +12,7 @@ const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
 import opComponents from "./operations";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import Operation from "../Account/RecentTransactions";
 
 require("./operations.scss");
 
@@ -94,7 +95,8 @@ class ProposedOperation extends React.Component {
         hideDate: false,
         hideFee: false,
         hideOpLabel: false,
-        csvExportMode: false
+        csvExportMode: false,
+        collapsed: true
     };
 
     static propTypes = {
@@ -103,7 +105,8 @@ class ProposedOperation extends React.Component {
         block: PropTypes.number,
         hideDate: PropTypes.bool,
         hideFee: PropTypes.bool,
-        csvExportMode: PropTypes.bool
+        csvExportMode: PropTypes.bool,
+        collapsed: PropTypes.bool
     };
 
     linkToAccount(name_or_id) {
@@ -145,6 +148,7 @@ class ProposedOperation extends React.Component {
         const {label_color} = this.state;
         let line = null,
             column = null;
+
         column = opComponents(ops[op[0]], this.props, {
             fromComponent: "proposed_operation",
             linkToAccount: this.linkToAccount,
@@ -168,7 +172,7 @@ class ProposedOperation extends React.Component {
                         />
                         :
                     </div>
-                    <div>{column}</div>
+                    <div style={{marginLeft: "0.5rem"}}>{column}</div>
                 </div>
             );
         }

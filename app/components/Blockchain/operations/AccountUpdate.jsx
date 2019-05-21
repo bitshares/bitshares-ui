@@ -15,11 +15,11 @@ const getVotesName = item => {
     return id
         ? ChainStore.getAccountName(id) || id
         : item.get("worker")
-        ? item.get("name")
-        : null;
+            ? item.get("name")
+            : null;
 };
 
-export const AccountUpdate = ({op, fromComponent}) => {
+export const AccountUpdate = ({op, fromComponent, collapsed}) => {
     const account = op[1].account;
 
     const votes = op[1].new_options ? op[1].new_options.votes : undefined;
@@ -32,7 +32,11 @@ export const AccountUpdate = ({op, fromComponent}) => {
     let votesPlusNames = [];
     let votesMinusNames = [];
 
-    if (fromComponent === "proposed_operation") {
+    if (collapsed == undefined) {
+        collapsed = true;
+    }
+
+    if (fromComponent === "proposed_operation" && !collapsed) {
         const _account = ChainStore.getAccount(account, false);
         const _votes = _account
             .get("options")
@@ -64,31 +68,63 @@ export const AccountUpdate = ({op, fromComponent}) => {
         }
 
         if (owner) {
-            const _owner = _account
-                .get("active")
+            change.owner = {};
+            const _owner_keys = _account
+                .get("owner")
                 .get("key_auths")
                 .map(a => a.get(0))
                 .toArray();
-            change.keys = {
-                ...change.keys,
-                ...compareKeys(_owner, owner.key_auths.map(x => x[0]))
-            };
+            change.owner.keys = compareKeys(
+                _owner_keys,
+                owner.key_auths.map(x => x[0])
+            );
+            const _owner_accounts = _account
+                .get("owner")
+                .get("account_auths")
+                .map(a => a.get(0))
+                .toArray();
+            change.owner.accounts = compareKeys(
+                _owner_accounts,
+                owner.account_auths.map(x => x[0])
+            );
+            if (
+                _account.get("owner").get("weight_threshold") !==
+                owner.weight_threshold
+            ) {
+                change.owner.weight_threshold = owner.weight_threshold;
+            }
         }
         if (active) {
-            const _active = _account
+            change.active = {};
+            const _active_keys = _account
                 .get("active")
                 .get("key_auths")
                 .map(a => a.get(0))
                 .toArray();
-            change.keys = {
-                ...change.keys,
-                ...compareKeys(_active, active.key_auths.map(x => x[0]))
-            };
+            change.active.keys = compareKeys(
+                _active_keys,
+                active.key_auths.map(x => x[0])
+            );
+            const _active_accounts = _account
+                .get("active")
+                .get("account_auths")
+                .map(a => a.get(0))
+                .toArray();
+            change.active.accounts = compareKeys(
+                _active_accounts,
+                active.account_auths.map(x => x[0])
+            );
+            if (
+                _account.get("active").get("weight_threshold") !==
+                active.weight_threshold
+            ) {
+                change.active.weight_threshold = owner.weight_threshold;
+            }
         }
 
         if (memo_key) {
             const _memo = _account.get("options").get("memo_key");
-            change.keys = {...change.keys, ...compareKeys([_memo], [memo_key])};
+            change.memo.keys = compareKeys([_memo], [memo_key]);
         }
     }
 

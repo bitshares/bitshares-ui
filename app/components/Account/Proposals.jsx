@@ -254,6 +254,7 @@ class Proposals extends Component {
                             proposal={true}
                             id={id}
                             proposer={proposer}
+                            collapsed={false}
                         />
                     );
                 })

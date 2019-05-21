@@ -1723,6 +1723,7 @@ class Transaction extends React.Component {
                                 hideOpLabel={true}
                                 hideDate={true}
                                 proposal={true}
+                                collapsed={true}
                             />
                         );
                     });
