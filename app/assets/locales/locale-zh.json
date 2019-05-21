@@ -25,6 +25,7 @@
         "deposit": "充值BTS",
         "deposit_address": "您的账户名就是您的充值地址",
         "deposit_withdraw": "充币/提币",
+        "download_history": "Download History",
         "eq_value": "估算值",
         "eq_value_header": "估值 ({asset})",
         "errors": {
@@ -37,6 +38,13 @@
         "estimate_value": "账户价值估算",
         "existing_accounts": "已有账户",
         "existing_user": "老用户",
+        "export_modal": {
+            "coinbase_report": "CoinTracking.info Report",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "title": "History Export",
+            "use_custom": "Use custom wrapper"
+        },
         "filter_orders": "筛选",
         "follow": "添加联系人",
         "group_by_asset": "Group by asset",
@@ -64,6 +72,7 @@
         "member": {
             "annual": "年度会员",
             "available": "可申领数量",
+            "balance_type": "Type",
             "basic": "普通会员",
             "cashback": "返现",
             "claim": "立即申领",
@@ -333,6 +342,7 @@
             "name": "账户名",
             "new": "提案预算项目 (%(count)s)",
             "no_proxy": "无代理",
+            "polls": "Polls(%(count)s)",
             "proxy": "手动输入某账户作为你的代理",
             "proxy_current": "你当前的投票代理人是",
             "proxy_known": "或者选择其他账户作为投票代理",
@@ -444,6 +454,8 @@
         "no_valid": " %(asset_symbol)s 无有效喂价",
         "pay_max_debt": "最大偿还债仓",
         "target_collateral_ratio": "目标抵押率",
+        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "%(asset_symbol)s 抵押债仓",
         "update": "更新",
         "use_max": "最大使用"
@@ -492,6 +504,7 @@
         "buy_sell": "挂单形式",
         "buysell_formatter": "{direction} {asset}",
         "call": "强平触发价",
+        "cancel_selected_orders": "Cancel selected order(s)",
         "change": "24H涨跌",
         "chart_height": "图表高度 (pixels)",
         "chart_hide": "隐藏图表",
@@ -1152,6 +1165,18 @@
         "update_asset": "更新资产",
         "withdraw_legacy": "或传统提币"
     },
+    "htlc": {
+        "claim_period": "Seconds to claim",
+        "claim_period_due": "Claimable until",
+        "id": "HTLC id",
+        "preimage": "Preimage",
+        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
+        "preimage_hash": "Preimage hash",
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "Redeemer",
+        "seconds_to_add": "Add seconds to claim period",
+        "update_issuer": "Update issuer"
+    },
     "icons": {
         "adjust": "调整债仓",
         "assets": "资产",
@@ -1334,6 +1359,7 @@
             "close": "关闭",
             "header": "充值到 %(account_name)s",
             "header_short": "充币",
+            "no_assets": "No depositable assets available",
             "submit": "充币"
         },
         "deposit_withdraw": {
@@ -1397,6 +1423,9 @@
         },
         "settle": {
             "amount": "要清算数量",
+            "delay": "Estimated delay: %(amount)s hours",
+            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
+            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
             "submit": "清算资产",
             "title": "请求清算资产 %(asset)s"
         },
@@ -1413,6 +1442,7 @@
             "gateway_fee": "网关手续费",
             "header": "提币",
             "memo": "Memo备注",
+            "no_assets": "No withdrawable assets available",
             "no_estimate": "此项目无可用估值",
             "no_gateways": "很遗憾,没有网关处理此提币",
             "quantity": "数量",
@@ -1484,6 +1514,11 @@
         "committee_member_update_global_parameters": "{account} 更新了全局理事会参数",
         "fill_order_buy": "{account} 以 {price} 的价格购买了 {amount} ",
         "fill_order_sell": "{account} 以 {price} 的价格卖出了 {amount} ",
+        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
+        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
+        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
         "lifetime_upgrade_account": "{account} 升级到终身会员",
         "limit_order_buy": "{account} 提交买单%(order)s, 以 {price} 的价格买入 {amount} ",
         "limit_order_cancel": "{account} 已取消限价单 #%(order)s",
@@ -1522,6 +1557,8 @@
     },
     "proposal": {
         "action": "操作",
+        "add": "Add",
+        "add_vote": "Add vote for",
         "approve": "批准",
         "approvers": "批准者(s)",
         "asset_create": "使用账户 {account} 创建资产 %(asset)s",
@@ -1530,7 +1567,11 @@
         "asset_settle": "为{account}请求清算资产 {amount} ",
         "asset_update": "使用账户 {account} 更新资产 {asset}",
         "call_order_update": "将账户 {account} 的 {debtSymbol} 债务调整 {debt}，抵押物调整 {collateral}",
+        "changes_to_active": "Changes to active",
+        "changes_to_memo": "Changes to memo",
+        "changes_to_owner": "Changes to owner",
         "committee_member_update_global_parameters": "由 {account} 更新理事会全局参数",
+        "danger_operation": "Dangerous operation",
         "delete": "永久否决",
         "expires": "到期时间",
         "feed_producer": "使用账户 {account} 更新资产 {asset} 的喂价提供者",
@@ -1538,8 +1579,12 @@
         "limit_order_create": "为账户 %(account)s 下单, 以%(sell_amount)s买入 %(buy_amount)s ",
         "limit_order_sell": "为账户 {account} 下单, 以价格 {price} 卖出 {amount}",
         "override_transfer": "由 {issuer} 授权，从账户 {from} 转账 {amount} 到 {to}",
+        "permission_changes": "Permission changes",
         "proposals": "提案",
         "reject": "否决",
+        "remove": "Remove",
+        "remove_vote": "Remove vote for",
+        "set_threshold": "Set threshold to %(threshold)s",
         "status": "状态",
         "transfer": "从账户 {from} 转账 {amount} 到 {to}",
         "update": {
@@ -1559,7 +1604,8 @@
             "owner_approvals_to_add": "账户权限(s)已添加",
             "owner_approvals_to_remove": "账户权限(s)已移除"
         },
-        "vesting_balance_withdraw": "从 {account} 的解冻余额中提取 {amount}"
+        "vesting_balance_withdraw": "从 {account} 的解冻余额中提取 {amount}",
+        "votes": "Votes"
     },
     "proposal_create": {
         "expiration_time": "有效时间",
@@ -1866,6 +1912,43 @@
             "update": "更新",
             "update_mandate": "更新存在的权限"
         },
+        "htlc": {
+            "actions": "Actions",
+            "amount": "Amount",
+            "claim": "Claim",
+            "create_htlc": "Create HTLC",
+            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
+            "enter_secret_preimage": "Enter secret preimage",
+            "expiration": "Expiration",
+            "expiration_date": "Expiration date",
+            "expiration_period": {
+                "one_day": "One day",
+                "one_week": "One week",
+                "two_days": "Two days"
+            },
+            "expires": "Expires",
+            "extend": "Extend",
+            "extend_htlc": "Extend HTLC",
+            "from": "From",
+            "hash": "Hash",
+            "preimage": "Preimage",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "recipient": "Recipient",
+            "redeem_htlc": "Redeem HTLC",
+            "sender": "Sender",
+            "size": "Size",
+            "title": "Hashed Time-Lock Contracts",
+            "to": "To",
+            "tooltip": {
+                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
+                "new_random": "Roll the dice and create a new random string.",
+                "preimage_button": "Please click to enter secret preimage",
+                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
+                "preimage_input": "Field requires a secret preimage",
+                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
+                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+            }
+        },
         "paper_wallet": {
             "description": "创建一个包含有你账户密钥的PDF文件(明文与二维码)。\n钱包未解锁将仅在PDF中添加公钥，不含私钥。\n钱包解锁后将会在PDF中添加公钥与私钥。",
             "title": "纸钱包"
@@ -1954,6 +2037,7 @@
         "own_account": "你拥有此账户的密钥",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
         "propose_tip": "提议由另一个用户发起交易",
+        "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "此提案由未知账户创建或提议目标为未知账户，此未知账户（不在联系单或白名单中）。警惕诈骗行为并小心检查所有操作。",
         "proxy_remove": "你有一个代理设置，清除输入字段就可以简单移除代理。",
         "proxy_search": "查找一个账户来作为你的投票代理",
@@ -2014,6 +2098,7 @@
         "create_key": "创建公钥",
         "csv": "导出到.csv 文件",
         "csv_tip": "将历史数据导出至 csv 格式文件",
+        "cumulative_borrow_amount": "Cumulative Debt",
         "custom": "创建自定义操作",
         "delta_collateral": "抵押物变化",
         "delta_debt": "债务变化",
@@ -2030,11 +2115,14 @@
             "_none": "免费",
             "basic_fee": "普通账户名手续费",
             "fee": "普通转账手续费",
+            "fee_per_day": "Price per day",
+            "fee_per_kb": "Price per KByte Transaction Size",
             "long_symbol": "更长的资产代码",
             "membership_annual_fee": "年度会员",
             "membership_lifetime_fee": "终身会员",
             "premium_fee": "高级账户名手续费",
             "price_per_kbyte": "每千字节手续费",
+            "price_per_output": "Price per recipient",
             "symbol3": "三位资产代码",
             "symbol4": "四位资产代码"
         },
@@ -2098,6 +2186,11 @@
             "execute_bid": "执行竞价",
             "fba_distribute": "手续费由担保资产分配",
             "fill_order": "订单成交",
+            "htlc_create": "HTLC create",
+            "htlc_extend": "HTLC extend",
+            "htlc_redeem": "HTLC redeem",
+            "htlc_redeemed": "HTLC redeemed",
+            "htlc_refund": "HTLC refund",
             "limit_order_cancel": "取消限价单",
             "limit_order_create": "创建限价单",
             "override_transfer": "强制转账",
@@ -2162,6 +2255,7 @@
         "explict_price": "具体价格",
         "fee": "手续费",
         "final": "转账后余额",
+        "free": "Free",
         "from": "从",
         "header": "转账详情",
         "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",

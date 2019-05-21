@@ -25,6 +25,7 @@
         "deposit": "Zahlen Sie BTS ein",
         "deposit_address": "Ihre Einzahladresse ist Ihr Kontoname",
         "deposit_withdraw": "Einzahlen/Auszahlen",
+        "download_history": "Download History",
         "eq_value": "entspricht",
         "eq_value_header": "Wert ({asset})",
         "errors": {
@@ -37,6 +38,13 @@
         "estimate_value": "Geschätzter Kontowert",
         "existing_accounts": "Existierendes Konto",
         "existing_user": "Existierender Benutzer",
+        "export_modal": {
+            "coinbase_report": "CoinTracking.info Report",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "title": "History Export",
+            "use_custom": "Use custom wrapper"
+        },
         "filter_orders": "Filter",
         "follow": "Kontakt hinzufügen",
         "group_by_asset": "Group by asset",
@@ -64,6 +72,7 @@
         "member": {
             "annual": "Jahresabonent",
             "available": "Zur Beanspruchung verfügbar",
+            "balance_type": "Type",
             "basic": "Grundmitglied",
             "cashback": "Skonto",
             "claim": "Guthaben einfordern",
@@ -333,6 +342,7 @@
             "name": "Name",
             "new": "Vorgeschlagen(%(count)s)",
             "no_proxy": "Kein Vertreter",
+            "polls": "Polls(%(count)s)",
             "proxy": "Vertreter-Konto",
             "proxy_current": "Ihr aktueller Vertreter ist",
             "proxy_known": "Oder wählen Sie ein Konto als Ihren Vertreter",
@@ -444,6 +454,8 @@
         "no_valid": "Kein gültige Preisquelle für %(asset_symbol)s",
         "pay_max_debt": "Bezahle max. Schulden",
         "target_collateral_ratio": "Ziel Sicherheiten-Ratio",
+        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "Sicherheiten Position für %(asset_symbol)s",
         "update": "Aktualisieren",
         "use_max": "Benutze Max"
@@ -492,6 +504,7 @@
         "buy_sell": "Kaufen/Verkaufen",
         "buysell_formatter": "{Richtung} {Anlage}",
         "call": "Kaufpreis",
+        "cancel_selected_orders": "Cancel selected order(s)",
         "change": "Änderung",
         "chart_height": "Chart Höhe (Pixel)",
         "chart_hide": "Chart ausblenden",
@@ -1152,6 +1165,18 @@
         "update_asset": "Anlage ändern",
         "withdraw_legacy": "or Legacy Withdraw"
     },
+    "htlc": {
+        "claim_period": "Seconds to claim",
+        "claim_period_due": "Claimable until",
+        "id": "HTLC id",
+        "preimage": "Preimage",
+        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
+        "preimage_hash": "Preimage hash",
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "Redeemer",
+        "seconds_to_add": "Add seconds to claim period",
+        "update_issuer": "Update issuer"
+    },
     "icons": {
         "adjust": "Stelle eine Sicherheitenpostion ein.",
         "assets": "Anlagen",
@@ -1334,6 +1359,7 @@
             "close": "Schließen",
             "header": "Einzahlen auf %(account_name)s",
             "header_short": "Einzahlen",
+            "no_assets": "No depositable assets available",
             "submit": "Einzahlen"
         },
         "deposit_withdraw": {
@@ -1397,6 +1423,9 @@
         },
         "settle": {
             "amount": "Menge für die Verrechnung",
+            "delay": "Estimated delay: %(amount)s hours",
+            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
+            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
             "submit": "Verrechnung durchführen",
             "title": "Verrechnung von %(asset)s durchführen"
         },
@@ -1413,6 +1442,7 @@
             "gateway_fee": "Gateway Gebühr",
             "header": "Auszahlung (beta)",
             "memo": "Notitz",
+            "no_assets": "No withdrawable assets available",
             "no_estimate": "Kein geschätzter Wert für diese Anlage verfügbar",
             "no_gateways": "Entschuldigung, aber es gibt kein Gateway, um diese Auszahlung vorzunehmen.",
             "quantity": "Menge",
@@ -1484,6 +1514,11 @@
         "committee_member_update_global_parameters": "{account} hat die globalen Komitee Parameter aktualsiert.",
         "fill_order_buy": "{account} hat {amount} zum Preis von {price} gekauft.",
         "fill_order_sell": "{account} hat {amount} zum Preis von {price} verkauft.",
+        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
+        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
+        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
         "lifetime_upgrade_account": "{account} hat eine lebenslange Mitgliedschaft gekauft.",
         "limit_order_buy": "{account} hat einen Kaufauftrag von {amount} für {price} eingestellt.",
         "limit_order_cancel": "{account} hat Auftrag #%(order)s zurückgezogen.",
@@ -1522,6 +1557,8 @@
     },
     "proposal": {
         "action": "Tätigkeit",
+        "add": "Add",
+        "add_vote": "Add vote for",
         "approve": "Bestätigen",
         "approvers": "Bestätigun(en)",
         "asset_create": "Durch die Benutzung von {account} die Anlage %(asset)s erstellen.",
@@ -1530,7 +1567,11 @@
         "asset_settle": "Eine Verrechnung anfordern.",
         "asset_update": "Die Anlage {asset} durch das Konto {account} aktualisieren.",
         "call_order_update": "{account} {debtSymbol} Schuld von {debt} und Sicherheit von {collateral} ändern.",
+        "changes_to_active": "Changes to active",
+        "changes_to_memo": "Changes to memo",
+        "changes_to_owner": "Changes to owner",
         "committee_member_update_global_parameters": "Die globale Komitee Parameter durch {account} aktualisieren.",
+        "danger_operation": "Dangerous operation",
         "delete": "Permanently reject",
         "expires": "Ablaufen",
         "feed_producer": "Die Preisquelle für die Anlage {asset} durch das Konto {account} aktualisieren.",
@@ -1538,8 +1579,12 @@
         "limit_order_create": "Einen Auftrag zum Kauf von %(buy_amount)s für %(sell_amount)s durch %(account)s platzieren.",
         "limit_order_sell": "Einen Auftrag zum Kauf von {amount} bei {price} durch {account} platzieren.",
         "override_transfer": "{amount} von {from} nach {to} durch die Befugnis von {issuer} überweisen.",
+        "permission_changes": "Permission changes",
         "proposals": "Vorschlag",
         "reject": "Ablehnung",
+        "remove": "Remove",
+        "remove_vote": "Remove vote for",
+        "set_threshold": "Set threshold to %(threshold)s",
         "status": "Status",
         "transfer": "{amount} von {from} nach {to} überweisen",
         "update": {
@@ -1559,7 +1604,8 @@
             "owner_approvals_to_add": "Owner approval(s) added",
             "owner_approvals_to_remove": "Owner approval(s) removed"
         },
-        "vesting_balance_withdraw": "Auszahlung {amount} Sperrfristguthaben durch {account}"
+        "vesting_balance_withdraw": "Auszahlung {amount} Sperrfristguthaben durch {account}",
+        "votes": "Votes"
     },
     "proposal_create": {
         "expiration_time": "Ablaufzeit",
@@ -1866,6 +1912,43 @@
             "update": "Update",
             "update_mandate": "Update existing authorization"
         },
+        "htlc": {
+            "actions": "Actions",
+            "amount": "Amount",
+            "claim": "Claim",
+            "create_htlc": "Create HTLC",
+            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
+            "enter_secret_preimage": "Enter secret preimage",
+            "expiration": "Expiration",
+            "expiration_date": "Expiration date",
+            "expiration_period": {
+                "one_day": "One day",
+                "one_week": "One week",
+                "two_days": "Two days"
+            },
+            "expires": "Expires",
+            "extend": "Extend",
+            "extend_htlc": "Extend HTLC",
+            "from": "From",
+            "hash": "Hash",
+            "preimage": "Preimage",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "recipient": "Recipient",
+            "redeem_htlc": "Redeem HTLC",
+            "sender": "Sender",
+            "size": "Size",
+            "title": "Hashed Time-Lock Contracts",
+            "to": "To",
+            "tooltip": {
+                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
+                "new_random": "Roll the dice and create a new random string.",
+                "preimage_button": "Please click to enter secret preimage",
+                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
+                "preimage_input": "Field requires a secret preimage",
+                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
+                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+            }
+        },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
@@ -1954,6 +2037,7 @@
         "own_account": "You hold keys for this account",
         "propose_scam": "Dieser Vorschlag wurde von einen Betrüger eingereicht, nehmen Sie ihn nicht an!",
         "propose_tip": "Schlagen Sie einen anderen Benutzer für die Ausführung der Transaktion vor!",
+        "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "Sie haben einen Vertreter ausgewählt, um diesen zu entfernen einfach den Eintrag löschen und speichern.",
         "proxy_search": "Suchen Sie nach einen Konto, der als Ihr Vertreter gewählt werden kann!",
@@ -2014,6 +2098,7 @@
         "create_key": "Ein öffentlicher Schlüssel wurde erzeugt.",
         "csv": "Exportieren als csv-Datei.",
         "csv_tip": "Verlauf als csv-Datei (durch Komma getrennt) herunterladen.",
+        "cumulative_borrow_amount": "Cumulative Debt",
         "custom": "Eine benutzerdefinierte Operation wurde definiert.",
         "delta_collateral": "Änderung der Sicherheit",
         "delta_debt": "Änderung der Schuld",
@@ -2030,11 +2115,14 @@
             "_none": "gratis",
             "basic_fee": "Grundgebühr",
             "fee": "Reguläre Gebühr",
+            "fee_per_day": "Price per day",
+            "fee_per_kb": "Price per KByte Transaction Size",
             "long_symbol": "Längeres Symbol",
             "membership_annual_fee": "Jahresabonement",
             "membership_lifetime_fee": "Lebenslange Mitgliedschaft",
             "premium_fee": "Premiumname",
             "price_per_kbyte": "Preis pro KByte Transaktionsgröße",
+            "price_per_output": "Price per recipient",
             "symbol3": "Symbol mit 3 Zeichen",
             "symbol4": "Sybmol mit 4 Zeichen"
         },
@@ -2098,6 +2186,11 @@
             "execute_bid": "Execute bid",
             "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Gebot ausgeführt",
+            "htlc_create": "HTLC create",
+            "htlc_extend": "HTLC extend",
+            "htlc_redeem": "HTLC redeem",
+            "htlc_redeemed": "HTLC redeemed",
+            "htlc_refund": "HTLC refund",
             "limit_order_cancel": "Limit-Auftrag abbrechen",
             "limit_order_create": "Limit-Auftrag",
             "override_transfer": "Übwereisung überschreiben",
@@ -2162,6 +2255,7 @@
         "explict_price": "Explict price:",
         "fee": "Gebühr",
         "final": "Abschließendes Guthaben",
+        "free": "Free",
         "from": "Von",
         "header": "Überweisungsdetails",
         "header_subheader": "Überweisungen werden benutzt, um Kapital zu einen anderen Bitshares Konto zu schicken.",
