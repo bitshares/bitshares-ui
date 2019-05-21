@@ -189,7 +189,10 @@ class Block extends React.Component {
                     component="span"
                     content="explorer.block.title"
                 />
-                <a onClick={this.toggleInput.bind(this)}>&nbsp;#{height}</a>
+                <a onClick={this.toggleInput.bind(this)}>
+                    &nbsp;#
+                    {height}
+                </a>
             </span>
         );
 

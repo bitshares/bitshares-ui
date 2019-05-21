@@ -21,9 +21,6 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
-import Borrow from "./components/Showcases/Borrow";
-import Barter from "./components/Showcases/Barter";
-import DirectDebit from "./components/Showcases/DirectDebit";
 
 import {Route, Switch, Redirect} from "react-router-dom";
 
@@ -32,41 +29,31 @@ import Page404 from "./components/Page404/Page404";
 
 const Exchange = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"
-        ),
+        import(/* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"),
     loading: LoadingIndicator
 });
 
 const Explorer = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "explorer" */ "./components/Explorer/Explorer"
-        ),
+        import(/* webpackChunkName: "explorer" */ "./components/Explorer/Explorer"),
     loading: LoadingIndicator
 });
 
 const AccountPage = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "account" */ "./components/Account/AccountPage"
-        ),
+        import(/* webpackChunkName: "account" */ "./components/Account/AccountPage"),
     loading: LoadingIndicator
 });
 
 const Transfer = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"
-        ),
+        import(/* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"),
     loading: LoadingIndicator
 });
 
 const AccountDepositWithdraw = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "deposit-withdraw" */ "./components/Account/AccountDepositWithdraw"
-        ),
+        import(/* webpackChunkName: "deposit-withdraw" */ "./components/Account/AccountDepositWithdraw"),
     loading: LoadingIndicator
 });
 
@@ -77,9 +64,7 @@ const News = Loadable({
 
 const Settings = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "settings" */ "./components/Settings/SettingsContainer"
-        ),
+        import(/* webpackChunkName: "settings" */ "./components/Settings/SettingsContainer"),
     loading: LoadingIndicator
 });
 
@@ -96,49 +81,61 @@ const Asset = Loadable({
 
 const Block = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "block" */ "./components/Blockchain/BlockContainer"
-        ),
+        import(/* webpackChunkName: "block" */ "./components/Blockchain/BlockContainer"),
     loading: LoadingIndicator
 });
 
 const DashboardAccountsOnly = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "dashboard-accounts" */ "./components/Dashboard/DashboardAccountsOnly"
-        ),
+        import(/* webpackChunkName: "dashboard-accounts" */ "./components/Dashboard/DashboardAccountsOnly"),
     loading: LoadingIndicator
 });
 
 const DashboardPage = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "dashboard" */ "./components/Dashboard/DashboardPage"
-        ),
+        import(/* webpackChunkName: "dashboard" */ "./components/Dashboard/DashboardPage"),
     loading: LoadingIndicator
 });
 
 const WalletManager = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "wallet" */ "./components/Wallet/WalletManager"
-        ),
+        import(/* webpackChunkName: "wallet" */ "./components/Wallet/WalletManager"),
     loading: LoadingIndicator
 });
 
 const ExistingAccount = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "existing-account" */ "./components/Wallet/ExistingAccount"
-        ),
+        import(/* webpackChunkName: "existing-account" */ "./components/Wallet/ExistingAccount"),
     loading: LoadingIndicator
 });
 
 const CreateWorker = Loadable({
     loader: () =>
-        import(
-            /* webpackChunkName: "create-worker" */ "./components/Account/CreateWorker"
-        ),
+        import(/* webpackChunkName: "create-worker" */ "./components/Account/CreateWorker"),
+    loading: LoadingIndicator
+});
+
+const Barter = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/Barter"),
+    loading: LoadingIndicator
+});
+
+const Borrow = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/Borrow"),
+    loading: LoadingIndicator
+});
+
+const Htlc = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/Htlc"),
+    loading: LoadingIndicator
+});
+
+const DirectDebit = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/DirectDebit"),
     loading: LoadingIndicator
 });
 
@@ -520,6 +517,7 @@ class App extends React.Component {
                                     path="/help/:path1/:path2/:path3"
                                     component={Help}
                                 />
+                                <Route path="/htlc" component={Htlc} />
                                 <Route path="*" component={Page404} />
                             </Switch>
                         </div>

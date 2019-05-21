@@ -241,8 +241,8 @@ class AccountSelector extends React.Component {
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
                     : account.accountType === "id"
-                    ? account.get("name")
-                    : null;
+                        ? account.get("name")
+                        : null;
         }
 
         // Without Typeahead Error Handling
@@ -397,13 +397,13 @@ class AccountSelector extends React.Component {
         let editableInput = !!this.state.locked
             ? false
             : this.props.editable != null
-            ? this.props.editable
-            : undefined;
+                ? this.props.editable
+                : undefined;
         let disabledInput = !!this.state.locked
             ? true
             : this.props.disabled != null
-            ? this.props.disabled
-            : undefined;
+                ? this.props.disabled
+                : undefined;
 
         return (
             <Form
@@ -431,7 +431,7 @@ class AccountSelector extends React.Component {
                                 className={cnames(
                                     "right-label",
                                     account &&
-                                        (account.isFavorite || account.isOwn)
+                                    (account.isFavorite || account.isOwn)
                                         ? "positive"
                                         : null,
                                     account && account.isKnownScammer
@@ -485,7 +485,7 @@ class AccountSelector extends React.Component {
                                     value={account ? accountName : null}
                                     disabled={
                                         !!disabledInput
-                                            ? disabledInput.toString()
+                                            ? disabledInput
                                             : undefined
                                     }
                                 >
