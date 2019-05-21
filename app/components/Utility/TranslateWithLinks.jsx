@@ -146,10 +146,24 @@ export default class TranslateWithLinks extends React.Component {
                                 <div>
                                     <Translate content={"proposal.votes"} />
                                     {votes.minus.length ? (
-                                        <div>- {votes.minus.join(", ")}</div>
+                                        <div>
+                                            {"- " +
+                                                counterpart.translate(
+                                                    "proposal.remove"
+                                                ) +
+                                                " "}{" "}
+                                            {votes.minus.join(", ")}
+                                        </div>
                                     ) : null}
                                     {votes.plus.length ? (
-                                        <div>+ {votes.plus.join(", ")}</div>
+                                        <div>
+                                            {"- " +
+                                                counterpart.translate(
+                                                    "proposal.add"
+                                                ) +
+                                                " "}{" "}
+                                            {votes.plus.join(", ")}
+                                        </div>
                                     ) : null}
                                 </div>
                             );
@@ -297,25 +311,27 @@ export default class TranslateWithLinks extends React.Component {
                                     </div>
                                 </React.Fragment>
                             );
-                            const memoDiv = memo && (
-                                <div>
-                                    <Translate
-                                        content={"proposal.change_memo"}
-                                    />
-                                    {memo.keys.plus.length > 0 && (
-                                        <div>
-                                            {" "}
-                                            + {memo.keys.plus.join(", ")}
-                                        </div>
-                                    )}
-                                    {memo.keys.minus.length > 0 && (
-                                        <div>
-                                            {" "}
-                                            - {memo.keys.minus.join(", ")}
-                                        </div>
-                                    )}
-                                </div>
-                            );
+                            const memoDiv = memo &&
+                                (memo.keys.plus.length > 0 ||
+                                    memo.keys.minus.length > 0) && (
+                                    <div>
+                                        <Translate
+                                            content={"proposal.changes_to_memo"}
+                                        />
+                                        {memo.keys.plus.length > 0 && (
+                                            <div>
+                                                {" "}
+                                                + {memo.keys.plus.join(", ")}
+                                            </div>
+                                        )}
+                                        {memo.keys.minus.length > 0 && (
+                                            <div>
+                                                {" "}
+                                                - {memo.keys.minus.join(", ")}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
                             value = (
                                 <div
                                     style={{

@@ -83,7 +83,6 @@ class RecentTransactions extends React.Component {
         };
         this.getDataSource = this.getDataSource.bind(this);
 
-        this.forceUpdate = this.forceUpdate.bind(this);
         this.useCustom = counterpart.translate(
             "account.export_modal.use_custom"
         );
@@ -105,7 +104,6 @@ class RecentTransactions extends React.Component {
 
             this._setHeaderHeight();
         }
-        ChainStore.subscribe(this.forceUpdate);
     }
 
     esNodeChange(e) {
@@ -192,10 +190,6 @@ class RecentTransactions extends React.Component {
         if (this.state.esNode !== nextState.esNode) return true;
         if (this.state.esNodeCustom !== nextState.esNodeCustom) return true;
         return false;
-    }
-
-    componentWillUnmount() {
-        ChainStore.unsubscribe(this.forceUpdate);
     }
 
     _onIncreaseLimit() {

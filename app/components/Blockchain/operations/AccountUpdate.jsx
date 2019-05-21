@@ -10,13 +10,35 @@ const compareKeys = (prev, next) => {
 };
 
 const getVotesName = item => {
-    const id =
-        item.get("witness_account") || item.get("committee_member_account");
-    return id
-        ? ChainStore.getAccountName(id) || id
-        : item.get("worker")
-            ? item.get("name")
-            : null;
+    if (item.id.startsWith("1.14")) {
+        // worker
+        let worker_account = ChainStore.getAccountName(item.worker_account);
+        return (
+            "Worker " +
+            item.name +
+            (worker_account
+                ? " of " + worker_account
+                : " account " + item.worker_account)
+        );
+    } else if (item.id.startsWith("1.6.")) {
+        let witness_account = ChainStore.getAccountName(item.witness_account);
+        return (
+            "Witness " +
+            (witness_account
+                ? witness_account
+                : " account " + item.witness_account)
+        );
+    } else {
+        let committee_member_account = ChainStore.getAccountName(
+            item.committee_member_account
+        );
+        return (
+            "Committee " +
+            (committee_member_account
+                ? committee_member_account
+                : " account " + item.committee_member_account)
+        );
+    }
 };
 
 export const AccountUpdate = ({op, fromComponent, collapsed}) => {
@@ -53,13 +75,13 @@ export const AccountUpdate = ({op, fromComponent, collapsed}) => {
             if (votesPlusData && votesMinusData) {
                 votesPlusData.forEach(item => {
                     if (item) {
-                        const name = getVotesName(item);
+                        const name = getVotesName(item.toJS());
                         if (name) votesPlusNames.push(name);
                     }
                 });
                 votesMinusData.forEach(item => {
                     if (item) {
-                        const name = getVotesName(item);
+                        const name = getVotesName(item.toJS());
                         if (name) votesMinusNames.push(name);
                     }
                 });
@@ -123,8 +145,15 @@ export const AccountUpdate = ({op, fromComponent, collapsed}) => {
         }
 
         if (memo_key) {
+            change.memo = {};
             const _memo = _account.get("options").get("memo_key");
             change.memo.keys = compareKeys([_memo], [memo_key]);
+            if (
+                change.memo.keys.minus.length == 0 &&
+                change.memo.keys.plus.length == 0
+            ) {
+                change.memo = undefined;
+            }
         }
     }
 
