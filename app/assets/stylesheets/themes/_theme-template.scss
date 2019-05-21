@@ -1973,6 +1973,9 @@
             color: $account-green;
         }
     }
+    .ant-table-placeholder {
+        min-height: 130px;
+    }
     div.account-creation {
         border: 1px solid $account-cells;
         border-radius: 6px;
