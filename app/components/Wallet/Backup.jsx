@@ -85,6 +85,16 @@ class BackupRestore extends Component {
         let new_wallet = this.props.wallet.new_wallet;
         let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet);
         let restored = has_new_wallet;
+        const wallet_types = (
+            <Link to="/help/introduction/wallets">
+                ({counterpart.translate("wallet.wallet_types")})
+            </Link>
+        );
+        const backup_types = (
+            <Link to="/help/introduction/backups">
+                ({counterpart.translate("wallet.backup_types")})
+            </Link>
+        );
 
         return (
             <div>
@@ -92,6 +102,13 @@ class BackupRestore extends Component {
                     style={{textAlign: "left", maxWidth: "30rem"}}
                     component="p"
                     content="wallet.import_backup_choose"
+                />
+                <Translate
+                    className="text-left"
+                    component="p"
+                    wallet={wallet_types}
+                    backup={backup_types}
+                    content="wallet.read_more"
                 />
                 {new FileReader().readAsBinaryString ? null : (
                     <p className="error">

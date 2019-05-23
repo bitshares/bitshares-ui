@@ -251,6 +251,7 @@ class CreateAccount extends React.Component {
                 style={{maxWidth: "40rem"}}
                 onSubmit={this.onSubmit.bind(this)}
                 noValidate
+                className="create-account-wrapper"
             >
                 <p
                     style={{

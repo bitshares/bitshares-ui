@@ -2367,6 +2367,7 @@
         "backup_explain": "Clicking on the button below will generate a backup file with a .bin extension. This file is encrypted with your wallet password, and contains all the private keys for your accounts. It can be used to restore your wallet, or move it to a different computer/browser.",
         "backup_login": "Backup & login",
         "backup_new_account": "Congratulations, you've just created a new account on the %(wallet_name)s exchange powered by the BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Lookup balances",
         "balance_claims": "Balance Claims",
@@ -2477,6 +2478,7 @@
         "paste_private": "Paste private keys here (Wallet Import Format - WIF)",
         "pwd4brainkey": "Enter your password to show your brainkey",
         "ready_to_restore": "Ready to Restore",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "reenter_brainkey": "Re-Enter Brainkey",
         "remember_me": "Remember me",
         "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
@@ -2530,6 +2532,7 @@
         "wallet_model_2": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_password": "Login anywhere using your password"
+        "wallet_password": "Login anywhere using your password",
+        "wallet_types": "wallet types"
     }
 }

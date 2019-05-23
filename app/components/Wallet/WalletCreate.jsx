@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component, Fragment } from "react";
 import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import BrainkeyInput from "components/Wallet/BrainkeyInputStyleGuide";
@@ -137,7 +137,7 @@ class CreateNewWallet extends Component {
         }
 
         return (
-            <div>
+            <div className="wallet-create">
                 <Form
                     style={{maxWidth: "40rem"}}
                     onSubmit={this.onSubmit}
@@ -151,17 +151,17 @@ class CreateNewWallet extends Component {
                         }}
                     >
                         {!this.props.restoreBrainkey ? (
-                            <Translate
-                                component="p"
-                                content="wallet.create_importkeys_text"
-                            />
-                        ) : null}
-                        {!this.props.restoreBrainkey ? (
-                            <Translate
-                                component="p"
-                                content="wallet.create_text"
-                                wallet_name={getWalletName()}
-                            />
+                            <Fragment>
+                                <Translate
+                                    component="p"
+                                    content="wallet.create_importkeys_text"
+                                />
+                                <Translate
+                                    component="p"
+                                    content="wallet.create_text"
+                                    wallet_name={getWalletName()}
+                                />
+                            </Fragment>
                         ) : null}
                     </div>
                     <PasswordConfirm onValid={this.onPassword.bind(this)} />
@@ -255,6 +255,17 @@ class WalletCreate extends Component {
 }
 
 const CreateWalletFromBrainkey = props => {
+    const wallet_types = (
+        <Link to="/help/introduction/wallets">
+            ({counterpart.translate("wallet.wallet_types")})
+        </Link>
+    );
+    const backup_types = (
+        <Link to="/help/introduction/backups">
+            ({counterpart.translate("wallet.backup_types")})
+        </Link>
+    );
+
     if (!props.nested) {
         return (
             <div className="grid-container" style={{paddingTop: 30}}>
@@ -262,7 +273,14 @@ const CreateWalletFromBrainkey = props => {
                 <Translate
                     content="settings.restore_brainkey_text"
                     component="p"
-                    style={{maxWidth: "40rem", paddingBottom: 10}}
+                    style={{ maxWidth: "40rem" }}
+                />
+                <Translate
+                    component="p"
+                    style={{ paddingBottom: 10 }}
+                    wallet={wallet_types}
+                    backup={backup_types}
+                    content="wallet.read_more"
                 />
                 <WalletCreate restoreBrainkey {...props} />
             </div>
