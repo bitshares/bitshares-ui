@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "3.1.190529-rc1",
+    "version": "3.1.190604-rc1",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Worker <ui-dev@bitshares.org>",
