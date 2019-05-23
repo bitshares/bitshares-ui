@@ -8,19 +8,19 @@ import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import {getHeadFeedAsset} from "../../branding";
 
-const filterNews = (news, hiddenGitNews) => {
+const filterNews = (news, hiddenNewsHeadline) => {
     return {
         ...Object.values(news).filter(item => {
-            return hiddenGitNews.indexOf(item.content);
+            return hiddenNewsHeadline.indexOf(item.content);
         })
     };
 };
-class GitNews extends React.Component {
+class NewsHeadline extends React.Component {
     constructor() {
         super();
         this.state = {
             news: {},
-            hiddenGitNewsSize: 0
+            hiddenNewsHeadlineSize: 0
         };
     }
 
@@ -30,10 +30,10 @@ class GitNews extends React.Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (props.hiddenGitNews.size !== state.hiddenGitNewsSize) {
+        if (props.hiddenNewsHeadline.size !== state.hiddenNewsHeadlineSize) {
             return {
-                news: filterNews(state.news, props.hiddenGitNews),
-                hiddenGitNewsSize: props.hiddenGitNews.size
+                news: filterNews(state.news, props.hiddenNewsHeadline),
+                hiddenNewsHeadlineSize: props.hiddenNewsHeadline.size
             };
         }
         return null;
@@ -43,7 +43,7 @@ class GitNews extends React.Component {
         return (
             Object.keys(this.state.news).length !==
                 Object.keys(state.news).length ||
-            props.hiddenGitNews.size !== this.props.hiddenGitNews.size
+            props.hiddenNewsHeadline.size !== this.props.hiddenNewsHeadline.size
         );
     }
 
@@ -58,7 +58,7 @@ class GitNews extends React.Component {
                 (json => {
                     const news = filterNews(
                         JSON.parse(atob(json.content)),
-                        this.props.hiddenGitNews
+                        this.props.hiddenNewsHeadline
                     );
                     this.setState({news});
                 }).bind(this)
@@ -97,7 +97,7 @@ class GitNews extends React.Component {
                 });
                 const news = filterNews(
                     notificationList,
-                    this.props.hiddenGitNews
+                    this.props.hiddenNewsHeadline
                 );
                 this.setState({news});
             }
@@ -105,7 +105,7 @@ class GitNews extends React.Component {
     }
 
     onClose(item) {
-        SettingsActions.hideGitNews(item);
+        SettingsActions.hideNewsHeadline(item);
     }
 
     render() {
@@ -143,18 +143,18 @@ class GitNews extends React.Component {
     }
 }
 
-GitNews = connect(
-    GitNews,
+NewsHeadline = connect(
+    NewsHeadline,
     {
         listenTo() {
             return [SettingsStore];
         },
         getProps() {
             return {
-                hiddenGitNews: SettingsStore.getState().hiddenGitNews
+                hiddenNewsHeadline: SettingsStore.getState().hiddenNewsHeadline
             };
         }
     }
 );
 
-export default GitNews;
+export default NewsHeadline;

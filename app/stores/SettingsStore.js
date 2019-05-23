@@ -56,7 +56,7 @@ class SettingsStore {
             onUpdateLatencies: SettingsActions.updateLatencies,
             onModifyPreferedBases: SettingsActions.modifyPreferedBases,
             onUpdateUnits: SettingsActions.updateUnits,
-            onHideGitNews: SettingsActions.hideGitNews
+            onHideNewsHeadline: SettingsActions.hideNewsHeadline
         });
 
         this.initDone = false;
@@ -90,7 +90,9 @@ class SettingsStore {
 
         this.priceAlert = fromJS(ss.get("priceAlert", []));
 
-        this.hiddenGitNews = Immutable.List(ss.get("hiddenGitNews", []));
+        this.hiddenNewsHeadline = Immutable.List(
+            ss.get("hiddenNewsHeadline", [])
+        );
     }
 
     /**
@@ -762,10 +764,10 @@ class SettingsStore {
         }
     }
 
-    onHideGitNews(payload) {
-        if (payload && this.hiddenGitNews.indexOf(payload)) {
-            this.hiddenGitNews = this.hiddenGitNews.push(payload);
-            ss.set("hiddenGitNews", this.hiddenGitNews.toJS());
+    onHideNewsHeadline(payload) {
+        if (payload && this.hiddenNewsHeadline.indexOf(payload)) {
+            this.hiddenNewsHeadline = this.hiddenNewsHeadline.push(payload);
+            ss.set("hiddenNewsHeadline", this.hiddenNewsHeadline.toJS());
         }
     }
 }

@@ -85,7 +85,7 @@ class SettingsActions {
         return value;
     }
 
-    hideGitNews(value) {
+    hideNewsHeadline(value) {
         return value;
     }
 }
