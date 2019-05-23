@@ -22,9 +22,12 @@ class BalanceComponent extends React.Component {
     };
 
     render() {
-        let amount = this.props.balance.get("balance")
-            ? Number(this.props.balance.get("balance"))
-            : null;
+        let amount = this.props.balance.get("balance");
+        if (amount || amount == 0) {
+            amount = Number(this.props.balance.get("balance"));
+        } else {
+            amount = null;
+        }
         let type = this.props.balance.get("asset_type");
         return (
             <FormattedAsset

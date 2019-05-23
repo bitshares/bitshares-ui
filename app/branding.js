@@ -162,7 +162,9 @@ export function getMyMarketsQuotes() {
             "XBTSX.P2P",
             "XBTSX.STEEP",
             "XBTSX.MDL",
-            "XBTSX.ETH"
+            "XBTSX.ETH",
+            "XBTSX.EXR",
+            "XBTSX.LCRT"
         ],
         otherTokens: [
             "BKT",

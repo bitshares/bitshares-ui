@@ -2169,9 +2169,11 @@ class Transaction extends React.Component {
                     break;
                 case "htlc_create":
                     // add claim period to block time
+                    const block_time = this.props.block
+                        ? this.props.block.timestamp.getTime()
+                        : new Date().getTime();
                     let claim_due = new Date(
-                        this.props.block.timestamp.getTime() +
-                            op[1].claim_period_seconds * 1000
+                        block_time + op[1].claim_period_seconds * 1000
                     );
 
                     rows.push(

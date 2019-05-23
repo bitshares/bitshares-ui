@@ -1,10 +1,14 @@
 import React from "react";
 import Translate from "react-translate-component";
-import Operation from "../Blockchain/Operation";
+import {saveAs} from "file-saver";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
+import {
+    ChainTypes as grapheneChainTypes,
+    FetchChain,
+    ChainStore
+} from "bitsharesjs";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
@@ -12,9 +16,19 @@ import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
-const alignLeft = {textAlign: "left"};
+import report from "bitshares-report";
 import LoadingIndicator from "../LoadingIndicator";
 import {Tooltip, Modal, Button, Select, Input} from "bitshares-ui-style-guide";
+const ops = Object.keys(operations);
+import {Link} from "react-router-dom";
+import FormattedAsset from "../Utility/FormattedAsset";
+import BlockTime from "../Blockchain/BlockTime";
+import OperationAnt from "../Blockchain/OperationAnt";
+import SettingsStore from "stores/SettingsStore";
+import {connect} from "alt-react";
+const operation = new OperationAnt();
+
+const Option = Select.Option;
 import AccountHistoryExporter, {
     FULL,
     COINBASE
@@ -62,10 +76,12 @@ class RecentTransactions extends React.Component {
             headerHeight: 85,
             filter: "all",
             accountHistoryError: false,
+            rows: [],
             showModal: false,
             esNodeCustom: false,
             esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
         };
+        this.getDataSource = this.getDataSource.bind(this);
 
         this.useCustom = counterpart.translate(
             "account.export_modal.use_custom"
@@ -263,10 +279,70 @@ class RecentTransactions extends React.Component {
         }
     }
 
-    _onChangeFilter(e) {
+    _onChangeFilter(value) {
         this.setState({
-            filter: e.target.value
+            filter: value
         });
+    }
+
+    getDataSource(o, current_account_id) {
+        let fee = o.op[1].fee;
+        let trxTypes = counterpart.translate("transaction.trxTypes");
+        const info = operation.getColumn(
+            o.op,
+            current_account_id,
+            o.block_num,
+            o.result,
+            this.props.marketDirections
+        );
+        fee.amount = parseInt(fee.amount, 10);
+        const dynGlobalObject = ChainStore.getObject("2.1.0");
+        let last_irreversible_block_num = dynGlobalObject.get(
+            "last_irreversible_block_num"
+        );
+        let pending = null;
+        if (o.block_num > last_irreversible_block_num) {
+            pending = (
+                <span>
+                    (
+                    <Translate
+                        content="operation.pending"
+                        blocks={o.block_num - last_irreversible_block_num}
+                    />
+                    )
+                </span>
+            );
+        }
+        return {
+            key: o.id,
+            id: o.id,
+            type: (
+                <Link
+                    className="inline-block"
+                    data-place="bottom"
+                    data-tip={counterpart.translate("tooltip.show_block", {
+                        block: utils.format_number(o.block_num, 0)
+                    })}
+                    to={`/block/${o.block_num}/${o.trx_in_block}`}
+                >
+                    <span className={cnames("label", info.color || "info")}>
+                        {trxTypes[ops[o.op[0]]]}
+                    </span>
+                </Link>
+            ),
+            info: (
+                <div>
+                    <div>
+                        <span>{info.column}</span>
+                    </div>
+                    <div style={{fontSize: 14, paddingTop: 5}}>
+                        {pending ? <span> - {pending}</span> : null}
+                    </div>
+                </div>
+            ),
+            fee: <FormattedAsset amount={fee.amount} asset={fee.asset_id} />,
+            time: <BlockTime block_number={o.block_num} fullDate={true} />
+        };
     }
 
     render() {
@@ -309,9 +385,9 @@ class RecentTransactions extends React.Component {
                 "vesting_balance_withdraw"
             ].map(type => {
                 return (
-                    <option value={type} key={type}>
+                    <Option value={type} key={type}>
                         {counterpart.translate("transaction.trxTypes." + type)}
-                    </option>
+                    </Option>
                 );
             });
         }
@@ -320,31 +396,9 @@ class RecentTransactions extends React.Component {
 
         let display_history = history.length
             ? history.slice(0, limit).map(o => {
-                  return (
-                      <Operation
-                          includeOperationId={true}
-                          operationId={o.id}
-                          style={alignLeft}
-                          key={o.id}
-                          op={o.op}
-                          result={o.result}
-                          txIndex={o.trx_in_block}
-                          block={o.block_num}
-                          current={current_account_id}
-                          hideFee={hideFee}
-                          inverted={false}
-                          hideOpLabel={compactView}
-                          fullDate={true}
-                      />
-                  );
+                  return this.getDataSource(o, current_account_id);
               })
-            : [
-                  <tr key="no_recent">
-                      <td colSpan={compactView ? "2" : "3"}>
-                          <Translate content="operation.no_recent" />
-                      </td>
-                  </tr>
-              ];
+            : [];
         let action = (
             <tr className="total-value" key="total_value">
                 <td style={{textAlign: "center"}}>&nbsp;</td>
@@ -426,31 +480,28 @@ class RecentTransactions extends React.Component {
                         </div>
                     )}
                     <div className="header-selector">
-                        <div className="selector">
-                            <div className={cnames("inline-block")}>
-                                {this.props.showFilters ? (
-                                    <Tooltip
-                                        placement="bottom"
-                                        title={counterpart.translate(
-                                            "tooltip.filter_ops"
+                        <div className="filter inline-block">
+                            {this.props.showFilters ? (
+                                <Tooltip
+                                    placement="bottom"
+                                    title={counterpart.translate(
+                                        "tooltip.filter_ops"
+                                    )}
+                                >
+                                    <Select
+                                        style={{
+                                            width: "210px"
+                                        }}
+                                        value={this.state.filter}
+                                        onChange={this._onChangeFilter.bind(
+                                            this
                                         )}
                                     >
-                                        <select
-                                            style={{
-                                                paddingTop: 5,
-                                                width: "auto"
-                                            }}
-                                            className="bts-select no-margin"
-                                            value={this.state.filter}
-                                            onChange={this._onChangeFilter.bind(
-                                                this
-                                            )}
-                                        >
-                                            {options}
-                                        </select>
-                                    </Tooltip>
-                                ) : null}
-                            </div>
+                                        {options}
+                                    </Select>
+                                </Tooltip>
+                            ) : null}
+
                             {historyCount > 0 ? (
                                 <Tooltip
                                     placement="bottom"
@@ -461,7 +512,9 @@ class RecentTransactions extends React.Component {
                                     <a
                                         className="inline-block iconLinkAndLabel"
                                         onClick={this.showExportModal}
-                                        style={{marginLeft: "1rem"}}
+                                        style={{
+                                            marginLeft: "1rem"
+                                        }}
                                     >
                                         <Icon name="excel" size="1x" />
                                         <Translate content="account.download_history" />
@@ -478,56 +531,99 @@ class RecentTransactions extends React.Component {
                             </div>
                         )}
                     </div>
-                    <div
-                        className="box-content grid-block no-margin"
-                        style={
-                            !this.props.fullHeight
-                                ? {maxHeight: maxHeight - headerHeight}
-                                : null
+                    <PaginatedList
+                        withTransition
+                        className={
+                            "table table-striped " +
+                            (compactView ? "compact" : "") +
+                            (this.props.dashboard
+                                ? " dashboard-table table-hover"
+                                : "")
                         }
-                        ref="transactions"
-                    >
-                        <PaginatedList
-                            withTransition
-                            className={
-                                "table table-striped " +
-                                (compactView ? "compact" : "") +
-                                (this.props.dashboard
-                                    ? " dashboard-table table-hover"
-                                    : "")
+                        header={[
+                            {
+                                title: (
+                                    <Translate content="account.transactions.id" />
+                                ),
+                                dataIndex: "id",
+                                align: "left",
+                                render: item => {
+                                    return (
+                                        <span style={{whiteSpace: "nowrap"}}>
+                                            {item}
+                                        </span>
+                                    );
+                                }
+                            },
+                            !compactView
+                                ? {
+                                      title: (
+                                          <Translate content="account.transactions.type" />
+                                      ),
+                                      dataIndex: "type",
+                                      align: "left"
+                                  }
+                                : {},
+                            {
+                                title: (
+                                    <Translate content="account.transactions.info" />
+                                ),
+                                dataIndex: "info",
+                                align: "left",
+                                render: item => {
+                                    return (
+                                        <span
+                                            style={{
+                                                whiteSpace: "nowrap"
+                                            }}
+                                        >
+                                            {item}
+                                        </span>
+                                    );
+                                }
+                            },
+                            !hideFee
+                                ? {
+                                      title: (
+                                          <Translate content="account.transactions.fee" />
+                                      ),
+                                      dataIndex: "fee",
+                                      align: "left",
+                                      render: item => {
+                                          return (
+                                              <span
+                                                  style={{
+                                                      whiteSpace: "nowrap"
+                                                  }}
+                                              >
+                                                  {item}
+                                              </span>
+                                          );
+                                      }
+                                  }
+                                : {},
+                            {
+                                title: (
+                                    <Translate
+                                        style={{whiteSpace: "nowrap"}}
+                                        content="account.transactions.time"
+                                    />
+                                ),
+                                dataIndex: "time",
+                                render: item => {
+                                    return (
+                                        <span style={{whiteSpace: "nowrap"}}>
+                                            {item}
+                                        </span>
+                                    );
+                                }
                             }
-                            header={
-                                <tr>
-                                    <th
-                                        className="column-hide-tiny"
-                                        style={alignLeft}
-                                    >
-                                        <Translate content="account.transactions.id" />
-                                    </th>
-                                    <th
-                                        className="column-hide-tiny"
-                                        style={alignLeft}
-                                    >
-                                        <Translate content="account.transactions.type" />
-                                    </th>
-                                    <th style={alignLeft}>
-                                        <Translate content="account.transactions.info" />
-                                    </th>
-                                    {!hideFee && (
-                                        <th style={alignLeft}>
-                                            <Translate content="account.transactions.fee" />
-                                        </th>
-                                    )}
-                                    <th>
-                                        <Translate content="account.transactions.time" />
-                                    </th>
-                                </tr>
-                            }
-                            rows={display_history}
-                            label="utility.total_x_operations"
-                            extraRow={action}
-                        />
-                    </div>
+                        ]}
+                        rows={display_history}
+                        label="utility.total_x_operations"
+                        extraRow={action}
+                    />
+
                     {this.state.fetchingAccountHistory && <LoadingIndicator />}
                 </div>
             </div>
@@ -535,6 +631,20 @@ class RecentTransactions extends React.Component {
     }
 }
 RecentTransactions = BindToChainState(RecentTransactions);
+
+RecentTransactions = connect(
+    RecentTransactions,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
+    }
+);
 
 class TransactionWrapper extends React.Component {
     static propTypes = {

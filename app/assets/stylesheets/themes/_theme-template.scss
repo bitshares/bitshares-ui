@@ -59,7 +59,8 @@
     $positive-color-alternative,
     $separator-line,
     $medium-color,
-    $dark-help-text
+    $dark-help-text,
+    $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
     .showcases-grid {
@@ -230,6 +231,14 @@
             &:hover {
                 color: $link-text-color;
             }
+        }
+    }
+    .form-input-header {
+        .form-input-header--label {
+        }
+        .form-input-header--right {
+            float: right;
+            cursor: pointer;
         }
     }
     .dark-text-color {
@@ -1711,6 +1720,15 @@
     .unstyled-list {
         list-style: none;
         margin-left: 0;
+        margin-bottom: 0;
+    }
+    .settings-container {
+        // hardcode style overriding for style-guide labels of Form.Item
+        .ant-form-item-label label {
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+            color: $settings-label-color !important;
+        }
     }
     .settings--notifications {
         .settings--notifications--group {
