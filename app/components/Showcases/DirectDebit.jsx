@@ -305,8 +305,8 @@ class DirectDebit extends Component {
                     return a.expires > b.expires
                         ? 1
                         : a.expires < b.expires
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 }
             },
             {

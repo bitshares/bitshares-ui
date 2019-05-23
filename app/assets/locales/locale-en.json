@@ -6,6 +6,7 @@
         "as_collateral": "Collateral",
         "asset": "Asset",
         "asset_details": "Asset details",
+        "average_price": "Average price",
         "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
         "bts_market": "Market",
         "collaterals": "Margin Positions",
@@ -24,6 +25,7 @@
         "deposit": "Deposit BTS",
         "deposit_address": "Your deposit address is your account name",
         "deposit_withdraw": "Deposit/Withdraw",
+        "download_history": "Download History",
         "eq_value": "Estimated",
         "eq_value_header": "Value ({asset})",
         "errors": {
@@ -36,8 +38,16 @@
         "estimate_value": "Estimated Account value",
         "existing_accounts": "Existing Accounts",
         "existing_user": "Existing user",
+        "export_modal": {
+            "coinbase_report": "CoinTracking.info Report",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "title": "History Export",
+            "use_custom": "Use custom wrapper"
+        },
         "filter_orders": "Filter...",
         "follow": "Add contact",
+        "group_by_asset": "Group by asset",
         "hidden_accounts_row": "Hidden Accounts",
         "hide_hidden": "Active",
         "hide_ignored": "Hide hidden accounts",
@@ -116,14 +126,6 @@
             "num_committee": "Desired Committee Members",
             "num_witnesses": "Desired Witnesses"
         },
-        "export_modal": {
-            "title": "History Export",
-            "use_custom": "Use custom wrapper",
-            "description": "Enter your desired elastic search instance and click the report type",
-            "full_report": "Full Report",
-            "coinbase_report": "CoinTracking.info Report"
-        },
-        "download_history": "Download History",
         "orders": "Orders",
         "other_scam": "This account is not known to be an official account, please verify the destination before transferring",
         "overview": "Overview",
@@ -452,6 +454,8 @@
         "no_valid": "No valid feeds for %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
         "target_collateral_ratio": "Target Collateral Ratio",
+        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "%(asset_symbol)s Margin",
         "update": "Update",
         "use_max": "Use Max"
@@ -499,8 +503,8 @@
         "buy_min": "Buy at least",
         "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
-        "cancel_selected_orders": "Cancel selected order(s)",
         "call": "Call Price",
+        "cancel_selected_orders": "Cancel selected order(s)",
         "change": "Change",
         "chart_height": "Chart height (pixels)",
         "chart_hide": "Hide Charts",
@@ -1161,6 +1165,18 @@
         "update_asset": "Update Asset",
         "withdraw_legacy": "or Legacy Withdraw"
     },
+    "htlc": {
+        "claim_period": "Seconds to claim",
+        "claim_period_due": "Claimable until",
+        "id": "HTLC id",
+        "preimage": "Preimage",
+        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
+        "preimage_hash": "Preimage hash",
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "Redeemer",
+        "seconds_to_add": "Add seconds to claim period",
+        "update_issuer": "Update issuer"
+    },
     "icons": {
         "adjust": "Adjust margin position",
         "assets": "Assets",
@@ -1407,11 +1423,11 @@
         },
         "settle": {
             "amount": "Amount to settle",
-            "submit": "Settle asset",
-            "title": "Request settlement of %(asset)s",
+            "delay": "Estimated delay: %(amount)s hours",
             "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
             "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
-            "delay": "Estimated delay: %(amount)s hours"
+            "submit": "Settle asset",
+            "title": "Request settlement of %(asset)s"
         },
         "withdraw": {
             "address": "Withdraw to Address",
@@ -1498,6 +1514,11 @@
         "committee_member_update_global_parameters": "{account} updated the global committee parameters",
         "fill_order_buy": "{account} bought {amount} at {price} for order #%(order)s",
         "fill_order_sell": "{account} sold {amount} at {price} for order #%(order)s",
+        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
+        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
+        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
         "lifetime_upgrade_account": "{account} was upgraded to lifetime member",
         "limit_order_buy": "{account} placed order %(order)s to buy {amount} at {price}",
         "limit_order_cancel": "{account} cancelled order #%(order)s",
@@ -1514,19 +1535,14 @@
         "transfer": "{from} sent {amount} to {to}",
         "transfer_account": "{account} ownership transferred to {to}",
         "unlisted_by": "{lister} unlisted the account {listee}",
-        "update_account": "{account} updated their account data",
+        "update_account": "{account} updated their account data {change}",
         "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",
         "whitelisted_by": "{lister} whitelisted the account {listee}",
         "witness_create": "{account} was upgraded to become a witness",
         "witness_pay": "Withdrew witness pay to account",
         "witness_receive": "Received witness from witness",
         "witness_update": "{account} update its witness info",
-        "worker_create": "{account} created a worker proposal with daily pay of {pay}",
-        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
-        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
-        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
-        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
-        "htlc_refund": "{to} got refund of HTLC {htlc_id}"
+        "worker_create": "{account} created a worker proposal with daily pay of {pay}"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
@@ -1541,6 +1557,8 @@
     },
     "proposal": {
         "action": "Actions",
+        "add": "Add",
+        "add_vote": "Add vote for",
         "approve": "Approve",
         "approvers": "Approver(s)",
         "asset_create": "Create the asset %(asset)s using the account {account}",
@@ -1549,7 +1567,11 @@
         "asset_settle": "Request a settlement of {amount} for {account}",
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
+        "changes_to_active": "Changes to active",
+        "changes_to_memo": "Changes to memo",
+        "changes_to_owner": "Changes to owner",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
+        "danger_operation": "Dangerous operation",
         "delete": "Permanently reject",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
@@ -1557,8 +1579,12 @@
         "limit_order_create": "Place an order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell": "Place an order to sell {amount} at {price} for {account}",
         "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "permission_changes": "Permission changes",
         "proposals": "Proposals",
         "reject": "Reject",
+        "remove": "Remove",
+        "remove_vote": "Remove vote for",
+        "set_threshold": "Set threshold to %(threshold)s",
         "status": "Status",
         "transfer": "Transfer {amount} from {from} to {to}",
         "update": {
@@ -1569,7 +1595,7 @@
             "owner_approvals_to_add": "Owner approvals to add",
             "owner_approvals_to_remove": "Owner approvals to remove"
         },
-        "update_account": "Update account data for {account}",
+        "update_account": "Update account data for {account} {change}",
         "updated": {
             "active_approvals_to_add": "Active approval(s) added",
             "active_approvals_to_remove": "Active approval(s) removed",
@@ -1578,7 +1604,8 @@
             "owner_approvals_to_add": "Owner approval(s) added",
             "owner_approvals_to_remove": "Owner approval(s) removed"
         },
-        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
+        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
+        "votes": "Votes"
     },
     "proposal_create": {
         "expiration_time": "Expiration time",
@@ -1885,6 +1912,43 @@
             "update": "Update",
             "update_mandate": "Update existing authorization"
         },
+        "htlc": {
+            "actions": "Actions",
+            "amount": "Amount",
+            "claim": "Claim",
+            "create_htlc": "Create HTLC",
+            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
+            "enter_secret_preimage": "Enter secret preimage",
+            "expiration": "Expiration",
+            "expiration_date": "Expiration date",
+            "expiration_period": {
+                "one_day": "One day",
+                "one_week": "One week",
+                "two_days": "Two days"
+            },
+            "expires": "Expires",
+            "extend": "Extend",
+            "extend_htlc": "Extend HTLC",
+            "from": "From",
+            "hash": "Hash",
+            "preimage": "Preimage",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "recipient": "Recipient",
+            "redeem_htlc": "Redeem HTLC",
+            "sender": "Sender",
+            "size": "Size",
+            "title": "Hashed Time-Lock Contracts",
+            "to": "To",
+            "tooltip": {
+                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
+                "new_random": "Roll the dice and create a new random string.",
+                "preimage_button": "Please click to enter secret preimage",
+                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
+                "preimage_input": "Field requires a secret preimage",
+                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
+                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+            }
+        },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
@@ -1921,7 +1985,7 @@
         "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "To complete the deposit, go to your external %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
         "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
-        "feed_price": "This is the current external feed price",
+        "feed_price": "This is the current external feed price (median of all feed prices given by witnesses)",
         "filter_ops": "Use this list to filter your history by operation type.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
@@ -1973,8 +2037,8 @@
         "own_account": "You hold keys for this account",
         "propose_scam": "This proposal was created by a known scammer or from someone that you blacklisted! Approval not possible.",
         "propose_tip": "Propose another user to initiate a transaction",
-        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
         "registration": {
@@ -2016,7 +2080,6 @@
         "bond_create_offer": "Created bond offer",
         "bond_pay_collateral": "Paid collateral of",
         "borrow_amount": "Debt",
-        "cumulative_borrow_amount": "Cumulative Debt",
         "borrower": "Borrower",
         "broadcast_fail": "Failed to broadcast the transaction: %(message)s",
         "broadcast_success": "Transaction has been broadcast",
@@ -2035,6 +2098,7 @@
         "create_key": "Created a public key",
         "csv": "Export to .csv",
         "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info or raw format",
+        "cumulative_borrow_amount": "Cumulative Debt",
         "custom": "Created a custom operation",
         "delta_collateral": "Collateral change",
         "delta_debt": "Debt change",
@@ -2053,12 +2117,12 @@
             "fee": "Regular Transaction Fee",
             "fee_per_day": "Price per day",
             "fee_per_kb": "Price per KByte Transaction Size",
-            "price_per_output": "Price per recipient",
             "long_symbol": "Longer Symbols",
             "membership_annual_fee": "Annual Membership",
             "membership_lifetime_fee": "Lifetime Membership",
             "premium_fee": "Fee for Premium Names",
             "price_per_kbyte": "Price per KByte Transaction Size",
+            "price_per_output": "Price per recipient",
             "symbol3": "Symbols with 3 Characters",
             "symbol4": "Symbols with 4 Characters"
         },
@@ -2122,6 +2186,11 @@
             "execute_bid": "Execute bid",
             "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Fill order",
+            "htlc_create": "HTLC create",
+            "htlc_extend": "HTLC extend",
+            "htlc_redeem": "HTLC redeem",
+            "htlc_redeemed": "HTLC redeemed",
+            "htlc_refund": "HTLC refund",
             "limit_order_cancel": "Cancel order",
             "limit_order_create": "Place order",
             "override_transfer": "Override transfer",
@@ -2140,12 +2209,7 @@
             "witness_create": "Create witness",
             "witness_update": "Update witness",
             "witness_withdraw_pay": "Witness pay withdrawal",
-            "worker_create": "Create worker",
-            "htlc_create": "HTLC create",
-            "htlc_redeem": "HTLC redeem",
-            "htlc_redeemed": "HTLC redeemed",
-            "htlc_extend": "HTLC extend",
-            "htlc_refund": "HTLC refund"
+            "worker_create": "Create worker"
         },
         "vesting_balance_create": "created vesting balance of",
         "waiting": "Waiting for confirmation..",
@@ -2190,8 +2254,8 @@
         },
         "explict_price": "Explict price:",
         "fee": "Fee",
-        "free": "Free",
         "final": "Final balance",
+        "free": "Free",
         "from": "From",
         "header": "Transfer details",
         "header_subheader": "Send funds from an account you control to another %(wallet_name)s account holder.",
@@ -2467,17 +2531,5 @@
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
         "wallet_password": "Login anywhere using your password"
-    },
-    "htlc": {
-        "claim_period": "Seconds to claim",
-        "claim_period_due": "Claimable until",
-        "preimage_hash": "Preimage hash",
-        "id": "HTLC id",
-        "update_issuer": "Update issuer",
-        "seconds_to_add": "Add seconds to claim period",
-        "redeemer": "Redeemer",
-        "preimage": "Preimage",
-        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
-        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'"
     }
 }

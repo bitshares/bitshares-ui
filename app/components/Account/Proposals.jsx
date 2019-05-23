@@ -153,14 +153,14 @@ class Proposals extends Component {
 
         touchedAccounts.push(proposer);
 
-        if (__DEV__) {
+        /* if (__DEV__) {
             console.log(
                 "Proposed transactions: ",
                 proposal,
                 " touching accounts ",
                 touchedAccounts
             );
-        }
+        } */
 
         touchedAccounts.forEach(_account => {
             if (accountUtils.isKnownScammer(_account)) {
@@ -272,6 +272,7 @@ class Proposals extends Component {
                             proposal={true}
                             id={id}
                             proposer={proposer}
+                            collapsed={false}
                         />
                     );
                 })

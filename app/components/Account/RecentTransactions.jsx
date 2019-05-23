@@ -86,7 +86,6 @@ class RecentTransactions extends React.Component {
         this.useCustom = counterpart.translate(
             "account.export_modal.use_custom"
         );
-
         // https://eswrapper.bitshares.eu/ is not alive
         // https://wrapper.elasticsearch.bitshares.ws/ is not alive
         // http://bts-es.clockwork.gr:5000/ is alive

@@ -21,9 +21,6 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
-import Borrow from "./components/Showcases/Borrow";
-import Barter from "./components/Showcases/Barter";
-import DirectDebit from "./components/Showcases/DirectDebit";
 
 import {Route, Switch, Redirect} from "react-router-dom";
 
@@ -115,6 +112,30 @@ const ExistingAccount = Loadable({
 const CreateWorker = Loadable({
     loader: () =>
         import(/* webpackChunkName: "create-worker" */ "./components/Account/CreateWorker"),
+    loading: LoadingIndicator
+});
+
+const Barter = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/Barter"),
+    loading: LoadingIndicator
+});
+
+const Borrow = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/Borrow"),
+    loading: LoadingIndicator
+});
+
+const Htlc = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/Htlc"),
+    loading: LoadingIndicator
+});
+
+const DirectDebit = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Showcases/DirectDebit"),
     loading: LoadingIndicator
 });
 
@@ -496,6 +517,7 @@ class App extends React.Component {
                                     path="/help/:path1/:path2/:path3"
                                     component={Help}
                                 />
+                                <Route path="/htlc" component={Htlc} />
                                 <Route path="*" component={Page404} />
                             </Switch>
                         </div>
