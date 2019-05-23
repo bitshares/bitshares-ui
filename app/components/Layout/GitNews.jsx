@@ -6,11 +6,12 @@ import {Carousel} from "antd";
 import SettingsActions from "actions/SettingsActions";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
+import {getHeadFeedAsset} from "../../branding";
 
 const filterNews = (news, hiddenGitNews) => {
     return {
         ...Object.values(news).filter(item => {
-            return item.type !== "info" || hiddenGitNews.indexOf(item.content);
+            return hiddenGitNews.indexOf(item.content);
         })
     };
 };
@@ -24,8 +25,8 @@ class GitNews extends React.Component {
     }
 
     componentDidMount() {
-        //this.getNewsThroughAsset("NOTIFICATIONS");
-        this.getNewsFromGitHub.call(this);
+        this.getNewsThroughAsset(getHeadFeedAsset());
+        //this.getNewsFromGitHub.call(this);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -64,22 +65,41 @@ class GitNews extends React.Component {
             );
     }
 
-    getNewsThroughAsset(assetSymbolOrId) {
-        FetchChainObjects(ChainStore.getAsset, [assetSymbolOrId]).then(
-            asset => {
-                asset = asset[0].toJS();
-                console.log(asset);
-                let notification = asset_utils.parseDescription(
-                    asset.options.description
-                );
-                notification = notification.main.split(
-                    "This asset is used to display notifications for the BitShares UI deployed under bitshares.org"
-                );
-                notification = filterNews(
-                    JSON.parse(notification[1]),
+    getNewsThroughAsset(listOfAssetSymbolOrId) {
+        FetchChainObjects(ChainStore.getAsset, listOfAssetSymbolOrId).then(
+            assets => {
+                let notificationList = [];
+                assets.forEach(asset => {
+                    if (!asset) {
+                        return;
+                    }
+                    try {
+                        asset = asset.toJS();
+                        let notification = asset_utils.parseDescription(
+                            asset.options.description
+                        );
+                        if (!!notification.main) {
+                            notification = notification.main.split(
+                                "This asset is used to display notifications for the BitShares UI"
+                            );
+                            if (notification.length > 1 && !!notification[1]) {
+                                notificationList.push(
+                                    JSON.parse(notification[1])
+                                );
+                            }
+                        }
+                    } catch (err) {
+                        console.error(
+                            "Head feed could not be parsed from asset",
+                            asset
+                        );
+                    }
+                });
+                const news = filterNews(
+                    notificationList,
                     this.props.hiddenGitNews
                 );
-                this.setState({news: [notification]});
+                this.setState({news});
             }
         );
     }
@@ -103,7 +123,7 @@ class GitNews extends React.Component {
                     ...acc,
                     <div className="git-info" key={`git-alert${index}`}>
                         <Alert type={type} message={item.content} banner />
-                        {type === "info" ? (
+                        {type === "info" || type === "warning" ? (
                             <Icon
                                 type="close"
                                 className="close-icon"
