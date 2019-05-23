@@ -9,7 +9,7 @@ import {
     FetchChain,
     ChainStore
 } from "bitsharesjs";
-import ps from "perfect-scrollbar";
+//import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
@@ -100,7 +100,7 @@ class RecentTransactions extends React.Component {
     componentDidMount() {
         if (!this.props.fullHeight) {
             let t = this.refs.transactions;
-            ps.initialize(t);
+            //ps.initialize(t);
 
             this._setHeaderHeight();
         }

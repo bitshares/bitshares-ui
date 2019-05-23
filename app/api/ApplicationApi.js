@@ -169,8 +169,8 @@ const ApplicationApi = {
                                       memo
                                   )
                                 : Buffer.isBuffer(memo)
-                                ? memo.toString("utf-8")
-                                : memo
+                                    ? memo.toString("utf-8")
+                                    : memo
                         };
                     }
                 }
@@ -206,7 +206,7 @@ const ApplicationApi = {
                     memo: memo_object
                 });
                 if (__DEV__) {
-                    console.log("built transfer", transfer_op);
+                    console.log("built transfer", transfer_op, tr);
                 }
                 return {
                     transfer_op,
@@ -391,8 +391,8 @@ const ApplicationApi = {
                               memo
                           )
                         : Buffer.isBuffer(memo)
-                        ? memo.toString("utf-8")
-                        : memo
+                            ? memo.toString("utf-8")
+                            : memo
                 };
             }
 
@@ -688,8 +688,8 @@ const ApplicationApi = {
                               memo
                           )
                         : Buffer.isBuffer(memo)
-                        ? memo.toString("utf-8")
-                        : memo
+                            ? memo.toString("utf-8")
+                            : memo
                 };
             }
         }
