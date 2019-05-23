@@ -325,3 +325,7 @@ export function getAllowedLogins() {
     // possible: list containing any combination of ["password", "wallet"]
     return ["password", "wallet"];
 }
+
+export function getHeadFeedAsset() {
+    return ["TEST"];
+}
