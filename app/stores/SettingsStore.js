@@ -141,7 +141,7 @@ class SettingsStore {
                 "ja"
             ],
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
-            unit: getUnits(this._getChainId()),
+            unit: getUnits(),
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
             themes: ["darkTheme", "lightTheme", "midnightTheme"],
@@ -758,7 +758,7 @@ class SettingsStore {
     }
 
     onUpdateUnits() {
-        this.defaults.unit = getUnits(this._getChainId());
+        this.defaults.unit = getUnits();
         if (this.defaults.unit.indexOf(this.settings.get("unit")) === -1) {
             this.settings = this.settings.set("unit", this.defaults.unit[0]);
         }

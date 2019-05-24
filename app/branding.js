@@ -1,8 +1,24 @@
+import {Apis} from "bitsharesjs-ws";
+
 /** This file centralized customization and branding efforts throughout the whole wallet and is meant to facilitate
  *  the process.
  *
  *  @author Stefan Schiessl <stefan.schiessl@blockchainprojectsbv.com>
  */
+
+/**
+ * Determine if we are running on testnet or mainnet
+ * @private
+ */
+function _isTestnet() {
+    const chainId = (Apis.instance().chain_id || "4018d784").substr(0, 8);
+    if (chainId === "4018d784") {
+        return false;
+    } else {
+        // treat every other chain as testnet, exact would be chainId === "39f5e2ed"
+        return true;
+    }
+}
 
 /**
  * Wallet name that is used throughout the UI and also in translations
@@ -64,12 +80,12 @@ export function getDefaultLogin() {
  *
  * @returns {[string,string,string,string,string,string]}
  */
-export function getUnits(chainId = "4018d784") {
-    if (chainId === "4018d784")
+export function getUnits() {
+    if (_isTestnet()) {
         return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
-    else if (chainId === "39f5e2ed") return ["TEST"];
-    // unknown chain id: (need to return at least one unit)
-    else return ["BTS"];
+    } else {
+        return ["TEST"];
+    }
 }
 
 /**
@@ -102,26 +118,26 @@ export function getMyMarketsQuotes() {
         ],
         bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
         gdexTokens: [
-            "GDEX.BTC", 
-            "GDEX.BTO", 
-            "GDEX.EOS", 
+            "GDEX.BTC",
+            "GDEX.BTO",
+            "GDEX.EOS",
             "GDEX.ETH",
-            "GDEX.BTM", 
-            "GDEX.NEO", 
-            "GDEX.GAS", 
-            "GDEX.QTUM", 
-            "GDEX.BKBT", 
-            "GDEX.GXC", 
-            "GDEX.HPB", 
-            "GDEX.SEER", 
-            "GDEX.FOTA", 
+            "GDEX.BTM",
+            "GDEX.NEO",
+            "GDEX.GAS",
+            "GDEX.QTUM",
+            "GDEX.BKBT",
+            "GDEX.GXC",
+            "GDEX.HPB",
+            "GDEX.SEER",
+            "GDEX.FOTA",
             "GDEX.JRC",
-            "GDEX.EOSDAC", 
-            "GDEX.MTS", 
-            "GDEX.GUSD", 
-            "GDEX.IQ", 
-            "GDEX.NULS", 
-            "GDEX.USDT"    
+            "GDEX.EOSDAC",
+            "GDEX.MTS",
+            "GDEX.GUSD",
+            "GDEX.IQ",
+            "GDEX.NULS",
+            "GDEX.USDT"
         ],
         openledgerTokens: [
             "OBITS",
@@ -371,5 +387,9 @@ export function getAllowedLogins() {
 }
 
 export function getHeadFeedAsset() {
-    return ["TEST"];
+    if (_isTestnet()) {
+        return ["NOTIFICATIONS"];
+    } else {
+        return ["TEST"];
+    }
 }
