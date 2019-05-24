@@ -50,8 +50,8 @@ export const Review = () => (
     </Tooltip>
 );
 
-export const Failed = () => (
-    <Tooltip className="error" content="explorer.proposals.failed_execute">
+export const Failed = ({reason}) => (
+    <Tooltip className="error" dataTip={reason}>
         <Translate content="explorer.proposals.failed" />
     </Tooltip>
 );
