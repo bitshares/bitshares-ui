@@ -82,9 +82,9 @@ export function getDefaultLogin() {
  */
 export function getUnits() {
     if (_isTestnet()) {
-        return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
-    } else {
         return ["TEST"];
+    } else {
+        return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
     }
 }
 
