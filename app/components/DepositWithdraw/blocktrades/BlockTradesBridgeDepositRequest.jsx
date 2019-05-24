@@ -477,6 +477,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             supports_output_memos: "",
             url: blockTradesAPIs.BASE,
             error: null,
+            isUserAuthorized: false,
 
             // things that get displayed for deposits
             deposit_input_coin_type: null,
@@ -1734,6 +1735,24 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         });
     }
 
+    registerBlocktradesAccount() {
+        window.location.assign("https://blocktrades.us/register");
+    }
+
+    signin() {
+        const client_id = "10ecf048-b982-467b-9965-0b0926330869";
+        const response_type = "code";
+        const grant_type = "authorization_code";
+        const scope = "profile create-trade";
+        const state = "1233123asdad";
+        const redirect_uri = "http://localhost:8080/auth-blocktrades";
+
+        const base = "http://devel-4.syncad.com:9000/oauth2/auth";
+        const url = `?client_id=${client_id}&response_type=${response_type}&grant_type=${grant_type}&scope=${scope}&state=${state}&redirect_uri=${redirect_uri}`; // eslint-disable-line
+
+        window.location.assign(base + url);
+    }
+
     render() {
         if (
             !this.props.account ||
@@ -1749,7 +1768,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             withdraw_header,
             conversion_body,
             conversion_header,
-            conversion_modal_id;
+            conversion_modal_id,
+            is_user_authorized;
 
         if (
             this.state.coin_info_request_state ==
@@ -2515,6 +2535,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 );
             }
 
+            is_user_authorized = this.state.is_user_authorized;
+
             return (
                 <div>
                     <div style={{paddingBottom: 15}}>
@@ -2524,14 +2546,33 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         />
                     </div>
                     {announcements}
-                    <table className="table">
-                        {deposit_header}
-                        {deposit_body}
-                        {withdraw_header}
-                        {withdraw_body}
-                        {conversion_header}
-                        {conversion_body}
-                    </table>
+                    {is_user_authorized ? (
+                        <table className="table">
+                            {deposit_header}
+                            {deposit_body}
+                            {withdraw_header}
+                            {withdraw_body}
+                            {conversion_header}
+                            {conversion_body}
+                        </table>
+                    ) : (
+                        <div style={{paddingTop: 15}}>
+                            <div
+                                onClick={this.registerBlocktradesAccount.bind(
+                                    this
+                                )}
+                                className="button"
+                            >
+                                Register BlockTrades Account
+                            </div>
+                            <div
+                                onClick={this.signin.bind(this)}
+                                className="button"
+                            >
+                                Sign in
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
