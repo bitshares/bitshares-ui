@@ -913,6 +913,7 @@
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "review": "Review",
             "title": "Proposed transactions"
         },
