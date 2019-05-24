@@ -56,7 +56,7 @@ export default class PaginatedList extends React.Component {
                 <Table
                     dataSource={currentRows}
                     columns={Array.isArray(header) ? header : []}
-                    footer={() => extraRow}
+                    footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
                     onChange={this.props.toggleSortOrder}
                     pagination={false}
                 />
@@ -78,7 +78,6 @@ export default class PaginatedList extends React.Component {
                         onChange={this.onChange.bind(this)}
                     />
                 ) : null}
-
                 {this.props.children}
             </div>
         );
