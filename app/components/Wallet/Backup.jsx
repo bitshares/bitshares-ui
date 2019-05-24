@@ -669,8 +669,8 @@ DecryptBackup = connect(
 class Sha1 extends Component {
     render() {
         return (
-            <div>
-                <pre className="no-overflow">
+            <div className="padding no-overflow">
+                <pre className="no-overflow" style={{lineHeight: "1.2"}}>
                     {this.props.backup.sha1} * SHA1
                 </pre>
                 <br />
