@@ -6,7 +6,7 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 
 ## Development process
 
-- We encourage everyoe to participate in issue discussion, especially those that has [not yet been qualified as work](https://github.com/bitshares/bitshares-ui/issues?q=is%3Aopen+is%3Aissue).
+- We encourage everyoe to participate in issue discussion, especially those that has [not yet been qualified as work](https://github.com/bitshares/bitshares-ui/issues?q=is%3Aopen+is%3Aissue) and [the `Need Discussion` issues](https://github.com/bitshares/bitshares-ui/issues?q=is%3Aissue+is%3Aopen+label%3A%22%5B2%5D+Needs+Discussion%22).
 - New issues will be groomed by a project coordinator to set the issue goal and estimated **Quality Hours** of development time.
 - After a clarified goal issues will be assigned to the [Active Developent milestone](https://github.com/bitshares/bitshares-ui/milestone/52).
 - All non-assigned issues can be found on the the [Active Developent milestone](https://github.com/bitshares/bitshares-ui/milestone/52). or [by filtering the issues list](https://github.com/bitshares/bitshares-ui/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22Active+Development%22+no%3Aassignee).
