@@ -6,9 +6,10 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 
 ## Development process
 
+- We encourage everyoe to participate in issue discussion, especially those that has [not yet been qualified as work](https://github.com/bitshares/bitshares-ui/issues?q=is%3Aopen+is%3Aissue).
 - New issues will be groomed by a project coordinator to set the issue goal and estimated **Quality Hours** of development time.
-- After a clarified goal issues will be assigned to the [Active Developent Project Board](https://github.com/bitshares/bitshares-ui/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+no%3Aproject).
-- All non-assigned issues can be found on the [Active Developent Project Board](https://github.com/bitshares/bitshares-ui/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+no%3Aproject) or [by filtering the issues list](https://github.com/bitshares/bitshares-ui/issues?q=is%3Aopen+is%3Aissue+project%3Abitshares%2Fbitshares-ui%2F13+no%3Amilestone).
+- After a clarified goal issues will be assigned to the [Active Developent milestone](https://github.com/bitshares/bitshares-ui/milestone/52).
+- All non-assigned issues can be found on the the [Active Developent milestone](https://github.com/bitshares/bitshares-ui/milestone/52). or [by filtering the issues list](https://github.com/bitshares/bitshares-ui/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22Active+Development%22+no%3Aassignee).
 - Assigned issues will be assigned to a milestone, which will indicate the deadline for the issues.
 - Milestones are numbered YYMMDD and indicates the expected delivery.
 - Bugs are always worked before enhancements
