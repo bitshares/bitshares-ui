@@ -1748,6 +1748,7 @@
         "medium_latency": "Medium latency",
         "midnightTheme": "Midnight",
         "my_nodes": "Personal",
+        "viewOnlyMode": "View only mode",
         "no": "No",
         "no_accounts": "This local wallet does not contain any accounts.",
         "node_already_exists": "Node with such URL already exists",
