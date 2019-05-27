@@ -16,6 +16,10 @@ import {Asset} from "common/MarketClasses";
 import {getConversionJson} from "common/gatewayMethods";
 import PropTypes from "prop-types";
 import {Modal} from "bitshares-ui-style-guide";
+import QueryString from "query-string";
+import ls from "common/localStorage";
+
+let oauthBlocktrades = new ls("__oauthBlocktrades__");
 
 class ButtonConversion extends React.Component {
     static propTypes = {
@@ -1069,6 +1073,61 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     componentDidMount() {
+        let params = QueryString.parse(this.props.params.search);
+
+        if (params["code"]) {
+            var data = new URLSearchParams();
+            data.append("grant_type", "authorization_code");
+            data.append("code", params["code"]);
+            data.append(
+                "redirect_uri",
+                "http://localhost:8080/deposit-withdraw"
+            );
+            data.append("client_id", "10ecf048-b982-467b-9965-0b0926330869");
+            const headers = {
+                "Content-Type": "application/x-www-form-urlencoded"
+            };
+
+            fetch("http://devel-4.syncad.com:9000/oauth2/token", {
+                method: "POST",
+                body: data.toString(),
+                headers
+            })
+                .then(r => r.json())
+                .then(body => {
+                    oauthBlocktrades.set("access_token", body.access_token);
+                    this.setState({isUserAuthorized: true});
+                })
+                .catch(() => {
+                    this.setState({isUserAuthorized: false});
+                });
+        } else if (oauthBlocktrades.get("access_token", "") !== "") {
+            var data = new URLSearchParams();
+            data.append("token", oauthBlocktrades.get("access_token"));
+            data.append("scope", "");
+
+            const headers = {
+                "Content-Type": "application/x-www-form-urlencoded"
+            };
+
+            fetch("http://devel-4.syncad.com:9001/oauth2/introspect", {
+                method: "POST",
+                body: data.toString(),
+                headers
+            })
+                .then(r => r.json())
+                .then(body => {
+                    if (body.active === true) {
+                        this.setState({isUserAuthorized: true});
+                    } else {
+                        this.setState({isUserAuthorized: false});
+                    }
+                })
+                .catch(() => {
+                    this.setState({isUserAuthorized: false});
+                });
+        }
+
         this.update_timer = setInterval(
             this.updateEstimates.bind(this),
             this.refresh_interval
@@ -1745,7 +1804,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         const grant_type = "authorization_code";
         const scope = "profile create-trade";
         const state = "1233123asdad";
-        const redirect_uri = "http://localhost:8080/auth-blocktrades";
+        const redirect_uri = "http://localhost:8080/deposit-withdraw";
 
         const base = "http://devel-4.syncad.com:9000/oauth2/auth";
         const url = `?client_id=${client_id}&response_type=${response_type}&grant_type=${grant_type}&scope=${scope}&state=${state}&redirect_uri=${redirect_uri}`; // eslint-disable-line
