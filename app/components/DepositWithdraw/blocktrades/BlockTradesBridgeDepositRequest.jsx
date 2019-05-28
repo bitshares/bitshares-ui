@@ -482,6 +482,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             url: blockTradesAPIs.BASE,
             error: null,
             isUserAuthorized: false,
+            retrievingDataFromOauthApi: true,
 
             // things that get displayed for deposits
             deposit_input_coin_type: null,
@@ -1008,6 +1009,81 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     componentWillMount() {
+        let params = QueryString.parse(this.props.params.search);
+
+        if (params["code"]) {
+            var data = new URLSearchParams();
+            data.append("grant_type", "authorization_code");
+            data.append("code", params["code"]);
+            data.append(
+                "redirect_uri",
+                "http://localhost:8080/deposit-withdraw"
+            );
+            data.append("client_id", "10ecf048-b982-467b-9965-0b0926330869");
+            const headers = {
+                "Content-Type": "application/x-www-form-urlencoded"
+            };
+
+            fetch("http://devel-4.syncad.com:9000/oauth2/token", {
+                method: "POST",
+                body: data.toString(),
+                headers
+            })
+                .then(r => r.json())
+                .then(body => {
+                    oauthBlocktrades.set("access_token", body.access_token);
+                    this.setState({
+                        isUserAuthorized: true,
+                        retrievingDataFromOauthApi: false
+                    });
+                })
+                .catch(() => {
+                    this.setState({
+                        isUserAuthorized: false,
+                        retrievingDataFromOauthApi: false
+                    });
+                });
+        } else if (oauthBlocktrades.get("access_token", "") !== "") {
+            var data = new URLSearchParams();
+            data.append("token", oauthBlocktrades.get("access_token"));
+            data.append("scope", "");
+
+            const headers = {
+                "Content-Type": "application/x-www-form-urlencoded"
+            };
+
+            fetch("http://devel-4.syncad.com:9001/oauth2/introspect", {
+                method: "POST",
+                body: data.toString(),
+                headers
+            })
+                .then(r => r.json())
+                .then(body => {
+                    if (body.active === true) {
+                        this.setState({
+                            isUserAuthorized: true,
+                            retrievingDataFromOauthApi: false
+                        });
+                    } else {
+                        this.setState({
+                            isUserAuthorized: false,
+                            retrievingDataFromOauthApi: false
+                        });
+                        oauthBlocktrades.set("access_token", "");
+                    }
+                })
+                .catch(() => {
+                    this.setState({
+                        isUserAuthorized: false,
+                        retrievingDataFromOauthApi: false
+                    });
+                });
+        } else {
+            this.setState({
+                retrievingDataFromOauthApi: false
+            });
+        }
+
         // check api.blocktrades.us/v2
         let checkUrl = this.state.url;
         this.urlConnection(checkUrl, 0);
@@ -1073,61 +1149,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     componentDidMount() {
-        let params = QueryString.parse(this.props.params.search);
-
-        if (params["code"]) {
-            var data = new URLSearchParams();
-            data.append("grant_type", "authorization_code");
-            data.append("code", params["code"]);
-            data.append(
-                "redirect_uri",
-                "http://localhost:8080/deposit-withdraw"
-            );
-            data.append("client_id", "10ecf048-b982-467b-9965-0b0926330869");
-            const headers = {
-                "Content-Type": "application/x-www-form-urlencoded"
-            };
-
-            fetch("http://devel-4.syncad.com:9000/oauth2/token", {
-                method: "POST",
-                body: data.toString(),
-                headers
-            })
-                .then(r => r.json())
-                .then(body => {
-                    oauthBlocktrades.set("access_token", body.access_token);
-                    this.setState({isUserAuthorized: true});
-                })
-                .catch(() => {
-                    this.setState({isUserAuthorized: false});
-                });
-        } else if (oauthBlocktrades.get("access_token", "") !== "") {
-            var data = new URLSearchParams();
-            data.append("token", oauthBlocktrades.get("access_token"));
-            data.append("scope", "");
-
-            const headers = {
-                "Content-Type": "application/x-www-form-urlencoded"
-            };
-
-            fetch("http://devel-4.syncad.com:9001/oauth2/introspect", {
-                method: "POST",
-                body: data.toString(),
-                headers
-            })
-                .then(r => r.json())
-                .then(body => {
-                    if (body.active === true) {
-                        this.setState({isUserAuthorized: true});
-                    } else {
-                        this.setState({isUserAuthorized: false});
-                    }
-                })
-                .catch(() => {
-                    this.setState({isUserAuthorized: false});
-                });
-        }
-
         this.update_timer = setInterval(
             this.updateEstimates.bind(this),
             this.refresh_interval
@@ -1846,7 +1867,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             this.state.coin_info_request_state ==
                 this.coin_info_request_states.never_requested ||
             this.state.coin_info_request_state ==
-                this.coin_info_request_states.request_in_progress
+                this.coin_info_request_states.request_in_progress ||
+            this.state.retrievingDataFromOauthApi
         ) {
             return (
                 <div>
@@ -2594,7 +2616,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 );
             }
 
-            is_user_authorized = this.state.is_user_authorized;
+            let is_user_authorized = this.state.isUserAuthorized;
 
             return (
                 <div>
