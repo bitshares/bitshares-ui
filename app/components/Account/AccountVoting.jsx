@@ -3,7 +3,7 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import accountUtils from "common/account_utils";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
-import WorkerApproval from "./WorkerApproval";
+import WorkersList from "./WorkersList";
 import VotingAccountsList from "./VotingAccountsList";
 import cnames from "classnames";
 import {Tabs, Tab} from "../Utility/Tabs";
@@ -18,9 +18,15 @@ import counterpart from "counterpart";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
-import stringSimilarity from "string-similarity";
-import {hiddenProposals} from "../../lib/common/hideProposals";
-import {Switch, Tooltip} from "bitshares-ui-style-guide";
+import {
+    Switch,
+    Tooltip,
+    Row,
+    Col,
+    Radio,
+    Input,
+    Icon as AntIcon
+} from "bitshares-ui-style-guide";
 import AccountStore from "stores/AccountStore";
 
 class AccountVoting extends React.Component {
@@ -50,7 +56,13 @@ class AccountVoting extends React.Component {
             workerTableIndex: props.viewSettings.get("workerTableIndex", 1),
             all_witnesses: Immutable.List(),
             all_committee: Immutable.List(),
-            hideLegacyProposals: true
+            hideLegacyProposals: true,
+            newWorkersLength: null,
+            activeWorkersLength: null,
+            pollsLength: null,
+            expiredWorkersLength: null,
+            voteThreshold: null,
+            filterSearch: ""
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -68,6 +80,23 @@ class AccountVoting extends React.Component {
         this.updateAccountData(this.props);
         this._getVoteObjects();
         this._getVoteObjects("committee");
+    }
+
+    shouldComponentUpdate(np, ns) {
+        return (
+            ns.workerTableIndex !== this.state.workerTableIndex ||
+            ns.prev_proxy_account_id !== this.state.prev_proxy_account_id ||
+            ns.newWorkersLength !== this.state.newWorkersLength ||
+            ns.activeWorkersLength !== this.state.activeWorkersLength ||
+            ns.pollsLength !== this.state.pollsLength ||
+            ns.expiredWorkersLength !== this.state.expiredWorkersLength ||
+            ns.voteThreshold !== this.state.voteThreshold ||
+            ns.hideLegacyProposals !== this.state.hideLegacyProposals ||
+            ns.workerTableIndex !== this.state.workerTableIndex ||
+            ns.vote_ids.size !== this.state.vote_ids.size ||
+            ns.current_proxy_input !== this.state.current_proxy_input ||
+            ns.filterSearch !== this.state.filterSearch
+        );
     }
 
     componentWillReceiveProps(np) {
@@ -315,6 +344,17 @@ class AccountVoting extends React.Component {
             });
     }
 
+    _getWorkerArray() {
+        let workerArray = [];
+
+        ChainStore.workers.forEach(workerId => {
+            let worker = ChainStore.getObject(workerId, false, false);
+            if (worker) workerArray.push(worker);
+        });
+
+        return workerArray;
+    }
+
     onReset() {
         let s = this.state;
         if (
@@ -425,13 +465,6 @@ class AccountVoting extends React.Component {
         });
     }
 
-    _getTotalVotes(worker) {
-        return (
-            parseInt(worker.get("total_votes_for"), 10) -
-            parseInt(worker.get("total_votes_against"), 10)
-        );
-    }
-
     getBudgetObject() {
         let {lastBudgetObject} = this.state;
         let budgetObject;
@@ -499,81 +532,46 @@ class AccountVoting extends React.Component {
         }
     }
 
-    _getWorkerArray() {
-        let workerArray = [];
-
-        ChainStore.workers.forEach(workerId => {
-            let worker = ChainStore.getObject(workerId, false, false);
-            if (worker) workerArray.push(worker);
-        });
-
-        return workerArray;
-    }
-
-    _setWorkerTableIndex(index) {
+    _setWorkerTableIndex(e) {
         this.setState({
-            workerTableIndex: index
+            workerTableIndex: e.target.value
         });
     }
 
-    _getMappedWorkers(workers, maxDailyPayout) {
-        let now = new Date();
-        let remainingDailyPayout = maxDailyPayout;
-        let voteThreshold = undefined;
-        let mapped = workers
-            .filter(a => {
-                if (!a) {
-                    return false;
-                } else {
-                    return true;
-                }
-            })
-            .sort((a, b) => {
-                // first sort by votes so payout order is correct
-                return this._getTotalVotes(b) - this._getTotalVotes(a);
-            })
-            .map((worker, index) => {
-                worker.isOngoing =
-                    new Date(worker.get("work_end_date") + "Z") > now &&
-                    new Date(worker.get("work_begin_date") + "Z") <= now;
-                worker.isUpcoming =
-                    new Date(worker.get("work_begin_date") + "Z") > now;
-                worker.isExpired =
-                    new Date(worker.get("work_end_date") + "Z") <= now;
-                let dailyPay = parseInt(worker.get("daily_pay"), 10);
-                worker.votes =
-                    worker.get("total_votes_for") -
-                    worker.get("total_votes_against");
-                if (remainingDailyPayout > 0 && worker.isOngoing) {
-                    worker.active = true;
-                    remainingDailyPayout = remainingDailyPayout - dailyPay;
-                    if (remainingDailyPayout <= 0 && !voteThreshold) {
-                        // remember when workers become inactive
-                        voteThreshold = worker.votes;
-                    }
-                    worker.remainingPayout = remainingDailyPayout + dailyPay;
-                } else {
-                    worker.active = false;
-                    worker.remainingPayout = 0;
-                }
-                return worker;
-            })
-            .sort((a, b) => {
-                // sort out expired
-                if (a.isExpired !== b.isExpired) {
-                    return a.isExpired ? 1 : -1;
-                } else {
-                    return this._getTotalVotes(b) - this._getTotalVotes(a);
-                }
-            });
-        return {
-            mappedWorkers: mapped,
-            voteThreshold: voteThreshold
-        };
+    setWorkersLength(
+        newWorkersLength,
+        activeWorkersLength,
+        pollsLength,
+        expiredWorkersLength,
+        voteThreshold
+    ) {
+        this.setState({
+            newWorkersLength,
+            activeWorkersLength,
+            pollsLength,
+            expiredWorkersLength,
+            voteThreshold
+        });
+    }
+
+    handleFilterChange(e) {
+        this.setState({
+            filterSearch: e.target.value || ""
+        });
     }
 
     render() {
-        let {workerTableIndex, prev_proxy_account_id} = this.state;
+        let {
+            workerTableIndex,
+            prev_proxy_account_id,
+            newWorkersLength,
+            activeWorkersLength,
+            pollsLength,
+            expiredWorkersLength,
+            voteThreshold,
+            hideLegacyProposals,
+            filterSearch
+        } = this.state;
         const accountHasProxy = !!prev_proxy_account_id;
         let preferredUnit = this.props.settings.get("unit") || "1.3.0";
         let hasProxy = !!this.state.proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
@@ -606,155 +604,12 @@ class AccountVoting extends React.Component {
             );
         }
 
-        let workerArray = this._getWorkerArray();
-        let {mappedWorkers, voteThreshold} = this._getMappedWorkers(
-            workerArray,
-            workerBudget
-        );
-
-        const hideProposals = (filteredWorker, compareWith) => {
-            if (!this.state.hideLegacyProposals) {
-                return true;
-            }
-
-            let duplicated = compareWith.some(worker => {
-                const isSimilarName =
-                    stringSimilarity.compareTwoStrings(
-                        filteredWorker.get("name"),
-                        worker.get("name")
-                    ) > 0.8;
-                const sameId = worker.get("id") === filteredWorker.get("id");
-                const isNewer =
-                    worker.get("id").substr(5, worker.get("id").length) >
-                    filteredWorker.get("id").substr(5, worker.get("id").length);
-                return isSimilarName && !sameId && isNewer;
-            });
-            const newDate = new Date();
-            const totalVotes =
-                filteredWorker.get("total_votes_for") -
-                filteredWorker.get("total_votes_against");
-            const hasLittleVotes = totalVotes < 2000000000000;
-            const hasStartedOverAMonthAgo =
-                new Date(filteredWorker.get("work_begin_date") + "Z") <=
-                new Date(newDate.setMonth(newDate.getMonth() - 2));
-
-            const manualHidden = hiddenProposals.includes(
-                filteredWorker.get("id")
-            );
-
-            let hidden =
-                ((!!duplicated || hasStartedOverAMonthAgo) && hasLittleVotes) ||
-                manualHidden;
-
-            return !hidden;
-        };
-        let polls = mappedWorkers
-            .filter(a => {
-                let lowercase = a.get("name").toLowerCase();
-                return lowercase.includes("bsip") || lowercase.includes("poll");
-            })
-            .map((worker, index) => {
-                return (
-                    <WorkerApproval
-                        preferredUnit={preferredUnit}
-                        rest={worker.remainingPayout}
-                        rank={index + 1}
-                        poll={true}
-                        key={worker.get("id")}
-                        worker={worker.get("id")}
-                        vote_ids={
-                            this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]
-                        }
-                        onChangeVotes={this.onChangeVotes.bind(this)}
-                        proxy={hasProxy}
-                        voteThreshold={voteThreshold}
-                    />
-                );
-            })
-            .filter(a => !!a);
-
-        // remove polls
-        mappedWorkers = mappedWorkers.filter(a => {
-            let lowercase = a.get("name").toLowerCase();
-            return !lowercase.includes("bsip") && !lowercase.includes("poll");
-        });
-
-        let onGoingWorkers = mappedWorkers.filter(a => {
-            return a.isOngoing;
-        });
-        let activeWorkers = mappedWorkers
-            .filter(a => {
-                return a.active && a.isOngoing;
-            })
-            .map((worker, index) => {
-                return (
-                    <WorkerApproval
-                        preferredUnit={preferredUnit}
-                        rest={worker.remainingPayout}
-                        rank={index + 1}
-                        key={worker.get("id")}
-                        worker={worker.get("id")}
-                        vote_ids={
-                            this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]
-                        }
-                        onChangeVotes={this.onChangeVotes.bind(this)}
-                        proxy={hasProxy}
-                        voteThreshold={voteThreshold}
-                    />
-                );
-            })
-            .filter(a => !!a);
-
-        let newWorkers = mappedWorkers
-            .filter(a => {
-                return (
-                    !a.active &&
-                    !a.isExpired &&
-                    hideProposals(a, onGoingWorkers)
-                );
-            })
-            .map((worker, index) => {
-                return (
-                    <WorkerApproval
-                        preferredUnit={preferredUnit}
-                        rest={0}
-                        rank={index + 1}
-                        key={worker.get("id")}
-                        worker={worker.get("id")}
-                        vote_ids={
-                            this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]
-                        }
-                        onChangeVotes={this.onChangeVotes.bind(this)}
-                        proxy={hasProxy}
-                        voteThreshold={voteThreshold}
-                    />
-                );
-            });
-
-        let expiredWorkers = workerArray
-            .filter(a => {
-                return a.isExpired;
-            })
-            .map((worker, index) => {
-                return (
-                    <WorkerApproval
-                        preferredUnit={preferredUnit}
-                        rest={0}
-                        rank={index + 1}
-                        key={worker.get("id")}
-                        worker={worker.get("id")}
-                        vote_ids={
-                            this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"]
-                        }
-                        onChangeVotes={this.onChangeVotes.bind(this)}
-                        proxy={hasProxy}
-                        voteThreshold={voteThreshold}
-                    />
-                );
-            });
-
         let actionButtons = (
-            <span>
+            <div
+                style={{
+                    float: "right"
+                }}
+            >
                 <button
                     className={cnames(publish_buttons_class, {
                         success: this.isChanged()
@@ -780,12 +635,17 @@ class AccountVoting extends React.Component {
                         <Translate content="account.perm.remove_proxy" />
                     </button>
                 )}
-            </span>
+            </div>
         );
 
         let proxyInput = (
             <AccountSelector
-                style={{width: "50%", maxWidth: 250, marginBottom: 10}}
+                style={{
+                    width: "50%",
+                    maxWidth: 250,
+                    marginTop: 10,
+                    display: "inline-block"
+                }}
                 account={this.state.current_proxy_input}
                 accountName={this.state.current_proxy_input}
                 onChange={this.onProxyChange.bind(this)}
@@ -828,8 +688,6 @@ class AccountVoting extends React.Component {
             </AccountSelector>
         );
 
-        const showExpired = workerTableIndex === 2;
-
         const saveText = (
             <div
                 className="inline-block"
@@ -859,7 +717,7 @@ class AccountVoting extends React.Component {
                     title={counterpart.translate("tooltip.legacy_explanation")}
                 >
                     <Switch
-                        style={{marginRight: 6}}
+                        style={{marginRight: 6, marginTop: -3}}
                         checked={this.state.hideLegacyProposals}
                     />
                     <Translate content="account.votes.hide_legacy_proposals" />
@@ -869,7 +727,12 @@ class AccountVoting extends React.Component {
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
-                <div className="content-block small-12">
+                <div className="content-block small-12 voting">
+                    <div className="proxy-row">
+                        {/* <Link to="/help/voting/witness"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
+                        {proxyInput}
+                        {actionButtons}
+                    </div>
                     <div className="tabs-container generic-bordered-box">
                         <Tabs
                             setting="votingTab"
@@ -881,19 +744,6 @@ class AccountVoting extends React.Component {
                         >
                             <Tab title="explorer.witnesses.title">
                                 <div className={cnames("content-block")}>
-                                    <div className="header-selector">
-                                        {/* <Link to="/help/voting/witness"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
-                                        {proxyInput}
-                                        <div
-                                            style={{
-                                                float: "right",
-                                                marginTop: "-2.5rem"
-                                            }}
-                                        >
-                                            {actionButtons}
-                                        </div>
-                                    </div>
-
                                     <VotingAccountsList
                                         type="witness"
                                         label="account.votes.add_witness_label"
@@ -929,18 +779,6 @@ class AccountVoting extends React.Component {
 
                             <Tab title="explorer.committee_members.title">
                                 <div className={cnames("content-block")}>
-                                    <div className="header-selector">
-                                        {/* <Link to="/help/voting/committee"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
-                                        {proxyInput}
-                                        <div
-                                            style={{
-                                                float: "right",
-                                                marginTop: "-2.5rem"
-                                            }}
-                                        >
-                                            {actionButtons}
-                                        </div>
-                                    </div>
                                     <VotingAccountsList
                                         type="committee"
                                         label="account.votes.add_committee_label"
@@ -986,269 +824,128 @@ class AccountVoting extends React.Component {
 
                                     <div className="selector inline-block">
                                         {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
-                                        <div
-                                            style={{paddingLeft: 10}}
-                                            className={cnames("inline-block", {
-                                                inactive: workerTableIndex !== 0
-                                            })}
-                                            onClick={this._setWorkerTableIndex.bind(
-                                                this,
-                                                0
+                                        <Input
+                                            placeholder={"Filter..."}
+                                            value={this.state.filterSearch}
+                                            style={{width: "220px"}}
+                                            onChange={this.handleFilterChange.bind(
+                                                this
+                                            )}
+                                            addonAfter={
+                                                <AntIcon type="search" />
+                                            }
+                                        />
+                                        <Radio.Group
+                                            defaultValue={1}
+                                            onChange={this._setWorkerTableIndex.bind(
+                                                this
                                             )}
                                         >
-                                            {counterpart.translate(
-                                                "account.votes.new",
-                                                {count: newWorkers.length}
-                                            )}
-                                        </div>
-                                        <div
-                                            className={cnames("inline-block", {
-                                                inactive: workerTableIndex !== 1
-                                            })}
-                                            onClick={this._setWorkerTableIndex.bind(
-                                                this,
-                                                1
-                                            )}
-                                        >
-                                            {counterpart.translate(
-                                                "account.votes.active",
-                                                {count: activeWorkers.length}
-                                            )}
-                                        </div>
-
-                                        {expiredWorkers.length ? (
-                                            <div
-                                                className={cnames(
-                                                    "inline-block",
-                                                    {inactive: !showExpired}
-                                                )}
-                                                onClick={
-                                                    !showExpired
-                                                        ? this._setWorkerTableIndex.bind(
-                                                              this,
-                                                              2
-                                                          )
-                                                        : () => {}
-                                                }
-                                            >
-                                                <Translate content="account.votes.expired" />
-                                            </div>
-                                        ) : null}
-
-                                        {polls.length ? (
-                                            <div
-                                                className={cnames(
-                                                    "inline-block",
-                                                    {
-                                                        inactive:
-                                                            workerTableIndex !==
-                                                            3
-                                                    }
-                                                )}
-                                                onClick={this._setWorkerTableIndex.bind(
-                                                    this,
-                                                    3
-                                                )}
-                                            >
+                                            <Radio value={0}>
                                                 {counterpart.translate(
-                                                    "account.votes.polls",
-                                                    {count: polls.length}
+                                                    "account.votes.new",
+                                                    {count: newWorkersLength}
                                                 )}
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                    <div className="inline-block">
-                                        {hideLegacy}
+                                            </Radio>
+
+                                            <Radio value={1}>
+                                                {counterpart.translate(
+                                                    "account.votes.active",
+                                                    {count: activeWorkersLength}
+                                                )}
+                                            </Radio>
+
+                                            {expiredWorkersLength ? (
+                                                <Radio value={2}>
+                                                    <Translate content="account.votes.expired" />
+                                                </Radio>
+                                            ) : null}
+
+                                            {pollsLength ? (
+                                                <Radio.Button value={3}>
+                                                    {counterpart.translate(
+                                                        "account.votes.polls",
+                                                        {count: pollsLength}
+                                                    )}
+                                                </Radio.Button>
+                                            ) : null}
+                                        </Radio.Group>
                                     </div>
 
-                                    <div style={{marginTop: "2rem"}}>
-                                        {proxyInput}
-                                        <div
+                                    {hideLegacy}
+                                </div>
+                                {workerTableIndex ===
+                                2 ? null : workerTableIndex === 0 ? (
+                                    <Row>
+                                        <Col
+                                            span={3}
+                                            style={{textAlign: "right"}}
+                                        >
+                                            <Translate content="account.votes.threshold" />
+                                        </Col>
+                                        <Col
+                                            span={3}
                                             style={{
-                                                float: "right",
-                                                marginTop: "-2.5rem"
+                                                textAlign: "left",
+                                                marginLeft: "10px"
                                             }}
                                         >
-                                            {actionButtons}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <table className="table dashboard-table table-hover">
-                                    {workerTableIndex ===
-                                    2 ? null : workerTableIndex === 0 ? (
-                                        <thead>
-                                            <tr>
-                                                <th />
-                                                <th
-                                                    colSpan="3"
-                                                    style={{textAlign: "left"}}
-                                                >
-                                                    <Translate content="account.votes.threshold" />
-                                                </th>
-                                                <th
-                                                    style={{textAlign: "right"}}
-                                                >
-                                                    <FormattedAsset
-                                                        decimalOffset={5}
-                                                        hide_asset
-                                                        amount={voteThreshold}
-                                                        asset="1.3.0"
-                                                    />
-                                                </th>
-                                                <th colSpan="3" />
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    style={{
-                                                        border: "none",
-                                                        backgroundColor:
-                                                            "transparent"
-                                                    }}
+                                            <FormattedAsset
+                                                decimalOffset={4}
+                                                hide_asset
+                                                amount={voteThreshold}
+                                                asset="1.3.0"
+                                            />
+                                        </Col>
+                                    </Row>
+                                ) : (
+                                    <Row>
+                                        <Col
+                                            span={3}
+                                            style={{textAlign: "right"}}
+                                        >
+                                            <Translate content="account.votes.total_budget" />{" "}
+                                            (
+                                            <AssetName name={preferredUnit} />)
+                                        </Col>
+                                        <Col
+                                            span={3}
+                                            style={{
+                                                textAlign: "left",
+                                                marginLeft: "10px"
+                                            }}
+                                        >
+                                            {globalObject ? (
+                                                <EquivalentValueComponent
+                                                    hide_asset
+                                                    fromAsset="1.3.0"
+                                                    toAsset={preferredUnit}
+                                                    amount={totalBudget}
                                                 />
-                                            </tr>
-                                        </thead>
-                                    ) : (
-                                        <thead>
-                                            <tr>
-                                                <th />
-                                                <th
-                                                    colSpan="4"
-                                                    style={{textAlign: "left"}}
-                                                >
-                                                    <Translate content="account.votes.total_budget" />{" "}
-                                                    (
-                                                    <AssetName
-                                                        name={preferredUnit}
-                                                    />
-                                                    )
-                                                </th>
-                                                <th
-                                                    colSpan="2"
-                                                    className="hide-column-small"
-                                                />
-                                                <th
-                                                    style={{textAlign: "right"}}
-                                                >
-                                                    {globalObject ? (
-                                                        <EquivalentValueComponent
-                                                            hide_asset
-                                                            fromAsset="1.3.0"
-                                                            toAsset={
-                                                                preferredUnit
-                                                            }
-                                                            amount={totalBudget}
-                                                        />
-                                                    ) : null}
-                                                </th>
-                                                <th className="hide-column-small" />
-                                            </tr>
-                                            <tr>
-                                                <th
-                                                    style={{
-                                                        border: "none",
-                                                        backgroundColor:
-                                                            "transparent"
-                                                    }}
-                                                />
-                                            </tr>
-                                        </thead>
-                                    )}
-                                    <thead>
-                                        <tr>
-                                            {workerTableIndex === 2 ? null : (
-                                                <th
-                                                    style={{textAlign: "right"}}
-                                                >
-                                                    <Translate content="account.votes.line" />
-                                                </th>
-                                            )}
-                                            <th style={{textAlign: "center"}}>
-                                                <Translate content="account.user_issued_assets.id" />
-                                            </th>
-                                            <th style={{textAlign: "left"}}>
-                                                <Translate content="account.user_issued_assets.description" />
-                                            </th>
-                                            <th
-                                                style={{textAlign: "right"}}
-                                                className="hide-column-small"
-                                            >
-                                                <Translate content="account.votes.total_votes" />
-                                            </th>
-                                            {workerTableIndex === 0 ? (
-                                                <th
-                                                    style={{textAlign: "right"}}
-                                                >
-                                                    <Translate content="account.votes.missing" />
-                                                </th>
                                             ) : null}
-                                            <th>
-                                                <Translate content="explorer.workers.period" />
-                                            </th>
-                                            {workerTableIndex === 2 ||
-                                            workerTableIndex === 0 ? null : (
-                                                <th
-                                                    style={{textAlign: "right"}}
-                                                    className="hide-column-small"
-                                                >
-                                                    <Translate content="account.votes.funding" />
-                                                </th>
-                                            )}
-                                            <th
-                                                style={{textAlign: "right"}}
-                                                className="hide-column-small"
-                                            >
-                                                <Translate content="account.votes.daily_pay" />
-                                                <div
-                                                    style={{
-                                                        paddingTop: 5,
-                                                        fontSize: "0.8rem"
-                                                    }}
-                                                >
-                                                    (
-                                                    <AssetName
-                                                        name={preferredUnit}
-                                                    />
-                                                    )
-                                                </div>
-                                            </th>
-                                            {workerTableIndex === 2 ||
-                                            workerTableIndex === 0 ? null : (
-                                                <th
-                                                    style={{textAlign: "right"}}
-                                                >
-                                                    <Translate content="explorer.witnesses.budget" />
-                                                    <div
-                                                        style={{
-                                                            paddingTop: 5,
-                                                            fontSize: "0.8rem"
-                                                        }}
-                                                    >
-                                                        (
-                                                        <AssetName
-                                                            name={preferredUnit}
-                                                        />
-                                                        )
-                                                    </div>
-                                                </th>
-                                            )}
+                                        </Col>
+                                    </Row>
+                                )}
 
-                                            <th>
-                                                <Translate content="account.votes.toggle" />
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {workerTableIndex === 0
-                                            ? newWorkers
-                                            : workerTableIndex === 1
-                                                ? activeWorkers
-                                                : workerTableIndex === 2
-                                                    ? expiredWorkers
-                                                    : polls}
-                                    </tbody>
-                                </table>
+                                <WorkersList
+                                    workerTableIndex={workerTableIndex}
+                                    preferredUnit={preferredUnit}
+                                    setWorkersLength={this.setWorkersLength.bind(
+                                        this
+                                    )}
+                                    workerBudget={workerBudget}
+                                    hideLegacyProposals={hideLegacyProposals}
+                                    hasProxy={hasProxy}
+                                    proxy_vote_ids={this.state.proxy_vote_ids}
+                                    vote_ids={this.state.vote_ids}
+                                    onChangeVotes={this.onChangeVotes.bind(
+                                        this
+                                    )}
+                                    getWorkerArray={this._getWorkerArray.bind(
+                                        this
+                                    )}
+                                    filterSearch={filterSearch}
+                                />
                             </Tab>
                         </Tabs>
                     </div>
