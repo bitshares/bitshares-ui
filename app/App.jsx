@@ -330,6 +330,10 @@ class App extends React.Component {
                                     component={DashboardPage}
                                 />
                                 <Route
+                                    path="/account/:account_name/overview/:tab"
+                                    component={AccountPage}
+                                />
+                                <Route
                                     path="/account/:account_name"
                                     component={AccountPage}
                                 />

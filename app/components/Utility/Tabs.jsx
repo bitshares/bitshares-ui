@@ -118,9 +118,14 @@ class Tabs extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.setting
-                ? props.viewSettings.get(props.setting, props.defaultActiveTab)
-                : props.defaultActiveTab,
+            activeTab: props.activeTab
+                ? props.activeTab
+                : props.setting
+                    ? props.viewSettings.get(
+                          props.setting,
+                          props.defaultActiveTab
+                      )
+                    : props.defaultActiveTab,
             width: window.innerWidth
         };
 
@@ -137,9 +142,13 @@ class Tabs extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let nextSetting = nextProps.viewSettings.get(nextProps.setting);
-        if (nextSetting !== this.props.viewSettings.get(this.props.setting)) {
+
+        if (
+            nextSetting !== this.props.viewSettings.get(this.props.setting) ||
+            nextProps.activeTab !== this.props.activeTab
+        ) {
             this.setState({
-                activeTab: nextSetting
+                activeTab: nextProps.activeTab || nextSetting
             });
         }
     }
