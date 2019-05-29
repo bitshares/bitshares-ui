@@ -220,6 +220,35 @@ class AssetActions {
         };
     }
 
+    resolvePrediction(asset, account_id, price) {
+        let tr = WalletApi.new_transaction();
+
+        tr.add_type_operation("asset_settle", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
+            account: account_id,
+            amount: {
+                amount: price,
+                asset_id: asset.id
+            }
+        });
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log(
+                        "[AssetActions.js:223] ----- resolvePrediction error ----->",
+                        error
+                    );
+                    dispatch(false);
+                });
+        };
+    }
+
     createAsset(
         account_id,
         createObject,
