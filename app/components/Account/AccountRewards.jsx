@@ -98,7 +98,12 @@ class AccountRewards extends React.Component {
                                         />
                                         <br />
                                         <span style={{fontSize: "80%"}}>
-                                            (with 10% bonus)
+                                            (<Translate
+                                                content={
+                                                    "cryptobridge.competition.button.stake_bonus"
+                                                }
+                                                with={{percent: 10}}
+                                            />)
                                         </span>
                                     </button>
                                     <button
@@ -121,7 +126,11 @@ class AccountRewards extends React.Component {
                                         />
                                         <br />
                                         <span style={{fontSize: "80%"}}>
-                                            (no bonus)
+                                            (<Translate
+                                                content={
+                                                    "cryptobridge.competition.button.claim_bonus"
+                                                }
+                                            />)
                                         </span>
                                     </button>
                                 </div>

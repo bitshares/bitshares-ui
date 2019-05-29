@@ -2048,7 +2048,9 @@
             },
             "button": {
                 "claim": "Claim only",
-                "stake": "Claim and stake"
+                "claim_bonus": "no bonus",
+                "stake": "Claim and stake",
+                "stake_bonus": "with %(percent)s% bonus"
             },
             "api": {
                 "claim": {
