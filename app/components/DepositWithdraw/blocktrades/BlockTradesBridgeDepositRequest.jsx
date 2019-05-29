@@ -1017,9 +1017,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             data.append("code", params["code"]);
             data.append(
                 "redirect_uri",
-                "http://localhost:8080/deposit-withdraw"
+                "http://192.168.6.139:9050/deposit-withdraw"
             );
-            data.append("client_id", "10ecf048-b982-467b-9965-0b0926330869");
+            data.append("client_id", "2c2bb58b-13a0-42e8-bf62-58b45f7df41f");
             const headers = {
                 "Content-Type": "application/x-www-form-urlencoded"
             };
@@ -1820,14 +1820,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     signin() {
-        const client_id = "10ecf048-b982-467b-9965-0b0926330869";
+        const client_id = "2c2bb58b-13a0-42e8-bf62-58b45f7df41f";
         const response_type = "code";
         const grant_type = "authorization_code";
         const scope = "profile create-trade";
         const state = "1233123asdad";
-        const redirect_uri = "http://localhost:8080/deposit-withdraw";
+        const redirect_uri = "http://192.168.6.139:9050/deposit-withdraw";
 
-        const base = "http://devel-4.syncad.com:9000/oauth2/auth";
+        const base = "https://devel-4.syncad.com/oauth2/auth";
         const url = `?client_id=${client_id}&response_type=${response_type}&grant_type=${grant_type}&scope=${scope}&state=${state}&redirect_uri=${redirect_uri}`; // eslint-disable-line
 
         window.location.assign(base + url);
