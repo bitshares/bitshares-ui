@@ -4,7 +4,8 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
-import {Radio} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
+import {Radio, Tooltip} from "bitshares-ui-style-guide";
 
 class AssetResolvePrediction extends React.Component {
     static propTypes = {
@@ -71,14 +72,21 @@ class AssetResolvePrediction extends React.Component {
                     </Radio.Group>
                 </div>
                 <div style={{paddingTop: "1rem"}} className="button-group">
-                    <button
-                        className={classnames("button", {
-                            disabled
-                        })}
-                        onClick={this.onSubmit.bind(this)}
+                    <Tooltip
+                        visible={disabled}
+                        title={counterpart.translate(
+                            "account_browsing_mode.you_are_in_browsing_mode"
+                        )}
                     >
-                        <Translate content="account.perm.publish_prediction" />
-                    </button>
+                        <button
+                            className={classnames("button", {
+                                disabled
+                            })}
+                            onClick={this.onSubmit.bind(this)}
+                        >
+                            <Translate content="account.perm.publish_prediction" />
+                        </button>
+                    </Tooltip>
                     <button
                         className="button outline"
                         onClick={this.onReset.bind(this)}

@@ -146,6 +146,7 @@
             "confirm_add": "Add",
             "create_paperwallet": "Create Paper Wallet",
             "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
+            "resolve_prediction_disabled_button": "The button will be enabled after resolution date has passed",
             "from": "Imported from account",
             "key": "Key/Name",
             "key_viewer": "Private key viewer",
