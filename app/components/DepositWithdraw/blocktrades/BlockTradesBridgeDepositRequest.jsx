@@ -1017,14 +1017,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             data.append("code", params["code"]);
             data.append(
                 "redirect_uri",
-                "http://192.168.6.139:9050/deposit-withdraw"
+                "https://192.168.6.139:9051/deposit-withdraw"
             );
-            data.append("client_id", "2c2bb58b-13a0-42e8-bf62-58b45f7df41f");
+            data.append("client_id", "10ecf048-b982-467b-9965-0b0926330869");
             const headers = {
                 "Content-Type": "application/x-www-form-urlencoded"
             };
 
-            fetch("http://devel-4.syncad.com:9000/oauth2/token", {
+            fetch("https://devel-4.syncad.com/oauth2/token", {
                 method: "POST",
                 body: data.toString(),
                 headers
@@ -1052,7 +1052,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 "Content-Type": "application/x-www-form-urlencoded"
             };
 
-            fetch("http://devel-4.syncad.com:9001/oauth2/introspect", {
+            fetch("https://devel-4.syncad.com/oauth2/introspect", {
                 method: "POST",
                 body: data.toString(),
                 headers
@@ -1295,6 +1295,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             }
         );
         return null;
+    }
+
+    makeState(length) {
+        var result = "";
+        var characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(
+                Math.floor(Math.random() * charactersLength)
+            );
+        }
+        return result;
     }
 
     // functions for managing deposit limits
@@ -1820,16 +1832,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     signin() {
-        const client_id = "2c2bb58b-13a0-42e8-bf62-58b45f7df41f";
+        const client_id = "10ecf048-b982-467b-9965-0b0926330869";
         const response_type = "code";
         const grant_type = "authorization_code";
-        const scope = "profile create-trade";
-        const state = "1233123asdad";
-        const redirect_uri = "http://192.168.6.139:9050/deposit-withdraw";
+        const scope =
+            "openid email profile create_new_mappings view_client_transaction_history";
+        const state = this.makeState(16);
+        const redirect_uri = "https://192.168.6.139:9051/deposit-withdraw";
 
         const base = "https://devel-4.syncad.com/oauth2/auth";
         const url = `?client_id=${client_id}&response_type=${response_type}&grant_type=${grant_type}&scope=${scope}&state=${state}&redirect_uri=${redirect_uri}`; // eslint-disable-line
-
         window.location.assign(base + url);
     }
 
