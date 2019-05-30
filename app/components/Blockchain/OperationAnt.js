@@ -290,8 +290,8 @@ class Operation {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                        ? "whitelisted_by"
-                        : "blacklisted_by";
+                            ? "whitelisted_by"
+                            : "blacklisted_by";
                 column = (
                     <span>
                         <TranslateWithLinks

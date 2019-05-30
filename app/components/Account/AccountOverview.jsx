@@ -300,7 +300,7 @@ class AccountOverview extends React.Component {
 
         // add unicode non-breaking space as subtext to Activity Tab to ensure that all titles are aligned
         // horizontally
-        const hiddenSubText = "\u00a0 ";
+        const hiddenSubText = "\u00a0";
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
@@ -409,13 +409,14 @@ class AccountOverview extends React.Component {
                                 subText={ordersValue}
                             >
                                 <AccountOrders {...this.props}>
-                                    <span
-                                        className="total-value"
-                                        style={{textAlign: "left"}}
-                                    >
-                                        {totalValueText}
-                                        {ordersValue}
-                                    </span>
+                                    <div className="total-value">
+                                        <span className="text">
+                                            {totalValueText}
+                                        </span>
+                                        <span className="value">
+                                            {ordersValue}
+                                        </span>
+                                    </div>
                                 </AccountOrders>
                             </Tab>
 

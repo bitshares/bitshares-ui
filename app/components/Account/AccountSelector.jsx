@@ -485,7 +485,7 @@ class AccountSelector extends React.Component {
                                     value={account ? accountName : null}
                                     disabled={
                                         !!disabledInput
-                                            ? disabledInput.toString()
+                                            ? disabledInput
                                             : undefined
                                     }
                                 >

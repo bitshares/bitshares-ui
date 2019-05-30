@@ -573,10 +573,10 @@ function BindToChainState(Component, options = {}) {
             let stateChanged = false;
 
             /*
-            * are_equal_shallow won't correctly compare null to undefined, so
-            * we need to work around it by assigning a non-falsy value instead
-            * of null before making the comparison
-            */
+             * are_equal_shallow won't correctly compare null to undefined, so
+             * we need to work around it by assigning a non-falsy value instead
+             * of null before making the comparison
+             */
             function replaceNull(state) {
                 let temp = {};
                 for (let key in state) {
