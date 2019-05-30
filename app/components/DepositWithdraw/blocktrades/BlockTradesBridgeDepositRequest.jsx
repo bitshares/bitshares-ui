@@ -1031,11 +1031,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             })
                 .then(r => r.json())
                 .then(body => {
-                    oauthBlocktrades.set("access_token", body.access_token);
-                    this.setState({
-                        isUserAuthorized: true,
-                        retrievingDataFromOauthApi: false
-                    });
+                    if (body["access_token"]) {
+                        oauthBlocktrades.set("access_token", body.access_token);
+                        this.setState({
+                            isUserAuthorized: true,
+                            retrievingDataFromOauthApi: false
+                        });
+                    } else {
+                        this.setState({
+                            isUserAuthorized: false,
+                            retrievingDataFromOauthApi: false
+                        });
+                    }
                 })
                 .catch(() => {
                     this.setState({
@@ -1059,17 +1066,24 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             })
                 .then(r => r.json())
                 .then(body => {
-                    if (body.active === true) {
-                        this.setState({
-                            isUserAuthorized: true,
-                            retrievingDataFromOauthApi: false
-                        });
+                    if (body["active"]) {
+                        if (body.active === true) {
+                            this.setState({
+                                isUserAuthorized: true,
+                                retrievingDataFromOauthApi: false
+                            });
+                        } else {
+                            this.setState({
+                                isUserAuthorized: false,
+                                retrievingDataFromOauthApi: false
+                            });
+                            oauthBlocktrades.set("access_token", "");
+                        }
                     } else {
                         this.setState({
                             isUserAuthorized: false,
                             retrievingDataFromOauthApi: false
                         });
-                        oauthBlocktrades.set("access_token", "");
                     }
                 })
                 .catch(() => {
