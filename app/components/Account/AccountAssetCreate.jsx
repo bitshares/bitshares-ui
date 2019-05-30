@@ -1334,76 +1334,17 @@ class AccountAssetCreate extends React.Component {
                                             component="h3"
                                             content="account.user_issued_assets.reward_percent"
                                         />
-                                        <table className="table">
-                                            <tbody>
-                                                <tr>
-                                                    <td
-                                                        style={{
-                                                            border: "none",
-                                                            width: "80%"
-                                                        }}
-                                                    >
-                                                        <Translate content="account.user_issued_assets.enable_reward_percent" />
-                                                        :
-                                                    </td>
-                                                    <td
-                                                        style={{
-                                                            border: "none"
-                                                        }}
-                                                    >
-                                                        <Switch
-                                                            checked={
-                                                                flagBooleans.enable_reward_percent
-                                                            }
-                                                            onChange={this._onFlagChange.bind(
-                                                                this,
-                                                                "enable_reward_percent"
-                                                            )}
-                                                        />
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div
-                                            className={cnames({
-                                                disabled: !flagBooleans.charge_market_fee
-                                            })}
-                                        >
-                                            <label>
-                                                <Translate content="account.user_issued_assets.market_fee" />{" "}
-                                                (%)
-                                                <input
-                                                    type="number"
-                                                    value={
-                                                        update.market_fee_percent
-                                                    }
-                                                    onChange={this._onUpdateInput.bind(
-                                                        this,
-                                                        "market_fee_percent"
-                                                    )}
-                                                />
-                                            </label>
-
-                                            <label>
-                                                <Translate content="account.user_issued_assets.max_market_fee" />{" "}
-                                                ({update.symbol})
-                                                <input
-                                                    type="number"
-                                                    value={
-                                                        update.max_market_fee
-                                                    }
-                                                    onChange={this._onUpdateInput.bind(
-                                                        this,
-                                                        "max_market_fee"
-                                                    )}
-                                                />
-                                            </label>
-                                            {errors.max_market_fee ? (
-                                                <p className="grid-content has-error">
-                                                    {errors.max_market_fee}
-                                                </p>
-                                            ) : null}
-                                        </div>
+                                        <label>
+                                            <Translate content="account.user_issued_assets.reward_percent" />{" "}
+                                            <input
+                                                type="number"
+                                                value={update.reward_percent}
+                                                onChange={this._onUpdateInput.bind(
+                                                    this,
+                                                    "reward_percent"
+                                                )}
+                                            />
+                                        </label>
                                     </div>
 
                                     <h3>

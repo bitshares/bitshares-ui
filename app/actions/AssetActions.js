@@ -335,8 +335,8 @@ class AssetActions {
         auths,
         feedProducers,
         originalFeedProducers,
-        assetChanged,
-        reward_percent
+        reward_percent,
+        assetChanged
     ) {
         // Create asset action here...
         let tr = WalletApi.new_transaction();
@@ -372,7 +372,7 @@ class AssetActions {
             let cr_base_amount = new big(core_exchange_rate.base.amount)
                 .times(cr_base_precision)
                 .toString();
-            console.log("auths:", auths);
+
             let updateObject = {
                 fee: {
                     amount: 0,
@@ -476,7 +476,7 @@ class AssetActions {
 
         return WalletDb.process_transaction(tr, null, true)
             .then(result => {
-                // console.log("asset create result:", result);
+                console.log("asset create result:", result);
                 // this.dispatch(account_id);
                 return true;
             })

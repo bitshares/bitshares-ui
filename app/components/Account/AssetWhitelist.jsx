@@ -29,10 +29,10 @@ class AssetWhitelist extends React.Component {
         };
     }
 
-    renderAccountTables() {
+    renderAccountTables(showFlagEnableError = true) {
         const {listType} = this.state;
 
-        if (!this.props.whiteListEnabled)
+        if (!this.props.whiteListEnabled && showFlagEnableError)
             return (
                 <div>
                     <Translate
@@ -199,7 +199,7 @@ class AssetWhitelist extends React.Component {
     }
 
     render() {
-        const {accountTable} = this.state;
+        const {accountTable, listType} = this.state;
         const activeIndex = this.state.listTypes.indexOf(this.state.listType);
 
         return (
@@ -231,7 +231,9 @@ class AssetWhitelist extends React.Component {
                         </div>
                     </div>
                     {accountTable
-                        ? this.renderAccountTables()
+                        ? this.renderAccountTables(
+                              listType !== "whitelist_market_fee_sharing"
+                          )
                         : this.renderMarketTable()}
                     {this.props.children}
                 </div>

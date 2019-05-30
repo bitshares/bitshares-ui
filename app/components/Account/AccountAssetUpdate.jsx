@@ -170,6 +170,7 @@ class AccountAssetUpdate extends React.Component {
                 "options",
                 "whitelist_markets"
             ]),
+            // fallback for old objects
             whitelist_market_fee_sharing:
                 whitelist_market_fee_sharing_val != null
                     ? whitelist_market_fee_sharing_val
@@ -264,7 +265,9 @@ class AccountAssetUpdate extends React.Component {
             JSON.stringify(s.whitelist_markets) !==
                 JSON.stringify(p.whitelist_markets) ||
             JSON.stringify(s.blacklist_markets) !==
-                JSON.stringify(p.blacklist_markets)
+                JSON.stringify(p.blacklist_markets) ||
+            JSON.stringify(s.whitelist_market_fee_sharing) !==
+                JSON.stringify(p.whitelist_market_fee_sharing)
         )
             tabUpdateIndex["1"] = true;
 
@@ -292,6 +295,8 @@ class AccountAssetUpdate extends React.Component {
             tabUpdateIndex["4"] = true;
 
         /* Flags */
+        // todo add reward_percent
+
         if (
             JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
             s.update.market_fee_percent !== p.update.market_fee_percent ||
@@ -376,8 +381,6 @@ class AccountAssetUpdate extends React.Component {
                 .whitelist_market_fee_sharing
         };
 
-        console.log("on account update init : ", auths);
-
         let feedProducersJS = isBitAsset ? feedProducers.toJS() : null;
         let originalFeedProducersJS = isBitAsset
             ? originalFeedProducers.toJS()
@@ -398,6 +401,7 @@ class AccountAssetUpdate extends React.Component {
             auths,
             feedProducersJS,
             originalFeedProducersJS,
+            0, // reward_percent value
             this.assetChanged()
         ).then(() => {
             console.log(
