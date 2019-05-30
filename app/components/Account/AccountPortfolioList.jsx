@@ -37,7 +37,7 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 class AccountPortfolioList extends React.Component {
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
             isBridgeModalVisible: false,
@@ -70,6 +70,8 @@ class AccountPortfolioList extends React.Component {
         this.valueRefs = {};
         this.changeRefs = {};
         this.ordersRefs = {};
+        this.vestingRefs = {};
+        this.collateralRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
@@ -300,6 +302,32 @@ class AccountPortfolioList extends React.Component {
                 return this.props.sortDirection || force ? -1 : 1;
 
             if (Number(this.ordersRefs[a.key]) > Number(this.ordersRefs[b.key]))
+                return this.props.sortDirection || force ? 1 : -1;
+        },
+        inVesting: function(a, b, force = false) {
+            if (
+                Number(this.vestingRefs[a.key]) <
+                Number(this.vestingRefs[b.key])
+            )
+                return this.props.sortDirection || force ? -1 : 1;
+
+            if (
+                Number(this.vestingRefs[a.key]) >
+                Number(this.vestingRefs[b.key])
+            )
+                return this.props.sortDirection || force ? 1 : -1;
+        },
+        inCollateral: function(a, b, force = false) {
+            if (
+                Number(this.collateralRefs[a.key]) <
+                Number(this.collateralRefs[b.key])
+            )
+                return this.props.sortDirection || force ? -1 : 1;
+
+            if (
+                Number(this.collateralRefs[a.key]) >
+                Number(this.collateralRefs[b.key])
+            )
                 return this.props.sortDirection || force ? 1 : -1;
         }
     };
@@ -555,6 +583,28 @@ class AccountPortfolioList extends React.Component {
                     portfolioSort === "inOrders" && portfolioSortDirection,
                 render: item => {
                     return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="account.vesting.title" />,
+                dataIndex: "inVesting",
+                align: "right",
+                sorter: this.sortFunctions.inVesting,
+                sortOrder:
+                    portfolioSort === "inVesting" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "noWrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="account.inCollateral" />,
+                dataIndex: "inCollateral",
+                align: "right",
+                sorter: this.sortFunctions.inCollateral,
+                sortOrder:
+                    portfolioSort === "inCollateral" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "noWrap"}}>{item}</span>;
                 }
             },
             {
@@ -871,6 +921,40 @@ class AccountPortfolioList extends React.Component {
             const hasBalance = !!balanceObject.get("balance");
             const hasOnOrder = !!orders[asset_type];
 
+            // Vesting balances
+            let hasVestingBalance = false;
+            let vestingBalance = 0;
+            const vbs = this.props.account.get("vesting_balances");
+
+            vbs.forEach(vb => {
+                let vestingObject = ChainStore.getObject(vb);
+                if (
+                    vestingObject.getIn(["balance", "asset_id"]) ===
+                    asset.get("id")
+                ) {
+                    hasVestingBalance = true;
+                    vestingBalance = vestingObject.getIn(["balance", "amount"]);
+                }
+            });
+
+            // Collateral
+            let hasCollateral = false;
+            let collateralBalance = 0;
+
+            this.props.callOrders.forEach(order => {
+                let collateralObject = ChainStore.getObject(order);
+                if (
+                    collateralObject.getIn([
+                        "call_price",
+                        "base",
+                        "asset_id"
+                    ]) === asset.get("id")
+                ) {
+                    hasCollateral = true;
+                    collateralBalance = collateralObject.get("collateral");
+                }
+            });
+
             const backedCoin = getBackedCoin(
                 asset.get("symbol"),
                 this.props.backedCoins
@@ -897,6 +981,13 @@ class AccountPortfolioList extends React.Component {
                 ? orders[asset.get("id")]
                 : 0;
 
+            this.vestingRefs[asset.get("symbol")] = hasVestingBalance
+                ? vestingBalance
+                : 0;
+
+            this.collateralRefs[asset.get("symbol")] = hasCollateral
+                ? collateralBalance
+                : 0;
             {
                 /* Asset and Backing Asset Prefixes */
             }
@@ -969,6 +1060,22 @@ class AccountPortfolioList extends React.Component {
                 inOrders: hasOnOrder ? (
                     <FormattedAsset
                         amount={orders[asset.get("id")]}
+                        asset={asset.get("id")}
+                    />
+                ) : (
+                    "--"
+                ),
+                inVesting: hasVestingBalance ? (
+                    <FormattedAsset
+                        amount={vestingBalance}
+                        asset={asset.get("id")}
+                    />
+                ) : (
+                    "--"
+                ),
+                inCollateral: hasCollateral ? (
+                    <FormattedAsset
+                        amount={collateralBalance}
                         asset={asset.get("id")}
                     />
                 ) : (

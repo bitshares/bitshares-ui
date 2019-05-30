@@ -57,6 +57,7 @@
         "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
         "intro_text_title": "Welcome to %(wallet_name)s",
         "inOrders": "In Orders",
+        "inCollateral": "In Collateral",
         "login_with": "Login with",
         "market_actions": "Market actions",
         "market_value": "Market Value",
