@@ -96,6 +96,17 @@ class ShowcaseGrid extends Component {
                     : "Please login to use this functionality"
             },
             {
+                title: "showcases.htlc.title",
+                target: event => {
+                    thiz.props.history.push("/htlc");
+                },
+                description: "showcases.htlc.description",
+                icon: "htlc",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
+            },
+            {
                 title: "showcases.timed_transfer.title",
                 target: () => {},
                 description: "showcases.timed_transfer.description",
