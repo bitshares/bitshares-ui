@@ -123,6 +123,12 @@ const SupportPage = Loadable({
     loading: LoadingIndicator
 });
 
+const TradingCompetitionPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "support" */ "./components/CryptoBridge/TradingCompetitionPage"),
+    loading: LoadingIndicator
+});
+
 import LoginSelector from "./components/LoginSelector";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 
@@ -330,6 +336,10 @@ class App extends React.Component {
                                     component={DashboardPage}
                                 />
                                 <Route
+                                    path="/account/:account_name/overview/:tab"
+                                    component={AccountPage}
+                                />
+                                <Route
                                     path="/account/:account_name"
                                     component={AccountPage}
                                 />
@@ -425,6 +435,11 @@ class App extends React.Component {
                                     path="/support/:ticketId?"
                                     component={SupportPage}
                                 />
+                                <Route
+                                    path="/trading-competition"
+                                    component={TradingCompetitionPage}
+                                />
+
                                 <Route path="*" component={Page404} />
                             </Switch>
                         </div>

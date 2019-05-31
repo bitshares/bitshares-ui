@@ -12,6 +12,7 @@ class CryptoBridgeStore extends BaseStore {
         this.accounts = Map();
         this.news = null;
         this.terms = null;
+        this.rewards = Map();
 
         this.bindListeners({
             onGetCryptoBridgeMarkets: CryptoBridgeActions.getMarkets,
@@ -19,7 +20,9 @@ class CryptoBridgeStore extends BaseStore {
             onGetAccount: CryptoBridgeActions.getAccount,
             onRemoveAccount: CryptoBridgeActions.removeAccount,
             onUpdateAccount: CryptoBridgeActions.updateAccount,
-            onGetLatestTerms: CryptoBridgeActions.getLatestTerms
+            onGetLatestTerms: CryptoBridgeActions.getLatestTerms,
+            onGetRewards: CryptoBridgeActions.getRewards,
+            onClaimReward: CryptoBridgeActions.claimReward
         });
 
         this._export(
@@ -31,7 +34,8 @@ class CryptoBridgeStore extends BaseStore {
             "getAccountRequiresTosAction",
             "getAccountRequiresTosForcedAction",
             "getAccountKycIsPending",
-            "getLatestTerms"
+            "getLatestTerms",
+            "getRewards"
         );
     }
 
@@ -80,6 +84,25 @@ class CryptoBridgeStore extends BaseStore {
 
     getLatestTerms() {
         return this.terms;
+    }
+
+    onGetRewards(data) {
+        const {accountName, rewards} = data;
+        if (accountName && rewards) {
+            this.rewards = this.rewards.set(accountName, rewards);
+        }
+    }
+
+    onClaimReward({id, type, accountName}) {
+        if (accountName) {
+            const rewards = this.rewards.get(accountName, []);
+            this.rewards = this.rewards.set(
+                accountName,
+                rewards.filter(reward => reward.id !== id)
+            );
+        }
+
+        console.log("onClaimReward", id, type, accountName);
     }
 
     getAccountRequiresTosAction(accountName) {
@@ -155,6 +178,12 @@ class CryptoBridgeStore extends BaseStore {
         const account = this.getAccount(accountName);
 
         return account && account.kyc.status === "pending";
+    }
+
+    getRewards(accountName) {
+        const rewards = this.rewards.get(accountName, []);
+
+        return rewards;
     }
 }
 

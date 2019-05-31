@@ -9,6 +9,8 @@ const API_NEWS_URL = "https://crypto-bridge.org/news.json";
 const API_LOGIN_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.LOGIN;
 const API_TERMS_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.TERMS;
 const API_ME_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.ACCOUNTS + "/me";
+const API_REWARDS_URL =
+    cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.ACCOUNTS + "/me/rewards";
 
 import {
     getRequestLoginOptions,
@@ -91,6 +93,70 @@ class CryptoBridgeActions {
                     })
                     .catch(err => {
                         dispatch();
+                        reject(err);
+                    });
+            });
+        };
+    }
+
+    getRewards(account) {
+        return dispatch => {
+            return new Promise((resolve, reject) => {
+                this.login(account)
+                    .then(access => {
+                        fetch(API_REWARDS_URL, getRequestAccessOptions(access))
+                            .then(response => response.json())
+                            .then(rewards => {
+                                dispatch({
+                                    accountName: account.get("name"),
+                                    rewards
+                                });
+                                resolve(rewards);
+                            })
+                            .catch(err => {
+                                dispatch({});
+                                reject(err);
+                            });
+                    })
+                    .catch(err => {
+                        dispatch({});
+                        reject(err);
+                    });
+            });
+        };
+    }
+
+    claimReward(account, id, type) {
+        return dispatch => {
+            return new Promise((resolve, reject) => {
+                this.login(account)
+                    .then(access => {
+                        fetch(
+                            `${API_REWARDS_URL}/${id}?type=${type}`,
+                            Object.assign(getRequestAccessOptions(access), {
+                                method: "PUT"
+                            })
+                        )
+                            .then(response => {
+                                if (response.ok) {
+                                    dispatch({
+                                        id,
+                                        type,
+                                        accountName: account.get("name")
+                                    });
+                                    resolve();
+                                    return;
+                                }
+
+                                throw new Error("Claim reward error");
+                            })
+                            .catch(err => {
+                                dispatch({});
+                                reject(err);
+                            });
+                    })
+                    .catch(err => {
+                        dispatch({});
                         reject(err);
                     });
             });
