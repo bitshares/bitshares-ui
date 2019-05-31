@@ -2033,8 +2033,17 @@
     "cryptobridge": {
         "competition": {
             "page": {
-                "title": "Trading competition",
-                "intro": "Trading competition text..."
+                "title": "Trading Competition",
+                "header":
+                    "#FromJunetotheMoon - The CryptoBridge Trading Competition",
+                "intro":
+                    "This is the moment you’ve been waiting for: The full scoop on our trading competition! Find it on <a href=\"https://crypto-bridge.org/2019/05/31/the-countdown-begins-from-june-to-the-moon/\" target=\"_blank\">our website</a>, along with the <a href=\"https://crypto-bridge.org/terms-of-the-trading-competition/\" target=\"_blank\">terms and conditions</a>.",
+                "leaderboard_title": "The Leader Board",
+                "leaderboard_body1":
+                    "The CryptoBridge hall of fame is where the best traders leave their legacy. Are you one of them? Then you’re eligible to win prizes for holding one of the top three slots.",
+                "leaderboard_body2":
+                    "By the way: Do you like the leader board? Then make it your own and include it as a widget on your website or blog. You can also simply link it anywhere you like:",
+                "leaderboard_yourWidget": "Customize it now"
             },
             "title": "You have won a reward in the trading competition.",
             "description": "Description text....",
