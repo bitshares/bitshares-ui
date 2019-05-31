@@ -90,6 +90,10 @@ class TosModal extends React.Component {
             const {account} =
                 nextProps.accounts.get(nextProps.currentAccount) || {};
 
+            if (account && account.rewards && currentAccount) {
+                CryptoBridgeActions.getRewards(currentAccount);
+            }
+
             if (
                 account &&
                 (account.terms.status !== "complete" ||

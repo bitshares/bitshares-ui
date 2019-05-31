@@ -2031,6 +2031,40 @@
         }
     },
     "cryptobridge": {
+        "competition": {
+            "page": {
+                "title": "Trading competition",
+                "intro": "Trading competition text..."
+            },
+            "title": "You have won a reward in the trading competition.",
+            "description": "Description text....",
+            "disclaimer":
+                "Disclaimer: Claiming your stake after ending of staking period costs %(amount)s BCO in fees at this moment. The fees are subject to change.",
+            "message": {
+                "title": "Some reward message title.",
+                "action": "Claim it"
+            },
+            "action": "Claim it",
+            "reward": {
+                "usd": "Reward (USD)",
+                "bonus":
+                    "If you \"Claim & Stake\" your %(amount)s BCO, you will receive 10% bonus on top!",
+                "period": "Period",
+                "payout": "Payout"
+            },
+            "button": {
+                "claim": "Claim only",
+                "claim_bonus": "no bonus",
+                "stake": "Claim and stake",
+                "stake_bonus": "with %(percent)s% bonus"
+            },
+            "api": {
+                "claim": {
+                    "error": "Could not claim BCO",
+                    "success": "Successfully claimed!"
+                }
+            }
+        },
         "important": {
             "title": "Important",
             "user_verification":

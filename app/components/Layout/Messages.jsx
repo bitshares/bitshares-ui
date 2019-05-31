@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
@@ -18,12 +19,23 @@ class Messages extends React.Component {
         ZfApi.publish("tos_modal", "open");
     };
 
+    componentDidUpdate(prevProps) {
+        if (
+            JSON.stringify(prevProps.rewards) !==
+            JSON.stringify(this.props.rewards)
+        ) {
+            this.forceUpdate();
+        }
+    }
+
     render() {
         const {
             hiddenImportantMessages,
             requiresTos,
             requiresKyc,
-            kycIsPending
+            kycIsPending,
+            rewards,
+            currentAccount
         } = this.props;
 
         const hasUserIdentificationProcessInfo =
@@ -33,12 +45,27 @@ class Messages extends React.Component {
                     "user_identification_process"
                 ));
 
-        if (!hasUserIdentificationProcessInfo && !requiresTos && !requiresKyc) {
+        if (
+            !hasUserIdentificationProcessInfo &&
+            !requiresTos &&
+            !requiresKyc &&
+            !rewards
+        ) {
             return <div />;
         }
 
         return (
             <ul className="messages">
+                {rewards && rewards.length ? (
+                    <li className="notice">
+                        <Translate content="cryptobridge.competition.message.title" />{" "}
+                        <Link
+                            to={`/account/${currentAccount}/overview/bridgecoin-staking`}
+                        >
+                            <Translate content="cryptobridge.competition.message.action" />
+                        </Link>
+                    </li>
+                ) : null}
                 {hasUserIdentificationProcessInfo ? (
                     <li className="notice">
                         <div
@@ -130,7 +157,7 @@ class Messages extends React.Component {
 
 export default connect(Messages, {
     listenTo() {
-        return [SettingsStore, CryptoBridgeStore];
+        return [SettingsStore, CryptoBridgeStore, AccountStore];
     },
     getProps() {
         const {hiddenImportantMessages} = SettingsStore.getState();
@@ -146,6 +173,7 @@ export default connect(Messages, {
 
         return {
             hiddenImportantMessages,
+            currentAccount,
             requiresTos:
                 account !== null &&
                 CryptoBridgeStore.getAccountRequiresTosAction(currentAccount),
@@ -154,7 +182,8 @@ export default connect(Messages, {
                 CryptoBridgeStore.getAccountRequiresKycAction(currentAccount),
             kycIsPending:
                 account !== null &&
-                CryptoBridgeStore.getAccountKycIsPending(currentAccount)
+                CryptoBridgeStore.getAccountKycIsPending(currentAccount),
+            rewards: CryptoBridgeStore.getRewards(currentAccount)
         };
     }
 });

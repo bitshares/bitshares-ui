@@ -185,6 +185,10 @@ class AccountOverview extends React.Component {
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
+            !utils.are_equal_shallow(
+                nextProps.matchParams,
+                this.props.matchParams
+            ) ||
             !utils.are_equal_shallow(nextState, this.state) ||
             this.state.filterValue !== nextState.filterValue
         );
@@ -896,18 +900,43 @@ class AccountOverview extends React.Component {
             false
         );
 
+        const {account_name, tab} = this.props.matchParams || {};
+        let activeTab = 0;
+
+        switch (tab) {
+            case "portfolio":
+                activeTab = 0;
+                break;
+            case "bridgecoin-staking":
+                activeTab = 1;
+                break;
+            case "open-orders":
+                activeTab = 2;
+                break;
+            case "activity":
+                activeTab = 3;
+                break;
+            case "proposals":
+                activeTab = 4;
+                break;
+        }
+
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
                         <Tabs
                             defaultActiveTab={0}
+                            activeTab={activeTab}
                             segmented={false}
                             setting="overviewTab"
                             className="account-tabs"
                             tabsClass="account-overview no-padding bordered-header content-block"
                         >
-                            <Tab title="account.portfolio">
+                            <Tab
+                                title="account.portfolio"
+                                isLinkTo={`/account/${account_name}/overview/portfolio`}
+                            >
                                 <div className="header-selector">
                                     <div className="filter inline-block">
                                         <input
@@ -1133,7 +1162,10 @@ class AccountOverview extends React.Component {
                                 )}
                             </Tab>
 
-                            <Tab title="cryptobridge.account.staking">
+                            <Tab
+                                title="cryptobridge.account.staking"
+                                isLinkTo={`/account/${account_name}/overview/cryptobridge-staking`}
+                            >
                                 <div className="grid-container">
                                     <div
                                         className="grid-content"
@@ -1148,13 +1180,19 @@ class AccountOverview extends React.Component {
                                 </div>
                             </Tab>
 
-                            <Tab title="account.open_orders">
+                            <Tab
+                                title="account.open_orders"
+                                isLinkTo={`/account/${account_name}/overview/open-orders`}
+                            >
                                 <AccountOrders {...this.props}>
                                     <tbody />
                                 </AccountOrders>
                             </Tab>
 
-                            <Tab title="account.activity">
+                            <Tab
+                                title="account.activity"
+                                isLinkTo={`/account/${account_name}/overview/activity`}
+                            >
                                 <RecentTransactions
                                     accountsList={Immutable.fromJS([
                                         account.get("id")
@@ -1178,6 +1216,7 @@ class AccountOverview extends React.Component {
                                             ? account.get("proposals").size
                                             : 0
                                     )}
+                                    isLinkTo={`/account/${account_name}/overview/proposals`}
                                 >
                                     <Proposals
                                         className="dashboard-table"

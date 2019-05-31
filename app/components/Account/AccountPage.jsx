@@ -89,7 +89,8 @@ class AccountPage extends React.Component {
             gatewayDown: this.props.gatewayDown,
             viewSettings: this.props.viewSettings,
             proxy: account.getIn(["options", "voting_account"]),
-            history: this.props.history
+            history: this.props.history,
+            matchParams: this.props.match.params || {}
         };
 
         return (
@@ -97,13 +98,13 @@ class AccountPage extends React.Component {
                 <div className="grid-block no-padding">
                     <Switch>
                         <Route
-                            path={`/account/${account_name}`}
+                            path={`/account/${account_name}/overview/:tab`}
                             exact
                             render={() => <AccountOverview {...passOnProps} />}
                         />
                         <Redirect
-                            from={`/account/${account_name}/overview`}
-                            to={`/account/${account_name}`}
+                            from={`/account/${account_name}`}
+                            to={`/account/${account_name}/overview/portfolio`}
                         />
                         <Route
                             path={`/account/${account_name}/assets`}
