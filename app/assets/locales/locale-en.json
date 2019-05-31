@@ -2032,8 +2032,14 @@
     },
     "cryptobridge": {
         "competition": {
+            "page": {
+                "title": "Trading competition",
+                "intro": "Trading competition text..."
+            },
             "title": "You have won a reward in the trading competition.",
             "description": "Description text....",
+            "disclaimer":
+                "Disclaimer: Claiming your stake after ending of staking period costs %(amount)s BCO in fees at this moment. The fees are subject to change.",
             "message": {
                 "title": "Some reward message title.",
                 "action": "Claim it"

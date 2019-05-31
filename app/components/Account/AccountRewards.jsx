@@ -20,7 +20,8 @@ class AccountRewards extends React.Component {
         if (
             JSON.stringify(prevProps.rewards) !==
                 JSON.stringify(this.props.rewards) ||
-            prevProps.account !== this.props.account
+            prevProps.account !== this.props.account ||
+            prevProps.reclaimFee !== this.props.reclaimFee
         ) {
             this.forceUpdate();
         }
@@ -54,10 +55,10 @@ class AccountRewards extends React.Component {
     }
 
     render() {
-        const {rewards, account} = this.props;
+        const {rewards, account, reclaimFee} = this.props;
         const {claimingRewardId} = this.state;
 
-        if (!rewards || !rewards.length || !account) {
+        if (!rewards || !rewards.length || !account || !reclaimFee) {
             return null;
         }
 
@@ -70,6 +71,12 @@ class AccountRewards extends React.Component {
                 <Translate
                     component="p"
                     content={"cryptobridge.competition.description"}
+                />
+                <Translate
+                    component="p"
+                    className={"label warning normal"}
+                    content={"cryptobridge.competition.disclaimer"}
+                    with={{amount: reclaimFee}}
                 />
 
                 <ul>

@@ -124,7 +124,12 @@ class AccountStakeCreateNew extends React.Component {
                     hasPoolBalance,
                     error: !hasBalance || !hasPoolBalance
                 },
-                this._checkFeeStatus
+                () => {
+                    this._checkFeeStatus();
+                    if (this.props.onFeeChange) {
+                        this.props.onFeeChange(fee);
+                    }
+                }
             );
         });
     }

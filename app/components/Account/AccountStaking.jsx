@@ -210,6 +210,7 @@ class AccountStaking extends React.Component {
                 <div className="content-block small-12">
                     <AccountRewards
                         account={this.props.account}
+                        reclaimFee={this.state.reclaimFee}
                         onChange={accountId => {
                             this.retrieveVestingBalances(accountId);
                         }}
@@ -219,6 +220,11 @@ class AccountStaking extends React.Component {
                         balances={this.props.balances}
                         asset={stakeAsset}
                         gateFee={this.props.gateFee}
+                        onFeeChange={fee => {
+                            const reclaimFee =
+                                ((fee && fee.getAmount({real: true})) || 0) * 2;
+                            this.setState({reclaimFee});
+                        }}
                     />
                     <div style={{marginTop: "2rem"}}>
                         {!balances.length ? (

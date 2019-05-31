@@ -789,6 +789,28 @@ class Header extends React.Component {
                 </a>
             );
         }
+        if (active.indexOf("/trading-competition") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/trading-competition") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="dollar"
+                        title="icons.dollar"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="cryptobridge.competition.page.title"
+                    />
+                </a>
+            );
+        }
 
         const submenus = {
             [SUBMENUS.SETTINGS]: (
