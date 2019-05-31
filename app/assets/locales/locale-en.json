@@ -2041,8 +2041,8 @@
             "disclaimer":
                 "Disclaimer: Claiming your stake after ending of staking period costs %(amount)s BCO in fees at this moment. The fees are subject to change.",
             "message": {
-                "title": "Some reward message title.",
-                "action": "Claim it"
+                "title": "Congratulations, you have rewards to claim!",
+                "action": "Claim now"
             },
             "action": "Claim it",
             "reward": {

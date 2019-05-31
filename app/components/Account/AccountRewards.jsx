@@ -160,7 +160,8 @@ class AccountRewards extends React.Component {
                                                 />:
                                             </th>
                                             <td>
-                                                {reward.from} - {reward.to}
+                                                {reward.from.substr(0, 10)} -{" "}
+                                                {reward.to.substr(0, 10)}
                                             </td>
                                         </tr>
                                         <tr>
