@@ -92,7 +92,7 @@ class DashboardList extends React.Component {
     }
 
     _createAccount() {
-        this.props.history.push("/create-account/wallet");
+        this.props.history.push("/registration");
     }
 
     _onFilter(e) {

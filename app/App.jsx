@@ -423,10 +423,6 @@ class App extends React.Component {
                                     exact
                                     component={AccountDepositWithdraw}
                                 />
-                                <Route
-                                    path="/create-account"
-                                    component={LoginSelector}
-                                />
                                 <Route path="/login" component={Login} />
                                 <Route
                                     path="/registration"

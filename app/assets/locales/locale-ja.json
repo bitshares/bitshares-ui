@@ -117,9 +117,10 @@
         "no_price": "不明な値",
         "open_orders": "注文中",
         "optional": {
-            "formatter": "ここから{restore_link}、または{restore_form}を使ってアカウントを作成することができます。",
+            "formatter": "オプションで、{restore_link} または {restore_link_brain}",
             "restore_form": "高度設定フォーム",
-            "restore_link": "アカウントのリストア"
+            "restore_link": "アカウントのリストア",
+            "restore_link_brain": "ブレインキーを使ってアカウントを復元する"
         },
         "options": {
             "memo_key": "メモキー",

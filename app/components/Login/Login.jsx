@@ -9,7 +9,7 @@ export default class Login extends React.Component {
     constructor() {
         super();
         this.state = {
-            activeWalletModel: true
+            activeWalletModel: false
         };
     }
 

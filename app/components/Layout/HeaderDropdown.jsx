@@ -70,15 +70,15 @@ export default class DropDownMenu extends React.Component {
                         className={cnames({
                             active:
                                 active.indexOf(
-                                    `/create-account/${
-                                        !passwordLogin ? "wallet" : "password"
+                                    `/registration/${
+                                        !passwordLogin ? "local" : "cloud"
                                     }`
                                 ) !== -1
                         })}
                         onClick={this.props.onNavigate.bind(
                             this,
-                            `/create-account/${
-                                !passwordLogin ? "wallet" : "password"
+                            `/registration/${
+                                !passwordLogin ? "local" : "cloud"
                             }`
                         )}
                     >
