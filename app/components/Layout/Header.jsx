@@ -1702,14 +1702,10 @@ class Header extends React.Component {
                                 </li>
 
                                 <li
-                                    className={cnames(
-                                        {
-                                            active:
-                                                active.indexOf("/benchmark") !==
-                                                -1
-                                        },
-                                        "divider"
-                                    )}
+                                    className={cnames({
+                                        active:
+                                            active.indexOf("/benchmark") !== -1
+                                    })}
                                     onClick={this._onNavigate.bind(
                                         this,
                                         "/benchmark"
@@ -1724,6 +1720,33 @@ class Header extends React.Component {
                                     </div>
                                     <div className="table-cell">
                                         <Translate content="cryptobridge.benchmark.title" />
+                                    </div>
+                                </li>
+
+                                <li
+                                    className={cnames(
+                                        {
+                                            active:
+                                                active.indexOf(
+                                                    "/trading-competition"
+                                                ) !== -1
+                                        },
+                                        "divider"
+                                    )}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/trading-competition"
+                                    )}
+                                >
+                                    <div className="table-cell">
+                                        <Icon
+                                            size="2x"
+                                            name="dollar"
+                                            title="icons.dollar"
+                                        />
+                                    </div>
+                                    <div className="table-cell">
+                                        <Translate content="cryptobridge.competition.page.title" />
                                     </div>
                                 </li>
 
