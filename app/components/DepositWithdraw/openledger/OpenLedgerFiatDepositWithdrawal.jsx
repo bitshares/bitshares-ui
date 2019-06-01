@@ -13,12 +13,12 @@ import WithdrawFiatOpenLedger from "./WithdrawFiatOpenLedger";
 import PropTypes from "prop-types";
 
 /*
-*
-*
-* BE AWARE BaseModal USED IN THIS CODE WAS REMOVED AT ALL
-*
-*
-* */
+ *
+ *
+ * BE AWARE BaseModal USED IN THIS CODE WAS REMOVED AT ALL
+ *
+ *
+ * */
 
 class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
     static propTypes = {

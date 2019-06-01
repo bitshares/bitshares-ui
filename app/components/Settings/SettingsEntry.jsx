@@ -122,21 +122,20 @@ export default class SettingsEntry extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        {!!value.allow &&
-                            Notify.needsPermission && (
-                                <a
-                                    href="https://goo.gl/zZ7NHY"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="external-link"
-                                >
-                                    <Translate
-                                        component="div"
-                                        className="settings--notifications--no-browser-support"
-                                        content="settings.browser_notifications_disabled_by_browser_notify"
-                                    />
-                                </a>
-                            )}
+                        {!!value.allow && Notify.needsPermission && (
+                            <a
+                                href="https://goo.gl/zZ7NHY"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="external-link"
+                            >
+                                <Translate
+                                    component="div"
+                                    className="settings--notifications--no-browser-support"
+                                    content="settings.browser_notifications_disabled_by_browser_notify"
+                                />
+                            </a>
+                        )}
                     </div>
                 );
 

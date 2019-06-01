@@ -6,7 +6,6 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import counterpart from "counterpart";
-import SettingsStore from "stores/SettingsStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
@@ -14,7 +13,7 @@ import AssetName from "../Utility/AssetName";
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
-import DatePicker from "react-datepicker2/src/";
+import { DatePicker } from "antd";
 import moment from "moment";
 import Icon from "../Icon/Icon";
 import SettleModal from "../Modal/SettleModal";
@@ -49,13 +48,13 @@ class BuySell extends React.Component {
     }
 
     /*
-    * Force re-rendering component when state changes.
-    * This is required for an updated value of component width
-    *
-    * It will trigger a re-render twice
-    * - Once when state is changed
-    * - Once when forceReRender is set to false
-    */
+     * Force re-rendering component when state changes.
+     * This is required for an updated value of component width
+     *
+     * It will trigger a re-render twice
+     * - Once when state is changed
+     * - Once when forceReRender is set to false
+     */
     _forceRender(np) {
         if (this.state.forceReRender) {
             this.setState({
@@ -102,6 +101,10 @@ class BuySell extends React.Component {
             nextState.isQuickDepositVisible !== this.state.isQuickDepositVisible
         );
     }
+
+    getDatePickerRef = node => {
+        this.datePricker = node;
+    };
 
     showSettleModal() {
         this.setState({
@@ -154,6 +157,35 @@ class BuySell extends React.Component {
         this.props.onBuy();
     }
 
+    onExpirationSelectChange = e => {
+        if (e.target.value === "SPECIFIC") {
+            this.datePricker.picker.handleOpenChange(true);
+        } else {
+            this.datePricker.picker.handleOpenChange(false);
+        }
+
+        this.props.onExpirationTypeChange(e);
+    };
+
+    onExpirationSelectClick = e => {
+        if (e.target.value === "SPECIFIC") {
+            if (this.firstClick) {
+                this.secondClick = true;
+            }
+            this.firstClick = true;
+            if (this.secondClick) {
+                this.datePricker.picker.handleOpenChange(true);
+                this.firstClick = false;
+                this.secondClick = false;
+            }
+        }
+    };
+
+    onExpirationSelectBlur = () => {
+        this.firstClick = false;
+        this.secondClick = false;
+    };
+
     render() {
         let {
             type,
@@ -175,6 +207,7 @@ class BuySell extends React.Component {
             hideHeader,
             verticalOrderForm
         } = this.props;
+        const { expirationCustomTime } = this.props;
 
         let clientWidth = this.refs.order_form
             ? this.refs.order_form.clientWidth
@@ -541,18 +574,24 @@ class BuySell extends React.Component {
             ? counterpart.translate("walkthrough.buy_form")
             : counterpart.translate("walkthrough.sell_form");
 
+        let expirationTip;
+
+        if (this.props.expirationType !== "SPECIFIC") {
+            expirationTip = this.props.expirations[this.props.expirationType]
+                .get();
+        }
+
         const expirationsOptionsList = Object.keys(this.props.expirations).map(
-            (key, i) => (
+            key => (
                 <option value={key} key={key}>
-                    {this.props.expirations[key].title}
+                    {key === "SPECIFIC" && expirationCustomTime !== "Specific" ?
+                        moment(expirationCustomTime)
+                            .format("Do MMM YYYY hh:mm A") :
+                        this.props.expirations[key].title}
                 </option>
             )
         );
 
-        // datepicker puts on the end of body so it's out of theme scope
-        // so theme is used on wrapperClassName
-        const theme = SettingsStore.getState().settings.get("themes");
-        const minExpirationDate = moment();
         const containerClass = "small-12";
         let formContent;
 
@@ -1081,38 +1120,36 @@ class BuySell extends React.Component {
                                     content="transaction.expiration"
                                 />
                                 <div className="small-8 expiration-datetime-picker">
-                                    <select
-                                        className={
-                                            this.props.expirationType ===
-                                                "SPECIFIC" && singleColumnForm
-                                                ? "expiration-datetime-picker--select--specific"
-                                                : ""
+                                    <DatePicker
+                                        ref={this.getDatePickerRef}
+                                        className="expiration-datetime-picker--hidden"
+                                        showTime
+                                        showToday={false}
+                                        disabledDate={current =>
+                                            current < moment().add(59, "minutes")}
+                                        value={
+                                            expirationCustomTime !== "Specific" ?
+                                                expirationCustomTime :
+                                                moment().add(1, "hour")
                                         }
-                                        style={{cursor: "pointer"}}
                                         onChange={
-                                            this.props.onExpirationTypeChange
+                                            this.props.onExpirationCustomChange
+                                        }
+                                    />
+                                    <select
+                                        className="cursor-pointer"
+                                        onChange={this.onExpirationSelectChange}
+                                        onClick={this.onExpirationSelectClick}
+                                        onBlur={this.onExpirationSelectBlur}
+                                        data-tip={
+                                            expirationTip &&
+                                            moment(expirationTip)
+                                                .format("Do MMM YYYY hh:mm A")
                                         }
                                         value={this.props.expirationType}
                                     >
                                         {expirationsOptionsList}
                                     </select>
-                                    {this.props.expirationType ===
-                                    "SPECIFIC" ? (
-                                        <DatePicker
-                                            pickerPosition={"bottom center"}
-                                            wrapperClassName={theme}
-                                            timePicker={true}
-                                            min={minExpirationDate}
-                                            inputFormat={"Do MMM YYYY hh:mm A"}
-                                            value={
-                                                this.props.expirationCustomTime
-                                            }
-                                            onChange={
-                                                this.props
-                                                    .onExpirationCustomChange
-                                            }
-                                        />
-                                    ) : null}
                                 </div>
                             </div>
                             {!singleColumnForm ? (

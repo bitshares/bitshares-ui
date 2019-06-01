@@ -1,8 +1,24 @@
+import {Apis} from "bitsharesjs-ws";
+
 /** This file centralized customization and branding efforts throughout the whole wallet and is meant to facilitate
  *  the process.
  *
  *  @author Stefan Schiessl <stefan.schiessl@blockchainprojectsbv.com>
  */
+
+/**
+ * Determine if we are running on testnet or mainnet
+ * @private
+ */
+function _isTestnet() {
+    const chainId = (Apis.instance().chain_id || "4018d784").substr(0, 8);
+    if (chainId === "4018d784") {
+        return false;
+    } else {
+        // treat every other chain as testnet, exact would be chainId === "39f5e2ed"
+        return true;
+    }
+}
 
 /**
  * Wallet name that is used throughout the UI and also in translations
@@ -64,12 +80,12 @@ export function getDefaultLogin() {
  *
  * @returns {[string,string,string,string,string,string]}
  */
-export function getUnits(chainId = "4018d784") {
-    if (chainId === "4018d784")
+export function getUnits() {
+    if (_isTestnet()) {
+        return ["TEST"];
+    } else {
         return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
-    else if (chainId === "39f5e2ed") return ["TEST"];
-    // unknown chain id: (need to return at least one unit)
-    else return ["BTS"];
+    }
 }
 
 /**
@@ -101,7 +117,28 @@ export function getMyMarketsQuotes() {
             "USD"
         ],
         bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
-        gdexTokens: ["GDEX.BTC", "GDEX.BTO", "GDEX.EOS", "GDEX.ETH"],
+        gdexTokens: [
+            "GDEX.BTC",
+            "GDEX.BTO",
+            "GDEX.EOS",
+            "GDEX.ETH",
+            "GDEX.BTM",
+            "GDEX.NEO",
+            "GDEX.GAS",
+            "GDEX.QTUM",
+            "GDEX.BKBT",
+            "GDEX.GXC",
+            "GDEX.HPB",
+            "GDEX.SEER",
+            "GDEX.FOTA",
+            "GDEX.JRC",
+            "GDEX.EOSDAC",
+            "GDEX.MTS",
+            "GDEX.GUSD",
+            "GDEX.IQ",
+            "GDEX.NULS",
+            "GDEX.USDT"
+        ],
         openledgerTokens: [
             "OBITS",
             "OPEN.BTC",
@@ -112,7 +149,6 @@ export function getMyMarketsQuotes() {
             "OPEN.EOSDAC",
             "OPEN.ETH",
             "OPEN.EURT",
-            "OPEN.GAME",
             "OPEN.GRC",
             "OPEN.INCNT",
             "OPEN.KRM",
@@ -143,7 +179,17 @@ export function getMyMarketsQuotes() {
             "RUDEX.STEEM",
             "RUDEX.TT"
         ],
-        sparkTokens: ["ZEPH", "SPARKDEX.ETH", "SPARKDEX.BTC"],
+        sparkTokens: [
+            "ZEPH",
+            "PEG.PHP",
+            "SPARKDEX.ETH",
+            "SPARKDEX.BTC",
+            "SPARKDEX.HKD",
+            "SPARKDEX.SGD",
+            "SPARKDEX.AUD",
+            "SPARKDEX.EUR",
+            "SPARKDEX.GBP"
+        ],
         xbtsxTokens: [
             "XBTSX.STH",
             "XBTSX.POST",
@@ -162,24 +208,19 @@ export function getMyMarketsQuotes() {
             "XBTSX.P2P",
             "XBTSX.STEEP",
             "XBTSX.MDL",
-            "XBTSX.ETH"
+            "XBTSX.ETH",
+            "XBTSX.EXR",
+            "XBTSX.LCRT"
         ],
         otherTokens: [
-            "BKT",
-            "BLOCKPAY",
             "BTWTY",
             "TWENTIX",
-            "BTSR",
-            "CADASTRAL",
+
             "CVCOIN",
-            "HEMPSWEET",
             "HERO",
+            "OCT",
             "HERTZ",
             "ICOO",
-            "IOU.CNY",
-            "KAPITAL",
-            "KEXCOIN",
-            "OCT",
             "SMOKE",
             "STEALTH",
             "YOYOW"
@@ -223,10 +264,13 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "GDEX.EOS"],
         ["CNY", "GDEX.BTO"],
         ["CNY", "GDEX.BTM"],
+        ["CNY", "GDEX.SEER"],
+        ["CNY", "GDEX.BKBT"],
+        ["CNY", "GDEX.USDT"],
+        ["CNY", "GDEX.GXC"],
         ["OPEN.BTC", "BTS"],
         ["OPEN.BTC", "OPEN.ETH"],
         ["OPEN.BTC", "OPEN.DASH"],
-        ["OPEN.BTC", "BLOCKPAY"],
         ["OPEN.BTC", "OPEN.DGD"],
         ["OPEN.BTC", "OPEN.STEEM"],
         ["BTS", "OPEN.ETH"],
@@ -239,15 +283,14 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "OCT"],
         ["BTS", "SILVER"],
         ["BTS", "GOLD"],
-        ["BTS", "BLOCKPAY"],
         ["BTS", "BTWTY"],
         ["BTS", "SMOKE"],
         ["BTS", "GDEX.BTC"],
         ["BTS", "GDEX.ETH"],
         ["BTS", "GDEX.EOS"],
         ["BTS", "GDEX.BTO"],
+        ["BTS", "GDEX.USDT"],
         ["BTS", "OPEN.EOSDAC"],
-        ["KAPITAL", "OPEN.BTC"],
         ["USD", "OPEN.STEEM"],
         ["USD", "OPEN.MAID"],
         ["OPEN.USDT", "OPEN.BTC"],
@@ -255,8 +298,6 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "OPEN.MAID"],
         ["BTS", "OPEN.HEAT"],
         ["BTS", "OPEN.INCENT"],
-        ["HEMPSWEET", "OPEN.BTC"],
-        ["KAPITAL", "BTS"],
         ["BTS", "RUDEX.STEEM"],
         ["USD", "RUDEX.STEEM"],
         ["BTS", "RUDEX.SBD"],
@@ -276,7 +317,15 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "ZEPH"],
         ["BTS", "HERTZ"],
         ["BTS", "SPARKDEX.BTC"],
-        ["BTS", "SPARKDEX.ETH"]
+        ["BTS", "SPARKDEX.ETH"],
+        ["BTS", "SPARKDEX.HKD"],
+        ["SPARKDEX.HKD", "SPARKDEX.BTC"],
+        ["SPARKDEX.HKD", "SPARKDEX.ETH"],
+        ["BTS", "SPARKDEX.SGD"],
+        ["BTS", "SPARKDEX.AUD"],
+        ["BTS", "SPARKDEX.EUR"],
+        ["BTS", "SPARKDEX.GBP"],
+        ["BTS", "PEG.PHP"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -335,4 +384,12 @@ export function getSupportedLanguages() {
 export function getAllowedLogins() {
     // possible: list containing any combination of ["password", "wallet"]
     return ["password", "wallet"];
+}
+
+export function getHeadFeedAsset() {
+    if (_isTestnet()) {
+        return ["NOTIFICATIONS"];
+    } else {
+        return ["TEST"];
+    }
 }

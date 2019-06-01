@@ -349,33 +349,6 @@ export default class DropDownMenu extends React.Component {
                 </li>
 
                 <li
-                    className={cnames(
-                        {
-                            active:
-                                active.indexOf(
-                                    "/help/introduction/bitshares"
-                                ) !== -1
-                        },
-                        "divider"
-                    )}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        "/help/introduction/bitshares"
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="question-circle"
-                            title="icons.question_circle"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.help" />
-                    </div>
-                </li>
-
-                <li
                     className={cnames({
                         active: active.indexOf("/voting") !== -1,
                         disabled: !showAccountLinks

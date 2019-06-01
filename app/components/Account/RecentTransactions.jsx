@@ -9,7 +9,7 @@ import {
     FetchChain,
     ChainStore
 } from "bitsharesjs";
-import ps from "perfect-scrollbar";
+//import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
@@ -86,7 +86,6 @@ class RecentTransactions extends React.Component {
         this.useCustom = counterpart.translate(
             "account.export_modal.use_custom"
         );
-
         // https://eswrapper.bitshares.eu/ is not alive
         // https://wrapper.elasticsearch.bitshares.ws/ is not alive
         // http://bts-es.clockwork.gr:5000/ is alive
@@ -101,7 +100,7 @@ class RecentTransactions extends React.Component {
     componentDidMount() {
         if (!this.props.fullHeight) {
             let t = this.refs.transactions;
-            ps.initialize(t);
+            //ps.initialize(t);
 
             this._setHeaderHeight();
         }
@@ -502,7 +501,7 @@ class RecentTransactions extends React.Component {
                                 </Tooltip>
                             ) : null}
 
-                            {historyCount > 0 ? (
+                            {historyCount > 0 && this.props.dashboard ? (
                                 <Tooltip
                                     placement="bottom"
                                     title={counterpart.translate(
