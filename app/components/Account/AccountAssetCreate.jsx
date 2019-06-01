@@ -240,7 +240,8 @@ class AccountAssetCreate extends React.Component {
                 max_supply: 100000,
                 max_market_fee: 0,
                 market_fee_percent: 0,
-                description: {main: ""}
+                description: {main: ""},
+                reward_percent: 0
             },
             errors: {
                 max_supply: null
@@ -296,8 +297,7 @@ class AccountAssetCreate extends React.Component {
             core_exchange_rate,
             isBitAsset,
             is_prediction_market,
-            bitasset_opts,
-            reward_percent
+            bitasset_opts
         } = this.state;
 
         let {account} = this.props;
@@ -322,8 +322,7 @@ class AccountAssetCreate extends React.Component {
             isBitAsset,
             is_prediction_market,
             bitasset_opts,
-            description,
-            reward_percent
+            description
         ).then(result => {
             console.log(
                 "... AssetActions.createAsset(account_id, update)",
@@ -1328,7 +1327,6 @@ class AccountAssetCreate extends React.Component {
                                             </div>
                                         </div>
                                     ) : null}
-
                                     <div>
                                         <Translate
                                             component="h3"
@@ -1336,6 +1334,7 @@ class AccountAssetCreate extends React.Component {
                                         />
                                         <label>
                                             <Translate content="account.user_issued_assets.reward_percent" />{" "}
+                                            (%)
                                             <input
                                                 type="number"
                                                 value={update.reward_percent}
@@ -1346,7 +1345,6 @@ class AccountAssetCreate extends React.Component {
                                             />
                                         </label>
                                     </div>
-
                                     <h3>
                                         <Translate content="account.user_issued_assets.flags" />
                                     </h3>

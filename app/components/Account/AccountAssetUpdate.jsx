@@ -111,6 +111,13 @@ class AccountAssetUpdate extends React.Component {
         );
         asset.options.market_fee_percent /= 100;
 
+        if (
+            asset.options.extensions !== null &&
+            asset.options.extensions.reward_percent !== null
+        ) {
+            asset.options.extensions.reward_percent /= 100;
+        }
+
         let coreRateQuoteAssetName = ChainStore.getAsset(
             core_exchange_rate.quote.asset_id
         ).get("symbol");
@@ -129,6 +136,7 @@ class AccountAssetUpdate extends React.Component {
             update: {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
+                reward_percent: asset.options.extensions.reward_percent,
                 market_fee_percent: asset.options.market_fee_percent,
                 description: assetUtils.parseDescription(
                     asset.options.description
@@ -295,12 +303,12 @@ class AccountAssetUpdate extends React.Component {
             tabUpdateIndex["4"] = true;
 
         /* Flags */
-        // todo add reward_percent
 
         if (
             JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
             s.update.market_fee_percent !== p.update.market_fee_percent ||
-            s.update.max_market_fee !== p.update.max_market_fee
+            s.update.max_market_fee !== p.update.max_market_fee ||
+            s.update.reward_percent !== p.update.reward_percent
         )
             tabUpdateIndex["5"] = true;
 
@@ -401,7 +409,6 @@ class AccountAssetUpdate extends React.Component {
             auths,
             feedProducersJS,
             originalFeedProducersJS,
-            0, // reward_percent value
             this.assetChanged()
         ).then(() => {
             console.log(
@@ -517,7 +524,9 @@ class AccountAssetUpdate extends React.Component {
             case "market_fee_percent":
                 update[value] = this._forcePositive(e.target.value);
                 break;
-
+            case "reward_percent":
+                update[value] = this._forcePositive(e.target.value);
+                break;
             case "max_market_fee":
                 let marketFee = e.amount.replace(/,/g, "");
                 if (
@@ -777,13 +786,9 @@ class AccountAssetUpdate extends React.Component {
     }
 
     onChangeList(key, action = "add", id) {
-        console.log("op " + action + " on key `" + key + "`. id = " + id);
-
         let current = this.state[key];
         if (action === "add" && !current.includes(id)) {
             current = current.push(id);
-
-            console.log("current = " + current);
         } else if (action === "remove" && current.includes(id)) {
             current = current.remove(current.indexOf(id));
         }
@@ -1507,7 +1512,24 @@ class AccountAssetUpdate extends React.Component {
                                             </div>
                                         </div>
                                     ) : null}
-
+                                    <div>
+                                        <Translate
+                                            component="h3"
+                                            content="account.user_issued_assets.reward_percent"
+                                        />
+                                        <label>
+                                            <Translate content="account.user_issued_assets.reward_percent" />{" "}
+                                            (%)
+                                            <input
+                                                type="number"
+                                                value={update.reward_percent}
+                                                onChange={this._onUpdateInput.bind(
+                                                    this,
+                                                    "reward_percent"
+                                                )}
+                                            />
+                                        </label>
+                                    </div>
                                     <h3>
                                         <Translate content="account.user_issued_assets.flags" />
                                     </h3>

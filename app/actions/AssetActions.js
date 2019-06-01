@@ -229,8 +229,7 @@ class AssetActions {
         isBitAsset,
         is_prediction_market,
         bitasset_opts,
-        description,
-        reward_percent
+        description
     ) {
         // Create asset action here...
         console.log(
@@ -259,6 +258,8 @@ class AssetActions {
         let corePrecision = utils.get_asset_precision(
             ChainStore.getAsset(cer.base.asset_id).get("precision")
         );
+
+        console.log("Now reward_percent = " + createObject.reward_percent);
 
         let operationJSON = {
             fee: {
@@ -290,7 +291,7 @@ class AssetActions {
                 blacklist_markets: [],
                 description: description,
                 extensions: {
-                    reward_percent: reward_percent,
+                    reward_percent: createObject.reward_percent * 100 || 0,
                     whitelist_market_fee_sharing: []
                 }
             },
@@ -335,7 +336,6 @@ class AssetActions {
         auths,
         feedProducers,
         originalFeedProducers,
-        reward_percent,
         assetChanged
     ) {
         // Create asset action here...
@@ -394,7 +394,7 @@ class AssetActions {
                     whitelist_markets: auths.whitelist_markets.toJS(),
                     blacklist_markets: auths.blacklist_markets.toJS(),
                     extensions: {
-                        reward_percent: reward_percent,
+                        reward_percent: update.reward_percent * 100,
                         whitelist_market_fee_sharing: auths.whitelist_market_fee_sharing.toJS()
                     },
                     core_exchange_rate: {

@@ -293,6 +293,7 @@
             "primary": "Primary settings",
             "quote": "Quote asset amount",
             "quote_name": "Quote asset",
+            "reward_percent": "Reward percent",
             "short": "Short name (max 32 characters)",
             "symbol": "Symbol",
             "to": "Issue to account",
