@@ -24,7 +24,8 @@ import AssetOwnerUpdate from "./AssetOwnerUpdate";
 import AssetPublishFeed from "./AssetPublishFeed";
 import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
-import {Tooltip, Icon, Table} from "bitshares-ui-style-guide";
+import {Tooltip, Icon, Table, Tabs as AntTabs} from "bitshares-ui-style-guide";
+// TODO: Replace remaining old style Tabs with new
 
 class AssetFlag extends React.Component {
     render() {
@@ -72,7 +73,8 @@ class Asset extends React.Component {
             collateralTableSort: "price",
             sortDirection: true,
             showCollateralBidInInfo: false,
-            cumulativeGrouping: false
+            cumulativeGrouping: false,
+            activeFeedTab: "feed"
         };
     }
 
@@ -1817,6 +1819,12 @@ class Asset extends React.Component {
         );
     }
 
+    _setFeedTab(tab) {
+        this.setState({
+            activeFeedTab: tab
+        });
+    }
+
     renderFeedTables(asset) {
         var bitAsset = asset.bitasset;
         if (
@@ -1831,24 +1839,35 @@ class Asset extends React.Component {
         let isGlobalSettlement = bitAsset.settlement_fund > 0 ? true : false;
 
         return (
-            <Tabs defaultActiveTab={0}>
-                <Tab title="explorer.asset.price_feed_data.title" key="0">
-                    {this._renderFeedTable(asset)}
-                </Tab>
-
-                <Tab
-                    key="1"
-                    title={
+            <AntTabs
+                onChange={this._setFeedTab.bind(this)}
+                activeKey={this.state.activeFeedTab}
+            >
+                <AntTabs.TabPane
+                    tab={counterpart.translate(
+                        "explorer.asset.price_feed_data.title"
+                    )}
+                    key="feed"
+                >
+                    {this.state.activeFeedTab == "feed"
+                        ? this._renderFeedTable(asset)
+                        : null}
+                </AntTabs.TabPane>
+                <AntTabs.TabPane
+                    tab={counterpart.translate(
                         isGlobalSettlement
                             ? "explorer.asset.collateral_bid.title"
                             : "explorer.asset.margin_positions.title"
-                    }
+                    )}
+                    key="margin"
                 >
-                    {!isGlobalSettlement
-                        ? this._renderMarginTable()
-                        : this._renderCollBidTable()}
-                </Tab>
-            </Tabs>
+                    {this.state.activeFeedTab == "margin"
+                        ? isGlobalSettlement
+                            ? this._renderCollBidTable()
+                            : this._renderMarginTable()
+                        : null}
+                </AntTabs.TabPane>
+            </AntTabs>
         );
     }
 
