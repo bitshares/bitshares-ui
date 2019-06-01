@@ -71,6 +71,7 @@ class AccountRewards extends React.Component {
                 <Translate
                     component="p"
                     content={"cryptobridge.competition.description"}
+                    unsafe
                 />
                 <Translate
                     component="p"
