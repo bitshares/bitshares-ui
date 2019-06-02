@@ -77,13 +77,12 @@ class BidCollateralOperation extends React.Component {
         const {account, collateralAmount, debtAmount} = this.state;
 
         let tabIndex = 1;
-        const coreID = core.get("id") || "1.3.0";
         let balance = 0;
-        const coreBalanceID = account
-            ? account.getIn(["balances", coreID])
+        const backingBalanceID = account
+            ? account.getIn(["balances", core.get("id")])
             : null;
-        if (coreBalanceID) {
-            let balanceObject = ChainStore.getObject(coreBalanceID);
+        if (backingBalanceID) {
+            let balanceObject = ChainStore.getObject(backingBalanceID);
             if (balanceObject) {
                 balance = balanceObject.get("balance");
             }
@@ -93,7 +92,7 @@ class BidCollateralOperation extends React.Component {
             <span>
                 <Translate component="span" content="transfer.available" />
                 :&nbsp;
-                <FormattedAsset amount={balance} asset={coreID} />
+                <FormattedAsset amount={balance} asset={core.get("id")} />
             </span>
         );
 
@@ -104,8 +103,8 @@ class BidCollateralOperation extends React.Component {
                     display_balance={balanceText}
                     amount={collateralAmount}
                     onChange={this._collateralBidInput.bind(this)}
-                    asset={coreID}
-                    assets={[coreID]}
+                    asset={core.get("id")}
+                    assets={[core.get("id")]}
                     placeholder="0.0"
                     tabIndex={tabIndex++}
                     style={{width: "100%", paddingTop: 16}}
@@ -133,7 +132,7 @@ class BidCollateralOperation extends React.Component {
                             &nbsp;
                             <FormattedPrice
                                 base_amount={this.state.collateralAmount / 1}
-                                base_asset={coreID}
+                                base_asset={core.get("id")}
                                 quote_amount={this.state.debtAmount / 1}
                                 quote_asset={asset.get("id")}
                                 noPopOver
@@ -169,9 +168,6 @@ class BidCollateralOperation extends React.Component {
 
 BidCollateralOperation = AssetWrapper(BidCollateralOperation, {
     propNames: ["asset", "core"],
-    defaultProps: {
-        core: "1.3.0"
-    },
     withDynamic: true
 });
 
