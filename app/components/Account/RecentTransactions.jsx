@@ -497,7 +497,7 @@ class RecentTransactions extends React.Component {
                                 </Tooltip>
                             ) : null}
 
-                            {historyCount > 0 ? (
+                            {historyCount > 0 && this.props.dashboard ? (
                                 <Tooltip
                                     placement="bottom"
                                     title={counterpart.translate(
