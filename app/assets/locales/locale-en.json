@@ -1730,6 +1730,7 @@
         "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
         "confirm_yes": "Always",
         "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes. Error was: %(error)s",
+        "custom": "Custom",
         "darkTheme": "Dark",
         "delete_select": "Select local wallet to delete",
         "disabled": "Disabled",

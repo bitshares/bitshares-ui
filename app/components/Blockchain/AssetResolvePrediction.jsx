@@ -5,7 +5,10 @@ import ChainTypes from "../Utility/ChainTypes";
 import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
 import counterpart from "counterpart";
-import {Radio, Tooltip} from "bitshares-ui-style-guide";
+import {Radio, Tooltip, Button, Form} from "bitshares-ui-style-guide";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
+import {ChainStore} from "bitsharesjs";
+import {Asset, Price} from "../../lib/common/MarketClasses";
 
 class AssetResolvePrediction extends React.Component {
     static propTypes = {
@@ -16,84 +19,156 @@ class AssetResolvePrediction extends React.Component {
         super();
 
         this.state = {
-            price: 1
+            globalSettlementPrice: null,
+            customPrice: false
         };
     }
 
     shouldComponentUpdate(np, ns) {
         return (
-            np.asset.id !== this.props.asset.id || ns.price !== this.state.price
+            np.asset.id !== this.props.asset.id ||
+            ns.globalSettlementPrice !== this.state.globalSettlementPrice ||
+            ns.customPrice !== this.state.customPrice
         );
+    }
+
+    onPriceChanged(value) {
+        if (value == 2 && !this.state.customPrice) {
+            this.setState({
+                globalSettlementPrice: 1,
+                customPrice: true
+            });
+        } else {
+            this.setState({
+                globalSettlementPrice: value
+            });
+        }
+    }
+
+    onPriceChangedObject(value) {
+        this.onPriceChanged(value.toReal());
     }
 
     onSubmit() {
         const {asset, account} = this.props;
 
-        AssetActions.resolvePrediction(
-            asset,
-            account.get("id"),
-            this.state.price
-        ).then(() => {
-            this.onReset();
+        let quote = new Asset({
+            real: this.state.globalSettlementPrice,
+            asset_id: this.props.asset.id,
+            precision: this.props.asset.precision
         });
+        let baseAsset = ChainStore.getAsset(
+            asset.bitasset.options.short_backing_asset
+        );
+        let base = new Asset({
+            real: 1,
+            asset_id: this.props.asset.bitasset.options.short_backing_asset,
+            precision: baseAsset.get("precision")
+        });
+
+        let price = new Price({
+            quote,
+            base
+        });
+
+        AssetActions.assetGlobalSettle(asset, account.get("id"), price).then(
+            () => {
+                this.onReset();
+            }
+        );
     }
 
     onReset() {
         this.setState({
-            price: 1
+            globalSettlementPrice: null,
+            customPrice: false
         });
     }
 
-    onChange(e) {
-        this.setState({
-            price: e.target.value
-        });
+    onChange({amount}) {
+        this.onPriceChanged(amount);
+    }
+
+    onChangeRadio(e) {
+        this.onPriceChanged(e.target.value);
     }
 
     render() {
-        const {current_feed_publication_time} = this.props.asset.bitasset;
-        const disabled =
-            new Date().getTime() <
-            new Date(current_feed_publication_time).getTime();
+        const {asset} = this.props;
+
+        const base = ChainStore.getAsset(
+            asset.bitasset.options.short_backing_asset
+        );
 
         return (
             <div>
-                <div style={{paddingBottom: "1rem"}}>
+                <Form
+                    style={{paddingBottom: "1rem"}}
+                    className="full-width"
+                    layout="vertical"
+                >
                     <Radio.Group
-                        onChange={this.onChange.bind(this)}
-                        value={this.state.price}
+                        onChange={this.onChangeRadio.bind(this)}
+                        value={this.state.globalSettlementPrice}
                     >
-                        <Radio value={1}>
+                        <Radio
+                            value={1}
+                            disabled={this.state.customPrice ? true : undefined}
+                        >
                             <Translate content="settings.yes" />
                         </Radio>
-                        <Radio value={0}>
+                        <Radio
+                            value={0}
+                            disabled={this.state.customPrice ? true : undefined}
+                        >
                             <Translate content="settings.no" />
                         </Radio>
+                        <Radio
+                            value={
+                                !this.state.customPrice
+                                    ? 2
+                                    : this.state.globalSettlementPrice
+                            }
+                        >
+                            <Translate content="settings.custom" />
+                        </Radio>
                     </Radio.Group>
-                </div>
-                <div style={{paddingTop: "1rem"}} className="button-group">
-                    <Tooltip
-                        visible={disabled}
-                        title={counterpart.translate(
-                            "account_browsing_mode.you_are_in_browsing_mode"
-                        )}
-                    >
-                        <button
-                            className={classnames("button", {
-                                disabled
-                            })}
+                    <br />
+                    <br />
+                    <AmountSelector
+                        disabled={this.state.customPrice ? undefined : true}
+                        label="explorer.asset.price_feed.global_settlement_price"
+                        amount={this.state.globalSettlementPrice}
+                        onChange={this.onChange.bind(this)}
+                        asset={asset.id}
+                        base={base.get("symbol")}
+                        isPrice
+                        assets={[asset.id]}
+                        placeholder="0.0"
+                        style={{
+                            width: "100%"
+                        }}
+                    />
+                    <div style={{paddingTop: "1rem"}} className="button-group">
+                        <Button
+                            type="primary"
+                            disabled={
+                                this.state.globalSettlementPrice == null
+                                    ? true
+                                    : undefined
+                            }
                             onClick={this.onSubmit.bind(this)}
                         >
                             <Translate content="account.perm.publish_prediction" />
-                        </button>
-                    </Tooltip>
-                    <button
-                        className="button outline"
-                        onClick={this.onReset.bind(this)}
-                    >
-                        <Translate content="account.perm.reset" />
-                    </button>
-                </div>
+                        </Button>
+                        <Button
+                            style={{marginLeft: "8px"}}
+                            onClick={this.onReset.bind(this)}
+                        >
+                            <Translate content="account.perm.reset" />
+                        </Button>
+                    </div>
+                </Form>
             </div>
         );
     }
