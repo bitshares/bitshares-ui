@@ -42,10 +42,6 @@ class AccountActions {
         return name;
     }
 
-    setNeverShowBrowsingModeNotice(value) {
-        return value;
-    }
-
     tryToSetCurrentAccount() {
         return true;
     }
