@@ -25,9 +25,12 @@ import {
     Col,
     Radio,
     Input,
-    Icon as AntIcon
+    Icon as AntIcon,
+    Button
 } from "bitshares-ui-style-guide";
 import AccountStore from "stores/AccountStore";
+import JoinWitnessesModal from "../Modal/JoinWitnessesModal";
+import JoinCommitteeModal from "../Modal/JoinCommitteeModal";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -62,7 +65,9 @@ class AccountVoting extends React.Component {
             pollsLength: null,
             expiredWorkersLength: null,
             voteThreshold: null,
-            filterSearch: ""
+            filterSearch: "",
+            showCreateCommitteeModal: false,
+            showCreateWitnessModal: false
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -84,6 +89,9 @@ class AccountVoting extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         return (
+            ns.showCreateWitnessModal !== this.state.showCreateWitnessModal ||
+            ns.showCreateCommitteeModal !==
+                this.state.showCreateCommitteeModal ||
             ns.workerTableIndex !== this.state.workerTableIndex ||
             ns.prev_proxy_account_id !== this.state.prev_proxy_account_id ||
             ns.newWorkersLength !== this.state.newWorkersLength ||
@@ -261,6 +269,19 @@ class AccountVoting extends React.Component {
 
     onPublish() {
         this.publish(this.state.proxy_account_id);
+    }
+
+    showWitnessModal() {
+        console.log("asdasd");
+        this.setState({
+            showCreateWitnessModal: !this.state.showCreateWitnessModal
+        });
+    }
+
+    showCommitteeModal() {
+        this.setState({
+            showCreateCommitteeModal: !this.state.showCreateCommitteeModal
+        });
     }
 
     publish(new_proxy_id) {
@@ -578,7 +599,7 @@ class AccountVoting extends React.Component {
         let publish_buttons_class = cnames("button", {
             disabled: !this.isChanged()
         });
-        let {globalObject} = this.props;
+        let {globalObject, account} = this.props;
         let budgetObject;
         if (this.state.lastBudgetObject) {
             budgetObject = ChainStore.getObject(this.state.lastBudgetObject);
@@ -605,45 +626,53 @@ class AccountVoting extends React.Component {
         }
 
         let actionButtons = (
-            <div
-                style={{
-                    float: "right"
-                }}
-            >
-                <button
-                    className={cnames(publish_buttons_class, {
-                        success: this.isChanged()
-                    })}
-                    onClick={this.onPublish}
-                    tabIndex={4}
-                >
-                    <Translate content="account.votes.publish" />
-                </button>
-                <button
-                    className={"button " + publish_buttons_class}
-                    onClick={this.onReset}
-                    tabIndex={8}
-                >
-                    <Translate content="account.perm.reset" />
-                </button>
-                {accountHasProxy && (
-                    <button
-                        className={"button"}
-                        onClick={this.onRemoveProxy}
-                        tabIndex={9}
-                    >
-                        <Translate content="account.perm.remove_proxy" />
-                    </button>
+            <Tooltip
+                title={counterpart.translate(
+                    "account.votes.cast_votes_through_one_operation"
                 )}
-            </div>
+                mouseEnterDelay={0.5}
+            >
+                <div
+                    style={{
+                        float: "right"
+                    }}
+                >
+                    <Button
+                        type="primary"
+                        onClick={this.onPublish}
+                        tabIndex={4}
+                        disabled={!this.isChanged() ? true : undefined}
+                    >
+                        <Translate content="account.votes.publish" />
+                    </Button>
+                    <Button
+                        style={{marginLeft: "8px"}}
+                        onClick={this.onReset}
+                        tabIndex={8}
+                    >
+                        <Translate content="account.perm.reset" />
+                    </Button>
+                    {accountHasProxy && (
+                        <Button
+                            type="primary"
+                            className={"primary"}
+                            style={{marginLeft: "8px"}}
+                            onClick={this.onRemoveProxy}
+                            tabIndex={9}
+                        >
+                            <Translate content="account.perm.remove_proxy" />
+                        </Button>
+                    )}
+                </div>
+            </Tooltip>
         );
 
         let proxyInput = (
             <AccountSelector
+                label="account.votes.proxy_short"
                 style={{
                     width: "50%",
                     maxWidth: 250,
-                    marginTop: 10,
                     display: "inline-block"
                 }}
                 account={this.state.current_proxy_input}
@@ -726,12 +755,20 @@ class AccountVoting extends React.Component {
         );
 
         return (
-            <div className="grid-content app-tables no-padding" ref="appTables">
+            <div className="grid-content app-tables no-padding">
                 <div className="content-block small-12 voting">
-                    <div className="proxy-row">
-                        {/* <Link to="/help/voting/witness"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
-                        {proxyInput}
-                        {actionButtons}
+                    <div className="padding">
+                        <div>
+                            <Translate content="voting.title" component="h1" />
+                            <Translate
+                                content="voting.description"
+                                component="p"
+                            />
+                        </div>
+                        <div className="proxy-row">
+                            {proxyInput}
+                            {actionButtons}
+                        </div>
                     </div>
                     <div className="tabs-container generic-bordered-box">
                         <Tabs
@@ -744,6 +781,33 @@ class AccountVoting extends React.Component {
                         >
                             <Tab title="explorer.witnesses.title">
                                 <div className={cnames("content-block")}>
+                                    <div className="header-selector">
+                                        <div style={{float: "right"}}>
+                                            <Button
+                                                style={{marginRight: "5px"}}
+                                                onClick={this.showWitnessModal.bind(
+                                                    this
+                                                )}
+                                            >
+                                                <Translate content="account.votes.join_witnesses" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="selector inline-block">
+                                            {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
+                                            <Input
+                                                placeholder={"Filter..."}
+                                                value={this.state.filterSearch}
+                                                style={{width: "220px"}}
+                                                onChange={this.handleFilterChange.bind(
+                                                    this
+                                                )}
+                                                addonAfter={
+                                                    <AntIcon type="search" />
+                                                }
+                                            />
+                                        </div>
+                                    </div>
                                     <VotingAccountsList
                                         type="witness"
                                         label="account.votes.add_witness_label"
@@ -773,11 +837,44 @@ class AccountVoting extends React.Component {
                                             "active_witnesses"
                                         )}
                                         proxy={this.state.proxy_account_id}
+                                        filterSearch={filterSearch}
                                     />
                                 </div>
+                                <JoinWitnessesModal
+                                    visible={this.state.showCreateWitnessModal}
+                                    account={account}
+                                    hideModal={this.showWitnessModal.bind(this)}
+                                />
                             </Tab>
 
                             <Tab title="explorer.committee_members.title">
+                                <div className="header-selector">
+                                    <div style={{float: "right"}}>
+                                        <Button
+                                            style={{marginRight: "5px"}}
+                                            onClick={this.showCommitteeModal.bind(
+                                                this
+                                            )}
+                                        >
+                                            <Translate content="account.votes.join_committee" />
+                                        </Button>
+                                    </div>
+
+                                    <div className="selector inline-block">
+                                        {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
+                                        <Input
+                                            placeholder={"Filter..."}
+                                            value={this.state.filterSearch}
+                                            style={{width: "220px"}}
+                                            onChange={this.handleFilterChange.bind(
+                                                this
+                                            )}
+                                            addonAfter={
+                                                <AntIcon type="search" />
+                                            }
+                                        />
+                                    </div>
+                                </div>
                                 <div className={cnames("content-block")}>
                                     <VotingAccountsList
                                         type="committee"
@@ -808,17 +905,28 @@ class AccountVoting extends React.Component {
                                             "active_committee_members"
                                         )}
                                         proxy={this.state.proxy_account_id}
+                                        filterSearch={filterSearch}
                                     />
                                 </div>
+                                <JoinCommitteeModal
+                                    visible={
+                                        this.state.showCreateCommitteeModal
+                                    }
+                                    account={account}
+                                    hideModal={this.showCommitteeModal.bind(
+                                        this
+                                    )}
+                                />
                             </Tab>
 
                             <Tab title="account.votes.workers_short">
                                 <div className="header-selector">
                                     <div style={{float: "right"}}>
-                                        <Link to="/create-worker">
-                                            <div className="button">
-                                                <Translate content="account.votes.create_worker" />
-                                            </div>
+                                        <Link
+                                            to="/create-worker"
+                                            className="button primary"
+                                        >
+                                            <Translate content="account.votes.create_worker" />
                                         </Link>
                                     </div>
 
@@ -862,31 +970,27 @@ class AccountVoting extends React.Component {
                                             ) : null}
 
                                             {pollsLength ? (
-                                                <Radio.Button value={3}>
+                                                <Radio value={3}>
                                                     {counterpart.translate(
                                                         "account.votes.polls",
                                                         {count: pollsLength}
                                                     )}
-                                                </Radio.Button>
+                                                </Radio>
                                             ) : null}
                                         </Radio.Group>
                                     </div>
 
                                     {hideLegacy}
-                                </div>
-                                {workerTableIndex ===
-                                2 ? null : workerTableIndex === 0 ? (
+                                    <br />
+                                    <br />
                                     <Row>
-                                        <Col
-                                            span={3}
-                                            style={{textAlign: "right"}}
-                                        >
-                                            <Translate content="account.votes.threshold" />
+                                        <Col span={3}>
+                                            <Translate content="account.votes.threshold" />{" "}
+                                            (<AssetName name={preferredUnit} />)
                                         </Col>
                                         <Col
                                             span={3}
                                             style={{
-                                                textAlign: "left",
                                                 marginLeft: "10px"
                                             }}
                                         >
@@ -898,20 +1002,14 @@ class AccountVoting extends React.Component {
                                             />
                                         </Col>
                                     </Row>
-                                ) : (
                                     <Row>
-                                        <Col
-                                            span={3}
-                                            style={{textAlign: "right"}}
-                                        >
+                                        <Col span={3}>
                                             <Translate content="account.votes.total_budget" />{" "}
-                                            (
-                                            <AssetName name={preferredUnit} />)
+                                            (<AssetName name={preferredUnit} />)
                                         </Col>
                                         <Col
                                             span={3}
                                             style={{
-                                                textAlign: "left",
                                                 marginLeft: "10px"
                                             }}
                                         >
@@ -925,8 +1023,7 @@ class AccountVoting extends React.Component {
                                             ) : null}
                                         </Col>
                                     </Row>
-                                )}
-
+                                </div>
                                 <WorkersList
                                     workerTableIndex={workerTableIndex}
                                     preferredUnit={preferredUnit}

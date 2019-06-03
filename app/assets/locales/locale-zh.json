@@ -342,7 +342,7 @@
             "name": "账户名",
             "new": "提案预算项目 (%(count)s)",
             "no_proxy": "无代理",
-            "polls": "Polls(%(count)s)",
+            "polls": "Polls (%(count)s)",
             "proxy": "手动输入某账户作为你的代理",
             "proxy_current": "你当前的投票代理人是",
             "proxy_known": "或者选择其他账户作为投票代理",
@@ -2040,7 +2040,7 @@
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "此提案由未知账户创建或提议目标为未知账户，此未知账户（不在联系单或白名单中）。警惕诈骗行为并小心检查所有操作。",
         "proxy_remove": "你有一个代理设置，清除输入字段就可以简单移除代理。",
-        "proxy_search": "查找一个账户来作为你的投票代理",
+        "proxy_search": "",
         "registration": {
             "accountModel": "账号模式允许你只需要账户名和密码就可以从任意计算机和浏览器上登录自己的账户。但<strong>你的密码将有可能被暴力破解！因此使用长密码非常重要，密码长度最好在 20 位字符以上！</strong>",
             "accountName": "账户名必须为4到63位字符,必须含有拉丁字母,短划线,数字.",
