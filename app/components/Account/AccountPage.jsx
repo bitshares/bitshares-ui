@@ -104,6 +104,7 @@ class AccountPage extends React.Component {
                         />
                         <Redirect
                             from={`/account/${account_name}`}
+                            exact
                             to={`/account/${account_name}/overview/portfolio`}
                         />
                         <Route
