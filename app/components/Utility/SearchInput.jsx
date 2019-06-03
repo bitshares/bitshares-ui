@@ -21,7 +21,7 @@ export default function SearchInput({ onChange, value, placeholder, maxLength,
                 <Icon
                     onClick={onClear}
                     type="close"
-                    className="cursor-pointer"
+                    className={value ? "cursor-pointe" : "hide"}
                 /> :
                 null
         }
