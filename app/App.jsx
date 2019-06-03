@@ -337,6 +337,7 @@ class App extends React.Component {
                                 />
                                 <Route
                                     path="/account/:account_name/overview/:tab"
+                                    exact
                                     component={AccountPage}
                                 />
                                 <Route
