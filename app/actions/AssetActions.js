@@ -6,6 +6,7 @@ import WalletDb from "stores/WalletDb";
 import {ChainStore} from "bitsharesjs";
 import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
+import {price} from "bitsharesjs/es/serializer/src/operations";
 let inProgress = {};
 
 class AssetActions {
@@ -220,19 +221,17 @@ class AssetActions {
         };
     }
 
-    resolvePrediction(asset, account_id, price) {
+    assetGlobalSettle(asset, account_id, price) {
         let tr = WalletApi.new_transaction();
 
-        tr.add_type_operation("asset_settle", {
+        tr.add_type_operation("asset_global_settle", {
             fee: {
                 amount: 0,
                 asset_id: 0
             },
-            account: account_id,
-            amount: {
-                amount: price,
-                asset_id: asset.id
-            }
+            issuer: account_id,
+            asset_to_settle: asset.id,
+            settle_price: price
         });
         return dispatch => {
             return WalletDb.process_transaction(tr, null, true)
@@ -241,7 +240,7 @@ class AssetActions {
                 })
                 .catch(error => {
                     console.log(
-                        "[AssetActions.js:223] ----- resolvePrediction error ----->",
+                        "[AssetActions.js:223] ----- assetGlobalSettle error ----->",
                         error
                     );
                     dispatch(false);
