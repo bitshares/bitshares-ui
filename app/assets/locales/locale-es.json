@@ -342,7 +342,7 @@
             "name": "Nombre",
             "new": "Propuesto (%(count)s)",
             "no_proxy": "Sin Apoderado",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Convertir en Apoderado de sus Votos a",
             "proxy_current": "Tu proxy actual es",
             "proxy_known": "O elige una cuenta como su proxy",

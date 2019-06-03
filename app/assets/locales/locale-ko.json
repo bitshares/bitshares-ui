@@ -342,7 +342,7 @@
             "name": "이름",
             "new": "Proposed (%(count)s)",
             "no_proxy": "대리투표 사용안함",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "대리투표 계정",
             "proxy_current": "Your current proxy is",
             "proxy_known": "Or choose an account as your proxy",

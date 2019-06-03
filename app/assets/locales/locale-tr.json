@@ -342,7 +342,7 @@
             "name": "Ad",
             "new": "Teklif edilen geliştirmeler",
             "no_proxy": "Vekil Yok",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Vekil Oy Hesabı",
             "proxy_current": "Your current proxy is",
             "proxy_known": "Bilinen proksiler",

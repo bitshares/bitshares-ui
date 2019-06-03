@@ -342,7 +342,7 @@
             "name": "名前",
             "new": "Proposed (%(count)s)",
             "no_proxy": "代理人はいません",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "代理人にするアカウントを手動で入力",
             "proxy_current": "現在の代理人: ",
             "proxy_known": "または代理人アカウントを選択してください",

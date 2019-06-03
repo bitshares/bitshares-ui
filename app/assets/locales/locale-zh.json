@@ -342,7 +342,7 @@
             "name": "账户名",
             "new": "提案预算项目 (%(count)s)",
             "no_proxy": "无代理",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "手动输入某账户作为你的代理",
             "proxy_current": "你当前的投票代理人是",
             "proxy_known": "或者选择其他账户作为投票代理",

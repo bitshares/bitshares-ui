@@ -342,7 +342,7 @@
             "name": "Nome",
             "new": "Worker proposti",
             "no_proxy": "Nessun proxy",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Inserisci manualmente un account come tuo proxy",
             "proxy_current": "Il tuo proxy attuale è",
             "proxy_known": "O scegli un account come tuo proxy",

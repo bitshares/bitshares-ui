@@ -342,7 +342,7 @@
             "name": "Name",
             "new": "Vorgeschlagen (%(count)s)",
             "no_proxy": "Kein Vertreter",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Vertreter-Konto",
             "proxy_current": "Ihr aktueller Vertreter ist",
             "proxy_known": "Oder wählen Sie ein Konto als Ihren Vertreter",

@@ -342,7 +342,7 @@
             "name": "Nom",
             "new": "Proposed (%(count)s)",
             "no_proxy": "No Proxy",
-            "polls": "Polls (%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Proxy Voting Account",
             "proxy_current": "Your current proxy is",
             "proxy_known": "Or choose an account as your proxy",
