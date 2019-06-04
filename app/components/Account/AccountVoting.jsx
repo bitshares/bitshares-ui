@@ -652,69 +652,60 @@ class AccountVoting extends React.Component {
                     >
                         <Translate content="account.perm.reset" />
                     </Button>
-                    {accountHasProxy && (
-                        <Button
-                            type="primary"
-                            className={"primary"}
-                            style={{marginLeft: "8px"}}
-                            onClick={this.onRemoveProxy}
-                            tabIndex={9}
-                        >
-                            <Translate content="account.perm.remove_proxy" />
-                        </Button>
-                    )}
                 </div>
             </Tooltip>
         );
 
         let proxyInput = (
-            <AccountSelector
-                label="account.votes.proxy_short"
-                style={{
-                    width: "50%",
-                    maxWidth: 250,
-                    display: "inline-block"
-                }}
-                account={this.state.current_proxy_input}
-                accountName={this.state.current_proxy_input}
-                onChange={this.onProxyChange.bind(this)}
-                onAccountChanged={this.onProxyAccountFound}
-                tabIndex={1}
-                placeholder={counterpart.translate("account.votes.set_proxy")}
-                tooltip={counterpart.translate(
-                    !this.state.proxy_account_id
-                        ? "tooltip.proxy_search"
-                        : "tooltip.proxy_remove"
+            <React.Fragment>
+                <AccountSelector
+                    label="account.votes.proxy_short"
+                    style={{
+                        width: "50%",
+                        maxWidth: 250,
+                        display: "inline-block"
+                    }}
+                    account={this.state.current_proxy_input}
+                    accountName={this.state.current_proxy_input}
+                    onChange={this.onProxyChange.bind(this)}
+                    onAccountChanged={this.onProxyAccountFound}
+                    tabIndex={1}
+                    placeholder={counterpart.translate(
+                        "account.votes.set_proxy"
+                    )}
+                    tooltip={counterpart.translate(
+                        !this.state.proxy_account_id
+                            ? "tooltip.proxy_search"
+                            : "tooltip.proxy_remove"
+                    )}
+                    hideImage
+                >
+                    <span
+                        style={{
+                            paddingLeft: 5,
+                            position: "relative",
+                            top: 9
+                        }}
+                    >
+                        <Link to="/help/voting">
+                            <Icon
+                                name="question-circle"
+                                title="icons.question_circle"
+                                size="1x"
+                            />
+                        </Link>
+                    </span>
+                </AccountSelector>
+                {accountHasProxy && (
+                    <Button
+                        style={{marginLeft: "1rem"}}
+                        onClick={this.onRemoveProxy}
+                        tabIndex={9}
+                    >
+                        <Translate content="account.perm.remove_proxy" />
+                    </Button>
                 )}
-                hideImage
-            >
-                <span
-                    style={{
-                        paddingLeft: 5,
-                        position: "relative",
-                        top: 9,
-                        display: hasProxy ? "" : "none"
-                    }}
-                >
-                    <Icon name="locked" size="1x" />
-                </span>
-                <span
-                    style={{
-                        paddingLeft: 5,
-                        position: "relative",
-                        top: 9,
-                        display: !hasProxy ? "" : "none"
-                    }}
-                >
-                    <Link to="/help/voting">
-                        <Icon
-                            name="question-circle"
-                            title="icons.question_circle"
-                            size="1x"
-                        />
-                    </Link>
-                </span>
-            </AccountSelector>
+            </React.Fragment>
         );
 
         const saveText = (
@@ -755,8 +746,8 @@ class AccountVoting extends React.Component {
         );
 
         return (
-            <div className="grid-content app-tables no-padding">
-                <div className="content-block small-12 voting">
+            <div className="grid-content no-padding page-layout ">
+                <div className="main-content content-block small-12 voting">
                     <div className="padding">
                         <div>
                             <Translate content="voting.title" component="h1" />

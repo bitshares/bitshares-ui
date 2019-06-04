@@ -99,7 +99,6 @@ class JoinCommitteeModal extends React.Component {
                         unsafe
                         component="p"
                     />
-                    <div className="ant-divider ant-divider-horizontal" />
                     <Form.Item
                         label={counterpart.translate("modal.committee.url")}
                     >
