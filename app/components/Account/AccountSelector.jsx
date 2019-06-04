@@ -56,14 +56,14 @@ class AccountSelector extends React.Component {
         excludeAccounts: [],
         disabled: null,
         editable: null,
-        locked: null
+        locked: false
     };
 
     constructor(props) {
         super(props);
         this.state = {
             inputChanged: false,
-            locked: this.props.locked
+            locked: null
         };
     }
 
@@ -394,12 +394,15 @@ class AccountSelector extends React.Component {
             error ||
             disableActionButton;
 
-        let editableInput = !!this.state.locked
+        const lockedState =
+            this.state.locked !== null ? this.state.locked : this.props.locked;
+
+        let editableInput = !!lockedState
             ? false
             : this.props.editable != null
                 ? this.props.editable
                 : undefined;
-        let disabledInput = !!this.state.locked
+        let disabledInput = !!lockedState
             ? true
             : this.props.disabled != null
                 ? this.props.disabled
@@ -562,7 +565,7 @@ class AccountSelector extends React.Component {
                                     }
                                 />
                             )}
-                            {!!this.state.locked && (
+                            {!!lockedState && (
                                 <Tooltip
                                     title={counterpart.translate(
                                         "tooltip.unlock_account_name"
