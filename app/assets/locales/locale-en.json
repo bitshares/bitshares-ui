@@ -764,7 +764,8 @@
             "margin_positions": {
                 "title": "Margin positions",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
-                "ratio_danger": "Position is below MCR and will be margin called"
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns."
             },
             "not_found": "The asset %(name)s does not exist",
             "permissions": {

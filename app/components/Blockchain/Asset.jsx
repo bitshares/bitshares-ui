@@ -345,8 +345,8 @@ class Asset extends React.Component {
         let preferredMarket = description.market
             ? description.market
             : core_asset
-            ? core_asset.get("symbol")
-            : "BTS";
+                ? core_asset.get("symbol")
+                : "BTS";
         if ("bitasset" in asset && asset.bitasset.is_prediction_market) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
@@ -1502,14 +1502,24 @@ class Asset extends React.Component {
                 },
                 render: item => {
                     return (
-                        <span
-                            onClick={this._toggleCumulativeGrouping.bind(this)}
+                        <Tooltip
+                            title={counterpart.translate(
+                                "explorer.asset.margin_positions.click_to_switch_to_cumulative"
+                            )}
+                            mouseEnterDelay={0.5}
                         >
-                            <FormattedAsset
-                                amount={item.amount}
-                                asset={item.asset}
-                            />
-                        </span>
+                            <span
+                                onClick={this._toggleCumulativeGrouping.bind(
+                                    this
+                                )}
+                                style={{cursor: "pointer"}}
+                            >
+                                <FormattedAsset
+                                    amount={item.amount}
+                                    asset={item.asset}
+                                />
+                            </span>
+                        </Tooltip>
                     );
                 }
             },
@@ -1537,14 +1547,24 @@ class Asset extends React.Component {
                 },
                 render: item => {
                     return (
-                        <span
-                            onClick={this._toggleCumulativeGrouping.bind(this)}
+                        <Tooltip
+                            title={counterpart.translate(
+                                "explorer.asset.margin_positions.click_to_switch_to_cumulative"
+                            )}
+                            mouseEnterDelay={0.5}
                         >
-                            <FormattedAsset
-                                amount={item.amount}
-                                asset={item.asset}
-                            />
-                        </span>
+                            <span
+                                onClick={this._toggleCumulativeGrouping.bind(
+                                    this
+                                )}
+                                style={{cursor: "pointer"}}
+                            >
+                                <FormattedAsset
+                                    amount={item.amount}
+                                    asset={item.asset}
+                                />
+                            </span>
+                        </Tooltip>
                     );
                 }
             },
