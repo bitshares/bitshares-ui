@@ -22,6 +22,7 @@ class JoinCommitteeModal extends React.Component {
     shouldComponentUpdate(np, ns) {
         return (
             this.props.visible !== np.visible ||
+            this.state.url !== ns.url ||
             this.state.committeeAccount !== ns.committeeAccount
         );
     }

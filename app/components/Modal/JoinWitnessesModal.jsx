@@ -24,6 +24,7 @@ class JoinWitnessesModal extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         return (
+            this.state.url !== ns.visible ||
             this.props.visible !== np.visible ||
             this.state.signingKey !== ns.signingKey ||
             this.state.witnessAccount !== ns.witnessAccount

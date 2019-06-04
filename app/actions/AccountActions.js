@@ -210,7 +210,7 @@ class AccountActions {
                 })
                 .catch(error => {
                     console.log(
-                        "[AccountActions.js:150] ----- Add Committee member error ----->",
+                        "----- Add Committee member error ----->",
                         error
                     );
                     dispatch(false);
@@ -218,7 +218,7 @@ class AccountActions {
         };
     }
 
-    createWitness({url, account, memo_key}) {
+    createWitness({url, account, signingKey}) {
         const account_id = account.get("id");
         var tr = WalletApi.new_transaction();
 
@@ -229,7 +229,7 @@ class AccountActions {
             },
             witness_account: account_id,
             url: url,
-            block_signing_key: memo_key
+            block_signing_key: signingKey
         });
         return dispatch => {
             return WalletDb.process_transaction(tr, null, true)
@@ -237,10 +237,7 @@ class AccountActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- Create witness error ----->",
-                        error
-                    );
+                    console.log("----- Create witness error ----->", error);
                     dispatch(false);
                 });
         };
