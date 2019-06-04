@@ -321,6 +321,7 @@
             "add_witness_label": "见证人",
             "already": "账户已经在列表中",
             "approve_worker": "赞成",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "clear_proxy": "移除投票代理",
             "cm_approved_by": "账户%(account)s赞同的理事会成员",
             "cm_not_approved_by": "账户%(account)s未赞同的理事会成员",
@@ -336,13 +337,15 @@
             "hide_legacy_proposals": "隐藏过期提案",
             "inactive": "备份",
             "info": "信息",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "行",
             "max_pay": "最大预算",
             "missing": "仍需票数",
             "name": "账户名",
             "new": "提案预算项目 (%(count)s)",
             "no_proxy": "无代理",
-            "polls": "Polls(%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "手动输入某账户作为你的代理",
             "proxy_current": "你当前的投票代理人是",
             "proxy_known": "或者选择其他账户作为投票代理",
@@ -736,8 +739,14 @@
                 "bid": "竞标价格",
                 "collateral": "追加抵押物",
                 "debt": "承担的债仓",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "抵押物竞价"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "申领手续费池余额",
                 "claim_fees": "领取手续费",
@@ -756,6 +765,9 @@
             "info": "资产信息",
             "invalid": "资产名 %(name)s 无效",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "抵押债仓"
             },
             "not_found": "资产 %(name)s 不存在",
@@ -910,6 +922,7 @@
             "children_authority_depth_warning": "此提案没有得到批准，因为一个许可值已经超过了最大权限值。",
             "failed": "失败",
             "failed_execute": "已批准，执行失败。",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "待处理",
             "pending_approval": "待处理批准。",
             "pending_review": "已批准, 检查时间.",
@@ -1130,6 +1143,7 @@
             "account": "账户"
         },
         "help": "帮助",
+        "not_found": "Not found",
         "return_to_top": "返回顶部",
         "scan_qr_code": "扫描二维码",
         "set": "设置"
@@ -1341,6 +1355,14 @@
         },
         "cancel": "取消",
         "close": "关闭",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
         "confirmation": {
             "accept": "是",
             "cancel": "否",
@@ -1448,6 +1470,17 @@
             "quantity": "数量",
             "submit": "提币",
             "withdraw": "提币"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "enter_public_signing_key": "Enter your public signing key",
+            "invalid_key": "Public Key is invalid",
+            "public_signing_key": "Public Signing Key",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "witness_account": "Witness Account"
         }
     },
     "news": {
@@ -1786,6 +1819,7 @@
         "themes": "主题",
         "unit": "显示记账单位",
         "valid_node_url": "节点地址必须以 ws:// 或 wss:// 开头",
+        "viewOnlyMode": "View only mode",
         "view_keys": "查看密钥",
         "wallet": "本地钱包",
         "walletLockTimeout": "钱包自动锁定时间（秒，0 为禁用）",
@@ -2040,7 +2074,7 @@
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "此提案由未知账户创建或提议目标为未知账户，此未知账户（不在联系单或白名单中）。警惕诈骗行为并小心检查所有操作。",
         "proxy_remove": "你有一个代理设置，清除输入字段就可以简单移除代理。",
-        "proxy_search": "查找一个账户来作为你的投票代理",
+        "proxy_search": "",
         "registration": {
             "accountModel": "账号模式允许你只需要账户名和密码就可以从任意计算机和浏览器上登录自己的账户。但<strong>你的密码将有可能被暴力破解！因此使用长密码非常重要，密码长度最好在 20 位字符以上！</strong>",
             "accountName": "账户名必须为4到63位字符,必须含有拉丁字母,短划线,数字.",
@@ -2327,6 +2361,10 @@
             "urlNamed": "%(name)s必须为url链接"
         }
     },
+    "voting": {
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "title": "Voting"
+    },
     "walkthrough": {
         "buy_form": "使用此表单下买单",
         "buy_orders": "查看该市场的所有购买订单。",
@@ -2367,6 +2405,7 @@
         "backup_explain": "点击按钮将生成一个后缀名为 .bin 的备份文件。这个备份文件使用你的钱包密码进行加密。其中包含该钱包中的所有私钥。通过它可以恢复钱包，或者在不同浏览器或者计算机间进行钱包迁移。",
         "backup_login": "备份 & 登录",
         "backup_new_account": "恭喜，你已经创建了一个新账户。强烈建议你立即备份你的钱包。如果你的计算机/浏览器发生意外，而你又没有备份文件，你将永久丢失钱包及其包含的数据和数字资产。",
+        "backup_types": "backup types",
         "backup_warning": "很明显你未备份你的私钥文件. 为了安全原因我们强烈建议用户在没有备份他们私钥的情况下不要登出.",
         "balance_claim_lookup": "查询余额",
         "balance_claims": "余额导入",
@@ -2476,6 +2515,7 @@
         "password_show": "显示我的密码",
         "paste_private": "将私钥粘贴在这里 (钱包导入格式 - WIF)",
         "pwd4brainkey": "输入密码后显示脑钱包密钥",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "准备导入",
         "reenter_brainkey": "请再输入一遍脑钱包密钥",
         "remember_me": "记住我",
@@ -2530,6 +2570,7 @@
         "wallet_model_2": "本地钱包模式的安全性最高，但只能在此电脑和此浏览器下使用。要在其他电脑或其他浏览器中使用该钱包的话，需要使用备份文件或脑钱包密钥对钱包进行迁移。",
         "wallet_model_3": "<li>多重签名账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
-        "wallet_password": "从任意地点使用密码登录"
+        "wallet_password": "从任意地点使用密码登录",
+        "wallet_types": "wallet types"
     }
 }

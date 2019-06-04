@@ -313,7 +313,7 @@
         },
         "votes": {
             "about": "Über",
-            "active": "Aktiv(%(count)s)",
+            "active": "Aktiv (%(count)s)",
             "active_short": "Aktiv",
             "add_committee": "Hinzufügen",
             "add_committee_label": "Mitglied des Komitees",
@@ -321,6 +321,7 @@
             "add_witness_label": "Zeuge",
             "already": "Konto ist schon in der Liste",
             "approve_worker": "Budgetpunkt bestätigen",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "clear_proxy": "Stellvertreter entfernen",
             "cm_approved_by": "Komitee Mitglied bestätigt durch %(account)s",
             "cm_not_approved_by": "Komitee Mitglied nicht bestätigt durch %(account)s",
@@ -336,13 +337,15 @@
             "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Inaktiv",
             "info": "Info",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "Linie",
             "max_pay": "Maximaler Tagessold",
             "missing": "Benötigt",
             "name": "Name",
-            "new": "Vorgeschlagen(%(count)s)",
+            "new": "Vorgeschlagen (%(count)s)",
             "no_proxy": "Kein Vertreter",
-            "polls": "Polls(%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Vertreter-Konto",
             "proxy_current": "Ihr aktueller Vertreter ist",
             "proxy_known": "Oder wählen Sie ein Konto als Ihren Vertreter",
@@ -736,8 +739,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Gebührenguthaben einfordern",
                 "claim_fees": "Gebühren einfordern",
@@ -756,6 +765,9 @@
             "info": "Anlagen Info",
             "invalid": "Der Anlagenname %(name)s ist ungültig",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Sicherheiten Positionen"
             },
             "not_found": "Die Anlage %(name)s existiert nicht",
@@ -910,6 +922,7 @@
             "children_authority_depth_warning": "Dieser Antrag wird nicht angenommen werden, weil die benötigten Befugnisse nicht ausreichen.",
             "failed": "Gescheitert",
             "failed_execute": "Angenommen, jedoch gescheitert bei der Ausführung.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Schwebend",
             "pending_approval": "Schwebende Annahme.",
             "pending_review": "Angenommen, aktuell im Bewertungszeitraum",
@@ -1130,6 +1143,7 @@
             "account": "account"
         },
         "help": "Hilfe",
+        "not_found": "Not found",
         "return_to_top": "Nach oben",
         "scan_qr_code": "QR-Code einlesen",
         "set": "Set"
@@ -1341,6 +1355,14 @@
         },
         "cancel": "cancel",
         "close": "close",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
         "confirmation": {
             "accept": "Ja",
             "cancel": "Nein",
@@ -1448,6 +1470,17 @@
             "quantity": "Menge",
             "submit": "Auszahlung",
             "withdraw": "Auszahlung"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "enter_public_signing_key": "Enter your public signing key",
+            "invalid_key": "Public Key is invalid",
+            "public_signing_key": "Public Signing Key",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "witness_account": "Witness Account"
         }
     },
     "news": {
@@ -1786,6 +1819,7 @@
         "themes": "Erscheinungsbild",
         "unit": "Bevorzugte Rechnungseinheit",
         "valid_node_url": "Knoten URL muss mit ws:// oder wss:// beginnen",
+        "viewOnlyMode": "View only mode",
         "view_keys": "Schlüssel betrachten",
         "wallet": "Lokale Wallet",
         "walletLockTimeout": "Wallet automatisch sperren (Sekunden)",
@@ -2040,7 +2074,7 @@
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "Sie haben einen Vertreter ausgewählt, um diesen zu entfernen einfach den Eintrag löschen und speichern.",
-        "proxy_search": "Suchen Sie nach einen Konto, der als Ihr Vertreter gewählt werden kann!",
+        "proxy_search": "",
         "registration": {
             "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
             "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
@@ -2327,6 +2361,10 @@
             "urlNamed": "%(name)s should be url"
         }
     },
+    "voting": {
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "title": "Voting"
+    },
     "walkthrough": {
         "buy_form": "Platzieren Sie Kaufaufträge über dieses Formular!",
         "buy_orders": "Alle Kaufaufträge für diesen Markt anschauen.",
@@ -2367,6 +2405,7 @@
         "backup_explain": "Durch das Klicken auf den Knopf darunter, wird eine Sicherungsdatei mit der .bin-Endung erstellt. Diese Datei wird mit Ihrem Passwort verschlüsselt und beinhaltet alle privaten Schlüssel von Ihrem Konto. Diese Datei kann benutzt werden, um Ihre Wallet wiederherzustellen oder zu einem anderen Computer/Browser zu wechseln.",
         "backup_login": "Sicherung & Anmeldung",
         "backup_new_account": "Glückwunsch, Sie haben gerade ein neues Konto auf der Bitshares Blockchain erstellt! Sie sollten jetzt auf jeden Fall eine Sicherung Ihrer Wallet erstellen! Ohne Sicherung gibt es keine Möglichkeit auf Ihr Konto zugreifen zu können.",
+        "backup_types": "backup types",
         "backup_warning": "Es schaut so aus, als wäre Ihre private Schlüssel-Datei noch nicht gesichert worden. Aus Gründen der Sicherheit empfehlen wir keine Anmeldung ohne Sicherungskopie Ihres privaten Schlüssels.",
         "balance_claim_lookup": "Guthaben anschauen",
         "balance_claims": "Guthaben einfordern",
@@ -2476,6 +2515,7 @@
         "password_show": "Passwort anzeigen",
         "paste_private": "Privaten Schlüssel hier einfügen (Wallet Import Format - WIF)",
         "pwd4brainkey": "Passwort eingeben, um Gedächtnisschlüssel anzuzeigen",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Fertig für Wiederherstellung",
         "reenter_brainkey": "Gedächtnisschlüssel bestätigen",
         "remember_me": "Remember me",
@@ -2530,6 +2570,7 @@
         "wallet_model_2": "Eine lokale Wallet bietet die beste Sicherheit, ist aber an den aktuellen Browser und Computer gebunden. Zur Migration auf ein anderes System, sollten Sie die Sicherungskopie (bin-Datei) oder den Gedächtnisschlüssel nutzen.",
         "wallet_model_3": "<li>Verschiedene Konten</li><li>Wallet Sicherung (Backup) benötigt</li><li>Hohe Sicherheit</li>",
         "wallet_move": "Diese Sicherungsdatei kann auch benutzt werden, um Ihre lokale Wallet, auf einen anderen Browser oder Computer zu benutzen. Damit Sie Ihre lokale Wallet wiederherstellen können, <strong>benötigen Sie auch Ihr Passwort!</strong>",
-        "wallet_password": "Anmeldung von überall möglich, durch Ihr Passwort."
+        "wallet_password": "Anmeldung von überall möglich, durch Ihr Passwort.",
+        "wallet_types": "wallet types"
     }
 }

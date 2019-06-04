@@ -117,7 +117,8 @@ class SettingsStore {
                     transferToMe: true
                 }
             },
-            rememberMe: true
+            rememberMe: true,
+            viewOnlyMode: true
         };
     }
 
@@ -155,8 +156,10 @@ class SettingsStore {
                     transferToMe: [true, false]
                 }
             },
-            rememberMe: [true, false]
-        };
+            rememberMe: [true, false],
+            viewOnlyMode: [{translate: "show"}, {translate: "hide"}]
+        }
+        ;
     }
 
     /**

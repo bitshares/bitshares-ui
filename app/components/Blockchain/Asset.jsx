@@ -1515,14 +1515,24 @@ class Asset extends React.Component {
                 },
                 render: item => {
                     return (
-                        <span
-                            onClick={this._toggleCumulativeGrouping.bind(this)}
+                        <Tooltip
+                            title={counterpart.translate(
+                                "explorer.asset.margin_positions.click_to_switch_to_cumulative"
+                            )}
+                            mouseEnterDelay={0.5}
                         >
-                            <FormattedAsset
-                                amount={item.amount}
-                                asset={item.asset}
-                            />
-                        </span>
+                            <span
+                                onClick={this._toggleCumulativeGrouping.bind(
+                                    this
+                                )}
+                                style={{cursor: "pointer"}}
+                            >
+                                <FormattedAsset
+                                    amount={item.amount}
+                                    asset={item.asset}
+                                />
+                            </span>
+                        </Tooltip>
                     );
                 }
             },
@@ -1550,14 +1560,24 @@ class Asset extends React.Component {
                 },
                 render: item => {
                     return (
-                        <span
-                            onClick={this._toggleCumulativeGrouping.bind(this)}
+                        <Tooltip
+                            title={counterpart.translate(
+                                "explorer.asset.margin_positions.click_to_switch_to_cumulative"
+                            )}
+                            mouseEnterDelay={0.5}
                         >
-                            <FormattedAsset
-                                amount={item.amount}
-                                asset={item.asset}
-                            />
-                        </span>
+                            <span
+                                onClick={this._toggleCumulativeGrouping.bind(
+                                    this
+                                )}
+                                style={{cursor: "pointer"}}
+                            >
+                                <FormattedAsset
+                                    amount={item.amount}
+                                    asset={item.asset}
+                                />
+                            </span>
+                        </Tooltip>
                     );
                 }
             },

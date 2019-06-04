@@ -568,6 +568,87 @@ export const settingsAPIs = {
             operator: "'Exotic flavors' infra worker",
             contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
         },
+        {
+            url: "wss://toronto2.ca.api.bitshares.org/ws",
+            region: "Canada",
+            country: "Canada",
+            location: "Toronto",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://master.eu.api.bitshares.org/ws",
+            region: "Northern Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://amsterdam.eu.api.bitshares.org/ws",
+            region: "Northern Europe",
+            country: "Netherlands",
+            location: "Amsterdam",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://london.eu.api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "England",
+            location: "London",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://paris.eu.api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "France",
+            location: "Paris",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://frankfurt.eu.api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://sydney.au.api.bitshares.org/ws",
+            region: "Oceania",
+            country: "Australia",
+            location: "Sydney",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://sydney2.au.api.bitshares.org/ws",
+            region: "Oceania",
+            country: "Australia",
+            location: "Sydney",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://singapore.asia.api.bitshares.org/ws",
+            region: "Asia",
+            country: "Singapore",
+            location: "Singapore",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://tokyo.eu.api.bitshares.org/ws",
+            region: "Asia",
+            country: "Japan",
+            location: "Tokyo",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",

@@ -313,7 +313,7 @@
         },
         "votes": {
             "about": "Подробнее",
-            "active": "Активно(%(count)s)",
+            "active": "Активно (%(count)s)",
             "active_short": "Активно",
             "add_committee": "Добавить",
             "add_committee_label": "Член комитета",
@@ -321,6 +321,7 @@
             "add_witness_label": "Заверитель",
             "already": "Аккаунт уже в списке",
             "approve_worker": "Утвердить",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "clear_proxy": "Убрать прокси",
             "cm_approved_by": "Члены комитета, утверждённые %(account)s",
             "cm_not_approved_by": "Члены комитета, не утверждённые %(account)s",
@@ -336,13 +337,15 @@
             "hide_legacy_proposals": "Скрыть устаревшие предложения",
             "inactive": "Резервные",
             "info": "Информация",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "Очередь",
             "max_pay": "Максимальная общая выплата",
             "missing": "Необходимо",
             "name": "Имя",
-            "new": "Предложено(%(count)s)",
+            "new": "Предложено (%(count)s)",
             "no_proxy": "Без прокси",
-            "polls": "Polls(%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Вручную введите аккаунт в качестве своего прокси",
             "proxy_current": "Ваш текущий прокси",
             "proxy_known": "Или выберите аккаунт в качестве вашего прокси",
@@ -736,8 +739,14 @@
                 "bid": "Цена предложения",
                 "collateral": "Дополнительное залоговое обеспечение",
                 "debt": "Покрытый долг",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Залоговые ставки"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Востребовать остаток пула комиссий",
                 "claim_fees": "Востребовать комиссии",
@@ -756,6 +765,9 @@
             "info": "Информация об активе",
             "invalid": "%(name)s – недопустимое имя актива",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Маржинальные позиции"
             },
             "not_found": "Актив %(name)s не существует",
@@ -910,6 +922,7 @@
             "children_authority_depth_warning": "Это предложение может не получить утверждения, так как данные права доступа превышают максимальный уровень полномочий.",
             "failed": "Неутвержденные",
             "failed_execute": "Утвержденные, не удалось выполнить.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Ожидающие",
             "pending_approval": "Ожидающие утверждения",
             "pending_review": "Утвержденные, ожидающие проверки",
@@ -1130,6 +1143,7 @@
             "account": "аккаунт"
         },
         "help": "Помощь",
+        "not_found": "Not found",
         "return_to_top": "Вернуться к началу",
         "scan_qr_code": "Сканировать QR-код",
         "set": "Задать"
@@ -1341,6 +1355,14 @@
         },
         "cancel": "отмена",
         "close": "закрыть",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
         "confirmation": {
             "accept": "Да",
             "cancel": "Нет",
@@ -1448,6 +1470,17 @@
             "quantity": "Количество",
             "submit": "Вывод",
             "withdraw": "Вывод"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "enter_public_signing_key": "Enter your public signing key",
+            "invalid_key": "Public Key is invalid",
+            "public_signing_key": "Public Signing Key",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "witness_account": "Witness Account"
         }
     },
     "news": {
@@ -1786,6 +1819,7 @@
         "themes": "Тема",
         "unit": "Предпочтительные единицы счета",
         "valid_node_url": "URL-адрес узла должен начинаться с ws:// или wss://",
+        "viewOnlyMode": "View only mode",
         "view_keys": "Просмотреть ключи",
         "wallet": "Локальный кошелек",
         "walletLockTimeout": "Время автоблокировки кошелька (в секундах, 0 - для отключения)",
@@ -2040,7 +2074,7 @@
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "Это предложение было создано или предназначено для неизвестной учетной записи (не в контактах или белом списке). Остерегайтесь мошеннических попыток и тщательно проверяйте содержащиеся в них операции.",
         "proxy_remove": "Вам предоставлен набор прокси, чтобы его удалить, просто очистите данное поле ввода",
-        "proxy_search": "Найдите аккаунт, который будет использоваться в качестве вашего прокси для голосования",
+        "proxy_search": "",
         "registration": {
             "accountModel": "Облачный кошелек позволяет вам войти в свой кошелек откуда угодно, используя только имя вашего аккаунта и пароль, однако ваш пароль уязвим для брутфорс-атак, а значит, вам нужно использовать очень длинный пароль, в идеале – 20+ символов!",
             "accountName": "Имя аккаунта должно содержать от 4 до 63 символов, среди которых должны быть латинские буквы, тире и цифры. ",
@@ -2327,6 +2361,10 @@
             "urlNamed": "%(name)s должно быть URL"
         }
     },
+    "voting": {
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "title": "Voting"
+    },
     "walkthrough": {
         "buy_form": "Разместить заявки на покупку, используя эту форму.",
         "buy_orders": "Просмотреть все заявки на покупку для этого рынка.",
@@ -2367,6 +2405,7 @@
         "backup_explain": "Нажав на кнопку ниже, Вы создадите резервную копию с расширением .bin. Этот файл зашифрован паролем Вашего кошелька и содержит все приватные ключи Вашего аккаунта. Он может быть использован для восстановления Вашего кошелька или его перемещения на другой компьютер/браузер.",
         "backup_login": "Резервное копирование и вход в систему",
         "backup_new_account": "Поздравляем, Вы только что создали новый аккаунт в %(wallet_name)s, работающем на базе блокчейна BitShares! Настоятельно рекомендуем Вам сразу же создать резервную копию кошелька. Без резервной копии восстановить Ваш аккаунт в случае повреждения компьютера будет невозможно.",
+        "backup_types": "backup types",
         "backup_warning": "Резервная копия файлов ваших закрытых ключей еще не создавалась. В целях безопасности мы рекомендуем пользователям не входить в систему без предварительно созданной резервной копии своих закрытых ключей.",
         "balance_claim_lookup": "Просмотреть балансы",
         "balance_claims": "Утверждения балансов",
@@ -2476,6 +2515,7 @@
         "password_show": "Показать мой пароль",
         "paste_private": "Вставьте приватные ключи сюда (Wallet Import Format - WIF)",
         "pwd4brainkey": "Введите Ваш пароль, чтобы увидеть Ваш Brainkey",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Готов к восстановлению",
         "reenter_brainkey": "Введите Brainkey повторно",
         "remember_me": "Запомнить меня",
@@ -2530,6 +2570,7 @@
         "wallet_model_2": "Модель кошелька обеспечивает высшую степень безопасности, но ограничивает Вас использованием вашего текущего браузера и компьютера. Чтобы перенести кошелек на другой браузер или компьютер, Вам нужно будет воспользоваться резервной копией или brainkey.",
         "wallet_model_3": "<li>Несколько аккаунтов</li><li>Требуется резервное копирование файлов кошелька</li><li>Высокая безопасность</li>",
         "wallet_move": "Резервная копия также может использоваться для перемещения Вашего локального кошелька на другие компьютеры или браузеры. Для восстановления локального кошелька из резервной копии <strong>Вам также понадобится Ваш пароль!</strong>",
-        "wallet_password": "Войдите, используя пароль"
+        "wallet_password": "Войдите, используя пароль",
+        "wallet_types": "wallet types"
     }
 }
