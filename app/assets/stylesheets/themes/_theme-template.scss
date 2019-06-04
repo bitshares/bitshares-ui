@@ -2,6 +2,10 @@
 @import "./../style-guide-fixes";
 
 @mixin theme(
+    $header-menu--active--icon-background,
+    $header-menu--active--box-shadow,
+    $header-menu-background-color,
+    $header-menu-item--hover--background-color,
     $selector-active-border-color,
     $selector-active-text-color,
     $selector-border-color,
@@ -83,6 +87,28 @@
     $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
+    ul.header-menu {
+        .divider {
+            margin: 0;
+        }
+        background-color: $header-menu-background-color !important;
+    }
+
+    .menu-dropdown-wrapper {
+        &.active {
+            background: $header-menu--active--icon-background !important;
+            ul.header-menu {
+                box-shadow: $header-menu--active--box-shadow;
+
+                li {
+                    &:hover {
+                        background-color: $header-menu-item--hover--background-color;
+                    }
+                }
+            }
+        }
+    }
 
     .selector {
         > * {

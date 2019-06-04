@@ -134,8 +134,19 @@ $selector-active-text-color: $primary-color;
 $selector-border-color: $dark-3;
 $selector-text-color: $dark-1;
 
+// Header Menu
+
+$header-menu--active--icon-background: $white;
+$header-menu--active--box-shadow: 0 4px 9px 0 #00000015;
+$header-menu-background-color: #fff;
+$header-menu-item--hover--background-color: lighten($primary-color, 40%);
+
 .midnightTheme {
     @include theme(
+        $header-menu--active--icon-background,
+        $header-menu--active--box-shadow,
+        $header-menu-background-color,
+        $header-menu-item--hover--background-color,
         $selector-active-border-color,
         $selector-active-text-color,
         $selector-border-color,
