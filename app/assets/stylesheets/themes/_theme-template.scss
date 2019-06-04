@@ -2,6 +2,17 @@
 @import "./../style-guide-fixes";
 
 @mixin theme(
+    $tabs-content-background-color,
+    $tabs-border-size,
+    $tabs-border-color,
+    $tabs-background-color,
+    $tabs-item-background-color,
+    $tabs-item-color,
+    $tabs-item-border-size,
+    $tabs-item-border-color,
+    $tabs-item--active--color,
+    $tabs-item--active--border-color,
+    $tabs-item--active--background-color,
     $header-background-color,
     $header-item--color,
     $header-item-background-color,
@@ -1064,7 +1075,7 @@
         }
     }
     .tab-content {
-        background-color: $tab-content-background-color;
+        background-color: $tabs-content-background-color;
         div.header-selector {
             .filter input {
                 background-color: $bg-color;
@@ -1883,18 +1894,27 @@
     div.account-tabs {
         > div.service-selector {
             background-color: $bg-color;
+            border-bottom: $tabs-border-size solid $tabs-border-color;
         }
     }
     ul.account-overview {
+        background-color: $tabs-background-color;
         li {
             transition: all 0.3s ease 0s;
+
+            background-color: $tabs-item-background-color;
+
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: $tabs-item-border-size solid $tabs-item-border-color;
+
             > a {
-                color: $account-dimmed;
-                background-color: transparent;
+                background-color: $tabs-item-background-color;
+                color: $tabs-item-color;
                 border: none;
                 transition: all 0.3s ease 0s;
                 &:hover {
-                    background-color: lighten($account-header, 4%);
                     color: $account-primarytext;
                 }
                 > div.tab-subtext {
@@ -1903,7 +1923,9 @@
             }
             &.is-active,
             &:hover {
-                background-color: lighten($account-header, 4%);
+                border-bottom: $tabs-item-border-size solid
+                    $tabs-item--active--border-color;
+                background-color: $tabs-item--active--background-color;
                 > a {
                     color: $account-primarytext;
                 }

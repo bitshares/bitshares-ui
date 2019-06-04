@@ -100,6 +100,7 @@ $primary-color: #337ab7;
 // help colors
 $white: #fff;
 $dark: rgba(0, 0, 0, 0.6);
+$dark-2: lighten($dark, 80%);
 
 // Header
 $header-background-color: $white;
@@ -109,8 +110,33 @@ $header-item--active--background-color: $white;
 
 $header-item--active--color: $primary-color;
 
+// Tabs (old, not style-guide)
+$tabs-border-size: 1px;
+$tabs-border-color: $dark-2;
+$tabs-background-color: $white;
+$tabs-item-background-color: $white;
+$tabs-item-color: $dark;
+$tabs-item-border-size: 3px;
+$tabs-item-border-color: $white;
+$tabs-item--active--color: $dark;
+$tabs-item--active--border-color: $primary-color;
+$tabs-item--active--background-color: $white;
+$tabs-item--active--border-color: $primary-color;
+$tabs-content-background-color: $white;
+
 .midnightTheme {
     @include theme(
+        $tabs-content-background-color,
+        $tabs-border-size,
+        $tabs-border-color,
+        $tabs-background-color,
+        $tabs-item-background-color,
+        $tabs-item-color,
+        $tabs-item-border-size,
+        $tabs-item-border-color,
+        $tabs-item--active--color,
+        $tabs-item--active--border-color,
+        $tabs-item--active--background-color,
         $header-background-color,
         $header-item--color,
         $header-item-background-color,
