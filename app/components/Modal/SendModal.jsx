@@ -3,6 +3,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
+import FeeAssetSelector from "../Utility/FeeAssetSelector";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -48,6 +49,7 @@ class SendModal extends React.Component {
 
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
+        // TODO extract
         this._updateFee = debounce(this._updateFee.bind(this), 250);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
@@ -92,6 +94,7 @@ class SendModal extends React.Component {
             knownScammer: null,
             propose: false,
             propose_account: "",
+            // TODO extract
             feeAsset: null,
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
@@ -126,6 +129,7 @@ class SendModal extends React.Component {
                 knownScammer: null,
                 propose: false,
                 propose_account: "",
+                // TODO extract
                 feeAsset: null,
                 fee_asset_id: "1.3.0",
                 feeAmount: new Asset({amount: 0}),
@@ -162,6 +166,7 @@ class SendModal extends React.Component {
                 ? new Buffer(this.state.memo, "utf-8")
                 : this.state.memo,
             this.state.propose ? this.state.propose_account : null,
+            // TODO extract
             this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
         )
             .then(() => {
@@ -221,22 +226,15 @@ class SendModal extends React.Component {
             if (current_types.length !== 1) {
                 this.onAmountChanged({amount: ns.amount, asset});
             }
-
-            if (next_asset_types[0] !== this.state.fee_asset_id) {
-                if (asset && this.state.fee_asset_id !== next_asset_types[0]) {
-                    this.setState({
-                        feeAsset: asset,
-                        fee_asset_id: next_asset_types[0]
-                    });
-                }
-            }
         }
 
+        // TODO extract
         if (ns.open && !this.state.open) this._checkFeeStatus(ns);
         if (!ns.open && !this.state.open) return false;
         return true;
     }
 
+    // TODO extract
     componentWillReceiveProps(np) {
         if (
             np.currentAccount !== this.state.from_name &&
@@ -285,6 +283,7 @@ class SendModal extends React.Component {
         const hasBalance = checkBalance(
             amount,
             asset,
+            // TODO feeAmount should be outed from fee asset selector
             feeAmount,
             balanceObject
         );
@@ -292,6 +291,7 @@ class SendModal extends React.Component {
         this.setState({balanceError: !hasBalance});
     }
 
+    // TODO extract
     _checkFeeStatus(state = this.state) {
         let {from_account, open} = state;
         if (!from_account || !open) return;
@@ -354,6 +354,7 @@ class SendModal extends React.Component {
     }
 
     _getAvailableAssets(state = this.state) {
+        // TODO extract
         const {feeStatus} = this.state;
         function hasFeePoolBalance(id) {
             if (feeStatus[id] === undefined) return true;
@@ -366,8 +367,8 @@ class SendModal extends React.Component {
         }
 
         const {from_account, from_error} = state;
-        let asset_types = [],
-            fee_asset_types = [];
+        let asset_types = [];
+        let fee_asset_types = [];
         if (!(from_account && from_account.get("balances") && !from_error)) {
             return {asset_types, fee_asset_types};
         }
@@ -391,8 +392,10 @@ class SendModal extends React.Component {
         return {asset_types, fee_asset_types};
     }
 
+    // TODO extract
     _updateFee(state = this.state) {
         if (!state.open) return;
+        // Original asset id should be passed to child component along with from_account
         let {fee_asset_id, from_account, asset_id} = state;
         const {fee_asset_types} = this._getAvailableAssets(state);
         if (
@@ -408,6 +411,7 @@ class SendModal extends React.Component {
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
+                // TODO - how to handle memo?
                 content: state.memo
             }
         }).then(({fee, hasBalance, hasPoolBalance}) =>
@@ -470,6 +474,7 @@ class SendModal extends React.Component {
         );
     }
 
+    // TODO refactor after extraction
     onFeeChanged({asset}) {
         if (!asset) return;
 
@@ -503,6 +508,7 @@ class SendModal extends React.Component {
                 account_balances[current_asset_id]
             );
         }
+        // TODO review and check if it works properly without updateFee
         this.setState({memo: e.target.value}, this._updateFee);
     }
 
@@ -570,7 +576,9 @@ class SendModal extends React.Component {
             to_name,
             from_name,
             memo,
+            // TODO extract
             feeAsset,
+            // TODO extract
             fee_asset_id,
             balanceError,
             hidden
@@ -580,10 +588,12 @@ class SendModal extends React.Component {
             from_name === this.props.passwordAccount;
         let from_error =
             from_account && !from_my_account && !propose ? true : false;
+        // TODO extract
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
         let balance = null;
-        let balance_fee = null;
 
+        // TODO extract ???
+        // It seems that we could just receive fee amount and fee asset in parent component to correctly handle submition of transaction
         // Estimate fee
         let fee = this.state.feeAmount.getAmount({real: true});
         if (from_account && from_account.get("balances") && !from_error) {
@@ -622,25 +632,8 @@ class SendModal extends React.Component {
                         </span>
                     </span>
                 );
-
-                if (feeID == current_asset_id && this.state.balanceError) {
-                    balance_fee = (
-                        <span>
-                            <span className={_error}>
-                                <Translate content="transfer.errors.insufficient" />
-                            </span>
-                        </span>
-                    );
-                }
             } else {
                 balance = (
-                    <span>
-                        <span className={_error}>
-                            <Translate content="transfer.errors.noFunds" />
-                        </span>
-                    </span>
-                );
-                balance_fee = (
                     <span>
                         <span className={_error}>
                             <Translate content="transfer.errors.noFunds" />
@@ -666,21 +659,7 @@ class SendModal extends React.Component {
             from_account.get("id") == to_account.get("id");
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
-        const cantPayFee = false;
-        if (cantPayFee) {
-            return (
-                <SetDefaultFeeAssetModal
-                    className="modal"
-                    show={this.state.isModalVisible}
-                    fee_asset_types={fee_asset_types}
-                    asset_types={asset_types}
-                    account={this.props.currentAccount}
-                    close={() => {
-                        this.setState({isModalVisible: false});
-                    }}
-                />
-            );
-        }
+
         return !this.state.open ? null : (
             <div
                 id="send_modal_wrapper"
@@ -847,22 +826,14 @@ class SendModal extends React.Component {
                                     </Tooltip>
                                 </Form.Item>
 
-                                <AmountSelector
+                                <FeeAssetSelector
                                     label="transfer.fee"
-                                    disabled={true}
+                                    disabled={false}
                                     amount={fee}
+                                    feeAmount={feeAmount}
+                                    fee_asset_id={fee_asset_id}
                                     onChange={this.onFeeChanged.bind(this)}
-                                    asset={
-                                        fee_asset_types.length && feeAmount
-                                            ? feeAmount.asset_id
-                                            : fee_asset_types.length === 1
-                                                ? fee_asset_types[0]
-                                                : fee_asset_id
-                                                    ? fee_asset_id
-                                                    : fee_asset_types[0]
-                                    }
                                     assets={fee_asset_types}
-                                    display_balance={balance_fee}
                                     tabIndex={tabIndex++}
                                     error={
                                         this.state.hasPoolBalance === false

@@ -25,11 +25,8 @@ class SetDefaultFeeAssetModal extends React.Component {
         }
     }
 
-    render() {
-        const assets = this.props.asset_types.map(id =>
-            ChainStore.getAsset(id)
-        );
-        let assetRows = assets
+    _getAssetsRows(assets) {
+        return assets
             .map(asset => ({
                 id: asset.get("id"),
                 asset: asset.get("symbol"),
@@ -58,6 +55,13 @@ class SetDefaultFeeAssetModal extends React.Component {
                     </tr>
                 );
             });
+    }
+
+    render() {
+        const assets = this.props.asset_types.map(id =>
+            ChainStore.getAsset(id)
+        );
+        let assetRows = this._getAssetsRows(assets);
 
         return (
             <Modal
