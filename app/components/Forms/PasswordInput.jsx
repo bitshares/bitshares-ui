@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import cname from "classnames";
 import Translate from "react-translate-component";
 import zxcvbnAsync from "zxcvbn-async";
+import CopyButton from "../Utility/CopyButton";
 
 class PasswordInput extends Component {
     static propTypes = {
@@ -14,7 +15,11 @@ class PasswordInput extends Component {
         noValidation: PropTypes.bool,
         noLabel: PropTypes.bool,
         passwordLength: PropTypes.number,
-        checkStrength: PropTypes.bool
+        checkStrength: PropTypes.bool,
+        value: PropTypes.string,
+        copy: PropTypes.bool,
+        visible: PropTypes.bool,
+        readonly: PropTypes.bool
     };
 
     static defaultProps = {
@@ -23,15 +28,19 @@ class PasswordInput extends Component {
         noValidation: false,
         noLabel: false,
         passwordLength: 8,
-        checkStrength: false
+        checkStrength: false,
+        value: "",
+        copy: false,
+        visible: false,
+        readonly: false
     };
 
-    constructor() {
+    constructor(props) {
         super();
         this.handleChange = this.handleChange.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
         this.state = {
-            value: "",
+            value: props.value || "",
             error: null,
             wrong: false,
             doesnt_match: false
@@ -113,7 +122,8 @@ class PasswordInput extends Component {
     }
 
     render() {
-        let {score} = this.state;
+        let {score, value} = this.state;
+        const {copy, visible, readonly} = this.props;
         let password_error = null,
             confirmation_error = null;
         if (this.state.wrong || this.props.wrongPassword)
@@ -173,20 +183,33 @@ class PasswordInput extends Component {
                         >
                             <Translate content="wallet.enter_password" />
                         </label>
-                        <input
-                            style={{
-                                marginBottom: this.props.checkStrength
-                                    ? 0
-                                    : null
-                            }}
-                            id="current-password"
-                            name="password"
-                            type="password"
-                            ref="password"
-                            autoComplete="current-password"
-                            onChange={this.handleChange}
-                            onKeyDown={this.onKeyDown}
-                        />
+                        <div className="generated-password-section">
+                            <input
+                                style={{
+                                    marginBottom: this.props.checkStrength
+                                        ? 0
+                                        : null,
+                                    display: copy ? "inline" : "block"
+                                }}
+                                id="current-password"
+                                name="password"
+                                type={visible ? "text" : "password"}
+                                ref="password"
+                                autoComplete="current-password"
+                                onChange={this.handleChange}
+                                onKeyDown={this.onKeyDown}
+                                value={value}
+                                readOnly={readonly}
+                            />
+                            {copy && (
+                                <CopyButton
+                                    text={value}
+                                    tip="tooltip.copy_password"
+                                    dataPlace="top"
+                                    className="button password-copy-button"
+                                />
+                            )}
+                        </div>
                         {this.props.checkStrength ? (
                             <progress
                                 style={{height: 10}}

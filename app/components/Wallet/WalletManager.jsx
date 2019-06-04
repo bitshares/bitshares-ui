@@ -15,6 +15,10 @@ import WalletChangePassword from "./WalletChangePassword";
 import {WalletCreate} from "./WalletCreate";
 import {BackupCreate, BackupRestore} from "./Backup";
 import BackupBrainkey from "./BackupBrainkey";
+import {Form, Select, Input, Button, Card} from "bitshares-ui-style-guide";
+
+const FormItem = Form.Item;
+const Option = Select.Option;
 
 const connectObject = {
     listenTo() {
@@ -138,7 +142,10 @@ class WalletManager extends Component {
         );
     }
 }
-WalletManager = connect(WalletManager, connectObject);
+WalletManager = connect(
+    WalletManager,
+    connectObject
+);
 
 class WalletOptions extends Component {
     render() {
@@ -151,67 +158,59 @@ class WalletOptions extends Component {
             <span>
                 <div className="grid-block">
                     <div className="grid-content">
-                        <div className="card">
-                            <div className="card-content">
-                                <label>
-                                    <Translate content="wallet.active_wallet" />:
-                                </label>
-                                <div>{current_wallet}</div>
-                                <br />
-                                {has_wallets ? (
-                                    <Link to="/wallet/change">
-                                        <div className="button outline success">
-                                            <Translate content="wallet.change_wallet" />
-                                        </div>
-                                    </Link>
-                                ) : null}
-                            </div>
-                        </div>
+                        <Card>
+                            <label>
+                                <Translate content="wallet.active_wallet" />:
+                            </label>
+                            <div>{current_wallet}</div>
+                            <br />
+                            {has_wallets ? (
+                                <Link to="/wallet/change">
+                                    <div className="button outline success">
+                                        <Translate content="wallet.change_wallet" />
+                                    </div>
+                                </Link>
+                            ) : null}
+                        </Card>
                     </div>
 
                     <div className="grid-content">
-                        <div className="card">
-                            <div className="card-content">
-                                <label>
-                                    <Translate content="wallet.import_keys_tool" />
-                                </label>
-                                <div style={{visibility: "hidden"}}>Dummy</div>
-                                <br />
-                                {has_wallet ? (
-                                    <Link to="/wallet/import-keys">
-                                        <div className="button outline success">
-                                            <Translate content="wallet.import_keys" />
-                                        </div>
-                                    </Link>
-                                ) : null}
-                            </div>
-                        </div>
+                        <Card>
+                            <label>
+                                <Translate content="wallet.import_keys_tool" />
+                            </label>
+                            <div style={{visibility: "hidden"}}>Dummy</div>
+                            <br />
+                            {has_wallet ? (
+                                <Link to="/wallet/import-keys">
+                                    <div className="button outline success">
+                                        <Translate content="wallet.import_keys" />
+                                    </div>
+                                </Link>
+                            ) : null}
+                        </Card>
                     </div>
 
                     {has_wallet ? (
                         <div className="grid-content">
-                            <div className="card">
-                                <div className="card-content">
-                                    <label>
-                                        <Translate content="wallet.balance_claims" />
-                                    </label>
-                                    <div style={{visibility: "hidden"}}>
-                                        Dummy
+                            <Card>
+                                <label>
+                                    <Translate content="wallet.balance_claims" />
+                                </label>
+                                <div style={{visibility: "hidden"}}>Dummy</div>
+                                <br />
+                                <Link to="/wallet/balance-claims">
+                                    <div className="button outline success">
+                                        <Translate content="wallet.balance_claim_lookup" />
                                     </div>
-                                    <br />
-                                    <Link to="/wallet/balance-claims">
-                                        <div className="button outline success">
-                                            <Translate content="wallet.balance_claim_lookup" />
-                                        </div>
-                                    </Link>
-                                    {/*<BalanceClaimByAsset>
+                                </Link>
+                                {/*<BalanceClaimByAsset>
                             <br/>
                             <div className="button outline success">
                                 <Translate content="wallet.balance_claims" /></div>
                         </BalanceClaimByAsset>
                         */}
-                                </div>
-                            </div>
+                            </Card>
                         </div>
                     ) : null}
                 </div>
@@ -267,7 +266,10 @@ class WalletOptions extends Component {
         );
     }
 }
-WalletOptions = connect(WalletOptions, connectObject);
+WalletOptions = connect(
+    WalletOptions,
+    connectObject
+);
 
 class ChangeActiveWallet extends Component {
     constructor() {
@@ -292,9 +294,9 @@ class ChangeActiveWallet extends Component {
         let options = [];
         state.wallet_names.forEach(wallet_name => {
             options.push(
-                <option key={wallet_name} value={wallet_name}>
+                <Option key={wallet_name} value={wallet_name}>
                     {wallet_name.toLowerCase()}
-                </option>
+                </Option>
             );
         });
 
@@ -302,53 +304,48 @@ class ChangeActiveWallet extends Component {
 
         return (
             <div>
-                <section className="block-list">
-                    <header>
-                        <Translate content="wallet.active_wallet" />:
-                    </header>
-
-                    <ul>
-                        <li className="with-dropdown" style={{borderBottom: 0}}>
-                            {state.wallet_names.count() <= 1 ? (
-                                <div
-                                    style={{
-                                        paddingLeft: 10,
-                                        lineHeight: "36px",
-                                        borderRadius: "3px"
-                                    }}
-                                    className="settings-input"
-                                >
-                                    {this.state.current_wallet}
-                                </div>
-                            ) : (
-                                <select
-                                    className="settings-select"
-                                    value={this.state.current_wallet}
-                                    onChange={this.onChange.bind(this)}
-                                >
-                                    {options}
-                                </select>
-                            )}
-                        </li>
-                    </ul>
+                <section>
+                    <FormItem
+                        label={counterpart.translate("wallet.active_wallet")}
+                        className="no-offset"
+                    >
+                        <ul className={"unstyled-list"}>
+                            <li
+                                className="with-dropdown"
+                                style={{borderBottom: 0}}
+                            >
+                                {state.wallet_names.count() <= 1 ? (
+                                    <Input
+                                        className="settings--input"
+                                        defaultValue={this.state.current_wallet}
+                                        disabled
+                                    />
+                                ) : (
+                                    <Select
+                                        className="settings--select"
+                                        value={this.state.current_wallet}
+                                        onChange={this.onChange.bind(this)}
+                                    >
+                                        {options}
+                                    </Select>
+                                )}
+                            </li>
+                        </ul>
+                    </FormItem>
                 </section>
-
                 <Link to="/wallet/create">
-                    <div className="button outline">
+                    <Button style={{marginRight: "16px"}}>
                         <Translate content="wallet.new_wallet" />
-                    </div>
+                    </Button>
                 </Link>
 
                 {is_dirty ? (
-                    <div
-                        className="button outline"
-                        onClick={this.onConfirm.bind(this)}
-                    >
+                    <Button onClick={this.onConfirm.bind(this)}>
                         <Translate
                             content="wallet.change"
                             name={this.state.current_wallet}
                         />
-                    </div>
+                    </Button>
                 ) : null}
             </div>
         );
@@ -364,12 +361,15 @@ class ChangeActiveWallet extends Component {
         // else window.location.href = "/";
     }
 
-    onChange(event) {
-        let current_wallet = event.target.value;
+    onChange(value) {
+        let current_wallet = value;
         this.setState({current_wallet});
     }
 }
-ChangeActiveWallet = connect(ChangeActiveWallet, connectObject);
+ChangeActiveWallet = connect(
+    ChangeActiveWallet,
+    connectObject
+);
 
 class WalletDelete extends Component {
     constructor() {
@@ -399,32 +399,31 @@ class WalletDelete extends Component {
                         content="wallet.delete_confirm_line3"
                     />
                     <br />
-                    <div
-                        className="button outline"
+                    <Button
                         onClick={this.onConfirm2.bind(this)}
+                        style={{marginRight: "16px"}}
                     >
                         <Translate
                             content="wallet.delete_confirm_line4"
                             name={this.state.selected_wallet}
                         />
-                    </div>
-                    <div
-                        className="button outline"
-                        onClick={this._onCancel.bind(this)}
-                    >
+                    </Button>
+                    <Button onClick={this._onCancel.bind(this)}>
                         <Translate content="wallet.cancel" />
-                    </div>
+                    </Button>
                 </div>
             );
         }
 
         // this.props.current_wallet
         let placeholder = (
-            <option
+            <Option
                 key="placeholder"
-                value=""
+                value=" "
                 disabled={this.props.wallet_names.size > 1}
-            />
+            >
+                &nbsp;
+            </Option>
         );
         // if (this.props.wallet_names.size > 1) {
         //     placeholder = <option value="" disabled>{placeholder}</option>;
@@ -436,41 +435,46 @@ class WalletDelete extends Component {
         // }
         let options = [placeholder];
         options.push(
-            <option key="select_option" value="">
-                {counterpart.translate("settings.delete_select")}&hellip;
-            </option>
+            <Option key="select_option" value="">
+                {counterpart.translate("settings.delete_select")}
+                &hellip;
+            </Option>
         );
         this.props.wallet_names.forEach(wallet_name => {
             options.push(
-                <option key={wallet_name} value={wallet_name}>
+                <Option key={wallet_name} value={wallet_name}>
                     {wallet_name.toLowerCase()}
-                </option>
+                </Option>
             );
         });
-
         let is_dirty = !!this.state.selected_wallet;
 
         return (
             <div style={{paddingTop: 20}}>
-                <section className="block-list">
-                    <header>
-                        <Translate content="wallet.delete_wallet" />
-                    </header>
-                    <ul>
-                        <li className="with-dropdown" style={{borderBottom: 0}}>
-                            <select
-                                className="settings-select"
-                                value={this.state.selected_wallet || ""}
-                                style={{margin: "0 auto"}}
-                                onChange={this.onChange.bind(this)}
+                <section>
+                    <FormItem
+                        label={counterpart.translate("wallet.delete_wallet")}
+                        className="no-offset"
+                    >
+                        <ul className={"unstyled-list"}>
+                            <li
+                                className="with-dropdown"
+                                style={{borderBottom: 0}}
                             >
-                                {options}
-                            </select>
-                        </li>
-                    </ul>
+                                <Select
+                                    className="settings--select"
+                                    value={this.state.selected_wallet || ""}
+                                    style={{margin: "0 auto"}}
+                                    onChange={this.onChange.bind(this)}
+                                >
+                                    {options}
+                                </Select>
+                            </li>
+                        </ul>
+                    </FormItem>
                 </section>
-                <div
-                    className={cname("button outline", {disabled: !is_dirty})}
+                <Button
+                    disabled={!is_dirty}
                     onClick={this.onConfirm.bind(this)}
                 >
                     <Translate
@@ -481,7 +485,7 @@ class WalletDelete extends Component {
                         }
                         name={this.state.selected_wallet}
                     />
-                </div>
+                </Button>
             </div>
         );
     }
@@ -496,12 +500,14 @@ class WalletDelete extends Component {
         // window.history.back()
     }
 
-    onChange(event) {
-        let selected_wallet = event.target.value;
+    onChange(selected_wallet) {
         this.setState({selected_wallet});
     }
 }
-WalletDelete = connect(WalletDelete, connectObject);
+WalletDelete = connect(
+    WalletDelete,
+    connectObject
+);
 
 export default WalletManager;
 export {WalletOptions, ChangeActiveWallet, WalletDelete};

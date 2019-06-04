@@ -5,10 +5,13 @@
 
 import {
     rudexAPIs,
+    bitsparkAPIs,
     widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
-    gdex2APIs
+    gdex2APIs,
+    xbtsxAPIs,
+    citadelAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 
@@ -39,11 +42,11 @@ export const availableGateways = {
             selected: false
         }
     },
-    WIN: {
-        id: "WIN",
-        name: "Winex",
-        baseAPI: widechainAPIs,
-        isEnabled: allowedGateway("WIN"),
+    SPARKDEX: {
+        id: "SPARKDEX",
+        name: "SPARKDEX",
+        baseAPI: bitsparkAPIs,
+        isEnabled: allowedGateway("SPARKDEX"),
         selected: false,
         options: {
             enabled: false,
@@ -74,9 +77,44 @@ export const availableGateways = {
             enabled: false,
             selected: false
         }
+    },
+    XBTSX: {
+        id: "XBTSX",
+        name: "XBTSX",
+        baseAPI: xbtsxAPIs,
+        isEnabled: allowedGateway("XBTSX"),
+        isSimple: true,
+        selected: false,
+        simpleAssetGateway: false,
+        addressValidatorMethod: "POST",
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    CITADEL: {
+        id: "CITADEL",
+        name: "CITADEL",
+        baseAPI: citadelAPIs,
+        isEnabled: allowedGateway("CITADEL"),
+        selected: false,
+        assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
+        options: {
+            enabled: false,
+            selected: false
+        }
     }
 };
 
 export const gatewayPrefixes = Object.keys(availableGateways);
+
+export function getPossibleGatewayPrefixes(bases) {
+    return gatewayPrefixes.reduce((assets, prefix) => {
+        bases.forEach(a => {
+            assets.push(`${prefix}.${a}`);
+        });
+        return assets;
+    }, []);
+}
 
 export default availableGateways;

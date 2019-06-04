@@ -1,47 +1,55 @@
 language: node_js
-node_js: 9
+node_js: 10
 matrix:
-  include:
-    - os: linux
-      dist: trusty
-    - os: osx
-      osx_image: xcode8.3
+    include:
+        - os: linux
+          dist: trusty
+        - os: osx
+          osx_image: xcode8.3
 env:
-  global:
-  - GITHUB_REPO: bitshares/bitshares-ui
-  - WALLET_REPO: bitshares/wallet.bitshares.org
-  - STAGING_REPO: bitshares/bitshares-ui-staging
-  - DEVELOP_REPO: bitshares/develop.bitshares.org
-  - CXX=g++-4.8
-  - secure: "deD+B8xDM7cguX+PbeOSLh30mi6gHAdlqQphP63ZSCuFbL6hQU7MMb8nmBdBpIuaG2rX5GejSqPWTKt+/MSgQNHMTvRnzG1l1JtDTEAky8ssMyxI+HWiRe7Ic+1pFR0qUBAcPVN3MgPtW3Za47v1IyDyaR/0GdSREdy2KvmwBOWMoT23ubA1QlEhFO7uOlium4gJ6trxNPwfXkNHiMzanpVFyRQljY1PNGEPRzRzyWPNvZ4Pq5yNKnFFcW+afhvsTtK8AoeMFDeKhDF2yva8U0IMCZzrSKWwCIhkhJPii7pPT2LNlpjwVKXn16dRRVKO2tImmWtMpgbJjiNTRzVC4Y30+F7XPc97SpTKfGvoaH/iSZpTT1la0gHgoeBB32y6buPKnF7M2UNwTt2eGXpg/JHyperyQ25ey9EQBk/vHNxS9M3jcfkoXneBOnwICHgrzfamHxmMsiXnNDDriyPqIY9kFGQubqEF74cvBxhPLmfxJCPyHx7BY9ioiAlcgzWqJDOp/ADLjpoh44rUCpQH26Zg0N9efOuLUhuTAa54/9rboWZLxjxEvJ5qfTe+eHMW1r2RzoMJqWOhkbMs4f/qqGY42nqWhiibdSAZzIBuPYt/m9kdQ33930dKWoIkJwqZ2Il+T3FWJtzaguuoxKKYzsok9c/6FY7MbSSPaPw+fjg="
+    global:
+        - GITHUB_REPO: bitshares/bitshares-ui
+        - WALLET_REPO: bitshares/wallet.bitshares.org
+        - STAGING_REPO: bitshares/bitshares-ui-staging
+        - DEVELOP_REPO: bitshares/develop.bitshares.org
+        - CXX=g++-4.8
+        - secure:
+              deD+B8xDM7cguX+PbeOSLh30mi6gHAdlqQphP63ZSCuFbL6hQU7MMb8nmBdBpIuaG2rX5GejSqPWTKt+/MSgQNHMTvRnzG1l1JtDTEAky8ssMyxI+HWiRe7Ic+1pFR0qUBAcPVN3MgPtW3Za47v1IyDyaR/0GdSREdy2KvmwBOWMoT23ubA1QlEhFO7uOlium4gJ6trxNPwfXkNHiMzanpVFyRQljY1PNGEPRzRzyWPNvZ4Pq5yNKnFFcW+afhvsTtK8AoeMFDeKhDF2yva8U0IMCZzrSKWwCIhkhJPii7pPT2LNlpjwVKXn16dRRVKO2tImmWtMpgbJjiNTRzVC4Y30+F7XPc97SpTKfGvoaH/iSZpTT1la0gHgoeBB32y6buPKnF7M2UNwTt2eGXpg/JHyperyQ25ey9EQBk/vHNxS9M3jcfkoXneBOnwICHgrzfamHxmMsiXnNDDriyPqIY9kFGQubqEF74cvBxhPLmfxJCPyHx7BY9ioiAlcgzWqJDOp/ADLjpoh44rUCpQH26Zg0N9efOuLUhuTAa54/9rboWZLxjxEvJ5qfTe+eHMW1r2RzoMJqWOhkbMs4f/qqGY42nqWhiibdSAZzIBuPYt/m9kdQ33930dKWoIkJwqZ2Il+T3FWJtzaguuoxKKYzsok9c/6FY7MbSSPaPw+fjg=
 addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.8
-    - g++-4.8
-    - icnsutils
-    - graphicsmagick
-    - xz-utils
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - gcc-4.8
+            - g++-4.8
+            - icnsutils
+            - graphicsmagick
+            - xz-utils
 install:
-  - npm install -g npm@6
-  - npm ci
-script: "./build.sh"
+    - npm ci
+script:
+    - "./build.sh"
 after_success: "./deploy.sh"
 deploy:
-  provider: releases
-  tag_name: $TRAVIS_TAG
-  name: $TRAVIS_TAG
-  body: Automated release from Travis CI with added files from AppVeyor build
-  api_key:
-    secure: "deD+B8xDM7cguX+PbeOSLh30mi6gHAdlqQphP63ZSCuFbL6hQU7MMb8nmBdBpIuaG2rX5GejSqPWTKt+/MSgQNHMTvRnzG1l1JtDTEAky8ssMyxI+HWiRe7Ic+1pFR0qUBAcPVN3MgPtW3Za47v1IyDyaR/0GdSREdy2KvmwBOWMoT23ubA1QlEhFO7uOlium4gJ6trxNPwfXkNHiMzanpVFyRQljY1PNGEPRzRzyWPNvZ4Pq5yNKnFFcW+afhvsTtK8AoeMFDeKhDF2yva8U0IMCZzrSKWwCIhkhJPii7pPT2LNlpjwVKXn16dRRVKO2tImmWtMpgbJjiNTRzVC4Y30+F7XPc97SpTKfGvoaH/iSZpTT1la0gHgoeBB32y6buPKnF7M2UNwTt2eGXpg/JHyperyQ25ey9EQBk/vHNxS9M3jcfkoXneBOnwICHgrzfamHxmMsiXnNDDriyPqIY9kFGQubqEF74cvBxhPLmfxJCPyHx7BY9ioiAlcgzWqJDOp/ADLjpoh44rUCpQH26Zg0N9efOuLUhuTAa54/9rboWZLxjxEvJ5qfTe+eHMW1r2RzoMJqWOhkbMs4f/qqGY42nqWhiibdSAZzIBuPYt/m9kdQ33930dKWoIkJwqZ2Il+T3FWJtzaguuoxKKYzsok9c/6FY7MbSSPaPw+fjg="
-  file_glob: true
-  file:
-    - build/binaries/BitShares*
-    - build/release-checksums-*
-  skip_cleanup: true
-  draft: true
-  on:
-    repo: bitshares/bitshares-ui
-    tags: true
+    - provider: releases
+      tag_name: "$TRAVIS_TAG"
+      name: "$TRAVIS_TAG"
+      body:
+          "Automated release from Travis CI with added files from AppVeyor build"
+      api_key:
+          secure:
+              HV4BRj0Nn4+3AGC5U2LxFQ3qr6bbwcs2SR7BIEKXdHcIAshvL52Qn9R2pXFjeJhj/FqGMRc6o1E54q4+QpzzlnoZquZkJoSv4x4EW306KVXNxaBQmwjNLs6gO09/s8j3IlZ0pudANmH2WQvT264ldGCqq0mC1vCMpHfxetdGsskfqdboFgyaUSDtRBER9FH23cM22Ro3oPJmRxn/dzZSctiB05e1i8CD6VZm8HeGuWKXyKOuhzBFzEgaSkSQWa6u5YsvAKkQ4c6rAAxUWJOH9+8WoqUVN/Pem56mnA0HYtqAoX/cShLuZfsHRJUVdE5Wt9YfEOBRQy954QmZgPhQbp7OKcIBAQyAkMSR1AEKCYd2QjPBBM5ek44Pbz0AsDSd1qsSgKUJs4urpOTLbFi2KfDmaXiO+ciaIDvyh0QiUPykVdRtDKacdrHCWUUuJajc465KRE8LGheOGThj+s9vPmy9Eubn7Zzsdzy1q0Xjwjd57bz8G5aTbBWpJJ4sk096trJqGX1iQMKEpnEU/KwmRS9XX65s6gBjuO8/2ZhoE8HQCDBS0whiJi+eHggu6wch6SfTvATkQ9ivex6T/T/eYHGF+sbShkXrzmUs0sbsq1TrjgFyIA/x23y+0k59mZ8xfkRLHT3L1EjgW6MahwPCPESumomq3PDJrKPVpd7n/04=
+      file_glob: true
+      file:
+          - build/binaries/BitShares*
+          - build/release-checksums-*
+      skip_cleanup: true
+      draft: true
+      on:
+          repo: bitshares/bitshares-ui
+          tags: true
+before_install:
+    - openssl aes-256-cbc -K $encrypted_844f3e8bd137_key -iv $encrypted_844f3e8bd137_iv
+      -in set_snap_token.sh.enc -out set_snap_token.sh -d
+    - chmod +x set_snap_token.sh
+    - source ./set_snap_token.sh

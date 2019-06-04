@@ -30,8 +30,51 @@ export default class TradingViewPriceChart extends React.Component {
             interval: getResolutionsFromBuckets([props.bucketSize])[0]
         });
 
+        let disabled_features = [
+            "header_saveload",
+            "symbol_info",
+            "symbol_search_hot_key",
+            "border_around_the_chart",
+            "header_symbol_search",
+            "header_compare"
+        ];
+
+        let enabled_features = [];
+
+        if (this.props.mobile || !this.props.chartZoom) {
+            disabled_features.push("chart_scroll");
+            disabled_features.push("chart_zoom");
+        }
+
+        if (this.props.mobile || !this.props.chartTools) {
+            disabled_features.push("left_toolbar");
+            disabled_features.push("chart_crosshair_menu");
+            disabled_features.push("chart_events");
+            disabled_features.push("footer_share_buttons");
+            disabled_features.push("footer_screenshot");
+            disabled_features.push("footer_publish_idea_button");
+            disabled_features.push("caption_buttons_text_if_possible");
+            disabled_features.push("line_tool_templates");
+            disabled_features.push("widgetbar_tabs");
+            disabled_features.push("support_manage_drawings");
+            disabled_features.push("support_multicharts");
+            disabled_features.push("right_bar_stays_on_scroll");
+            disabled_features.push("charts_auto_save");
+            disabled_features.push("edit_buttons_in_legend");
+            disabled_features.push("context_menus");
+            disabled_features.push("control_bar");
+            disabled_features.push("header_fullscreen_button");
+            disabled_features.push("header_widget");
+            disabled_features.push("symbollist_context_menu");
+            disabled_features.push("show_pro_features");
+        } else {
+            enabled_features.push("study_templates");
+            enabled_features.push("keep_left_toolbar_visible_on_small_screens");
+        }
+
         if (__DEV__) console.log("*** Load Chart ***");
         if (__DEV__) console.time("*** Chart load time: ");
+
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,
@@ -59,18 +102,8 @@ export default class TradingViewPriceChart extends React.Component {
                 "scalesProperties.textColor": themeColors.textColor
             },
             custom_css_url: props.theme + ".css",
-            enabled_features: [
-                "study_templates",
-                "keep_left_toolbar_visible_on_small_screens"
-            ],
-            disabled_features: [
-                "header_saveload",
-                "symbol_info",
-                "symbol_search_hot_key",
-                "border_around_the_chart",
-                "header_symbol_search",
-                "header_compare"
-            ],
+            enabled_features: enabled_features,
+            disabled_features: disabled_features,
             debug: false,
             preset: this.props.mobile ? "mobile" : ""
         });
@@ -82,6 +115,8 @@ export default class TradingViewPriceChart extends React.Component {
                 onMarketChange: this._setSymbol.bind(this)
             });
         });
+
+        this._onWheel = this._onWheel.bind(this);
     }
 
     componentWillReceiveProps(np) {
@@ -102,6 +137,10 @@ export default class TradingViewPriceChart extends React.Component {
 
     componentDidMount() {
         this.loadTradingView(this.props);
+
+        // continue investigating how to disable mouse wheel, here are the containted docs
+        // document.getElementById("tv_chart").children[0].contentWindow
+        // document.getElementById("tv_chart").children[0].contentDocument
     }
 
     componentWillUnmount() {
@@ -115,16 +154,16 @@ export default class TradingViewPriceChart extends React.Component {
         return true;
     }
 
+    _onWheel(e) {
+        console.log("Test wheel interception");
+    }
+
     render() {
         return (
             <div className="small-12">
                 <div
                     className="exchange-bordered"
-                    style={{
-                        marginTop: 10,
-                        marginBottom: 10,
-                        height: this.props.chartHeight + "px"
-                    }}
+                    style={{height: this.props.chartHeight + "px"}}
                     id="tv_chart"
                 />
             </div>

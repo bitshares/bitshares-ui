@@ -5,6 +5,7 @@ import BlockchainStore from "stores/BlockchainStore";
 import BlockchainActions from "actions/BlockchainActions";
 import ReactTooltip from "react-tooltip";
 import getLocale from "browser-locale";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 /**
  * @brief displays block's date and time based on block number
@@ -26,41 +27,50 @@ class BlockDate extends React.Component {
     };
 
     componentWillMount() {
-        if (!this.props.block)
-            BlockchainActions.getBlock(this.props.block_number);
+        if (!this.props.blockHeader)
+            BlockchainActions.getHeader.defer(this.props.block_number);
     }
 
     shouldComponentUpdate(np) {
-        if (np.block && !this.props.block)
+        if (np.blockHeader && !this.props.blockHeader)
             setTimeout(ReactTooltip.rebuild, 1000);
-        return np.block !== this.props.block;
+        return np.blockHeader !== this.props.blockHeader;
     }
 
     render() {
-        const {block, tooltip, component, format} = this.props;
-        if (!block) return React.createElement(component);
+        const {blockHeader, tooltip, component, format} = this.props;
+        if (!blockHeader) return React.createElement(component);
         return React.createElement(
             component,
             {
-                className: tooltip ? "tooltip" : "",
-                "data-tip": tooltip ? block.timestamp : ""
+                className: tooltip ? "tooltip" : ""
             },
-            <span>
-                {counterpart.localize(block.timestamp, {type: "date", format})}
-            </span>
+            <Tooltip title={tooltip ? blockHeader.timestamp : ""}>
+                <span>
+                    {counterpart.localize(blockHeader.timestamp, {
+                        type: "date",
+                        format
+                    })}
+                </span>
+            </Tooltip>
         );
     }
 }
 
-BlockDate = connect(BlockDate, {
-    listenTo() {
-        return [BlockchainStore];
-    },
-    getProps(props) {
-        return {
-            block: BlockchainStore.getState().blocks.get(props.block_number)
-        };
+BlockDate = connect(
+    BlockDate,
+    {
+        listenTo() {
+            return [BlockchainStore];
+        },
+        getProps(props) {
+            return {
+                blockHeader: BlockchainStore.getState().blockHeaders.get(
+                    props.block_number
+                )
+            };
+        }
     }
-});
+);
 
 export default BlockDate;

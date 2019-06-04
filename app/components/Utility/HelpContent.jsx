@@ -4,6 +4,7 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
+import sanitize from "sanitize";
 
 let req = require.context("../../help", true, /\.md/);
 let HelpData = {};
@@ -29,10 +30,15 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
+        text = sanitize(text, {
+            whiteList: [], // empty, means filter out all tags
+            stripIgnoreTag: true // filter out all HTML not in the whilelist
+        });
+
         if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0)
             return `<a href="${text}" onclick="_onClickLink(event)"`;
         if (text.indexOf("http") === 0)
-            return `<a href="${text}" rel="noopener noreferrer" target="_blank"`;
+            return `<a href="${text}" rel="noopener noreferrer" class="external-link" target="_blank"`;
         let page = endsWith(text, ".md")
             ? text.substr(0, text.length - 3)
             : text;
@@ -51,6 +57,10 @@ class HelpContent extends React.Component {
         section: PropTypes.string
     };
 
+    static defaultProps = {
+        hide_issuer: "false"
+    };
+
     constructor(props) {
         super(props);
         window._onClickLink = this.onClickLink.bind(this);
@@ -60,8 +70,7 @@ class HelpContent extends React.Component {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         // Only load helpData for the current locale as well as the fallback 'en'
-        req
-            .keys()
+        req.keys()
             .filter(a => {
                 return (
                     a.indexOf(`/${locale}/`) !== -1 || a.indexOf("/en/") !== -1
@@ -97,6 +106,11 @@ class HelpContent extends React.Component {
         return str.replace(/(\{.+?\})/gi, (match, text) => {
             let key = text.substr(1, text.length - 2);
             let value = this.props[key] !== undefined ? this.props[key] : text;
+            if (value && typeof value === "string")
+                value = sanitize(value, {
+                    whiteList: [], // empty, means filter out all tags
+                    stripIgnoreTag: true // filter out all HTML not in the whilelist
+                });
             if (value.amount && value.asset)
                 value = utils.format_asset(
                     value.amount,
@@ -106,6 +120,7 @@ class HelpContent extends React.Component {
                 );
             if (value.date) value = utils.format_date(value.date);
             if (value.time) value = utils.format_time(value.time);
+
             return value;
         });
     }
@@ -175,6 +190,15 @@ class HelpContent extends React.Component {
         if (!value) {
             console.error(
                 `help section not found ${this.props.path}#${
+                    this.props.section
+                }`
+            );
+            return null;
+        }
+
+        if (typeof value === "object") {
+            console.error(
+                `help section content invalid ${this.props.path}#${
                     this.props.section
                 }`
             );

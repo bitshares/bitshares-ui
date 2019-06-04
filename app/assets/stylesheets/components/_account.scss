@@ -262,6 +262,14 @@ div.header-selector {
     > .selector div:last-of-type {
         border-right: 0px;
     }
+    > .group-by {
+        float: right;
+        line-height: 32px;
+
+        .text {
+            margin-right: 10px;
+        }
+    }
 }
 
 div.account-tabs {
@@ -390,6 +398,30 @@ table.table.dashboard-table {
     }
 }
 
+.grid-wrapper {
+    margin-bottom: 20px;
+}
+
+.groupColumn {
+    // !important used to override theme styles
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+
+    // "Fit to content" hack: https://stackoverflow.com/questions/11267154/fit-cell-width-to-content
+    width: 1%;
+    white-space: nowrap;
+}
+
+.ant-table-content .ant-table-footer .total-value {
+    text-align: right;
+
+    .text {
+        margin-right: 20px;
+        text-transform: uppercase;
+        @include RobotoMedium;
+    }
+}
+
 div.header-selector > div.new-worker-button {
     padding-left: 0;
     padding-top: 10px;
@@ -466,5 +498,46 @@ div.tabs-container {
     padding: 10px;
     text {
         @include RobotoRegular;
+    }
+}
+
+.account-treemap--legend {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    .legend-item {
+        display: flex;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        .legend-square {
+            height: 16px;
+            width: 16px;
+            margin-right: 5px;
+        }
+    }
+}
+
+.account-input-style-guide--account-status {
+    float: right;
+    color: $success-color;
+}
+
+.account-input-style-guide--account-status--scammer {
+    color: $alert-color;
+}
+
+.account-input-style-guide--label {
+}
+
+.account-input-style-guide {
+}
+
+.recent-transactions {
+    .iconLinkAndLabel {
+        span {
+            font-weight: bold;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+        }
     }
 }

@@ -1,29 +1,21 @@
 import React from "react";
-import BindToChainState from "../Utility/BindToChainState";
-import ChainTypes from "../Utility/ChainTypes";
 import TimeAgo from "../Utility/TimeAgo";
-import utils from "common/utils";
 import counterpart from "counterpart";
-import getLocale from "browser-locale";
 import PropTypes from "prop-types";
+import BlockchainActions from "actions/BlockchainActions";
+import BlockchainStore from "stores/BlockchainStore";
+import {connect} from "alt-react";
 
 /**
  * @brief displays block's date and time based on block number
  *
  * properties: block_number - number
- * Note, it doesn't fetch block, just calculates time based on number alone.
+ * Note, it fetches block header data only
  **/
 
 class BlockTime extends React.Component {
     static propTypes = {
-        block_number: PropTypes.number.isRequired,
-        globalObject: ChainTypes.ChainObject.isRequired,
-        dynGlobalObject: ChainTypes.ChainObject.isRequired
-    };
-
-    static defaultProps = {
-        globalObject: "2.0.0",
-        dynGlobalObject: "2.1.0"
+        block_number: PropTypes.number.isRequired
     };
 
     constructor(props) {
@@ -31,50 +23,51 @@ class BlockTime extends React.Component {
         this.state = {time: null};
     }
 
-    componentDidMount() {
-        this.calcTime(this.props.block_number);
-    }
-
-    calcTime(block_number) {
-        this.setState({
-            time: utils.calc_block_time(
-                block_number,
-                this.props.globalObject,
-                this.props.dynGlobalObject
-            )
-        });
-    }
-
-    componentWillReceiveProps(next_props) {
-        if (next_props.block_number !== this.props.block_number) {
-            this.calcTime(next_props.block_number);
+    componentWillMount() {
+        if (!this.props.blockHeader) {
+            BlockchainActions.getHeader.defer(this.props.block_number);
         }
     }
 
-    /*
-    shouldComponentUpdate(next_props, next_state) {
-        return next_props.block_number !== this.props.block_number || next_state.time !== this.state.time;
+    shouldComponentUpdate(next_props) {
+        return (
+            next_props.block_number !== this.props.block_number ||
+            next_props.blockHeader !== this.props.blockHeader
+        );
     }
-    */
 
-    //{this.state.time ?  <FormattedDate value={this.state.time} format="short"/> : null}
     render() {
         return (
             <span className="time" key={this.props.block_number}>
-                {this.state.time ? (
+                {this.props.blockHeader ? (
                     this.props.fullDate ? (
-                        counterpart.localize(new Date(this.state.time), {
+                        counterpart.localize(this.props.blockHeader.timestamp, {
                             type: "date",
                             format: "full"
                         })
                     ) : (
-                        <TimeAgo time={this.state.time} />
+                        <TimeAgo time={this.props.blockHeader.timestamp} />
                     )
                 ) : null}
             </span>
         );
     }
 }
-BlockTime = BindToChainState(BlockTime);
+
+BlockTime = connect(
+    BlockTime,
+    {
+        listenTo() {
+            return [BlockchainStore];
+        },
+        getProps(props) {
+            return {
+                blockHeader: BlockchainStore.getState().blockHeaders.get(
+                    props.block_number
+                )
+            };
+        }
+    }
+);
 
 export default BlockTime;

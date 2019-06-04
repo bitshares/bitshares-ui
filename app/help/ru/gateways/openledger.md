@@ -4,7 +4,7 @@ Openledger – сервис шлюза, построенный на бирже B
 
 ## Веб-сайт
 
-<https://openledger.info>
+<https://dex.openledger.io>
 
 ## Поддержка
 

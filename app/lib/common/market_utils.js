@@ -53,18 +53,18 @@ const MarketUtils = {
         return value;
     },
 
-    getFeedPrice(settlement_price, invert = false) {
+    getFeedPrice(some_raw_price, invert = false) {
         let quoteAsset = ChainStore.getAsset(
-            settlement_price.getIn(["quote", "asset_id"])
+            some_raw_price.getIn(["quote", "asset_id"])
         );
         let baseAsset = ChainStore.getAsset(
-            settlement_price.getIn(["base", "asset_id"])
+            some_raw_price.getIn(["base", "asset_id"])
         );
 
         let price = utils.get_asset_price(
-            settlement_price.getIn(["quote", "amount"]),
+            some_raw_price.getIn(["quote", "amount"]),
             quoteAsset,
-            settlement_price.getIn(["base", "amount"]),
+            some_raw_price.getIn(["base", "amount"]),
             baseAsset
         );
 
@@ -275,7 +275,7 @@ const MarketUtils = {
             }
         } else if (!ask) {
             amount = this.limitByPrecision(
-                buy.amount / sell.amount * order.for_sale / quotePrecision,
+                ((buy.amount / sell.amount) * order.for_sale) / quotePrecision,
                 quote
             );
             value = order.for_sale / basePrecision;

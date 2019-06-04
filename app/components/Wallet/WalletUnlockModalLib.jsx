@@ -2,6 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {getWalletName} from "branding";
+import {Alert, Checkbox, Tooltip} from "bitshares-ui-style-guide";
 
 /* Dummy input to trick Chrome into disabling auto-complete */
 export const DisableChromeAutocomplete = () => (
@@ -28,20 +29,15 @@ export const KeyFileLabel = ({showUseOtherWalletLink, onUseOtherWallet}) => (
 );
 
 export class StyledUpload extends React.Component {
-    handleLabelClick = () => this.refs.input.click();
     render() {
         return (
-            <label
-                onClick={this.handleLabelClick}
-                className="upload-button themed-input"
-            >
+            <label className="upload-button themed-input">
                 <Translate content="wallet.restore_key_file" />
                 <UploadButtonLogo />
                 <input
                     type="file"
                     onClick={stopPropagation}
                     onChange={this.props.onFileChosen}
-                    ref="input"
                     accept=".bin"
                 />
             </label>
@@ -74,37 +70,38 @@ export const RestoreBackupOnly = ({onFileChosen, onRestoreOther}) => (
 
 export const BackupWarning = ({onChange, checked}) => (
     <div className="backup-warning">
-        <p>
-            <Translate content="wallet.backup_warning" />
-        </p>
+        <Alert
+            type="warning"
+            message={counterpart.translate("alert.warning")}
+            description={counterpart.translate("wallet.backup_warning")}
+        />
         <div className="checkbox">
-            <input
+            <Checkbox
                 key={`checkbox_${checked}`} // This is needed to prevent slow checkbox reaction
-                type="checkbox"
                 onChange={onChange}
                 checked={checked}
-            />{" "}
-            <Translate content="wallet.dont_ask_for_backup" />
+            >
+                <Translate content="wallet.dont_ask_for_backup" />
+            </Checkbox>
         </div>
     </div>
 );
 
 export const LoginButtons = ({onLogin, backupLogin}) => (
-    <button
-        className="button"
-        data-place="bottom"
-        data-html
-        data-tip={counterpart.translate("tooltip.login", {
+    <Tooltip
+        placement="bottom"
+        title={counterpart.translate("tooltip.login", {
             wallet_name: getWalletName()
         })}
-        onClick={onLogin}
     >
-        <Translate
-            content={
-                backupLogin ? "wallet.backup_login" : "header.unlock_short"
-            }
-        />
-    </button>
+        <button className="button" onClick={onLogin}>
+            <Translate
+                content={
+                    backupLogin ? "wallet.backup_login" : "header.unlock_short"
+                }
+            />
+        </button>
+    </Tooltip>
 );
 
 export class CustomPasswordInput extends React.Component {

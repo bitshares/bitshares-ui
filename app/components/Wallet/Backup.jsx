@@ -11,14 +11,14 @@ import BackupActions, {
     backup,
     decryptWalletBackup
 } from "actions/BackupActions";
-import notify from "actions/NotificationActions";
 import {saveAs} from "file-saver";
-import cname from "classnames";
 import Translate from "react-translate-component";
 import {PrivateKey} from "bitsharesjs";
 import SettingsActions from "actions/SettingsActions";
 import {backupName} from "common/backupUtils";
 import {getWalletName} from "branding";
+import {Button, Input, Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 const connectObject = {
     listenTo() {
@@ -39,7 +39,7 @@ class BackupCreate extends Component {
                 <Create
                     noText={this.props.noText}
                     newAccount={
-                        this.props.location
+                        this.props.location && this.props.location.query
                             ? this.props.location.query.newAccount
                             : null
                     }
@@ -52,7 +52,10 @@ class BackupCreate extends Component {
         );
     }
 }
-BackupCreate = connect(BackupCreate, connectObject);
+BackupCreate = connect(
+    BackupCreate,
+    connectObject
+);
 
 // layout is a small project
 // class WalletObjectInspector extends Component {
@@ -82,6 +85,16 @@ class BackupRestore extends Component {
         let new_wallet = this.props.wallet.new_wallet;
         let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet);
         let restored = has_new_wallet;
+        const wallet_types = (
+            <Link to="/help/introduction/wallets">
+                {counterpart.translate("wallet.wallet_types")}
+            </Link>
+        );
+        const backup_types = (
+            <Link to="/help/introduction/backups">
+                {counterpart.translate("wallet.backup_types")}
+            </Link>
+        );
 
         return (
             <div>
@@ -89,6 +102,13 @@ class BackupRestore extends Component {
                     style={{textAlign: "left", maxWidth: "30rem"}}
                     component="p"
                     content="wallet.import_backup_choose"
+                />
+                <Translate
+                    className="text-left"
+                    component="p"
+                    wallet={wallet_types}
+                    backup={backup_types}
+                    content="wallet.read_more"
                 />
                 {new FileReader().readAsBinaryString ? null : (
                     <p className="error">
@@ -108,16 +128,19 @@ class BackupRestore extends Component {
                 </Upload>
                 <br />
                 <Link to="/">
-                    <button className="blue">
+                    <Button>
                         <Translate content="wallet.back" />
-                    </button>
+                    </Button>
                 </Link>
             </div>
         );
     }
 }
 
-BackupRestore = connect(BackupRestore, connectObject);
+BackupRestore = connect(
+    BackupRestore,
+    connectObject
+);
 
 class Restore extends Component {
     constructor() {
@@ -145,12 +168,12 @@ class Restore extends Component {
                         />
                     </h5>
                     <Link to="/">
-                        <div className="button outline">
+                        <Button type="primary">
                             <Translate
                                 component="span"
                                 content="header.dashboard"
                             />
-                        </div>
+                        </Button>
                     </Link>
                     <div>{this.props.children}</div>
                 </span>
@@ -161,15 +184,12 @@ class Restore extends Component {
                 <h3>
                     <Translate content="wallet.ready_to_restore" />
                 </h3>
-                <div
-                    className="button outline"
-                    onClick={this.onRestore.bind(this)}
-                >
+                <Button type="primary" onClick={this.onRestore.bind(this)}>
                     <Translate
                         content="wallet.restore_wallet_of"
                         name={new_wallet}
                     />
-                </div>
+                </Button>
             </span>
         );
     }
@@ -185,7 +205,10 @@ class Restore extends Component {
         });
     }
 }
-Restore = connect(Restore, connectObject);
+Restore = connect(
+    Restore,
+    connectObject
+);
 
 class NewWalletName extends Component {
     constructor() {
@@ -233,7 +256,7 @@ class NewWalletName extends Component {
                 <h5>
                     <Translate content="wallet.new_wallet_name" />
                 </h5>
-                <input
+                <Input
                     type="text"
                     id="new_wallet"
                     onChange={this.formChange.bind(this)}
@@ -244,13 +267,13 @@ class NewWalletName extends Component {
                         <Translate content="wallet.wallet_exist" />
                     ) : null}
                 </p>
-                <div
+                <Button
                     onClick={this.onAccept.bind(this)}
-                    type="submit"
-                    className={cname("button outline", {disabled: !name_ready})}
+                    type="primary"
+                    disabled={!name_ready}
                 >
                     <Translate content="wallet.accept" />
-                </div>
+                </Button>
             </form>
         );
     }
@@ -275,7 +298,10 @@ class NewWalletName extends Component {
         this.setState(state);
     }
 }
-NewWalletName = connect(NewWalletName, connectObject);
+NewWalletName = connect(
+    NewWalletName,
+    connectObject
+);
 
 class Download extends Component {
     componentWillMount() {
@@ -285,25 +311,84 @@ class Download extends Component {
     }
 
     componentDidMount() {
-        if (!this.isFileSaverSupported)
-            notify.error("File saving is not supported");
+        if (!this.isFileSaverSupported) {
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.backup_file_save_unsupported"
+                )
+            });
+        }
+
+        if (this.props.confirmation) {
+            this.createBackup();
+        }
+    }
+
+    getBackupName() {
+        return backupName(this.props.wallet.current_wallet);
+    }
+
+    createBackup() {
+        const backupPubkey = WalletDb.getWallet().password_pubkey;
+        backup(backupPubkey).then(contents => {
+            const name = this.getBackupName();
+            BackupActions.incommingBuffer({name, contents});
+        });
     }
 
     render() {
+        let isReady = true;
+        if (this.props.confirmation) {
+            isReady = this.props.checkboxActive;
+        }
         return (
-            <div className="button" onClick={this.onDownload.bind(this)}>
-                <Translate content="wallet.download" />
-            </div>
+            <Button
+                type={"primary"}
+                disabled={!isReady}
+                onClick={() => {
+                    this.onDownload();
+                }}
+                style={
+                    this.props.confirmation
+                        ? {height: "initial", padding: 0}
+                        : {}
+                }
+            >
+                {this.props.confirmation ? (
+                    <div
+                        className="download-block"
+                        style={{padding: "1.25rem"}}
+                    >
+                        <img
+                            className="bin-img"
+                            src="/bin-file/default.svg"
+                            alt="bin"
+                        />
+                        <span className="text-left">
+                            <Translate
+                                className="download-text"
+                                content="registration.downloadFile"
+                            />
+                            <p className="file-name" style={{marginBottom: 0}}>
+                                {this.props.backup.name}
+                            </p>
+                        </span>
+                    </div>
+                ) : (
+                    <Translate content="wallet.download" />
+                )}
+            </Button>
         );
     }
 
     onDownload() {
-        let blob = new Blob([this.props.backup.contents], {
+        const blob = new Blob([this.props.backup.contents], {
             type: "application/octet-stream; charset=us-ascii"
         });
 
-        if (blob.size !== this.props.backup.size)
+        if (blob.size !== this.props.backup.size) {
             throw new Error("Invalid backup to download conversion");
+        }
         saveAs(blob, this.props.backup.name);
         WalletActions.setBackupDate();
 
@@ -312,7 +397,10 @@ class Download extends Component {
         }
     }
 }
-Download = connect(Download, connectObject);
+Download = connect(
+    Download,
+    connectObject
+);
 
 class Create extends Component {
     getBackupName() {
@@ -342,16 +430,17 @@ class Create extends Component {
                         />
                     </div>
                 )}
-                <div
+                <Button
+                    type="primary"
                     onClick={this.onCreateBackup.bind(this)}
-                    className={cname("button", {disabled: !ready})}
                     style={{marginBottom: 10}}
+                    disabled={!ready}
                 >
                     <Translate
                         content="wallet.create_backup_of"
                         name={this.props.wallet.current_wallet}
                     />
-                </div>
+                </Button>
                 <LastBackupDate />
             </div>
         );
@@ -365,7 +454,10 @@ class Create extends Component {
         });
     }
 }
-Create = connect(Create, connectObject);
+Create = connect(
+    Create,
+    connectObject
+);
 
 class LastBackupDate extends Component {
     render() {
@@ -419,14 +511,12 @@ class Upload extends Component {
     render() {
         let resetButton = (
             <div style={{paddingTop: 20}}>
-                <div
+                <Button
+                    disabled={!this.props.backup.contents}
                     onClick={this.reset.bind(this)}
-                    className={cname("button outline", {
-                        disabled: !this.props.backup.contents
-                    })}
                 >
                     <Translate content="wallet.reset" />
-                </div>
+                </Button>
             </div>
         );
 
@@ -467,7 +557,10 @@ class Upload extends Component {
         this.forceUpdate();
     }
 }
-Upload = connect(Upload, connectObject);
+Upload = connect(
+    Upload,
+    connectObject
+);
 
 class NameSizeModified extends Component {
     render() {
@@ -485,7 +578,10 @@ class NameSizeModified extends Component {
         );
     }
 }
-NameSizeModified = connect(NameSizeModified, connectObject);
+NameSizeModified = connect(
+    NameSizeModified,
+    connectObject
+);
 
 class DecryptBackup extends Component {
     static propTypes = {
@@ -511,20 +607,20 @@ class DecryptBackup extends Component {
                 <label>
                     <Translate content="wallet.enter_password" />
                 </label>
-                <input
+                <Input
                     type="password"
                     id="backup_password"
                     onChange={this.formChange.bind(this)}
                     value={this.state.backup_password}
                 />
                 <Sha1 />
-                <div
-                    type="submit"
-                    className="button outline"
+                <Button
+                    type="primary"
+                    htmlType="submit"
                     onClick={this.onPassword.bind(this)}
                 >
                     <Translate content="wallet.submit" />
-                </div>
+                </Button>
             </form>
         );
     }
@@ -545,9 +641,17 @@ class DecryptBackup extends Component {
                     error,
                     error.stack
                 );
-                if (error === "invalid_decryption_key")
-                    notify.error("Invalid Password");
-                else notify.error("" + error);
+                if (error === "invalid_decryption_key") {
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.invalid_password"
+                        )
+                    });
+                } else {
+                    Notification.error({
+                        message: error
+                    });
+                }
             });
     }
 
@@ -557,13 +661,16 @@ class DecryptBackup extends Component {
         this.setState(state);
     }
 }
-DecryptBackup = connect(DecryptBackup, connectObject);
+DecryptBackup = connect(
+    DecryptBackup,
+    connectObject
+);
 
 class Sha1 extends Component {
     render() {
         return (
-            <div>
-                <pre className="no-overflow">
+            <div className="padding no-overflow">
+                <pre className="no-overflow" style={{lineHeight: "1.2"}}>
                     {this.props.backup.sha1} * SHA1
                 </pre>
                 <br />
@@ -571,7 +678,10 @@ class Sha1 extends Component {
         );
     }
 }
-Sha1 = connect(Sha1, connectObject);
+Sha1 = connect(
+    Sha1,
+    connectObject
+);
 
 export {
     BackupCreate,

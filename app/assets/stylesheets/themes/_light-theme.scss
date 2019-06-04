@@ -40,7 +40,7 @@ $row-accent-color: #ffffff;
 $header-color: #dcdcdc;
 
 // Account table view colors
-$account-header: #b1b1b1;
+$account-header: #eaeaea;
 $account-cells: #dadada;
 $account-green: #488a00;
 $account-primarytext: $primary-text-color;
@@ -56,12 +56,44 @@ $pulsate-red-end: #e87f84;
 
 $modal-bg-color: #dadada;
 
+$positive-color-alternative: #22d173;
+$negative-color-alternative: #ff276d;
+$medium-color: #ff9900;
+$dark-help-text: #171a25;
+$separator-line: rgba(23, 26, 37, 0.3);
+
 $mobile-input-bg: $input-background;
 
 $incognito-bg: #ea340b;
 
+$tab-content-background-color: lighten($account-header, 4%);
+$explorer-tab-content-background-color: #fff;
+
+// * * * Explorer
+
+// * * * * * Witnesses
+
+$explorer--witnesses--info-bg: transparent;
+$explorer--witnesses--info-border: darken($account-header, 6%);
+$explorer--witnesses--info-table-title-color: lighten($dark-text-color, 20%);
+$explorer--witnesses--info-table-text-color: $dark-text-color;
+
+// * * * * * Assets
+
+$explorer--assets--bg: $bg-color;
+
+// * * *
+
+// * * * * Settings
+
+$settings-label-color: rgba(0, 0, 0, 0.65);
+
+//
+
 .lightTheme {
     @include theme(
+        $explorer-tab-content-background-color,
+        $tab-content-background-color,
         $primary-text-color,
         $bg-color,
         $dark-text-color,
@@ -107,7 +139,18 @@ $incognito-bg: #ea340b;
         $main-content-margin-block-bg-color,
         $modal-bg-color,
         $mobile-input-bg,
-        $incognito-bg
+        $incognito-bg,
+        $explorer--witnesses--info-bg,
+        $explorer--witnesses--info-border,
+        $explorer--witnesses--info-table-title-color,
+        $explorer--witnesses--info-table-text-color,
+        $explorer--assets--bg,
+        $negative-color-alternative,
+        $positive-color-alternative,
+        $separator-line,
+        $medium-color,
+        $dark-help-text,
+        $settings-label-color
     );
 
     .change-up {

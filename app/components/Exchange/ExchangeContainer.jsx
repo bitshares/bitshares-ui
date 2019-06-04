@@ -30,6 +30,9 @@ class ExchangeContainer extends React.Component {
                     IntlStore
                 ]}
                 inject={{
+                    hasAnyPriceAlert: () =>
+                        SettingsStore.hasAnyPriceAlert(symbols[0], symbols[1]),
+                    priceAlert: () => SettingsStore.getState().priceAlert,
                     locale: () => IntlStore.getState().currentLocale,
                     lockedWalletState: () => {
                         return WalletUnlockStore.getState().locked;

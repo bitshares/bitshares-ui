@@ -14,6 +14,7 @@ import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
 import {set} from "lodash-es";
 import {getAllowedLogins, getFaucet} from "../../branding";
+import {Input, Form} from "bitshares-ui-style-guide";
 
 class Settings extends React.Component {
     constructor(props) {
@@ -33,13 +34,20 @@ class Settings extends React.Component {
             "showSettles",
             "walletLockTimeout",
             "themes",
-            "showAssetPercent"
+            "showAssetPercent",
+            "viewOnlyMode"
         ];
         // disable that the user can change login method if only one is allowed
         if (getAllowedLogins().length > 1) general.push("passwordLogin");
         general.push("reset");
 
         this.state = {
+            isAddNodeModalVisible: false,
+            isRemoveNodeModalVisible: false,
+            removeNode: {
+                name: null,
+                url: null
+            },
             apiServer: props.settings.get("apiServer"),
             activeSetting,
             menuEntries,
@@ -49,13 +57,21 @@ class Settings extends React.Component {
             }
         };
 
+        this.showAddNodeModal = this.showAddNodeModal.bind(this);
+        this.hideAddNodeModal = this.hideAddNodeModal.bind(this);
+        this.showRemoveNodeModal = this.showRemoveNodeModal.bind(this);
+        this.hideRemoveNodeModal = this.hideRemoveNodeModal.bind(this);
+
         this._handleNotificationChange = this._handleNotificationChange.bind(
             this
         );
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.match.params.tab !== this.props.match.params.tab) {
+        if (
+            prevProps.match.params.tab !== this.props.match.params.tab &&
+            !!this.props.match.params.tab
+        ) {
             this._onChangeMenu(this.props.match.params.tab);
         }
     }
@@ -88,6 +104,38 @@ class Settings extends React.Component {
         }
     }
 
+    showAddNodeModal() {
+        this.setState({
+            isAddNodeModalVisible: true
+        });
+    }
+
+    hideAddNodeModal() {
+        this.setState({
+            isAddNodeModalVisible: false
+        });
+    }
+
+    showRemoveNodeModal(url, name) {
+        this.setState({
+            isRemoveNodeModalVisible: true,
+            removeNode: {
+                url,
+                name
+            }
+        });
+    }
+
+    hideRemoveNodeModal() {
+        this.setState({
+            isRemoveNodeModalVisible: false,
+            removeNode: {
+                url: null,
+                name: null
+            }
+        });
+    }
+
     _getMenuEntries(props) {
         if (props.deprecated) {
             return ["wallet", "backup"];
@@ -97,7 +145,7 @@ class Settings extends React.Component {
         menuEntries.push("general");
         if (!props.settings.get("passwordLogin")) menuEntries.push("wallet");
         menuEntries.push("accounts");
-        menuEntries.push("password");
+        if (!props.settings.get("passwordLogin")) menuEntries.push("password");
         if (!props.settings.get("passwordLogin")) menuEntries.push("backup");
         if (!props.settings.get("passwordLogin")) menuEntries.push("restore");
         menuEntries.push("access");
@@ -105,6 +153,7 @@ class Settings extends React.Component {
         if (getFaucet().show) menuEntries.push("faucet_address");
 
         menuEntries.push("reset");
+        menuEntries.push("viewOnlyMode");
 
         return menuEntries;
     }
@@ -129,8 +178,16 @@ class Settings extends React.Component {
         });
     }
 
+    _handleSettingsEntryChange(setting, input) {
+        if (!input.target) {
+            this._onChangeSetting(setting, {target: {value: input}});
+        } else {
+            this._onChangeSetting(setting, input);
+        }
+    }
+
     _onChangeSetting(setting, e) {
-        e.preventDefault();
+        if (e.preventDefault) e.preventDefault();
 
         let {defaults} = this.props;
         let value = null;
@@ -203,6 +260,7 @@ class Settings extends React.Component {
             case "showSettles":
             case "showAssetPercent":
             case "passwordLogin":
+            case "viewOnlyMode":
                 let reference = defaults[setting][0];
                 if (reference.translate) reference = reference.translate;
                 SettingsActions.changeSetting({
@@ -283,16 +341,16 @@ class Settings extends React.Component {
                         faucet={settings.get("faucet_address")}
                         nodes={defaults.apiServer}
                         onChange={this._onChangeSetting.bind(this)}
-                        triggerModal={this.triggerModal.bind(this)}
+                        showAddNodeModal={this.showAddNodeModal}
+                        showRemoveNodeModal={this.showRemoveNodeModal}
                     />
                 );
                 break;
             case "faucet_address":
                 entries = (
-                    <input
+                    <Input
                         disabled={!getFaucet().editable}
                         type="text"
-                        className="settings-input"
                         defaultValue={settings.get("faucet_address")}
                         onChange={
                             getFaucet().editable
@@ -318,7 +376,9 @@ class Settings extends React.Component {
                             setting={setting}
                             settings={settings}
                             defaults={defaults[setting]}
-                            onChange={this._onChangeSetting.bind(this)}
+                            onChange={this._handleSettingsEntryChange.bind(
+                                this
+                            )}
                             onNotificationChange={
                                 this._handleNotificationChange
                             }
@@ -331,85 +391,107 @@ class Settings extends React.Component {
         }
 
         return (
-            <div className={this.props.deprecated ? "" : "grid-block"}>
-                <div className="grid-block main-content margin-block wrap">
-                    <div
-                        className="grid-content shrink settings-menu"
-                        style={{paddingRight: "2rem"}}
-                    >
-                        <Translate
-                            style={{paddingBottom: 10, paddingLeft: 10}}
-                            component="h3"
-                            content="header.settings"
-                            className={"panel-bg-color"}
-                        />
-
-                        <ul>
-                            {menuEntries.map((entry, index) => {
-                                return (
-                                    <li
-                                        className={
-                                            index === activeSetting
-                                                ? "active"
-                                                : ""
-                                        }
-                                        onClick={this._redirectToEntry.bind(
-                                            this,
-                                            entry
-                                        )}
-                                        key={entry}
-                                    >
-                                        <Translate
-                                            content={"settings." + entry}
-                                        />
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-
-                    <div
-                        className="grid-content"
-                        style={{
-                            maxWidth: 1000
-                        }}
-                    >
-                        <div className="grid-block small-12 no-margin vertical">
+            <Form layout={"vertical"}>
+                <div
+                    className={
+                        this.props.deprecated
+                            ? ""
+                            : "grid-block settings-container"
+                    }
+                >
+                    <div className="grid-block main-content margin-block wrap">
+                        <div
+                            className="grid-content shrink settings-menu"
+                            style={{paddingRight: "2rem"}}
+                        >
                             <Translate
+                                style={{paddingBottom: 10, paddingLeft: 10}}
                                 component="h3"
-                                content={
-                                    "settings." + menuEntries[activeSetting]
-                                }
+                                content="header.settings"
+                                className={"panel-bg-color"}
                             />
-                            {activeEntry != "access" && (
+
+                            <ul>
+                                {menuEntries.map((entry, index) => {
+                                    return (
+                                        <li
+                                            className={
+                                                index === activeSetting
+                                                    ? "active"
+                                                    : ""
+                                            }
+                                            onClick={this._redirectToEntry.bind(
+                                                this,
+                                                entry
+                                            )}
+                                            key={entry}
+                                        >
+                                            <Translate
+                                                content={"settings." + entry}
+                                            />
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+
+                        <div
+                            className="grid-content"
+                            style={{
+                                height: "100%"
+                            }}
+                        >
+                            <div
+                                className="grid-block small-12 no-margin vertical"
+                                style={{
+                                    maxWidth: 1000
+                                }}
+                            >
                                 <Translate
-                                    unsafe
-                                    style={{paddingTop: 5, marginBottom: 30}}
-                                    content={`settings.${
-                                        menuEntries[activeSetting]
-                                    }_text`}
-                                    className="panel-bg-color"
+                                    component="h3"
+                                    content={
+                                        "settings." + menuEntries[activeSetting]
+                                    }
                                 />
-                            )}
-                            {entries}
+                                {activeEntry != "access" && (
+                                    <Translate
+                                        unsafe
+                                        style={{
+                                            paddingTop: 5,
+                                            marginBottom: 30
+                                        }}
+                                        content={`settings.${
+                                            menuEntries[activeSetting]
+                                        }_text`}
+                                        className="panel-bg-color"
+                                    />
+                                )}
+                                {entries}
+                            </div>
                         </div>
                     </div>
+                    <WebsocketAddModal
+                        removeNode={this.state.removeNode}
+                        isAddNodeModalVisible={this.state.isAddNodeModalVisible}
+                        isRemoveNodeModalVisible={
+                            this.state.isRemoveNodeModalVisible
+                        }
+                        onAddNodeClose={this.hideAddNodeModal}
+                        onRemoveNodeClose={this.hideRemoveNodeModal}
+                        apis={defaults["apiServer"]}
+                        api={defaults["apiServer"]
+                            .filter(a => {
+                                return a.url === this.state.apiServer;
+                            })
+                            .reduce((a, b) => {
+                                return b && b.url;
+                            }, null)}
+                        changeConnection={apiServer => {
+                            this.setState({apiServer});
+                        }}
+                    />
                 </div>
-                <WebsocketAddModal
-                    ref="ws_modal"
-                    apis={defaults["apiServer"]}
-                    api={defaults["apiServer"]
-                        .filter(a => {
-                            return a.url === this.state.apiServer;
-                        })
-                        .reduce((a, b) => {
-                            return b && b.url;
-                        }, null)}
-                    changeConnection={apiServer => {
-                        this.setState({apiServer});
-                    }}
-                />
-            </div>
+            </Form>
         );
     }
 }

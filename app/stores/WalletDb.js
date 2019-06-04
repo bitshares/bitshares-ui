@@ -16,7 +16,7 @@ import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs";
 import {Apis, ChainConfig} from "bitsharesjs-ws";
 import AddressIndex from "stores/AddressIndex";
 import SettingsActions from "actions/SettingsActions";
-import notify from "actions/NotificationActions";
+import {Notification} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 
 let aes_private = null;
@@ -442,9 +442,8 @@ class WalletDb extends BaseStore {
                         if (!foundRole) {
                             let alsoCheckRole =
                                 role === "active" ? "owner" : "active";
-                            acc
-                                .getIn([alsoCheckRole, "key_auths"])
-                                .forEach(auth => {
+                            acc.getIn([alsoCheckRole, "key_auths"]).forEach(
+                                auth => {
                                     if (auth.get(0) === key.pubKey) {
                                         setKey(
                                             alsoCheckRole,
@@ -454,7 +453,8 @@ class WalletDb extends BaseStore {
                                         foundRole = true;
                                         return false;
                                     }
-                                });
+                                }
+                            );
                         }
                     }
                 }
@@ -467,10 +467,8 @@ class WalletDb extends BaseStore {
                     true
                 );
                 if (success && !cloudMode) {
-                    notify.addNotification({
-                        message: counterpart.translate("wallet.local_switch"),
-                        level: "success",
-                        timeout: 5
+                    Notification.success({
+                        message: counterpart.translate("wallet.local_switch")
                     });
                     SettingsActions.changeSetting({
                         setting: "passwordLogin",

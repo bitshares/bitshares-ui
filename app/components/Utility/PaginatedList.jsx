@@ -1,7 +1,8 @@
 import React from "react";
 import {Pagination} from "antd";
 import counterpart from "counterpart";
-import TransitionWrapper from "../Utility/TransitionWrapper";
+import {Table} from "bitshares-ui-style-guide";
+import "./paginated-list.scss";
 
 export default class PaginatedList extends React.Component {
     constructor(props) {
@@ -51,25 +52,14 @@ export default class PaginatedList extends React.Component {
         }
 
         return (
-            <div className="grid-content" style={this.props.style}>
-                <table className={this.props.className}>
-                    {header ? <thead>{header}</thead> : null}
-                    {this.props.withTransition && page === 1 ? (
-                        <TransitionWrapper
-                            component="tbody"
-                            transitionName="newrow"
-                        >
-                            {currentRows}
-                            {extraRow}
-                        </TransitionWrapper>
-                    ) : (
-                        <tbody>
-                            {currentRows}
-                            {extraRow}
-                        </tbody>
-                    )}
-                </table>
-
+            <div className="paginated-list" style={this.props.style}>
+                <Table
+                    dataSource={currentRows}
+                    columns={Array.isArray(header) ? header : []}
+                    footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
+                    onChange={this.props.toggleSortOrder}
+                    pagination={false}
+                />
                 {total > pageSize ? (
                     <Pagination
                         style={{
@@ -88,7 +78,6 @@ export default class PaginatedList extends React.Component {
                         onChange={this.onChange.bind(this)}
                     />
                 ) : null}
-
                 {this.props.children}
             </div>
         );

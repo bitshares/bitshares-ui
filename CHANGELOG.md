@@ -1,4 +1,108 @@
 ---------------------------------------------------------------------
+Release 2.0.180815
+---------------------------------------------------------------------
+New features
+--------
+- #1767: Add full account history csv export
+- #1738: Use block headers to display block times
+- #1493: Add missing fee ops to Fees page
+- #1751: Refactor the dashboard markets table, separate markets by quote asset
+
+Bug fixes and improvements
+--------
+- Update one API url
+- Fix #1795: Handle disabled gateways iussue in withdrawmodal new
+- Fix #1788: Market Picker issue
+- #1751: Add missing translation key and update locale files
+- #1699: Link to in-wallet help instead of docs.bitshares.org
+- Fix #1781: Update openledger contact info and fix deposit modal help
+- Fix #1770: Make sure node information defaults to sensible values
+- Fix #1758 - Tooltip on Margin Modal
+- Fix global settlement price displayed in Asset view
+- Replace misplaced tx label with #[number] in Transaction.jsx
+
+---------------------------------------------------------------------
+Release 2.0.180815-rc1
+---------------------------------------------------------------------
+New features
+--------
+- #1767: Add full account history csv export
+- #1738: Use block headers to display block times
+- #1493: Add missing fee ops to Fees page
+- #1751: Refactor the dashboard markets table, separate markets by quote asset
+
+Bug fixes and improvements
+--------
+- #1751: Add missing translation key and update locale files
+- #1699: Link to in-wallet help instead of docs.bitshares.org
+- Fix #1781: Update openledger contact info and fix deposit modal help
+- Fix #1770: Make sure node information defaults to sensible values
+- Fix #1758 - Tooltip on Margin Modal
+- Fix global settlement price displayed in Asset view
+- Replace misplaced tx label with #[number] in Transaction.jsx
+
+---------------------------------------------------------------------
+Release 2.0.180814
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- Fix #1778: Sum call orders properly
+- Fix #1779: Display debt and collateral values properly in Asset view
+
+---------------------------------------------------------------------
+Release 2.0.180808
+---------------------------------------------------------------------
+New features
+--------
+- #1740: Add pagination to several tables
+- #1576: Add target collateral ratio to orderbook calculations
+- #1131: Add feed price publishing to Asset page
+- #1629: Move burn asset to portfolio, fee claiming to Asset page
+- #1596: Add new asset_update_issuer operation
+- #1598: Add fee pool claim and cleanup Asset page
+- #1550: Make preferred units depend on the network (main/testnet)
+- #1521, #1672, #1462: Better Node Management
+- #1575: Adding UI for Target CR on Modal
+- #1701: Implement an advanced ping strategy
+
+Bug fixes and improvements
+--------
+- #1521: Add more nodes and improve latency check
+- Fix #1760 and AccountStoreBug (#1765)
+- Fix #1752: Account with no balances crashes the GUI
+- Fix #1748: Disable release notifications in RC builds
+- Fix #1745: are_equal_shallow bug
+- Fix #1737: Make sure groupedOrder selection is used when switching chart timeframes
+- #1521: More node updates
+- Fix a bug causing infinite loading in Assets search page
+- Fix #1744: Make sure BindToChainState compares null values correctly
+- #1521: Update API node details
+- #1131: Use ratio instead of percent for mcr and mssr
+- #1596: Move Asset fee claiming to Asset page actions tab
+- #1706: Update scam accounts list
+- Fix #1723: Clean up proxy input field, add tooltips
+- #1712: Add OPEN.EOSDAC asset to default lists
+- #1712: Improve find market search results
+- Fix #1727: Target CR Delimiter
+- Fix #1628: Add checker for inputs on withdrawal
+- Fix #1688 - Add Trading link to margin table
+- Fix #1667 - Dashboard Column Reordering
+- Fix #1704: Theme Issues on Asset Explorer
+- #1575: Fixes for Target CR
+- #1672: Remove API nodes without support for orders API
+- Update russian translations (#1709)
+
+---------------------------------------------------------------------
+Release 2.0.180808-rc2
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- Fix #1752: Account with no balances crashes the GUI
+- Fix #1748: Disable release notifications in RC builds
+- Fix #1745: are_equal_shallow bug
+- Fix #1737: Make sure groupedOrder selection is used when switching chart timeframes
+
+---------------------------------------------------------------------
 Release 2.0.180808-rc1
 ---------------------------------------------------------------------
 New features

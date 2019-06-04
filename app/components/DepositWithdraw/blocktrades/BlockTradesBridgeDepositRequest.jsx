@@ -1,9 +1,8 @@
+import counterpart from "counterpart";
 import React from "react";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import BaseModal from "../../Modal/BaseModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
@@ -14,9 +13,9 @@ import {blockTradesAPIs} from "api/apiConfig";
 import {debounce} from "lodash-es";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
-import {ChainStore} from "bitsharesjs";
 import {getConversionJson} from "common/gatewayMethods";
 import PropTypes from "prop-types";
+import {Modal} from "bitshares-ui-style-guide";
 
 class ButtonConversion extends React.Component {
     static propTypes = {
@@ -323,12 +322,10 @@ class ButtonWithdraw extends React.Component {
     }
 
     onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
+        this.props.showModal();
     }
 
     render() {
-        let withdraw_modal_id = this.getWithdrawModalId();
-
         let button_class = "button disabled";
         if (
             Object.keys(this.props.account.get("balances").toJS()).includes(
@@ -361,32 +358,37 @@ class ButtonWithdraw extends React.Component {
                         <Translate content="gateway.withdraw_now" />{" "}
                     </button>
                 </span>
-                <BaseModal id={withdraw_modal_id} overlay={true}>
-                    <br />
-                    <div className="grid-block vertical">
-                        <WithdrawModalBlocktrades
-                            key={`${this.props.key}`}
-                            account={this.props.account.get("name")}
-                            issuer={this.props.issuer}
-                            asset={this.props.asset.get("id")}
-                            output_coin_name={this.props.output_coin_name}
-                            output_coin_symbol={this.props.output_coin_symbol}
-                            output_coin_type={this.props.output_coin_type}
-                            output_supports_memos={
-                                this.props.output_supports_memos
-                            }
-                            amount_to_withdraw={this.props.amount_to_withdraw}
-                            modal_id={withdraw_modal_id}
-                            url={this.props.url}
-                            output_wallet_type={this.props.output_wallet_type}
-                            balance={
-                                this.props.account.get("balances").toJS()[
-                                    this.props.asset.get("id")
-                                ]
-                            }
-                        />
-                    </div>
-                </BaseModal>
+                <Modal
+                    closable={false}
+                    onCancel={this.props.hideModal}
+                    title={counterpart.translate("gateway.withdraw_coin", {
+                        coin: this.props.output_coin_name,
+                        symbol: this.props.output_coin_symbol
+                    })}
+                    footer={null}
+                    visible={this.props.visible}
+                    overlay={true}
+                >
+                    <WithdrawModalBlocktrades
+                        hideModal={this.props.hideModal}
+                        key={`${this.props.key}`}
+                        account={this.props.account.get("name")}
+                        issuer={this.props.issuer}
+                        asset={this.props.asset.get("id")}
+                        output_coin_name={this.props.output_coin_name}
+                        output_coin_symbol={this.props.output_coin_symbol}
+                        output_coin_type={this.props.output_coin_type}
+                        output_supports_memos={this.props.output_supports_memos}
+                        amount_to_withdraw={this.props.amount_to_withdraw}
+                        url={this.props.url}
+                        output_wallet_type={this.props.output_wallet_type}
+                        balance={
+                            this.props.account.get("balances").toJS()[
+                                this.props.asset.get("id")
+                            ]
+                        }
+                    />
+                </Modal>
             </span>
         );
     }
@@ -405,6 +407,9 @@ class ButtonWithdrawContainer extends React.Component {
     render() {
         let withdraw_button = (
             <ButtonWithdraw
+                visible={this.props.visible}
+                hideModal={this.props.hideModal}
+                showModal={this.props.showModal}
                 key={this.props.key}
                 account={this.props.account}
                 issuer={this.props.issuer}
@@ -466,6 +471,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         };
 
         this.state = {
+            isModalVisible: false,
             coin_symbol: "btc",
             key_for_withdrawal_dialog: "btc",
             supports_output_memos: "",
@@ -526,6 +532,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             // announcements data
             announcements: []
         };
+
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     urlConnection(checkUrl, state_coin_info) {
@@ -615,8 +636,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     if (
                         input_coin_info.backingCoinType !=
                             pair.outputCoinType &&
+                        output_coin_info &&
                         output_coin_info.backingCoinType !=
                             pair.inputCoinType &&
+                        input_coin_info &&
                         input_coin_info.restricted == false &&
                         output_coin_info.restricted == false
                     ) {
@@ -1014,9 +1037,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     let input_coin_info = coins_by_type[pair.inputCoinType];
                     let output_coin_info = coins_by_type[pair.outputCoinType];
                     if (
-                        input_coin_info.backingCoinType !=
-                            pair.outputCoinType &&
-                        output_coin_info.backingCoinType != pair.inputCoinType
+                        output_coin_info &&
+                        output_coin_info.backingCoinType !=
+                            pair.inputCoinType &&
+                        input_coin_info &&
+                        input_coin_info.backingCoinType != pair.outputCoinType
                     ) {
                         if (
                             active_wallets.indexOf(
@@ -1552,10 +1577,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         return "withdraw_asset_" + this.props.gateway + "_bridge";
     }
 
-    onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
-    }
-
     onInputCoinTypeChanged(deposit_withdraw_or_convert, event) {
         let estimated_input_output_amount = null;
         let estimated_input_output_amount_state = "_estimated_output_amount";
@@ -1728,7 +1749,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             withdraw_header,
             conversion_body,
             conversion_header,
-            withdraw_modal_id,
             conversion_modal_id;
 
         if (
@@ -1999,7 +2019,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     this.state.allowed_mappings_for_withdraw
                 ).length > 0
             ) {
-                withdraw_modal_id = this.getWithdrawModalId();
                 let withdraw_asset_symbol = this.state.coins_by_type[
                     this.state.withdraw_input_coin_type
                 ].symbol;
@@ -2110,6 +2129,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
                 let withdraw_button = (
                     <ButtonWithdrawContainer
+                        visible={this.state.isModalVisible}
+                        hideModal={this.hideModal}
+                        showModal={this.showModal}
                         key={this.state.key_for_withdrawal_dialog}
                         account={this.props.account.get("name")}
                         issuer={this.props.issuer_account.get("name")}

@@ -61,6 +61,14 @@ class VestingBalance extends React.Component {
                     <tbody>
                         <tr>
                             <td>
+                                <Translate content="account.member.balance_type" />
+                            </td>
+                            <td>
+                                <span>{vb.balance_type}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <Translate content="account.member.cashback" />
                             </td>
                             <td>
@@ -82,7 +90,8 @@ class VestingBalance extends React.Component {
                                     ),
                                     0
                                 )}
-                                &nbsp;<Translate content="account.member.coindays" />
+                                &nbsp;
+                                <Translate content="account.member.coindays" />
                             </td>
                         </tr>
                         <tr>
@@ -92,14 +101,14 @@ class VestingBalance extends React.Component {
                             <td>
                                 {utils.format_number(
                                     utils.get_asset_amount(
-                                        vb.balance.amount *
-                                            vestingPeriod /
+                                        (vb.balance.amount * vestingPeriod) /
                                             secondsPerDay,
                                         cvbAsset
                                     ),
                                     0
                                 )}
-                                &nbsp;<Translate content="account.member.coindays" />
+                                &nbsp;
+                                <Translate content="account.member.coindays" />
                             </td>
                         </tr>
                         <tr>
@@ -108,8 +117,7 @@ class VestingBalance extends React.Component {
                             </td>
                             <td>
                                 {utils.format_number(
-                                    vestingPeriod *
-                                        (1 - availablePercent) /
+                                    (vestingPeriod * (1 - availablePercent)) /
                                         secondsPerDay || 0,
                                     2
                                 )}
@@ -121,8 +129,8 @@ class VestingBalance extends React.Component {
                                 <Translate content="account.member.available" />
                             </td>
                             <td>
-                                {utils.format_number(availablePercent * 100, 2)}%
-                                /{" "}
+                                {utils.format_number(availablePercent * 100, 2)}
+                                % /{" "}
                                 <FormattedAsset
                                     amount={
                                         availablePercent * vb.balance.amount

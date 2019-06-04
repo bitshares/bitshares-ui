@@ -68,17 +68,19 @@ class MarketsActions {
                     lastFetched: new Date()
                 };
 
-                marketStatsQueue.push({
-                    promise: Apis.instance()
-                        .db_api()
-                        .exec("get_ticker", [
-                            second.get("id"),
-                            first.get("id")
-                        ]),
-                    market: marketName,
-                    base: second,
-                    quote: first
-                });
+                if (Apis.instance().db_api()) {
+                    marketStatsQueue.push({
+                        promise: Apis.instance()
+                            .db_api()
+                            .exec("get_ticker", [
+                                second.get("id"),
+                                first.get("id")
+                            ]),
+                        market: marketName,
+                        base: second,
+                        quote: first
+                    });
+                }
 
                 if (!marketStatsQueueActive) {
                     marketStatsQueueActive = true;
@@ -541,7 +543,7 @@ class MarketsActions {
                                 error
                             );
                             dispatch({unSub: false, market: subID});
-                            reject();
+                            reject(error);
                         });
                 });
             }
@@ -611,17 +613,25 @@ class MarketsActions {
         };
     }
 
-    createLimitOrder2(order) {
+    createLimitOrder2(orderOrOrders) {
         var tr = WalletApi.new_transaction();
+
+        let orders = [];
 
         // let feeAsset = ChainStore.getAsset(fee_asset_id);
         // if( feeAsset.getIn(["options", "core_exchange_rate", "base", "asset_id"]) === "1.3.0" && feeAsset.getIn(["options", "core_exchange_rate", "quote", "asset_id"]) === "1.3.0" ) {
         //     fee_asset_id = "1.3.0";
         // }
 
-        order = order.toObject();
+        if (Array.isArray(orderOrOrders)) {
+            orders = orderOrOrders.map(order => order.toObject());
+        } else {
+            orders.push(orderOrOrders.toObject());
+        }
 
-        tr.add_type_operation("limit_order_create", order);
+        orders.forEach(order => {
+            tr.add_type_operation("limit_order_create", order);
+        });
 
         return WalletDb.process_transaction(tr, null, true)
             .then(result => {

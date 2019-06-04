@@ -3,6 +3,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
+import {Button} from "bitshares-ui-style-guide";
 
 class BackupFavorites extends React.Component {
     makeBackup() {
@@ -21,24 +22,24 @@ class BackupFavorites extends React.Component {
                 <p>
                     <Translate content="settings.backup_favoritestext" />
                 </p>
-                <button
-                    onClick={this.makeBackup.bind(this)}
-                    className="button success"
-                >
+                <Button type="primary" onClick={this.makeBackup.bind(this)}>
                     <Translate content="settings.backup_favoritesbtn" />
-                </button>
+                </Button>
             </div>
         );
     }
 }
 
-export default connect(BackupFavorites, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            starredMarkets: SettingsStore.getState().starredMarkets
-        };
+export default connect(
+    BackupFavorites,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                starredMarkets: SettingsStore.getState().starredMarkets
+            };
+        }
     }
-});
+);

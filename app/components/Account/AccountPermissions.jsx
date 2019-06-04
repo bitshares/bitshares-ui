@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import accountUtils from "common/account_utils";
+import {createPaperWalletAsPDF} from "common/paperWallet";
 import ApplicationApi from "api/ApplicationApi";
 import {PublicKey} from "bitsharesjs";
 import AccountPermissionsList from "./AccountPermissionsList";
@@ -12,7 +13,7 @@ import PubKeyInput from "../Forms/PubKeyInput";
 import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import {RecentTransactions} from "./RecentTransactions";
-import notify from "actions/NotificationActions";
+import {Notification} from "bitshares-ui-style-guide";
 
 class AccountPermissions extends React.Component {
     constructor(props) {
@@ -179,11 +180,10 @@ class AccountPermissions extends React.Component {
             s.owner_accounts.size === 1 &&
             s.owner_accounts.first() === updated_account.id
         ) {
-            return notify.addNotification({
-                message:
-                    "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-                level: "error",
-                autoDismiss: 10
+            return Notification.warning({
+                message: counterpart.translate(
+                    "notifications.account_permissions_update_warning"
+                )
             });
         }
         if (
@@ -270,6 +270,10 @@ class AccountPermissions extends React.Component {
         this.setState(newState);
     }
 
+    onPdfCreate() {
+        createPaperWalletAsPDF(this.props.account);
+    }
+
     render() {
         let error1, error2;
 
@@ -354,6 +358,19 @@ class AccountPermissions extends React.Component {
                                         tabIndex={9}
                                     >
                                         <Translate content="account.perm.publish" />
+                                    </button>
+                                    <button
+                                        className={"button"}
+                                        style={{marginLeft: 10}}
+                                        data-tip={counterpart.translate(
+                                            "account.perm.create_paperwallet_private_hint"
+                                        )}
+                                        onClick={() => {
+                                            this.onPdfCreate();
+                                        }}
+                                        tabIndex={10}
+                                    >
+                                        <Translate content="account.perm.create_paperwallet" />
                                     </button>
                                 </div>
                             }

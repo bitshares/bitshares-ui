@@ -1,0 +1,27 @@
+
+<svg width="350px" height="392px" viewBox="0 0 350 392" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="175" cy="175.926667" r="175"></circle>
+    </defs>
+    <g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="illustration/usb-active">
+            <g id="usb">
+                <g id="mask" transform="translate(0.000000, 41.073333)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Oval-2" fill="#171A25" opacity="0.2" xlink:href="#path-1"></use>
+                    <path d="M85.536,49.9266667 L265.464,49.9266667 C267.969164,49.9266667 270,51.957503 270,54.4626667 L270,353.926667 L81,353.926667 L81,54.4626667 C81,51.957503 83.0308364,49.9266667 85.536,49.9266667 Z" id="Rectangle-4" fill="#186974" mask="url(#mask-2)"></path>
+                </g>
+                <path d="M154,228.585935 L154,232 C154,234 154,236 156,238 L173,257 L173,187 L166,187 L176.5,162 L187,186.993927 L180.046223,186.993927 L180,241 L197,224 C198.553165,222.424769 199,220.275502 199,218.049086 L199,213.978762 L193,213.978762 L193,194 L212,194 L212,213.978762 L206.034693,213.978762 L206.034693,218.049086 C206.034693,222.0943 204.821459,226.139976 202,229 L185,246 C181,250 180.046223,254 180.046223,259 L180.046223,271.28963 C187.42587,272.712105 193,279.205098 193,287 C193,295.836556 185.836556,303 177,303 C168.163444,303 161,295.836556 161,287 C161,279.548184 166.094247,273.286194 172.990165,271.506605 C172.864494,268.369974 171.534439,265.534439 169,263 L151.015003,243 C148,240 147,236.042703 147,232 L147,228.250119 C142.902643,226.649981 140,222.663965 140,218 C140,211.924868 144.924868,207 151,207 C157.075132,207 162,211.924868 162,218 C162,223.035108 158.61701,227.280077 154,228.585935 Z" fill="#FFFFFF" opacity="0.5"></path>
+                <rect id="Rectangle" fill="#FF276D" x="105" y="77" width="140" height="14"></rect>
+                <rect id="Rectangle-5" fill="#00FFFF" x="116" y="0" width="118" height="77"></rect>
+                <rect id="Rectangle" fill="#000000" x="133" y="28" width="21" height="10"></rect>
+                <rect id="Rectangle" fill="#000000" x="196" y="28" width="21" height="10"></rect>
+                <polyline id="Path" stroke="#000000" stroke-width="2" opacity="0.200000003" points="171 0 171 28 182 28 182 45 171 45 171 77"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

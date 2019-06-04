@@ -3,7 +3,6 @@ import {FormattedNumber} from "react-intl";
 import AssetWrapper from "./AssetWrapper";
 import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
-import ReactTooltip from "react-tooltip";
 import {MarketStats} from "../Utility/MarketPrice";
 
 /**
@@ -23,10 +22,6 @@ class MarketChangeComponent extends MarketStats {
 
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount() {
-        ReactTooltip.rebuild();
     }
 
     shouldComponentUpdate(np) {
@@ -55,11 +50,16 @@ class MarketChangeComponent extends MarketStats {
             />
         );
 
-        return (
-            <span className={"value " + dayChangeClass}>
-                {marketChangeFormattedValue}%
-            </span>
-        );
+        // this is treating a sympton when MarketStore does not provide a proper value! #2511
+        if (!isNaN(parseFloat(marketChangeValue))) {
+            return (
+                <span className={"value " + dayChangeClass}>
+                    {marketChangeFormattedValue}%
+                </span>
+            );
+        } else {
+            return <span className={"value " + dayChangeClass}>-</span>;
+        }
     }
 }
 MarketChangeComponent = AssetWrapper(MarketChangeComponent, {
@@ -75,18 +75,21 @@ class Market24HourChangeComponent extends React.Component {
     }
 }
 
-Market24HourChangeComponent = connect(Market24HourChangeComponent, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps(props) {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats.get(
-                props.marketId
-            ),
-            allMarketStats: MarketsStore.getState().allMarketStats
-        };
+Market24HourChangeComponent = connect(
+    Market24HourChangeComponent,
+    {
+        listenTo() {
+            return [MarketsStore];
+        },
+        getProps(props) {
+            return {
+                marketStats: MarketsStore.getState().allMarketStats.get(
+                    props.marketId
+                ),
+                allMarketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 export {Market24HourChangeComponent};

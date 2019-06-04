@@ -1,12 +1,13 @@
 import React from "react";
-import {Tabs, Tab} from "../Utility/Tabs";
 import Witnesses from "./Witnesses";
 import CommitteeMembers from "./CommitteeMembers";
 import FeesContainer from "../Blockchain/FeesContainer";
 import BlocksContainer from "./BlocksContainer";
 import AssetsContainer from "./AssetsContainer";
 import AccountsContainer from "./AccountsContainer";
+import counterpart from "counterpart";
 import MarketsContainer from "../Exchange/MarketsContainer";
+import {Tabs} from "bitshares-ui-style-guide";
 
 class Explorer extends React.Component {
     constructor(props) {
@@ -61,34 +62,31 @@ class Explorer extends React.Component {
     }
 
     render() {
-        let {tab} = this.props.match.params;
-        let defaultActiveTab = this.state.tabs.findIndex(t => t.name === tab);
-
-        let tabs = [];
-
-        for (var i = 0; i < this.state.tabs.length; i++) {
-            let currentTab = this.state.tabs[i];
-
-            let TabContent = currentTab.content;
-            let isLinkTo = defaultActiveTab == i ? "" : currentTab.link;
-
-            tabs.push(
-                <Tab key={i} title={currentTab.translate} isLinkTo={isLinkTo}>
-                    <TabContent />
-                </Tab>
-            );
-        }
+        const onChange = value => {
+            this.props.history.push(value);
+        };
 
         return (
             <Tabs
-                defaultActiveTab={defaultActiveTab}
-                segmented={false}
-                setting="explorer-tabs"
-                className="account-tabs"
-                tabsClass="account-overview bordered-header content-block"
-                contentClass="tab-content padding"
+                activeKey={this.props.location.pathname}
+                animated={false}
+                style={{display: "table", height: "100%", width: "100%"}}
+                onChange={onChange}
             >
-                {tabs}
+                {this.state.tabs.map(tab => {
+                    const TabContent = tab.content;
+
+                    return (
+                        <Tabs.TabPane
+                            key={tab.link}
+                            tab={counterpart.translate(tab.translate)}
+                        >
+                            <div className="padding">
+                                <TabContent />
+                            </div>
+                        </Tabs.TabPane>
+                    );
+                })}
             </Tabs>
         );
     }

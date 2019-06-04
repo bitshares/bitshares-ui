@@ -1,0 +1,353 @@
+.registration-layout {
+    .registration-layout--copy-password-btn {
+        position: absolute;
+        right: 0;
+        border-radius: 0 !important;
+        height: 74px;
+    }
+
+    .display-none {
+        display: none;
+    }
+    .plate {
+        width: 390px;
+        padding-bottom: 49px;
+        border-radius: 12px;
+        box-shadow: 0 8px 19px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .buttons-group {
+        display: flex;
+        justify-content: space-around;
+
+        &.vertical {
+            text-align: center;
+            flex-direction: column;
+
+            .button-primary,
+            .button-secondary {
+                margin: 0 auto 1.2rem auto;
+                padding: 0.8rem;
+                width: 75%;
+                border-radius: 1.6rem;
+                display: block;
+            }
+            margin-bottom: 2rem;
+        }
+    }
+
+    .button-primary,
+    .button-secondary {
+        text-align: center;
+        border-radius: 20px;
+        font-size: 16px;
+        letter-spacing: 0.07px;
+        line-height: 20px;
+        padding: 8px 0;
+        cursor: pointer;
+
+        &:disabled {
+            opacity: 0.1;
+        }
+    }
+
+    .button-secondary {
+        background-color: inherit;
+        border: 1px solid;
+    }
+
+    .button {
+        border-radius: 20px;
+    }
+
+    span.question-icon {
+        cursor: pointer;
+        svg {
+            fill: none;
+
+            g {
+                opacity: 0.7;
+
+                use {
+                    opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    .approve-icon {
+        width: 14px;
+        height: 14px;
+        vertical-align: middle;
+    }
+
+    .dismiss-icon {
+        font-size: 25px;
+        vertical-align: middle;
+    }
+
+    .input {
+        font-size: 0.9rem;
+    }
+
+    .attention-note {
+        display: flex;
+        max-width: 30rem;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-bottom: 1.8rem;
+
+        p {
+            margin: 0 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .attention-text {
+            display: none;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+            line-height: 20px;
+        }
+    }
+
+    span.checkbox {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        padding: 4px;
+        border: 1px solid;
+        cursor: pointer;
+
+        svg {
+            display: none;
+            width: 10px;
+            height: 10px;
+        }
+    }
+    span.checkbox-active {
+        svg {
+            display: block;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+
+        .input-block {
+            display: flex;
+            align-items: center;
+        }
+
+        span.question-icon {
+            margin-left: 5px;
+        }
+
+        .vertical-middle {
+            vertical-align: middle;
+        }
+    }
+    .left-label {
+        padding-bottom: 8px;
+        font-size: 12px;
+        letter-spacing: -0.17px;
+        line-height: 17px;
+    }
+
+    input {
+        margin-bottom: 0;
+        padding-right: 30px;
+        font-size: 14px;
+        line-height: 19px;
+    }
+
+    .no-width {
+        width: 0;
+    }
+
+    .create-account-input {
+        display: inline-block;
+        height: fit-content;
+        @include breakpoint(small only) {
+            max-width: 100%;
+        }
+    }
+    .create-account-input::placeholder,
+    .bin-name {
+        font-size: 14px;
+        line-height: 19px;
+    }
+
+    .eye-icon,
+    .copy-icon {
+        width: 14px;
+        height: 14px;
+        right: 25px;
+        cursor: pointer;
+    }
+
+    .copy-icon {
+        top: -7px;
+        right: 22px;
+    }
+
+    .eye-icon {
+        vertical-align: middle;
+        top: -3px;
+    }
+
+    .eye-invisible {
+        top: -2px;
+    }
+
+    .dismiss-icon,
+    .approve-icon {
+        margin-left: 14px;
+    }
+
+    .custom-tooltip {
+        padding: 0;
+        border-radius: 6px;
+        box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.5);
+
+        .tooltip-text {
+            padding: 13px 21px 17px;
+            font-size: 13px;
+            letter-spacing: 0.06px;
+            line-height: 18px;
+        }
+
+        .close-button {
+            font-size: 16px;
+        }
+    }
+
+    .icon-opacity:hover {
+        g {
+            opacity: 0.7;
+
+            path {
+                opacity: 0.7;
+            }
+        }
+    }
+
+    .icon-opacity:active {
+        g {
+            opacity: 0.2;
+
+            path {
+                opacity: 0.2;
+            }
+        }
+    }
+
+    .modal-body {
+        .buttons-block-center {
+            padding-top: 10px;
+            margin-bottom: 12px;
+            .button-primary,
+            .button-secondary {
+                margin: 10px;
+                padding: 8px 35px;
+            }
+        }
+    }
+
+    @include breakpoint(small only) {
+        .attention-note {
+            max-width: 100%;
+            display: block;
+            margin: 15px 0;
+
+            .icon.attention {
+                width: 14px;
+                height: 14px;
+                margin-right: 5px;
+            }
+
+            .attention-text {
+                display: inline-block;
+                text-transform: uppercase;
+            }
+
+            p {
+                margin: 6px 0 0;
+                font-size: 12px;
+                letter-spacing: -0.17px;
+                line-height: 18px;
+            }
+        }
+
+        .plate {
+            .wallet-block,
+            .account-block,
+            .wallet-block-registration,
+            .account-block-registration {
+                padding-bottom: 45px;
+                border-bottom-right-radius: 12px;
+                border-bottom-left-radius: 12px;
+
+                .overflow-bg-block {
+                    height: 10px;
+
+                    .content {
+                        padding: 15px 50px 0;
+                    }
+                }
+            }
+
+            .wallet-block,
+            .wallet-block-registration {
+                border-top-right-radius: 12px;
+            }
+
+            .account-block,
+            .account-block-registration {
+                border-top-left-radius: 12px;
+            }
+
+            .header-block {
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                z-index: 1;
+            }
+
+            .inactive-right-block {
+                z-index: 1;
+                border-top-left-radius: 0;
+            }
+
+            .inactive-left-block {
+                z-index: 1;
+                border-top-right-radius: 0;
+            }
+        }
+
+        button.button-primary {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 25px;
+        }
+    }
+
+    .visible-on-hover {
+        pointer-events: auto !important;
+        &:hover {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    }
+}
+
+.btn-clipboard {
+    width: 0;
+    padding: 0;
+    height: 0;
+    border: none;
+    &:focus,
+    &:active,
+    &:visited {
+        outline: none;
+        opacity: 0.5;
+    }
+}

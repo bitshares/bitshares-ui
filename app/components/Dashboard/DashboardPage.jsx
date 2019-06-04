@@ -4,9 +4,11 @@ import {connect} from "alt-react";
 import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
 
 import {Tabs, Tab} from "../Utility/Tabs";
 import {StarredMarkets, FeaturedMarkets} from "./Markets";
+import {getPossibleGatewayPrefixes} from "common/gateways";
 
 class DashboardPage extends React.Component {
     render() {
@@ -14,7 +16,8 @@ class DashboardPage extends React.Component {
             myActiveAccounts,
             myHiddenAccounts,
             accountsReady,
-            passwordAccount
+            passwordAccount,
+            preferredBases
         } = this.props;
         if (!accountsReady) {
             return <LoadingIndicator />;
@@ -47,12 +50,39 @@ class DashboardPage extends React.Component {
                                     <Tab title="dashboard.starred_markets">
                                         <StarredMarkets />
                                     </Tab>
-                                    <Tab title="dashboard.featured_markets">
-                                        <FeaturedMarkets />
-                                    </Tab>
-                                    {/* <Tab title="dashboard.top_markets">
-                                        <TopMarkets />
-                                    </Tab> */}
+                                    {preferredBases.sort().map(q => {
+                                        let title = (
+                                            <span>
+                                                <img
+                                                    className="column-hide-small"
+                                                    style={{
+                                                        maxWidth: 30,
+                                                        marginRight: 5
+                                                    }}
+                                                    src={`${__BASE_URL__}asset-symbols/${q
+                                                        .replace(
+                                                            /^BTC/,
+                                                            "OPEN.BTC"
+                                                        )
+                                                        .toLowerCase()}.png`}
+                                                />
+                                                &nbsp;
+                                                {q}
+                                            </span>
+                                        );
+
+                                        return (
+                                            <Tab key={q} title={title}>
+                                                <FeaturedMarkets
+                                                    quotes={[q].concat(
+                                                        getPossibleGatewayPrefixes(
+                                                            [q]
+                                                        )
+                                                    )}
+                                                />
+                                            </Tab>
+                                        );
+                                    })}
                                 </Tabs>
                             </div>
                         </div>
@@ -63,24 +93,28 @@ class DashboardPage extends React.Component {
     }
 }
 
-export default connect(DashboardPage, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        let {
-            myActiveAccounts,
-            myHiddenAccounts,
-            passwordAccount,
-            accountsLoaded,
-            refsLoaded
-        } = AccountStore.getState();
+export default connect(
+    DashboardPage,
+    {
+        listenTo() {
+            return [AccountStore, SettingsStore];
+        },
+        getProps() {
+            let {
+                myActiveAccounts,
+                myHiddenAccounts,
+                passwordAccount,
+                accountsLoaded,
+                refsLoaded
+            } = AccountStore.getState();
 
-        return {
-            myActiveAccounts,
-            myHiddenAccounts,
-            passwordAccount,
-            accountsReady: accountsLoaded && refsLoaded
-        };
+            return {
+                myActiveAccounts,
+                myHiddenAccounts,
+                passwordAccount,
+                accountsReady: accountsLoaded && refsLoaded,
+                preferredBases: SettingsStore.getState().preferredBases
+            };
+        }
     }
-});
+);

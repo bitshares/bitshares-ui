@@ -1,10 +1,8 @@
 import React from "react";
-import BaseModal from "components/Modal/BaseModal";
 import QrReader from "react-qr-reader";
-import Icon from "./Icon/Icon";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import {Modal, Button, Icon} from "bitshares-ui-style-guide";
 
 class QRScanner extends React.Component {
     modalId = "qr_scanner_modal";
@@ -30,14 +28,9 @@ class QRScanner extends React.Component {
     }
 
     handleClick() {
-        this.setState(
-            {
-                visible: true
-            },
-            () => {
-                ZfApi.publish(this.modalId, "open");
-            }
-        );
+        this.setState({
+            visible: true
+        });
     }
 
     handleClose() {
@@ -107,82 +100,86 @@ class QRScanner extends React.Component {
 
         return (
             <div className="qr-address-scanner">
-                <button
-                    className="qr-address-scanner-btn"
+                <Icon
+                    type="camera"
                     onClick={this.handleClick}
-                >
-                    <Icon name="photo-camera" />
-                </button>
-                {(this.state.visible && (
-                    <BaseModal
-                        className="qr-address-scanner-modal"
-                        modalHeader="global.scan_qr_code"
-                        id={this.modalId}
-                        overlay={true}
-                        noLoggo={true}
-                        onClose={this.handleClose}
-                    >
-                        <QrReader
-                            delay={100}
-                            onError={handleError}
-                            onScan={handleScan}
-                            style={{
-                                width: "calc(100% - 48px)",
-                                margin: "0 24px"
-                            }}
-                        />
-
-                        {this.state.address && (
-                            <div>
-                                <div className="qr-address-scanner-status">
-                                    <div className="qr-address-scanner-status-title">
+                    style={{fontSize: "24px", padding: 5}}
+                />
+                <Modal
+                    visible={this.state.visible}
+                    className="qr-address-scanner-modal"
+                    modalHeader="global.scan_qr_code"
+                    id={this.modalId}
+                    overlay={true}
+                    closable={false}
+                    footer={
+                        !this.state.address ? (
+                            <div style={{justifyContent: "center"}}>
+                                <Button onClick={this.handleClose}>
+                                    Close
+                                </Button>
+                            </div>
+                        ) : (
+                            <div style={{justifyContent: "center"}}>
+                                {[
+                                    <Button onClick={this.retry}>
                                         {counterpart.translate(
-                                            "qr_address_scanner.address_found"
-                                        )}:
-                                    </div>
-                                    <div className="qr-address-scanner-status-address">
-                                        {this.state.address}
-                                    </div>
-
-                                    {this.state.amount && (
-                                        <div className="qr-address-scanner-status-title">
-                                            {counterpart.translate(
-                                                "qr_address_scanner.amount"
-                                            )}
-                                        </div>
-                                    )}
-                                    {this.state.amount && (
-                                        <div className="qr-address-scanner-status-amount">
-                                            {this.state.amount}
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="qr-address-scanner-divider" />
-
-                                <div className="qr-address-scanner-actions">
-                                    <button
-                                        className="button"
+                                            "qr_address_scanner.retry"
+                                        )}
+                                    </Button>,
+                                    <Button
+                                        type="primary"
                                         onClick={this.submit}
                                     >
                                         {counterpart.translate(
                                             "qr_address_scanner.use_address"
                                         )}
-                                    </button>
-                                    <button
-                                        className="button hollow primary"
-                                        onClick={this.retry}
-                                    >
-                                        {counterpart.translate(
-                                            "qr_address_scanner.retry"
-                                        )}
-                                    </button>
-                                </div>
+                                    </Button>
+                                ]}
                             </div>
-                        )}
-                    </BaseModal>
-                )) ||
-                    null}
+                        )
+                    }
+                    onCancel={this.handleClose}
+                >
+                    <QrReader
+                        delay={100}
+                        onError={handleError}
+                        onScan={handleScan}
+                        style={{
+                            width: "calc(100% - 48px)",
+                            margin: "0 24px"
+                        }}
+                    />
+
+                    {this.state.address && (
+                        <div>
+                            <div className="qr-address-scanner-status">
+                                <div className="qr-address-scanner-status-title">
+                                    {counterpart.translate(
+                                        "qr_address_scanner.address_found"
+                                    )}
+                                    :
+                                </div>
+                                <div className="qr-address-scanner-status-address">
+                                    {this.state.address}
+                                </div>
+
+                                {this.state.amount && (
+                                    <div className="qr-address-scanner-status-title">
+                                        {counterpart.translate(
+                                            "qr_address_scanner.amount"
+                                        )}
+                                    </div>
+                                )}
+                                {this.state.amount && (
+                                    <div className="qr-address-scanner-status-amount">
+                                        {this.state.amount}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </Modal>
             </div>
         );
     }

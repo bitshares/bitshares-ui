@@ -1,0 +1,2499 @@
+[
+    {
+        "borrower": "1.2.959903",
+        "call_price": {
+            "base": {
+                "amount": "44898815032",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 499733759,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "11224703758",
+        "debt": 71390537,
+        "id": "1.8.94129",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.629701",
+        "call_price": {
+            "base": {
+                "amount": "461834888562",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": "5139774773",
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "230917444281",
+        "debt": 1468507078,
+        "id": "1.8.41794"
+    },
+    {
+        "borrower": "1.2.362937",
+        "call_price": {
+            "base": {
+                "amount": "2994441504",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 33323815,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1497220752,
+        "debt": 9521090,
+        "id": "1.8.81222"
+    },
+    {
+        "borrower": "1.2.154577",
+        "call_price": {
+            "base": {
+                "amount": "2143965266908",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": "23858812047",
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "2143965266908",
+        "debt": "13633606884",
+        "id": "1.8.3026",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.1030090",
+        "call_price": {
+            "base": {
+                "amount": 15728711,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 175000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 15728711,
+        "debt": 100000,
+        "id": "1.8.85914"
+    },
+    {
+        "borrower": "1.2.424868",
+        "call_price": {
+            "base": {
+                "amount": "6039336155172",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": "67162767707",
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "1509834038793",
+        "debt": "9594681101",
+        "id": "1.8.17545",
+        "target_collateral_ratio": 1755
+    },
+    {
+        "borrower": "1.2.149047",
+        "call_price": {
+            "base": {
+                "amount": "1294043466628",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": "14390609779",
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "970532599971",
+        "debt": "6167404191",
+        "id": "1.8.79492",
+        "target_collateral_ratio": 1755
+    },
+    {
+        "borrower": "1.2.492032",
+        "call_price": {
+            "base": {
+                "amount": 680000000,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7557781,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3400000000",
+        "debt": 21593660,
+        "id": "1.8.79600",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.276595",
+        "call_price": {
+            "base": {
+                "amount": "12618949940",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 140125237,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "6309474970",
+        "debt": 40035782,
+        "id": "1.8.94841"
+    },
+    {
+        "borrower": "1.2.610189",
+        "call_price": {
+            "base": {
+                "amount": 80488220,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 893683,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 100610275,
+        "debt": 638345,
+        "id": "1.8.94390",
+        "target_collateral_ratio": 1800
+    },
+    {
+        "borrower": "1.2.315746",
+        "call_price": {
+            "base": {
+                "amount": "73146867776",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 811899249,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "54860150832",
+        "debt": 347956821,
+        "id": "1.8.80142"
+    },
+    {
+        "borrower": "1.2.964",
+        "call_price": {
+            "base": {
+                "amount": "134069234352",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1486989251,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "234621160116",
+        "debt": 1486989251,
+        "id": "1.8.94897",
+        "target_collateral_ratio": 1755
+    },
+    {
+        "borrower": "1.2.711573",
+        "call_price": {
+            "base": {
+                "amount": 254040956,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2816163,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 63510239,
+        "debt": 402309,
+        "id": "1.8.94146"
+    },
+    {
+        "borrower": "1.2.90558",
+        "call_price": {
+            "base": {
+                "amount": "6877622044",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 76139573,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "12035838577",
+        "debt": 76139573,
+        "id": "1.8.44145"
+    },
+    {
+        "borrower": "1.2.524621",
+        "call_price": {
+            "base": {
+                "amount": "5537404471",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 61250000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "22149617884",
+        "debt": 140000000,
+        "id": "1.8.94249",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.511036",
+        "call_price": {
+            "base": {
+                "amount": "9722977144",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 107448047,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "2430744286",
+        "debt": 15349721,
+        "id": "1.8.84744",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.432748",
+        "call_price": {
+            "base": {
+                "amount": "51344439252",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 567335923,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "12836109813",
+        "debt": 81047989,
+        "id": "1.8.60541"
+    },
+    {
+        "borrower": "1.2.456552",
+        "call_price": {
+            "base": {
+                "amount": 132220760,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1460917,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 462772660,
+        "debt": 2921834,
+        "id": "1.8.86827",
+        "target_collateral_ratio": 1800
+    },
+    {
+        "borrower": "1.2.912472",
+        "call_price": {
+            "base": {
+                "amount": "31083674366",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 343163765,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "15541837183",
+        "debt": 98046790,
+        "id": "1.8.94740"
+    },
+    {
+        "borrower": "1.2.749077",
+        "call_price": {
+            "base": {
+                "amount": 431248347,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 4760000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "10781208675",
+        "debt": 68000000,
+        "id": "1.8.69130"
+    },
+    {
+        "borrower": "1.2.188508",
+        "call_price": {
+            "base": {
+                "amount": 3172,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 35,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 396500000,
+        "debt": 2500000,
+        "id": "1.8.40729"
+    },
+    {
+        "borrower": "1.2.548395",
+        "call_price": {
+            "base": {
+                "amount": 269098132,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2968205,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 470921731,
+        "debt": 2968205,
+        "id": "1.8.95226",
+        "target_collateral_ratio": 1750
+    },
+    {
+        "borrower": "1.2.500951",
+        "call_price": {
+            "base": {
+                "amount": 8644724,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 95277,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 30256534,
+        "debt": 190554,
+        "id": "1.8.17502"
+    },
+    {
+        "borrower": "1.2.373305",
+        "call_price": {
+            "base": {
+                "amount": "107126828504",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1180086089,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "26781707126",
+        "debt": 168583727,
+        "id": "1.8.93909",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.160435",
+        "call_price": {
+            "base": {
+                "amount": 317836181,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 3500000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 317836181,
+        "debt": 2000000,
+        "id": "1.8.65227"
+    },
+    {
+        "borrower": "1.2.445710",
+        "call_price": {
+            "base": {
+                "amount": 63590293,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 700000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 63590293,
+        "debt": 400000,
+        "id": "1.8.52238"
+    },
+    {
+        "borrower": "1.2.458798",
+        "call_price": {
+            "base": {
+                "amount": 636,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "15900000000",
+        "debt": 100000000,
+        "id": "1.8.46354"
+    },
+    {
+        "borrower": "1.2.445427",
+        "call_price": {
+            "base": {
+                "amount": 1881721540,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 20674759,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1881721540,
+        "debt": 11814148,
+        "id": "1.8.93924"
+    },
+    {
+        "borrower": "1.2.388630",
+        "call_price": {
+            "base": {
+                "amount": "177979047748",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1954209943,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "44494761937",
+        "debt": 279172849,
+        "id": "1.8.45856",
+        "target_collateral_ratio": 1750
+    },
+    {
+        "borrower": "1.2.909255",
+        "call_price": {
+            "base": {
+                "amount": 582196632,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 6392519,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 873294948,
+        "debt": 5479302,
+        "id": "1.8.92335",
+        "target_collateral_ratio": 176
+    },
+    {
+        "borrower": "1.2.964932",
+        "call_price": {
+            "base": {
+                "amount": "23976017096",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 263106319,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "5994004274",
+        "debt": 37586617,
+        "id": "1.8.94207",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.923877",
+        "call_price": {
+            "base": {
+                "amount": 1782845899,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 19564468,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3565691798",
+        "debt": 22359392,
+        "id": "1.8.80173",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.385965",
+        "call_price": {
+            "base": {
+                "amount": "52823447144",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 579124621,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "92441032502",
+        "debt": 579124621,
+        "id": "1.8.94005",
+        "target_collateral_ratio": 1750
+    },
+    {
+        "borrower": "1.2.1013275",
+        "call_price": {
+            "base": {
+                "amount": 1676460684,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 18340091,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 838230342,
+        "debt": 5240026,
+        "id": "1.8.80388"
+    },
+    {
+        "borrower": "1.2.21594",
+        "call_price": {
+            "base": {
+                "amount": "60236045704",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 658835287,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "105413079982",
+        "debt": 658835287,
+        "id": "1.8.3519"
+    },
+    {
+        "borrower": "1.2.475449",
+        "call_price": {
+            "base": {
+                "amount": 640,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 8000000,
+        "debt": 50000,
+        "id": "1.8.13955"
+    },
+    {
+        "borrower": "1.2.467729",
+        "call_price": {
+            "base": {
+                "amount": 640,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 8000000,
+        "debt": 50000,
+        "id": "1.8.45109"
+    },
+    {
+        "borrower": "1.2.989899",
+        "call_price": {
+            "base": {
+                "amount": 640,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1600000,
+        "debt": 10000,
+        "id": "1.8.93348"
+    },
+    {
+        "borrower": "1.2.685709",
+        "call_price": {
+            "base": {
+                "amount": 384075000,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 4199839,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1536300000,
+        "debt": 9599632,
+        "id": "1.8.95446",
+        "target_collateral_ratio": 1750
+    },
+    {
+        "borrower": "1.2.415292",
+        "call_price": {
+            "base": {
+                "amount": "244712997896",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": "2675452703",
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "61178249474",
+        "debt": 382207529,
+        "id": "1.8.95405",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.508912",
+        "call_price": {
+            "base": {
+                "amount": 242241716,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2645531,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 121120858,
+        "debt": 755866,
+        "id": "1.8.43388"
+    },
+    {
+        "borrower": "1.2.379106",
+        "call_price": {
+            "base": {
+                "amount": 131709020,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1437947,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 32927255,
+        "debt": 205421,
+        "id": "1.8.95383",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.686279",
+        "call_price": {
+            "base": {
+                "amount": 271731380,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2962873,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 475529915,
+        "debt": 2962873,
+        "id": "1.8.48901"
+    },
+    {
+        "borrower": "1.2.435256",
+        "call_price": {
+            "base": {
+                "amount": 1837,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 20,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "6429500000",
+        "debt": 40000000,
+        "id": "1.8.25797"
+    },
+    {
+        "borrower": "1.2.464542",
+        "call_price": {
+            "base": {
+                "amount": "4130862006",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 44935625,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "66093792096",
+        "debt": 410840000,
+        "id": "1.8.21682"
+    },
+    {
+        "borrower": "1.2.446575",
+        "call_price": {
+            "base": {
+                "amount": "11186916472",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 121688993,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "39154207652",
+        "debt": 243377986,
+        "id": "1.8.29452"
+    },
+    {
+        "borrower": "1.2.984670",
+        "call_price": {
+            "base": {
+                "amount": 137202683,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1489796,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 274405366,
+        "debt": 1702624,
+        "id": "1.8.76483"
+    },
+    {
+        "borrower": "1.2.421280",
+        "call_price": {
+            "base": {
+                "amount": 155151489,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1683500,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1551514890,
+        "debt": 9620000,
+        "id": "1.8.47477"
+    },
+    {
+        "borrower": "1.2.450919",
+        "call_price": {
+            "base": {
+                "amount": "6159200000",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 66780889,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3079600000",
+        "debt": 19080254,
+        "id": "1.8.42752"
+    },
+    {
+        "borrower": "1.2.430098",
+        "call_price": {
+            "base": {
+                "amount": "6236736860",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 67609339,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3118368430",
+        "debt": 19316954,
+        "id": "1.8.12622"
+    },
+    {
+        "borrower": "1.2.165333",
+        "call_price": {
+            "base": {
+                "amount": 67804,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 735,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1695100000,
+        "debt": 10500000,
+        "id": "1.8.68049",
+        "target_collateral_ratio": 178
+    },
+    {
+        "borrower": "1.2.394681",
+        "call_price": {
+            "base": {
+                "amount": 687341080,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7450723,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 171835270,
+        "debt": 1064389,
+        "id": "1.8.78665"
+    },
+    {
+        "borrower": "1.2.472397",
+        "call_price": {
+            "base": {
+                "amount": 253971682,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2751875,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1015886728,
+        "debt": 6290000,
+        "id": "1.8.12937"
+    },
+    {
+        "borrower": "1.2.479867",
+        "call_price": {
+            "base": {
+                "amount": 1016880,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 11011,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "2542200000",
+        "debt": 15730000,
+        "id": "1.8.18827"
+    },
+    {
+        "borrower": "1.2.481982",
+        "call_price": {
+            "base": {
+                "amount": 169745783,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1837500,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 339491566,
+        "debt": 2100000,
+        "id": "1.8.93935"
+    },
+    {
+        "borrower": "1.2.22024",
+        "call_price": {
+            "base": {
+                "amount": 64719,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 700,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 16179750,
+        "debt": 100000,
+        "id": "1.8.92929"
+    },
+    {
+        "borrower": "1.2.381086",
+        "call_price": {
+            "base": {
+                "amount": "2778544684",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 30024813,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 694636171,
+        "debt": 4289259,
+        "id": "1.8.57965"
+    },
+    {
+        "borrower": "1.2.29124",
+        "call_price": {
+            "base": {
+                "amount": "2719296752",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 29371853,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 2039472564,
+        "debt": 12587937,
+        "id": "1.8.19436"
+    },
+    {
+        "borrower": "1.2.475780",
+        "call_price": {
+            "base": {
+                "amount": "26729257054",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 288329419,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "13364628527",
+        "debt": 82379834,
+        "id": "1.8.73981"
+    },
+    {
+        "borrower": "1.2.100145",
+        "call_price": {
+            "base": {
+                "amount": "49623332116",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 534513273,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "24811666058",
+        "debt": 152718078,
+        "id": "1.8.69415"
+    },
+    {
+        "borrower": "1.2.985501",
+        "call_price": {
+            "base": {
+                "amount": "4073559696",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 43833265,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1018389924,
+        "debt": 6261895,
+        "id": "1.8.92028"
+    },
+    {
+        "borrower": "1.2.152806",
+        "call_price": {
+            "base": {
+                "amount": 8542519,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 91875,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 34170076,
+        "debt": 210000,
+        "id": "1.8.70306"
+    },
+    {
+        "borrower": "1.2.495400",
+        "call_price": {
+            "base": {
+                "amount": 2051102944,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 21969899,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1025551472,
+        "debt": 6277114,
+        "id": "1.8.47208"
+    },
+    {
+        "borrower": "1.2.480708",
+        "call_price": {
+            "base": {
+                "amount": "2959500108",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 31699829,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 739875027,
+        "debt": 4528547,
+        "id": "1.8.49619"
+    },
+    {
+        "borrower": "1.2.914758",
+        "call_price": {
+            "base": {
+                "amount": 761642215,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 8152676,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1523284430,
+        "debt": 9317344,
+        "id": "1.8.68716"
+    },
+    {
+        "borrower": "1.2.985569",
+        "call_price": {
+            "base": {
+                "amount": 1144702273,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 12250000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1144702273,
+        "debt": 7000000,
+        "id": "1.8.94919"
+    },
+    {
+        "borrower": "1.2.379151",
+        "call_price": {
+            "base": {
+                "amount": 335272019,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 3587500,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 335272019,
+        "debt": 2050000,
+        "id": "1.8.95550"
+    },
+    {
+        "borrower": "1.2.373321",
+        "call_price": {
+            "base": {
+                "amount": "7310432841",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 78214514,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "7310432841",
+        "debt": 44694008,
+        "id": "1.8.80170",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.402780",
+        "call_price": {
+            "base": {
+                "amount": "2846091019",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 30422448,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "2846091019",
+        "debt": 17384256,
+        "id": "1.8.77169"
+    },
+    {
+        "borrower": "1.2.375257",
+        "call_price": {
+            "base": {
+                "amount": 233422704,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2493743,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 58355676,
+        "debt": 356249,
+        "id": "1.8.76449"
+    },
+    {
+        "borrower": "1.2.469657",
+        "call_price": {
+            "base": {
+                "amount": 302897657,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 3235000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "4240567198",
+        "debt": 25880000,
+        "id": "1.8.44644"
+    },
+    {
+        "borrower": "1.2.378680",
+        "call_price": {
+            "base": {
+                "amount": "3278437709",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 35000000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "6556875418",
+        "debt": 40000000,
+        "id": "1.8.81604"
+    },
+    {
+        "borrower": "1.2.540024",
+        "call_price": {
+            "base": {
+                "amount": 501600000,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 5344241,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 125400000,
+        "debt": 763463,
+        "id": "1.8.95211"
+    },
+    {
+        "borrower": "1.2.522647",
+        "call_price": {
+            "base": {
+                "amount": "4649306540",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 49505673,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1162326635,
+        "debt": 7072239,
+        "id": "1.8.73423"
+    },
+    {
+        "borrower": "1.2.609544",
+        "call_price": {
+            "base": {
+                "amount": 49334,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 525,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "4933400000",
+        "debt": 30000000,
+        "id": "1.8.51550"
+    },
+    {
+        "borrower": "1.2.544795",
+        "call_price": {
+            "base": {
+                "amount": "34615036856",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 367910459,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "8653759214",
+        "debt": 52558637,
+        "id": "1.8.29744"
+    },
+    {
+        "borrower": "1.2.637403",
+        "call_price": {
+            "base": {
+                "amount": 144459032,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1535121,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 36114758,
+        "debt": 219303,
+        "id": "1.8.88002"
+    },
+    {
+        "borrower": "1.2.623908",
+        "call_price": {
+            "base": {
+                "amount": 32958701,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 350000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 32958701,
+        "debt": 200000,
+        "id": "1.8.42024"
+    },
+    {
+        "borrower": "1.2.383500",
+        "call_price": {
+            "base": {
+                "amount": "34322389828",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 364280315,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "8580597457",
+        "debt": 52040045,
+        "id": "1.8.79455"
+    },
+    {
+        "borrower": "1.2.431919",
+        "call_price": {
+            "base": {
+                "amount": 1320800000,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 13993119,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 330200000,
+        "debt": 1999017,
+        "id": "1.8.50339"
+    },
+    {
+        "borrower": "1.2.165689",
+        "call_price": {
+            "base": {
+                "amount": 64425976,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 682423,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 740898724,
+        "debt": 4484494,
+        "id": "1.8.59648"
+    },
+    {
+        "borrower": "1.2.507838",
+        "call_price": {
+            "base": {
+                "amount": 236381,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2500,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 16546670,
+        "debt": 100000,
+        "id": "1.8.16711"
+    },
+    {
+        "borrower": "1.2.466368",
+        "call_price": {
+            "base": {
+                "amount": 165497831,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1750000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 165497831,
+        "debt": 1000000,
+        "id": "1.8.49790"
+    },
+    {
+        "borrower": "1.2.442060",
+        "call_price": {
+            "base": {
+                "amount": 3694,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 39,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "25858000000",
+        "debt": 156000000,
+        "id": "1.8.69821",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.620798",
+        "call_price": {
+            "base": {
+                "amount": 10615,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 112,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 212300000,
+        "debt": 1280000,
+        "id": "1.8.95442"
+    },
+    {
+        "borrower": "1.2.166572",
+        "call_price": {
+            "base": {
+                "amount": 165931001,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1750000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 165931001,
+        "debt": 1000000,
+        "id": "1.8.79648"
+    },
+    {
+        "borrower": "1.2.108102",
+        "call_price": {
+            "base": {
+                "amount": 73975388,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 780143,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 73975388,
+        "debt": 445796,
+        "id": "1.8.56205"
+    },
+    {
+        "borrower": "1.2.312251",
+        "call_price": {
+            "base": {
+                "amount": 1497438973,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 15750000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "4492316919",
+        "debt": 27000000,
+        "id": "1.8.82722"
+    },
+    {
+        "borrower": "1.2.90493",
+        "call_price": {
+            "base": {
+                "amount": 2000,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 21,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "10000000000",
+        "debt": 60000000,
+        "id": "1.8.6328"
+    },
+    {
+        "borrower": "1.2.547445",
+        "call_price": {
+            "base": {
+                "amount": 135524806,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1421875,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3252595344",
+        "debt": 19500000,
+        "id": "1.8.95402"
+    },
+    {
+        "borrower": "1.2.111823",
+        "call_price": {
+            "base": {
+                "amount": 1669113589,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 17500000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3338227178",
+        "debt": 20000000,
+        "id": "1.8.60200"
+    },
+    {
+        "borrower": "1.2.441480",
+        "call_price": {
+            "base": {
+                "amount": 670,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "6700000000",
+        "debt": 40000000,
+        "id": "1.8.80223"
+    },
+    {
+        "borrower": "1.2.437782",
+        "call_price": {
+            "base": {
+                "amount": 9094,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 95,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3182900000",
+        "debt": 19000000,
+        "id": "1.8.95116"
+    },
+    {
+        "borrower": "1.2.12376",
+        "call_price": {
+            "base": {
+                "amount": 13800004,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 144025,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "690000200000",
+        "debt": "4115000000",
+        "id": "1.8.44381",
+        "target_collateral_ratio": 1750
+    },
+    {
+        "borrower": "1.2.620809",
+        "call_price": {
+            "base": {
+                "amount": 480887716,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 5016711,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 841553503,
+        "debt": 5016711,
+        "id": "1.8.95432"
+    },
+    {
+        "borrower": "1.2.466343",
+        "call_price": {
+            "base": {
+                "amount": 419657689,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 4375000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 839315378,
+        "debt": 5000000,
+        "id": "1.8.14320"
+    },
+    {
+        "borrower": "1.2.1013392",
+        "call_price": {
+            "base": {
+                "amount": "8292193664",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 86435279,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 2073048416,
+        "debt": 12347897,
+        "id": "1.8.95128"
+    },
+    {
+        "borrower": "1.2.431939",
+        "call_price": {
+            "base": {
+                "amount": "4116908589",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 42875000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "4116908589",
+        "debt": 24500000,
+        "id": "1.8.89571"
+    },
+    {
+        "borrower": "1.2.427840",
+        "call_price": {
+            "base": {
+                "amount": 16829,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 175,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "5048700000",
+        "debt": 30000000,
+        "id": "1.8.95348"
+    },
+    {
+        "borrower": "1.2.614614",
+        "call_price": {
+            "base": {
+                "amount": 104877596,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1089403,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 78658197,
+        "debt": 466887,
+        "id": "1.8.94036"
+    },
+    {
+        "borrower": "1.2.812540",
+        "call_price": {
+            "base": {
+                "amount": 2106079,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 21875,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 42121580,
+        "debt": 250000,
+        "id": "1.8.54787"
+    },
+    {
+        "borrower": "1.2.757875",
+        "call_price": {
+            "base": {
+                "amount": 567630984,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 5895029,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 141907746,
+        "debt": 842147,
+        "id": "1.8.80356"
+    },
+    {
+        "borrower": "1.2.358039",
+        "call_price": {
+            "base": {
+                "amount": 16015661,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 166250,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "2242192540",
+        "debt": 13300000,
+        "id": "1.8.70738"
+    },
+    {
+        "borrower": "1.2.523973",
+        "call_price": {
+            "base": {
+                "amount": "30460002295",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 315181468,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "30460002295",
+        "debt": 180103696,
+        "id": "1.8.53999"
+    },
+    {
+        "borrower": "1.2.31082",
+        "call_price": {
+            "base": {
+                "amount": 846608781,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 8750000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1693217562,
+        "debt": 10000000,
+        "id": "1.8.93459"
+    },
+    {
+        "borrower": "1.2.370701",
+        "call_price": {
+            "base": {
+                "amount": 842902861,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 8706250,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1685805722,
+        "debt": 9950000,
+        "id": "1.8.53651"
+    },
+    {
+        "borrower": "1.2.165830",
+        "call_price": {
+            "base": {
+                "amount": "6130500000",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 63301543,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "42913500000",
+        "debt": 253206172,
+        "id": "1.8.93910",
+        "target_collateral_ratio": 1752
+    },
+    {
+        "borrower": "1.2.380090",
+        "call_price": {
+            "base": {
+                "amount": 14551,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 150,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "20371400000",
+        "debt": 120000000,
+        "id": "1.8.69180"
+    },
+    {
+        "borrower": "1.2.441221",
+        "call_price": {
+            "base": {
+                "amount": 1359,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 14,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "54360000000",
+        "debt": 320000000,
+        "id": "1.8.9655"
+    },
+    {
+        "borrower": "1.2.857426",
+        "call_price": {
+            "base": {
+                "amount": 680,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1700000,
+        "debt": 10000,
+        "id": "1.8.80666"
+    },
+    {
+        "borrower": "1.2.187769",
+        "call_price": {
+            "base": {
+                "amount": 10625999,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 109375,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 42503996,
+        "debt": 250000,
+        "id": "1.8.46765"
+    },
+    {
+        "borrower": "1.2.534182",
+        "call_price": {
+            "base": {
+                "amount": 1645900000,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 16924523,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3291800000",
+        "debt": 19342312,
+        "id": "1.8.54554"
+    },
+    {
+        "borrower": "1.2.435319",
+        "call_price": {
+            "base": {
+                "amount": 131898111,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1356250,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 263796222,
+        "debt": 1550000,
+        "id": "1.8.11383"
+    },
+    {
+        "borrower": "1.2.465564",
+        "call_price": {
+            "base": {
+                "amount": "9883523186",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 101444133,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "14825284779",
+        "debt": 86952114,
+        "id": "1.8.87459"
+    },
+    {
+        "borrower": "1.2.515214",
+        "call_price": {
+            "base": {
+                "amount": 682,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 852500000,
+        "debt": 5000000,
+        "id": "1.8.38574"
+    },
+    {
+        "borrower": "1.2.441933",
+        "call_price": {
+            "base": {
+                "amount": 341048801,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 3500000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3410488010",
+        "debt": 20000000,
+        "id": "1.8.44044"
+    },
+    {
+        "borrower": "1.2.17391",
+        "call_price": {
+            "base": {
+                "amount": "71963515472",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 737008699,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "17990878868",
+        "debt": 105286957,
+        "id": "1.8.94534",
+        "target_collateral_ratio": 1750
+    },
+    {
+        "borrower": "1.2.650615",
+        "call_price": {
+            "base": {
+                "amount": 2136223,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 21875,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 4272446,
+        "debt": 25000,
+        "id": "1.8.47628"
+    },
+    {
+        "borrower": "1.2.33101",
+        "call_price": {
+            "base": {
+                "amount": 34221,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 350,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "27376800000",
+        "debt": 160000000,
+        "id": "1.8.28194"
+    },
+    {
+        "borrower": "1.2.111822",
+        "call_price": {
+            "base": {
+                "amount": 489439323,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 5000000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3426075261",
+        "debt": 20000000,
+        "id": "1.8.60198"
+    },
+    {
+        "borrower": "1.2.840071",
+        "call_price": {
+            "base": {
+                "amount": 29805794,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 304465,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "1490289700000",
+        "debt": "8699000000",
+        "id": "1.8.58113",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.968256",
+        "call_price": {
+            "base": {
+                "amount": 176602053,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1803025,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 176602053,
+        "debt": 1030300,
+        "id": "1.8.76619"
+    },
+    {
+        "borrower": "1.2.514921",
+        "call_price": {
+            "base": {
+                "amount": 1542857143,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 15750000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3085714286",
+        "debt": 18000000,
+        "id": "1.8.92163"
+    },
+    {
+        "borrower": "1.2.443603",
+        "call_price": {
+            "base": {
+                "amount": "3312266667",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 33785500,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3312266667",
+        "debt": 19306000,
+        "id": "1.8.24690"
+    },
+    {
+        "borrower": "1.2.178349",
+        "call_price": {
+            "base": {
+                "amount": "302035000000",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": "3077385661",
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "151017500000",
+        "debt": 879253046,
+        "id": "1.8.32254"
+    },
+    {
+        "borrower": "1.2.471063",
+        "call_price": {
+            "base": {
+                "amount": 1896026347,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 19250000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1896026347,
+        "debt": 11000000,
+        "id": "1.8.66733"
+    },
+    {
+        "borrower": "1.2.455376",
+        "call_price": {
+            "base": {
+                "amount": 8965,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 91,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "7172000000",
+        "debt": 41600000,
+        "id": "1.8.77408",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.983702",
+        "call_price": {
+            "base": {
+                "amount": "2761395377",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 27945750,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "5522790754",
+        "debt": 31938000,
+        "id": "1.8.95278"
+    },
+    {
+        "borrower": "1.2.166673",
+        "call_price": {
+            "base": {
+                "amount": 953196,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 9625,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "190639200000",
+        "debt": 1100000000,
+        "id": "1.8.7233"
+    },
+    {
+        "borrower": "1.2.624226",
+        "call_price": {
+            "base": {
+                "amount": 49186953,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 496475,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 49186953,
+        "debt": 283700,
+        "id": "1.8.30283"
+    },
+    {
+        "borrower": "1.2.379232",
+        "call_price": {
+            "base": {
+                "amount": 4864,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 49,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 60800000,
+        "debt": 350000,
+        "id": "1.8.87494"
+    },
+    {
+        "borrower": "1.2.432241",
+        "call_price": {
+            "base": {
+                "amount": 52123,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 525,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 78184500,
+        "debt": 450000,
+        "id": "1.8.10918"
+    },
+    {
+        "borrower": "1.2.264806",
+        "call_price": {
+            "base": {
+                "amount": 3484,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 35,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 609700000,
+        "debt": 3500000,
+        "id": "1.8.21296"
+    },
+    {
+        "borrower": "1.2.98301",
+        "call_price": {
+            "base": {
+                "amount": "17363636736",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 174404713,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "4340909184",
+        "debt": 24914959,
+        "id": "1.8.67267"
+    },
+    {
+        "borrower": "1.2.1509",
+        "call_price": {
+            "base": {
+                "amount": 2092,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 21,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 261500000,
+        "debt": 1500000,
+        "id": "1.8.82711"
+    },
+    {
+        "borrower": "1.2.425200",
+        "call_price": {
+            "base": {
+                "amount": 38900126,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 390411,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 175050567,
+        "debt": 1003914,
+        "id": "1.8.47129"
+    },
+    {
+        "borrower": "1.2.373535",
+        "call_price": {
+            "base": {
+                "amount": 498459967,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 5000000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3489219769",
+        "debt": 20000000,
+        "id": "1.8.45153"
+    },
+    {
+        "borrower": "1.2.468153",
+        "call_price": {
+            "base": {
+                "amount": 385592132,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 3865477,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1349572462,
+        "debt": 7730954,
+        "id": "1.8.81116"
+    },
+    {
+        "borrower": "1.2.393009",
+        "call_price": {
+            "base": {
+                "amount": 174809517,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1750000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 349619034,
+        "debt": 2000000,
+        "id": "1.8.71328"
+    },
+    {
+        "borrower": "1.2.534585",
+        "call_price": {
+            "base": {
+                "amount": 689000000,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 6897177,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 344500000,
+        "debt": 1970622,
+        "id": "1.8.95590"
+    },
+    {
+        "borrower": "1.2.142314",
+        "call_price": {
+            "base": {
+                "amount": "45551124364",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 455888363,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "56938905455",
+        "debt": 325634545,
+        "id": "1.8.85831",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.1059139",
+        "call_price": {
+            "base": {
+                "amount": 100,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 700000000,
+        "debt": 4000000,
+        "id": "1.8.94761",
+        "target_collateral_ratio": 1760
+    },
+    {
+        "borrower": "1.2.620350",
+        "call_price": {
+            "base": {
+                "amount": 100,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 1,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "6650000000",
+        "debt": 38000000,
+        "id": "1.8.94818",
+        "target_collateral_ratio": 1751
+    },
+    {
+        "borrower": "1.2.650828",
+        "call_price": {
+            "base": {
+                "amount": 700503297,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7000000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 700503297,
+        "debt": 4000000,
+        "id": "1.8.94003"
+    },
+    {
+        "borrower": "1.2.749753",
+        "call_price": {
+            "base": {
+                "amount": "7018285713",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 70000000,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "7018285713",
+        "debt": 40000000,
+        "id": "1.8.93016"
+    },
+    {
+        "borrower": "1.2.24426",
+        "call_price": {
+            "base": {
+                "amount": 219374457,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 2187500,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "3071242398",
+        "debt": 17500000,
+        "id": "1.8.95426"
+    },
+    {
+        "borrower": "1.2.518415",
+        "call_price": {
+            "base": {
+                "amount": 315267,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 3125,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 17654952,
+        "debt": 100000,
+        "id": "1.8.43515"
+    },
+    {
+        "borrower": "1.2.753343",
+        "call_price": {
+            "base": {
+                "amount": 305376690,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 3025771,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1374195105,
+        "debt": 7780554,
+        "id": "1.8.72800"
+    },
+    {
+        "borrower": "1.2.475214",
+        "call_price": {
+            "base": {
+                "amount": 44163803,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 437500,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 883276060,
+        "debt": 5000000,
+        "id": "1.8.45990"
+    },
+    {
+        "borrower": "1.2.7003",
+        "call_price": {
+            "base": {
+                "amount": "3195791806",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 31647133,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 1597895903,
+        "debt": 9042038,
+        "id": "1.8.95118",
+        "target_collateral_ratio": 1750
+    },
+    {
+        "borrower": "1.2.439606",
+        "call_price": {
+            "base": {
+                "amount": 1006160,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 9961,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "12577000000",
+        "debt": 71150000,
+        "id": "1.8.44969"
+    },
+    {
+        "borrower": "1.2.793954",
+        "call_price": {
+            "base": {
+                "amount": 708,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 7,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": 17700000,
+        "debt": 100000,
+        "id": "1.8.82072"
+    },
+    {
+        "borrower": "1.2.466068",
+        "call_price": {
+            "base": {
+                "amount": "33288792732",
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 328705825,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "8322198183",
+        "debt": 46957975,
+        "id": "1.8.33370",
+        "target_collateral_ratio": 176
+    },
+    {
+        "borrower": "1.2.512209",
+        "call_price": {
+            "base": {
+                "amount": 14211,
+                "asset_id": "1.3.0"
+            },
+            "quote": {
+                "amount": 140,
+                "asset_id": "1.3.121"
+            }
+        },
+        "collateral": "2842200000",
+        "debt": 16000000,
+        "id": "1.8.55921"
+    }
+]

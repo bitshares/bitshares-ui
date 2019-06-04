@@ -17,36 +17,90 @@ import BlockDate from "../Utility/BlockDate";
 import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
 import getLocale from "browser-locale";
+import utils from "common/utils";
 import {FillOrder} from "common/MarketClasses";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class MarketHistory extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.viewSettings.get("historyTab", "history")
+            activeTab: props.viewSettings.get("historyTab", "history"),
+            rowCount: 20,
+            showAll: false
         };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (!nextProps.marketReady) return false;
+        if (nextProps.activeTab !== this.props.activeTab) {
+            this._changeTab(nextProps.activeTab);
+        }
+
+        if (
+            this.props.hideScrollbars &&
+            nextState.showAll != this.state.showAll
+        ) {
+            let historyContainer = this.refs.history;
+            if (!nextState.showAll) {
+                Ps.destroy(historyContainer);
+            } else {
+                Ps.initialize(historyContainer);
+                Ps.update(historyContainer);
+            }
+            this.refs.historyTransition.resetAnimation();
+            if (historyContainer) historyContainer.scrollTop = 0;
+        }
+
         return (
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             nextProps.className !== this.props.className ||
+            nextProps.activeTab !== this.props.activeTab ||
             nextState.activeTab !== this.state.activeTab ||
-            nextProps.currentAccount !== this.props.currentAccount
+            nextState.showAll !== this.state.showAll ||
+            nextProps.currentAccount !== this.props.currentAccount ||
+            nextProps.isPanelActive !== this.props.isPanelActive ||
+            nextProps.hideScrollbars !== this.props.hideScrollbars
         );
     }
 
     componentDidMount() {
-        let historyContainer = this.refs.history;
-        Ps.initialize(historyContainer);
+        if (!this.props.hideScrollbars) {
+            let historyContainer = this.refs.history;
+            if (historyContainer) Ps.initialize(historyContainer);
+        }
     }
 
     componentDidUpdate() {
+        if (
+            !this.props.hideScrollbars ||
+            (this.props.hideScrollbars && this.state.showAll)
+        ) {
+            let historyContainer = this.refs.history;
+            if (historyContainer) Ps.update(historyContainer);
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
         let historyContainer = this.refs.history;
-        Ps.update(historyContainer);
+
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            nextProps.hideScrollbars
+        ) {
+            Ps.destroy(historyContainer);
+        }
+
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            !nextProps.hideScrollbars
+        ) {
+            Ps.initialize(historyContainer);
+            this.refs.historyTransition.resetAnimation();
+            if (historyContainer) historyContainer.scrollTop = 0;
+            Ps.update(historyContainer);
+        }
     }
 
     _changeTab(tab) {
@@ -65,6 +119,16 @@ class MarketHistory extends React.Component {
         setTimeout(ReactTooltip.rebuild, 1000);
     }
 
+    _onSetShowAll() {
+        this.setState({
+            showAll: !this.state.showAll
+        });
+
+        if (this.state.showAll) {
+            this.refs.history.scrollTop = 0;
+        }
+    }
+
     render() {
         let {
             history,
@@ -73,9 +137,10 @@ class MarketHistory extends React.Component {
             quote,
             baseSymbol,
             quoteSymbol,
-            isNullAccount
+            isNullAccount,
+            activeTab
         } = this.props;
-        let {activeTab} = this.state;
+        let {rowCount, showAll} = this.state;
         let historyRows = null;
 
         if (isNullAccount) {
@@ -151,16 +216,23 @@ class MarketHistory extends React.Component {
                             </td>
                             <td>{fill.amountToReceive()}</td>
                             <td>{fill.amountToPay()}</td>
-                            <td className="tooltip" data-tip={fill.time}>
-                                {counterpart.localize(fill.time, {
-                                    type: "date",
-                                    format:
-                                        getLocale()
-                                            .toLowerCase()
-                                            .indexOf("en-us") !== -1
-                                            ? "market_history_us"
-                                            : "market_history"
-                                })}
+                            <td>
+                                <Tooltip title={fill.time.toString()}>
+                                    <div
+                                        className="tooltip"
+                                        style={{whiteSpace: "nowrap"}}
+                                    >
+                                        {counterpart.localize(fill.time, {
+                                            type: "date",
+                                            format:
+                                                getLocale()
+                                                    .toLowerCase()
+                                                    .indexOf("en-us") !== -1
+                                                    ? "market_history_us"
+                                                    : "market_history"
+                                        })}
+                                    </div>
+                                </Tooltip>
                             </td>
                         </tr>
                     );
@@ -168,46 +240,55 @@ class MarketHistory extends React.Component {
                 .toArray();
         }
 
-        let hc = "mymarkets-header clickable";
-        let historyClass = cnames(hc, {inactive: activeTab === "my_history"});
-        let myHistoryClass = cnames(hc, {inactive: activeTab === "history"});
+        let emptyRow = (
+            <tr>
+                <td
+                    style={{
+                        textAlign: "center",
+                        lineHeight: 4,
+                        fontStyle: "italic"
+                    }}
+                    colSpan="5"
+                >
+                    <Translate content="account.no_orders" />
+                </td>
+            </tr>
+        );
+
+        if (!showAll && historyRows) {
+            historyRows.splice(rowCount, historyRows.length);
+        }
 
         return (
-            <div className={this.props.className}>
+            <div className={cnames(this.props.className)}>
                 <div
-                    className="exchange-bordered small-12"
-                    style={{height: "auto"}}
+                    className={this.props.innerClass}
+                    style={this.props.innerStyle}
                 >
-                    <div
-                        style={this.props.headerStyle}
-                        className="grid-block shrink left-orderbook-header bottom-header"
-                    >
+                    {this.props.noHeader ? null : (
                         <div
-                            className={cnames(myHistoryClass, {
-                                disabled: isNullAccount
-                            })}
-                            onClick={this._changeTab.bind(this, "my_history")}
+                            style={this.props.headerStyle}
+                            className="exchange-content-header"
                         >
-                            <Translate content="exchange.my_history" />
+                            {activeTab === "my_history" ? (
+                                <Translate content="exchange.my_history" />
+                            ) : null}
+                            {activeTab === "history" ? (
+                                <Translate content="exchange.history" />
+                            ) : null}
                         </div>
-                        <div
-                            className={historyClass}
-                            onClick={this._changeTab.bind(this, "history")}
-                        >
-                            <Translate content="exchange.history" />
-                        </div>
-                    </div>
+                    )}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table order-table text-right fixed-table market-right-padding">
+                        <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
                             <thead>
                                 <tr>
-                                    <th>
+                                    <th style={{textAlign: "right"}}>
                                         <Translate
                                             className="header-sub-title"
                                             content="exchange.price"
                                         />
                                     </th>
-                                    <th>
+                                    <th style={{textAlign: "right"}}>
                                         <span className="header-sub-title">
                                             <AssetName
                                                 dataPlace="top"
@@ -215,7 +296,7 @@ class MarketHistory extends React.Component {
                                             />
                                         </span>
                                     </th>
-                                    <th>
+                                    <th style={{textAlign: "right"}}>
                                         <span className="header-sub-title">
                                             <AssetName
                                                 dataPlace="top"
@@ -223,7 +304,7 @@ class MarketHistory extends React.Component {
                                             />
                                         </span>
                                     </th>
-                                    <th>
+                                    <th style={{textAlign: "right"}}>
                                         <Translate
                                             className="header-sub-title"
                                             content="explorer.block.date"
@@ -236,17 +317,40 @@ class MarketHistory extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="history"
-                        style={{maxHeight: 210, overflow: "hidden"}}
+                        style={{
+                            minHeight: !this.props.tinyScreen ? 260 : 0,
+                            maxHeight: 260,
+                            overflow: "hidden",
+                            lineHeight: "13px"
+                        }}
                     >
-                        <table className="table order-table text-right fixed-table market-right-padding">
+                        <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
                             <TransitionWrapper
+                                ref="historyTransition"
                                 component="tbody"
                                 transitionName="newrow"
+                                className="orderbook"
                             >
-                                {historyRows}
+                                {!!historyRows && historyRows.length > 0
+                                    ? historyRows
+                                    : emptyRow}
                             </TransitionWrapper>
                         </table>
                     </div>
+                    {historyRows && historyRows.length > 11 ? (
+                        <div className="orderbook-showall">
+                            <a onClick={this._onSetShowAll.bind(this)}>
+                                <Translate
+                                    content={
+                                        showAll
+                                            ? "exchange.hide"
+                                            : "exchange.show_all_trades"
+                                    }
+                                    rowcount={historyRows.length}
+                                />
+                            </a>
+                        </div>
+                    ) : null}
                 </div>
             </div>
         );
@@ -261,13 +365,16 @@ MarketHistory.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-export default connect(MarketHistory, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    MarketHistory,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);

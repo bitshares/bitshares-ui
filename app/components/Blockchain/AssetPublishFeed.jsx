@@ -23,7 +23,7 @@ class AssetPublishFeed extends React.Component {
     resetState(props = this.props) {
         let publisher_id = props.account.get("id");
 
-        const currentFeed = props.base.getIn(["bitasset", "current_feed"]);
+        const currentFeed = props.asset.getIn(["bitasset", "current_feed"]);
 
         /* Might need to check these default values */
         let mcr = currentFeed.get("maintenance_collateral_ratio", 1750);
@@ -54,10 +54,10 @@ class AssetPublishFeed extends React.Component {
     onSubmit() {
         AssetActions.publishFeed({
             publisher: this.state.publisher_id,
-            asset_id: this.props.base.get("id"),
+            asset_id: this.props.asset.get("id"),
             mcr: this.state.mcr,
             mssr: this.state.mssr,
-            settlementPrice: this.state.settlementPrice,
+            feedPrice: this.state.feedPrice,
             cer: this.state.cer
         });
         // .then(() => {
@@ -88,8 +88,15 @@ class AssetPublishFeed extends React.Component {
     }
 
     render() {
-        const {quote, base} = this.props;
+        const {asset} = this.props;
         const {mcrValue, mssrValue, publisher} = this.state;
+
+        const base = asset.get("id");
+        const quote = asset.getIn([
+            "bitasset",
+            "options",
+            "short_backing_asset"
+        ]);
 
         return (
             <div>
@@ -112,20 +119,17 @@ class AssetPublishFeed extends React.Component {
                 <PriceInput
                     onPriceChanged={this.onPriceChanged.bind(this, "cer")}
                     label="explorer.asset.fee_pool.core_exchange_rate"
-                    quote={quote.get("id")}
-                    base={base.get("id")}
+                    quote={"1.3.0"}
+                    base={base}
                 />
 
                 {/* Settlement Price */}
                 <br />
                 <PriceInput
-                    onPriceChanged={this.onPriceChanged.bind(
-                        this,
-                        "settlementPrice"
-                    )}
-                    label="explorer.asset.price_feed.settlement_price"
-                    quote={quote.get("id")}
-                    base={base.get("id")}
+                    onPriceChanged={this.onPriceChanged.bind(this, "feedPrice")}
+                    label="explorer.asset.price_feed.feed_price"
+                    quote={quote}
+                    base={base}
                 />
 
                 {/* MCR */}
@@ -179,10 +183,5 @@ class AssetPublishFeed extends React.Component {
 }
 
 AssetPublishFeed = BindToChainState(AssetPublishFeed);
-AssetPublishFeed = AssetWrapper(AssetPublishFeed, {
-    propNames: ["quote", "base"],
-    defaultProps: {
-        quote: "1.3.0"
-    }
-});
+AssetPublishFeed = AssetWrapper(AssetPublishFeed);
 export default AssetPublishFeed;

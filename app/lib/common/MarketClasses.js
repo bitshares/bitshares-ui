@@ -1,5 +1,5 @@
-import {Fraction} from "fractional";
 import utils from "./utils";
+import {BigNumber} from "bignumber.js";
 
 const GRAPHENE_100_PERCENT = 10000;
 
@@ -134,13 +134,13 @@ class Asset {
         // asset amount times a price p
         let temp, amount;
         if (this.asset_id === p.base.asset_id) {
-            temp = this.amount * p.quote.amount / p.base.amount;
+            temp = (this.amount * p.quote.amount) / p.base.amount;
             amount = Math.floor(temp);
             /*
-            * Sometimes prices are inexact for the relevant amounts, in the case
-            * of bids this means we need to round up in order to pay 1 sat more
-            * than the floored price, if we don't do this the orders don't match
-            */
+             * Sometimes prices are inexact for the relevant amounts, in the case
+             * of bids this means we need to round up in order to pay 1 sat more
+             * than the floored price, if we don't do this the orders don't match
+             */
             if (isBid && temp !== amount) {
                 amount += 1;
             }
@@ -151,13 +151,13 @@ class Asset {
                 precision: p.quote.precision
             });
         } else if (this.asset_id === p.quote.asset_id) {
-            temp = this.amount * p.base.amount / p.quote.amount;
+            temp = (this.amount * p.base.amount) / p.quote.amount;
             amount = Math.floor(temp);
             /*
-            * Sometimes prices are inexact for the relevant amounts, in the case
-            * of bids this means we need to round up in order to pay 1 sat more
-            * than the floored price, if we don't do this the orders don't match
-            */
+             * Sometimes prices are inexact for the relevant amounts, in the case
+             * of bids this means we need to round up in order to pay 1 sat more
+             * than the floored price, if we don't do this the orders don't match
+             */
             if (isBid && temp !== amount) {
                 amount += 1;
             }
@@ -231,14 +231,15 @@ class Price {
     setPriceFromReal(real, base = this.base, quote = this.quote) {
         if (real && typeof real === "number") {
             /*
-            * In order to make large numbers work properly, we assume numbers
-            * larger than 100k do not need more than 5 decimals. Without this we
-            * quickly encounter JavaScript floating point errors for large numbers.
-            */
+             * In order to make large numbers work properly, we assume numbers
+             * larger than 100k do not need more than 5 decimals. Without this we
+             * quickly encounter JavaScript floating point errors for large numbers.
+             */
+
             if (real > 100000) {
                 real = limitByPrecision(real, 5);
             }
-            let frac = new Fraction(real);
+            let frac = new BigNumber(real.toString()).toFraction();
             let baseSats = base.toSats(),
                 quoteSats = quote.toSats();
             let numRatio = baseSats / quoteSats,
@@ -250,8 +251,8 @@ class Price {
                 numRatio = 1;
             }
 
-            base.setAmount({sats: frac.numerator * numRatio});
-            quote.setAmount({sats: frac.denominator * denRatio});
+            base.setAmount({sats: frac[0] * numRatio});
+            quote.setAmount({sats: frac[1] * denRatio});
         } else if (real === 0) {
             base.setAmount({sats: 0});
             quote.setAmount({sats: 0});
@@ -277,11 +278,9 @@ class Price {
             return this[key];
         }
         let real = sameBase
-            ? this.quote.amount *
-              this.base.toSats() /
+            ? (this.quote.amount * this.base.toSats()) /
               (this.base.amount * this.quote.toSats())
-            : this.base.amount *
-              this.quote.toSats() /
+            : (this.base.amount * this.quote.toSats()) /
               (this.quote.amount * this.base.toSats());
         return (this[key] = parseFloat(real.toFixed(8))); // toFixed and parseFloat helps avoid floating point errors for really big or small numbers
     }
@@ -610,12 +609,14 @@ class CallOrder {
         assets,
         market_base,
         feed,
+        mcr,
         is_prediction_market = false
     ) {
-        if (!order || !assets || !market_base || !feed) {
+        if (!order || !assets || !market_base || !feed || !mcr) {
             throw new Error("CallOrder missing inputs");
         }
 
+        this.mcr = mcr;
         this.isSum = false;
         this.order = order;
         this.assets = assets;
@@ -636,30 +637,32 @@ class CallOrder {
         this.debt = parseInt(order.debt, 10);
         this.debt_id = order.call_price.quote.asset_id;
 
-        let base = new Asset({
-            asset_id: order.call_price.base.asset_id,
-            amount: parseInt(order.call_price.base.amount, 10),
-            precision: assets[order.call_price.base.asset_id].precision
-        });
-        let quote = new Asset({
-            asset_id: order.call_price.quote.asset_id,
-            amount: parseInt(order.call_price.quote.amount, 10),
-            precision: assets[order.call_price.quote.asset_id].precision
-        });
-
         this.precisionsRatio =
             precisionToRatio(assets[this.debt_id].precision) /
             precisionToRatio(assets[this.collateral_id].precision);
 
         /*
-        * The call price is DEBT * MCR / COLLATERAL. This calculation is already
-        * done by the witness_node before returning the orders so it is not necessary
-        * to deal with the MCR (maintenance collateral ratio) here.
-        */
-        this.call_price = new Price({
-            base: base,
-            quote: quote
+         * The call price is DEBT * MCR / COLLATERAL.
+         * Since bitshares-core 3.0.0 this is no longer done by the witness_node.
+         * Deal with the MCR (maintenance collateral ratio) here.
+         */
+
+        let base = new Asset({
+            asset_id: this.collateral_id,
+            amount: order.collateral,
+            precision: assets[this.collateral_id].precision
         });
+        let quote = new Asset({
+            asset_id: this.debt_id,
+            amount: order.debt * (mcr / 1000),
+            precision: assets[this.debt_id].precision
+        });
+
+        this.call_price = new Price({
+            base,
+            quote
+        });
+
         if (this.inverted) this.call_price = this.call_price.invert();
 
         if (feed.base.asset_id !== this.call_price.base.asset_id) {
@@ -677,7 +680,13 @@ class CallOrder {
     }
 
     clone(f = this.feed_price) {
-        return new CallOrder(this.order, this.assets, this.market_base, f);
+        return new CallOrder(
+            this.order,
+            this.assets,
+            this.market_base,
+            f,
+            this.mcr
+        );
     }
 
     setFeed(f) {
@@ -800,20 +809,20 @@ class CallOrder {
         let max_debt_to_cover = this._getMaxDebtToCover(),
             max_debt_to_cover_int;
         /*
-        * We may calculate like this: if max_debt_to_cover has no fractional
-        * component (e.g. 5.00 as opposed to 5.23), plus it by one Satoshi;
-        * otherwise, round it up. An effectively same approach is to round
-        * down then add one Satoshi onto the result:
-        */
+         * We may calculate like this: if max_debt_to_cover has no fractional
+         * component (e.g. 5.00 as opposed to 5.23), plus it by one Satoshi;
+         * otherwise, round it up. An effectively same approach is to round
+         * down then add one Satoshi onto the result:
+         */
         if (Math.round(max_debt_to_cover) !== max_debt_to_cover) {
             max_debt_to_cover_int = Math.floor(max_debt_to_cover) + 1;
         }
 
         /*
-        * With max_debt_to_cover_int in integer, max_amount_to_sell_int in
-        * integer can be calculated as: max_amount_to_sell_int =
-        * round_up(max_debt_to_cover_int / match_price)
-        */
+         * With max_debt_to_cover_int in integer, max_amount_to_sell_int in
+         * integer can be calculated as: max_amount_to_sell_int =
+         * round_up(max_debt_to_cover_int / match_price)
+         */
         let max_collateral_to_sell_int = Math.ceil(
             max_debt_to_cover_int / match_price
         );
@@ -833,12 +842,12 @@ class CallOrder {
     }
 
     /*
-    * Assume a USD:BTS market
-    * The call order will always be selling BTS in order to buy USD
-    * The asset being sold is always the collateral, which is call_price.base.asset_id.
-    * The amount being sold depends on how big the debt is, only enough
-    * collateral will be sold to cover the debt
-    */
+     * Assume a USD:BTS market
+     * The call order will always be selling BTS in order to buy USD
+     * The asset being sold is always the collateral, which is call_price.base.asset_id.
+     * The amount being sold depends on how big the debt is, only enough
+     * collateral will be sold to cover the debt
+     */
     amountForSale(isBid = this.isBid()) {
         /*
         BSIP38:
@@ -856,6 +865,10 @@ class CallOrder {
     }
 
     _useTargetCR() {
+        // if (!!this.target_collateral_ratio &&
+        // this.getRatio() < this.target_collateral_ratio) {
+        //     console.log("Using target cr", this.target_collateral_ratio, "getRatio", this.getRatio());
+        // }
         return (
             !!this.target_collateral_ratio &&
             this.getRatio() < this.target_collateral_ratio
@@ -880,30 +893,33 @@ class CallOrder {
             newOrder.borrowers.push(order.borrower);
         }
 
+        const orderUseCR = order._useTargetCR();
+        const newOrderUseCR = newOrder._useTargetCR();
         /* Determine which debt values to use */
         let orderDebt = order.iSum
             ? order.debt
-            : order._useTargetCR()
-                ? order.max_debt_to_cover.getAmount()
-                : order.amountToReceive().getAmount();
+            : orderUseCR
+            ? order.max_debt_to_cover.getAmount()
+            : order.amountToReceive().getAmount();
         let newOrderDebt = newOrder.iSum
             ? newOrder.debt
-            : newOrder._useTargetCR()
-                ? newOrder.max_debt_to_cover.getAmount()
-                : newOrder.amountToReceive().getAmount();
-        newOrder.debt = newOrderDebt + orderDebt;
+            : newOrderUseCR
+            ? newOrder.max_debt_to_cover.getAmount()
+            : newOrder.amountToReceive().getAmount();
 
         /* Determine which collateral values to use */
         let orderCollateral = order.iSum
             ? order.collateral
-            : order._useTargetCR()
-                ? order.max_collateral_to_sell.getAmount()
-                : order.amountForSale().getAmount();
+            : orderUseCR
+            ? order.max_collateral_to_sell.getAmount()
+            : order.amountForSale().getAmount();
         let newOrderCollateral = newOrder.iSum
             ? newOrder.collateral
-            : newOrder._useTargetCR()
-                ? newOrder.max_collateral_to_sell.getAmount()
-                : newOrder.amountForSale().getAmount();
+            : newOrderUseCR
+            ? newOrder.max_collateral_to_sell.getAmount()
+            : newOrder.amountForSale().getAmount();
+
+        newOrder.debt = newOrderDebt + orderDebt;
         newOrder.collateral = newOrderCollateral + orderCollateral;
         newOrder._clearCache();
 
@@ -1216,8 +1232,8 @@ class FillOrder {
         this.className = this.isCall
             ? "orderHistoryCall"
             : this.isBid
-                ? "orderHistoryBid"
-                : "orderHistoryAsk";
+            ? "orderHistoryBid"
+            : "orderHistoryAsk";
         this.time = fill.time && new Date(utils.makeISODateString(fill.time));
         this.block = fill.block;
         this.account = fill.op.account || fill.op.account_id;
@@ -1299,6 +1315,73 @@ class FillOrder {
     }
 }
 
+class CollateralBid {
+    constructor(order, assets, market_base, feed) {
+        if (!order || !assets) {
+            throw new Error("Collateral Bid missing inputs");
+        }
+
+        this.market_base = market_base;
+        this.inverted = market_base === order.inv_swan_price.base.asset_id;
+
+        this.id = order.id;
+        this.bidder = order.bidder;
+        this.collateral = parseInt(order.inv_swan_price.base.amount, 10);
+        this.debt = parseInt(order.inv_swan_price.quote.amount, 10);
+
+        this.bid = new Price({
+            base: new Asset({
+                asset_id: order.inv_swan_price.base.asset_id,
+                amount: parseInt(order.inv_swan_price.base.amount, 10),
+                precision: assets[order.inv_swan_price.base.asset_id].precision
+            }),
+            quote: new Asset({
+                asset_id: order.inv_swan_price.quote.asset_id,
+                amount: parseInt(order.inv_swan_price.quote.amount, 10),
+                precision: assets[order.inv_swan_price.quote.asset_id].precision
+            })
+        });
+
+        this.precisionsRatio =
+            precisionToRatio(
+                assets[order.inv_swan_price.base.asset_id].precision
+            ) /
+            precisionToRatio(
+                assets[order.inv_swan_price.quote.asset_id].precision
+            );
+
+        if (this.inverted) this.bid = this.bid.invert();
+        this.feed_price = feed;
+    }
+
+    getFeedPrice(f = this.feed_price) {
+        if (this._feed_price) {
+            return this._feed_price;
+        }
+        return (this._feed_price = f.toReal(
+            f.base.asset_id === this.market_base
+        ));
+    }
+
+    /* Returns satoshi feed price in consistent units of debt/collateral */
+    _getFeedPrice() {
+        return (
+            (this.inverted
+                ? this.getFeedPrice()
+                : this.feed_price.invert().toReal()) * this.precisionsRatio
+        );
+    }
+
+    getRatio() {
+        return (
+            this.collateral / // CORE
+            (this.debt / // DEBT
+                this._getFeedPrice()) / // DEBT/CORE
+            100
+        );
+    }
+}
+
 export {
     Asset,
     Price,
@@ -1308,6 +1391,7 @@ export {
     precisionToRatio,
     LimitOrder,
     CallOrder,
+    CollateralBid,
     SettleOrder,
     didOrdersChange,
     GroupedOrder,

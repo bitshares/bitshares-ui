@@ -1,15 +1,11 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
-import BaseModal from "./BaseModal";
 import {getWalletName} from "branding";
+import counterpart from "counterpart";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 export default class BrowserSupportModal extends React.Component {
-    show() {
-        ZfApi.publish("browser_modal", "open");
-    }
-
     _openLink() {
         let newWnd = window.open(
             "https://www.google.com/chrome/browser/desktop/",
@@ -20,9 +16,21 @@ export default class BrowserSupportModal extends React.Component {
 
     render() {
         return (
-            <BaseModal id="browser_modal" overlay={true} ref="browser_modal">
+            <Modal
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+                title={counterpart.translate("app_init.browser")}
+                footer={[
+                    <Button
+                        key={"submit"}
+                        type="primary"
+                        onClick={this.props.hideModal}
+                    >
+                        {counterpart.translate("app_init.understand")}
+                    </Button>
+                ]}
+            >
                 <div className="grid-block vertical no-overflow">
-                    <Translate component="h3" content="app_init.browser" />
                     <Translate
                         component="p"
                         content="app_init.browser_text"
@@ -31,21 +39,12 @@ export default class BrowserSupportModal extends React.Component {
                     <br />
 
                     <p>
-                        <a onClick={this._openLink}>Google Chrome</a>
+                        <a className="external-link" onClick={this._openLink}>
+                            Google Chrome
+                        </a>
                     </p>
-
-                    <div
-                        className="button-group no-overflow"
-                        style={{paddingTop: 0}}
-                    >
-                        <Trigger close="browser_modal">
-                            <div className="button">
-                                <Translate content="app_init.understand" />
-                            </div>
-                        </Trigger>
-                    </div>
                 </div>
-            </BaseModal>
+            </Modal>
         );
     }
 }

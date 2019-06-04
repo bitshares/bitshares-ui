@@ -1,30 +1,53 @@
 import React from "react";
 import Translate from "react-translate-component";
 import {saveAs} from "file-saver";
-import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
-import ps from "perfect-scrollbar";
+import {
+    ChainTypes as grapheneChainTypes,
+    FetchChain,
+    ChainStore
+} from "bitsharesjs";
+//import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
-const alignLeft = {textAlign: "left"};
+import report from "bitshares-report";
+import LoadingIndicator from "../LoadingIndicator";
+import {Tooltip, Modal, Button, Select, Input} from "bitshares-ui-style-guide";
+const ops = Object.keys(operations);
+import {Link} from "react-router-dom";
+import FormattedAsset from "../Utility/FormattedAsset";
+import BlockTime from "../Blockchain/BlockTime";
+import OperationAnt from "../Blockchain/OperationAnt";
+import SettingsStore from "stores/SettingsStore";
+import {connect} from "alt-react";
+const operation = new OperationAnt();
+
+const Option = Select.Option;
+import AccountHistoryExporter, {
+    FULL,
+    COINBASE
+} from "../../services/AccountHistoryExporter";
+import {settingsAPIs} from "api/apiConfig";
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
+        if (a.trx_in_block !== b.trx_in_block) {
+            return a.trx_in_block - b.trx_in_block;
+        }
+
+        if (a.op_in_trx !== b.op_in_trx) {
+            return a.op_in_trx - b.op_in_trx;
+        }
         return a.virtual_op - b.virtual_op;
     } else {
         return a.block_num - b.block_num;
     }
-}
-
-function textContent(n) {
-    return n ? `"${n.textContent.replace(/[\s\t\r\n]/gi, " ")}"` : "";
 }
 
 class RecentTransactions extends React.Component {
@@ -46,21 +69,72 @@ class RecentTransactions extends React.Component {
 
     constructor(props) {
         super();
+
         this.state = {
             limit: props.limit,
-            csvExport: false,
+            fetchingAccountHistory: false,
             headerHeight: 85,
-            filter: "all"
+            filter: "all",
+            accountHistoryError: false,
+            rows: [],
+            showModal: false,
+            esNodeCustom: false,
+            esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
         };
+        this.getDataSource = this.getDataSource.bind(this);
+
+        this.useCustom = counterpart.translate(
+            "account.export_modal.use_custom"
+        );
+        // https://eswrapper.bitshares.eu/ is not alive
+        // https://wrapper.elasticsearch.bitshares.ws/ is not alive
+        // http://bts-es.clockwork.gr:5000/ is alive
+        // https://explorer.bitshares-kibana.info/ is not alive
+        // http://185.208.208.184:5000/es/ is alive
+        this.showExportModal = this.showExportModal.bind(this);
+        this.hideExportModal = this.hideExportModal.bind(this);
+        this.esNodeChange = this.esNodeChange.bind(this);
+        this._generateCSV = this._generateCSV.bind(this);
     }
 
     componentDidMount() {
         if (!this.props.fullHeight) {
             let t = this.refs.transactions;
-            ps.initialize(t);
+            //ps.initialize(t);
 
             this._setHeaderHeight();
         }
+    }
+
+    esNodeChange(e) {
+        let newValue = null;
+        if (e.target) {
+            newValue = e.target.value;
+        } else {
+            newValue = e;
+        }
+        if (newValue == this.useCustom) {
+            this.setState({
+                esNode: "",
+                esNodeCustom: true
+            });
+        } else {
+            this.setState({
+                esNode: newValue
+            });
+        }
+    }
+
+    showExportModal() {
+        this.setState({
+            showModal: true
+        });
+    }
+
+    hideExportModal() {
+        this.setState({
+            showModal: false
+        });
     }
 
     _setHeaderHeight() {
@@ -102,7 +176,8 @@ class RecentTransactions extends React.Component {
         if (this.props.maxHeight !== nextProps.maxHeight) return true;
         if (
             nextState.limit !== this.state.limit ||
-            nextState.csvExport !== this.state.csvExport
+            nextState.fetchingAccountHistory !==
+                this.state.fetchingAccountHistory
         )
             return true;
         for (let key = 0; key < nextProps.accountsList.length; ++key) {
@@ -111,51 +186,10 @@ class RecentTransactions extends React.Component {
             if (npa && nsa && npa.get("history") !== nsa.get("history"))
                 return true;
         }
+        if (this.state.showModal !== nextState.showModal) return true;
+        if (this.state.esNode !== nextState.esNode) return true;
+        if (this.state.esNodeCustom !== nextState.esNodeCustom) return true;
         return false;
-    }
-
-    componentDidUpdate() {
-        if (this.state.csvExport) {
-            this.state.csvExport = false;
-            const csv_export_container = document.getElementById(
-                "csv_export_container"
-            );
-            const nodes = csv_export_container.childNodes;
-            let csv = "";
-            for (const n of nodes) {
-                //console.log("-- RecentTransactions._downloadCSV -->", n);
-                const cn = n.childNodes;
-                if (csv !== "") csv += "\n";
-                csv += [
-                    textContent(cn[0]),
-                    textContent(cn[1]),
-                    textContent(cn[2]),
-                    textContent(cn[3])
-                ].join(",");
-            }
-            var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
-            var today = new Date();
-            saveAs(
-                blob,
-                "btshist-" +
-                    today.getFullYear() +
-                    "-" +
-                    ("0" + (today.getMonth() + 1)).slice(-2) +
-                    "-" +
-                    ("0" + today.getDate()).slice(-2) +
-                    "-" +
-                    ("0" + today.getHours()).slice(-2) +
-                    ("0" + today.getMinutes()).slice(-2) +
-                    ".csv"
-            );
-        }
-
-        if (!this.props.fullHeight) {
-            let t = this.refs.transactions;
-            ps.update(t);
-
-            this._setHeaderHeight();
-        }
     }
 
     _onIncreaseLimit() {
@@ -212,14 +246,102 @@ class RecentTransactions extends React.Component {
         return history;
     }
 
-    _downloadCSV() {
-        this.setState({csvExport: true});
+    async _generateCSV(exportType) {
+        if (__DEV__) {
+            console.log("intializing fetching of ES data");
+        }
+        try {
+            const AHE = new AccountHistoryExporter();
+
+            this.setState({
+                fetchingAccountHistory: true,
+                showModal: false
+            });
+
+            await AHE.generateCSV(
+                this.props.accountsList,
+                this.state.esNode,
+                exportType
+            );
+
+            this.setState({
+                fetchingAccountHistory: false,
+                accountHistoryError: null
+            });
+        } catch (err) {
+            this.setState({
+                fetchingAccountHistory: false,
+                accountHistoryError: err,
+                esNodeCustom: false,
+                esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
+            });
+        }
     }
 
-    _onChangeFilter(e) {
+    _onChangeFilter(value) {
         this.setState({
-            filter: e.target.value
+            filter: value
         });
+    }
+
+    getDataSource(o, current_account_id) {
+        let fee = o.op[1].fee;
+        let trxTypes = counterpart.translate("transaction.trxTypes");
+        const info = operation.getColumn(
+            o.op,
+            current_account_id,
+            o.block_num,
+            o.result,
+            this.props.marketDirections
+        );
+        fee.amount = parseInt(fee.amount, 10);
+        const dynGlobalObject = ChainStore.getObject("2.1.0");
+        let last_irreversible_block_num = dynGlobalObject.get(
+            "last_irreversible_block_num"
+        );
+        let pending = null;
+        if (o.block_num > last_irreversible_block_num) {
+            pending = (
+                <span>
+                    (
+                    <Translate
+                        content="operation.pending"
+                        blocks={o.block_num - last_irreversible_block_num}
+                    />
+                    )
+                </span>
+            );
+        }
+        return {
+            key: o.id,
+            id: o.id,
+            type: (
+                <Link
+                    className="inline-block"
+                    data-place="bottom"
+                    data-tip={counterpart.translate("tooltip.show_block", {
+                        block: utils.format_number(o.block_num, 0)
+                    })}
+                    to={`/block/${o.block_num}/${o.trx_in_block}`}
+                >
+                    <span className={cnames("label", info.color || "info")}>
+                        {trxTypes[ops[o.op[0]]]}
+                    </span>
+                </Link>
+            ),
+            info: (
+                <div>
+                    <div>
+                        <span>{info.column}</span>
+                    </div>
+                    <div style={{fontSize: 14, paddingTop: 5}}>
+                        {pending ? <span> - {pending}</span> : null}
+                    </div>
+                </div>
+            ),
+            fee: <FormattedAsset amount={fee.amount} asset={fee.asset_id} />,
+            time: <BlockTime block_number={o.block_num} fullDate={true} />
+        };
     }
 
     render() {
@@ -262,82 +384,82 @@ class RecentTransactions extends React.Component {
                 "vesting_balance_withdraw"
             ].map(type => {
                 return (
-                    <option value={type} key={type}>
+                    <Option value={type} key={type}>
                         {counterpart.translate("transaction.trxTypes." + type)}
-                    </option>
+                    </Option>
                 );
             });
         }
 
+        let hideFee = false;
+
         let display_history = history.length
             ? history.slice(0, limit).map(o => {
-                  return (
-                      <Operation
-                          includeOperationId={true}
-                          operationId={o.id}
-                          style={alignLeft}
-                          key={o.id}
-                          op={o.op}
-                          result={o.result}
-                          txIndex={o.trx_in_block}
-                          block={o.block_num}
-                          current={current_account_id}
-                          hideFee
-                          inverted={false}
-                          hideOpLabel={compactView}
-                          fullDate={true}
-                      />
-                  );
+                  return this.getDataSource(o, current_account_id);
               })
-            : [
-                  <tr key="no_recent">
-                      <td colSpan={compactView ? "2" : "3"}>
-                          <Translate content="operation.no_recent" />
-                      </td>
-                  </tr>
-              ];
+            : [];
         let action = (
-            <tr className="total-value" key="total_value">
-                <td style={{textAlign: "center"}}>
-                    {historyCount > 0 ? (
-                        <span>
-                            <a
-                                className="inline-block"
-                                onClick={this._downloadCSV.bind(this)}
-                                data-tip={counterpart.translate(
-                                    "transaction.csv_tip"
-                                )}
-                                data-place="bottom"
-                            >
-                                <Icon
-                                    name="excel"
-                                    title="icons.excel"
-                                    className="icon-14px"
-                                />
-                            </a>
-                        </span>
-                    ) : null}
-                </td>
-                <td className="column-hide-tiny" />
-                <td style={{textAlign: "center"}}>
-                    &nbsp;{(this.props.showMore &&
-                        historyCount > this.props.limit) ||
-                    (20 && limit < historyCount) ? (
-                        <a onClick={this._onIncreaseLimit.bind(this)}>
-                            <Icon
-                                name="chevron-down"
-                                title="icons.chevron_down.transactions"
-                                className="icon-14px"
-                            />
-                        </a>
-                    ) : null}
-                </td>
-                <td />
-            </tr>
+            <div className="total-value" key="total_value">
+                <span style={{textAlign: "center"}}>&nbsp;</span>
+            </div>
+        );
+
+        const footer = (
+            <div>
+                <Button onClick={() => this._generateCSV(FULL)} type="primary">
+                    <Translate content="account.export_modal.full_report" />
+                </Button>
+                <Button
+                    onClick={() => this._generateCSV(COINBASE)}
+                    type="primary"
+                >
+                    <Translate content="account.export_modal.coinbase_report" />
+                </Button>
+            </div>
         );
 
         return (
             <div className="recent-transactions no-overflow" style={style}>
+                <Modal
+                    wrapClassName="modal--transaction-confirm"
+                    title={<Translate content="account.export_modal.title" />}
+                    visible={this.state.showModal}
+                    id="transaction_confirm_modal"
+                    ref="modal"
+                    footer={footer}
+                    overlay={true}
+                    onCancel={this.hideExportModal}
+                    noCloseBtn={true}
+                >
+                    <p>
+                        <Translate content="account.export_modal.description" />
+                    </p>
+                    {this.state.esNodeCustom ? (
+                        <Input
+                            type="text"
+                            value={this.state.esNode}
+                            onChange={this.esNodeChange}
+                        />
+                    ) : (
+                        <Select
+                            showSearch
+                            value={this.state.esNode}
+                            onChange={this.esNodeChange}
+                            style={{
+                                width: "100%"
+                            }}
+                        >
+                            {settingsAPIs.ES_WRAPPER_LIST.concat([
+                                {url: this.useCustom}
+                            ]).map(wrapper => (
+                                <Select.Option key={wrapper.url}>
+                                    {wrapper.url}
+                                </Select.Option>
+                            ))}
+                        </Select>
+                    )}
+                </Modal>
+
                 <div className="generic-bordered-box">
                     {this.props.dashboard ? null : (
                         <div ref="header">
@@ -353,107 +475,171 @@ class RecentTransactions extends React.Component {
                         </div>
                     )}
                     <div className="header-selector">
-                        <div className="selector">
-                            <div className={cnames("inline-block")}>
-                                {this.props.showFilters ? (
-                                    <select
-                                        data-place="left"
-                                        data-tip={counterpart.translate(
-                                            "tooltip.filter_ops"
-                                        )}
-                                        style={{paddingTop: 5, width: "auto"}}
-                                        className="bts-select no-margin"
+                        <div className="filter inline-block">
+                            {this.props.showFilters ? (
+                                <Tooltip
+                                    placement="bottom"
+                                    title={counterpart.translate(
+                                        "tooltip.filter_ops"
+                                    )}
+                                >
+                                    <Select
+                                        style={{
+                                            width: "210px"
+                                        }}
                                         value={this.state.filter}
                                         onChange={this._onChangeFilter.bind(
                                             this
                                         )}
                                     >
                                         {options}
-                                    </select>
-                                ) : null}
-                            </div>
+                                    </Select>
+                                </Tooltip>
+                            ) : null}
+
+                            {historyCount > 0 && this.props.dashboard ? (
+                                <Tooltip
+                                    placement="bottom"
+                                    title={counterpart.translate(
+                                        "transaction.csv_tip"
+                                    )}
+                                >
+                                    <a
+                                        className="inline-block iconLinkAndLabel"
+                                        onClick={this.showExportModal}
+                                        style={{
+                                            marginLeft: "1rem"
+                                        }}
+                                    >
+                                        <Icon name="excel" size="1x" />
+                                        <Translate content="account.download_history" />
+                                    </a>
+                                </Tooltip>
+                            ) : null}
                         </div>
-                    </div>
-                    <div
-                        className="box-content grid-block no-margin"
-                        style={
-                            !this.props.fullHeight
-                                ? {
-                                      maxHeight: maxHeight - headerHeight
-                                  }
-                                : null
-                        }
-                        ref="transactions"
-                    >
-                        <PaginatedList
-                            withTransition
-                            className={
-                                "table table-striped " +
-                                (compactView ? "compact" : "") +
-                                (this.props.dashboard
-                                    ? " dashboard-table table-hover"
-                                    : "")
-                            }
-                            header={
-                                <tr>
-                                    <th
-                                        className="column-hide-tiny"
-                                        style={alignLeft}
-                                    >
-                                        <Translate content="account.transactions.id" />
-                                    </th>
-                                    <th
-                                        className="column-hide-tiny"
-                                        style={alignLeft}
-                                    >
-                                        <Translate content="account.transactions.type" />
-                                    </th>
-                                    <th style={alignLeft}>
-                                        <Translate content="account.transactions.info" />
-                                    </th>
-                                    <th>
-                                        <Translate content="account.transactions.time" />
-                                    </th>
-                                </tr>
-                            }
-                            rows={display_history}
-                            withTransition
-                            label="utility.total_x_operations"
-                            extraRow={action}
-                        />
-                    </div>
-                    {historyCount > 0 &&
-                        this.state.csvExport && (
+                        {this.state.accountHistoryError && (
                             <div
-                                id="csv_export_container"
-                                style={{display: "none"}}
+                                className="has-error"
+                                style={{paddingLeft: "0.75rem"}}
                             >
-                                <div>
-                                    <div>DATE</div>
-                                    <div>OPERATION</div>
-                                    <div>MEMO</div>
-                                    <div>AMOUNT</div>
-                                </div>
-                                {history.map(o => {
-                                    return (
-                                        <Operation
-                                            key={o.id}
-                                            op={o.op}
-                                            result={o.result}
-                                            block={o.block_num}
-                                            inverted={false}
-                                            csvExportMode
-                                        />
-                                    );
-                                })}
+                                <Translate content="account.history_error" />
                             </div>
                         )}
+                    </div>
+                    <PaginatedList
+                        withTransition
+                        className={
+                            "table table-striped " +
+                            (compactView ? "compact" : "") +
+                            (this.props.dashboard
+                                ? " dashboard-table table-hover"
+                                : "")
+                        }
+                        header={[
+                            {
+                                title: (
+                                    <Translate content="account.transactions.id" />
+                                ),
+                                dataIndex: "id",
+                                align: "left",
+                                render: item => {
+                                    return (
+                                        <span style={{whiteSpace: "nowrap"}}>
+                                            {item}
+                                        </span>
+                                    );
+                                }
+                            },
+                            !compactView
+                                ? {
+                                      title: (
+                                          <Translate content="account.transactions.type" />
+                                      ),
+                                      dataIndex: "type",
+                                      align: "left"
+                                  }
+                                : {},
+                            {
+                                title: (
+                                    <Translate content="account.transactions.info" />
+                                ),
+                                dataIndex: "info",
+                                align: "left",
+                                render: item => {
+                                    return (
+                                        <span
+                                            style={{
+                                                whiteSpace: "nowrap"
+                                            }}
+                                        >
+                                            {item}
+                                        </span>
+                                    );
+                                }
+                            },
+                            !hideFee
+                                ? {
+                                      title: (
+                                          <Translate content="account.transactions.fee" />
+                                      ),
+                                      dataIndex: "fee",
+                                      align: "left",
+                                      render: item => {
+                                          return (
+                                              <span
+                                                  style={{
+                                                      whiteSpace: "nowrap"
+                                                  }}
+                                              >
+                                                  {item}
+                                              </span>
+                                          );
+                                      }
+                                  }
+                                : {},
+                            {
+                                title: (
+                                    <Translate
+                                        style={{whiteSpace: "nowrap"}}
+                                        content="account.transactions.time"
+                                    />
+                                ),
+                                dataIndex: "time",
+                                render: item => {
+                                    return (
+                                        <span style={{whiteSpace: "nowrap"}}>
+                                            {item}
+                                        </span>
+                                    );
+                                }
+                            }
+                        ]}
+                        rows={display_history}
+                        label="utility.total_x_operations"
+                        extraRow={action}
+                    />
+
+                    {this.state.fetchingAccountHistory && <LoadingIndicator />}
                 </div>
             </div>
         );
     }
 }
 RecentTransactions = BindToChainState(RecentTransactions);
+
+RecentTransactions = connect(
+    RecentTransactions,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
+    }
+);
 
 class TransactionWrapper extends React.Component {
     static propTypes = {

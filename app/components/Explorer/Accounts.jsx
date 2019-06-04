@@ -5,115 +5,31 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
 import {debounce} from "lodash-es";
-import ChainTypes from "../Utility/ChainTypes";
 import Icon from "../Icon/Icon";
-import BindToChainState from "../Utility/BindToChainState";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountStore from "stores/AccountStore";
-import {connect} from "alt-react";
 import LoadingIndicator from "../LoadingIndicator";
-import PaginatedList from "../Utility/PaginatedList";
-
-class AccountRow extends React.Component {
-    static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired
-    };
-
-    static defaultProps = {
-        tempComponent: "tr",
-        autosubscribe: false
-    };
-
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.contacts !== this.props.contacts ||
-            nextProps.account !== this.props.account
-        );
-    }
-
-    _onAddContact(account, e) {
-        e.preventDefault();
-        AccountActions.addAccountContact(account);
-    }
-
-    _onRemoveContact(account, e) {
-        e.preventDefault();
-        AccountActions.removeAccountContact(account);
-    }
-
-    render() {
-        let {account, contacts} = this.props;
-
-        if (!account) return null;
-        let balance = account.getIn(["balances", "1.3.0"]) || null;
-        let accountName = account.get("name");
-
-        return (
-            <tr key={account.get("id")}>
-                <td>{account.get("id")}</td>
-                {contacts.has(accountName) ? (
-                    <td onClick={this._onRemoveContact.bind(this, accountName)}>
-                        <Icon
-                            name="minus-circle"
-                            title="icons.minus_circle.remove_contact"
-                        />
-                    </td>
-                ) : (
-                    <td onClick={this._onAddContact.bind(this, accountName)}>
-                        <Icon
-                            name="plus-circle"
-                            title="icons.plus_circle.add_contact"
-                        />
-                    </td>
-                )}
-                <td>
-                    <Link to={`/account/${accountName}/overview`}>
-                        {accountName}
-                    </Link>
-                </td>
-                <td>
-                    {!balance ? "n/a" : <BalanceComponent balance={balance} />}
-                </td>
-                <td>
-                    {!balance ? (
-                        "n/a"
-                    ) : (
-                        <BalanceComponent
-                            balance={balance}
-                            asPercentage={true}
-                        />
-                    )}
-                </td>
-            </tr>
-        );
-    }
-}
-AccountRow = BindToChainState(AccountRow);
-
-let AccountRowWrapper = props => {
-    return <AccountRow {...props} />;
-};
-
-AccountRowWrapper = connect(AccountRowWrapper, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            contacts: AccountStore.getState().accountContacts
-        };
-    }
-});
+import {
+    Table,
+    Select,
+    Input,
+    Icon as IconStyleGuide
+} from "bitshares-ui-style-guide";
+import {ChainStore} from "bitsharesjs";
 
 class Accounts extends React.Component {
     constructor(props) {
         super();
         this.state = {
             searchTerm: props.searchTerm,
-            isLoading: false
+            isLoading: false,
+            rowsOnPage: "25"
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
+        this.handleRowsChange = this.handleRowsChange.bind(this);
+
+        this.balanceObjects = [];
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -140,13 +56,178 @@ class Accounts extends React.Component {
         this.setState({isLoading: false});
     }
 
+    _onAddContact(account, e) {
+        e.preventDefault();
+        AccountActions.addAccountContact(account);
+        this.forceUpdate();
+    }
+
+    _onRemoveContact(account, e) {
+        e.preventDefault();
+        AccountActions.removeAccountContact(account);
+        this.forceUpdate();
+    }
+
+    handleRowsChange(rows) {
+        this.setState({
+            rowsOnPage: rows
+        });
+        this.forceUpdate();
+    }
+
+    _ensureBalanceObject(object_id) {
+        if (object_id && typeof object_id === "string") {
+            if (!this.balanceObjects[object_id]) {
+                this.balanceObjects[object_id] = parseFloat(
+                    ChainStore.getObject(object_id).get("balance")
+                );
+            }
+        }
+        if (!this.balanceObjects[object_id]) {
+            this.balanceObjects[object_id] = 0;
+        }
+    }
+
     render() {
         let {searchAccounts} = this.props;
         let {searchTerm} = this.state;
-        let accountRows = [];
+
+        let dataSource = [];
+        let columns = [];
+
+        columns = [
+            {
+                title: (
+                    <Translate component="span" content="explorer.assets.id" />
+                ),
+                dataIndex: "accountId",
+                key: "accountId",
+                defaultSortOrder: "ascend",
+                sorter: (a, b) => {
+                    return a.accountId > b.accountId
+                        ? 1
+                        : a.accountId < b.accountId
+                            ? -1
+                            : 0;
+                },
+                render: id => {
+                    return <div>{id}</div>;
+                }
+            },
+            {
+                title: <Icon name="user" title="icons.user.account" />,
+                dataIndex: "accountContacts",
+                key: "accountContacts",
+                render: (contacts, record) => {
+                    return contacts.has(record.accountName) ? (
+                        <div
+                            onClick={this._onRemoveContact.bind(
+                                this,
+                                record.accountName
+                            )}
+                        >
+                            <Icon
+                                name="minus-circle"
+                                title="icons.minus_circle.remove_contact"
+                            />
+                        </div>
+                    ) : (
+                        <div
+                            onClick={this._onAddContact.bind(
+                                this,
+                                record.accountName
+                            )}
+                        >
+                            <Icon
+                                name="plus-circle"
+                                title="icons.plus_circle.add_contact"
+                            />
+                        </div>
+                    );
+                }
+            },
+            {
+                title: <Translate component="span" content="account.name" />,
+                dataIndex: "accountName",
+                key: "accountName",
+                sorter: (a, b) => {
+                    return a.accountName > b.accountName
+                        ? 1
+                        : a.accountName < b.accountName
+                            ? -1
+                            : 0;
+                },
+                render: name => {
+                    return (
+                        <div>
+                            <Link to={`/account/${name}/overview`}>{name}</Link>
+                        </div>
+                    );
+                }
+            },
+            {
+                title: <Translate component="span" content="gateway.balance" />,
+                dataIndex: "accountBalance",
+                key: "accountBalance",
+                sorter: (a, b) => {
+                    this._ensureBalanceObject(a.accountBalance);
+                    this._ensureBalanceObject(b.accountBalance);
+
+                    return this.balanceObjects[a.accountBalance] >
+                        this.balanceObjects[b.accountBalance]
+                        ? 1
+                        : this.balanceObjects[a.accountBalance] <
+                          this.balanceObjects[b.accountBalance]
+                            ? -1
+                            : 0;
+                },
+                render: balance => {
+                    return (
+                        <div>
+                            {!balance ? (
+                                "n/a"
+                            ) : (
+                                <BalanceComponent balance={balance} />
+                            )}
+                        </div>
+                    );
+                }
+            },
+            {
+                title: <Translate component="span" content="account.percent" />,
+                dataIndex: "accountBalance",
+                key: "accountBalancePercentage",
+                sorter: (a, b) => {
+                    this._ensureBalanceObject(a.accountBalance);
+                    this._ensureBalanceObject(b.accountBalance);
+
+                    return this.balanceObjects[a.accountBalance] >
+                        this.balanceObjects[b.accountBalance]
+                        ? 1
+                        : this.balanceObjects[a.accountBalance] <
+                          this.balanceObjects[b.accountBalance]
+                            ? -1
+                            : 0;
+                },
+                render: balance => {
+                    return (
+                        <div>
+                            {!balance ? (
+                                "n/a"
+                            ) : (
+                                <BalanceComponent
+                                    balance={balance}
+                                    asPercentage={true}
+                                />
+                            )}
+                        </div>
+                    );
+                }
+            }
+        ];
 
         if (searchAccounts.size > 0 && searchTerm && searchTerm.length > 0) {
-            accountRows = searchAccounts
+            searchAccounts
                 .filter(a => {
                     /*
                     * This appears to return false negatives, perhaps from
@@ -168,69 +249,97 @@ class Accounts extends React.Component {
                         return 0;
                     }
                 })
-                .map((account, id) => {
-                    return <AccountRowWrapper key={id} account={account} />;
-                })
-                .toArray();
+                .map((name, id) => {
+                    let currentAccount = ChainStore.getAccount(
+                        id.toLowerCase()
+                    );
+                    let balance = currentAccount
+                        ? currentAccount.getIn(["balances", "1.3.0"]) || null
+                        : null;
+
+                    dataSource.push({
+                        accountId: id,
+                        accountContacts: AccountStore.getState()
+                            .accountContacts,
+                        accountName: name,
+                        accountBalance: balance
+                    });
+                });
         }
 
         return (
-            <div className="grid-block">
-                <div className="grid-block vertical medium-6 medium-offset-3">
-                    <div className="grid-content shrink">
-                        <Translate
-                            component="h3"
-                            content="explorer.accounts.title"
-                        />
-                        <input
-                            type="text"
-                            value={this.state.searchTerm}
-                            onChange={this._onSearchChange.bind(this)}
-                        />
-                    </div>
-                    <PaginatedList
-                        header={
-                            <tr>
-                                <th>
-                                    <Translate
-                                        component="span"
-                                        content="explorer.assets.id"
-                                    />
-                                </th>
-                                <th>
-                                    <Icon
-                                        name="user"
-                                        title="icons.user.account"
-                                    />
-                                </th>
-                                <th>
-                                    <Translate
-                                        component="span"
-                                        content="account.name"
-                                    />
-                                </th>
-                                <th>
-                                    <Translate
-                                        component="span"
-                                        content="gateway.balance"
-                                    />
-                                </th>
-                                <th>
-                                    <Translate
-                                        component="span"
-                                        content="account.percent"
-                                    />
-                                </th>
-                            </tr>
-                        }
-                        rows={accountRows}
-                        pageSize={20}
-                    />
-                    {this.state.isLoading ? (
-                        <div style={{textAlign: "center", padding: 10}}>
-                            <LoadingIndicator type="three-bounce" />
+            <div className="grid-block vertical">
+                <div className="grid-block vertical">
+                    <div className="grid-block main-content small-12 medium-10 medium-offset-1 main-content vertical">
+                        <div className="generic-bordered-box">
+                            <div
+                                style={{
+                                    textAlign: "left",
+                                    marginBottom: "24px"
+                                }}
+                            >
+                                <Input
+                                    placeholder={"Search"}
+                                    value={this.state.searchTerm}
+                                    style={{width: "200px"}}
+                                    onChange={this._onSearchChange.bind(this)}
+                                    addonAfter={
+                                        <IconStyleGuide type="search" />
+                                    }
+                                />
+
+                                <Select
+                                    style={{width: "150px", marginLeft: "24px"}}
+                                    value={this.state.rowsOnPage}
+                                    onChange={this.handleRowsChange}
+                                >
+                                    <Select.Option key={"10"}>
+                                        10 rows
+                                    </Select.Option>
+                                    <Select.Option key={"25"}>
+                                        25 rows
+                                    </Select.Option>
+                                    <Select.Option key={"50"}>
+                                        50 rows
+                                    </Select.Option>
+                                    <Select.Option key={"100"}>
+                                        100 rows
+                                    </Select.Option>
+                                    <Select.Option key={"200"}>
+                                        200 rows
+                                    </Select.Option>
+                                </Select>
+
+                                <div
+                                    style={{
+                                        display: "inline-block",
+                                        marginLeft: "24px"
+                                    }}
+                                >
+                                    {this.state.searchTerm &&
+                                    this.state.searchTerm.length == 0 ? (
+                                        <Translate content="account.start_typing_to_search" />
+                                    ) : null}
+                                </div>
+                            </div>
+
+                            <Table
+                                style={{width: "100%", marginTop: "16px"}}
+                                rowKey="accountId"
+                                columns={columns}
+                                dataSource={dataSource}
+                                pagination={{
+                                    position: "bottom",
+                                    pageSize: Number(this.state.rowsOnPage)
+                                }}
+                            />
+                            {this.state.isLoading ? (
+                                <div style={{textAlign: "center", padding: 10}}>
+                                    <LoadingIndicator type="three-bounce" />
+                                </div>
+                            ) : null}
                         </div>
-                    ) : null}
+                    </div>
                 </div>
             </div>
         );

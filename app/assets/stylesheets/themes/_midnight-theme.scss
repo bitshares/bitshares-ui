@@ -60,8 +60,42 @@ $mobile-input-bg: #1b1c22;
 
 $incognito-bg: #e3745b;
 
+$positive-color-alternative: #22d173;
+$negative-color-alternative: #ff276d;
+$medium-color: #ff9900;
+$dark-help-text: #171a25;
+$separator-line: rgba(23, 26, 37, 0.3);
+
+$tab-content-background-color: lighten($account-header, 4%);
+$explorer-tab-content-background-color: $tab-content-background-color;
+
+// * * * Explorer
+
+// * * * * * Witnesses
+
+$explorer--witnesses--info-bg: $account-cells;
+$explorer--witnesses--info-border: $header-color;
+$explorer--witnesses--info-table-title-color: darken(#fff, 50%);
+$explorer--witnesses--info-table-text-color: #fff;
+
+// * * * * * Assets
+
+$explorer--assets--bg: $bg-color;
+
+// * * * * *
+
+// * * *
+
+// * * * * Settings
+
+$settings-label-color: rgba(255, 255, 255, 0.5);
+
+//
+
 .midnightTheme {
     @include theme(
+        $explorer-tab-content-background-color,
+        $tab-content-background-color,
         $primary-text-color,
         $bg-color,
         $dark-text-color,
@@ -107,6 +141,17 @@ $incognito-bg: #e3745b;
         $main-content-margin-block-bg-color,
         $modal-bg-color,
         $mobile-input-bg,
-        $incognito-bg
+        $incognito-bg,
+        $explorer--witnesses--info-bg,
+        $explorer--witnesses--info-border,
+        $explorer--witnesses--info-table-title-color,
+        $explorer--witnesses--info-table-text-color,
+        $explorer--assets--bg,
+        $negative-color-alternative,
+        $positive-color-alternative,
+        $separator-line,
+        $medium-color,
+        $dark-help-text,
+        $settings-label-color
     );
 }

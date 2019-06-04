@@ -3,7 +3,7 @@ import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import assetUtils from "common/asset_utils";
 import PropTypes from "prop-types";
-import Popover from "react-popover";
+import {Popover} from "bitshares-ui-style-guide";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
 import Pulsate from "./Pulsate";
@@ -28,7 +28,10 @@ class SupplyPercentage extends React.Component {
 
     render() {
         let supply = parseInt(this.props.do.get("current_supply"), 10);
-        let percent = utils.format_number(this.props.amount / supply * 100, 4);
+        let percent = utils.format_number(
+            (this.props.amount / supply) * 100,
+            4
+        );
         return <span className={this.props.colorClass}>{percent}%</span>;
     }
 }
@@ -158,20 +161,17 @@ class FormattedAsset extends React.Component {
                         <span>
                             &nbsp;
                             <Popover
-                                isOpen={this.state.isPopoverOpen}
-                                onOuterAction={this.closePopover}
-                                body={currency_popover_body}
+                                trigger="click"
+                                content={currency_popover_body}
+                                mouseEnterDelay={0.5}
                             >
-                                <span
-                                    className="currency click-for-help"
-                                    onClick={this.togglePopover}
-                                >
+                                <span className="currency click-for-help">
                                     <AssetName name={asset.symbol} />
                                 </span>
                             </Popover>
                         </span>
                     ) : (
-                        <span className="currency" onClick={this.togglePopover}>
+                        <span className="currency">
                             &nbsp;
                             <AssetName
                                 noTip={this.props.noTip}

@@ -5,9 +5,7 @@ import Translate from "react-translate-component";
 import AssetActions from "actions/AssetActions";
 import AssetStore from "stores/AssetStore";
 import AccountActions from "actions/AccountActions";
-import BaseModal from "../Modal/BaseModal";
 import FormattedAsset from "../Utility/FormattedAsset";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {debounce} from "lodash-es";
 import LoadingIndicator from "../LoadingIndicator";
 import IssueModal from "../Modal/IssueModal";
@@ -35,6 +33,7 @@ class AccountAssets extends React.Component {
         super(props);
 
         this.state = {
+            isIssueAssetModalVisible: false,
             create: {
                 symbol: "",
                 name: "",
@@ -57,6 +56,21 @@ class AccountAssets extends React.Component {
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 150);
+
+        this.showIssueAssetModal = this.showIssueAssetModal.bind(this);
+        this.hideIssueAssetModal = this.hideIssueAssetModal.bind(this);
+    }
+
+    showIssueAssetModal() {
+        this.setState({
+            isIssueAssetModalVisible: true
+        });
+    }
+
+    hideIssueAssetModal() {
+        this.setState({
+            isIssueAssetModalVisible: false
+        });
     }
 
     _checkAssets(assets, force) {
@@ -119,7 +133,7 @@ class AccountAssets extends React.Component {
         issue.asset_id = asset_id;
         issue.symbol = symbol;
         this.setState({issue: issue});
-        ZfApi.publish("issue_asset", "open");
+        this.showIssueAssetModal();
     }
 
     _editButtonClick(symbol, account_name, e) {
@@ -325,17 +339,12 @@ class AccountAssets extends React.Component {
                         </Tabs>
                     </div>
 
-                    <BaseModal id="issue_asset" overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <IssueModal
-                                asset_to_issue={this.state.issue.asset_id}
-                                onClose={() => {
-                                    ZfApi.publish("issue_asset", "close");
-                                }}
-                            />
-                        </div>
-                    </BaseModal>
+                    <IssueModal
+                        visible={this.state.isIssueAssetModalVisible}
+                        hideModal={this.hideIssueAssetModal}
+                        showModal={this.showIssueAssetModal}
+                        asset_to_issue={this.state.issue.asset_id}
+                    />
                 </div>
             </div>
         );
@@ -348,20 +357,23 @@ AccountAssets = AssetWrapper(AccountAssets, {
     withDynamic: true
 });
 
-export default connect(AccountAssets, {
-    listenTo() {
-        return [AssetStore];
-    },
-    getProps(props) {
-        let assets = Map(),
-            assetsList = List();
-        if (props.account.get("assets", []).size) {
-            props.account.get("assets", []).forEach(id => {
-                assetsList = assetsList.push(id);
-            });
-        } else {
-            assets = AssetStore.getState().assets;
+export default connect(
+    AccountAssets,
+    {
+        listenTo() {
+            return [AssetStore];
+        },
+        getProps(props) {
+            let assets = Map(),
+                assetsList = List();
+            if (props.account.get("assets", []).size) {
+                props.account.get("assets", []).forEach(id => {
+                    assetsList = assetsList.push(id);
+                });
+            } else {
+                assets = AssetStore.getState().assets;
+            }
+            return {assets, assetsList};
         }
-        return {assets, assetsList};
     }
-});
+);

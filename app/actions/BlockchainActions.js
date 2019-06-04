@@ -3,7 +3,27 @@ import {Apis} from "bitsharesjs-ws";
 
 let latestBlocks = {};
 
+let headerQueue = {};
 class BlockchainActions {
+    getHeader(height) {
+        if (headerQueue[height]) return {};
+        headerQueue[height] = true;
+        return dispatch => {
+            return Apis.instance()
+                .db_api()
+                .exec("get_block_header", [height])
+                .then(header => {
+                    dispatch({
+                        header: {
+                            timestamp: header.timestamp,
+                            witness: header.witness
+                        },
+                        height
+                    });
+                });
+        };
+    }
+
     getLatest(height, maxBlock) {
         // let start = new Date();
         return dispatch => {

@@ -1,0 +1,300 @@
+.login-page-selector {
+    .recommended {
+        display: none;
+    }
+
+    div.selection-block {
+        .choice-model {
+            margin-bottom: 42px;
+        }
+
+        .choice-account {
+            margin-bottom: 59px;
+        }
+
+        .content-block {
+            margin-bottom: 28px;
+        }
+    }
+
+    .account-block,
+    .wallet-block {
+        padding: 0 10%;
+
+        input {
+            height: auto;
+            flex: none;
+        }
+
+        .account-selector {
+            .inline-label {
+                align-items: center;
+            }
+
+            .custom-tooltip:hover {
+                visibility: visible !important;
+                opacity: 0.9 !important;
+            }
+        }
+
+        .header-area {
+            margin-left: 0;
+
+            .left-label {
+                text-align: left;
+            }
+        }
+
+        .button-secondary,
+        button.button-primary {
+            outline: 0;
+            padding: 7px 35px 8px;
+        }
+
+        .button-secondary {
+            opacity: 0;
+        }
+
+        .button-group {
+            margin: 50px 0 15px;
+        }
+
+        .eye-block {
+            display: inline-block;
+        }
+
+        .dismiss-icon,
+        .approve-icon {
+            margin: auto 0 auto 8px;
+        }
+
+        .approve-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .error-area {
+            padding-left: 0;
+        }
+
+        .file-input-container,
+        .small-container {
+            display: grid;
+            grid-template-columns: 50px 50px auto;
+            padding-right: 20px;
+            border: 1px dashed;
+            border-radius: 5px;
+
+            .rounded-arrow {
+                margin: auto 0 auto -15px;
+                z-index: 1;
+            }
+
+            .bin-file {
+                opacity: 0.4;
+                height: 50px;
+                margin: 20px 0 20px -30px;
+                &.initial-bin {
+                    margin-left: -60px;
+                }
+            }
+
+            &:hover .bin-file,
+            &.dropHover .bin-file,
+            &.downloaded {
+                opacity: 1;
+            }
+
+            .upload-text {
+                margin: auto 0;
+                font-size: 14px;
+                letter-spacing: -0.2px;
+                line-height: 20px;
+                text-transform: none;
+
+                p {
+                    margin-bottom: 0;
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+
+                .active-upload-text {
+                    display: inline-block;
+                    position: relative;
+
+                    .upload-bin-input {
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        opacity: 0;
+                        cursor: pointer;
+                    }
+                    .upload-bin-input::-webkit-file-upload-button {
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .facolor-error {
+                text-transform: uppercase;
+            }
+
+            &.downloaded {
+                border: 1px solid;
+            }
+        }
+
+        .small-container {
+            display: none;
+        }
+
+        .without-bin {
+            width: fit-content;
+            margin: 6px 0 22px;
+            font-size: 12px;
+            letter-spacing: -0.17px;
+            line-height: 17px;
+            border-bottom: 1px dashed;
+        }
+
+        .custom-tooltip {
+            width: 250px;
+            pointer-events: auto;
+
+            .without-bin {
+                border-bottom: 1px dashed;
+                font-size: 13px;
+                letter-spacing: 0.06px;
+                line-height: 18px;
+            }
+        }
+    }
+
+    .wallet-block {
+        .button-group {
+            margin: 61px 0 0;
+        }
+
+        .bin-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .inactive-model-block {
+        padding-top: 39px;
+
+        div.header-block {
+            padding: 87px 0 127px 0;
+            .inactive-img {
+                bottom: 0;
+            }
+
+            .inactive-title {
+                margin-top: 20px;
+            }
+
+            .choice-model {
+                margin-bottom: 0;
+            }
+        }
+
+        div.button-group {
+            margin: 0;
+
+            span.button-secondary {
+                margin-top: 0;
+            }
+        }
+    }
+
+    .inactive-model-block:hover {
+        .button-secondary {
+            opacity: 1;
+        }
+    }
+
+    .account-selector {
+        text-align: left;
+
+        .has-error {
+            font-size: 0.875rem;
+            margin-top: 5px !important;
+        }
+    }
+
+    @include breakpoint(small only) {
+        div.small-only-block.header-block {
+            padding-bottom: 15px;
+
+            div.small-only-text-left {
+                height: fit-content;
+                margin: auto 0;
+
+                .choice-model {
+                    margin-bottom: 0;
+                }
+            }
+            .model-img {
+                margin-bottom: 5px;
+            }
+        }
+
+        .wallet-block,
+        .account-block {
+            padding-top: 5px;
+        }
+
+        div.selection-block {
+            .content-block {
+                margin-bottom: 12px;
+            }
+
+            .button-group {
+                width: 100%;
+                margin: 18px 0 0;
+
+                button.button-primary {
+                    padding: 14px 20px;
+                }
+            }
+        }
+
+        .account-block,
+        .wallet-block {
+            div.custom-tooltip {
+                width: 180px;
+            }
+        }
+
+        .wallet-block {
+            .file-input-container {
+                display: none;
+            }
+
+            .small-container {
+                padding: 0 0 0 8px;
+                border-radius: 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .upload-bin-input {
+                    z-index: 1;
+                }
+
+                .attach-bin {
+                    display: block;
+                    width: 19px;
+                    height: 19px;
+                    margin: 8px 10px 10px;
+                    opacity: 0.6;
+                }
+            }
+
+            .password-block {
+                margin-bottom: 12px;
+            }
+        }
+    }
+}

@@ -1,3 +1,5 @@
+@import "../style-guide-fixes";
+
 .modal-header {
     padding: 1rem;
     text-align: center;
@@ -11,7 +13,7 @@
     text-align: right;
 }
 
-#unlock_wallet_modal2 {
+.unlock_wallet_modal2 {
     padding-left: 0;
     padding-right: 0;
     border-radius: 1px;
@@ -58,7 +60,7 @@
         }
     }
 
-    .has-error {
+    .has-error#{$ant-fix} {
         display: block;
         height: 20px;
         margin-bottom: 1rem;
@@ -119,7 +121,7 @@
         padding: 0;
         padding-left: 0.5rem;
     }
-    .has-error {
+    .has-error#{$ant-fix} {
         font-size: 14.4px;
     }
     .error-area {
@@ -150,18 +152,8 @@
         }
     }
     .backup-warning {
-        p {
-            border: 1px solid yellow;
-            padding: 1rem;
-        }
-
         .checkbox {
-            display: flex;
-            align-items: center;
-            span {
-                margin-left: 0.5rem;
-            }
-            margin-bottom: 1rem;
+            margin: 1rem 0 0;
         }
     }
 }
@@ -185,6 +177,12 @@
 
 .text-group .left-menu {
     padding-bottom: 1em;
+}
+
+.wallet-create, .create-account-wrapper {
+    div.ant-form-item-label {
+        text-align: left;
+    }
 }
 
 @include breakpoint(medium) {

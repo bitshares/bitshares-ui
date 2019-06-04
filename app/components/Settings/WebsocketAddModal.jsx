@@ -1,9 +1,8 @@
 import React from "react";
 import Translate from "react-translate-component";
-import Trigger from "react-foundation-apps/src/trigger";
-import BaseModal from "../Modal/BaseModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SettingsActions from "actions/SettingsActions";
+import counterpart from "counterpart";
+import {Modal, Button, Form, Input} from "bitshares-ui-style-guide";
 
 const ws = "ws://";
 const wss = "wss://";
@@ -22,6 +21,8 @@ class WebsocketAddModal extends React.Component {
             addError: null,
             existsError: null
         };
+
+        this.onRemoveSubmit = this.onRemoveSubmit.bind(this);
     }
 
     onServerInput(e) {
@@ -52,22 +53,10 @@ class WebsocketAddModal extends React.Component {
         this.setState({name: e.target.value});
     }
 
-    show(e, url, name) {
-        let state = {};
-        if (e.target.id.indexOf("add") !== -1) {
-            state.type = "add";
-        } else if (e.target.id.indexOf("remove") !== -1) {
-            state.type = "remove";
-            state.remove = {url, name};
-        }
-
-        this.setState(state);
-
-        ZfApi.publish("ws_modal_" + state.type, "open");
-    }
-
     close() {
-        ZfApi.publish("ws_modal_" + this.state.type, "close");
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     onAddSubmit(e) {
@@ -79,14 +68,14 @@ class WebsocketAddModal extends React.Component {
             ws: this.state.protocol === "https:" ? wss : ws,
             name: ""
         });
-        this.close();
+        this.props.onAddNodeClose();
     }
 
     onRemoveSubmit(e) {
         e.preventDefault();
         let removeIndex;
         this.props.apis.forEach((api, index) => {
-            if (api.url === this.state.remove.url) {
+            if (api.url === this.props.removeNode.url) {
                 removeIndex = index;
             }
         });
@@ -101,79 +90,68 @@ class WebsocketAddModal extends React.Component {
         }
 
         SettingsActions.removeWS(removeIndex);
-        this.close();
+        this.props.onRemoveNodeClose();
     }
 
     _renderAddModal() {
-        let labelStyle = {padding: 0, color: "white"};
+        let help = "";
+        let validateStatus = "";
+
+        if (this.state.existsError) {
+            validateStatus = "error";
+            help = counterpart.translate("settings.node_already_exists");
+        }
+
+        if (this.state.addError) {
+            validateStatus = "error";
+            help = counterpart.translate("settings.valid_node_url");
+        }
 
         return (
-            <BaseModal
+            <Modal
+                visible={this.props.isAddNodeModalVisible}
                 id="ws_modal_add"
                 ref="ws_modal_add"
+                title={counterpart.translate("settings.add_ws")}
                 overlay={true}
+                onCancel={this.props.onAddNodeClose}
                 overlayClose={false}
+                footer={[
+                    <Button
+                        key="confirm"
+                        type="primary"
+                        disabled={this.state.addError || this.state.existsError}
+                        onClick={this.onAddSubmit.bind(this)}
+                    >
+                        {counterpart.translate("transfer.confirm")}
+                    </Button>,
+                    <Button key="cancel" onClick={this.props.onAddNodeClose}>
+                        {counterpart.translate("account.perm.cancel")}
+                    </Button>
+                ]}
             >
                 <div className="grid-content">
-                    <Translate component="h3" content="settings.add_ws" />
-                    <form onSubmit={this.onAddSubmit.bind(this)} noValidate>
-                        <section className="block-list">
-                            <ul>
-                                <li
-                                    className="with-dropdown"
-                                    style={{marginBottom: "1em"}}
-                                >
-                                    <label style={labelStyle}>Name</label>
-                                    <input
-                                        type="text"
-                                        onChange={this.onNameInput.bind(this)}
-                                        value={this.state.name}
-                                    />
-                                </li>
-                                <li className="with-dropdown">
-                                    <label style={labelStyle}>Address</label>
-                                    <input
-                                        type="text"
-                                        onChange={this.onServerInput.bind(this)}
-                                        defaultValue={this.state.ws}
-                                    />
-                                </li>
-                            </ul>
-                            {this.state.addError && (
-                                <p style={{marginBottom: "1em"}}>
-                                    <Translate content="settings.valid_node_url" />
-                                </p>
-                            )}
-                            {this.state.existsError && (
-                                <p style={{marginBottom: "1em"}}>
-                                    <Translate content="settings.node_already_exists" />
-                                </p>
-                            )}
-                        </section>
-                        <div className="button-group">
-                            <button
-                                type="submit"
-                                className={
-                                    "button " +
-                                    (this.state.addError ||
-                                    this.state.existsError
-                                        ? "disabled"
-                                        : "")
-                                }
-                                onClick={this.onAddSubmit.bind(this)}
-                                disabled={this.state.addError}
-                            >
-                                <Translate content="transfer.confirm" />
-                            </button>
-                            <Trigger close={"ws_modal_add"}>
-                                <div className=" button">
-                                    <Translate content="account.perm.cancel" />
-                                </div>
-                            </Trigger>
-                        </div>
-                    </form>
+                    <Form layout="vertical">
+                        <Form.Item label="Name">
+                            <Input
+                                onChange={this.onNameInput.bind(this)}
+                                value={this.state.name}
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Address"
+                            validateStatus={validateStatus}
+                            help={help}
+                        >
+                            <Input
+                                value={this.state.ws}
+                                onChange={this.onServerInput.bind(this)}
+                            />
+                        </Form.Item>
+                    </Form>
                 </div>
-            </BaseModal>
+            </Modal>
         );
     }
 
@@ -182,42 +160,42 @@ class WebsocketAddModal extends React.Component {
             return null;
         }
 
+        const footer = [
+            <Button key="submit" onClick={this.onRemoveSubmit}>
+                {counterpart.translate("transfer.confirm")}
+            </Button>,
+            <Button
+                key="cancel"
+                type="primary"
+                onClick={this.props.onRemoveNodeClose}
+            >
+                {counterpart.translate("modal.cancel")}
+            </Button>
+        ];
+
         return (
-            <BaseModal
-                id="ws_modal_remove"
-                ref="ws_modal_remove"
-                overlay={true}
-                overlayClose={false}
+            <Modal
+                onCancel={this.props.onRemoveNodeClose}
+                title={counterpart.translate("settings.remove_ws")}
+                visible={this.props.isRemoveNodeModalVisible}
+                footer={footer}
             >
                 <div className="grid-content no-overflow">
-                    <Translate component="h3" content="settings.remove_ws" />
                     <section className="block-list">
                         <p>
                             <Translate
                                 component="span"
                                 content="settings.confirm_remove"
-                                with={{name: this.state.remove.name}}
+                                with={{
+                                    name:
+                                        this.props.removeNode &&
+                                        this.props.removeNode.name
+                                }}
                             />
                         </p>
                     </section>
-                    <form onSubmit={this.onRemoveSubmit.bind(this)} noValidate>
-                        <div className="button-group">
-                            <button
-                                type="submit"
-                                className={"button"}
-                                onClick={this.onRemoveSubmit.bind(this)}
-                            >
-                                <Translate content="transfer.confirm" />
-                            </button>
-                            <Trigger close={"ws_modal_remove"}>
-                                <div className="button">
-                                    <Translate content="account.perm.cancel" />
-                                </div>
-                            </Trigger>
-                        </div>
-                    </form>
                 </div>
-            </BaseModal>
+            </Modal>
         );
     }
 

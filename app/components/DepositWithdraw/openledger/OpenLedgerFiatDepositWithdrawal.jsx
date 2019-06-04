@@ -12,6 +12,14 @@ import DepositFiatOpenLedger from "./DepositFiatOpenLedger";
 import WithdrawFiatOpenLedger from "./WithdrawFiatOpenLedger";
 import PropTypes from "prop-types";
 
+/*
+ *
+ *
+ * BE AWARE BaseModal USED IN THIS CODE WAS REMOVED AT ALL
+ *
+ *
+ * */
+
 class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
     static propTypes = {
         url: PropTypes.string,
@@ -83,7 +91,8 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                         <Translate
                             component="span"
                             content="transfer.available"
-                        />:{" "}
+                        />
+                        :{" "}
                         <BalanceComponent
                             balance={account_balances[current_asset_id]}
                         />
@@ -137,6 +146,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                         href="https://openledger.info/v/"
                         rel="noopener noreferrer"
                         target="_blank"
+                        className="external-link"
                     >
                         here
                     </a>{" "}
@@ -187,6 +197,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
                         href="https://openledger.info/v/"
                         rel="noopener noreferrer"
                         target="_blank"
+                        className="external-link"
                     >
                         here
                     </a>{" "}

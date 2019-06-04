@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "alt-react";
 import cname from "classnames";
-import notify from "actions/NotificationActions";
 import {PrivateKey, Aes, PublicKey, hash} from "bitsharesjs";
 import {ChainConfig} from "bitsharesjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
@@ -17,7 +16,11 @@ import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal";
 import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore";
 
+import {Notification} from "bitshares-ui-style-guide";
+
 import GenesisFilter from "chain/GenesisFilter";
+
+import {Button, Input} from "bitshares-ui-style-guide";
 
 require("./ImportKeys.scss");
 
@@ -402,7 +405,9 @@ class ImportKeys extends Component {
                 } missing encrypted_private_keys`;
                 console.error(error);
                 if (format_error1_once) {
-                    notify.error(error);
+                    Notification.error({
+                        message: error
+                    });
                     format_error1_once = false;
                 }
                 continue;
@@ -485,10 +490,15 @@ class ImportKeys extends Component {
                 } catch (e) {
                     console.log(e, e.stack);
                     let message = e.message || e;
-                    notify.error(
-                        `Account ${account_name} had a private key import error: ` +
-                            message
-                    );
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.import_keys_error",
+                            {
+                                account_name: account_name,
+                                error_msg: message
+                            }
+                        )
+                    });
                 }
             }
         }
@@ -518,7 +528,11 @@ class ImportKeys extends Component {
             dups[public_key_string] = true;
         }
         if (Object.keys(this.state.imported_keys_public).length === 0) {
-            notify.error("This wallet has already been imported");
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.import_keys_already_imported"
+                )
+            });
             return;
         }
         let keys_to_account = this.state.keys_to_account;
@@ -557,11 +571,15 @@ class ImportKeys extends Component {
                 ImportKeysStore.importing(false);
                 let import_count = private_key_objs.length;
 
-                notify.success(
-                    counterpart.translate("wallet.import_key_success", {
-                        count: import_count
-                    })
-                );
+                Notification.success({
+                    message: counterpart.translate(
+                        "wallet.import_key_success",
+                        {
+                            count: import_count
+                        }
+                    )
+                });
+
                 this.setState({
                     importSuccess: true
                 });
@@ -574,7 +592,15 @@ class ImportKeys extends Component {
                 try {
                     message = error.target.error.message;
                 } catch (e) {}
-                notify.error(`Key import error: ${message}`);
+
+                Notification.error({
+                    message: counterpart.translate(
+                        "notifications.import_keys_error_unknown",
+                        {
+                            error_msg: message
+                        }
+                    )
+                });
             });
     }
 
@@ -635,12 +661,9 @@ class ImportKeys extends Component {
                 <BalanceClaimActive />
 
                 <div style={{paddingTop: 15}}>
-                    <div
-                        className="button success"
-                        onClick={this.onCancel.bind(this)}
-                    >
+                    <Button type="primary" onClick={this.onCancel.bind(this)}>
                         <Translate content="wallet.done" />
-                    </div>
+                    </Button>
                 </div>
             </div>
         );
@@ -683,7 +706,7 @@ class ImportKeys extends Component {
                                     <span>
                                         Filtering{" "}
                                         {Math.round(
-                                            status.count / status.total * 100
+                                            (status.count / status.total) * 100
                                         )}{" "}
                                         %{" "}
                                     </span>
@@ -717,9 +740,9 @@ class ImportKeys extends Component {
         }
 
         let cancelButton = (
-            <div className="button success" onClick={this.onCancel.bind(this)}>
+            <Button onClick={this.onCancel.bind(this)}>
                 <Translate content="wallet.cancel" />
-            </div>
+            </Button>
         );
 
         let tabIndex = 1;
@@ -742,9 +765,11 @@ class ImportKeys extends Component {
                     {!import_ready ? null : (
                         <span>
                             {" "}
-                            (<a onClick={this.reset.bind(this)}>
+                            (
+                            <a onClick={this.reset.bind(this)}>
                                 <Translate content="wallet.reset" />
-                            </a>)
+                            </a>
+                            )
                         </span>
                     )}
                 </div>
@@ -785,19 +810,21 @@ class ImportKeys extends Component {
                                             component="label"
                                             content="wallet.paste_private"
                                         />
-                                        <input
+                                        <Input
                                             ref="wifInput"
                                             type="password"
                                             id="wif"
                                             tabIndex={tabIndex++}
+                                            style={{marginBottom: "16px"}}
                                         />
 
-                                        <button
-                                            className="button"
-                                            type="submit"
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            style={{marginRight: "16px"}}
                                         >
                                             <Translate content="wallet.submit" />
-                                        </button>
+                                        </Button>
                                         {cancelButton}
                                     </form>
                                 ) : (
@@ -810,13 +837,15 @@ class ImportKeys extends Component {
                                             <Translate content="wallet.bts_09_export" />
                                             {this.state.no_file ? null : (
                                                 <span>
-                                                    &nbsp; (<a
+                                                    &nbsp; (
+                                                    <a
                                                         onClick={this.reset.bind(
                                                             this
                                                         )}
                                                     >
                                                         Reset
-                                                    </a>)
+                                                    </a>
+                                                    )
                                                 </span>
                                             )}
                                         </label>
@@ -836,7 +865,7 @@ class ImportKeys extends Component {
                                         </div>
                                         {!this.state.no_file ? (
                                             <div>
-                                                <input
+                                                <Input
                                                     type="password"
                                                     ref="password"
                                                     key={
@@ -869,15 +898,14 @@ class ImportKeys extends Component {
                                             </div>
                                         ) : null}
                                         <div className="button-group">
-                                            <button
-                                                className={cname("button", {
-                                                    disabled: !!this.state
-                                                        .no_file
-                                                })}
-                                                type="submit"
+                                            <Button
+                                                type="primary"
+                                                disabled={!!this.state.no_file}
+                                                htmlType="submit"
+                                                style={{marginRight: "16px"}}
                                             >
                                                 <Translate content="wallet.submit" />
-                                            </button>
+                                            </Button>
                                             {cancelButton}
                                         </div>
                                     </form>
@@ -940,15 +968,18 @@ class ImportKeys extends Component {
     }
 }
 
-ImportKeys = connect(ImportKeys, {
-    listenTo() {
-        return [ImportKeysStore];
-    },
-    getProps() {
-        return {
-            importing: ImportKeysStore.getState().importing
-        };
+ImportKeys = connect(
+    ImportKeys,
+    {
+        listenTo() {
+            return [ImportKeysStore];
+        },
+        getProps() {
+            return {
+                importing: ImportKeysStore.getState().importing
+            };
+        }
     }
-});
+);
 
 export default ImportKeys;

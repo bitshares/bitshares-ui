@@ -1,0 +1,256 @@
+div.registration {
+    padding-top: 3rem;
+    background-color: initial;
+
+    .registration-title {
+        font-weight: bold;
+    }
+
+    .model-img {
+        @include hide-for-only(small);
+        min-width: 350px;
+        opacity: 0.15;
+        transition-duration: 0.3s;
+
+        &.confirmed {
+            opacity: 1;
+        }
+    }
+
+    .model-img-overlay {
+        @include hide-for-only(small);
+        min-width: 350px;
+        top: 0;
+        position: absolute;
+        clip: rect(0, 0, 400px, 0);
+    }
+
+    .create-account-block {
+        max-width: 700px;
+        width: 100%;
+        padding: 0 15px;
+        text-align: left;
+
+        span.inline-label {
+            max-width: 30rem;
+
+            &.generated-password-field {
+                margin-bottom: 1.5rem;
+            }
+
+            .button {
+                border-radius: 0;
+            }
+
+            input {
+                padding-right: 0;
+            }
+        }
+
+        @include breakpoint(large) {
+            .account-name,
+            .account-selector {
+                width: 77%;
+            }
+        }
+
+        h3 {
+            margin-bottom: 15px;
+            font-size: 32px;
+            line-height: 26px;
+        }
+
+        .confirm-checks {
+            h3 {
+                margin-bottom: 28px;
+            }
+        }
+
+        .model-description {
+            max-width: 560px;
+            margin-bottom: 27px;
+            font-size: 14px;
+            letter-spacing: 0.06px;
+            line-height: 20px;
+        }
+
+        button.button-primary {
+            margin-top: 23px;
+            padding: 8px 25px;
+            border-radius: 20px;
+        }
+
+        button.disabled {
+            opacity: 0.1;
+        }
+
+        .checkbox-block {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 19px;
+            cursor: pointer;
+
+            span {
+                vertical-align: middle;
+            }
+        }
+
+        .checkbox-text {
+            margin-left: 10px;
+            font-size: 14px;
+            letter-spacing: 0.06px;
+            line-height: 20px;
+        }
+
+        .download-btn {
+            margin-top: 16px;
+            padding: 11px 35px;
+            border-radius: 30px;
+
+            .download-block {
+                display: flex;
+
+                .bin-img {
+                    margin-right: 16px;
+                }
+
+                .download-text {
+                    font-size: 16px;
+                    letter-spacing: 0.07px;
+                    line-height: 20px;
+                }
+
+                .file-name {
+                    margin-bottom: 0;
+                    font-size: 11px;
+                    letter-spacing: -0.13px;
+                    line-height: 15px;
+                }
+            }
+        }
+
+        .registration-layout-select {
+            max-width: 30rem;
+            border-radius: 0;
+        }
+
+        .why-bin-file {
+            margin-top: 10px;
+            width: fit-content;
+        }
+
+        @include breakpoint(large) {
+            margin-left: 60px;
+        }
+    }
+
+    div.sub-content {
+        padding-top: 1rem;
+        table {
+            text-align: left;
+        }
+        p {
+            word-wrap: break-word;
+            max-width: 30rem;
+            text-align: left;
+        }
+    }
+
+    div.button-group {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 2rem;
+        label {
+            > span {
+                text-transform: none;
+                font-size: 90%;
+            }
+            &:first-of-type {
+                margin-right: 3rem;
+            }
+        }
+    }
+    div.button {
+        border-radius: 20px;
+        padding: 11px 25px;
+    }
+
+    div.button.disabled {
+        opacity: 0.1;
+    }
+
+    .password-copy-button {
+        padding: 10px;
+        border-radius: 0 5px 5px 0;
+        display: inline;
+        right: 0;
+        position: absolute;
+    }
+
+    .generated-password-section {
+        position: relative;
+        display: inline;
+    }
+}
+
+@include breakpoint(small only) {
+    div.registration {
+        padding-top: 14px;
+
+        .create-account-block {
+            h3 {
+                margin-bottom: 4px;
+                font-size: 20px;
+                line-height: 24px;
+            }
+
+            .model-description {
+                margin-bottom: 17px;
+                font-size: 12px;
+                letter-spacing: 0.05px;
+                line-height: 16px;
+            }
+
+            button.button-primary {
+                margin-top: 8px;
+            }
+
+            p {
+                max-width: 100%;
+            }
+
+            .download-btn {
+                width: 100%;
+                margin-top: 9px;
+
+                .download-block {
+                    justify-content: center;
+                }
+            }
+
+            .confirm-checks {
+                h3 {
+                    margin: 14px 0 15px 0;
+                }
+            }
+
+            .checkbox-block {
+                margin-bottom: 16px;
+            }
+
+            .checkbox-text {
+                font-size: 12px;
+                letter-spacing: 0.05px;
+                line-height: 18px;
+            }
+
+            .registration-layout-select {
+                max-width: 100%;
+            }
+
+            .why-bin-file {
+                margin: 10px auto;
+            }
+        }
+    }
+}

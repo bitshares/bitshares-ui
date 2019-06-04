@@ -9,13 +9,23 @@ import {gatewayPrefixes} from "common/gateways";
 let inProgress = {};
 
 class AssetActions {
-    publishFeed({publisher, asset_id, mcr, mssr, settlementPrice, cer}) {
+    publishFeed({publisher, asset_id, mcr, mssr, feedPrice, cer}) {
         let tr = WalletApi.new_transaction();
+        /**
+         * The naming convention is confusing!
+         *
+         * bitshares-core knows only settlement_price, which is the feed price as known from UI!
+         *
+         * UI definition:
+         *  - Feed Price: Witness fed price, given by backend as settlement_price
+         *  - Settlement Price: feed price * force settlement offset factor
+         *
+         */
         tr.add_type_operation("asset_publish_feed", {
             publisher,
             asset_id,
             feed: {
-                settlement_price: settlementPrice.toObject(),
+                settlement_price: feedPrice.toObject(),
                 maintenance_collateral_ratio: mcr,
                 maximum_short_squeeze_ratio: mssr,
                 core_exchange_rate: cer.toObject()
@@ -84,6 +94,43 @@ class AssetActions {
                 .catch(error => {
                     console.log(
                         "[AssetActions.js:150] ----- claimPool error ----->",
+                        error
+                    );
+                    dispatch(false);
+                });
+        };
+    }
+
+    bidCollateral(account_id, core, asset, coll, debt) {
+        let core_precision = utils.get_asset_precision(core.get("precision"));
+        let asset_precision = utils.get_asset_precision(asset.get("precision"));
+
+        var tr = WalletApi.new_transaction();
+        tr.add_type_operation("bid_collateral", {
+            fee: {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            bidder: account_id,
+            additional_collateral: {
+                amount: coll * core_precision,
+                asset_id: core.get("id")
+            },
+            debt_covered: {
+                amount: debt * asset_precision,
+                asset_id: asset.get("id")
+            },
+            extensions: []
+        });
+
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log(
+                        "[AssetActions.js:122] ----- collateralBid error ----->",
                         error
                     );
                     dispatch(false);
