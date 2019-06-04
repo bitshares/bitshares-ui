@@ -7,7 +7,7 @@ Closes #[Insert issue number]
 Please make sure the following is done:
 
 - Pull request is onto develop
-- If you haven't already, have a look at 
+- If you haven't already, have a look at
   - https://github.com/bitshares/bitshares-ui/blob/develop/CODE_OF_CONDUCT.md
   - https://github.com/bitshares/bitshares-ui/blob/develop/CONTRIBUTING.md
 
