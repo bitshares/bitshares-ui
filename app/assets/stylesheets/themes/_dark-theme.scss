@@ -92,8 +92,30 @@ $settings-label-color: rgba(255, 255, 255, 0.5);
 
 //
 
+// color palette
+
+// branding colors
+$primary-color: #337ab7;
+
+// help colors
+$white: #fff;
+$dark: rgba(0, 0, 0, 0.6);
+
+// Header
+$header-background-color: $white;
+$header-item--color: $dark;
+$header-item-background-color: $white;
+$header-item--active--background-color: $white;
+
+$header-item--active--color: $primary-color;
+
 .darkTheme {
     @include theme(
+        $header-background-color,
+        $header-item--color,
+        $header-item-background-color,
+        $header-item--active--background-color,
+        $header-item--active--color,
         $explorer-tab-content-background-color,
         $tab-content-background-color,
         $primary-text-color,

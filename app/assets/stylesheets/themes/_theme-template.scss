@@ -2,6 +2,11 @@
 @import "./../style-guide-fixes";
 
 @mixin theme(
+    $header-background-color,
+    $header-item--color,
+    $header-item-background-color,
+    $header-item--active--background-color,
+    $header-item--active--color,
     $explorer-tab-content-background-color,
     $tab-content-background-color,
     $primary-text-color,
@@ -2095,7 +2100,39 @@
         background-color: transparent !important;
     }
     .header-container {
-        background-color: $account-background;
+        background-color: $header-background-color;
+
+        box-shadow: 0 0 7px rgba(0, 0, 0, 0.1) !important;
+
+        z-index: 1;
+
+        .menu-group {
+            .menu-bar {
+                li {
+                    a {
+                        text-decoration: none;
+                        background: $header-item-background-color;
+                        color: $header-item--color;
+                        svg path {
+                            fill: $header-item--color !important;
+                        }
+                        &:hover {
+                            color: $header-item--active--color;
+                            svg path {
+                                fill: $header-item--active--color !important;
+                            }
+                        }
+                        &.active {
+                            color: $header-item--active--color;
+                            svg path {
+                                fill: $header-item--active--color !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         .menu-dropdown-wrapper {
             &.active {
                 background: $panel-bg-color;
