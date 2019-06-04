@@ -206,7 +206,7 @@ const ApplicationApi = {
                     memo: memo_object
                 });
                 if (__DEV__) {
-                    console.log("built transfer", transfer_op);
+                    console.log("built transfer", transfer_op, tr);
                 }
                 return {
                     transfer_op,

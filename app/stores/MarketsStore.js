@@ -294,10 +294,10 @@ class MarketsStore {
             this.activeMarket = result.market;
             newMarket = true;
             /*
-            * To prevent the callback from DataFeed to be called with new data
-            * before subscribeBars in DataFeed has been updated, we clear the
-            * callback subscription here
-            */
+             * To prevent the callback from DataFeed to be called with new data
+             * before subscribeBars in DataFeed has been updated, we clear the
+             * callback subscription here
+             */
             this.unsubscribe("subscribeBars");
         }
 
@@ -662,11 +662,11 @@ class MarketsStore {
             };
 
             /*
-            * If the feed price changed, we need to check whether the orders
-            * being margin called have changed and filter accordingly. To do so
-            * we recreate the marketCallOrders map from scratch using the
-            * previously fetched data and the new feed price.
-            */
+             * If the feed price changed, we need to check whether the orders
+             * being margin called have changed and filter accordingly. To do so
+             * we recreate the marketCallOrders map from scratch using the
+             * previously fetched data and the new feed price.
+             */
             this.marketCallOrders = this.marketCallOrders.clear();
             this.allCallOrders.forEach(call => {
                 // ChainStore._updateObject(call, false, false);
@@ -1103,9 +1103,9 @@ class MarketsStore {
 
     _saveMarketStats() {
         /*
-        * Only save stats once every 30s to limit writes and
-        * allMarketStats JS conversions
-        */
+         * Only save stats once every 30s to limit writes and
+         * allMarketStats JS conversions
+         */
         if (!this.saveStatsTimeout) {
             this.saveStatsTimeout = setTimeout(() => {
                 marketStorage.set("allMarketStats", this.allMarketStats.toJS());

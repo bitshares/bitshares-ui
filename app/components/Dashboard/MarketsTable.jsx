@@ -12,6 +12,7 @@ import {Input, Tooltip} from "bitshares-ui-style-guide";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
 import {Link} from "react-router-dom";
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 
 class MarketsTable extends React.Component {
     constructor() {
@@ -505,7 +506,7 @@ class MarketsTable extends React.Component {
                             type="text"
                             placeholder="Filter..."
                             onChange={this._handleFilterInput.bind(this)}
-                            addonAfter={<Icon type="search" />}
+                            addonAfter={<AntIcon type="search" />}
                         />
                     </div>
 
