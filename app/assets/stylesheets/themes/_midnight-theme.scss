@@ -132,8 +132,8 @@ $tabs-content-background-color: $primary-dark;
 $selector-active-border-color: $primary-color;
 $selector-active-text-color: $primary-color;
 
-$selector-border-color: $dark-3;
-$selector-text-color: $dark-1;
+$selector-border-color: lighten($primary-dark, 5%);
+$selector-text-color: lighten($primary-dark, 35%);
 
 // Header Menu
 
