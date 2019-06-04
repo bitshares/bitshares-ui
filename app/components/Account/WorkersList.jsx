@@ -261,39 +261,6 @@ class WorkerList extends React.Component {
                           );
                       }
                   },
-            {
-                className: "column-hide-small",
-                title: (
-                    <span>
-                        <Translate
-                            content="account.votes.daily_pay"
-                            style={{whiteSpace: "nowrap"}}
-                        />
-                        <div
-                            style={{
-                                paddingTop: 5,
-                                fontSize: "0.8rem"
-                            }}
-                        >
-                            (<AssetName name={preferredUnit} />)
-                        </div>
-                    </span>
-                ),
-                dataIndex: "daily_pay",
-                align: "right",
-                sorter: (a, b) => a.daily_pay.daily_pay - b.daily_pay.daily_pay,
-                render: item => {
-                    return (
-                        <EquivalentValueComponent
-                            hide_asset
-                            fromAsset="1.3.0"
-                            toAsset={item.preferredUnit}
-                            amount={item.daily_pay}
-                            style={{whiteSpace: "nowrap"}}
-                        />
-                    );
-                }
-            },
             workerTableIndex === 2 || workerTableIndex === 0
                 ? null
                 : {
@@ -341,6 +308,39 @@ class WorkerList extends React.Component {
                           );
                       }
                   },
+            {
+                className: "column-hide-small",
+                title: (
+                    <span>
+                        <Translate
+                            content="account.votes.daily_pay"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                        <div
+                            style={{
+                                paddingTop: 5,
+                                fontSize: "0.8rem"
+                            }}
+                        >
+                            (<AssetName name={preferredUnit} />)
+                        </div>
+                    </span>
+                ),
+                dataIndex: "daily_pay",
+                align: "right",
+                sorter: (a, b) => a.daily_pay.daily_pay - b.daily_pay.daily_pay,
+                render: item => {
+                    return (
+                        <EquivalentValueComponent
+                            hide_asset
+                            fromAsset="1.3.0"
+                            toAsset={item.preferredUnit}
+                            amount={item.daily_pay}
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    );
+                }
+            },
             {
                 className: "column-hide-small",
                 title: (

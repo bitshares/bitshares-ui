@@ -2352,7 +2352,7 @@
     },
     "voting": {
         "title": "Voting",
-        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (on-chain parameter governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls)."
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls)."
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",
