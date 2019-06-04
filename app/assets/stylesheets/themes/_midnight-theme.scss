@@ -137,10 +137,10 @@ $selector-text-color: lighten($primary-dark, 35%);
 
 // Header Menu
 
-$header-menu--active--icon-background: $white;
+$header-menu--active--icon-background: $primary-dark;
 $header-menu--active--box-shadow: 0 4px 9px 0 #00000015;
-$header-menu-background-color: #fff;
-$header-menu-item--hover--background-color: lighten($primary-color, 40%);
+$header-menu-background-color: lighten($primary-dark, 5%);
+$header-menu-item--hover--background-color: lighten($primary-dark, 10%);
 
 .midnightTheme {
     @include theme(
