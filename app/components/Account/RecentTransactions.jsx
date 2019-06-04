@@ -399,13 +399,9 @@ class RecentTransactions extends React.Component {
               })
             : [];
         let action = (
-            <tr className="total-value" key="total_value">
-                <td style={{textAlign: "center"}}>&nbsp;</td>
-                <td />
-                <td />
-                <td />
-                <td />
-            </tr>
+            <div className="total-value" key="total_value">
+                <span style={{textAlign: "center"}}>&nbsp;</span>
+            </div>
         );
 
         const footer = (

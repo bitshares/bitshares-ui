@@ -409,51 +409,55 @@ class AccountSelector extends React.Component {
                 : undefined;
 
         return (
-            <Form
-                className="full-width"
-                layout="vertical"
-                style={this.props.style}
+            <Tooltip
+                className="input-area"
+                title={this.props.tooltip}
+                mouseEnterDelay={0.5}
             >
-                <Form.Item
-                    label={
-                        this.props.label
-                            ? counterpart.translate(this.props.label)
-                            : ""
-                    }
-                    validateStatus={error ? "error" : null}
-                    help={error ? error : null}
+                <Form
+                    className="full-width"
+                    layout="vertical"
+                    style={this.props.style}
                 >
-                    {this.props.label ? (
-                        <div
-                            className={
-                                "header-area" +
-                                (this.props.hideImage ? " no-margin" : "")
-                            }
-                        >
-                            <label
-                                className={cnames(
-                                    "right-label",
-                                    account &&
-                                    (account.isFavorite || account.isOwn)
-                                        ? "positive"
-                                        : null,
-                                    account && account.isKnownScammer
-                                        ? "negative"
-                                        : null
-                                )}
-                                style={{marginTop: -30}}
+                    <Form.Item
+                        label={
+                            this.props.label
+                                ? counterpart.translate(this.props.label)
+                                : ""
+                        }
+                        validateStatus={error ? "error" : null}
+                        help={error ? error : null}
+                    >
+                        {this.props.label ? (
+                            <div
+                                className={
+                                    "header-area" +
+                                    (this.props.hideImage ? " no-margin" : "")
+                                }
                             >
-                                <span style={{paddingRight: "0.5rem"}}>
-                                    {account && account.statusText}
-                                    &nbsp;
-                                    {!!displayText && displayText}
-                                </span>
-                                {linked_status}
-                            </label>
-                        </div>
-                    ) : null}
-                    {useHR && <hr />}
-                    <Tooltip className="input-area" title={this.props.tooltip}>
+                                <label
+                                    className={cnames(
+                                        "right-label",
+                                        account &&
+                                        (account.isFavorite || account.isOwn)
+                                            ? "positive"
+                                            : null,
+                                        account && account.isKnownScammer
+                                            ? "negative"
+                                            : null
+                                    )}
+                                    style={{marginTop: -30}}
+                                >
+                                    <span style={{paddingRight: "0.5rem"}}>
+                                        {account && account.statusText}
+                                        &nbsp;
+                                        {!!displayText && displayText}
+                                    </span>
+                                    {linked_status}
+                                </label>
+                            </div>
+                        ) : null}
+                        {useHR && <hr />}
                         <div className="inline-label input-wrapper">
                             {account && account.accountType === "pubkey" ? (
                                 <div className="account-image">
@@ -612,9 +616,9 @@ class AccountSelector extends React.Component {
                                 </Tooltip>
                             ) : null}
                         </div>
-                    </Tooltip>
-                </Form.Item>
-            </Form>
+                    </Form.Item>
+                </Form>
+            </Tooltip>
         );
     }
 }

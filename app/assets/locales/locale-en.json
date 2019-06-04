@@ -313,7 +313,7 @@
         },
         "votes": {
             "about": "About",
-            "active": "Active(%(count)s)",
+            "active": "Active (%(count)s)",
             "active_short": "Active",
             "add_committee": "Add",
             "add_committee_label": "Committee Member",
@@ -336,13 +336,15 @@
             "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Backup",
             "info": "Info",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "Line",
             "max_pay": "Maximum total pay",
             "missing": "Needed",
             "name": "Name",
-            "new": "Proposed(%(count)s)",
+            "new": "Proposed (%(count)s)",
             "no_proxy": "No Proxy",
-            "polls": "Polls(%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Manually enter an account as your proxy",
             "proxy_current": "Your current proxy is",
             "proxy_known": "Or choose an account as your proxy",
@@ -355,6 +357,7 @@
             "save_finish": "Click save to finish",
             "set_proxy": "Set a proxy here",
             "start": "Start date",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "status": {
                 "neutral": "Neutral",
                 "rejected": "Rejected",
@@ -1352,6 +1355,25 @@
         },
         "cancel": "cancel",
         "close": "close",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "witness_account": "Witness Account",
+            "invalid_key": "Public Key is invalid",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "public_signing_key": "Public Signing Key",
+            "enter_public_signing_key": "Enter your public signing key"
+        },
         "confirmation": {
             "accept": "Yes",
             "cancel": "No",
@@ -2051,8 +2073,8 @@
         "propose_tip": "Propose another user to initiate a transaction",
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
-        "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
-        "proxy_search": "Search for an account to be used as your proxy for voting",
+        "proxy_remove": "You have a proxy set, to remove it clear this input field and click save or directly click remove proxy",
+        "proxy_search": "Search for an account to be used as your proxy for voting. Your account will act as if you would be voting exactly the same as your proxy.",
         "registration": {
             "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
             "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
@@ -2338,6 +2360,10 @@
             "url": "The field should be url",
             "urlNamed": "%(name)s should be url"
         }
+    },
+    "voting": {
+        "title": "Voting",
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls)."
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",
