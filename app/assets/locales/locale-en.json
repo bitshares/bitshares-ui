@@ -726,6 +726,7 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "cumulative": "Cumulative",
             "collateral": {
                 "bid": "Bid Collateral",
                 "bid_price": "Bid price",
@@ -736,7 +737,12 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
-                "title": "Collateral Bids"
+                "title": "Collateral Bids",
+                "included": {
+                    "yes": "Yes",
+                    "no": "No",
+                    "partial": "Partially"
+                }
             },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
@@ -756,7 +762,10 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
-                "title": "Margin positions"
+                "title": "Margin positions",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns."
             },
             "not_found": "The asset %(name)s does not exist",
             "permissions": {
