@@ -71,6 +71,7 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     _onChange(e) {
+        console.log(e);
         if (this.props.onChange)
             this.props.onChange({
                 amount: this.getNumericEventValue(e),
@@ -79,6 +80,7 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     onAssetChange(selected_asset) {
+        console.log(selected_asset);
         if (this.props.onChange) {
             this.props.onChange({
                 amount: this.props.amount,
@@ -88,7 +90,6 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     render() {
-        console.log(this._getAsset());
         let value = this.props.error
             ? counterpart.translate(this.props.error)
             : this.formatAmount(this.props.amount);

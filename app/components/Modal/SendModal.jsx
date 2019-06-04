@@ -21,7 +21,6 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import {getWalletName} from "branding";
 import {Form, Modal, Button, Tooltip, Input} from "bitshares-ui-style-guide";
-import SetDefaultFeeAssetModal from "./SetDefaultFeeAssetModal";
 
 const EqualWidthContainer = ({children}) => (
     <div
@@ -40,6 +39,9 @@ const EqualWidthContainer = ({children}) => (
         </div>
     </div>
 );
+
+const getUninitializedFeeAmount = () =>
+    new Asset({amount: 0, asset_id: "1.3.0"});
 
 class SendModal extends React.Component {
     constructor(props) {
@@ -94,10 +96,8 @@ class SendModal extends React.Component {
             knownScammer: null,
             propose: false,
             propose_account: "",
-            // TODO extract
-            feeAsset: null,
-            fee_asset_id: "1.3.0",
-            feeAmount: new Asset({amount: 0}),
+            feeAmount: getUninitializedFeeAmount(),
+            // TODO extract ??
             feeStatus: {},
             maxAmount: false,
             hidden: false
@@ -129,10 +129,8 @@ class SendModal extends React.Component {
                 knownScammer: null,
                 propose: false,
                 propose_account: "",
-                // TODO extract
-                feeAsset: null,
-                fee_asset_id: "1.3.0",
-                feeAmount: new Asset({amount: 0}),
+                feeAmount: getUninitializedFeeAmount(),
+                // TODO extract ???
                 feeStatus: {},
                 maxAmount: false,
                 hidden: false
@@ -166,8 +164,7 @@ class SendModal extends React.Component {
                 ? new Buffer(this.state.memo, "utf-8")
                 : this.state.memo,
             this.state.propose ? this.state.propose_account : null,
-            // TODO extract
-            this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
+            this.state.feeAmount.asset_id
         )
             .then(() => {
                 this.onClose();
@@ -234,29 +231,21 @@ class SendModal extends React.Component {
         return true;
     }
 
-    // TODO extract
     componentWillReceiveProps(np) {
         if (
             np.currentAccount !== this.state.from_name &&
             np.currentAccount !== this.props.currentAccount
         ) {
-            this.setState(
-                {
-                    from_name: np.from_name,
-                    from_account: ChainStore.getAccount(np.from_name),
-                    to_name: np.to_name ? np.to_name : "",
-                    to_account: np.to_name
-                        ? ChainStore.getAccount(np.to_name)
-                        : null,
-                    feeStatus: {},
-                    fee_asset_id: "1.3.0",
-                    feeAmount: new Asset({amount: 0})
-                },
-                () => {
-                    this._updateFee();
-                    this._checkFeeStatus();
-                }
-            );
+            this.setState({
+                from_name: np.from_name,
+                from_account: ChainStore.getAccount(np.from_name),
+                to_name: np.to_name ? np.to_name : "",
+                to_account: np.to_name
+                    ? ChainStore.getAccount(np.to_name)
+                    : null,
+                feeStatus: {},
+                feeAmount: getUninitializedFeeAmount()
+            });
         }
     }
 
@@ -276,14 +265,16 @@ class SendModal extends React.Component {
             ? ChainStore.getObject(feeBalanceID)
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
+            this.setState(
+                {feeAmount: getUninitializedFeeAmount()},
+                this._updateFee
+            );
         }
         if (!balanceObject || !feeAmount) return;
         if (!amount) return this.setState({balanceError: false});
         const hasBalance = checkBalance(
             amount,
             asset,
-            // TODO feeAmount should be outed from fee asset selector
             feeAmount,
             balanceObject
         );
@@ -291,7 +282,7 @@ class SendModal extends React.Component {
         this.setState({balanceError: !hasBalance});
     }
 
-    // TODO extract
+    // TODO extract (it always returns empty object for statuses)
     _checkFeeStatus(state = this.state) {
         let {from_account, open} = state;
         if (!from_account || !open) return;
@@ -319,6 +310,7 @@ class SendModal extends React.Component {
                 assets.forEach((a, idx) => {
                     feeStatus[a] = status[idx];
                 });
+
                 if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
                     this.setState({
                         feeStatus
@@ -355,6 +347,7 @@ class SendModal extends React.Component {
 
     _getAvailableAssets(state = this.state) {
         // TODO extract
+        // FIXME incorrect state is used, why did it work? did it work at all?
         const {feeStatus} = this.state;
         function hasFeePoolBalance(id) {
             if (feeStatus[id] === undefined) return true;
@@ -379,7 +372,7 @@ class SendModal extends React.Component {
             let balanceObject = ChainStore.getObject(account_balances[key]);
             if (balanceObject && balanceObject.get("balance") === 0) {
                 asset_types.splice(asset_types.indexOf(key), 1);
-                if (fee_asset_types.indexOf(key) !== -1) {
+                if (fee_asset_types.includes(key)) {
                     fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
                 }
             }
@@ -396,18 +389,16 @@ class SendModal extends React.Component {
     _updateFee(state = this.state) {
         if (!state.open) return;
         // Original asset id should be passed to child component along with from_account
-        let {fee_asset_id, from_account, asset_id} = state;
+        let {feeAmount, from_account, asset_id} = state;
+        let feeID = feeAmount.asset_id;
         const {fee_asset_types} = this._getAvailableAssets(state);
-        if (
-            fee_asset_types.length === 1 &&
-            fee_asset_types[0] !== fee_asset_id
-        ) {
-            fee_asset_id = fee_asset_types[0];
+        if (fee_asset_types.length === 1 && fee_asset_types[0] !== feeID) {
+            feeID = fee_asset_types[0];
         }
         if (!from_account) return null;
         checkFeeStatusAsync({
             accountID: from_account.get("id"),
-            feeID: fee_asset_id,
+            feeID,
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
@@ -420,13 +411,13 @@ class SendModal extends React.Component {
                     should
                         ? this.setState(
                               {
+                                  // TODO how should it be handeled? Can it be not the same as fee?
                                   fee_asset_id: asset_id
                               },
                               this._updateFee
                           )
                         : this.setState({
                               feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
                               hasBalance,
                               hasPoolBalance,
                               error: !hasBalance || !hasPoolBalance
@@ -476,6 +467,7 @@ class SendModal extends React.Component {
 
     // TODO refactor after extraction
     onFeeChanged({asset}) {
+        // TODO feeAmount should be received from fee asset selector component
         if (!asset) return;
 
         if (typeof asset !== "object") {
@@ -484,8 +476,6 @@ class SendModal extends React.Component {
 
         this.setState(
             {
-                feeAsset: asset,
-                fee_asset_id: asset.get("id"),
                 error: null
             },
             this._updateFee
@@ -572,14 +562,9 @@ class SendModal extends React.Component {
             propose_account,
             feeAmount,
             amount,
-            error,
             to_name,
             from_name,
             memo,
-            // TODO extract
-            feeAsset,
-            // TODO extract
-            fee_asset_id,
             balanceError,
             hidden
         } = this.state;
@@ -603,7 +588,7 @@ class SendModal extends React.Component {
                 asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
+                let feeID = this.state.feeAmount.asset_id;
 
                 balance = (
                     <span>
@@ -828,10 +813,10 @@ class SendModal extends React.Component {
 
                                 <FeeAssetSelector
                                     label="transfer.fee"
-                                    disabled={false}
+                                    disabled={true}
                                     amount={fee}
                                     feeAmount={feeAmount}
-                                    fee_asset_id={fee_asset_id}
+                                    fee_asset_id={feeAmount.asset_id}
                                     onChange={this.onFeeChanged.bind(this)}
                                     assets={fee_asset_types}
                                     tabIndex={tabIndex++}
