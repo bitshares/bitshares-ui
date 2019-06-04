@@ -98,6 +98,7 @@ $settings-label-color: rgba(255, 255, 255, 0.5);
 $primary-color: #337ab7;
 
 // help colors
+$primary-dark: #191a1f;
 $white: #fff;
 $dark: rgba(0, 0, 0, 0.6);
 $dark-1: lighten($dark, 30%);
@@ -105,10 +106,10 @@ $dark-2: lighten($dark, 60%);
 $dark-3: lighten($dark, 90%);
 
 // Header
-$header-background-color: $white;
-$header-item--color: $dark;
-$header-item-background-color: $white;
-$header-item--active--background-color: $white;
+$header-background-color: $primary-dark;
+$header-item--color: $white;
+$header-item-background-color: $primary-dark;
+$header-item--active--background-color: $primary-dark;
 
 $header-item--active--color: $primary-color;
 
