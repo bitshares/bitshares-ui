@@ -2,6 +2,10 @@
 @import "./../style-guide-fixes";
 
 @mixin theme(
+    $selector-active-border-color,
+    $selector-active-text-color,
+    $selector-border-color,
+    $selector-text-color,
     $tabs-content-background-color,
     $tabs-border-size,
     $tabs-border-color,
@@ -79,6 +83,29 @@
     $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
+    .selector {
+        > * {
+            border: 1px solid $selector-border-color !important;
+            border-right: 0 !important;
+            color: $selector-text-color !important;
+
+            line-height: 1.6rem;
+            &:last-child {
+                border-right: 1px solid $selector-border-color !important;
+            }
+        }
+
+        > *:not(.inactive) {
+            color: $selector-active-text-color !important;
+            border: 1px solid $selector-active-border-color !important;
+        }
+
+        > *:not(.inactive) + * {
+            border-left: 0 !important;
+        }
+    }
+
     .showcases-grid {
         margin: 32px 0;
         display: flex;

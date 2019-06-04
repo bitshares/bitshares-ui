@@ -98,7 +98,9 @@ $primary-color: #337ab7;
 // help colors
 $white: #fff;
 $dark: rgba(0, 0, 0, 0.6);
-$dark-2: lighten($dark, 80%);
+$dark-1: lighten($dark, 30%);
+$dark-2: lighten($dark, 60%);
+$dark-3: lighten($dark, 90%);
 
 // Header
 $header-background-color: $white;
@@ -110,7 +112,7 @@ $header-item--active--color: $primary-color;
 
 // Tabs (old, not style-guide)
 $tabs-border-size: 1px;
-$tabs-border-color: $dark-2;
+$tabs-border-color: $dark-3;
 $tabs-background-color: $white;
 $tabs-item-background-color: $white;
 $tabs-item-color: $dark;
@@ -122,8 +124,20 @@ $tabs-item--active--background-color: $white;
 $tabs-item--active--border-color: $primary-color;
 $tabs-content-background-color: $white;
 
+// Selector
+
+$selector-active-border-color: $primary-color;
+$selector-active-text-color: $primary-color;
+
+$selector-border-color: $dark-3;
+$selector-text-color: $dark-1;
+
 .lightTheme {
     @include theme(
+        $selector-active-border-color,
+        $selector-active-text-color,
+        $selector-border-color,
+        $selector-text-color,
         $tabs-content-background-color,
         $tabs-border-size,
         $tabs-border-color,
