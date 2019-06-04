@@ -1133,7 +1133,8 @@
         "help": "Help",
         "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code",
-        "set": "Set"
+        "set": "Set",
+        "not_found": "Not found"
     },
     "header": {
         "account": "Account",

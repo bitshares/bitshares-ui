@@ -32,9 +32,10 @@ const AssetSelectView = ({
             {...props}
             optionFilterProp="children"
             filterOption={(input, option) =>
-                option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
             disabled={assets.filter(Map.isMap).length <= 1}
-            notFoundContent={counterpart.translate("exchange.no_data")}
+            notFoundContent={counterpart.translate("global.not_found")}
         >
             {assets.filter(Map.isMap).map(asset => {
                 const {name: replacedName, prefix} = utils.replaceName(asset);
