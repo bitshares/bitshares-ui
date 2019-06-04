@@ -1758,6 +1758,14 @@
             }
         }
     }
+
+    .danger > svg > path {
+        fill: darken($alert-color, 15%) !important;
+    }
+    .warning > svg > path {
+        fill: darken($warning-color, 15%) !important;
+    }
+
     tr.margin-row {
         > td.danger {
             background-color: darken($alert-color, 15%) !important;
