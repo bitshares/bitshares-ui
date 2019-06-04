@@ -736,8 +736,14 @@
                 "bid": "竞标价格",
                 "collateral": "追加抵押物",
                 "debt": "承担的债仓",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "抵押物竞价"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "申领手续费池余额",
                 "claim_fees": "领取手续费",
@@ -756,6 +762,9 @@
             "info": "资产信息",
             "invalid": "资产名 %(name)s 无效",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "抵押债仓"
             },
             "not_found": "资产 %(name)s 不存在",
@@ -910,6 +919,7 @@
             "children_authority_depth_warning": "此提案没有得到批准，因为一个许可值已经超过了最大权限值。",
             "failed": "失败",
             "failed_execute": "已批准，执行失败。",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "待处理",
             "pending_approval": "待处理批准。",
             "pending_review": "已批准, 检查时间.",
@@ -2367,6 +2377,7 @@
         "backup_explain": "点击按钮将生成一个后缀名为 .bin 的备份文件。这个备份文件使用你的钱包密码进行加密。其中包含该钱包中的所有私钥。通过它可以恢复钱包，或者在不同浏览器或者计算机间进行钱包迁移。",
         "backup_login": "备份 & 登录",
         "backup_new_account": "恭喜，你已经创建了一个新账户。强烈建议你立即备份你的钱包。如果你的计算机/浏览器发生意外，而你又没有备份文件，你将永久丢失钱包及其包含的数据和数字资产。",
+        "backup_types": "backup types",
         "backup_warning": "很明显你未备份你的私钥文件. 为了安全原因我们强烈建议用户在没有备份他们私钥的情况下不要登出.",
         "balance_claim_lookup": "查询余额",
         "balance_claims": "余额导入",
@@ -2476,6 +2487,7 @@
         "password_show": "显示我的密码",
         "paste_private": "将私钥粘贴在这里 (钱包导入格式 - WIF)",
         "pwd4brainkey": "输入密码后显示脑钱包密钥",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "准备导入",
         "reenter_brainkey": "请再输入一遍脑钱包密钥",
         "remember_me": "记住我",
@@ -2530,6 +2542,7 @@
         "wallet_model_2": "本地钱包模式的安全性最高，但只能在此电脑和此浏览器下使用。要在其他电脑或其他浏览器中使用该钱包的话，需要使用备份文件或脑钱包密钥对钱包进行迁移。",
         "wallet_model_3": "<li>多重签名账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
-        "wallet_password": "从任意地点使用密码登录"
+        "wallet_password": "从任意地点使用密码登录",
+        "wallet_types": "wallet types"
     }
 }

@@ -736,8 +736,14 @@
                 "bid": "Bid Precio",
                 "collateral": "Colateral Adicional",
                 "debt": "Deuda cubierta",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Ofertas Colaterales"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Balance de la cuota de la reclamación",
                 "claim_fees": "Reclamar tarifas",
@@ -756,6 +762,9 @@
             "info": "Información del activo",
             "invalid": "El nombre del activo %(name)s es invalido",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "posiciòn a margen"
             },
             "not_found": "El activo %(name)s no existe",
@@ -910,6 +919,7 @@
             "children_authority_depth_warning": "Es posible que esta propuesta no se apruebe porque un permiso excede la profundidad máxima de autoridad.",
             "failed": "Fallado",
             "failed_execute": "Aprobado, no se pudo ejecutar.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pendiente",
             "pending_approval": "Aprobación pendiente.",
             "pending_review": "Aprobado, tiempo de revisión.",
@@ -2367,6 +2377,7 @@
         "backup_explain": "Al hacer clic en el siguiente botón, se generará un archivo de respaldo con una estenciòn .bin . Este archivo está encriptado con su contraseña de billetera y contiene todas las claves privadas para sus cuentas. Se puede usar para restaurar tu billetera o moverla a una computadora / navegador diferente.",
         "backup_login": "Apoyo (Backup) & iniciar sesion",
         "backup_new_account": "Felicidades, acaba de crear una nueva cuenta en los BitShares blockchain! Se recomienda encarecidamente que haga una copia de seguridad de su cartera ahora. Sin un respaldo que no hay manera de restaurar su cuenta si algo le sucede a su computadora.",
+        "backup_types": "backup types",
         "backup_warning": "Parece que sus archivos de clave privada no están respaldados. Por razones de seguridad, recomendamos a los usuarios que no inicien sesión sin hacer una copia de seguridad de sus claves privadas.",
         "balance_claim_lookup": "Búsquedas de saldos",
         "balance_claims": "Balances Solicitados",
@@ -2476,6 +2487,7 @@
         "password_show": "muéstrame la contraseña",
         "paste_private": "Pegar claves privadas aquí (Wallet Import Format - WIF)",
         "pwd4brainkey": "Ingrese el password para ver su brainkey",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Lista para Restaurar",
         "reenter_brainkey": "Re-Ingrese Brainkey",
         "remember_me": "Recuérdame",
@@ -2530,6 +2542,7 @@
         "wallet_model_2": "La billetera local tiene la mejor seguridad, pero está restringida a su navegador y computadora actuales. Para migrar la billetera a otro navegador o computadora, puede usar el archivo de copia de seguridad o Brainkey.",
         "wallet_model_3": "<li>Multiples cuentas</li><li>Se requiere una copia de seguridad del archivo Wallet</li><li>Alta seguridad</li>",
         "wallet_move": "Este archivo de respaldo también se puede usar para mover su billetera local a diferentes computadoras o navegadores diferentes. ¡Para restaurar su billetera local usando esta copia de seguridad <strong>, también necesitará su contraseña </strong>",
-        "wallet_password": "Inicie sesión en cualquier lugar con su contraseña"
+        "wallet_password": "Inicie sesión en cualquier lugar con su contraseña",
+        "wallet_types": "wallet types"
     }
 }

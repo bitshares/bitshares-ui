@@ -730,8 +730,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Ücretleri talep et",
@@ -750,6 +756,9 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Margin positions"
             },
             "not_found": "%(name)s diye bir dijital varlık mevcut değil",
@@ -904,6 +913,7 @@
             "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
@@ -2361,6 +2371,7 @@
         "backup_explain": "Aşağıdaki butona tıkladığınızda .bin uzantılı bir yedekleme dosyası oluşturulacaktır. Bu dosya, cüzdan şifreniz ile şifrelenmiştir, ve kendi şifreniz ile birlikte kullanıldığında cüzdanınıza tam erişim sağlar. Yedekleme dosyasını cüzdanınızı başka bir tarayıcı ya da bilgisayara taşımak için de kullanabilirsiniz.",
         "backup_login": "Backup & login",
         "backup_new_account": "Tebrikler, yeni hesabınız oluşturuldu. Lütfen cüzdanınızı yedekleyin. Cüzdanınıza ya da bilgisayarınıza erişiminizi kaybetseniz bile TekAnahtar ile, ya da .bin dosyası ve şifrenizle hesabınıza tekrar erişebilirsiniz.",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Bakiye Arama",
         "balance_claims": "Bakiye Talepleri",
@@ -2470,6 +2481,7 @@
         "password_show": "Şifreyi göster",
         "paste_private": "Özel anahtarı buraya kopyalayın (WIF formatında)",
         "pwd4brainkey": "TekAnahtarı göstermek için şifrenizi girin.",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Eski Haline Dönmeye Hazır",
         "reenter_brainkey": "TekAnahtarı tekrar gir",
         "remember_me": "Remember me",
@@ -2524,6 +2536,7 @@
         "wallet_model_2": "Cüzdan Sistemi en yüksek güvenlikli yöntemdir, fakat bu sistemi seçtiğinizde bir başka tarayıcı ya da bilgisayardan hesabınıza erişmek için TekAnahtar ya da .bin dosyası gerekmektedir.",
         "wallet_model_3": "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
         "wallet_move": "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
-        "wallet_password": "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz."
+        "wallet_password": "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz.",
+        "wallet_types": "wallet types"
     }
 }

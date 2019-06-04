@@ -736,8 +736,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Gebührenguthaben einfordern",
                 "claim_fees": "Gebühren einfordern",
@@ -756,6 +762,9 @@
             "info": "Anlagen Info",
             "invalid": "Der Anlagenname %(name)s ist ungültig",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Sicherheiten Positionen"
             },
             "not_found": "Die Anlage %(name)s existiert nicht",
@@ -910,6 +919,7 @@
             "children_authority_depth_warning": "Dieser Antrag wird nicht angenommen werden, weil die benötigten Befugnisse nicht ausreichen.",
             "failed": "Gescheitert",
             "failed_execute": "Angenommen, jedoch gescheitert bei der Ausführung.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Schwebend",
             "pending_approval": "Schwebende Annahme.",
             "pending_review": "Angenommen, aktuell im Bewertungszeitraum",
@@ -2367,6 +2377,7 @@
         "backup_explain": "Durch das Klicken auf den Knopf darunter, wird eine Sicherungsdatei mit der .bin-Endung erstellt. Diese Datei wird mit Ihrem Passwort verschlüsselt und beinhaltet alle privaten Schlüssel von Ihrem Konto. Diese Datei kann benutzt werden, um Ihre Wallet wiederherzustellen oder zu einem anderen Computer/Browser zu wechseln.",
         "backup_login": "Sicherung & Anmeldung",
         "backup_new_account": "Glückwunsch, Sie haben gerade ein neues Konto auf der Bitshares Blockchain erstellt! Sie sollten jetzt auf jeden Fall eine Sicherung Ihrer Wallet erstellen! Ohne Sicherung gibt es keine Möglichkeit auf Ihr Konto zugreifen zu können.",
+        "backup_types": "backup types",
         "backup_warning": "Es schaut so aus, als wäre Ihre private Schlüssel-Datei noch nicht gesichert worden. Aus Gründen der Sicherheit empfehlen wir keine Anmeldung ohne Sicherungskopie Ihres privaten Schlüssels.",
         "balance_claim_lookup": "Guthaben anschauen",
         "balance_claims": "Guthaben einfordern",
@@ -2476,6 +2487,7 @@
         "password_show": "Passwort anzeigen",
         "paste_private": "Privaten Schlüssel hier einfügen (Wallet Import Format - WIF)",
         "pwd4brainkey": "Passwort eingeben, um Gedächtnisschlüssel anzuzeigen",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Fertig für Wiederherstellung",
         "reenter_brainkey": "Gedächtnisschlüssel bestätigen",
         "remember_me": "Remember me",
@@ -2530,6 +2542,7 @@
         "wallet_model_2": "Eine lokale Wallet bietet die beste Sicherheit, ist aber an den aktuellen Browser und Computer gebunden. Zur Migration auf ein anderes System, sollten Sie die Sicherungskopie (bin-Datei) oder den Gedächtnisschlüssel nutzen.",
         "wallet_model_3": "<li>Verschiedene Konten</li><li>Wallet Sicherung (Backup) benötigt</li><li>Hohe Sicherheit</li>",
         "wallet_move": "Diese Sicherungsdatei kann auch benutzt werden, um Ihre lokale Wallet, auf einen anderen Browser oder Computer zu benutzen. Damit Sie Ihre lokale Wallet wiederherstellen können, <strong>benötigen Sie auch Ihr Passwort!</strong>",
-        "wallet_password": "Anmeldung von überall möglich, durch Ihr Passwort."
+        "wallet_password": "Anmeldung von überall möglich, durch Ihr Passwort.",
+        "wallet_types": "wallet types"
     }
 }

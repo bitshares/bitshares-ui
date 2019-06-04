@@ -730,8 +730,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Riscuoti commissioni",
@@ -750,6 +756,9 @@
             "info": "Asset info",
             "invalid": "Il nome di asset %(name)s non è valido",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Posizioni con margine"
             },
             "not_found": "L'asset %(name)s non esiste",
@@ -904,6 +913,7 @@
             "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
@@ -2361,6 +2371,7 @@
         "backup_explain": "Cliccando il seguente tasto verrà generato un file di backup con estensione .bin. Questo file è crittografato con la password del tuo portafoglio, e contiene tutte le chiavi private per i tuoi account. Può essere usato per ripristinare il tuo portafoglio, o spostarlo su un altro computer/browser.",
         "backup_login": "Backup & login",
         "backup_new_account": "Congratulazioni, hai appena creato un nuovo account! È fortemente consigliato effettuare adesso il backup del tuo portafoglio. Senza un backup, non c'è nessun modo per recuperare il tuo portafoglio se succede qualcosa al tuo computer.",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Cerca saldi",
         "balance_claims": "Riscossione Saldi",
@@ -2470,6 +2481,7 @@
         "password_show": "Mostrami la mia password",
         "paste_private": "Incolla qui le chiavi private (Wallet Import Format - WIF)",
         "pwd4brainkey": "Inserisci la tua password per mostrare la tua brainkey",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Pronto al ripristino",
         "reenter_brainkey": "Reinserisci brainkey",
         "remember_me": "Remember me",
@@ -2524,6 +2536,7 @@
         "wallet_model_2": "La modalità portafoglio è la più sicura, ma è limitata al tuo computer e al tuo browser corrente. Per spostare il portafoglio su un altro browser o computer, puoi utilizzare il file di backup o la brainkey.",
         "wallet_model_3": "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
         "wallet_move": "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
-        "wallet_password": "Fai il login dovunque usando la tua password"
+        "wallet_password": "Fai il login dovunque usando la tua password",
+        "wallet_types": "wallet types"
     }
 }

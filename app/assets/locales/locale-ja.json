@@ -730,8 +730,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
@@ -750,6 +756,9 @@
             "info": "Asset info",
             "invalid": "アセット名%(name)sは無効です",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "マージンポジション"
             },
             "not_found": "アセット%(name)sは存在しません",
@@ -904,6 +913,7 @@
             "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
@@ -2361,6 +2371,7 @@
         "backup_explain": "下のボタンをクリックすると、拡張子 .bin のバックアップファイルが生成されます。このファイルはウォレットのパスワードで暗号化されており、アカウントのすべての秘密キーを含んでいます。ウォレットのリストアや他のコンピュータ / ブラウザへの移動に使用することができます。",
         "backup_login": "Backup & login",
         "backup_new_account": "おめでとうございます。新しいアカウントを作成しました。今すぐウォレットのバックアップを作成することを強く推奨します。バックアップがない場合、コンピュータに何か問題が発生した場合にリストアすることはできません。",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "残高を検索",
         "balance_claims": "残高請求",
@@ -2470,6 +2481,7 @@
         "password_show": "パスワードを表示する",
         "paste_private": "秘密キーをここに貼り付けてください (Wallet Import Format - WIF)",
         "pwd4brainkey": "ブレインキーを表示するにはパスワードを入力してください",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "リストアできます",
         "reenter_brainkey": "ブレインキーを再入力してください",
         "remember_me": "Remember me",
@@ -2524,6 +2536,7 @@
         "wallet_model_2": "ウォレットモデルは最高のセキュリティを備えていますが、現在のブラウザとコンピュータに制限されます。ウォレットを他のブラウザやコンピュータに移行するには、バックアップまたはブレインキーを使用します。",
         "wallet_model_3": "<li>複数アカウント</li><li>ウォレットファイルのバックアップが必要</li><li>高度なセキュリティ</li>",
         "wallet_move": "このバックアップファイルによって、他のコンピュータやブラウザにウォレットを移動することができます。このバックアップを使用してウォレットをリストアするには、<strong>あなたのパスワードが必要です！</strong>",
-        "wallet_password": "パスワードを使用してどこでもログイン"
+        "wallet_password": "パスワードを使用してどこでもログイン",
+        "wallet_types": "wallet types"
     }
 }
