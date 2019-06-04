@@ -115,17 +115,17 @@ $header-item--active--color: $primary-color;
 
 // Tabs (old, not style-guide)
 $tabs-border-size: 1px;
-$tabs-border-color: $dark-3;
-$tabs-background-color: $white;
-$tabs-item-background-color: $white;
-$tabs-item-color: $dark;
+$tabs-border-color: lighten($primary-dark, 5%);
+$tabs-background-color: $primary-dark;
+$tabs-item-background-color: $primary-dark;
+$tabs-item-color: $white;
 $tabs-item-border-size: 3px;
-$tabs-item-border-color: $white;
+$tabs-item-border-color: $primary-dark;
 $tabs-item--active--color: $dark;
 $tabs-item--active--border-color: $primary-color;
-$tabs-item--active--background-color: $white;
+$tabs-item--active--background-color: $primary-dark;
 $tabs-item--active--border-color: $primary-color;
-$tabs-content-background-color: $white;
+$tabs-content-background-color: $primary-dark;
 
 // Selector
 
