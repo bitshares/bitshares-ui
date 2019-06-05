@@ -38,10 +38,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- fundPool error ----->",
-                        error
-                    );
+                    console.log("----- fundPool error ----->", error);
                     dispatch(false);
                 });
         };
@@ -66,10 +63,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- fundPool error ----->",
-                        error
-                    );
+                    console.log("----- fundPool error ----->", error);
                     dispatch(false);
                 });
         };
@@ -92,10 +86,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- claimPool error ----->",
-                        error
-                    );
+                    console.log("----- claimPool error ----->", error);
                     dispatch(false);
                 });
         };
@@ -129,10 +120,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:122] ----- collateralBid error ----->",
-                        error
-                    );
+                    console.log("----- collateralBid error ----->", error);
                     dispatch(false);
                 });
         };
@@ -155,10 +143,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- updateOwner error ----->",
-                        error
-                    );
+                    console.log("----- updateOwner error ----->", error);
                     dispatch(false);
                 });
         };
@@ -183,7 +168,7 @@ class AssetActions {
                 })
                 .catch(error => {
                     console.log(
-                        "[AssetActions.js:150] ----- updateFeedProducers error ----->",
+                        "----- updateFeedProducers error ----->",
                         error
                     );
                     dispatch(false);
@@ -211,10 +196,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- claimFees error ----->",
-                        error
-                    );
+                    console.log("----- claimFees error ----->", error);
                     dispatch(false);
                 });
         };
@@ -252,14 +234,10 @@ class AssetActions {
         let max_market_fee = new big(createObject.max_market_fee || 0)
             .times(precision)
             .toString();
-        // console.log("max_supply:", max_supply);
-        // console.log("max_market_fee:", max_market_fee);
 
         let corePrecision = utils.get_asset_precision(
             ChainStore.getAsset(cer.base.asset_id).get("precision")
         );
-
-        console.log("Now reward_percent = " + createObject.reward_percent);
 
         let operationJSON = {
             fee: {
@@ -312,10 +290,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- createAsset error ----->",
-                        error
-                    );
+                    console.log("----- createAsset error ----->", error);
                     dispatch(false);
                 });
         };
@@ -373,6 +348,14 @@ class AssetActions {
                 .times(cr_base_precision)
                 .toString();
 
+            let extensions = asset.getIn(["options", "extensions"]).toJS();
+            if (update.reward_percent !== undefined) {
+                extensions.reward_percent = update.reward_percent * 100;
+            }
+            if (auths.whitelist_market_fee_sharing) {
+                extensions.whitelist_market_fee_sharing = auths.whitelist_market_fee_sharing.toJS();
+            }
+
             let updateObject = {
                 fee: {
                     amount: 0,
@@ -393,10 +376,7 @@ class AssetActions {
                     blacklist_authorities: auths.blacklist_authorities.toJS(),
                     whitelist_markets: auths.whitelist_markets.toJS(),
                     blacklist_markets: auths.blacklist_markets.toJS(),
-                    extensions: {
-                        reward_percent: update.reward_percent * 100,
-                        whitelist_market_fee_sharing: auths.whitelist_market_fee_sharing.toJS()
-                    },
+                    extensions: extensions,
                     core_exchange_rate: {
                         quote: {
                             amount: cr_quote_amount,
@@ -481,10 +461,7 @@ class AssetActions {
                 return true;
             })
             .catch(error => {
-                console.log(
-                    "[AssetActions.js:150] ----- updateAsset error ----->",
-                    error
-                );
+                console.log("----- updateAsset error ----->", error);
                 return false;
             });
     }
@@ -606,10 +583,7 @@ class AssetActions {
                 })
                 .catch(error => {
                     dispatch(false);
-                    console.log(
-                        "[AssetActions.js:150] ----- reserveAsset error ----->",
-                        error
-                    );
+                    console.log("----- reserveAsset error ----->", error);
                     return false;
                 });
         };
