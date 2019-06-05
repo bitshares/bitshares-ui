@@ -439,19 +439,24 @@ class Asset extends React.Component {
         ) : null;
 
         // options.max_market_fee initially a string
-        var maxMarketFee = flagBooleans["charge_market_fee"] ? (
-            <tr>
-                <td>
-                    <Translate content="explorer.asset.summary.max_market_fee" />
-                </td>
-                <td>
-                    <FormattedAsset
-                        amount={+options.max_market_fee}
-                        asset={asset.id}
-                    />
-                </td>
-            </tr>
-        ) : null;
+        var marketFeeReferralReward =
+            flagBooleans["charge_market_fee"] &&
+            options.extensions &&
+            options.extensions.reward_percent >= 0 ? (
+                <tr>
+                    <td>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "account.user_issued_assets.reward_percent_tooltip"
+                            )}
+                        >
+                            <Translate content="explorer.asset.summary.market_fee_referral_reward_percent" />{" "}
+                            <Icon type="question-circle" theme="filled" />
+                        </Tooltip>
+                    </td>
+                    <td> {options.extensions.reward_percent / 100.0} % </td>
+                </tr>
+            ) : null;
 
         return (
             <div className="asset-card no-padding">
@@ -498,7 +503,7 @@ class Asset extends React.Component {
                         {currentSupply}
                         {stealthSupply}
                         {marketFee}
-                        {maxMarketFee}
+                        {marketFeeReferralReward}
                     </tbody>
                 </table>
                 <br />
@@ -1239,6 +1244,18 @@ class Asset extends React.Component {
             </div>
         ) : null;
 
+        let whitelist_market_fee_sharing = asset.options.extensions
+            .whitelist_market_fee_sharing && (
+            <React.Fragment>
+                <br />
+                <Translate content="explorer.asset.permissions.accounts_in_whitelist_market_fee_sharing" />
+                : &nbsp;
+                {this.renderAuthorityList(
+                    asset.options.extensions.whitelist_market_fee_sharing
+                )}
+            </React.Fragment>
+        );
+
         return (
             <div className="asset-card no-padding">
                 <div className="card-divider">
@@ -1259,6 +1276,7 @@ class Asset extends React.Component {
                 <br />
 
                 {whiteLists}
+                {whitelist_market_fee_sharing}
             </div>
         );
     }

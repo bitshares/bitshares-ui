@@ -781,7 +781,8 @@
                 "max_supply": "Max supply",
                 "title": "Permissions",
                 "whitelist_authorities": "Whitelist authorities",
-                "whitelist_markets": "Whitelist markets"
+                "whitelist_markets": "Whitelist markets",
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist"
             },
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
@@ -832,7 +833,7 @@
                 "current_supply": "Current supply",
                 "issuer": "Issuer",
                 "market_fee": "Market fee",
-                "max_market_fee": "Max market fee",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Stealth supply"
             },
             "title": "Asset",
