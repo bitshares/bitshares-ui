@@ -987,9 +987,11 @@ class MyMarkets extends React.Component {
                                         required="required"
                                         value={this.state.myMarketFilter}
                                         onChange={this.handleSearchUpdate}
-                                        onClear={() => this.handleSearchUpdate(
-                                            { target: { value: "" } }
-                                        )}
+                                        onClear={() =>
+                                            this.handleSearchUpdate({
+                                                target: {value: ""}
+                                            })
+                                        }
                                     />
                                 </div>
                             </form>

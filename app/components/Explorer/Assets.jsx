@@ -446,9 +446,11 @@ class Assets extends React.Component {
                                     value={this.state.filterSearch}
                                     style={{width: "200px"}}
                                     onChange={this.handleFilterChange}
-                                    onClear={() => this.handleFilterChange(
-                                        { target: { value: "" } }
-                                    )}
+                                    onClear={() =>
+                                        this.handleFilterChange({
+                                            target: {value: ""}
+                                        })
+                                    }
                                 />
                                 <Radio.Group
                                     value={this.state.activeFilter}

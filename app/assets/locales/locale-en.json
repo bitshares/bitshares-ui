@@ -293,6 +293,8 @@
             "primary": "Primary settings",
             "quote": "Quote asset amount",
             "quote_name": "Quote asset",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Short name (max 32 characters)",
             "symbol": "Symbol",
             "to": "Issue to account",
@@ -396,7 +398,8 @@
             "empty_white_by": "No accounts have whitelisted %(account)s.",
             "title": "Whitelist",
             "white_by": "Whitelisted by",
-            "whitelist_authorities": "Whitelist authority"
+            "whitelist_authorities": "Whitelist authority",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -778,7 +781,8 @@
                 "max_supply": "Max supply",
                 "title": "Permissions",
                 "whitelist_authorities": "Whitelist authorities",
-                "whitelist_markets": "Whitelist markets"
+                "whitelist_markets": "Whitelist markets",
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist"
             },
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
@@ -829,7 +833,7 @@
                 "current_supply": "Current supply",
                 "issuer": "Issuer",
                 "market_fee": "Market fee",
-                "max_market_fee": "Max market fee",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Stealth supply"
             },
             "title": "Asset",
@@ -838,7 +842,9 @@
                 "blacklist_markets": "Market blacklist",
                 "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities",
                 "whitelist_authorities": "Whitelist authorities",
-                "whitelist_markets": "Market whitelist"
+                "whitelist_markets": "Market whitelist",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist"
             }
         },
         "assets": {

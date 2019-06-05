@@ -161,8 +161,9 @@ export default connect(
         },
         getProps() {
             return {
-                viewOnlyMode: SettingsStore.getState()
-                    .settings.get("viewOnlyMode"),
+                viewOnlyMode: SettingsStore.getState().settings.get(
+                    "viewOnlyMode"
+                ),
                 currentAccount: AccountStore.getState().currentAccount
             };
         }

@@ -158,8 +158,7 @@ class SettingsStore {
             },
             rememberMe: [true, false],
             viewOnlyMode: [{translate: "show"}, {translate: "hide"}]
-        }
-        ;
+        };
     }
 
     /**

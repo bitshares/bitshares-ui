@@ -179,12 +179,13 @@ class News extends React.Component {
                             <div className="grid-block vertical">
                                 {isWrong && <SomethingWentWrong />}
                                 {isLoading ? <LoadingIndicator /> : null}
-                                {!isWrong && !isLoading && (
-                                    <NewsTable
-                                        width={width}
-                                        data={discussions}
-                                    />
-                                )}
+                                {!isWrong &&
+                                    !isLoading && (
+                                        <NewsTable
+                                            width={width}
+                                            data={discussions}
+                                        />
+                                    )}
                             </div>
                         </div>
                     </div>

@@ -529,14 +529,12 @@ class BorrowModalContent extends React.Component {
         };
 
         if (props && props.hasCallOrders && props.call_orders) {
-            currentPosition = props.call_orders
-                .filter(a => !!a)
-                .find(a => {
-                    return (
-                        a.getIn(["call_price", "quote", "asset_id"]) ===
-                        props.quote_asset.get("id")
-                    );
-                });
+            currentPosition = props.call_orders.filter(a => !!a).find(a => {
+                return (
+                    a.getIn(["call_price", "quote", "asset_id"]) ===
+                    props.quote_asset.get("id")
+                );
+            });
 
             currentPosition = !!currentPosition
                 ? currentPosition.toJS()
@@ -858,8 +856,8 @@ class BorrowModalContent extends React.Component {
                                                 (errors.below_maintenance
                                                     ? "has-error"
                                                     : errors.close_maintenance
-                                                    ? "has-warning"
-                                                    : "")
+                                                        ? "has-warning"
+                                                        : "")
                                             }
                                         >
                                             <span className="borrow-price-label">

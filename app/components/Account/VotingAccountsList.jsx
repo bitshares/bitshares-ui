@@ -225,8 +225,8 @@ class VotingAccountsList extends React.Component {
                     return a.supported > b.supported
                         ? 1
                         : a.supported < b.supported
-                        ? -1
-                        : 0;
+                            ? -1
+                            : 0;
                 },
                 render: item => {
                     return (
