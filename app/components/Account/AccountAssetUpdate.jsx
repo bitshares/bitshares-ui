@@ -21,9 +21,14 @@ import {BitAssetOptions} from "./AccountAssetCreate";
 import assetConstants from "chain/asset_constants";
 import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {withRouter} from "react-router-dom";
-import {Modal, Button, Notification, Switch} from "bitshares-ui-style-guide";
+import {
+    Modal,
+    Button,
+    Notification,
+    Switch,
+    Tooltip
+} from "bitshares-ui-style-guide";
 import Immutable from "immutable";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
@@ -125,10 +130,16 @@ class AccountAssetUpdate extends React.Component {
             core_exchange_rate.base.asset_id
         ).get("symbol");
 
+        // maybe undefined (extensions may be empty
         let whitelist_market_fee_sharing_val = props.asset.getIn([
             "options",
             "extensions",
             "whitelist_market_fee_sharing"
+        ]);
+        let reward_percent = props.asset.getIn([
+            "options",
+            "extensions",
+            "reward_percent"
         ]);
 
         return {
@@ -136,7 +147,10 @@ class AccountAssetUpdate extends React.Component {
             update: {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
-                reward_percent: asset.options.extensions.reward_percent,
+                reward_percent:
+                    reward_percent === undefined
+                        ? undefined
+                        : asset.options.extensions.reward_percent,
                 market_fee_percent: asset.options.market_fee_percent,
                 description: assetUtils.parseDescription(
                     asset.options.description
@@ -178,11 +192,7 @@ class AccountAssetUpdate extends React.Component {
                 "options",
                 "whitelist_markets"
             ]),
-            // fallback for old objects
-            whitelist_market_fee_sharing:
-                whitelist_market_fee_sharing_val != null
-                    ? whitelist_market_fee_sharing_val
-                    : new Immutable.List([]),
+            whitelist_market_fee_sharing: whitelist_market_fee_sharing_val,
             blacklist_markets: props.asset.getIn([
                 "options",
                 "blacklist_markets"
@@ -787,6 +797,9 @@ class AccountAssetUpdate extends React.Component {
 
     onChangeList(key, action = "add", id) {
         let current = this.state[key];
+        if (current === undefined) {
+            current = new Immutable.List([]);
+        }
         if (action === "add" && !current.includes(id)) {
             current = current.push(id);
         } else if (action === "remove" && current.includes(id)) {
@@ -1224,7 +1237,12 @@ class AccountAssetUpdate extends React.Component {
                                         this.state.whitelist_markets
                                     }
                                     whitelist_market_fee_sharing={
-                                        this.state.whitelist_market_fee_sharing
+                                        this.state
+                                            .whitelist_market_fee_sharing ===
+                                        undefined
+                                            ? new Immutable.List([])
+                                            : this.state
+                                                  .whitelist_market_fee_sharing
                                     }
                                     blacklist_markets={
                                         this.state.blacklist_markets
@@ -1494,17 +1512,16 @@ class AccountAssetUpdate extends React.Component {
                                                         tabIndex={1}
                                                     />
                                                 </label>
-                                                <div
-                                                    className={cnames({
-                                                        disabled: !(
-                                                            update.market_fee_percent >
-                                                            0
-                                                        )
-                                                    })}
-                                                >
+                                                <div>
                                                     <label>
-                                                        <Translate content="account.user_issued_assets.reward_percent" />{" "}
-                                                        (%)
+                                                        <Tooltip
+                                                            title={counterpart.translate(
+                                                                "account.user_issued_assets.reward_percent_tooltip"
+                                                            )}
+                                                        >
+                                                            <Translate content="account.user_issued_assets.reward_percent" />{" "}
+                                                            (%)
+                                                        </Tooltip>
                                                         <input
                                                             type="number"
                                                             value={
@@ -1601,17 +1618,6 @@ AccountAssetUpdate = AssetWrapper(AccountAssetUpdate, {
 class ConfirmModal extends React.Component {
     constructor() {
         super();
-        this.state = {open: false};
-    }
-
-    show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
-        });
-    }
-
-    onClose() {
-        this.setState({open: false});
     }
 
     render() {

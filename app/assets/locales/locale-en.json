@@ -294,6 +294,7 @@
             "quote": "Quote asset amount",
             "quote_name": "Quote asset",
             "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Short name (max 32 characters)",
             "symbol": "Symbol",
             "to": "Issue to account",
