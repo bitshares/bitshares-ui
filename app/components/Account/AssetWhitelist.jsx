@@ -29,16 +29,29 @@ class AssetWhitelist extends React.Component {
         };
     }
 
-    renderAccountTables(showFlagEnableError = true) {
+    renderAccountTables() {
         const {listType} = this.state;
 
-        if (!this.props.whiteListEnabled && showFlagEnableError)
+        let showFlagEnableError = false;
+        let errorLabel = "explorer.asset.whitelist.enable_flag";
+
+        if (listType === "whitelist_market_fee_sharing") {
+            // market fee sharing whitelist
+            if (!this.props.marketFeeEnabled) {
+                showFlagEnableError = true;
+                errorLabel = "explorer.asset.whitelist.market_fee_enable_flag";
+            }
+        } else {
+            showFlagEnableError = !this.props.whiteListEnabled;
+        }
+
+        if (showFlagEnableError)
             return (
                 <div>
                     <Translate
                         className="txtlabel cancel"
                         component="p"
-                        content="explorer.asset.whitelist.enable_flag"
+                        content={errorLabel}
                     />
                 </div>
             );
@@ -231,9 +244,7 @@ class AssetWhitelist extends React.Component {
                         </div>
                     </div>
                     {accountTable
-                        ? this.renderAccountTables(
-                              listType !== "whitelist_market_fee_sharing"
-                          )
+                        ? this.renderAccountTables()
                         : this.renderMarketTable()}
                     {this.props.children}
                 </div>

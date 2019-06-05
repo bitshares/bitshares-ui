@@ -841,7 +841,8 @@
                 "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities",
                 "whitelist_authorities": "Whitelist authorities",
                 "whitelist_markets": "Market whitelist",
-                "whitelist_market_fee_sharing": "Market fee sharing whitelist"
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist"
             }
         },
         "assets": {
