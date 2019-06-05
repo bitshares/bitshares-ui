@@ -15,9 +15,8 @@ import {Asset} from "common/MarketClasses";
 class FeeAssetSelector extends DecimalChecker {
     static propTypes = {
         label: PropTypes.string, // a translation key for the label
-        assets: PropTypes.array,
+        account: PropTypes.any,
         feeAmount: PropTypes.any,
-        fee_asset_id: PropTypes.any,
         amount: PropTypes.any,
         placeholder: PropTypes.string,
         onChange: PropTypes.func,
@@ -37,6 +36,7 @@ class FeeAssetSelector extends DecimalChecker {
         super(props);
         this.state = {
             asset: null,
+            assets: [],
             feeAsset: null,
             fee_asset_id: "1.3.0",
             feeAmount: new Asset({amount: 0}),
@@ -45,16 +45,64 @@ class FeeAssetSelector extends DecimalChecker {
         };
     }
 
+    componentWillReceiveProps(np) {
+        console.log(np.amount);
+        console.log(np.feeAmount);
+        this.setState({
+            assets: this._getAvailableAssets(np.account),
+            fee_asset_id: np.feeAmount
+                ? np.feeAmount.asset_id
+                : this.props.feeAmount.asset_id
+        });
+    }
+
     _getAsset() {
+        const {assets, fee_asset_id} = this.state;
         return ChainStore.getAsset(
-            this.props.assets.length && this.props.feeAmount
+            assets.length && this.props.feeAmount
                 ? this.props.feeAmount.asset_id
-                : this.props.assets.length === 1
-                    ? this.props.assets[0]
-                    : this.props.fee_asset_id
-                        ? this.props.fee_asset_id
-                        : this.props.assets[0]
+                : assets.length === 1
+                    ? assets[0]
+                    : fee_asset_id
+                        ? fee_asset_id
+                        : assets[0]
         );
+    }
+
+    _getAvailableAssets(account) {
+        /* TODO uncomment when it comes to feeStatus
+        const {feeStatus} = this.state;
+        function hasFeePoolBalance(id) {
+            if (feeStatus[id] === undefined) return true;
+            return feeStatus[id] && feeStatus[id].hasPoolBalance;
+        }
+
+        function hasBalance(id) {
+            if (feeStatus[id] === undefined) return true;
+            return feeStatus[id] && feeStatus[id].hasBalance;
+        }
+        */
+
+        let fee_asset_types = [];
+        if (!(account && account.get("balances"))) {
+            return fee_asset_types;
+        }
+        const account_balances = account.get("balances").toJS();
+        fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
+        for (let key in account_balances) {
+            let balanceObject = ChainStore.getObject(account_balances[key]);
+            if (balanceObject && balanceObject.get("balance") === 0) {
+                if (fee_asset_types.includes(key)) {
+                    fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
+                }
+            }
+        }
+
+        /*fee_asset_types = fee_asset_types.filter(a => {
+            return hasFeePoolBalance(a) && hasBalance(a);
+        });*/
+
+        return fee_asset_types;
     }
 
     componentDidMount() {
@@ -80,7 +128,6 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     onAssetChange(selected_asset) {
-        console.log(selected_asset);
         if (this.props.onChange) {
             this.props.onChange({
                 amount: this.props.amount,
@@ -144,7 +191,7 @@ class FeeAssetSelector extends DecimalChecker {
                                 style={{width: "130px"}}
                                 selectStyle={{width: "100%"}}
                                 value={this._getAsset().get("symbol")}
-                                assets={Immutable.List(this.props.assets)}
+                                assets={Immutable.List(this.state.assets)}
                                 onChange={this.onAssetChange.bind(this)}
                                 disabled={
                                     this.props.selectDisabled ? true : undefined
@@ -164,8 +211,7 @@ class FeeAssetSelector extends DecimalChecker {
                 <SetDefaultFeeAssetModal
                     className="modal"
                     show={this.state.isModalVisible}
-                    fee_asset_types={this.props.assets}
-                    asset_types={this.props.assets}
+                    asset_types={this.state.assets}
                     close={() => {
                         this.setState({isModalVisible: false});
                     }}

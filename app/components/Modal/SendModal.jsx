@@ -476,6 +476,10 @@ class SendModal extends React.Component {
 
         this.setState(
             {
+                feeAmount: new Asset({
+                    amount: this.state.feeAmount.amount,
+                    asset_id: asset.get("id")
+                }),
                 error: null
             },
             this._updateFee
@@ -814,11 +818,10 @@ class SendModal extends React.Component {
                                 <FeeAssetSelector
                                     label="transfer.fee"
                                     disabled={true}
+                                    account={from_account}
                                     amount={fee}
                                     feeAmount={feeAmount}
-                                    fee_asset_id={feeAmount.asset_id}
                                     onChange={this.onFeeChanged.bind(this)}
-                                    assets={fee_asset_types}
                                     tabIndex={tabIndex++}
                                     error={
                                         this.state.hasPoolBalance === false
