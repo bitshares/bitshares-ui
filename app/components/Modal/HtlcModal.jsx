@@ -442,12 +442,16 @@ class HtlcModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         const {operation} = this.props;
-        if (this.props.fromAccount !== prevProps.fromAccount) {
+        if (
+            this.props.fromAccount !== prevProps.fromAccount ||
+            this.state.from_account == null
+        ) {
             // refesh balances and fee
             // write props to state
             this.setState(
                 {
-                    from_account: this.props.fromAccount
+                    from_account: this.props.fromAccount,
+                    from_name: this.props.fromAccount.get("name")
                 },
                 () => {
                     this._updateFee();
@@ -847,6 +851,7 @@ class HtlcModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
+
         const isSubmitNotValid =
             !from_account ||
             !to_account ||
@@ -929,17 +934,15 @@ class HtlcModal extends React.Component {
                 <div className="grid-block vertical no-overflow">
                     <Form className="full-width" layout="vertical">
                         {/* Sender */}
-                        {isRedeem ? (
-                            <AccountSelector
-                                label="showcases.htlc.sender"
-                                accountName={from_name}
-                                account={from_account}
-                                size={60}
-                                typeahead={true}
-                                hideImage
-                                disabled={true}
-                            />
-                        ) : null}
+                        <AccountSelector
+                            label="showcases.htlc.sender"
+                            accountName={from_name}
+                            account={from_account}
+                            size={60}
+                            typeahead={true}
+                            hideImage
+                            disabled={true}
+                        />
 
                         <AccountSelector
                             label="showcases.htlc.recipient"
