@@ -1,17 +1,19 @@
 import React from "react";
-import Translate from "react-translate-component";
 import BalanceComponent from "../Utility/BalanceComponent";
 import counterpart from "counterpart";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import AssetActions from "actions/AssetActions";
 import {ChainStore} from "bitsharesjs";
 import {Asset} from "common/MarketClasses";
 import AssetWrapper from "../Utility/AssetWrapper";
+import {Modal, Button, Form, Alert} from "bitshares-ui-style-guide";
 
 class ReserveAssetModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
+
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentWillReceiveProps(np) {
@@ -49,7 +51,7 @@ class ReserveAssetModal extends React.Component {
             this.state.amountAsset.setAmount({sats: 0});
             this.setState({amount: 0});
         });
-        this.props.onClose();
+        this.props.hideModal();
     }
 
     render() {
@@ -66,62 +68,59 @@ class ReserveAssetModal extends React.Component {
         if (!currentBalance) return null;
 
         return (
-            <form className="grid-block vertical full-width-content">
-                <Translate component="h3" content="modal.reserve.title" />
-                <div className="grid-container " style={{paddingTop: "2rem"}}>
-                    <div className="content-block">
-                        <AmountSelector
-                            label="modal.reserve.amount"
-                            amount={this.state.amount}
-                            onChange={this.onAmountChanged.bind(this)}
-                            asset={assetId}
-                            assets={[assetId]}
-                            display_balance={
-                                <div
-                                    onClick={() => {
-                                        this.state.amountAsset.setAmount({
-                                            sats: currentBalance.get("balance")
-                                        });
-                                        this.setState({
-                                            amount: this.state.amountAsset.getAmount(
-                                                {real: true}
-                                            )
-                                        });
-                                    }}
-                                >
-                                    <BalanceComponent
-                                        balance={this.props.account.getIn([
-                                            "balances",
-                                            assetId
-                                        ])}
-                                    />
-                                </div>
-                            }
-                            tabIndex={1}
-                        />
-                    </div>
-
-                    <div className="content-block button-group">
-                        <input
-                            type="submit"
-                            className="button success"
-                            onClick={this.onSubmit.bind(this)}
-                            value={counterpart.translate(
-                                "modal.reserve.submit"
-                            )}
-                            tabIndex={2}
-                        />
-
-                        <div
-                            className="button"
-                            onClick={this.props.onClose}
-                            tabIndex={3}
-                        >
-                            {counterpart.translate("cancel")}
-                        </div>
-                    </div>
-                </div>
-            </form>
+            <Modal
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+                title={counterpart.translate("modal.reserve.title")}
+                footer={[
+                    <Button type="primary" key="submit" onClick={this.onSubmit}>
+                        {counterpart.translate("modal.reserve.submit")}
+                    </Button>,
+                    <Button onClick={this.props.hideModal} key="cancel">
+                        {counterpart.translate("cancel")}
+                    </Button>
+                ]}
+            >
+                <Alert
+                    message={counterpart.translate(
+                        "modal.reserve.warning_message"
+                    )}
+                    type="warning"
+                    showIcon
+                    style={{marginBottom: "2em"}}
+                />
+                <Form layout="vertical">
+                    <AmountSelector
+                        label="modal.reserve.amount"
+                        amount={this.state.amount}
+                        onChange={this.onAmountChanged.bind(this)}
+                        asset={assetId}
+                        assets={[assetId]}
+                        display_balance={
+                            <div
+                                onClick={() => {
+                                    this.state.amountAsset.setAmount({
+                                        sats: currentBalance.get("balance")
+                                    });
+                                    this.setState({
+                                        amount: this.state.amountAsset.getAmount(
+                                            {real: true}
+                                        )
+                                    });
+                                }}
+                            >
+                                <BalanceComponent
+                                    balance={this.props.account.getIn([
+                                        "balances",
+                                        assetId
+                                    ])}
+                                />
+                            </div>
+                        }
+                        tabIndex={1}
+                    />
+                </Form>
+            </Modal>
         );
     }
 }

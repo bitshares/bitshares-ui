@@ -11,7 +11,6 @@ import BackupActions, {
     backup,
     decryptWalletBackup
 } from "actions/BackupActions";
-import notify from "actions/NotificationActions";
 import {saveAs} from "file-saver";
 import cname from "classnames";
 import Translate from "react-translate-component";
@@ -19,6 +18,8 @@ import {PrivateKey} from "bitsharesjs";
 import SettingsActions from "actions/SettingsActions";
 import {backupName} from "common/backupUtils";
 import {getWalletName} from "branding";
+import {Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 const connectObject = {
     listenTo() {
@@ -39,7 +40,7 @@ class BackupCreate extends Component {
                 <Create
                     noText={this.props.noText}
                     newAccount={
-                        this.props.location
+                        this.props.location && this.props.location.query
                             ? this.props.location.query.newAccount
                             : null
                     }
@@ -297,25 +298,77 @@ class Download extends Component {
     }
 
     componentDidMount() {
-        if (!this.isFileSaverSupported)
-            notify.error("File saving is not supported");
+        if (!this.isFileSaverSupported) {
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.backup_file_save_unsupported"
+                )
+            });
+        }
+
+        if (this.props.confirmation) {
+            this.createBackup();
+        }
+    }
+
+    getBackupName() {
+        return backupName(this.props.wallet.current_wallet);
+    }
+
+    createBackup() {
+        const backupPubkey = WalletDb.getWallet().password_pubkey;
+        backup(backupPubkey).then(contents => {
+            const name = this.getBackupName();
+            BackupActions.incommingBuffer({name, contents});
+        });
     }
 
     render() {
+        let isReady = true;
+        if (this.props.confirmation) {
+            isReady = this.props.checkboxActive;
+        }
         return (
-            <div className="button" onClick={this.onDownload.bind(this)}>
-                <Translate content="wallet.download" />
+            <div
+                className={`${
+                    !isReady ? "disabled" : ""
+                } button button-primary download-btn`}
+                onClick={() => {
+                    this.onDownload();
+                }}
+            >
+                {this.props.confirmation ? (
+                    <div className="download-block">
+                        <img
+                            className="bin-img"
+                            src="/bin-file/default.svg"
+                            alt="bin"
+                        />
+                        <span className="text-left">
+                            <Translate
+                                className="download-text"
+                                content="registration.downloadFile"
+                            />
+                            <p className="file-name">
+                                {this.props.backup.name}
+                            </p>
+                        </span>
+                    </div>
+                ) : (
+                    <Translate content="wallet.download" />
+                )}
             </div>
         );
     }
 
     onDownload() {
-        let blob = new Blob([this.props.backup.contents], {
+        const blob = new Blob([this.props.backup.contents], {
             type: "application/octet-stream; charset=us-ascii"
         });
 
-        if (blob.size !== this.props.backup.size)
+        if (blob.size !== this.props.backup.size) {
             throw new Error("Invalid backup to download conversion");
+        }
         saveAs(blob, this.props.backup.name);
         WalletActions.setBackupDate();
 
@@ -569,9 +622,17 @@ class DecryptBackup extends Component {
                     error,
                     error.stack
                 );
-                if (error === "invalid_decryption_key")
-                    notify.error("Invalid Password");
-                else notify.error("" + error);
+                if (error === "invalid_decryption_key") {
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.invalid_password"
+                        )
+                    });
+                } else {
+                    Notification.error({
+                        message: error
+                    });
+                }
             });
     }
 

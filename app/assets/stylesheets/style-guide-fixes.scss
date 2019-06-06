@@ -10,3 +10,8 @@ $ant-fix: ':not([class*="ant-"])';
         }
     }
 }
+
+.ant-select-dropdown-menu {
+    margin-left: 0;
+    font-size: 14px;
+}

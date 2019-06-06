@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import WalletActions from "actions/WalletActions";
 import WalletDb from "stores/WalletDb";
 import {hash} from "bitsharesjs";
+import {Card} from "bitshares-ui-style-guide";
 
 export default class BackupBrainkey extends Component {
     constructor() {
@@ -46,11 +47,7 @@ export default class BackupBrainkey extends Component {
                     <h3>
                         <Translate content="wallet.brainkey" />
                     </h3>
-                    <div className="card">
-                        <div className="card-content">
-                            <h5>{this.state.brainkey}</h5>
-                        </div>
-                    </div>
+                    <Card>{this.state.brainkey}</Card>
                     <br />
                     <pre className="no-overflow">
                         sha1 hash of the brainkey: {sha1}
@@ -71,11 +68,7 @@ export default class BackupBrainkey extends Component {
                     <h3>
                         <Translate content="wallet.brainkey" />
                     </h3>
-                    <div className="card">
-                        <div className="card-content">
-                            <h5>{this.state.brainkey}</h5>
-                        </div>
-                    </div>
+                    <Card>{this.state.brainkey}</Card>
                     <div style={{padding: "10px 0"}}>
                         <pre className="no-overflow">
                             sha1 hash of your brainkey: {sha1}

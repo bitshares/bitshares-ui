@@ -7,6 +7,7 @@ import counterpart from "counterpart";
 import AssetWrapper from "./AssetWrapper";
 import utils from "common/utils";
 import PropTypes from "prop-types";
+import {DecimalChecker} from "./DecimalChecker";
 
 class AssetSelector extends React.Component {
     static propTypes = {
@@ -54,7 +55,7 @@ class AssetSelector extends React.Component {
 
 AssetSelector = AssetWrapper(AssetSelector, {asList: true});
 
-class AmountSelector extends React.Component {
+class AmountSelector extends DecimalChecker {
     static propTypes = {
         label: PropTypes.string, // a translation key for the label
         assets: PropTypes.array,
@@ -84,10 +85,12 @@ class AmountSelector extends React.Component {
         return value;
     }
 
-    _onChange(event) {
-        let amount = event.target.value;
+    _onChange(e) {
         if (this.props.onChange)
-            this.props.onChange({amount: amount, asset: this.props.asset});
+            this.props.onChange({
+                amount: this.getNumericEventValue(e),
+                asset: this.props.asset
+            });
     }
 
     onAssetChange(selected_asset) {
@@ -122,6 +125,8 @@ class AmountSelector extends React.Component {
                         placeholder={this.props.placeholder}
                         onChange={this._onChange.bind(this)}
                         tabIndex={this.props.tabIndex}
+                        onPaste={this.props.onPaste || this.onPaste.bind(this)}
+                        onKeyPress={this.onKeyPress.bind(this)}
                     />
 
                     <div className="form-label select floating-dropdown">

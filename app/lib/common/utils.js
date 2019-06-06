@@ -1,3 +1,5 @@
+import asset_utils from "./asset_utils";
+
 var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
@@ -30,6 +32,26 @@ var Utils = {
         if (!amount) return null;
         return (
             amount /
+            this.get_asset_precision(
+                asset.toJS ? asset.get("precision") : asset.precision
+            )
+        );
+    },
+
+    convert_satoshi_to_typed: function(amount, asset) {
+        if (amount === 0) return amount;
+        if (!amount) return null;
+        return (
+            amount /
+            this.get_asset_precision(
+                asset.toJS ? asset.get("precision") : asset.precision
+            )
+        );
+    },
+
+    convert_typed_to_satoshi: function(amount, asset) {
+        return (
+            amount *
             this.get_asset_precision(
                 asset.toJS ? asset.get("precision") : asset.precision
             )
@@ -296,18 +318,14 @@ var Utils = {
         if (fromRate.toJS && this.is_object_type(fromRate.get("id"), "asset")) {
             fromID = fromRate.get("id");
             fromRate = fromRate.get("bitasset")
-                ? fromRate
-                      .getIn(["bitasset", "current_feed", "settlement_price"])
-                      .toJS()
+                ? asset_utils.extractRawFeedPrice(fromRate).toJS()
                 : fromRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
 
         if (toRate.toJS && this.is_object_type(toRate.get("id"), "asset")) {
             toID = toRate.get("id");
             toRate = toRate.get("bitasset")
-                ? toRate
-                      .getIn(["bitasset", "current_feed", "settlement_price"])
-                      .toJS()
+                ? asset_utils.extractRawFeedPrice(toRate).toJS()
                 : toRate.getIn(["options", "core_exchange_rate"]).toJS();
         }
 

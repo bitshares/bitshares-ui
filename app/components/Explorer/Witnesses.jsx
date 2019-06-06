@@ -1,7 +1,6 @@
 import counterpart from "counterpart";
 import React from "react";
 import Immutable from "immutable";
-import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import {ChainStore} from "bitsharesjs";
@@ -14,94 +13,9 @@ import SettingsStore from "stores/SettingsStore";
 import classNames from "classnames";
 import {withRouter} from "react-router-dom";
 import {Table, Icon, Input, Popover} from "bitshares-ui-style-guide";
+import sanitize from "sanitize";
 
 require("./witnesses.scss");
-
-class WitnessCard extends React.Component {
-    static propTypes = {
-        witness: ChainTypes.ChainAccount.isRequired
-    };
-
-    _onCardClick(e) {
-        e.preventDefault();
-        this.props.history.push(`/account/${this.props.witness.get("name")}`);
-    }
-
-    render() {
-        let witness_data = ChainStore.getWitnessById(
-            this.props.witness.get("id")
-        );
-        if (!witness_data) return null;
-        let total_votes = witness_data.get("total_votes");
-
-        let witness_aslot = witness_data.get("last_aslot");
-        let color = {};
-        if (this.props.most_recent - witness_aslot > 100) {
-            color = {borderLeft: "1px solid #FCAB53"};
-        } else {
-            color = {borderLeft: "1px solid #50D2C2"};
-        }
-        let last_aslot_time = new Date(
-            Date.now() -
-                (this.props.most_recent - witness_aslot) *
-                    ChainStore.getObject("2.0.0").getIn([
-                        "parameters",
-                        "block_interval"
-                    ]) *
-                    1000
-        );
-
-        return (
-            <div
-                className="grid-content account-card"
-                onClick={this._onCardClick.bind(this)}
-            >
-                <div className="card" style={color}>
-                    <h4 className="text-center">
-                        #{this.props.rank}: {this.props.witness.get("name")}
-                    </h4>
-                    <div className="card-content">
-                        <div className="text-center">
-                            <AccountImage
-                                account={this.props.witness.get("name")}
-                                size={{height: 64, width: 64}}
-                            />
-                        </div>
-                        <br />
-                        <table className="table key-value-table">
-                            <tbody>
-                                <tr>
-                                    <td>Votes</td>
-                                    <td>
-                                        <FormattedAsset
-                                            amount={total_votes}
-                                            asset="1.3.0"
-                                            decimalOffset={5}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Last&nbsp;Block</td>
-                                    <td>
-                                        <TimeAgo
-                                            time={new Date(last_aslot_time)}
-                                        />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Missed</td>
-                                    <td>{witness_data.get("total_missed")}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
-WitnessCard = BindToChainState(WitnessCard);
-WitnessCard = withRouter(WitnessCard);
 
 class WitnessRow extends React.Component {
     static propTypes = {
@@ -287,7 +201,10 @@ class WitnessList extends React.Component {
                         rank: ranks[a.get("id")],
                         name: witness.get("name"),
                         signing_key: witness_data.get("signing_key"),
-                        url: witness_data.get("url"),
+                        url: sanitize(witness_data.get("url"), {
+                            whiteList: [], // empty, means filter out all tags
+                            stripIgnoreTag: true // filter out all HTML not in the whilelist
+                        }),
                         lastConfirmedBlock: {
                             id: witness_data.get("last_confirmed_block_num"),
                             timestamp: last_aslot_time.getTime()

@@ -19,6 +19,8 @@ import marketUtils from "common/market_utils";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import PropTypes from "prop-types";
+import {Tooltip} from "bitshares-ui-style-guide";
+import asset_utils from "../../lib/common/asset_utils";
 
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
@@ -111,33 +113,31 @@ class Row extends React.Component {
                         style={{textAlign: "left"}}
                         className="left-td column-hide-tiny"
                     >
-                        <Link
-                            className="inline-block"
-                            data-place="bottom"
-                            data-tip={counterpart.translate(
-                                "tooltip.show_block",
-                                {
-                                    block: utils.format_number(
-                                        this.props.block,
-                                        0
-                                    )
-                                }
-                            )}
-                            to={`/block/${this.props.block}/${
-                                this.props.txIndex
-                            }`}
+                        <Tooltip
+                            placement="bottom"
+                            title={counterpart.translate("tooltip.show_block", {
+                                block: utils.format_number(this.props.block, 0)
+                            })}
                         >
-                            <TransactionLabel color={color} type={type} />
-                        </Link>
+                            <Link
+                                className="inline-block"
+                                to={`/block/${this.props.block}/${
+                                    this.props.txIndex
+                                }`}
+                            >
+                                <TransactionLabel color={color} type={type} />
+                            </Link>
+                        </Tooltip>
                     </td>
                 )}
+
                 <td style={{padding: "8px 5px", textAlign: "left"}}>
                     <div>
                         <span>{this.props.info}</span>
                     </div>
                     <div style={{fontSize: 14, paddingTop: 5}}>
                         {/*<span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>*/}
-                        {!this.props.hideFee ? (
+                        {/*{!this.props.hideFee ? (
                             <span className="facolor-fee">
                                 {" "}
                                 -{" "}
@@ -146,10 +146,18 @@ class Row extends React.Component {
                                     asset={fee.asset_id}
                                 />
                             </span>
-                        ) : null}
+                        ) : null}*/}
                         {pending ? <span> - {pending}</span> : null}
                     </div>
                 </td>
+                {!this.props.hideFee && (
+                    <td style={{textAlign: "left"}}>
+                        <FormattedAsset
+                            amount={fee.amount}
+                            asset={fee.asset_id}
+                        />
+                    </td>
+                )}
                 <td>
                     {!this.props.hideDate ? (
                         <BlockTime
@@ -672,63 +680,60 @@ class Operation extends React.Component {
 
             case "asset_settle":
                 color = "warning";
-
                 const baseAmount = op[1].amount;
-                const {
-                    result: [resultCode, quoteAmount]
-                } = this.props;
                 const instantSettleCode = 2;
-
-                switch (resultCode) {
-                    case instantSettleCode:
-                        column = (
-                            <span>
-                                <TranslateWithLinks
-                                    string="operation.asset_settle_instant"
-                                    keys={[
-                                        {
-                                            type: "account",
-                                            value: op[1].account,
-                                            arg: "account"
+                if (
+                    this.props.result &&
+                    this.props.result[0] == instantSettleCode
+                ) {
+                    const quoteAmount = this.props.result[1];
+                    column = (
+                        <span>
+                            <TranslateWithLinks
+                                string="operation.asset_settle_instant"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: op[1].account,
+                                        arg: "account"
+                                    },
+                                    {
+                                        type: "amount",
+                                        value: baseAmount,
+                                        arg: "amount"
+                                    },
+                                    {
+                                        type: "price",
+                                        value: {
+                                            base: baseAmount,
+                                            quote: quoteAmount
                                         },
-                                        {
-                                            type: "amount",
-                                            value: baseAmount,
-                                            arg: "amount"
-                                        },
-                                        {
-                                            type: "price",
-                                            value: {
-                                                base: baseAmount,
-                                                quote: quoteAmount
-                                            },
-                                            arg: "price"
-                                        }
-                                    ]}
-                                />
-                            </span>
-                        );
-                        break;
-                    default:
-                        column = (
-                            <span>
-                                <TranslateWithLinks
-                                    string="operation.asset_settle"
-                                    keys={[
-                                        {
-                                            type: "account",
-                                            value: op[1].account,
-                                            arg: "account"
-                                        },
-                                        {
-                                            type: "amount",
-                                            value: op[1].amount,
-                                            arg: "amount"
-                                        }
-                                    ]}
-                                />
-                            </span>
-                        );
+                                        arg: "price"
+                                    }
+                                ]}
+                            />
+                        </span>
+                    );
+                } else {
+                    column = (
+                        <span>
+                            <TranslateWithLinks
+                                string="operation.asset_settle"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: op[1].account,
+                                        arg: "account"
+                                    },
+                                    {
+                                        type: "amount",
+                                        value: op[1].amount,
+                                        arg: "amount"
+                                    }
+                                ]}
+                            />
+                        </span>
+                    );
                 }
 
                 break;
@@ -775,7 +780,9 @@ class Operation extends React.Component {
                                 },
                                 {
                                     type: "price",
-                                    value: op[1].feed.settlement_price,
+                                    value: asset_utils.extractRawFeedPrice(
+                                        op[1].feed
+                                    ),
                                     arg: "price"
                                 }
                             ]}
@@ -878,10 +885,12 @@ class Operation extends React.Component {
                                         arg: "account"
                                     },
                                     {
-                                        value: (
+                                        value: this.props.result ? (
                                             <ShortObjectId
                                                 objectId={this.props.result[1]}
                                             />
+                                        ) : (
+                                            ""
                                         ),
                                         arg: "proposal"
                                     }
@@ -1490,8 +1499,33 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "bid_collateral":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.bid_collateral"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].bidder,
+                                arg: "bid_account"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].additional_collateral,
+                                arg: "collateral"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].debt_covered,
+                                arg: "debt"
+                            }
+                        ]}
+                    />
+                );
+                break;
+
             default:
-                console.log("unimplemented op:", op);
+                console.log("unimplemented op '" + ops[op[0]] + "':", op);
                 column = (
                     <span>
                         <Link to={`/block/${block}`}>#{block}</Link>

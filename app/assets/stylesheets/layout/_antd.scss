@@ -1,0 +1,73 @@
+/*
+ * Ant Design SCSS Overrides
+ *
+ * These overrides are highly temporary and should be solved as soon as possible
+*/
+
+/* Exchange Overrides */
+
+.market-layout {
+    .ant-tabs {
+        line-height: 1 !important;
+    }
+
+    .ant-btn {
+        padding: 0 19px !important;
+    }
+
+    .ant-input:focus {
+        box-shadow: 0 !important;
+    }
+
+    .ant-tabs-bar {
+        margin: 0 0 0 0 !important;
+    }
+
+    .ant-tabs-nav,
+    .ant-tabs-tab {
+        margin: 0 12px 0 0 !important;
+        padding: 5px 5px !important;
+    }
+
+    .ant-tabs-nav.ant-tabs-nav-animated {
+        margin-right: 0px !important;
+    }
+
+    .ant-tabs.ant-tabs-top.ant-tabs-line {
+        width: 100% !important;
+    }
+
+    .inputAddon {
+        input {
+            text-align: right !important;
+        }
+        padding-bottom: 10px !important;
+        .ant-input-group-addon {
+            width: 60% !important;
+            text-align: left !important;
+        }
+    }
+
+    .ant-select-dropdown-menu-vertical {
+        margin-left: 0 !important;
+
+        > li {
+            padding: 1px 1px 5px 5px !important;
+        }
+    }
+
+    .ant-collapse {
+        width: 100% !important;
+    }
+
+    .ant-collapse-content > .ant-collapse-content-box {
+        padding: 0px !important;
+    }
+}
+
+/* Modal Overrides */
+label.ant-checkbox-wrapper {
+    > span {
+        text-transform: none !important;
+    }
+}

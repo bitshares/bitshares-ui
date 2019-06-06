@@ -1,5 +1,6 @@
 import {Apis, Manager} from "bitsharesjs-ws";
 import {ChainStore} from "bitsharesjs";
+import hirestime from "hirestime";
 
 // Stores
 import iDB from "idb-instance";
@@ -19,7 +20,7 @@ import counterpart from "counterpart";
 // Actions
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import SettingsActions from "actions/SettingsActions";
-import notify from "actions/NotificationActions";
+import {Notification} from "bitshares-ui-style-guide";
 
 ChainStore.setDispatchFrequency(60);
 
@@ -71,15 +72,15 @@ class RouterTransitioner {
             const apiLatencies = SettingsStore.getState().apiLatencies;
             let latenciesEstablished = Object.keys(apiLatencies).length > 0;
 
-            let latencyChecks = ss.get("latencyChecks", 1);
-            if (latencyChecks >= 5) {
+            let latencyChecks = this._getLatencyChecks(1);
+            if (latencyChecks >= 8) {
                 // every x connect attempts we refresh the api latency list
                 // automatically
-                ss.set("latencyChecks", 0);
+                this._setLatencyChecks(0);
                 latenciesEstablished = false;
             } else {
                 // otherwise increase the counter
-                if (appInit) ss.set("latencyChecks", latencyChecks + 1);
+                if (appInit) this._setLatencyChecks(latencyChecks + 1);
             }
 
             let urls = this._getNodesToConnectTo(false, apiLatencies);
@@ -94,7 +95,7 @@ class RouterTransitioner {
                 !latenciesEstablished ||
                 Object.keys(apiLatencies).length == 0
             ) {
-                this.doLatencyUpdate(true)
+                this.doLatencyUpdate()
                     .then(
                         this._initiateConnection.bind(
                             this,
@@ -117,7 +118,23 @@ class RouterTransitioner {
     }
 
     isTransitionInProgress() {
-        return !!this._willTransitionToInProgress;
+        return (
+            !!this._willTransitionToInProgress &&
+            typeof this._willTransitionToInProgress !== "object"
+        );
+    }
+
+    isBackgroundPingingInProgress() {
+        return (
+            !!this._willTransitionToInProgress &&
+            typeof this._willTransitionToInProgress === "object"
+        );
+    }
+
+    getBackgroundPingingTarget() {
+        if (this.isBackgroundPingingInProgress())
+            return this._willTransitionToInProgress.key;
+        return null;
     }
 
     getTransitionTarget() {
@@ -175,133 +192,48 @@ class RouterTransitioner {
     /**
      * Updates the latency of all target nodes
      *
-     * @param refresh boolean true reping all existing nodes
-     *                        false only reping all reachable nodes
-     * @param beSatisfiedWith integer if appropriate number of nodes for each of the keys in this latency map are found, pinging is stopped.
-     *                                Values correspond to AccessSettings display (low, medium latency)
-     * @param range integer ping range amount of nodes at the same time, default 5
+     * @param discardOldLatencies boolean if true drop all old latencies and reping
+     * @param pingAll boolean if true, resolve promise after all nodes are pinged, if false resolve when sufficiently small latency has been found
+     * @param pingInBackground integer if > 0, pinging will continue in background after promise is resolved, Integer value will be used as delay to start background ping
      * @returns {Promise}
      */
     doLatencyUpdate(
-        refresh = true,
-        beSatisfiedWith = {instant: 200, low: 400, medium: 800},
-        range = 5
+        discardOldLatencies = false,
+        pingAll = false,
+        pingInBackground = 5000
     ) {
         this.updateTransitionTarget(
             counterpart.translate("app_init.check_latency")
         );
 
+        let thiz = this;
+
         return new Promise((resolve, reject) => {
             // if for some reason this method is called before connections are setup via willTransitionTo,
             // initialize the manager
-            if (this._connectionManager == null) {
-                this._initConnectionManager();
+            if (thiz._connectionManager == null) {
+                thiz._initConnectionManager();
             }
-            if (refresh) {
-                this._connectionManager.urls = this._getNodesToConnectTo(true);
-            }
-            let url = this._connectionManager.url;
-            let urls = this._connectionManager.urls;
-            let current = 0;
-
-            if (range == null) {
-                range = this._connectionManager.urls.length;
-            } else {
+            let nodeList = thiz._getNodesToConnectTo(true, null, true);
+            if (discardOldLatencies) {
                 this._clearLatencies();
             }
 
-            function local_ping(thiz, range = null) {
-                let counter = {instant: 0, low: 0, medium: 0};
-                let selectedOneWasPinged = false;
-                if (current < urls.length) {
-                    thiz._connectionManager.url = urls[current];
-                    thiz._connectionManager.urls = urls.slice(
-                        current + 1,
-                        current + range
-                    );
-                    thiz.updateTransitionTarget(
-                        counterpart.translate(
-                            "app_init.check_latency_feedback",
-                            {
-                                pinged: current,
-                                totalToPing: urls.length
-                            }
-                        )
-                    );
-                    thiz._connectionManager
-                        .checkConnections()
-                        .then(res => {
-                            console.log(
-                                "Following nodes have been pinged:",
-                                res
-                            );
-                            // update the latencies object
-                            const apiLatencies = SettingsStore.getState()
-                                .apiLatencies;
-                            for (var nodeUrl in res) {
-                                if (nodeUrl == url) {
-                                    selectedOneWasPinged = true;
-                                }
-                                apiLatencies[nodeUrl] = res[nodeUrl];
-                                // we stop the pinging if
-                                //  - not autoselection and the selcted node has been pinged
-                                //  - a node that has low_latency (less than beSatisfiedWith ms) is found
-                                //  - at least 3 nodes with medium_latency have been found
-                                if (beSatisfiedWith != null) {
-                                    if (
-                                        res[nodeUrl] < beSatisfiedWith.instant
-                                    ) {
-                                        counter.instant = counter.instant + 1;
-                                    } else if (
-                                        res[nodeUrl] < beSatisfiedWith.low
-                                    ) {
-                                        counter.low = counter.low + 1;
-                                    } else if (
-                                        res[nodeUrl] < beSatisfiedWith.medium
-                                    ) {
-                                        counter.medium = counter.medium + 1;
-                                    }
-                                    if (
-                                        thiz.isAutoSelection() ||
-                                        selectedOneWasPinged
-                                    ) {
-                                        // only stop pinging if the selected one was pinged, if not autoSelect
-                                        if (
-                                            counter.instant > 0 ||
-                                            counter.low >= 2 ||
-                                            counter.medium >= 3
-                                        ) {
-                                            console.log(
-                                                "Found nodes with sufficient latency, stopping latency update"
-                                            );
-                                            current = urls.length;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            thiz._updateLatencies(res);
-                        })
-                        .catch(err => {
-                            console.log("doLatencyUpdate error", err);
-                        })
-                        .finally(() => {
-                            current = current + range;
-                            setTimeout(() => {
-                                local_ping(thiz, range);
-                            }, 50);
-                        });
-                } else {
-                    done_pinging(thiz);
-                }
-            }
+            let originalURL = this._connectionManager.url;
 
-            function done_pinging(thiz) {
+            function done_pinging() {
                 // resort the api nodes with the new pings
-                thiz._connectionManager.urls = thiz._getNodesToConnectTo();
+                let _nodes = thiz._getNodesToConnectTo(false, null, true);
+                thiz._connectionManager.urls = _nodes.map(a => a.url);
+                // update preferences
+                thiz._setLatencyPreferences({
+                    region: _nodes[0].region,
+                    country: _nodes[0].country
+                });
+
                 if (
                     thiz.isAutoSelection() &&
-                    url !== thiz._connectionManager.urls[0]
+                    originalURL !== thiz._connectionManager.urls[0]
                 ) {
                     thiz._connectionManager.url =
                         thiz._connectionManager.urls[0];
@@ -311,25 +243,89 @@ class RouterTransitioner {
                             " after latency update"
                     );
                 } else {
-                    thiz._connectionManager.url = url;
+                    thiz._connectionManager.url = originalURL;
                 }
                 thiz._transitionDone(resolve);
+
+                if (pingInBackground > 0) {
+                    let _func = function() {
+                        // wait for transition to be completed
+                        if (!thiz._willTransitionToInProgress) {
+                            pinger.enableBackgroundPinging();
+                            pinger.pingNodes(() => {
+                                let _nodes = thiz._getNodesToConnectTo(
+                                    false,
+                                    null,
+                                    true
+                                );
+                                thiz._connectionManager.urls = _nodes.map(
+                                    a => a.url
+                                );
+                                thiz._transitionDone();
+                            });
+                        } else {
+                            setTimeout(_func, 2000);
+                        }
+                    };
+                    setTimeout(_func, pingInBackground);
+                }
             }
-            local_ping(this, range);
+
+            let pinger = new Pinger(
+                thiz._connectionManager,
+                thiz._updateLatencies.bind(thiz),
+                thiz.updateTransitionTarget.bind(thiz),
+                pingAll
+            );
+            let strategy = new PingStrategy(
+                nodeList,
+                pinger,
+                done_pinging,
+                thiz.getNodes.bind(thiz)
+            );
+
+            strategy.ping(
+                this.isAutoSelection() ? null : this._getLastNode(),
+                this._getLatencyPreferences()
+            );
         });
+    }
+
+    _getLatencyPreferences() {
+        // those settings are not used anywhere in the UI and thus do not need a store
+        return ss.get("latency_preferences", {});
+    }
+
+    _setLatencyPreferences(preferences) {
+        ss.set("latency_preferences", preferences);
+    }
+
+    _getLatencyChecks() {
+        if (ss.has("latencyChecks")) {
+            ss.remove("latencyChecks");
+        }
+        return ss.get("latency_checks", 0);
+    }
+
+    _setLatencyChecks(number) {
+        ss.set("latency_checks", number);
     }
 
     _clearLatencies() {
         SettingsActions.updateLatencies({});
     }
 
-    _updateLatencies(mapOfPings, force = true) {
-        const apiLatencies = SettingsStore.getState().apiLatencies;
+    _updateLatencies(mapOfPings, force = true, container = null) {
+        let apiLatencies = SettingsStore.getState().apiLatencies;
+
         for (let node in mapOfPings) {
             if (!force && node in apiLatencies) {
                 continue;
             }
             apiLatencies[node] = mapOfPings[node];
+            if (container != null) {
+                container[node] = mapOfPings[node];
+            }
         }
         SettingsActions.updateLatencies(apiLatencies);
     }
@@ -340,9 +336,12 @@ class RouterTransitioner {
      * @param resolveOrReject
      * @private
      */
-    _transitionDone(resolveOrReject) {
-        resolveOrReject();
+    _transitionDone(resolveOrReject = null) {
+        if (resolveOrReject != null) {
+            resolveOrReject();
+        }
         this._willTransitionToInProgress = false;
+        this._statusCallback = null;
     }
 
     _initConnectionManager(urls = null) {
@@ -458,17 +457,14 @@ class RouterTransitioner {
         });
         // create more info in the entries
         filtered = filtered.map(a => {
-            let newEntry = {
-                name: a.location || "Unknown location",
-                url: a.url,
-                hidden: !!a.hidden
-            };
+            a.hidden = !!a.hidden;
+            a.name = a.location || "Unknown";
             if (latenciesMap != null && a.url in latenciesMap) {
-                newEntry.latency = latenciesMap[a.url];
+                a.latency = latenciesMap[a.url];
             } else {
-                newEntry.latency = null;
+                a.latency = null;
             }
-            return newEntry;
+            return a;
         });
         // now sort
         filtered = filtered.sort((a, b) => {
@@ -504,10 +500,16 @@ class RouterTransitioner {
      *
      * @param all (default false) if true, all nodes are returned
      * @param latenciesMap (default null)
-     * @returns see getNodes
+     * @param keepObject (default false) either returns only the url or full node object
+     * @returns list of strings or list of objects
      */
-    _getNodesToConnectTo(all = false, latenciesMap = null) {
-        return this.getNodes(latenciesMap, !all).map(a => a.url); // drop location, only urls in list
+    _getNodesToConnectTo(all = false, latenciesMap = null, keepObject = false) {
+        let nodeList = this.getNodes(latenciesMap, !all); // drop location, only urls in list
+        if (!keepObject) {
+            return nodeList.map(a => a.url);
+        } else {
+            return nodeList;
+        }
     }
 
     /**
@@ -587,6 +589,8 @@ class RouterTransitioner {
         this._willTransitionToInProgress = this._connectionManager.url;
         this._connectionStart = new Date().getTime();
 
+        console.log("Connecting to " + this._connectionManager.url);
+
         if (appInit) {
             // only true if app is initialized
             this.updateTransitionTarget(
@@ -617,7 +621,7 @@ class RouterTransitioner {
                     }
                 });
         } else {
-            // in case switches manually, reset the settings so we dont connect to
+            // in case switches manually, reset the settings so we don't connect to
             // a faulty node twice. If connection is established, onConnect sets the settings again
             if (!this.isAutoSelection()) {
                 this._setLastNode("");
@@ -636,14 +640,13 @@ class RouterTransitioner {
     _onResetError(failingNodeUrl, err) {
         console.error("onResetError:", err, failingNodeUrl);
         this._willTransitionToInProgress = false;
+        this._statusCallback = false;
         this._oldChain = "old";
-        notify.addNotification({
+        Notification.error({
             message: counterpart.translate("settings.connection_error", {
                 url: failingNodeUrl || "",
                 error: err
-            }),
-            level: "error",
-            autoDismiss: 10
+            })
         });
         let apiLatencies = SettingsStore.getState().apiLatencies;
         delete apiLatencies[failingNodeUrl];
@@ -770,3 +773,472 @@ class RouterTransitioner {
 // this makes routerTransitioner a Singleton
 export let routerTransitioner = new RouterTransitioner();
 export default routerTransitioner.willTransitionTo.bind(routerTransitioner);
+
+/**
+ * FIXME should be taken out of routerTransition
+ *
+ * Helper class to manage the latency check of all nodes.
+ * When pinging is done, the given callback is executed.
+ *
+ */
+class Pinger {
+    /**
+     * @param connectionManager bitsharesjs connectionmanager
+     * @param updateLatencies callback to update the settings object
+     * @param updateTransitionTarget callback to update the message displayed to the user
+     * @param pingAll if true, resolve after pinging all
+     */
+    constructor(
+        connectionManager,
+        updateLatencies,
+        updateTransitionTarget,
+        pingAll = true
+    ) {
+        this._connectionManager = connectionManager;
+        this._updateLatencies = updateLatencies;
+        this._updateTransitionTarget = updateTransitionTarget;
+        if (pingAll) {
+            this._beSatisfiedWith = {instant: 0, low: 0, medium: 0};
+        } else {
+            this._beSatisfiedWith = {instant: 500, low: 800, medium: 1500};
+        }
+    }
+
+    /**
+     * Adds the given nodes to this pinger. Duplicates are ignored.
+     *
+     * @param nodes given list of node urls
+     * @param reset if true, reset the internal node list before adding new nodes
+     * @param translationKey key to display to the user (updateTransitionTarget)
+     */
+    addNodes(nodes, reset = true, translationKey = null) {
+        this._translationKey = translationKey;
+        if (reset || this._nodeURLs === undefined) {
+            this._nodeURLs = nodes;
+            this._current = 0;
+            this._counter = {instant: 0, low: 0, medium: 0};
+            this._localLatencyCache = {};
+
+            this._suitableNodeFound = false;
+            this._pingInBackGround = false;
+        } else {
+            nodes.forEach(node => {
+                if (this._nodeURLs.indexOf(node) === -1) {
+                    this._nodeURLs.push(node);
+                }
+            });
+        }
+    }
+
+    /**
+     * The pinger constructs its own latencyMap in addition to what is saved in localStorage
+     * @returns {}
+     */
+    getLocalLatencyMap() {
+        return this._localLatencyCache;
+    }
+
+    /**
+     * This call enables background pinging (all nodes are pinged)
+     */
+    enableBackgroundPinging() {
+        this._beSatisfiedWith = {instant: 0, low: 0, medium: 0};
+        this._counter = {instant: 0, low: 0, medium: 0};
+        this._suitableNodeFound = false;
+        this._pingInBackGround = true;
+    }
+
+    /**
+     * This call enables background pinging (all nodes are pinged)
+     */
+    doCallbackAndEnableBackgroundPinging() {
+        this._beSatisfiedWith = {instant: 0, low: 0, medium: 0};
+        this._counter = {instant: 0, low: 0, medium: 0};
+        this._suitableNodeFound = true;
+        this._pingInBackGround = true;
+    }
+
+    /**
+     * Ping the currently stored nodes and call the callback when done.
+     *
+     * @param callbackFunc function handle callback when pinging is done
+     * @param nodes optional, add to internal node list before pinging
+     */
+    pingNodes(callbackFunc, nodes = null) {
+        if (nodes != null) {
+            this.addNodes(nodes, true);
+        }
+
+        this._callbackWasCalled = false;
+        this._callback = callbackFunc;
+
+        // defaults
+        this._range = 3;
+
+        this._pingNodesInBatches();
+    }
+
+    _continueToPing() {
+        return (
+            this._current < this._nodeURLs.length &&
+            (!this._suitableNodeFound || this._pingInBackGround)
+        );
+    }
+
+    _notifyCallback() {
+        if (this._callbackWasCalled) {
+            return false;
+        } else {
+            return (
+                this._suitableNodeFound ||
+                this._current == this._nodeURLs.length
+            );
+        }
+    }
+
+    _pingNodesInBatches() {
+        // cache the value, callback might change something
+        let continueToPing = this._continueToPing();
+
+        if (this._notifyCallback()) {
+            this._callbackWasCalled = true;
+            if (this._continueToPing()) {
+                console.log(
+                    "Node with sufficient latency found, continueing to ping the rest in background"
+                );
+            }
+            if (this._callback != null) {
+                this._callback();
+            }
+        }
+
+        if (continueToPing) {
+            let pingNow = this._nodeURLs.slice(
+                this._current,
+                this._current + this._range
+            );
+            let key =
+                this._translationKey == null
+                    ? "app_init.check_latency_feedback"
+                    : this._translationKey;
+            if (!this._pingInBackGround) {
+                this._updateTransitionTarget(
+                    counterpart.translate(key, {
+                        pinged: this._current,
+                        totalToPing: this._nodeURLs.length
+                    })
+                );
+            } else {
+                this._updateTransitionTarget({
+                    background: true,
+                    key: counterpart.translate(key, {
+                        pinged: this._current,
+                        totalToPing: this._nodeURLs.length
+                    })
+                });
+            }
+            try {
+                let _ping = new DirectPinger(2000);
+                _ping
+                    .check(pingNow)
+                    .then(this._handlePingResult.bind(this))
+                    .catch(err => {
+                        console.log("doLatencyUpdate error", err);
+                    })
+                    .finally(() => {
+                        this._current = this._current + pingNow.length;
+                        setTimeout(this._pingNodesInBatches.bind(this), 500);
+                    });
+            } catch (err) {
+                console.error(err);
+            }
+        } else {
+            // show message for seconds, then finished
+            this._updateTransitionTarget(false);
+        }
+    }
+
+    _updateSuitabilityCounter(res = null) {
+        for (let nodeUrl in res) {
+            if (this._beSatisfiedWith != null) {
+                if (res[nodeUrl] < this._beSatisfiedWith.instant) {
+                    this._counter.instant = this._counter.instant + 1;
+                } else if (res[nodeUrl] < this._beSatisfiedWith.low) {
+                    this._counter.low = this._counter.low + 1;
+                } else if (res[nodeUrl] < this._beSatisfiedWith.medium) {
+                    this._counter.medium = this._counter.medium + 1;
+                }
+            }
+        }
+        this._checkIfSuitableFound();
+    }
+
+    _checkIfSuitableFound() {
+        if (
+            this._counter.instant > 0 ||
+            this._counter.low >= 2 ||
+            this._counter.medium >= 3
+        ) {
+            this._suitableNodeFound = true;
+        }
+    }
+
+    _handlePingResult(res) {
+        if (!!res && Object.keys(res).length > 0) {
+            console.log("Latency result:", res);
+            this._updateSuitabilityCounter(res);
+            // build additional ping cache
+            this._updateLatencies(res, true, this._localLatencyCache);
+        }
+    }
+}
+
+class DirectPinger {
+    constructor(timeout) {
+        this.urls = [];
+        this.timeout = timeout;
+    }
+
+    async check(urls) {
+        urls.forEach(item => {
+            this.addURL(item);
+        });
+        try {
+            await this._runCheck();
+        } catch (err) {
+            console.error(err);
+        }
+        let _all = {};
+        this._result.forEach(item => {
+            _all[item.url] = item.latency;
+        });
+        return _all;
+    }
+
+    addURL(url) {
+        this.urls.push({
+            url: url,
+            latency: NaN
+        });
+    }
+
+    _checkURL(url) {
+        return new Promise(resolve => {
+            setTimeout(function() {
+                resolve(null);
+            }, this.timeout);
+            try {
+                let connection = new WebSocket(url);
+                connection.openTime = hirestime();
+                connection.onerror = event => {
+                    resolve(null);
+                };
+                connection.onopen = event => {
+                    connection.onmessage = function() {
+                        this.closeTime = connection.openTime(hirestime.MS);
+                        connection.close();
+                        resolve(this.closeTime);
+                    };
+                    connection.onmessage.bind(connection);
+                    connection.send(
+                        '{"id":1,"method":"call","params":[1,"login",["",""]]}'
+                    );
+                };
+            } catch (e) {
+                resolve(null);
+            }
+        });
+    }
+
+    async _runCheck() {
+        for (let i = 0; i < this.urls.length; i++) {
+            this.urls[i].latency = this._checkURL(this.urls[i].url);
+            this.urls[i].latency.then(res => {
+                this.urls[i].latency = res;
+            });
+        }
+        await Promise.all(
+            this.urls.map(x => {
+                return x.latency;
+            })
+        );
+        this.urls.sort((a, b) => {
+            return Number(a.latency) - Number(b.latency);
+        });
+        this._result = this.urls.slice();
+    }
+}
+
+/**
+ * Ping Strategy that leverages the hardcoded location of the nodes.
+ *
+ * Order:
+ *  - ping last connected node
+ *  - ping 2 nodes in each region, then continue with best country (lowest latency)
+ *  - ping all nodes in best country, then all from region
+ *  - if preferences are given, ping those in the preferred country and region first
+ *
+ * Pinging will stop according to the underlying pinger, this class merely adjusts the order of pinging.
+ *
+ */
+class PingStrategy {
+    constructor(nodesToPing, pinger, callback, getNodes) {
+        this._nodesToPing = nodesToPing;
+        this._pinger = pinger;
+        this._callback = callback;
+        this._getNodes = getNodes;
+        this._sortNodesToTree();
+    }
+
+    ping(firstURL, preferences = {}) {
+        // if background pinging is active this needs some more attention due to race pinging
+        function ping_the_rest() {
+            this._pinger.addNodes(
+                this._nodesToPing.map(a => a.url),
+                false,
+                "app_init.check_latency_feedback_rest"
+            );
+            this._pinger.pingNodes(this._callback);
+        }
+
+        function ping_all_from_one_region(region = null) {
+            if (region == null) {
+                let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
+                region = bestOne[0].region;
+            }
+            this._pinger.addNodes(
+                this.getFromRegion(region).map(a => a.url),
+                false,
+                "app_init.check_latency_feedback_region"
+            );
+            this._pinger.pingNodes(ping_the_rest.bind(this));
+        }
+
+        function ping_all_from_one_country(region = null, country = null) {
+            if (region == null) {
+                let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
+                region = bestOne[0].region;
+                country = bestOne[0].country;
+            }
+            this._pinger.addNodes(
+                this.getFromRegion(region, country).map(a => a.url),
+                false,
+                "app_init.check_latency_feedback_country"
+            );
+            this._pinger.pingNodes(ping_all_from_one_region.bind(this));
+        }
+
+        function ping_the_world() {
+            this._pinger.addNodes(
+                this.getFromEachRegion().map(a => a.url),
+                false,
+                "app_init.check_latency_feedback_world"
+            );
+            this._pinger.pingNodes(ping_all_from_one_country.bind(this));
+        }
+
+        function decideNext() {
+            if (!!preferences.region && !!preferences.country) {
+                ping_all_from_one_country.bind(this)(
+                    preferences.region,
+                    preferences.country
+                );
+            } else if (!!preferences.region) {
+                ping_all_from_one_region.bind(this)(preferences.region);
+            } else {
+                ping_the_world.bind(this)();
+            }
+        }
+
+        if (!!firstURL) {
+            this._pinger.addNodes(
+                [firstURL],
+                false,
+                "app_init.check_latency_feedback_last"
+            );
+            this._pinger.pingNodes(decideNext.bind(this));
+        } else {
+            decideNext.bind(this)();
+        }
+    }
+
+    getFromEachRegion(amount = 2, randomOrder = true) {
+        let filtered = [];
+
+        Object.keys(this._nodeTree).forEach(regionKey => {
+            let allFromRegion = this._nodeTree[regionKey]["all"];
+            let i;
+            for (i = 1; i <= amount; i++) {
+                if (allFromRegion.length >= i)
+                    filtered.push(allFromRegion[i - 1]);
+            }
+        });
+
+        console.log("Node tree", filtered);
+
+        if (randomOrder) {
+            return this._getShuffleArray(filtered);
+        } else {
+            return filtered;
+        }
+    }
+
+    getFromRegion(
+        regionKey,
+        countryKey = null,
+        amount = 10,
+        randomOrder = true
+    ) {
+        let filtered = [];
+
+        let countryKeys = null;
+        if (!countryKey) {
+            countryKeys = ["all"];
+        } else {
+            countryKeys = [countryKey];
+        }
+
+        countryKeys.forEach(_countryKey => {
+            let allFromRegion = this._nodeTree[regionKey][_countryKey];
+
+            let shuffled = randomOrder
+                ? this._getShuffleArray(allFromRegion)
+                : allFromRegion;
+
+            let i;
+            for (i = 1; i <= amount; i++) {
+                if (shuffled.length >= i) filtered.push(shuffled[i - 1]);
+            }
+        });
+
+        return filtered;
+    }
+
+    _getShuffleArray(array) {
+        array = array.slice(0);
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    _sortNodesToTree() {
+        let nodeTree = {};
+
+        this._nodesToPing.forEach(_node => {
+            if (nodeTree[_node.region] === undefined) {
+                nodeTree[_node.region] = {};
+                nodeTree[_node.region]["all"] = [];
+            }
+            if (nodeTree[_node.region][_node.country] === undefined) {
+                nodeTree[_node.region][_node.country] = [];
+            }
+
+            nodeTree[_node.region]["all"].push(_node);
+            nodeTree[_node.region][_node.country].push(_node);
+        });
+
+        this._nodeTree = nodeTree;
+    }
+}

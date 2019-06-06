@@ -18,6 +18,10 @@ import counterpart from "counterpart";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
+import stringSimilarity from "string-similarity";
+import {hiddenProposals} from "../../lib/common/hideProposals";
+import {Switch, Tooltip} from "bitshares-ui-style-guide";
+import AccountStore from "stores/AccountStore";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -45,7 +49,8 @@ class AccountVoting extends React.Component {
             lastBudgetObject: props.initialBudget.get("id"),
             workerTableIndex: props.viewSettings.get("workerTableIndex", 1),
             all_witnesses: Immutable.List(),
-            all_committee: Immutable.List()
+            all_committee: Immutable.List(),
+            hideLegacyProposals: true
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -549,16 +554,55 @@ class AccountVoting extends React.Component {
         let workerArray = this._getWorkerArray();
 
         let voteThreshold = 0;
-        let workers = workerArray
-            .filter(a => {
-                if (!a) {
-                    return false;
-                }
+        const hideProposals = (filteredWorker, compareWith) => {
+            if (!this.state.hideLegacyProposals) {
+                return true;
+            }
 
-                return (
-                    new Date(a.get("work_end_date") + "Z") > now &&
-                    new Date(a.get("work_begin_date") + "Z") <= now
-                );
+            let duplicated = compareWith.some(worker => {
+                const isSimilarName =
+                    stringSimilarity.compareTwoStrings(
+                        filteredWorker.get("name"),
+                        worker.get("name")
+                    ) > 0.8;
+                const sameId = worker.get("id") === filteredWorker.get("id");
+                const isNewer =
+                    worker.get("id").substr(5, worker.get("id").length) >
+                    filteredWorker.get("id").substr(5, worker.get("id").length);
+                return isSimilarName && !sameId && isNewer;
+            });
+            const newDate = new Date();
+            const totalVotes =
+                filteredWorker.get("total_votes_for") -
+                filteredWorker.get("total_votes_against");
+            const hasLittleVotes = totalVotes < 2000000000000;
+            const hasStartedOverAMonthAgo =
+                new Date(filteredWorker.get("work_begin_date") + "Z") <=
+                new Date(newDate.setMonth(newDate.getMonth() - 2));
+
+            const manualHidden = hiddenProposals.includes(
+                filteredWorker.get("id")
+            );
+
+            let hidden =
+                ((!!duplicated || hasStartedOverAMonthAgo) && hasLittleVotes) ||
+                manualHidden;
+
+            return !hidden;
+        };
+
+        let workers = workerArray.filter(a => {
+            if (!a) {
+                return false;
+            }
+            return (
+                new Date(a.get("work_end_date") + "Z") > now &&
+                new Date(a.get("work_begin_date") + "Z") <= now
+            );
+        });
+        workers = workers
+            .filter(a => {
+                return hideProposals(a, workers);
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -572,7 +616,6 @@ class AccountVoting extends React.Component {
                 if (workerBudget <= 0 && !voteThreshold) {
                     voteThreshold = votes;
                 }
-
                 if (voteThreshold && votes < voteThreshold) return null;
 
                 return (
@@ -595,19 +638,21 @@ class AccountVoting extends React.Component {
 
         // unusedBudget = Math.max(0, workerBudget);
 
-        let newWorkers = workerArray
-            .filter(a => {
-                if (!a) {
-                    return false;
-                }
+        let newWorkers = workerArray.filter(a => {
+            if (!a) {
+                return false;
+            }
 
-                let votes =
-                    a.get("total_votes_for") - a.get("total_votes_against");
-                return (
-                    (new Date(a.get("work_end_date") + "Z") > now &&
-                        votes < voteThreshold) ||
-                    new Date(a.get("work_begin_date") + "Z") > now
-                );
+            let votes = a.get("total_votes_for") - a.get("total_votes_against");
+            return (
+                (new Date(a.get("work_end_date") + "Z") > now &&
+                    votes < voteThreshold) ||
+                new Date(a.get("work_begin_date") + "Z") > now
+            );
+        });
+        newWorkers = newWorkers
+            .filter(a => {
+                return hideProposals(a, newWorkers);
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -639,7 +684,7 @@ class AccountVoting extends React.Component {
                     return false;
                 }
 
-                return new Date(a.get("work_end_date")) <= now;
+                return new Date(a.get("work_end_date") + "Z") <= now;
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -754,6 +799,28 @@ class AccountVoting extends React.Component {
                 }}
             >
                 <Translate content="account.votes.save_finish" />
+            </div>
+        );
+
+        const hideLegacy = (
+            <div
+                className="inline-block"
+                style={{marginLeft: "0.5em"}}
+                onClick={() => {
+                    this.setState({
+                        hideLegacyProposals: !this.state.hideLegacyProposals
+                    });
+                }}
+            >
+                <Tooltip
+                    title={counterpart.translate("tooltip.legacy_explanation")}
+                >
+                    <Switch
+                        style={{marginRight: 6}}
+                        checked={this.state.hideLegacyProposals}
+                    />
+                    <Translate content="account.votes.hide_legacy_proposals" />
+                </Tooltip>
             </div>
         );
 
@@ -923,6 +990,9 @@ class AccountVoting extends React.Component {
                                                 <Translate content="account.votes.expired" />
                                             </div>
                                         ) : null}
+                                        <div className="inline-block">
+                                            {hideLegacy}
+                                        </div>
                                     </div>
                                     <div style={{marginTop: "2rem"}}>
                                         {proxyInput}
@@ -1138,13 +1208,34 @@ class AccountVoting extends React.Component {
 }
 AccountVoting = BindToChainState(AccountVoting);
 
-const BudgetObjectWrapper = props => {
-    return (
-        <AccountVoting
-            {...props}
-            initialBudget={SettingsStore.getLastBudgetObject()}
-        />
-    );
+const FillMissingProps = props => {
+    let missingProps = {};
+    if (!props.initialBudget) {
+        missingProps.initialBudget = SettingsStore.getLastBudgetObject();
+    }
+    if (!props.account) {
+        // don't use store listener, user might be looking at different account. this is for reasonable default
+        let accountName =
+            AccountStore.getState().currentAccount ||
+            AccountStore.getState().passwordAccount;
+        accountName =
+            accountName && accountName !== "null"
+                ? accountName
+                : "committee-account";
+        missingProps.account = accountName;
+    }
+    if (!props.proxy) {
+        const account = ChainStore.getAccount(props.account);
+        let proxy = null;
+        if (account) {
+            proxy = account.getIn(["options", "voting_account"]);
+        } else {
+            throw "Account must be loaded";
+        }
+        missingProps.proxy = proxy;
+    }
+
+    return <AccountVoting {...props} {...missingProps} />;
 };
 
-export default BudgetObjectWrapper;
+export default FillMissingProps;

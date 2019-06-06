@@ -5,7 +5,6 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import WalletDb from "stores/WalletDb";
-import notify from "actions/NotificationActions";
 import {Link} from "react-router-dom";
 import AccountSelect from "../Forms/AccountSelect";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -21,6 +20,7 @@ import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
 import {withRouter} from "react-router-dom";
 import {scroller} from "react-scroll";
+import {Notification, Tooltip} from "bitshares-ui-style-guide";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -172,11 +172,17 @@ class CreateAccountPassword extends React.Component {
                         ? error.base[0]
                         : "unknown error";
                 if (error.remote_ip) error_msg = error.remote_ip[0];
-                notify.addNotification({
-                    message: `Failed to create account: ${name} - ${error_msg}`,
-                    level: "error",
-                    autoDismiss: 10
+
+                Notification.error({
+                    message: counterpart.translate(
+                        "notifications.account_create_failure",
+                        {
+                            account_name: name,
+                            error_msg: error_msg
+                        }
+                    )
                 });
+
                 this.setState({loading: false});
             });
     }
@@ -260,18 +266,18 @@ class CreateAccountPassword extends React.Component {
                         <label className="left-label">
                             <Translate content="wallet.generated" />
                             &nbsp;&nbsp;
-                            <span
-                                className="tooltip"
-                                data-html={true}
-                                data-tip={counterpart.translate(
+                            <Tooltip
+                                title={counterpart.translate(
                                     "tooltip.generate"
                                 )}
                             >
-                                <Icon
-                                    name="question-circle"
-                                    title="icons.question_circle"
-                                />
-                            </span>
+                                <span className="tooltip">
+                                    <Icon
+                                        name="question-circle"
+                                        title="icons.question_circle"
+                                    />
+                                </span>
+                            </Tooltip>
                         </label>
                         <div style={{paddingBottom: "0.5rem"}}>
                             <span className="inline-label">

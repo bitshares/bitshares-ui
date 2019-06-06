@@ -6,7 +6,6 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import CitadelGateway from "../DepositWithdraw/citadel/CitadelGateway";
 import OpenledgerGateway from "../DepositWithdraw/OpenledgerGateway";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
@@ -21,10 +20,13 @@ import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
+import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
-import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
 import PropTypes from "prop-types";
+import DepositModal from "../Modal/DepositModal";
+import WithdrawModal from "../Modal/WithdrawModalNew";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 class AccountDepositWithdraw extends React.Component {
     static propTypes = {
@@ -41,6 +43,10 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {
             olService: props.viewSettings.get("olService", "gateway"),
             rudexService: props.viewSettings.get("rudexService", "gateway"),
+            bitsparkService: props.viewSettings.get(
+                "bitsparkService",
+                "gateway"
+            ),
             xbtsxService: props.viewSettings.get("xbtsxService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
             citadelService: props.viewSettings.get("citadelService", "bridge"),
@@ -67,6 +73,7 @@ class AccountDepositWithdraw extends React.Component {
             ) ||
             nextState.olService !== this.state.olService ||
             nextState.rudexService !== this.state.rudexService ||
+            nextState.bitsparkService !== this.state.bitsparkService ||
             nextState.xbtsxService !== this.state.xbtsxService ||
             nextState.btService !== this.state.btService ||
             nextState.citadelService !== this.state.citadelService ||
@@ -106,6 +113,16 @@ class AccountDepositWithdraw extends React.Component {
 
         SettingsActions.changeViewSetting({
             xbtsxService: service
+        });
+    }
+
+    toggleBitSparkService(service) {
+        this.setState({
+            bitsparkService: service
+        });
+
+        SettingsActions.changeViewSetting({
+            bitsparkService: service
         });
     }
 
@@ -152,6 +169,7 @@ class AccountDepositWithdraw extends React.Component {
     renderServices(
         openLedgerGatewayCoins,
         rudexGatewayCoins,
+        bitsparkGatewayCoins,
         xbtsxGatewayCoins
     ) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
@@ -161,6 +179,7 @@ class AccountDepositWithdraw extends React.Component {
             olService,
             btService,
             rudexService,
+            bitsparkService,
             xbtsxService,
             citadelService
         } = this.state;
@@ -295,6 +314,45 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         serList.push({
+            name: "BitSpark (SPARKDEX.X)",
+            template: (
+                <div className="content-block">
+                    <div
+                        className="service-selector"
+                        style={{marginBottom: "2rem"}}
+                    >
+                        <ul className="button-group segmented no-margin">
+                            <li
+                                onClick={this.toggleBitSparkService.bind(
+                                    this,
+                                    "gateway"
+                                )}
+                                className={
+                                    bitsparkService === "gateway"
+                                        ? "is-active"
+                                        : ""
+                                }
+                            >
+                                <a>
+                                    <Translate content="gateway.gateway" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {bitsparkService === "gateway" &&
+                    bitsparkGatewayCoins.length ? (
+                        <BitsparkGateway
+                            account={account}
+                            coins={bitsparkGatewayCoins}
+                            provider="bitspark"
+                        />
+                    ) : null}
+                </div>
+            )
+        });
+
+        serList.push({
             name: "XBTS (XBTSX.X)",
             template: (
                 <div className="content-block">
@@ -403,7 +461,6 @@ class AccountDepositWithdraw extends React.Component {
             template: (
                 <div>
                     <div className="content-block">
-                        {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
                         <div
                             className="service-selector"
                             style={{marginBottom: "2rem"}}
@@ -462,15 +519,6 @@ class AccountDepositWithdraw extends React.Component {
             )
         });
 
-        serList.push({
-            name: "Winex",
-            template: (
-                <div>
-                    <WinexGateway account={account} provider="Winex" />
-                </div>
-            )
-        });
-
         return serList;
     }
 
@@ -498,6 +546,16 @@ class AccountDepositWithdraw extends React.Component {
                 return 0;
             });
 
+        let bitsparkGatewayCoins = this.props.bitsparkBackedCoins
+            .map(coin => {
+                return coin;
+            })
+            .sort((a, b) => {
+                if (a.symbol < b.symbol) return -1;
+                if (a.symbol > b.symbol) return 1;
+                return 0;
+            });
+
         let xbtsxGatewayCoins = this.props.xbtsxBackedCoins
             .map(coin => {
                 return coin;
@@ -511,6 +569,7 @@ class AccountDepositWithdraw extends React.Component {
         let services = this.renderServices(
             openLedgerGatewayCoins,
             rudexGatewayCoins,
+            bitsparkGatewayCoins,
             xbtsxGatewayCoins
         );
 
@@ -523,10 +582,10 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         const serviceNames = [
-            "Winex",
             "GDEX",
             "OPEN",
             "RUDEX",
+            "SPARKDEX",
             "TRADE",
             "BITKAPITAL",
             "XBTSX",
@@ -545,6 +604,54 @@ class AccountDepositWithdraw extends React.Component {
                     className={this.props.contained ? "" : "grid-content"}
                     style={{paddingTop: "2rem"}}
                 >
+                    <div className="grid-block vertical medium-horizontal no-margin no-padding">
+                        <div style={{paddingBottom: "1rem"}}>
+                            <DepositModal
+                                ref="deposit_modal"
+                                modalId="deposit_modal_new"
+                                account={this.props.currentAccount}
+                                backedCoins={this.props.backedCoins}
+                            />
+                            <WithdrawModal
+                                ref="withdraw_modal"
+                                modalId="withdraw_modal_new"
+                                backedCoins={this.props.backedCoins}
+                            />
+                            <TranslateWithLinks
+                                string="gateway.phase_out_warning"
+                                keys={[
+                                    {
+                                        arg: "deposit_modal_link",
+                                        value: (
+                                            <a
+                                                onClick={() => {
+                                                    if (this.refs.deposit_modal)
+                                                        this.refs.deposit_modal.show();
+                                                }}
+                                            >
+                                                <Translate content="modal.deposit.submit" />
+                                            </a>
+                                        )
+                                    },
+                                    {
+                                        arg: "withdraw_modal_link",
+                                        value: (
+                                            <a
+                                                onClick={() => {
+                                                    if (
+                                                        this.refs.withdraw_modal
+                                                    )
+                                                        this.refs.withdraw_modal.show();
+                                                }}
+                                            >
+                                                <Translate content="modal.withdraw.submit" />
+                                            </a>
+                                        )
+                                    }
+                                ]}
+                            />
+                        </div>
+                    </div>
                     <Translate content="gateway.title" component="h2" />
                     <div className="grid-block vertical medium-horizontal no-margin no-padding">
                         <div className="medium-6 show-for-medium">
@@ -651,8 +758,12 @@ export default connect(
         },
         getProps() {
             return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount,
                 account: AccountStore.getState().currentAccount,
                 viewSettings: SettingsStore.getState().viewSettings,
+                backedCoins: GatewayStore.getState().backedCoins,
                 openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
                     "OPEN",
                     []
@@ -661,16 +772,16 @@ export default connect(
                     "RUDEX",
                     []
                 ),
+                bitsparkBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "SPARKDEX",
+                    []
+                ),
                 blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
                     "TRADE",
                     []
                 ),
                 citadelBackedCoins: GatewayStore.getState().backedCoins.get(
                     "CITADEL",
-                    []
-                ),
-                winexBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "WIN",
                     []
                 ),
                 xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(

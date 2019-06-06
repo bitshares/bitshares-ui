@@ -68,6 +68,8 @@ export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
         return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
     else if (chainId === "39f5e2ed") return ["TEST"];
+    // unknown chain id: (need to return at least one unit)
+    else return ["BTS"];
 }
 
 /**
@@ -141,7 +143,7 @@ export function getMyMarketsQuotes() {
             "RUDEX.STEEM",
             "RUDEX.TT"
         ],
-        winTokens: ["WIN.ETC", "WIN.ETH", "WIN.HSR"],
+        sparkTokens: ["ZEPH", "SPARKDEX.ETH", "SPARKDEX.BTC"],
         xbtsxTokens: [
             "XBTSX.STH",
             "XBTSX.POST",
@@ -150,10 +152,18 @@ export function getMyMarketsQuotes() {
             "XBTSX.LTC",
             "XBTSX.DASH",
             "XBTSX.KEC",
-            "XBTSX.BCH",
             "XBTSX.BTG",
             "XBTSX.XSPEC",
-            "XBTSX.NVC"
+            "XBTSX.NVC",
+            "XBTSX.UNI",
+            "XBTSX.NMC",
+            "XBTSX.WAVES",
+            "XBTSX.COF",
+            "XBTSX.XRUP",
+            "XBTSX.P2P",
+            "XBTSX.STEEP",
+            "XBTSX.MDL",
+            "XBTSX.ETH"
         ],
         otherTokens: [
             "BKT",
@@ -173,8 +183,7 @@ export function getMyMarketsQuotes() {
             "OCT",
             "SMOKE",
             "STEALTH",
-            "YOYOW",
-            "ZEPH"
+            "YOYOW"
         ]
     };
 
@@ -264,8 +273,11 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.ETH"],
         ["BTS", "RUDEX.DGB"],
         ["BTS", "XBTSX.STH"],
+        ["BTS", "XBTSX.WAVES"],
         ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"]
+        ["BTS", "HERTZ"],
+        ["BTS", "SPARKDEX.BTC"],
+        ["BTS", "SPARKDEX.ETH"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -279,14 +291,13 @@ export function getFeaturedMarkets(quotes = []) {
  */
 export function getAssetNamespaces() {
     return [
-        "TRADE.",
         "OPEN.",
-        "METAEX.",
-        "BRIDGE.",
         "RUDEX.",
+        "BRIDGE.",
         "GDEX.",
-        "WIN.",
-        "XBTSX."
+        "XBTSX.",
+        "SPARKDEX.",
+        "CITADEL."
     ];
 }
 
@@ -306,8 +317,15 @@ export function getAssetHideNamespaces() {
  */
 export function allowedGateway(gateway) {
     return (
-        ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX", "XBTSX"].indexOf(gateway) >=
-        0
+        [
+            "OPEN",
+            "RUDEX",
+            "BRIDGE",
+            "GDEX",
+            "XBTSX",
+            "SPARKDEX",
+            "CITADEL"
+        ].indexOf(gateway) >= 0
     );
 }
 

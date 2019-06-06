@@ -1,29 +1,52 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "../Modal/BaseModal";
 import utils from "common/utils";
 import Translate from "react-translate-component";
+import {Modal, Button} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 export default class ConfirmModal extends React.Component {
-    show() {
-        let modalId = "modal_confirm_" + this.props.type;
-        ZfApi.publish(modalId, "open");
+    constructor(props) {
+        super(props);
+
+        this.submit = this.submit.bind(this);
+        this.cancel = this.cancel.bind(this);
     }
 
     _onForce(value, e) {
-        let modalId = "modal_confirm_" + this.props.type;
         e.preventDefault();
 
-        ZfApi.publish(modalId, "close");
+        this.props.hideModal();
+
         if (value) this.props.onForce();
+    }
+
+    submit(e) {
+        this._onForce(true, e);
+    }
+
+    cancel(e) {
+        this._onForce(false, e);
     }
 
     render() {
         let {type, diff, hasOrders} = this.props;
 
+        const footer = [
+            <Button key="submit" onClick={this.submit}>
+                {counterpart.translate("settings.yes")}
+            </Button>,
+            <Button key="cancel" type="primary" onClick={this.cancel}>
+                {counterpart.translate("settings.no")}
+            </Button>
+        ];
+
         return (
-            <BaseModal id={"modal_confirm_" + type} overlay={true}>
-                <Translate component="h3" content="transaction.confirm" />
+            <Modal
+                footer={footer}
+                visible={this.props.visible}
+                onCancel={this.cancel}
+                title={counterpart.translate("transaction.confirm")}
+            >
                 <div className="grid-block vertical">
                     {!hasOrders ? (
                         <Translate
@@ -35,22 +58,8 @@ export default class ConfirmModal extends React.Component {
                             diff={utils.format_number(diff, 2)}
                         />
                     )}
-                    <div className="button-group" style={{paddingTop: "2rem"}}>
-                        <input
-                            onClick={this._onForce.bind(this, true)}
-                            className="button success"
-                            type="submit"
-                            value="Yes"
-                        />
-                        <input
-                            onClick={this._onForce.bind(this, false)}
-                            className="button info"
-                            type="submit"
-                            value="No"
-                        />
-                    </div>
                 </div>
-            </BaseModal>
+            </Modal>
         );
     }
 }

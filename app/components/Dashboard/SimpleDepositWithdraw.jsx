@@ -22,15 +22,14 @@ import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
 import {debounce} from "lodash-es";
-import {DecimalChecker} from "../Exchange/ExchangeInput";
+import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
-
-// import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
-// import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
+import {Modal, Tooltip} from "bitshares-ui-style-guide";
 
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
+        balance: ChainTypes.ChainObject,
         sender: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
@@ -289,9 +288,17 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _getCurrentBalance() {
-        return this.props.balances.find(b => {
-            return b && b.get("asset_type") === this.props.asset.get("id");
-        });
+        let balances = this.props.balance
+            ? [this.props.balance]
+            : this.props.balances;
+
+        return !!balances
+            ? balances.find(b => {
+                  return (
+                      b && b.get("asset_type") === this.props.asset.get("id")
+                  );
+              })
+            : null;
     }
 
     _checkBalance() {
@@ -571,15 +578,15 @@ class DepositWithdrawContent extends DecimalChecker {
 
                         <div className="form-label select floating-dropdown">
                             <div className="dropdown-wrapper inactive">
-                                <div
-                                    data-place="right"
-                                    data-tip={counterpart.translate(
+                                <Tooltip
+                                    placement="right"
+                                    title={counterpart.translate(
                                         "tooltip.withdraw_address",
                                         {asset: assetName}
                                     )}
                                 >
                                     ?
-                                </div>
+                                </Tooltip>
                             </div>
                         </div>
                     </div>
@@ -670,23 +677,24 @@ class DepositWithdrawContent extends DecimalChecker {
                 {this._renderCurrentBalance()}
 
                 <div className="SimpleTrade__withdraw-row">
-                    <p
-                        style={{marginBottom: 10}}
-                        data-place="right"
-                        data-tip={counterpart.translate("tooltip.deposit_tip", {
+                    <Tooltip
+                        placement="right"
+                        title={counterpart.translate("tooltip.deposit_tip", {
                             asset: assetName
                         })}
                     >
-                        <Translate
-                            className="help-tooltip"
-                            content="gateway.deposit_to"
-                            asset={assetName}
-                        />
-                        :
-                        <label className="fz_12 left-label">
-                            <Translate content="gateway.deposit_notice_delay" />
-                        </label>
-                    </p>
+                        <p style={{marginBottom: 10}}>
+                            <Translate
+                                className="help-tooltip"
+                                content="gateway.deposit_to"
+                                asset={assetName}
+                            />
+                            :
+                            <label className="fz_12 left-label">
+                                <Translate content="gateway.deposit_notice_delay" />
+                            </label>
+                        </p>
+                    </Tooltip>
                     {!addressValue ? (
                         <LoadingIndicator type="three-bounce" />
                     ) : (
@@ -774,20 +782,23 @@ class DepositWithdrawContent extends DecimalChecker {
                 {assetName}
             </span>
         ) : (
-            <button
-                data-place="right"
-                data-tip={counterpart.translate("tooltip.withdraw_full")}
-                className="button"
-                style={{border: "2px solid black", borderLeft: "none"}}
-                onClick={this._updateAmount.bind(
-                    this,
-                    !currentBalance
-                        ? 0
-                        : parseInt(currentBalance.get("balance"), 10)
-                )}
+            <Tooltip
+                placement="right"
+                title={counterpart.translate("tooltip.withdraw_full")}
             >
-                <Icon name="clippy" title="icons.clippy.withdraw_full" />
-            </button>
+                <button
+                    className="button"
+                    style={{border: "2px solid black", borderLeft: "none"}}
+                    onClick={this._updateAmount.bind(
+                        this,
+                        !currentBalance
+                            ? 0
+                            : parseInt(currentBalance.get("balance"), 10)
+                    )}
+                >
+                    <Icon name="clippy" title="icons.clippy.withdraw_full" />
+                </button>
+            </Tooltip>
         );
 
         return (
@@ -852,20 +863,6 @@ class DepositWithdrawContent extends DecimalChecker {
 
         return (
             <div className="SimpleTrade__modal">
-                <div className="Modal__header">
-                    <h3>
-                        <Translate
-                            content={
-                                isDeposit
-                                    ? "gateway.deposit"
-                                    : "modal.withdraw.submit"
-                            }
-                        />{" "}
-                        {assetName}
-                    </h3>
-                </div>
-                <div className="Modal__divider" />
-
                 <div
                     className="grid-block vertical no-overflow"
                     style={{
@@ -901,20 +898,30 @@ export default class SimpleDepositWithdrawModal extends React.Component {
     }
 
     render() {
-        return !this.state.open ? null : (
-            <BaseModal
+        const isDeposit = this.props.action === "deposit";
+
+        const title = isDeposit
+            ? counterpart.translate("gateway.deposit")
+            : counterpart.translate("modal.withdraw.submit");
+
+        return (
+            <Modal
+                title={title}
+                footer={[]}
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
                 className="test"
                 onClose={this.onClose.bind(this)}
                 overlay={true}
                 id={this.props.modalId}
             >
-                {this.state.open ? (
+                {this.props.visible ? (
                     <DepositWithdrawContent
                         {...this.props}
-                        open={this.state.open}
+                        open={this.props.visible}
                     />
                 ) : null}
-            </BaseModal>
+            </Modal>
         );
     }
 }

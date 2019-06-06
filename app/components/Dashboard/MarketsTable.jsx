@@ -9,6 +9,7 @@ import SettingsStore from "stores/SettingsStore";
 import utils from "common/utils";
 import PaginatedList from "../Utility/PaginatedList";
 import MarketsRow from "./MarketsRow";
+import {Input, Icon} from "bitshares-ui-style-guide";
 
 class MarketsTable extends React.Component {
     constructor() {
@@ -242,14 +243,18 @@ class MarketsTable extends React.Component {
             <div>
                 <div className="header-selector">
                     <div className="filter inline-block">
-                        <input
+                        <Input
                             type="text"
-                            placeholder="Filter"
+                            placeholder="Filter..."
                             onChange={this._handleFilterInput.bind(this)}
+                            addonAfter={<Icon type="search" />}
                         />
                     </div>
 
-                    <div className="selector inline-block">
+                    <div
+                        className="selector inline-block"
+                        style={{position: "relative", top: "6px"}}
+                    >
                         <div
                             className={cnames("inline-block", {
                                 inactive: showHidden
@@ -358,15 +363,18 @@ class MarketsTable extends React.Component {
                         </tr>
                     }
                     rows={
-                        !marketRows.length ? (
-                            <tr className="table-empty">
-                                <td colSpan={showFlip ? 7 : 6}>
-                                    <Translate content="dashboard.table_empty" />
-                                </td>
-                            </tr>
-                        ) : (
-                            marketRows
-                        )
+                        !marketRows.length
+                            ? [
+                                  <tr
+                                      className="table-empty"
+                                      key={"tr-table-empty"}
+                                  >
+                                      <td colSpan={showFlip ? 7 : 6}>
+                                          <Translate content="dashboard.table_empty" />
+                                      </td>
+                                  </tr>
+                              ]
+                            : marketRows
                     }
                     pageSize={25}
                     label="utility.total_x_markets"

@@ -468,3 +468,34 @@ div.tabs-container {
         @include RobotoRegular;
     }
 }
+
+.account-treemap--legend {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    .legend-item {
+        display: flex;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        .legend-square {
+            height: 16px;
+            width: 16px;
+            margin-right: 5px;
+        }
+    }
+}
+
+.account-input-style-guide--account-status {
+    float: right;
+    color: $success-color;
+}
+
+.account-input-style-guide--account-status--scammer {
+    color: $alert-color;
+}
+
+.account-input-style-guide--label {
+}
+
+.account-input-style-guide {
+}

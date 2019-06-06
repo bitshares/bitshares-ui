@@ -7,6 +7,7 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import counterpart from "counterpart";
 import SignedMessageAction from "../../actions/SignedMessageAction";
 import SignedMessage from "../Account/SignedMessage";
+import {Switch} from "bitshares-ui-style-guide";
 
 /** This component gives a user interface for signing and verifying messages with the bitShares memo key.
  *  It consists of two tabs:
@@ -319,29 +320,26 @@ class AccountSignedMessages extends React.Component {
                                             <table>
                                                 <tr>
                                                     <td>
-                                                        <label>
+                                                        <label
+                                                            style={{
+                                                                marginBottom: 0,
+                                                                marginRight:
+                                                                    "0.5rem"
+                                                            }}
+                                                        >
                                                             <Translate content="account.signedmessages.verifyonchange" />
                                                         </label>
                                                     </td>
                                                     <td>
-                                                        <div
-                                                            className="switch"
-                                                            onClick={this._tabVMToggleVerifyOnChange.bind(
+                                                        <Switch
+                                                            checked={
+                                                                this.state
+                                                                    .tabvm_flag_verifyonchange
+                                                            }
+                                                            onChange={this._tabVMToggleVerifyOnChange.bind(
                                                                 this
                                                             )}
-                                                        >
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={
-                                                                    this.state
-                                                                        .tabvm_flag_verifyonchange
-                                                                }
-                                                                value={counterpart.translate(
-                                                                    "account.signedmessages.verifyonchange"
-                                                                )}
-                                                            />
-                                                            <label />
-                                                        </div>
+                                                        />
                                                     </td>
                                                 </tr>
                                             </table>

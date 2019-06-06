@@ -9,6 +9,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
+import {Card} from "bitshares-ui-style-guide";
 const {operations} = grapheneChainTypes;
 let ops = Object.keys(operations);
 
@@ -129,39 +130,34 @@ class FeeGroup extends React.Component {
                 }
 
                 if (ltm_required.indexOf(opId) < 0) {
-                    rows.push(
-                        <tr
-                            key={opId.toString() + key}
-                            className={
-                                feeTypes[key] === "Annual Membership"
-                                    ? "linethrough"
-                                    : ""
-                            }
-                        >
-                            {title}
-                            <td>{feeTypes[key]}</td>
-                            <td style={{textAlign: "right"}}>
-                                {assetAmount}
-                                {amount !== 0 && preferredUnit !== "BTS" ? (
-                                    <span>
-                                        &nbsp;/&nbsp;
-                                        {equivalentAmount}
-                                    </span>
-                                ) : null}
-                            </td>
-                            <td style={{textAlign: "right"}}>
-                                {feeIdx !== 8 ? assetAmountLTM : null}
-                                {feeIdx !== 8 &&
-                                amount !== 0 &&
-                                preferredUnit !== "BTS" ? (
-                                    <span>
-                                        &nbsp;/&nbsp;
-                                        {equivalentAmountLTM}
-                                    </span>
-                                ) : null}
-                            </td>
-                        </tr>
-                    );
+                    if (feeTypes[key] != "Annual Membership") {
+                        rows.push(
+                            <tr key={opId.toString() + key}>
+                                {title}
+                                <td>{feeTypes[key]}</td>
+                                <td style={{textAlign: "right"}}>
+                                    {assetAmount}
+                                    {amount !== 0 && preferredUnit !== "BTS" ? (
+                                        <span>
+                                            &nbsp;/&nbsp;
+                                            {equivalentAmount}
+                                        </span>
+                                    ) : null}
+                                </td>
+                                <td style={{textAlign: "right"}}>
+                                    {feeIdx !== 8 ? assetAmountLTM : null}
+                                    {feeIdx !== 8 &&
+                                    amount !== 0 &&
+                                    preferredUnit !== "BTS" ? (
+                                        <span>
+                                            &nbsp;/&nbsp;
+                                            {equivalentAmountLTM}
+                                        </span>
+                                    ) : null}
+                                </td>
+                            </tr>
+                        );
+                    }
                 } else {
                     rows.push(
                         <tr key={opId.toString() + key}>
@@ -188,7 +184,7 @@ class FeeGroup extends React.Component {
 
         return (
             <div className="asset-card">
-                <div className="card-divider">{this.props.title}</div>
+                <Card>{this.props.title.toUpperCase()}</Card>
                 <table className="table">
                     <thead>
                         <tr>

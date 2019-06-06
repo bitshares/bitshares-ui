@@ -2,20 +2,31 @@ import React from "react";
 import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PasswordInput from "../Forms/PasswordInput";
-import notify from "actions/NotificationActions";
 import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import WalletManagerStore from "stores/WalletManagerStore";
 import BackupStore from "stores/BackupStore";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletActions from "actions/WalletActions";
 import BackupActions, {restore, backup} from "actions/BackupActions";
 import AccountActions from "actions/AccountActions";
+import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
+import {
+    Modal,
+    Button,
+    Form,
+    Input,
+    Switch,
+    InputNumber,
+    Tooltip,
+    Notification
+} from "bitshares-ui-style-guide";
 import utils from "common/utils";
-import AccountSelector from "../Account/AccountSelector";
+import AccountSelector from "../Account/AccountSelectorAnt";
 import {PrivateKey} from "bitsharesjs";
 import {saveAs} from "file-saver";
 import LoginTypeSelector from "./LoginTypeSelector";
@@ -24,33 +35,40 @@ import {
     WalletSelector,
     CreateLocalWalletLink,
     WalletDisplay,
-    CustomPasswordInput,
-    LoginButtons,
     BackupWarning,
     BackupFileSelector,
     DisableChromeAutocomplete,
-    CustomError,
     KeyFileLabel
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
 import {withRouter} from "react-router-dom";
+import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
+import Translate from "react-translate-component";
+import Icon from "../Icon/Icon";
 
 class WalletUnlockModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.initialState(props);
+        this.account_input = React.createRef();
+
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
 
     initialState = (props = this.props) => {
         const {passwordAccount, currentWallet} = props;
         return {
+            isModalVisible: false,
             passwordError: null,
             accountName: passwordAccount,
             walletSelected: !!currentWallet,
             customError: null,
             isOpen: false,
             restoringBackup: false,
-            stopAskingForBackup: false
+            stopAskingForBackup: false,
+            rememberMe: WalletUnlockStore.getState().rememberMe,
+            focusedOnce: false,
+            isAutoLockVisible: false
         };
     };
 
@@ -62,8 +80,7 @@ class WalletUnlockModal extends React.Component {
         } = np;
 
         const newState = {};
-        if (newPasswordAccount && !accountName)
-            newState.accountName = newPasswordAccount;
+        // Updating the accountname through the listener breaks UX (#2335)
         if (walletSelected && !restoringBackup && !newCurrentWallet)
             newState.walletSelected = false;
         if (this.props.passwordLogin != np.passwordLogin) {
@@ -80,6 +97,12 @@ class WalletUnlockModal extends React.Component {
             !utils.are_equal_shallow(np, this.props) ||
             !utils.are_equal_shallow(ns, this.state)
         );
+    }
+
+    handlePasswordChange(event) {
+        this.setState({
+            password: event.target.value
+        });
     }
 
     handleModalClose = () => {
@@ -104,14 +127,19 @@ class WalletUnlockModal extends React.Component {
                     dbWallet &&
                     Apis.instance().chain_id !== dbWallet.chain_id
                 ) {
-                    notify.error(
-                        "This wallet was intended for a different block-chain; expecting " +
-                            dbWallet.chain_id.substring(0, 4).toUpperCase() +
-                            ", but got " +
-                            Apis.instance()
-                                .chain_id.substring(0, 4)
-                                .toUpperCase()
-                    );
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.wallet_unlock_different_block_chain",
+                            {
+                                expectedWalletId: dbWallet.chain_id
+                                    .substring(0, 4)
+                                    .toUpperCase(),
+                                actualWalletId: Apis.instance()
+                                    .chain_id.substring(0, 4)
+                                    .toUpperCase()
+                            }
+                        )
+                    });
                     WalletUnlockActions.cancel();
                 }
             }
@@ -119,8 +147,7 @@ class WalletUnlockModal extends React.Component {
     };
 
     componentDidMount() {
-        const {modalId, passwordLogin} = this.props;
-
+        const {modalId} = this.props;
         ZfApi.subscribe(modalId, (name, msg) => {
             const {isOpen} = this.state;
 
@@ -131,32 +158,56 @@ class WalletUnlockModal extends React.Component {
                 this.handleModalOpen();
             }
         });
-
-        if (passwordLogin) {
-            const {password_input, account_input} = this.refs;
-            const {accountName} = this.state;
-
-            if (accountName && password_input) {
-                password_input.focus();
-            } else if (
-                account_input &&
-                typeof account_input.focus === "function"
-            ) {
-                account_input.focus();
-            }
-        }
     }
 
     componentDidUpdate() {
-        const {resolve, modalId, isLocked} = this.props;
+        const {resolve, isLocked, passwordLogin} = this.props;
+        const {isModalVisible, accountName, focusedOnce} = this.state;
 
-        if (resolve)
+        if (!focusedOnce && isModalVisible && passwordLogin) {
+            let account_input =
+                this.account_input && this.account_input.current;
+            let password_input = this.password_input;
+
+            if (!account_input || !password_input) {
+                this.forceUpdate();
+            }
+            if (accountName && password_input) {
+                password_input.input.focus();
+                this.setState({focusedOnce: true});
+            } else if (
+                account_input &&
+                account_input.input &&
+                typeof account_input.focus === "function"
+            ) {
+                account_input.focus();
+                this.setState({focusedOnce: true});
+            }
+        } else if (!focusedOnce && isModalVisible && !passwordLogin) {
+            let password_input = this.password_input2;
+            if (!password_input) {
+                this.forceUpdate();
+            }
+            if (password_input) {
+                password_input.input.focus();
+                this.setState({focusedOnce: true});
+            }
+        }
+
+        if (resolve) {
             if (isLocked) {
-                ZfApi.publish(modalId, "open");
+                this.setState({
+                    isModalVisible: true
+                });
             } else {
                 resolve();
             }
-        else ZfApi.publish(this.props.modalId, "close");
+        } else {
+            this.setState({
+                isModalVisible: false,
+                password: ""
+            });
+        }
     }
 
     validate = (password, account) => {
@@ -172,11 +223,14 @@ class WalletUnlockModal extends React.Component {
         if (WalletDb.isLocked()) {
             this.setState({passwordError: true});
         } else {
-            const password_input = this.passwordInput();
             if (!passwordLogin) {
-                password_input.clear();
+                this.setState({
+                    password: ""
+                });
             } else {
-                password_input.value = "";
+                this.setState({
+                    password: ""
+                });
                 if (cloudMode) AccountActions.setPasswordAccount(account);
             }
             WalletUnlockActions.change();
@@ -229,13 +283,19 @@ class WalletUnlockModal extends React.Component {
             });
         } else {
             this.setState({passwordError: null}, () => {
-                const password_input = this.passwordInput();
-                const password = passwordLogin
-                    ? password_input.value
-                    : password_input.value();
+                const password = this.state.password;
                 if (!passwordLogin && backup.name) {
                     this.restoreBackup(password, () => this.validate(password));
                 } else {
+                    if (!this.state.rememberMe) {
+                        if (isPersistantType()) {
+                            setLocalStorageType("inram");
+                        }
+                    } else {
+                        if (!isPersistantType()) {
+                            setLocalStorageType("persistant");
+                        }
+                    }
                     const account = passwordLogin ? accountName : null;
                     this.validate(password, account);
                 }
@@ -334,13 +394,34 @@ class WalletUnlockModal extends React.Component {
     shouldUseBackupLogin = () =>
         this.shouldShowBackupWarning() && !this.state.stopAskingForBackup;
 
+    handleRememberMe = () => {
+        let newRememberMe = !this.state.rememberMe;
+        this.setState({rememberMe: newRememberMe});
+        SettingsActions.changeSetting({
+            setting: "rememberMe",
+            value: newRememberMe
+        });
+    };
+
+    handleWalletAutoLock = val => {
+        let newValue = parseInt(val, 10);
+        if (isNaN(newValue)) newValue = 0;
+        if (!isNaN(newValue) && typeof newValue === "number") {
+            SettingsActions.changeSetting({
+                setting: "walletLockTimeout",
+                value: newValue
+            });
+        }
+    };
+
     render() {
         const {
             backup,
             passwordLogin,
             modalId,
             currentWallet,
-            walletNames
+            walletNames,
+            walletLockTimeout
         } = this.props;
         const {
             walletSelected,
@@ -361,126 +442,242 @@ class WalletUnlockModal extends React.Component {
         // Modal overlayClose must be false pending a fix that allows us to detect
         // this event and clear the password (via this.refs.password_input.clear())
         // https://github.com/akiran/react-foundation-apps/issues/34
+
+        let footer = [];
+        if (passwordLogin) {
+            footer.push(
+                <Tooltip
+                    key="wallet.remember_me_explanation"
+                    title={counterpart.translate(
+                        "wallet.remember_me_explanation"
+                    )}
+                >
+                    <div
+                        style={{
+                            float: "left",
+                            cursor: "pointer",
+                            marginTop: "6px"
+                        }}
+                        onClick={this.handleRememberMe.bind(this)}
+                    >
+                        <Translate content="wallet.remember_me" />
+                        <Switch
+                            checked={this.state.rememberMe}
+                            onChange={this.handleRememberMe.bind(this)}
+                        />
+                    </div>
+                </Tooltip>
+            );
+            footer.push(
+                <div
+                    style={{
+                        float: "left"
+                    }}
+                    key="settings.walletLockTimeoutTooltip"
+                >
+                    <span>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "settings.walletLockTimeoutTooltip"
+                            )}
+                        >
+                            <span>
+                                <Icon
+                                    onClick={() => {
+                                        this.setState({
+                                            isAutoLockVisible: !this.state
+                                                .isAutoLockVisible
+                                        });
+                                    }}
+                                    name={"autolock"}
+                                    size={"1_5x"}
+                                    style={{
+                                        cursor: "pointer",
+                                        top: "5px",
+                                        position: "relative",
+                                        marginLeft: "12px"
+                                    }}
+                                />
+                            </span>
+                        </Tooltip>
+                        {this.state.isAutoLockVisible && (
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "settings.walletLockTimeout"
+                                )}
+                            >
+                                <InputNumber
+                                    value={walletLockTimeout}
+                                    onChange={this.handleWalletAutoLock}
+                                    placeholder="Auto-lock after..."
+                                    style={{
+                                        marginLeft: "7px",
+                                        width: "65px"
+                                    }}
+                                />
+                            </Tooltip>
+                        )}
+                    </span>
+                </div>
+            );
+        }
+        footer.push(
+            <span className="auto-lock-wrapper" key="wallet.backup_login">
+                <Button onClick={this.handleLogin} key="login-btn">
+                    {counterpart.translate(
+                        this.shouldUseBackupLogin()
+                            ? "wallet.backup_login"
+                            : "header.unlock_short"
+                    )}
+                </Button>
+            </span>
+        );
+
         return (
             // U N L O C K
-            <BaseModal
+            <Modal
+                title="Login"
+                visible={this.state.isModalVisible}
+                wrapClassName={"unlock_wallet_modal2"}
                 id={modalId}
+                closeable={false}
                 ref="modal"
                 overlay={true}
                 overlayClose={false}
                 modalHeader="header.unlock_short"
+                onCancel={this.handleModalClose}
                 leftHeader
+                footer={footer}
+                zIndex={1001} // always on top
             >
-                {!isOpen ? null : (
-                    <form onSubmit={this.handleLogin} className="full-width">
-                        <LoginTypeSelector />
-                        {passwordLogin ? (
-                            <div>
-                                <DisableChromeAutocomplete />
-                                <AccountSelector
-                                    label="account.name"
-                                    ref="account_input"
-                                    accountName={accountName}
-                                    account={accountName}
-                                    onChange={this.handleAccountNameChange}
-                                    onAccountChanged={() => {}}
-                                    size={60}
-                                    hideImage
-                                    placeholder=" "
-                                    useHR
-                                    labelClass="login-label"
-                                    reserveErrorSpace
+                <Form className="full-width" layout="vertical">
+                    <LoginTypeSelector />
+                    {passwordLogin ? (
+                        <div>
+                            <DisableChromeAutocomplete />
+                            <AccountSelector
+                                label="account.name"
+                                inputRef={this.account_input} // needed for ref forwarding to Input
+                                accountName={accountName}
+                                account={accountName}
+                                onChange={this.handleAccountNameChange}
+                                onAccountChanged={() => {}}
+                                size={60}
+                                hideImage
+                                placeholder=" "
+                                useHR
+                                labelClass="login-label"
+                                reserveErrorSpace
+                            />
+
+                            <Form.Item
+                                label={counterpart.translate(
+                                    "settings.password"
+                                )}
+                                validateStatus={passwordError ? "error" : ""}
+                                help={passwordError || ""}
+                            >
+                                <Input
+                                    type="password"
+                                    value={this.state.password}
+                                    onChange={this.handlePasswordChange}
+                                    onPressEnter={this.handleLogin}
+                                    ref={input => {
+                                        this.password_input = input;
+                                    }}
                                 />
-                                <CustomPasswordInput
-                                    password_error={passwordError}
-                                    ref="custom_password_input"
-                                />
-                            </div>
-                        ) : (
-                            <div>
-                                <div
-                                    className={
-                                        "key-file-selector " +
-                                        (restoringBackup && !walletSelected
-                                            ? "restoring"
-                                            : "")
+                            </Form.Item>
+                        </div>
+                    ) : (
+                        <div>
+                            <div
+                                className={
+                                    "key-file-selector " +
+                                    (restoringBackup && !walletSelected
+                                        ? "restoring"
+                                        : "")
+                                }
+                            >
+                                <KeyFileLabel
+                                    showUseOtherWalletLink={
+                                        restoringBackup && !backup.name
                                     }
-                                >
-                                    <KeyFileLabel
-                                        showUseOtherWalletLink={
-                                            restoringBackup && !backup.name
-                                        }
+                                    onUseOtherWallet={this.handleUseOtherWallet}
+                                />
+                                <hr />
+                                {walletSelected ? (
+                                    <WalletDisplay
+                                        name={walletDisplayName}
                                         onUseOtherWallet={
                                             this.handleUseOtherWallet
                                         }
                                     />
-                                    <hr />
-                                    {walletSelected ? (
-                                        <WalletDisplay
-                                            name={walletDisplayName}
-                                            onUseOtherWallet={
-                                                this.handleUseOtherWallet
-                                            }
-                                        />
-                                    ) : (
-                                        <div>
-                                            {restoringBackup ||
-                                            noWalletNames ? (
-                                                <BackupFileSelector
-                                                    onFileChosen={
-                                                        this.loadBackup
-                                                    }
-                                                    onRestoreOther={
-                                                        this.handleRestoreOther
-                                                    }
-                                                />
-                                            ) : (
-                                                <WalletSelector
-                                                    onFileChosen={
-                                                        this.loadBackup
-                                                    }
-                                                    restoringBackup={
-                                                        restoringBackup
-                                                    }
-                                                    walletNames={walletNames}
-                                                    onWalletChange={
-                                                        this
-                                                            .handleSelectedWalletChange
-                                                    }
-                                                />
-                                            )}
-                                            {noLocalWallet && (
-                                                <CreateLocalWalletLink
-                                                    onCreate={
-                                                        this.handleCreateWallet
-                                                    }
-                                                />
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                                <PasswordInput
-                                    ref="password_input"
-                                    onEnter={this.handleLogin}
-                                    noValidation
-                                    labelClass="login-label"
-                                />
+                                ) : (
+                                    <div>
+                                        {restoringBackup || noWalletNames ? (
+                                            <BackupFileSelector
+                                                onFileChosen={this.loadBackup}
+                                                onRestoreOther={
+                                                    this.handleRestoreOther
+                                                }
+                                            />
+                                        ) : (
+                                            <WalletSelector
+                                                onFileChosen={this.loadBackup}
+                                                restoringBackup={
+                                                    restoringBackup
+                                                }
+                                                walletNames={walletNames}
+                                                onWalletChange={
+                                                    this
+                                                        .handleSelectedWalletChange
+                                                }
+                                            />
+                                        )}
+                                        {noLocalWallet && (
+                                            <CreateLocalWalletLink
+                                                onCreate={
+                                                    this.handleCreateWallet
+                                                }
+                                            />
+                                        )}
+                                    </div>
+                                )}
                             </div>
-                        )}
-                        <CustomError message={errorMessage} />
-                        {this.shouldShowBackupWarning() && (
-                            <BackupWarning
-                                onChange={this.handleAskForBackupChange}
-                                checked={stopAskingForBackup}
-                            />
-                        )}
-                        <LoginButtons
-                            onLogin={this.handleLogin}
-                            backupLogin={this.shouldUseBackupLogin()}
+
+                            <Form.Item
+                                label={counterpart.translate(
+                                    "wallet.enter_password"
+                                )}
+                                validateStatus={
+                                    errorMessage ? "error" : "success"
+                                }
+                                help={errorMessage}
+                            >
+                                <Input
+                                    type="password"
+                                    value={this.state.password}
+                                    placeholder={counterpart.translate(
+                                        "wallet.enter_password"
+                                    )}
+                                    onChange={this.handlePasswordChange}
+                                    onPressEnter={this.handleLogin}
+                                    ref={input => {
+                                        this.password_input2 = input;
+                                    }}
+                                />
+                            </Form.Item>
+                        </div>
+                    )}
+
+                    {this.shouldShowBackupWarning() && (
+                        <BackupWarning
+                            onChange={this.handleAskForBackupChange}
+                            checked={stopAskingForBackup}
                         />
-                    </form>
-                )}
-            </BaseModal>
+                    )}
+                </Form>
+            </Modal>
         );
     }
 }
@@ -500,7 +697,8 @@ class WalletUnlockModalContainer extends React.Component {
                     AccountStore,
                     WalletManagerStore,
                     WalletDb,
-                    BackupStore
+                    BackupStore,
+                    SettingsStore
                 ]}
                 inject={{
                     currentWallet: () =>
@@ -516,7 +714,12 @@ class WalletUnlockModalContainer extends React.Component {
                     passwordLogin: () =>
                         WalletUnlockStore.getState().passwordLogin,
                     passwordAccount: () =>
-                        AccountStore.getState().passwordAccount || ""
+                        AccountStore.getState().passwordAccount || "",
+                    walletLockTimeout: () => {
+                        return SettingsStore.getState().settings.get(
+                            "walletLockTimeout"
+                        );
+                    }
                 }}
             >
                 <WalletUnlockModal {...this.props} />

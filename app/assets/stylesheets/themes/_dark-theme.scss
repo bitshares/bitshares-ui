@@ -4,7 +4,7 @@
 
 $light-text-color: #fff;
 $dark-text-color: #444;
-$primary-text-color: #ffffff;
+$primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
 $inactive-text-color: darken($primary-text-color, 30%);
 $link-text-color: #1ec3fa;
@@ -78,6 +78,12 @@ $explorer--witnesses--info-table-text-color: #fff;
 
 $explorer--assets--bg: $bg-color;
 
+$positive-color-alternative: #22d173;
+$negative-color-alternative: #ff276d;
+$medium-color: #ff9900;
+$dark-help-text: #171a25;
+$separator-line: rgba(23, 26, 37, 0.3);
+
 // * * *
 
 .darkTheme {
@@ -134,6 +140,11 @@ $explorer--assets--bg: $bg-color;
         $explorer--witnesses--info-border,
         $explorer--witnesses--info-table-title-color,
         $explorer--witnesses--info-table-text-color,
-        $explorer--assets--bg
+        $explorer--assets--bg,
+        $negative-color-alternative,
+        $positive-color-alternative,
+        $separator-line,
+        $medium-color,
+        $dark-help-text
     );
 }

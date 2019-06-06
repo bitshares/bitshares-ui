@@ -1,16 +1,57 @@
+import cnames from "classnames";
+import translator from "counterpart";
+import {StickyTable} from "react-sticky-table";
 import React from "react";
+import Translate from "react-translate-component";
 import PropTypes from "prop-types";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
-import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
-import classnames from "classnames";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
-import {StickyTable} from "react-sticky-table";
 import Icon from "../Icon/Icon";
-const counterpart = require("counterpart");
+import {Select, Icon as AntIcon, Tooltip} from "bitshares-ui-style-guide";
+
+/**
+ * @array: orderRows
+ * @bool: noOrders
+ * @bool: isBid
+ */
+class OrderRows extends React.Component {
+    static propTypes = {
+        orderRows: PropTypes.array.isRequired,
+        noOrders: PropTypes.bool.isRequired,
+        isBid: PropTypes.bool.isRequired
+    };
+
+    render() {
+        let {orderRows, noOrders, isBid, id} = this.props;
+        return (
+            <TransitionWrapper
+                id={id}
+                ref={isBid ? "bidTransition" : "askTransaction"}
+                className="transition-container clickable"
+                component="div"
+                transitionName="newrow"
+            >
+                {orderRows.length > 0
+                    ? orderRows
+                    : noOrders || (
+                          <div className="sticky-table-row">
+                              <td className="cell no-orders" colSpan="3">
+                                  {isBid ? (
+                                      <Translate content="exchange.no_bids" />
+                                  ) : (
+                                      <Translate content="exchange.no_asks" />
+                                  )}
+                              </td>
+                          </div>
+                      )}
+            </TransitionWrapper>
+        );
+    }
+}
 
 class OrderBookRowVertical extends React.Component {
     shouldComponentUpdate(np) {
@@ -18,7 +59,9 @@ class OrderBookRowVertical extends React.Component {
         return (
             np.order.ne(this.props.order) ||
             np.index !== this.props.index ||
-            np.currentAccount !== this.props.currentAccount
+            np.currentAccount !== this.props.currentAccount ||
+            np.isPanelActive !== this.props.isPanelActive ||
+            np.horizontal !== this.props.horizontal
         );
     }
 
@@ -38,7 +81,7 @@ class OrderBookRowVertical extends React.Component {
         return (
             <div
                 onClick={this.props.onClick}
-                className={classnames(
+                className={cnames(
                     "sticky-table-row order-row",
                     {"final-row": final},
                     {"my-order": order.isMine(this.props.currentAccount)}
@@ -66,7 +109,7 @@ class OrderBookRowVertical extends React.Component {
     }
 }
 
-const elemHeight = elem => elem.getBoundingClientRect().height;
+const elemHeight = elem => (elem ? elem.getBoundingClientRect().height : 0);
 
 class OrderBookRowHorizontal extends React.Component {
     shouldComponentUpdate(np) {
@@ -128,7 +171,7 @@ class OrderBookRowHorizontal extends React.Component {
                 }
             >
                 {position === "left" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -137,7 +180,7 @@ class OrderBookRowHorizontal extends React.Component {
                 <td>{position === "left" ? value : amount}</td>
                 <td>{position === "left" ? amount : value}</td>
                 {position === "right" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -169,7 +212,7 @@ class GroupedOrderBookRowVertical extends React.Component {
         return (
             <div
                 onClick={this.props.onClick}
-                className={classnames("sticky-table-row order-row", {
+                className={cnames("sticky-table-row order-row", {
                     "final-row": final
                 })}
             >
@@ -245,7 +288,7 @@ class GroupedOrderBookRowHorizontal extends React.Component {
         return (
             <tr onClick={this.props.onClick}>
                 {position === "left" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -254,7 +297,7 @@ class GroupedOrderBookRowHorizontal extends React.Component {
                 <td>{position === "left" ? value : amount}</td>
                 <td>{position === "left" ? amount : value}</td>
                 {position === "right" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -273,40 +316,76 @@ class GroupOrderLimitSelector extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({groupLimit: this.props.currentGroupOrderLimit});
+    static getDerivedStateFromProps(props) {
+        return {groupLimit: props.currentGroupOrderLimit};
     }
 
     render() {
         const noGroupsAvailable = this.props.trackedGroupsConfig.length === 0;
         const trackedGroupsOptionsList = this.props.trackedGroupsConfig.map(
-            key => (
-                <option value={key} key={key}>
-                    {`${key / 100}%`}
-                </option>
-            )
+            key =>
+                this.props.globalSettingsSelector ? (
+                    <Select.Option value={key} key={key}>
+                        {`${key / 100}%`}
+                    </Select.Option>
+                ) : (
+                    <option value={key} key={key}>
+                        {`${key / 100}%`}
+                    </option>
+                )
         );
 
-        return (
-            <select
-                dir="rtl"
-                value={this.state.groupLimit}
-                onChange={this.props.handleGroupOrderLimitChange}
-                data-tip={
-                    noGroupsAvailable
-                        ? counterpart.translate("tooltip.no_groups_available")
-                        : null
-                }
-                style={noGroupsAvailable ? {cursor: "not-allowed"} : null}
-            >
-                <Translate
-                    content="exchange.group_order_limit"
-                    component="option"
-                    value="0"
-                />
-                {trackedGroupsOptionsList}
-            </select>
-        );
+        if (this.props.globalSettingsSelector) {
+            return (
+                <Select
+                    placeholder="Select option"
+                    style={{width: "100%"}}
+                    value={this.props.currentGroupOrderLimit}
+                    disabled={noGroupsAvailable}
+                    onChange={this.props.handleGroupOrderLimitChange.bind(this)}
+                >
+                    {noGroupsAvailable ? (
+                        <Select.Option value={0}>
+                            <Translate content="tooltip.no_groups_available" />
+                        </Select.Option>
+                    ) : (
+                        <Select.Option value={0}>
+                            <Translate content="settings.disabled" />
+                        </Select.Option>
+                    )}
+                    {trackedGroupsOptionsList}
+                </Select>
+            );
+        } else {
+            return (
+                <Tooltip
+                    placement="bottom"
+                    title={
+                        noGroupsAvailable
+                            ? translator.translate(
+                                  "tooltip.no_groups_available"
+                              )
+                            : null
+                    }
+                >
+                    <select
+                        value={this.state.groupLimit}
+                        onChange={this.props.handleGroupOrderLimitChange}
+                        className="settings-select"
+                        style={
+                            noGroupsAvailable ? {cursor: "not-allowed"} : null
+                        }
+                    >
+                        <Translate
+                            content="exchange.group_order_limit"
+                            component="option"
+                            value="0"
+                        />
+                        {trackedGroupsOptionsList}
+                    </select>
+                </Tooltip>
+            );
+        }
     }
 }
 
@@ -318,34 +397,55 @@ class OrderBook extends React.Component {
             showAllBids: false,
             showAllAsks: false,
             rowCount: 20,
-            autoScroll: true
+            autoScroll: props.autoScroll
         };
+        this.verticalStickyTable = React.createRef();
+        this.centerText = React.createRef();
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (!nextProps.marketReady) return false;
+    shouldComponentUpdate(nextProps, nextState) {
+        if (
+            this.props.horizontal &&
+            this.props.hideScrollbars &&
+            nextState.showAllAsks != this.state.showAllAsks
+        ) {
+            let asksContainer = this.refs.hor_asks;
+            if (!nextState.showAllAsks) {
+                Ps.destroy(asksContainer);
+            } else {
+                Ps.initialize(asksContainer);
+                this.psUpdate();
+            }
+            this.refs.askTransition.resetAnimation();
+            if (this.refs.hor_asks) this.refs.hor_asks.scrollTop = 0;
+        }
+
+        if (
+            this.props.horizontal &&
+            this.props.hideScrollbars &&
+            nextState.showAllBids != this.state.showAllBids
+        ) {
+            let bidsContainer = this.refs.hor_bids;
+            if (!nextState.showAllBids) {
+                Ps.destroy(bidsContainer);
+            } else {
+                Ps.initialize(bidsContainer);
+                this.psUpdate();
+            }
+            this.refs.bidTransition.resetAnimation();
+            if (this.refs.hor_bids) this.refs.hor_bids.scrollTop = 0;
+        }
+
+        // if (!nextProps.marketReady) return false;
         return true;
     }
-    //     console.log("calls changed:", !Immutable.is(nextProps.calls, this.props.calls), nextProps.calls && nextProps.calls.toJS(), this.props.calls && this.props.calls.toJS());
-    //     const callsChanged = didOrdersChange(nextProps.calls, this.props.calls);
-    //     const limitsChanged = didOrdersChange(nextProps.orders, this.props.orders);
-    //     console.log("callsChanged:", callsChanged, "limitsChanged", limitsChanged);
-    //     return (
-    //         !Immutable.is(nextProps.orders, this.props.orders) ||
-    //         !Immutable.is(nextProps.calls, this.props.calls) ||
-    //         nextProps.horizontal !== this.props.horizontal ||
-    //         !utils.are_equal_shallow(nextProps.latest, this.props.latest) ||
-    //         nextProps.smallScreen !== this.props.smallScreen ||
-    //         nextProps.wrapperClass !== this.props.wrapperClass ||
-    //         !utils.are_equal_shallow(nextState, this.state)
-    //     );
-    // }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const nextProps = this.props;
         // Change of market or direction
         if (
-            nextProps.base.get("id") !== this.props.base.get("id") ||
-            nextProps.quote.get("id") !== this.props.quote.get("id")
+            nextProps.base.get("id") !== prevProps.base.get("id") ||
+            nextProps.quote.get("id") !== prevProps.quote.get("id")
         ) {
             if (this.refs.askTransition) {
                 this.refs.askTransition.resetAnimation();
@@ -360,86 +460,96 @@ class OrderBook extends React.Component {
             if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
 
             if (!this.props.horizontal) {
-                this.setState({autoScroll: true});
+                this.setState({autoScroll: this.state.autoScroll});
             }
         }
 
+        let bidsContainer = this.refs.hor_bids;
+        let asksContainer = this.refs.hor_asks;
+
         if (
-            !utils.are_equal_shallow(
-                nextProps.combinedAsks,
-                this.props.combinedAsks
-            ) ||
-            !utils.are_equal_shallow(
-                nextProps.combinedBids,
-                this.props.combinedBids
-            )
+            this.props.horizontal &&
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            nextProps.hideScrollbars
         ) {
-            this.setState({}, () => {
-                this.psUpdate();
-            });
+            Ps.destroy(bidsContainer);
+            Ps.destroy(asksContainer);
         }
+
+        if (
+            this.props.horizontal &&
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            !nextProps.hideScrollbars
+        ) {
+            Ps.initialize(bidsContainer);
+            Ps.initialize(asksContainer);
+            this.refs.askTransition.resetAnimation();
+            this.refs.bidTransition.resetAnimation();
+            if (asksContainer) asksContainer.scrollTop = 0;
+            if (bidsContainer) bidsContainer.scrollTop = 0;
+            this.psUpdate();
+        }
+
+        this.centerVerticalScrollBar();
     }
 
-    queryStickyTable = query =>
-        this.refs.vertical_sticky_table.table.querySelector(query);
+    queryStickyTable = query => {
+        return this.verticalStickyTable.current.table.querySelector(query);
+    };
 
     verticalScrollBar = () => this.queryStickyTable("#y-scrollbar");
 
     componentDidMount() {
         if (!this.props.horizontal) {
             Ps.initialize(this.verticalScrollBar());
-            this.centerVerticalScrollBar();
         } else {
-            let bidsContainer = this.refs.hor_bids;
-            Ps.initialize(bidsContainer);
-            let asksContainer = this.refs.hor_asks;
-            Ps.initialize(asksContainer);
-        }
-    }
-
-    componentWillUpdate() {
-        if (!this.props.horizontal) {
-            const scrollableContainer = this.queryStickyTable(
-                "#sticky-table-y-wrapper"
-            );
-
-            const centerTextContainer = this.refs.center_text;
-            const centeringOffset = 21;
-            const scrollTo =
-                centerTextContainer.offsetTop -
-                elemHeight(scrollableContainer) / 2 +
-                centeringOffset;
-
-            this.offset = scrollableContainer.scrollTop - scrollTo;
+            if (!this.props.hideScrollbars) {
+                let bidsContainer = this.refs.hor_bids;
+                Ps.initialize(bidsContainer);
+                let asksContainer = this.refs.hor_asks;
+                Ps.initialize(asksContainer);
+            }
         }
     }
 
     centerVerticalScrollBar() {
-        if (!this.props.horizontal) {
+        if (!this.props.horizontal && this.state.autoScroll) {
+            // Center vertical scroll bar
             const scrollableContainer = this.queryStickyTable(
                 "#sticky-table-y-wrapper"
             );
-            const centerTextContainer = this.refs.center_text;
-            const centeringOffset = 21;
-            const offset =
-                !this.state.autoScroll && this.offset ? this.offset : 0;
-            const scrollTo =
-                centerTextContainer.offsetTop -
-                elemHeight(scrollableContainer) / 2 +
-                centeringOffset +
-                offset;
-
-            this.setState(
-                {ownScroll: true},
-                () => (scrollableContainer.scrollTop = scrollTo)
+            const header = this.queryStickyTable("#sticky-table-header");
+            const centerTextContainer = this.centerText.current;
+            const singleRowHeight = elemHeight(
+                this.queryStickyTable(".order-row")
             );
+
+            let rows =
+                this.props.currentGroupOrderLimit !== 0
+                    ? !this.props.orderBookReversed
+                        ? this.props.groupedAsks
+                        : this.props.groupedBids
+                    : !this.props.orderBookReversed
+                        ? this.props.combinedAsks
+                        : this.props.combinedBids;
+
+            const rowsHeight = rows.length * singleRowHeight;
+
+            const scrollableContainerHeight =
+                elemHeight(scrollableContainer) - elemHeight(header);
+
+            const scrollTo =
+                rowsHeight +
+                elemHeight(centerTextContainer) / 2 -
+                scrollableContainerHeight / 2;
+
+            scrollableContainer.scrollTop = scrollTo;
         }
     }
 
     psUpdate() {
         if (!this.props.horizontal) {
             Ps.update(this.verticalScrollBar());
-            this.centerVerticalScrollBar();
         } else {
             let bidsContainer = this.refs.hor_bids;
             Ps.update(bidsContainer);
@@ -448,15 +558,11 @@ class OrderBook extends React.Component {
         }
     }
 
-    _flipBuySell() {
-        SettingsActions.changeViewSetting({
-            flipOrderBook: !this.state.flip
-        });
-
-        this.setState({flip: !this.state.flip});
-    }
-
-    _onToggleShowAll(type) {
+    /***
+     * Sets status to show full order book by asks or bids
+     * @string: type
+     */
+    _onSetShowAll(type) {
         if (type === "asks") {
             this.setState({
                 showAllAsks: !this.state.showAllAsks
@@ -476,17 +582,23 @@ class OrderBook extends React.Component {
         }
     }
 
+    /***
+     * Toggle spread value to view real value or percentage in spread
+     * Vertical order book only
+     */
     toggleSpreadValue = () => {
         this.setState({
             displaySpreadAsPercentage: !this.state.displaySpreadAsPercentage
         });
     };
 
+    /***
+     * Toggle auto scroll to lock/unlock auto centering
+     * Vertical order book only
+     */
+
     toggleAutoScroll = () => {
-        const newState = {autoScroll: !this.state.autoScroll};
-        if (newState.autoScroll)
-            this.setState(newState, this.centerVerticalScrollBar);
-        else this.setState(newState);
+        this.setState({autoScroll: !this.state.autoScroll});
     };
 
     render() {
@@ -505,8 +617,10 @@ class OrderBook extends React.Component {
             trackedGroupsConfig,
             currentGroupOrderLimit,
             handleGroupOrderLimitChange,
+            orderBookReversed,
             groupedBids,
-            groupedAsks
+            groupedAsks,
+            flipOrderBook
         } = this.props;
         let {
             showAllAsks,
@@ -514,6 +628,7 @@ class OrderBook extends React.Component {
             rowCount,
             displaySpreadAsPercentage
         } = this.state;
+
         const noOrders = !lowestAsk.sell_price && !highestBid.sell_price;
         const hasAskAndBids = !!(lowestAsk.sell_price && highestBid.sell_price);
         const spread =
@@ -532,10 +647,37 @@ class OrderBook extends React.Component {
             ));
         let bidRows = null,
             askRows = null;
+
+        /* Sort */
+        let tempAsks =
+            this.props.currentGroupOrderLimit !== 0
+                ? groupedAsks
+                : combinedAsks; // RED
+        let tempBids =
+            this.props.currentGroupOrderLimit !== 0
+                ? groupedBids
+                : combinedBids; // GREEN
+
+        if (!horizontal && !orderBookReversed) {
+            tempBids.sort((a, b) => {
+                return b.getPrice() - a.getPrice();
+            });
+            tempAsks.sort((a, b) => {
+                return b.getPrice() - a.getPrice();
+            });
+        } else if (!horizontal && orderBookReversed) {
+            tempBids.sort((a, b) => {
+                return a.getPrice() - b.getPrice();
+            });
+            tempAsks.sort((a, b) => {
+                return a.getPrice() - b.getPrice();
+            });
+        }
+
         if (base && quote) {
             // limit orders or grouped orders
             if (this.props.currentGroupOrderLimit !== 0) {
-                bidRows = groupedBids.map((order, index) => {
+                bidRows = tempBids.map((order, index) => {
                     return horizontal ? (
                         <GroupedOrderBookRowHorizontal
                             index={index}
@@ -546,7 +688,7 @@ class OrderBook extends React.Component {
                             onClick={this.props.onClick.bind(this, order)}
                             base={base}
                             quote={quote}
-                            position={!this.state.flip ? "left" : "right"}
+                            position={!flipOrderBook ? "left" : "right"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -565,12 +707,6 @@ class OrderBook extends React.Component {
                     );
                 });
 
-                let tempAsks = groupedAsks;
-                if (!horizontal) {
-                    tempAsks.sort((a, b) => {
-                        return b.getPrice() - a.getPrice();
-                    });
-                }
                 askRows = tempAsks.map((order, index) => {
                     return horizontal ? (
                         <GroupedOrderBookRowHorizontal
@@ -583,7 +719,7 @@ class OrderBook extends React.Component {
                             base={base}
                             quote={quote}
                             type={order.type}
-                            position={!this.state.flip ? "right" : "left"}
+                            position={!flipOrderBook ? "right" : "left"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -603,7 +739,7 @@ class OrderBook extends React.Component {
                     );
                 });
             } else {
-                bidRows = combinedBids.map((order, index) => {
+                bidRows = tempBids.map((order, index) => {
                     return horizontal ? (
                         <OrderBookRowHorizontal
                             index={index}
@@ -615,7 +751,7 @@ class OrderBook extends React.Component {
                             onClick={this.props.onClick.bind(this, order)}
                             base={base}
                             quote={quote}
-                            position={!this.state.flip ? "left" : "right"}
+                            position={!flipOrderBook ? "left" : "right"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -635,14 +771,6 @@ class OrderBook extends React.Component {
                     );
                 });
 
-                let tempAsks = combinedAsks;
-                tempAsks.sort((a, b) => {
-                    if (horizontal) {
-                        return a.getPrice() - b.getPrice();
-                    } else {
-                        return b.getPrice() - a.getPrice();
-                    }
-                });
                 askRows = tempAsks.map((order, index) => {
                     return horizontal ? (
                         <OrderBookRowHorizontal
@@ -656,7 +784,7 @@ class OrderBook extends React.Component {
                             base={base}
                             quote={quote}
                             type={order.type}
-                            position={!this.state.flip ? "right" : "left"}
+                            position={!flipOrderBook ? "right" : "left"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -694,7 +822,7 @@ class OrderBook extends React.Component {
             let leftHeader = (
                 <thead>
                     <tr key="top-header" className="top-header">
-                        <th>
+                        <th className="column-hide-xs">
                             <Translate
                                 className="header-sub-title"
                                 content="exchange.total"
@@ -718,7 +846,7 @@ class OrderBook extends React.Component {
                         <th>
                             <Translate
                                 className={
-                                    (this.state.flip
+                                    (flipOrderBook
                                         ? "ask-total"
                                         : "bid-total") + " header-sub-title"
                                 }
@@ -735,7 +863,7 @@ class OrderBook extends React.Component {
                         <th>
                             <Translate
                                 className={
-                                    (!this.state.flip
+                                    (!flipOrderBook
                                         ? "ask-total"
                                         : "bid-total") + " header-sub-title"
                                 }
@@ -752,7 +880,7 @@ class OrderBook extends React.Component {
                                 <AssetName dataPlace="top" name={baseSymbol} />
                             </span>
                         </th>
-                        <th>
+                        <th className="column-hide-xs">
                             <Translate
                                 className="header-sub-title"
                                 content="exchange.total"
@@ -767,31 +895,34 @@ class OrderBook extends React.Component {
                 </thead>
             );
 
+            let wrapperClass = this.props.wrapperClass;
+            let innerClass = this.props.innerClass;
+
             return (
                 <div
-                    className={classnames(
-                        this.props.wrapperClass,
-                        "grid-block orderbook no-padding small-vertical medium-horizontal align-spaced no-overflow small-12 xlarge-8"
-                    )}
+                    ref="order_book"
+                    style={{marginRight: this.props.smallScreen ? 10 : 0}}
+                    className={cnames(wrapperClass)}
                 >
                     <div
-                        className={classnames(
-                            "small-12 medium-6 middle-content",
-                            this.state.flip ? "order-1" : "order-2"
+                        className={cnames(
+                            innerClass,
+                            flipOrderBook ? "order-1" : "order-2"
                         )}
                     >
-                        <div className="exchange-bordered">
+                        <div>
                             <div
                                 className="exchange-content-header ask"
-                                data-intro={counterpart.translate(
-                                    "walkthrough.sell_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.sell_orders"
+                                //)}
                             >
                                 <Translate content="exchange.asks" />
-                                {this.state.flip ? (
+                                {flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
                                     <div style={{display: "inline-block"}}>
                                         <span
-                                            onClick={this._flipBuySell.bind(
+                                            onClick={this.props.onFlipOrderBook.bind(
                                                 this
                                             )}
                                             style={{
@@ -806,19 +937,10 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
-                                        <span
-                                            className="order-book-button-v"
-                                            onClick={this.props.moveOrderBook}
-                                        >
-                                            <Icon
-                                                name="thumb-tack"
-                                                title="icons.thumb_tack"
-                                                className="icon-14px"
-                                            />
-                                        </span>
                                     </div>
                                 ) : null}
-                                {this.state.flip ? (
+                                {flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
                                     <div className="float-right header-sub-title grouped_order">
                                         {trackedGroupsConfig ? (
                                             <GroupOrderLimitSelector
@@ -835,11 +957,37 @@ class OrderBook extends React.Component {
                                         ) : null}
                                     </div>
                                 ) : null}
+                                {this.props.onTogglePosition &&
+                                !this.props.hideFunctionButtons ? (
+                                    <span
+                                        onClick={this.props.onTogglePosition}
+                                        style={{
+                                            cursor: "pointer",
+                                            fontSize: "1rem"
+                                        }}
+                                        className="flip-arrow"
+                                    >
+                                        {" "}
+                                        &#8645;
+                                    </span>
+                                ) : null}
+                                {flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
+                                    <span
+                                        className="order-book-button-v"
+                                        onClick={this.props.moveOrderBook}
+                                    >
+                                        <Icon
+                                            name="thumb-tack"
+                                            className="icon-14px icon-fill"
+                                        />
+                                    </span>
+                                ) : null}
                                 <div
                                     style={{lineHeight: "16px"}}
-                                    className="float-right header-sub-title"
+                                    className="header-sub-title float-right"
                                 >
-                                    <Translate content="exchange.total" />
+                                    <Translate content="exchange.market_depth" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalAsks,
@@ -851,11 +999,9 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{paddingRight: "0.6rem"}}>
+                            <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
-                                    {!this.state.flip
-                                        ? rightHeader
-                                        : leftHeader}
+                                    {!flipOrderBook ? rightHeader : leftHeader}
                                 </table>
                             </div>
                             <div
@@ -864,27 +1010,29 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 210
+                                    maxHeight: 260,
+                                    lineHeight: "13px"
                                 }}
                             >
                                 <table
                                     style={{paddingBottom: 5}}
-                                    className="table order-table table-hover fixed-table text-right no-overflow"
+                                    className="table order-table no-stripes table-hover fixed-table text-right no-overflow"
                                 >
                                     <TransitionWrapper
                                         ref="askTransition"
                                         className="orderbook clickable"
                                         component="tbody"
                                         transitionName="newrow"
+                                        id="top-order-rows"
                                     >
                                         {askRows}
                                     </TransitionWrapper>
                                 </table>
                             </div>
-                            {totalAsksLength > rowCount ? (
+                            {totalAsksLength > 11 ? (
                                 <div className="orderbook-showall">
                                     <a
-                                        onClick={this._onToggleShowAll.bind(
+                                        onClick={this._onSetShowAll.bind(
                                             this,
                                             "asks"
                                         )}
@@ -895,10 +1043,8 @@ class OrderBook extends React.Component {
                                                     ? "exchange.hide"
                                                     : "exchange.show_asks"
                                             }
+                                            ordercount={totalAsksLength}
                                         />
-                                        {!showAllAsks ? (
-                                            <span> ({totalAsksLength})</span>
-                                        ) : null}
                                     </a>
                                 </div>
                             ) : null}
@@ -906,23 +1052,24 @@ class OrderBook extends React.Component {
                     </div>
 
                     <div
-                        className={classnames(
-                            "small-12 medium-6 middle-content",
-                            this.state.flip ? "order-2" : "order-1"
+                        className={cnames(
+                            innerClass,
+                            flipOrderBook ? "order-2" : "order-1"
                         )}
                     >
-                        <div className="exchange-bordered">
+                        <div>
                             <div
                                 className="exchange-content-header bid"
-                                data-intro={counterpart.translate(
-                                    "walkthrough.buy_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.buy_orders"
+                                //)}
                             >
                                 <Translate content="exchange.bids" />
-                                {!this.state.flip ? (
+                                {!flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
                                     <div style={{display: "inline-block"}}>
                                         <span
-                                            onClick={this._flipBuySell.bind(
+                                            onClick={this.props.onFlipOrderBook.bind(
                                                 this
                                             )}
                                             style={{
@@ -937,19 +1084,10 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
-                                        <span
-                                            className="order-book-button-v"
-                                            onClick={this.props.moveOrderBook}
-                                        >
-                                            <Icon
-                                                name="thumb-tack"
-                                                title="icons.thumb_tack"
-                                                className="icon-14px"
-                                            />
-                                        </span>
                                     </div>
                                 ) : null}
-                                {!this.state.flip ? (
+                                {!flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
                                     <div className="float-right header-sub-title grouped_order">
                                         {trackedGroupsConfig ? (
                                             <GroupOrderLimitSelector
@@ -966,11 +1104,50 @@ class OrderBook extends React.Component {
                                         ) : null}
                                     </div>
                                 ) : null}
+                                {currentGroupOrderLimit !== 0 &&
+                                    this.props.hideFunctionButtons && (
+                                        <Icon
+                                            name="grouping"
+                                            className="float-right icon-14px"
+                                            title={translator.translate(
+                                                "icons.order_grouping"
+                                            )}
+                                            style={{
+                                                marginLeft: "0.5rem"
+                                            }}
+                                        />
+                                    )}
+                                {this.props.onTogglePosition &&
+                                !this.props.hideFunctionButtons ? (
+                                    <span
+                                        onClick={this.props.onTogglePosition}
+                                        style={{
+                                            cursor: "pointer",
+                                            fontSize: "1rem"
+                                        }}
+                                        className="flip-arrow"
+                                    >
+                                        {" "}
+                                        &#8645;
+                                    </span>
+                                ) : null}
+                                {!flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
+                                    <span
+                                        className="order-book-button-v"
+                                        onClick={this.props.moveOrderBook}
+                                    >
+                                        <Icon
+                                            name="thumb-tack"
+                                            className="icon-14px"
+                                        />
+                                    </span>
+                                ) : null}
                                 <div
                                     style={{lineHeight: "16px"}}
                                     className="float-right header-sub-title"
                                 >
-                                    <Translate content="exchange.total" />
+                                    <Translate content="exchange.market_depth" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalBids,
@@ -982,9 +1159,9 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{paddingRight: "0.6rem"}}>
+                            <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
-                                    {this.state.flip ? rightHeader : leftHeader}
+                                    {flipOrderBook ? rightHeader : leftHeader}
                                 </table>
                             </div>
                             <div
@@ -993,12 +1170,13 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 210
+                                    maxHeight: 260,
+                                    lineHeight: "13px"
                                 }}
                             >
                                 <table
                                     style={{paddingBottom: 5}}
-                                    className="table order-table table-hover fixed-table text-right no-overflow"
+                                    className="table order-table no-stripes table-hover fixed-table text-right no-overflow"
                                 >
                                     <TransitionWrapper
                                         ref="bidTransition"
@@ -1013,7 +1191,7 @@ class OrderBook extends React.Component {
                             {totalBidsLength > rowCount ? (
                                 <div className="orderbook-showall">
                                     <a
-                                        onClick={this._onToggleShowAll.bind(
+                                        onClick={this._onSetShowAll.bind(
                                             this,
                                             "bids"
                                         )}
@@ -1024,10 +1202,8 @@ class OrderBook extends React.Component {
                                                     ? "exchange.hide"
                                                     : "exchange.show_bids"
                                             }
+                                            ordercount={totalBidsLength}
                                         />
-                                        {!showAllBids ? (
-                                            <span> ({totalBidsLength})</span>
-                                        ) : null}
                                     </a>
                                 </div>
                             ) : null}
@@ -1038,174 +1214,169 @@ class OrderBook extends React.Component {
         } else {
             // Vertical orderbook
             return (
-                <div className="left-order-book no-padding no-overflow">
-                    <div className="order-table-container">
-                        <StickyTable
-                            stickyColumnCount={0}
-                            className="order-table table"
-                            ref="vertical_sticky_table"
-                        >
-                            <div className="sticky-table-row top-header">
-                                <div className="cell header-cell left">
-                                    <span className="header-sub-title">
-                                        <AssetName name={baseSymbol} />
-                                    </span>
-                                </div>
-                                <div className="cell header-cell">
-                                    <span className="header-sub-title">
-                                        <AssetName name={quoteSymbol} />
-                                    </span>
-                                </div>
-                                <div className="cell header-cell right">
-                                    <Translate
-                                        className="header-sub-title"
-                                        content="exchange.price"
-                                    />
-                                </div>
+                <div className="order-table-container">
+                    <StickyTable
+                        stickyColumnCount={0}
+                        className="order-table table"
+                        ref={this.verticalStickyTable}
+                    >
+                        <div className="sticky-table-row top-header">
+                            <div className="cell header-cell left">
+                                <span className="header-sub-title">
+                                    <AssetName name={baseSymbol} />
+                                </span>
                             </div>
-                            <TransitionWrapper
-                                ref="askTransition"
-                                className="transition-container clickable"
-                                component="div"
-                                transitionName="newrow"
-                            >
-                                {askRows.length > 0
-                                    ? askRows
-                                    : noOrders || (
-                                          <div className="sticky-table-row">
-                                              <td
-                                                  className="cell no-orders padtop"
-                                                  colSpan="3"
-                                              >
-                                                  <Translate content="exchange.no_asks" />
-                                              </td>
-                                          </div>
-                                      )}
-                            </TransitionWrapper>
-                            <div className="sticky-table-row" ref="center_text">
-                                {noOrders ? (
-                                    <td
-                                        colSpan={3}
-                                        className="no-orders padtop"
-                                    >
-                                        <Translate content="exchange.no_orders" />
-                                    </td>
-                                ) : (
-                                    <td
-                                        className="cell center-cell"
-                                        colSpan="3"
-                                    >
-                                        <div className="orderbook-latest-price">
-                                            <div className="text-center spread">
-                                                {!!spread && (
-                                                    <span
-                                                        className="clickable left"
-                                                        onClick={
-                                                            this
-                                                                .toggleSpreadValue
-                                                        }
-                                                    >
-                                                        <Translate content="exchange.spread" />{" "}
-                                                        <span className="spread-value">
-                                                            {spread}
-                                                        </span>
-                                                    </span>
-                                                )}
-                                                <Icon
-                                                    className="lock-unlock clickable"
-                                                    onClick={
-                                                        this.toggleAutoScroll
-                                                    }
-                                                    name={
-                                                        this.state.autoScroll
-                                                            ? "locked"
-                                                            : "unlocked"
-                                                    }
-                                                    title={
-                                                        this.state.autoScroll
-                                                            ? "icons.locked.enable_auto_scroll"
-                                                            : "icons.unlocked.disable_auto_scroll"
-                                                    }
-                                                />
-                                                {!!this.props.latest && (
-                                                    <span className="right">
-                                                        <Translate content="exchange.latest" />{" "}
-                                                        <span
-                                                            className={
-                                                                this.props
-                                                                    .changeClass
-                                                            }
-                                                        >
-                                                            <PriceText
-                                                                price={
-                                                                    this.props
-                                                                        .latest
-                                                                }
-                                                                base={
-                                                                    this.props
-                                                                        .base
-                                                                }
-                                                                quote={
-                                                                    this.props
-                                                                        .quote
-                                                                }
-                                                            />
-                                                        </span>
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </td>
-                                )}
+                            <div className="cell header-cell">
+                                <span className="header-sub-title">
+                                    <AssetName name={quoteSymbol} />
+                                </span>
                             </div>
-                            <TransitionWrapper
-                                ref="bidTransition"
-                                className="transition-container clickable"
-                                component="div"
-                                transitionName="newrow"
-                            >
-                                {bidRows.length > 0
-                                    ? bidRows
-                                    : noOrders || (
-                                          <div className="sticky-table-row">
-                                              <td
-                                                  className="cell no-orders"
-                                                  colSpan="3"
-                                              >
-                                                  <Translate content="exchange.no_bids" />
-                                              </td>
-                                          </div>
-                                      )}
-                            </TransitionWrapper>
-                        </StickyTable>
-                    </div>
-                    <div className="v-align no-padding align-center grid-block footer shrink bottom-header">
-                        <div
-                            className="v-align grid-block align-center"
-                            style={{height: "2rem", overflow: "hidden"}}
-                        >
-                            <Icon
-                                name="thumb-untack"
-                                title="icons.thumb_untack"
-                                className="icon-14px order-book-button-h"
-                                style={{top: "-0.5rem"}}
-                                onClick={this.props.moveOrderBook}
-                            />
-                        </div>
-                        <div className="v-align grid-block align-center grouped_order">
-                            {trackedGroupsConfig ? (
-                                <GroupOrderLimitSelector
-                                    trackedGroupsConfig={trackedGroupsConfig}
-                                    handleGroupOrderLimitChange={
-                                        handleGroupOrderLimitChange
-                                    }
-                                    currentGroupOrderLimit={
-                                        currentGroupOrderLimit
-                                    }
+                            <div className="cell header-cell right">
+                                <Translate
+                                    className="header-sub-title"
+                                    content="exchange.price"
                                 />
-                            ) : null}
+                            </div>
                         </div>
-                    </div>
+                        {orderBookReversed ? (
+                            <OrderRows
+                                id="top-order-rows"
+                                noOrders={noOrders}
+                                orderRows={bidRows}
+                                isBid={true}
+                            />
+                        ) : (
+                            <OrderRows
+                                id="top-order-rows"
+                                noOrders={noOrders}
+                                orderRows={askRows}
+                                isBid={false}
+                            />
+                        )}
+
+                        {noOrders ? (
+                            <div
+                                className="sticky-table-row"
+                                ref={this.centerText}
+                            >
+                                <div className="cell" />
+                                <div className="cell no-orders padtop">
+                                    <Translate content="exchange.no_orders" />
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className="sticky-table-row orderbook-latest-price"
+                                ref={this.centerText}
+                                style={{padding: 0}}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.vertical_order"
+                                //)}
+                            >
+                                <div className="cell right">
+                                    <span
+                                        className="clickable left"
+                                        onClick={this.toggleSpreadValue}
+                                    >
+                                        <Translate
+                                            className="orderbook-center-title"
+                                            content="exchange.spread"
+                                        />{" "}
+                                        <span className="spread-value">
+                                            {!!spread ? spread : "0"}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div className="cell cell-center">
+                                    <span style={{width: 75}}>
+                                        {!this.props.hideFunctionButtons ? (
+                                            <Icon
+                                                //data-intro={translator.translate(
+                                                //    "walkthrough.vertical_lock"
+                                                //)}
+                                                className="lock-unlock clickable icon-fill"
+                                                onClick={this.toggleAutoScroll}
+                                                name={
+                                                    this.state.autoScroll
+                                                        ? "locked"
+                                                        : "unlocked"
+                                                }
+                                                title={
+                                                    this.state.autoScroll
+                                                        ? "icons.unlocked.disable_auto_scroll"
+                                                        : "icons.locked.enable_auto_scroll"
+                                                }
+                                            />
+                                        ) : null}
+                                        &nbsp;
+                                        {!this.props.hideFunctionButtons ? (
+                                            <Icon
+                                                onClick={
+                                                    this.props.moveOrderBook
+                                                }
+                                                name="thumb-tack"
+                                                className="icon-14px icon-fill order-book-button-v clickable"
+                                                title={
+                                                    this.props.horizontal
+                                                        ? "icons.thumb_tack"
+                                                        : "icons.thumb_untack"
+                                                }
+                                                style={{
+                                                    marginLeft: 0
+                                                }}
+                                            />
+                                        ) : null}
+                                        &nbsp;
+                                        {currentGroupOrderLimit == 0 ? null : (
+                                            <Icon
+                                                name="grouping"
+                                                className="icon-14px"
+                                                title={translator.translate(
+                                                    "icons.order_grouping"
+                                                )}
+                                                style={{
+                                                    marginLeft: 0
+                                                }}
+                                            />
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="cell">
+                                    {!!this.props.latest && (
+                                        <span className="right">
+                                            <span
+                                                className={
+                                                    !this.props.changeClass
+                                                        ? "spread-value"
+                                                        : this.props.changeClass
+                                                }
+                                            >
+                                                <PriceText
+                                                    price={this.props.latest}
+                                                    base={this.props.base}
+                                                    quote={this.props.quote}
+                                                />
+                                            </span>
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {orderBookReversed ? (
+                            <OrderRows
+                                noOrders={noOrders}
+                                orderRows={askRows}
+                                isBid={false}
+                            />
+                        ) : (
+                            <OrderRows
+                                noOrders={noOrders}
+                                orderRows={bidRows}
+                                isBid={true}
+                            />
+                        )}
+                    </StickyTable>
                 </div>
             );
         }
@@ -1224,4 +1395,4 @@ OrderBook.propTypes = {
     orders: PropTypes.object.isRequired
 };
 
-export default OrderBook;
+export {OrderBook, GroupOrderLimitSelector};

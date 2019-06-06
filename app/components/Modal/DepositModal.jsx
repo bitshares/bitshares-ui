@@ -1,6 +1,4 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "../Modal/BaseModal";
 import Translate from "react-translate-component";
 import utils from "common/utils";
 import {requestDepositAddress} from "common/gatewayMethods";
@@ -8,7 +6,7 @@ import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCach
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
-import {DecimalChecker} from "../Exchange/ExchangeInput";
+import {DecimalChecker} from "../Utility/DecimalChecker";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
 import {
     gatewaySelector,
@@ -19,12 +17,65 @@ import {
 import {availableGateways} from "common/gateways";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
 import CryptoLinkFormatter from "../Utility/CryptoLinkFormatter";
+import counterpart from "counterpart";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 class DepositModalContent extends DecimalChecker {
     constructor() {
         super();
 
-        this.state = {
+        this.state = this._intitalState();
+
+        this.deposit_address_cache = new BlockTradesDepositAddressCache();
+        this.addDepositAddress = this.addDepositAddress.bind(this);
+    }
+
+    onClose() {
+        this.props.hideModal();
+    }
+
+    componentWillMount() {
+        let {asset} = this.props;
+        this._setDepositAsset(asset);
+    }
+
+    shouldComponentUpdate(np, ns) {
+        if (np.asset !== this.props.asset) {
+            this.setState(this._intitalState());
+            this._setDepositAsset(np.asset);
+        }
+        return !utils.are_equal_shallow(ns, this.state);
+    }
+
+    onGatewayChanged(selectedGateway) {
+        this._getDepositAddress(this.state.selectedAsset, selectedGateway);
+    }
+
+    onAssetSelected(asset) {
+        if (asset.gateway == "")
+            return this.setState({
+                selectedAsset: asset.id,
+                selectedGateway: null
+            });
+
+        let {selectedAsset, selectedGateway} = _onAssetSelected.call(
+            this,
+            asset.id,
+            "depositAllowed",
+            (availableGateways, balancesByGateway) => {
+                if (availableGateways && availableGateways.length == 1)
+                    return availableGateways[0]; //autoselect gateway if exactly 1 item
+                return null;
+            }
+        );
+
+        if (selectedGateway) {
+            this._getDepositAddress(selectedAsset, selectedGateway);
+        }
+    }
+
+    _intitalState() {
+        return {
             depositAddress: "",
             selectedAsset: "",
             selectedGateway: null,
@@ -32,18 +83,9 @@ class DepositModalContent extends DecimalChecker {
             backingAsset: null,
             gatewayStatus: availableGateways
         };
-
-        this.deposit_address_cache = new BlockTradesDepositAddressCache();
-        this.addDepositAddress = this.addDepositAddress.bind(this);
     }
 
-    onClose() {
-        ZfApi.publish(this.props.modalId, "close");
-    }
-
-    componentWillMount() {
-        let {asset} = this.props;
-
+    _setDepositAsset(asset) {
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
         this.setState({coinToGatewayMapping});
 
@@ -63,50 +105,16 @@ class DepositModalContent extends DecimalChecker {
         }
     }
 
-    shouldComponentUpdate(np, ns) {
-        return !utils.are_equal_shallow(ns, this.state);
-    }
-
-    onGatewayChanged(e) {
-        if (!e.target.value) return;
-        this._getDepositAddress(this.state.selectedAsset, e.target.value);
-    }
-
-    onAssetSelected(asset, assetDetails) {
-        if (assetDetails.gateway == "")
-            return this.setState({selectedAsset: asset, selectedGateway: null});
-
-        let {selectedAsset, selectedGateway} = _onAssetSelected.call(
-            this,
-            asset,
-            "depositAllowed",
-            (availableGateways, balancesByGateway) => {
-                if (availableGateways && availableGateways.length == 1)
-                    return availableGateways[0]; //autoselect gateway if exactly 1 item
-                return null;
-            }
-        );
-
-        if (selectedGateway) {
-            this._getDepositAddress(selectedAsset, selectedGateway);
-        }
-    }
-
-    _getDepositObject(selectedAsset, selectedGateway, url) {
+    _getDepositObject(assetName, fullAssetName, selectedGateway, url) {
         let {props, state} = this;
         let {account} = props;
         let {gatewayStatus} = state;
 
         return {
             inputCoinType: gatewayStatus[selectedGateway].useFullAssetName
-                ? selectedGateway.toLowerCase() +
-                  "." +
-                  selectedAsset.toLowerCase()
-                : selectedAsset.toLowerCase(),
-            outputCoinType:
-                selectedGateway.toLowerCase() +
-                "." +
-                selectedAsset.toLowerCase(),
+                ? fullAssetName.toLowerCase()
+                : assetName.toLowerCase(),
+            outputCoinType: fullAssetName.toLowerCase(),
             outputAddress: account,
             url: url,
             stateCallback: this.addDepositAddress,
@@ -128,17 +136,15 @@ class DepositModalContent extends DecimalChecker {
         let backingAsset = this.props.backedCoins
             .get(selectedGateway.toUpperCase(), [])
             .find(c => {
-                if (c.backingCoinType) {
-                    return (
-                        c.backingCoinType.toUpperCase() ===
-                        selectedAsset.toUpperCase()
-                    );
-                } else if (c.backingCoin) {
-                    return (
-                        c.backingCoin.toUpperCase() ===
-                        selectedAsset.toUpperCase()
-                    );
+                let backingCoin = c.backingCoinType || c.backingCoin;
+
+                if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
+                    backingCoin = backingCoin.split(".")[1];
                 }
+
+                return (
+                    backingCoin.toUpperCase() === selectedAsset.toUpperCase()
+                );
             });
 
         if (!backingAsset) {
@@ -178,9 +184,14 @@ class DepositModalContent extends DecimalChecker {
             });
         } else {
             if (!depositAddress) {
+                const assetName =
+                    backingAsset.backingCoinType || backingAsset.backingCoin;
+                const fullAssetName = backingAsset.symbol;
+
                 requestDepositAddress(
                     this._getDepositObject(
-                        selectedAsset,
+                        assetName,
+                        fullAssetName,
                         selectedGateway,
                         gatewayStatus[selectedGateway].baseAPI.BASE
                     )
@@ -242,23 +253,25 @@ class DepositModalContent extends DecimalChecker {
             depositAddress !== "unknown" &&
             !depositAddress.error;
 
-        let minDeposit =
-            !backingAsset || !backingAsset.gateFee
-                ? 0
-                : backingAsset.gateFee
-                    ? backingAsset.gateFee * 2
-                    : utils.format_number(
-                          backingAsset.minAmount /
-                              utils.get_asset_precision(backingAsset.precision),
-                          backingAsset.precision,
-                          false
-                      );
+        let minDeposit = 0;
+        if (!!backingAsset) {
+            if (!!backingAsset.minAmount && !!backingAsset.precision) {
+                minDeposit = utils.format_number(
+                    backingAsset.minAmount /
+                        utils.get_asset_precision(backingAsset.precision),
+                    backingAsset.precision,
+                    false
+                );
+            } else if (!!backingAsset.gateFee) {
+                minDeposit = backingAsset.gateFee * 2;
+            }
+        }
         //let maxDeposit = backingAsset.maxAmount ? backingAsset.maxAmount : null;
 
         const QR = isAddressValid ? (
             <CryptoLinkFormatter
                 size={140}
-                address={depositAddress.address}
+                address={usingGateway ? depositAddress.address : account}
                 asset={selectedAsset}
             />
         ) : (
@@ -276,30 +289,12 @@ class DepositModalContent extends DecimalChecker {
 
         return (
             <div className="grid-block vertical no-overflow">
-                <div className="modal__header">
-                    {usingGateway && account ? (
-                        <Translate
-                            component="p"
-                            content="modal.deposit.header"
-                            account_name={
-                                <span className="modal__highlight">
-                                    {account}
-                                </span>
-                            }
-                        />
-                    ) : (
-                        <Translate
-                            component="p"
-                            content="modal.deposit.header_short"
-                        />
-                    )}
-                </div>
-                <div className="modal__body">
+                <div className="modal__body" style={{paddingTop: "0"}}>
                     <div className="container-row">
                         <div className="no-margin no-padding">
                             <div className="inline-label input-wrapper">
                                 <DepositWithdrawAssetSelector
-                                    defaultValue={selectedAsset}
+                                    defaultValue={this.state.selectedAsset}
                                     onSelect={this.onAssetSelected.bind(this)}
                                     selectOnBlur
                                 />
@@ -335,7 +330,7 @@ class DepositModalContent extends DecimalChecker {
                     ) : (
                         <div
                             className="container-row"
-                            style={{textAlign: "center"}}
+                            style={{textAlign: "center", paddingTop: 15}}
                         >
                             <LoadingIndicator type="three-bounce" />
                         </div>
@@ -438,17 +433,6 @@ class DepositModalContent extends DecimalChecker {
                         </div>
                     ) : null}
                 </div>
-
-                <div className="Modal__footer">
-                    <div className="container-row">
-                        <button
-                            className="button primary hollow"
-                            onClick={this.onClose.bind(this)}
-                        >
-                            <Translate content="modal.deposit.close" />
-                        </button>
-                    </div>
-                </div>
             </div>
         );
     }
@@ -463,25 +447,43 @@ export default class DepositModal extends React.Component {
 
     show() {
         this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
+            this.props.hideModal();
         });
     }
 
     onClose() {
+        this.props.hideModal();
         this.setState({open: false});
     }
 
     render() {
-        return !this.state.open ? null : (
-            <BaseModal
+        return (
+            <Modal
+                title={
+                    this.props.account
+                        ? counterpart.translate("modal.deposit.header", {
+                              account_name: this.props.account
+                          })
+                        : counterpart.translate("modal.deposit.header_short")
+                }
                 id={this.props.modalId}
                 className={this.props.modalId}
-                onClose={this.onClose.bind(this)}
+                onCancel={this.onClose.bind(this)}
                 overlay={true}
+                footer={[
+                    <Button key="cancel" onClick={this.props.hideModal}>
+                        {counterpart.translate("modal.close")}
+                    </Button>
+                ]}
+                visible={this.props.visible}
                 noCloseBtn
             >
-                <DepositModalContent {...this.props} open={this.state.open} />
-            </BaseModal>
+                <DepositModalContent
+                    hideModal={this.props.hideModal}
+                    {...this.props}
+                    open={this.props.visible}
+                />
+            </Modal>
         );
     }
 }

@@ -66,7 +66,6 @@ module.exports = function(env) {
         regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
     });
     const localeRegex = new RegExp(regexString);
-
     var plugins = [
         new HtmlWebpackPlugin({
             template: "!!handlebars-loader!app/assets/index.hbs",
@@ -77,14 +76,13 @@ module.exports = function(env) {
                 ELECTRON: !!env.electron
             }
         }),
+
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(__VERSION__),
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
-            __UI_API__: JSON.stringify(
-                env.apiUrl || "https://ui.bitshares.eu/api"
-            ),
+            __UI_API__: JSON.stringify(env.apiUrl),
             __TESTNET__: !!env.testnet,
             __DEPRECATED__: !!env.deprecated,
             DEFAULT_SYMBOL: "BTS",
@@ -191,6 +189,16 @@ module.exports = function(env) {
                     ),
                     to: path.join(outputPath, "dictionary.json"),
                     toType: "file"
+                },
+                {
+                    from: path.join(
+                        root_dir,
+                        "app",
+                        "assets",
+                        "outdated_browser.css"
+                    ),
+                    to: path.join(outputPath, "outdated_browser.css"),
+                    toType: "file"
                 }
             ],
             {}
@@ -269,7 +277,9 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
-                        path.join(root_dir, "node_modules/react-datepicker2")
+                        path.join(root_dir, "node_modules/react-datepicker2"),
+                        path.join(root_dir, "node_modules/alt-container"),
+                        path.join(root_dir, "node_modules/alt-react")
                     ],
                     use: [
                         {
@@ -333,6 +343,10 @@ module.exports = function(env) {
                 },
                 {
                     test: /.*\.svg$/,
+                    exclude: [
+                        path.resolve(root_dir, "app/assets/model-type-images"),
+                        path.resolve(root_dir, "app/assets/bin-file")
+                    ],
                     use: [
                         {
                             loader: "svg-inline-loader"

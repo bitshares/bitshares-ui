@@ -24,6 +24,8 @@ class AccountStore extends BaseStore {
         super();
 
         this.bindListeners({
+            onSetNeverShowBrowsingModeNotice:
+                AccountActions.setNeverShowBrowsingModeNotice,
             onSetCurrentAccount: AccountActions.setCurrentAccount,
             onCreateAccount: AccountActions.createAccount,
             onAccountSearch: AccountActions.accountSearch,
@@ -179,6 +181,7 @@ class AccountStore extends BaseStore {
         );
 
         return {
+            neverShowBrowsingModeNotice: false,
             update: false,
             subbed: false,
             accountsLoaded: false,
@@ -253,8 +256,7 @@ class AccountStore extends BaseStore {
         let myActiveAccounts = Immutable.Set().asMutable();
         let chainId = Apis.instance().chain_id;
         return new Promise((resolve, reject) => {
-            iDB
-                .load_data("linked_accounts")
+            iDB.load_data("linked_accounts")
                 .then(data => {
                     this.state.linkedAccounts = Immutable.fromJS(
                         data || []
@@ -662,6 +664,14 @@ class AccountStore extends BaseStore {
                     this.setCurrentAccount(account.name);
                 }
             });
+    }
+
+    onSetNeverShowBrowsingModeNotice(value) {
+        ss.set(this._getStorageKey("neverShowBrowsingModeNotice"), value);
+
+        this.setState({
+            neverShowBrowsingModeNotice: value
+        });
     }
 
     onAddAccountContact(name) {

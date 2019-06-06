@@ -50,6 +50,7 @@ export default class TransitionWrapper extends React.Component {
         } else {
             return (
                 <CSSTransitionGroup
+                    id={this.props.id}
                     className={this.props.className}
                     component={this.props.component}
                     transitionName={this.props.transitionName}

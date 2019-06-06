@@ -79,7 +79,7 @@ class LoadingButton extends React.Component {
 
     static defaultProps = {
         style: {},
-        isLoading: false,
+        isLoading: null,
         className: "button",
         type: "button",
         loadingType: "inside-feedback",
@@ -90,10 +90,19 @@ class LoadingButton extends React.Component {
         super(props);
         // initialize state (do not use setState method!)
         this.state = {
-            loading: this.props.isLoading,
+            loading:
+                this.props.isLoading == null ? false : this.props.isLoading,
             overrideMessage: null,
             loadingButtonWidth: null
         };
+        this.processingOnClick = false;
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            nextProps.isLoading !== this.props.isLoading ||
+            nextState.loading !== this.state.loading
+        );
     }
 
     _feedback(done = null, message = null) {
@@ -102,6 +111,7 @@ class LoadingButton extends React.Component {
                 overrideMessage: null,
                 loading: false
             });
+            this.processingOnClick = false;
         } else if (typeof done === "string") {
             this.setState({
                 overrideMessage: done
@@ -115,11 +125,13 @@ class LoadingButton extends React.Component {
                 this.setState({
                     loading: false
                 });
+                this.processingOnClick = false;
             }
         }
     }
 
     _onClick(event) {
+        this.processingOnClick = true;
         if (this.state.loading) {
             return true;
         }
@@ -135,6 +147,14 @@ class LoadingButton extends React.Component {
             this.props.onClick(event, this._feedback.bind(this));
             return true;
         }
+    }
+
+    _isLoading() {
+        return this.processingOnClick
+            ? this.state.loading
+            : this.props.isLoading == null
+                ? false
+                : this.props.isLoading;
     }
 
     render() {
@@ -167,9 +187,11 @@ class LoadingButton extends React.Component {
         let fixButtonWidth = false;
         let buttonInner = <span>{caption}</span>;
 
+        let loadingState = this._isLoading();
+
         switch (this.props.loadingType) {
             case "inside":
-                if (this.state.loading) {
+                if (loadingState) {
                     fixButtonWidth = true;
                     buttonInner = (
                         <span style={{margin: "auto", display: "inline-block"}}>
@@ -179,7 +201,7 @@ class LoadingButton extends React.Component {
                 }
                 break;
             case "inside-feedback":
-                if (this.state.loading) {
+                if (loadingState) {
                     fixButtonWidth = true;
                     buttonInner = (
                         <span style={{float: "left"}}>
@@ -200,13 +222,13 @@ class LoadingButton extends React.Component {
                 }
                 break;
             case "overlay":
-                if (this.state.loading) {
+                if (loadingState) {
                     fixButtonWidth = true;
                     rightElement = <LoadingIndicator type="loading-overlay" />;
                 }
                 break;
             case "overlay-feedback":
-                if (this.state.loading) {
+                if (loadingState) {
                     fixButtonWidth = true;
                     rightElement = (
                         <LoadingIndicator
@@ -217,7 +239,7 @@ class LoadingButton extends React.Component {
                 }
                 break;
             case "inside-feedback-resize":
-                if (this.state.loading) {
+                if (loadingState) {
                     buttonInner = (
                         <span>
                             <span>{loadingMessage}</span>
@@ -229,7 +251,7 @@ class LoadingButton extends React.Component {
                 }
                 break;
             case "right-feedback":
-                if (this.state.loading) {
+                if (loadingState) {
                     rightElement = (
                         <div
                             style={{
@@ -263,7 +285,7 @@ class LoadingButton extends React.Component {
                 }
                 break;
             case "left-feedback":
-                if (this.state.loading) {
+                if (loadingState) {
                     leftElement = (
                         <div
                             style={{
@@ -313,7 +335,7 @@ class LoadingButton extends React.Component {
                         ref={instance => {
                             this.loadingButton = instance;
                         }}
-                        disabled={this.state.loading}
+                        disabled={loadingState}
                         type={this.props.type}
                         className={this.props.className}
                         id={this.props.id}

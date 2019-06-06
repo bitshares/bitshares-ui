@@ -80,6 +80,10 @@ class SettingsActions {
     updateUnits() {
         return true;
     }
+
+    setPriceAlert(value) {
+        return value;
+    }
 }
 
 export default alt.createActions(SettingsActions);

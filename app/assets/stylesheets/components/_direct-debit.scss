@@ -1,0 +1,27 @@
+.direct-debit-table {
+    overflow-x: auto;
+    table {
+        min-width: 1100px;
+    }
+    .ant-table-placeholder {
+        min-height: 140px;
+    }
+}
+
+@media (max-width: 750px) {
+    .direct-debit-view {
+        .direct-debit-table-card {
+            .ant-card-body {
+                padding: 24px 0;
+            }
+        }
+    }
+}
+
+@media (max-width: 550px) {
+    .direct-debit-view {
+        .direct-debit-table__filter-input {
+            margin-bottom: 15px;
+        }
+    }
+}

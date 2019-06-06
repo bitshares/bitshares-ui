@@ -27,11 +27,13 @@ class SettingsStore {
             init: this.init.bind(this),
             getSetting: this.getSetting.bind(this),
             getLastBudgetObject: this.getLastBudgetObject.bind(this),
-            setLastBudgetObject: this.setLastBudgetObject.bind(this)
+            setLastBudgetObject: this.setLastBudgetObject.bind(this),
+            hasAnyPriceAlert: this.hasAnyPriceAlert.bind(this)
         });
 
         // bind actions to store
         this.bindListeners({
+            onSetPriceAlert: SettingsActions.setPriceAlert,
             onSetExchangeLastExpiration:
                 SettingsActions.setExchangeLastExpiration,
             onSetExchangeTutorialShown:
@@ -84,6 +86,8 @@ class SettingsStore {
         );
 
         this.exchange = fromJS(ss.get("exchange", {}));
+
+        this.priceAlert = fromJS(ss.get("priceAlert", []));
     }
 
     /**
@@ -107,7 +111,8 @@ class SettingsStore {
                 additional: {
                     transferToMe: true
                 }
-            }
+            },
+            rememberMe: true
         };
     }
 
@@ -138,7 +143,14 @@ class SettingsStore {
             passwordLogin: [
                 {translate: "cloud_login"},
                 {translate: "local_wallet"}
-            ]
+            ],
+            browser_notifications: {
+                allow: [true, false],
+                additional: {
+                    transferToMe: [true, false]
+                }
+            },
+            rememberMe: [true, false]
         };
     }
 
@@ -677,6 +689,24 @@ class SettingsStore {
         this.exchange = this.exchange.set(key, value);
 
         ss.set("exchange", this.exchange.toJS());
+    }
+
+    getPriceAlert() {
+        return this.priceAlert.toJS();
+    }
+
+    onSetPriceAlert(value) {
+        this.priceAlert = fromJS(value);
+
+        ss.set("priceAlert", value);
+    }
+
+    hasAnyPriceAlert(quoteAssetSymbol, baseAssetSymbol) {
+        return this.priceAlert.some(
+            priceAlert =>
+                priceAlert.get("quoteAssetSymbol") === quoteAssetSymbol &&
+                priceAlert.get("baseAssetSymbol") === baseAssetSymbol
+        );
     }
 
     getExchangeSettings(key) {

@@ -20,6 +20,7 @@
         "contacts": "連絡先",
         "create_account": "アカウント作成",
         "create_new": "新しいアカウントを作成する",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "BTSをデポジットする",
         "deposit_address": "あなたのデポジットアドレスはあなたのアカウント名です。",
         "deposit_withdraw": "入金 / 出金",
@@ -50,7 +51,7 @@
         "ignore": "非表示",
         "in_open": "これは注文中の%(asset)sの金額です。",
         "in_open_value": "これは注文中の%(asset)sの相当額です。",
-        "intro_text_1": "あなたのための分散型取引所",
+        "intro_text_1": "Your Decentralized Platform",
         "intro_text_2": "BitSharesは<b>DEX</b>として分散化されており、BitSharesのコアトークンであるBTSと、bitUSD、bitCNY、bitBTC、bitGoldなどのトラストレスで価格安定性のあるアセット間のトレードを可能にします。これらの資産はすべてカウンターパーティリスク<b>ゼロ</b>で取引することができるため、あなた自身が資金を完全にコントロールすることができます。",
         "intro_text_3": "<b>DEX</b>では、ユーザー発行型アセット（UIA）の作成も可能です。ユーザー発行型アセットは、プラットフォーム上の他のユーザー発行型アセット、及びトラストレスアセット間のトレードが可能です。 DEX上でよく知られているアセット発行者である、<b>OpenLedger</b>、はBTC、ETH、STEEM、DASH、LTC、DOGE、その他多数のアセットをホスティングしています。",
         "intro_text_4": "これにより、仮想通貨トレーダーは使い慣れた取引インタフェースを通して、伝統的なトレーディングスタイルと分散型のトレーディングスタイルのユニークな融合を体験することができます。",
@@ -132,6 +133,8 @@
             "brain": "ブレインキーの位置",
             "cancel": "キャンセル",
             "confirm_add": "追加",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "アカウントからインポート",
             "key": "キー/名前",
             "key_viewer": "秘密キービューア",
@@ -148,6 +151,7 @@
             "private": "秘密キー (WIF - Wallet Import Format)",
             "public": "公開キー",
             "publish": "変更を公開",
+            "remove_proxy": "Remove proxy",
             "remove_text": "削除",
             "reset": "変更をリセット",
             "save": "Save Changes",
@@ -202,12 +206,14 @@
             "verifymessage": "Verify Message",
             "verifyonchange": "Verify while typing"
         },
+        "start_typing_to_search": "Start typing to search for accounts",
         "submit_orders": "送信",
         "total": "合計 ({asset})",
         "total_estimate": "これは非表示のもの、注文中のもの、賃借、担保を含むすべてのアセットの推定価格です。推定は現在のブロックチェーンデータのみを使用しており、正確とは限りません。",
         "total_value": "合計額",
         "trade": "トレード",
         "transactions": {
+            "fee": "Fee",
             "id": "ID",
             "info": "情報",
             "time": "時間",
@@ -240,6 +246,7 @@
             "disable_force_settle": "強制決済を無効にする",
             "error_invalid": "そのアセットは使用できません",
             "error_precision": "そのアセットの精度は%(asset)sと異なります。",
+            "error_too_deep": "May not create a bitasset backed by a bitasset backed by a bitasset",
             "exists": "そのアセットは既に存在します",
             "expiry": "市場解決日",
             "feed_lifetime_sec": "フィード寿命 (分)",
@@ -251,7 +258,9 @@
             "force_settlement_offset_percent": "強制決済のパーセントオフセット",
             "global_settle": "発行者に強制グローバル決済を許可する",
             "id": "ID",
+            "invalid_backing_asset_change": "You can't change the backing asset of an asset that has a non-zero current supply",
             "invalid_market_pair": "Preferred market pairing can not be the same market",
+            "invalid_permissions_change": "You can't enable a permission for an asset that has a non-zero current supply",
             "issued_assets": "発行済みアセット",
             "market": "優先取引ペア",
             "market_fee": "取引手数料",
@@ -313,6 +322,7 @@
             "expired": "期限切れのワーカー",
             "funding": "資金調達",
             "go_proxy": "進む:",
+            "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "バックアップ",
             "info": "情報",
             "line": "Line",
@@ -374,11 +384,27 @@
             "whitelist_authorities": "ホワイトリスト権限"
         }
     },
+    "account_browsing_mode": {
+        "go_back": "Go back to my account",
+        "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
+        "modal_title": "View Only Mode",
+        "never_show_again": "Never show again",
+        "view_mode": "View Mode",
+        "you_are_in_browsing_mode": "You're in view only mode of the current account. Click here to get back to your account."
+    },
+    "alert": {
+        "warning": "Warning"
+    },
     "app_init": {
         "browser": "サポートされていないブラウザ",
         "browser_text": "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
         "check_latency": "Running latency checks...",
         "check_latency_feedback": "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
+        "check_latency_feedback_country": "Latency check in best country (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_last": "Latency check for last connected node (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_region": "Latency check in best region (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_rest": "Latency check for remaining nodes (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_world": "Latency check in each region (%(pinged)s/%(totalToPing)s nodes)",
         "connected": "接続しました",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -388,6 +414,13 @@
         "understand": "理解しました。",
         "ws_status": "フルノード接続状態"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
+    "boolean": {
+        "false": "False",
+        "true": "True"
+    },
     "borrow": {
         "adjust": "ポジションを更新",
         "adjust_short": "調整",
@@ -395,6 +428,7 @@
         "close": "ポジションを閉じる",
         "coll_ratio": "担保比率",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "あなたの担保比率は%(mr)s未満であり、許可されません。",
@@ -453,12 +487,15 @@
         "buy": "買う",
         "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "最低購入量",
+        "buy_sell": "Order Form",
         "buysell_formatter": "{asset} {direction}",
         "call": "コール価格",
         "change": "変化",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
+        "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "あなたの注文は、最低アスク価格より%(diff)s倍高いです。続行してもよろしいですか？",
         "confirm_no_orders_buy": "未執行の売り注文がないマーケットに買い注文を出そうとしています。続行してもよろしいですか？",
         "confirm_no_orders_sell": "未執行の買い注文がないマーケットに売り注文を出そうとしています。続行してもよろしいですか？",
@@ -472,6 +509,7 @@
         "feed_price": "フィード価格",
         "filter": "フィルター",
         "flip": "ひっくり返す",
+        "global_settle": "Global Settlement",
         "group_order_limit": "グループ",
         "hide": "非表示",
         "highest_bid": "最高ビッド価格",
@@ -482,9 +520,11 @@
         "invalid_price": "価格が不正です",
         "invert": "価格を反転",
         "latest": "最新",
+        "limit": "Limit",
         "lowest_ask": "最低アスク価格",
         "maintenance": "維持コール価格",
         "market": "マーケット",
+        "market_depth": "Market Depth",
         "market_frozen": "%(asset)s のオーナーがこのマーケットでの取引を無効にしています。",
         "market_name": "マイ・マーケット",
         "market_picker": {
@@ -513,28 +553,126 @@
         "no_bids": "No bids",
         "no_data": "データなし",
         "no_orders": "No orders",
+        "order_book": "Order Book",
         "order_depth": "マーケットデプス",
+        "order_grouping": "Order Grouping %(orderlimit)s%",
         "others": "その他",
         "overbought": "買われすぎ",
         "oversold": "売られすぎ",
+        "panels_mirror": "Mirror Panels",
         "period": "期間 (日)",
         "price": "価格",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "価格チャート",
         "price_market": "マーケット価格",
         "quantity": "数量",
+        "quick_deposit": "Deposit %(asset)s",
+        "quick_deposit_bridge": "Use a Bridge to deposit external assets using one of the existing gateways and instantly trade it into %(target)s",
+        "quick_deposit_bridge_button": "Use a Bridge",
+        "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
+        "quick_deposit_gateway_button": "Use a Gateway",
+        "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "クオート通貨:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "クオート供給量",
         "receive": "取得",
         "remove": "Remove",
         "rsi": "相対力指数",
+        "scaled": "Scaled",
         "search": "他のマーケットを検索する",
         "sell": "売る",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "チャートオプション",
+        "settings": {
+            "header": "Personalize",
+            "options": {
+                "grouping_1": "Group 1",
+                "grouping_2": "Group 2",
+                "grouping_standalone": "Standalone",
+                "hidden_chart": "Hide chart",
+                "horizontal": "Horizontal",
+                "position_order_asset_opt1": "Orders above Asset",
+                "position_order_asset_opt2": "Asset above Order",
+                "position_order_form_opt1": "Buy - Sell",
+                "position_order_form_opt2": "Sell - Buy",
+                "position_order_orders_opt1": "Buy - Sell",
+                "position_order_orders_opt2": "Sell - Buy",
+                "vertical": "Vertical"
+            },
+            "title": {
+                "chart_height": "Height",
+                "chart_tools": "View Tools",
+                "chart_type": "Type",
+                "chart_zoom": "Allow Zoom",
+                "hide_function_buttons": "Hide function buttons",
+                "market_location": "Market location",
+                "market_trades": "Market Trades",
+                "my_trades": "My Trades",
+                "open_orders": "Open Orders",
+                "order_book_grouping": "Order Book Grouping",
+                "order_style": "Style",
+                "orderbook_auto_scroll": "Auto scroll",
+                "position_order_asset": "Vertical Orders / Asset",
+                "position_order_form": "Buy/Sell Asset",
+                "position_order_orders": "Buy/Sell Orders",
+                "reduce_scrollbars": "Reduce Scroll Bars",
+                "reverse_order_book": "Reverse Order Book",
+                "settlements": "Settlements",
+                "single_colum_order_form": "Single Column Order Form"
+            },
+            "tooltip": {
+                "chart_height": "Define the height of the charts",
+                "chart_reload": "Changing this setting will reload the chart",
+                "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
+                "chart_type": "Switch between market depth and price charts, or disable charts",
+                "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
+                "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
+                "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
+                "market_trades": "",
+                "my_trades": "",
+                "open_orders": "",
+                "order_book_grouping": "Group orders which are close together by a defined percentage",
+                "order_style": "Use vertical order book to pin it to the side panel",
+                "orderbook_auto_scroll": "Auto scroll the order book to keep center as new orders come in. Disable to allow scrolling",
+                "panel_grouping": "Define panel grouping",
+                "position_order_asset": "Define the vertical order for the order form vs order book",
+                "position_order_form": "Define the horizontal order for the order form",
+                "position_order_orders": "Define the horizontal order for the order book",
+                "reduce_scrollbars": "Disable scroll bars by default",
+                "reload": "Changing this option will only affect after manually reloading",
+                "reverse_order_book": "Reverse order book to have buy orders on top",
+                "settlements": "",
+                "show_market_depth": "Show market depth",
+                "show_price_chart": "Show price chart",
+                "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)"
+            }
+        },
         "settle": "決済",
+        "settle_better_marketprice": "Market price is in favour",
+        "settle_better_settleprice": "Settlement price is in favour",
+        "settle_delay": "This asset will settle in %(hours)s hours",
+        "settle_delay_globally_settled": "This asset will settle instantly",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
+        "settle_offset": "Settlement price offset: %(offset)s%",
         "settle_orders": "決済注文",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "ショート",
+        "show_all_orders": "Show all %(rowcount)s orders",
+        "show_all_trades": "Show all %(rowcount)s trades",
         "show_asks": "すべての売り注文を見る",
         "show_bids": "すべての買い注文を見る",
         "show_only_liquid": "Show liquid markets only",
@@ -551,6 +689,7 @@
         "vol_short": "出来高",
         "volume": "出来高",
         "volume_24": "24時間出来高",
+        "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
         "your_price": "あなたのコール価格",
         "zoom": "拡大",
         "zoom_all": "すべて"
@@ -566,6 +705,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
@@ -597,22 +748,48 @@
                 "whitelist_markets": "ホワイトリストマーケット"
             },
             "price_feed": {
-                "force_settlement_offset": "強制決済オフセット",
-                "global_settlement_price": "グローバル決済価格",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "feed_lifetime": "Feed lifetime (hours)",
+                "feed_price": "Feed price",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "維持担保率 (MCR)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "最大ショート・スクイーズ比率 (MSSR)",
-                "settlement_delay": "決済遅延",
+                "min_feeds": "Minimum feeds",
                 "settlement_price": "決済価格",
                 "title": "価格フィード"
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
+                "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "公開しました",
                 "publisher": "公開者",
                 "settlement_price": "決済価格",
                 "title": "価格フィードデータ"
+            },
+            "settlement": {
+                "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "アセット種別",
@@ -632,6 +809,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "ID",
             "issuer": "発行者",
             "market": "スマートコイン",
@@ -721,6 +899,7 @@
             "budget": "残余予算",
             "card": "カードビュー",
             "current": "現在の証人",
+            "filter_by_name": "名前でフィルタリングする",
             "last_confirmed": "最新の確認",
             "missed": "ブロック喪失",
             "next_vote": "次回の投票更新",
@@ -728,8 +907,7 @@
             "pay": "1ブロックあたりの報酬",
             "rank": "ランク",
             "table": "テーブルビュー",
-            "title": "証人",
-            "filter_by_name": "名前でフィルタリングする"
+            "title": "証人"
         },
         "workers": {
             "create": "新しいワーカー提案を作成する",
@@ -784,16 +962,24 @@
         "asset_to_withdraw": "出金するアセット:",
         "asset_unavailable": "%(asset)sのゲートウェイはサービス外です。",
         "assets": {
-            "bit": "<br/><br/>%(asset)s は実際の%(backed)sの価値に追随するデリバティブです。これは100%分散化されており、トラストレスであり、スマートコントラクトによってブロックチェーンに保持される担保に裏付けされています。",
-            "bitcny": "<br/><br/>bitCNY はMagic Walletが提供するゲートウェイサービスによって実際の元と1：1で入出金できます。詳細はこちらを見てください https://www.magicw.net/",
-            "open": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Openledgerによって提供されるゲートウェイサービスによって入出金が可能です。",
-            "trade": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。"
+            "bit": "%(asset)s は実際の%(backed)sの価値に追随するデリバティブです。これは100%分散化されており、トラストレスであり、スマートコントラクトによってブロックチェーンに保持される担保に裏付けされています。",
+            "bitcny": "bitCNY はMagic Walletが提供するゲートウェイサービスによって実際の元と1：1で入出金できます。詳細はこちらを見てください https://www.magicw.net/",
+            "bridge": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、CryptoBridgeによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "gdex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Gdexによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "open": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、OpenLedgerによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "rudex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Rudexによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "trade": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "win": "",
+            "xbts": ""
         },
         "balance": "現在の残高",
         "balance_asset": "現在の%(asset)s残高",
         "bitkapital_receive": "入金額",
         "bitkapital_text": "入出金するアセットを選択してください:",
         "bitkapital_withdraw": "出金額",
+        "bitspark": {
+            "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+        },
         "bridge": "ブリッジ",
         "bridge_text": "ブリッジはアセットを他のものに交換します。例: BTCをBTSに。",
         "calc": "計算中",
@@ -812,9 +998,9 @@
         "convert_now": "今すぐ変換",
         "copy_address": "アドレスをコピー",
         "copy_memo": "メモをコピー",
-        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "入金",
         "deposit_address": "入金アドレス",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit_history_status": {
             "confirming": "デポジット確認中",
             "fail": "失敗",
@@ -852,8 +1038,9 @@
             "open_website": "ウェブサイトを開く"
         },
         "min_deposit_warning_amount": "最低入金額は%(minDeposit)s %(coin)sです。",
-        "min_deposit_warning_asset": "重要: このアドレスには%(coin)sのみ送金してください。このアドレスに%(minDeposit)s %(coin)s未満、または他の仮想通貨を送金すると、デポジットが失われる可能性があります。",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "制限に達しました",
+        "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "新しいアドレスを取得",
         "purchase": "%(asset)sを買う",
         "purchase_1": "外部ウォレットの%(inputAsset)sで%(outputAsset)sを素早く簡単に買います。このサービスは<a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>によって提供されます。",
@@ -869,13 +1056,6 @@
             "support_block": "サポートについては、RuDEXまでご連絡ください。:",
             "under_construction": "工事中"
         },
-        "xbtsx": {
-            "coming_soon": "近日公開",
-            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
-            "min_amount_error": "数字を入力してください >= minimum",
-            "support_block": "サポートについては、XBTSまでご連絡ください。:",
-            "under_construction": "工事中"
-        },
         "scan_qr": "QRをスキャン",
         "service": "転送サービス",
         "status": "ステータス",
@@ -886,6 +1066,7 @@
         "title": "入金 & 出金",
         "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
         "unavailable": "このアセットのゲートウェイサービスが現在停止しています。後でやり直してください",
+        "unavailable_CITADEL": "The Citadel Bridge is down or not responding",
         "unavailable_OPEN": "OpenLedgerゲートウェイがダウンしているか、応答していません",
         "unavailable_RUDEX": "RuDEXゲートウェイがダウンしているか、応答していません",
         "unavailable_TRADE": "Blocktradesブリッジがダウンしているか、応答していません",
@@ -911,14 +1092,26 @@
         "withdraw_placeholder": "%(asset)sアドレスを入力してください",
         "withdraw_summary": "出金概要",
         "withdraw_to": "%(asset)sの出金画面を開くには下のボタンをクリックしてください",
+        "xbtsx": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、XBTSまでご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "your_account": "あなたのアカウント"
     },
     "global": {
         "cancel": "Cancel",
+        "close": "Close",
         "confirm": "Confirm",
+        "field_type": {
+            "account": "account"
+        },
         "help": "Help",
         "return_to_top": "Return to top",
-        "scan_qr_code": "Scan QR code"
+        "scan_qr_code": "Scan QR code",
+        "set": "Set"
     },
     "header": {
         "account": "アカウント",
@@ -931,6 +1124,7 @@
         "current": "現在のアカウント",
         "dashboard": "ダッシュボード",
         "deposit-withdraw": "入金/出金",
+        "deposit_legacy": "or Legacy Deposit",
         "exchange": "取引所",
         "explorer": "エクスプローラー",
         "help": "ヘルプ",
@@ -939,15 +1133,16 @@
         "locked_tip": "<br/>クリックすると、ウォレットをアンロックしログインします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
         "logout": "ログアウト",
         "payments": "送金",
-        "payments_beta": "送金 (ベータ)",
         "payments_legacy": "送金 (レガシー)",
         "settings": "設定",
+        "showcases": "Spotlight",
         "title": "BitShares UI",
         "unlock": "ログイン (ウォレットをアンロック)",
         "unlock_password": "パスワードでログイン",
         "unlock_short": "ログイン",
         "unlocked_tip": "<br/>クリックすると、ウォレットをロックしログアウトします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
-        "update_asset": "アセット更新"
+        "update_asset": "アセット更新",
+        "withdraw_legacy": "or Legacy Withdraw"
     },
     "icons": {
         "adjust": "Adjust margin position",
@@ -980,6 +1175,7 @@
             "remove": "Remove"
         },
         "dashboard": "Dashboard",
+        "debug-report": "Report your error log console, or create a screenshot",
         "deposit": {
             "deposit": "Deposit",
             "deposit_withdraw": "Deposit/Withdraw"
@@ -1021,6 +1217,7 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "order_grouping": "Order Grouping Active",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
@@ -1028,6 +1225,7 @@
         },
         "power": "Login",
         "question_circle": "Help",
+        "reverse_orderbook": "Reverse orderbook",
         "server": "Explore",
         "settle": "Settle",
         "share": "About",
@@ -1036,7 +1234,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",
@@ -1074,6 +1272,17 @@
         "tr": "Türkçe",
         "zh": "简体中文"
     },
+    "login": {
+        "browseFile": "browse your files",
+        "browseFileLabel": "Browse your backup file",
+        "dropFile": "Drop your backup file in this area or ",
+        "invalidFormat": "Invalid format!",
+        "loginButton": "Login",
+        "selectDifferent": "Select different file",
+        "supportWarning": "Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.",
+        "title": "Select Login Type",
+        "withoutBinFile": "I don't have .bin-file"
+    },
     "markets": {
         "base": "ベースアセット",
         "core_rate": "中心レート",
@@ -1094,9 +1303,11 @@
     "modal": {
         "buy": {
             "asset": "Asset",
-            "bridge": "Brdige",
+            "bridge": "Bridge",
             "title": "Buy"
         },
+        "cancel": "cancel",
+        "close": "close",
         "confirmation": {
             "accept": "はい",
             "cancel": "いいえ",
@@ -1115,8 +1326,7 @@
             "close": "閉じる",
             "header": "%(account_name)sに入金",
             "header_short": "入金",
-            "submit": "入金",
-            "submit_beta": "入金 (ベータ)"
+            "submit": "入金"
         },
         "deposit_withdraw": {
             "disabled": "ゲートウェイサービスが無効",
@@ -1132,6 +1342,11 @@
         },
         "ok": "OK",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "delete": "Permanently reject proposal",
+                "reject": "Reject proposal"
+            },
             "approval_add": "承認を追加",
             "approval_remove": "承認を削除",
             "key_approval_add": "キー承認を追加",
@@ -1143,12 +1358,31 @@
             "label": "QRコード",
             "title": "秘密キーのQR code"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "消却数量",
             "from": "消却するアカウント",
             "submit": "消却（バーン）",
-            "title": "アセットを消却 (バーン) する"
+            "title": "アセットを消却 (バーン) する",
+            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
         },
+        "save": "save",
         "send": {
             "header": "<span class=\"send-name\">%(fromName)s</span>から送信",
             "header_propose": "<span class=\"send-name\">%(fromName)s</span>から送信を提案"
@@ -1175,7 +1409,6 @@
             "no_gateways": "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
             "quantity": "数量",
             "submit": "出金",
-            "submit_beta": "出金 (ベータ)",
             "withdraw": "出金"
         }
     },
@@ -1186,6 +1419,27 @@
         },
         "news": "ニュース",
         "subject": "タイトル"
+    },
+    "notifications": {
+        "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
+        "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
+        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)s",
+        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
+        "backup_file_save_unsupported": "File saving is not supported",
+        "balance_claim_error": "Error claiming balance: %(error_msg)s",
+        "exchange_enter_valid_values": "Please enter a valid amount and price",
+        "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
+        "exchange_unknown_error_place_scaled_order": "Unknown error. Failed to place Scaled Order",
+        "import_keys_already_imported": "This wallet has already been imported",
+        "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
+        "import_keys_error_unknown": "Key import error: %(error_msg)s",
+        "invalid_password": "Invalid Password",
+        "password_change_failure": "Unable to change password: %(error_msg)s",
+        "password_change_success": "Password changed",
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId)s, but got %(actualWalletId)s",
+        "worker_create_failure": "Failed to create worker: %(error_msg)s"
     },
     "openledger": {
         "deposit_amount": "入金額",
@@ -1211,10 +1465,12 @@
         "asset_reserve": "{account}は{amount}を消却 (バーン) しました",
         "asset_settle": "{account}は{amount}の決済を依頼しました",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account}はアセット{asset}を更新しました",
         "asset_update_feed_producers": "{account}はアセット{asset}のフィード作成者を更新しました",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account}は{amount}を請求しました",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister}は{listee}をブラックリストに登録しました",
         "call_order_update": "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
         "committee_member_update_global_parameters": "{account}はグローバル委員会のパラメータを更新しました",
@@ -1267,6 +1523,7 @@
         "asset_update": "{account}アカウントでアセット{asset}を更新します",
         "call_order_update": "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
         "committee_member_update_global_parameters": "{account}による委員会グローバルパラメータを更新します",
+        "delete": "Permanently reject",
         "expires": "有効期限",
         "feed_producer": "{account}で アセット{asset}のフィード作成者を更新します",
         "limit_order_buy": "{amount}を{price}で{account}が買い注文を出します",
@@ -1286,6 +1543,14 @@
             "owner_approvals_to_remove": "オーナー承認の削除"
         },
         "update_account": "{account}のアカウントデータを更新します",
+        "updated": {
+            "active_approvals_to_add": "Active approval(s) added",
+            "active_approvals_to_remove": "Active approval(s) removed",
+            "key_approvals_to_add": "Key approval(s) added",
+            "key_approvals_to_remove": "Key approval(s) removed",
+            "owner_approvals_to_add": "Owner approval(s) added",
+            "owner_approvals_to_remove": "Owner approval(s) removed"
+        },
         "vesting_balance_withdraw": "{account}の権利確定残高から{amount}を引き出します"
     },
     "proposal_create": {
@@ -1294,6 +1559,9 @@
         "id": "Proposal object id",
         "proposed_operations": "提案された操作",
         "review_period": "レビュー期間開始"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "提案",
     "qr_address_scanner": {
@@ -1307,6 +1575,60 @@
         "claim_refcode": "紹介コードを請求する",
         "enter_refcode": "紹介コードを入力してください",
         "refcode_optional": "紹介コード (任意)"
+    },
+    "registration": {
+        "accountConfirmation": "I have written down or otherwise stored my username and password.",
+        "accountDescription": "Please keep your password in a safe place. Don’t share it with any third-parties or send it online.",
+        "accountLoginByValue": "Account name + Password",
+        "accountModelTitle": "By Account Name<span class=\"hide-text-for-small\"> and Password</span>",
+        "accountNote": "If you forget your pass phrase you will be unable to access your account and your funds. We cannot reset or restore your password! Memorize or write down your username and password!",
+        "attention": "Attention",
+        "backUpRestoreKey": "Back up and restore Account",
+        "checkboxRecover": "I understand that no one can recover my password or .bin file if I forget or lose it.",
+        "checkboxRemember": "I have remembered or otherwise stored my password and I safely kept downloaded .bin file.",
+        "checkboxUploaded": "I understand that .bin file must be uploaded during the login process and without .bin file I will lose access to my funds.",
+        "continue": "Continue",
+        "copyPassword": "Copy your password to save.",
+        "createAccountTitle": "Create Account by Bin-file",
+        "createByPassword": "Create Account by Name and Password",
+        "downloadFile": "Download file",
+        "loginByKey": "Login by",
+        "passwordPlaceholder": "Minimum 7 characters",
+        "recommended": "recommended",
+        "securityAccountModel": "Medium",
+        "securityKey": "Security",
+        "securityWalletModel": "High",
+        "select": "Select",
+        "title": "Registration",
+        "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
+        "walletLoginByValue": "Bin-file + Password",
+        "walletModelTitle": "By bin-file",
+        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "whyBinFile": "Why do I need a .bin file?"
+    },
+    "scaled_orders": {
+        "action": {
+            "buy": "Buy",
+            "sell": "Sell",
+            "title": "Action"
+        },
+        "distribution": {
+            "flat": "Flat",
+            "title": "Distribution"
+        },
+        "fee": "Fee",
+        "market_fee": "Market Fee",
+        "order_count": "Order Count",
+        "order_s": "Order(s)",
+        "please_log_in": "You need to login before use Scaled Orders",
+        "preview_table": {
+            "price": "Price"
+        },
+        "price_lower": "Price Lower",
+        "price_upper": "Price Upper",
+        "quantity": "Quantity",
+        "title": "Scaled Order",
+        "total": "Total"
     },
     "settings": {
         "access": "アクセス",
@@ -1351,15 +1673,18 @@
         "connection_error": "APIノード%(url)sに接続できません。接続可能のノードに戻ります。",
         "darkTheme": "ダークテーマ",
         "delete_select": "削除するウォレットを選択してください",
+        "disabled": "Disabled",
         "enable_wallet": "ウォレットモデルを有効にする",
         "faucet_address": "フォーセット",
         "faucet_address_text": "フォーセットアドレスは新規ユーザーの登録手数料の支払いに使用されます。",
         "general": "全般",
         "general_text": "基本設定を調整する。",
+        "global_settings": "Default Global Settings",
         "hidden_nodes": "非表示のノード",
         "hide": "非表示",
         "high_latency": "レイテンシー高",
         "inverseMarket": "市場志向の選択",
+        "left": "Left",
         "lightTheme": "ライトテーマ",
         "local_wallet": "ウォレットモデルでログイン",
         "locale": "言語切替",
@@ -1374,12 +1699,16 @@
         "node_down": "DOWN",
         "node_up": "UP",
         "olDarkTheme": "Openledgerダーク",
+        "orderbook_autoscroll": "Order Book Autoscroll",
+        "orderbook_grouping": "Order Book Grouping",
+        "orderbook_reverse": "Order Book Reversed",
         "password": "パスワード",
         "passwordLogin": "ログインモード",
         "password_text": "パスワードを変更する。",
         "personal_active": "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
+        "placeholder_select": "Select option",
         "remove": "削除",
         "remove_api": "ノードを削除",
         "remove_ws": "ノードを削除",
@@ -1391,6 +1720,8 @@
         "restore_default_success": "設定が正常にリセットされました",
         "restore_key_count": "キー数",
         "restore_text": "バックアップまたはインポートキーからリストアする。",
+        "right": "Right",
+        "scrollbars_hide": "Reduce scroll bars",
         "show": "表示",
         "showAssetPercent": "アカウントページにアセットパーセンテージを表示",
         "showSettles": "決済注文をデプスチャートで表示する",
@@ -1404,11 +1735,141 @@
         "view_keys": "キーを見る",
         "wallet": "ウォレット",
         "walletLockTimeout": "ウォレットの自動ロック時間 (秒。0の場合は無効)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "ウォレットモデルが必要です",
         "wallet_required_text": "バックアップをリストアするには、まずウォレットモデルに切り替える必要があります。下のボタンをクリックしてください。",
         "wallet_text": "ウォレットの詳細を制御する。",
         "wallets": "ウォレット",
         "yes": "はい"
+    },
+    "showcases": {
+        "barter": {
+            "account": "Account",
+            "action": "Peer 1 (%(peer_left)s) offers to send %(assets_left)s to Peer 2 (%(peer_right)s) and receives %(assets_right)s in return. ",
+            "add_escrow": "Add escrow",
+            "add_escrow_tooltip": "Adds or removes an escrow to this barter. This escrow will have to approve the resulting proposal as well. The escrow can serve as a witness only, or also be the custodian of Peer 1's funds.",
+            "balance_warning": "Balance Warning",
+            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s",
+            "balance_warning_tooltip": "%(peer)s does not have enough funds to execute the transfers when the proposal gets approved and executes. This is not an issue when creating the proposal, but the balances must match when executed",
+            "bartering_asset": "Bartering asset",
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "error_fill_in_escrow_name": "Please fill in the account name of the escrow",
+            "error_fill_in_peer_left_name": "Please fill in the account name of Peer 1",
+            "error_fill_in_peer_right_name": "Please fill in the account name of Peer 2",
+            "error_fill_in_valid_asset_amount": "Please fill in valid amounts for the bartering assets",
+            "error_same_name": "Peer 1 and Peer 2 must be different accounts",
+            "error_same_name_escrow": "The escrow can not be Peer 1 or Peer 2",
+            "escrow_account": "Escrowing account",
+            "escrow_as_custodian": "An escrow (%(escrow)s) is used as custodian which holds the funds of Peer 1 and which has to approve the barter before it can execute.",
+            "escrow_as_witness": "An escrow (%(escrow)s) is used as a witness which has to approve the barter before it can execute.",
+            "escrow_payment": "Payment for escrow services",
+            "escrow_payment_tooltip": "Being an escrow requires trust from both peers and should be considered a paid service. The escrow will be paid from Peer 1's account via an additional transfer in the proposal, which increases the overall fee for Peer 1. Set this value to zero to remove it, default value is equal to the transactions fee induced for the escrow.",
+            "fee_due_now": "Fee due now",
+            "fee_due_now_tooltip": "The indicated transaction fee will be paid when creating this barter proposal to move funds to the escrow",
+            "fee_when_proposal_executes": "Fee when proposal executes",
+            "fee_when_proposal_executes_tooltip": "When the proposal of this barter executes, the mentioned account will have to pay the indicated transaction fee for the underlying transfer operations",
+            "new_barter": "Propose a new barter",
+            "new_barter_tooltip": "This panel allows you to create a new barter. It utilizes the atomicity of a transaction to securely swap assets between two accounts (via transfer operations). The transaction is wrapped in a proposal and needs approval from both parties (called Peer 1 and Peer 2 below) to execute, and optionally from an escrow",
+            "not_complete": "Please fill out all fields to see a description of the action here",
+            "peer_left": "Peer 1",
+            "peer_right": "Peer 2",
+            "proposal_fee": "Proposal fee",
+            "proposal_fee_tooltip": "The indicated transaction fee will be paid to create the proposal to realize this barter",
+            "propose_tooltip": "This creates a proposal that needs to be approved by you and all other involved parties. After broadcasting the proposal, go to find the Proposal tab in your Dashboard, approve the proposal and notify the other involved parties.",
+            "remove_escrow": "Remove escrow",
+            "send_to_escrow": "Use escrow as custodian for Peer 1's funds",
+            "send_to_escrow_tooltip": "Enabling this will send the selected funds to the escrow, and then a barter proposal is created between escrow and Peer 2",
+            "title": "Barter",
+            "total_fees": "Total fees: %(fee)s %(asset)s",
+            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
+        },
+        "borrow": {
+            "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
+            "choose": "Choose the SmartCoin you want to create a position for",
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "do_it": "Let's do it",
+            "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
+            "next": "Next",
+            "now_ready": "Finalize the creation of your own Collateralized Debt Position",
+            "previous": "Previous",
+            "steps_benefits": {
+                "text": "Creating a Collateralized Debt Position allows you to provide liquidity for your desired SmartCoin (MPA), without giving up ownership of your collateral provided that you lock up enough collateral to guarantee the value of the SmartCoin. On the one hand, selling the newly generated SmartCoin on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). On the other hand, holders of the SmartCoin benefit from the significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
+                "text_legend": "Forced settlement: Holders of a SmartCoin can request a forced settlement. The SmartCoin is used to forcefully pay back the debt of the least collateralized positions while the former SmartCoin holder receives collateral as if he sold it for the forced settlement price. Any leftover collateral is returned to the position holder. This mechanism enforces a mandated delay after being triggered to avoid abuse (24 hours). \nForced Settlement Price: The price at which a forced settlement price will occur. It is calculated from the feed price by adding a forced settlement offset to disincentivize forced settlements. All settlements are converted to underlying backing asset (e.g. BTS in the case of bitUSD).",
+                "title": "Benefits",
+                "title_within": "What are the benefits?"
+            },
+            "steps_concept": {
+                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
+                "title": "Concept",
+                "title_within": "What is a Collateralized Debt Position?"
+            },
+            "steps_costs": {
+                "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text ",
+                "title": "Settlement",
+                "title_within": ""
+            },
+            "steps_introduction": {
+                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
+            },
+            "steps_risks": {
+                "text": "As long as you monitor your position and make sure that the Collateral Ratio (CR) stays above the Maintenance Collateral Ratio (MCR), your position will not be liquidated. If the value of the collateral drops and your position gets close to MCR, you can lock up more collateral or pay back some of the debt to increase the CR. Failure to remain above MCR results in a forced liquidation of your position (Margin Call). This means that your collateral is automatically sold on the respective market to reduce your debt, with a 10% penalty to ensure the order is filled (penalty is given by the Maximum Short Squeeze Ratio (MSSR)). Any leftover collateral is returned to you after the full debt is paid. You can choose to only allow partial selling of your position by setting the Target Collateral Ratio (TCR). If your position can not be forced to liquidate due to extreme market conditions and the CR drops below the MSSR, the SmartCoin (MPA) automatically enters a state of Global Settlement (GS) and you lose your entire position instantly.",
+                "text_legend": "Target Collateral Ratio (TCR): If your position is liquidated, the system automatically puts an order on the market buying back the full debt. If Target Collateral Ratio (TCR) is set, the order will only sell as much debt as needed such that the Collateral Ratio (CR) of your position is the Target Collateral Ratio (TCR). \n Maximum Short Squeeze Ratio (MSSR): When your position is force liquidated, it is being sold below the current feed price to ensure the order is filled. The MSSR defines how much below feed price. \n Global Settlement: A globally settled SmartCoin can no longer be generated by opening a Collateralized Debt Position CDP). Instead, SmartCoin holders can settle it instantly for a fixed Global Settlement Price.",
+                "title": "Risks",
+                "title_within": "What are the risks involved in borrowing?"
+            },
+            "steps_setup": {
+                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be. The Maintenance (Minimum) Collateral Ratio (MCR) reflects the lowermost possible value on the scale. You spend the SmartCoin (MPA) as you wish, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
+                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position.",
+                "title": "Setup",
+                "title_within": "How does it work?"
+            },
+            "title": "Collaterized Debt Position",
+            "title_long": "Create a Collateralized Debt Position"
+        },
+        "direct_debit": {
+            "amount_to_withdraw": "Amount to collect",
+            "authorized_account": "Payee",
+            "authorizing_account": "Payer",
+            "claim": "Claim",
+            "claim_funds": "Claim funds",
+            "create": "Create",
+            "create_new_mandate": "Create authorization",
+            "current_period_expires": "Current period ends",
+            "delete": "Delete",
+            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "expires": "Expires",
+            "first_period_not_started": "First period has not started!",
+            "limit": "limit",
+            "limit_per_period": "Maximum amount per period",
+            "num_of_periods": "Number of periods",
+            "period": "Specify period",
+            "start_date": "First period starts on",
+            "title": "Direct debit",
+            "tooltip": {
+                "authorized_account": "The account that is eligible to collect from your account.",
+                "limit_per_period": "The payee may collect a maximum amount of the specified asset (up to) per period. The payee can only collect once per period, even if not collected in full.",
+                "num_of_periods": "After the start time this amount of periods are available consecutively.",
+                "period": "One period lasts the indicated time interval, e.g. 2 weeks.",
+                "start_time": "The start time of the first period must be in the future when broadcasting."
+            },
+            "update": "Update",
+            "update_mandate": "Update existing authorization"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "timed_transfer": {
+            "description": "Initiate a transfer that will execute at a specified time.",
+            "title": "Timed transfer"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
     },
     "sync_fail": {
         "sub_text_1": "コンピュータの時計が正しいか確認してください。",
@@ -1416,7 +1877,10 @@
         "title": "APIサーバとの同期に失敗しました"
     },
     "tooltip": {
+        "add_memo_field": "メモテキストフィールドを追加",
         "borrow": "ネットワークから%(asset)sを借り入れます。これはポジションを変更するか、マージンコールが必要になるまで担保をロックするスマートコントラクトを作成します。",
+        "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
+        "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTradesはアセットの即時取引をサポートするブリッジです。詳細と利用規約はhttps://blocktrades.usから。",
         "buy_min": "最低でもこの金額を受け取れます。あなたが指定した価格よりも低い価格でマッチする注文があった場合、あなたはこれ以上の金額を受け取れます。",
         "call_limit": "これは市場における最低限の担保付マージンポジションのコール価格です。",
@@ -1427,6 +1891,7 @@
         "copy_tip": "テキストをコピーするにはここをクリックしてください。",
         "cr_danger": "現在、このポジションにはマージンコールがかかっています。担保を追加して担保比率を%(mr)s以上にするか、ポジションをクローズすることを検討してください。",
         "cr_warning": "このポジションは担保レベルが低く、担保比率が%(mr)sを下回った場合はマージンコールがかかります。担保を追加するかポジションをクローズすることを検討してください。",
+        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "入金を完了するには、%(asset)sウォレットに行き、このページに記載されているアドレスに転送してください。確認後、すぐに入金されます。メモが表示されている場合は、転送にこのメモを含めなければなりません。",
         "disconnected": "APIノードに接続していません。リロードするか、設定ページで新しいアクセスポイントを設定してください。",
         "feed_price": "This is the current external feed price",
@@ -1435,19 +1900,65 @@
         "follow_user_add": "このユーザーをフォローするにはクリックしてください",
         "gateway": "ゲートウェイはデポジットを100%の実際のアセットでバッキングしています",
         "generate": "生成パスワードはローカルでブラウザによって作成されたものです。 <br /><br /><strong> あなただけがアクセスできます。</strong><br /><br /> 以下の欄に貼り付けて、安全な場所にコピーを保存してください。",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "このリストからこのアセットを非表示にするにはここをクリックしてください。",
+        "lack_funds": "There is not enough funds to perform the operation",
         "latest_price": "これはこの市場における最新の価格です。",
+        "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
+        "login-tooltip": {
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "end": " to login.",
+                "model": "Local wallet"
+            },
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "end": " to login.",
+                "middle": " or use ",
+                "model": "Cloud wallet"
+            }
+        },
+        "login-tooltips": {
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "end": " to login.",
+                "model": "Local wallet"
+            },
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "end": " to login.",
+                "middle": " or use ",
+                "model": "Cloud wallet"
+            }
+        },
+        "login_required": "Please login to the selected account to perform this action",
         "margin_price": "これはマージンコールがかかったポジションが支払う必要のある最大価格です。スクイーズ価格とも言います。",
-        "market_fee": "%(asset)sのオーナーは買い注文に対して%(percent)s%%の取引手数料を課しています。この手数料は注文が約定したときに、受取額から減算されます。注文を出すときにはかかりません。",
+        "market_fee": "%(asset)sのオーナーは買い注文に対して%(percent)sの取引手数料を課しています。この手数料は注文が約定したときに、受取額から減算されます。注文を出すときにはかかりません。",
         "memo_tip": "任意のメッセージをメモ欄に含めることができます。メモは任意ですが、一般に取引所への転送には必要です。",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "このアセットには推定価格を算出するために使用可能な最新の価格がありません。",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "ブリッジにはこの買い注文に必要なアセットが不足しています。",
+        "own_account": "You hold keys for this account",
         "propose_scam": "この提案は有名な詐欺師によるものです。応じないでください！",
         "propose_tip": "別のユーザーからトランザクションを提案する",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
+        "registration": {
+            "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
+            "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
+            "password": "Password must contain at least 8 characters. It would be better to use a complicated password containing a combination of numbers, special characters and letters.",
+            "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+            "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
+        },
+        "required_input": "Field requires a valid %(type)s",
+        "scam_account": "Account is suspected scammer",
+        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "精算により、保有する%(asset)sを%(settleDelay)s時間の遅延後に%(backingAsset)sにその時点のフィード価格で変換できます。",
         "settle_price": "これは決済注文を実行する価格です。",
         "show_asset": "メインリストにこのアセットを表示するにはここをクリックしてください。",
@@ -1457,6 +1968,7 @@
         "sync_yes": "現在のノードはブロックチェーンと同期しています。",
         "target_collateral_ratio": "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions": "転送または、サポートするアセットを入出金するにはここをクリックしてください。",
+        "unlock_account_name": "Click to edit the account name, e.g. when your account is set as permission of another account.",
         "update_position": "ポジションを更新するにはここをクリックしてください。いつでもポジションの賃借や担保比率を変更できます。",
         "withdraw_address": "まだ%(asset)sのアドレスをお持ちでない場合は、出金する前にウォレットプロバイダーを探して作成する必要があります。",
         "withdraw_full": "全額を出金するにはここをクリックしてください。"
@@ -1468,6 +1980,7 @@
         "at": "at",
         "balance_id": "残高ID",
         "balance_owner": "残高オーナーキー",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "承認された債権提案",
         "bond_cancel_offer": "キャンセルされた債権提案",
@@ -1550,6 +2063,7 @@
             "account_whitelist": "アカウントホワイトリスト",
             "all": "すべて表示",
             "assert": "アサート操作",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "アセット手数料を請求",
             "asset_claim_pool": "Claim asset fee pool",
@@ -1617,6 +2131,7 @@
         "balances": "残高",
         "broadcast": "あなたの転送はネットワークに送信されました",
         "broadcasting": "送信中...",
+        "by": "By",
         "cancel": "キャンセル",
         "close": "閉じる",
         "confirm": "確認",
@@ -1636,15 +2151,18 @@
             "req": "必須",
             "valid": "有効な正の数を入力してください。"
         },
+        "explict_price": "Explict price:",
         "fee": "手数料",
         "final": "最終残高",
         "from": "From",
         "header": "転送の詳細設定",
         "header_subheader": "転送機能は他のBitSharesアカウントに資金を送金するために使用されます。",
+        "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "メモ",
         "memo_unlock": "このメモを見るにはウォレットをアンロックしてください",
         "optional": "オプション",
         "pay_from": "送信元",
+        "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "see": "自身の転送を見る",
         "send": "送信",
         "to": "To",
@@ -1654,10 +2172,58 @@
         "expire": "あなたのトランザクションは確認されずに期限切れになりました。後でやり直してください。"
     },
     "utility": {
+        "asset_input_placeholder": "Enter asset symbol",
+        "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
+    },
+    "validation": {
+        "messages": {
+            "balance": "Insufficient balance. Available only: %(balance)s %(symbol)s",
+            "email": "The field should be email",
+            "emailNamed": "%(name)s should be email",
+            "float": "The field should be float",
+            "floatNamed": "%(name)s should be float",
+            "integer": "The field should be integer",
+            "integerNamed": "%(name)s should be integer",
+            "max": "The field should be less than %(max)s",
+            "maxNamed": "%(name)s should be less than %(max)s",
+            "min": "The field should higher than %(min)s",
+            "minNamed": "%(name)s should be higher than %(min)s",
+            "number": "The field should be number",
+            "numberNamed": "%(name)s should be number",
+            "oneOf": "The field should be one of: %(list)s",
+            "oneOfNamed": "%(name)s should be one of: %(list)s",
+            "range": "The field should be in range from %(min)s to %(max)s",
+            "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
+            "required": "The field is required",
+            "requiredNamed": "%(name)s is required",
+            "test": "",
+            "types": {
+                "array": "The field should be array",
+                "arrayNamed": "%(name)s should be array",
+                "boolean": "The field should be boolean",
+                "booleanNamed": "%(name)s should be boolean",
+                "date": "The field should be date",
+                "dateNamed": "%(name)s should be date",
+                "enum": "The field should be one of %(list)s",
+                "enumNamed": "%(name)s should be one of %(list)s",
+                "hex": "The field should be hex",
+                "hexNamed": "%(name)s should be hex",
+                "method": "The field should be method",
+                "methodNamed": "%(name)s should be method",
+                "object": "The field should be object",
+                "objectNamed": "%(name)s should be object",
+                "regexp": "The field should be regexp",
+                "regexpNamed": "%(name)s should be regexp",
+                "string": "The field should be string",
+                "stringNamed": "%(name)s should be string"
+            },
+            "url": "The field should be url",
+            "urlNamed": "%(name)s should be url"
+        }
     },
     "walkthrough": {
         "buy_form": "このフォームを使用して買い注文を出します。",
@@ -1665,6 +2231,7 @@
         "chart_tool_duration": "別の間隔を使用して取引データをグループ化する。",
         "chart_tool_indicators": "テクニカル・インジケータを価格チャートに追加する。",
         "chart_tool_zoom": "価格チャートを調整して価格の履歴の表示数を変更する。",
+        "collapsed_items": "View one or several sections of the market by expanding the drawers",
         "create_cloud_wallet": "アカウント名とパスワードを使用してアクセスする。",
         "create_local_wallet": "ローカルウォレットを作成してローカルにプライベートキーをダウンロードする。",
         "depth_chart": "市場深度チャートを使用して買いと売りを表示する。",
@@ -1672,15 +2239,20 @@
         "favourite_button": "このペアをあなたのマーケットリストのお気に入りとしてマークする。",
         "find_markets_tab": "このタブでは、マーケットを検索して「マイマーケット」タブに追加することができます。",
         "language_flag": "DEXで利用する言語を9種類の中から選択してください。",
-        "my_markets_tab": "このタブには、よく利用する市場が表示されます。",
+        "my_markets": "This tab lists commonly used markets.",
         "next_label": "次へ",
+        "panel_hide": "You can hide the panel to have more room",
+        "personalize": "Change the default layout in the personalize settings",
         "prev_label": "戻る",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "価格チャートを使用してアセットの価格アクションを表示する。",
         "restore_account": "バックアップファイルからウォレットをリストアする。",
         "sell_form": "このフォームを使用して売り注文を出します。",
         "sell_orders": "この市場のすべての売り注文を表示する。",
         "skip_label": "スキップ",
-        "switch_button": "このボタンを使用してトレーディングペアを切り替える。"
+        "switch_button": "このボタンを使用してトレーディングペアを切り替える。",
+        "vertical_lock": "Disable auto scroll to scroll through the order book",
+        "vertical_order": "View all orders for this market, including spread and latest order price"
     },
     "wallet": {
         "accept": "承認",
@@ -1804,6 +2376,8 @@
         "pwd4brainkey": "ブレインキーを表示するにはパスワードを入力してください",
         "ready_to_restore": "リストアできます",
         "reenter_brainkey": "ブレインキーを再入力してください",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "リセット",
         "restore": "バックアップからウォレットをリストアする",
         "restore_backup": "バックアップのリストア",
@@ -1855,23 +2429,5 @@
         "wallet_model_3": "<li>複数アカウント</li><li>ウォレットファイルのバックアップが必要</li><li>高度なセキュリティ</li>",
         "wallet_move": "このバックアップファイルによって、他のコンピュータやブラウザにウォレットを移動することができます。このバックアップを使用してウォレットをリストアするには、<strong>あなたのパスワードが必要です！</strong>",
         "wallet_password": "パスワードを使用してどこでもログイン"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "ゲートウェイ手数料",
-            "get_deposit_address": "get deposit address",
-            "support_block": "サポートについては、Winexまでご連絡ください。:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

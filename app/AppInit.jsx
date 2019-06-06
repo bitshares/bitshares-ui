@@ -10,10 +10,12 @@ import alt from "alt-instance";
 import {connect, supplyFluxContext} from "alt-react";
 import {IntlProvider} from "react-intl";
 import willTransitionTo from "./routerTransition";
+import {BodyClassName} from "bitshares-ui-style-guide";
 import LoadingIndicator from "./components/LoadingIndicator";
 import InitError from "./components/InitError";
 import SyncError from "./components/SyncError";
 import counterpart from "counterpart";
+import LogsActions from "actions/LogsActions";
 
 /*
 * Electron does not support browserHistory, so we need to use hashHistory.
@@ -50,11 +52,111 @@ class AppInit extends React.Component {
             apiConnected: false,
             apiError: false,
             syncError: null,
-            status: ""
+            status: "",
+            extendeLogText: [] // used to cache logs when not mounted
         };
+        this.mounted = true;
+        this.persistentLogEnabled = false;
+    }
+
+    /**
+     * Global error catching and forwarding to log handler
+     * @param error
+     */
+    componentDidCatch(error) {
+        this.saveExtendedLog("error", [error]);
+    }
+
+    componentDidUpdate(nextProps, nextState) {
+        LogsActions.setLog(nextState.extendeLogText);
+    }
+
+    saveExtendedLog(type, logText) {
+        const maxlogslength = 19;
+        const logState = this.state.extendeLogText;
+        var text = "";
+
+        for (const value of logText) {
+            text += value;
+        }
+        text = [type, ": ", text].join("");
+        if (logState.length > maxlogslength) {
+            logState.splice(0, 1);
+        }
+        if (text.indexOf(logState[logState.length - 1])) {
+            logState.push(text);
+            if (this.mounted) {
+                this.setState({extendeLogText: logState});
+            } else {
+                LogsActions.setLog(logState);
+            }
+        }
+    }
+
+    _enablePersistingLog() {
+        if (this.persistentLogEnabled) return;
+
+        if (!this.state.extendeLogText.length) {
+            LogsActions.getLogs().then(data => {
+                if (data) {
+                    this.setState({extendeLogText: data});
+                }
+            });
+        }
+
+        const thiz = this;
+        const saveLog = (type, log) => {
+            if (
+                log.length > 1 &&
+                typeof log[1] === "string" &&
+                log[1] === "html2canvas:"
+            ) {
+                return;
+            }
+            thiz.saveExtendedLog(type, Array.from(log));
+            if (thiz.mounted) {
+                console[`str${type}`].apply(console, log);
+            }
+        };
+
+        // see https://www.sitepoint.com/javascript-decorators-what-they-are/ for decorator
+
+        // see https://stackoverflow.com/questions/9559725/extending-console-log-without-affecting-log-line for line numbers
+
+        console.strlog = console.log.bind(console);
+        console.strerror = console.error.bind(console);
+        console.strwarn = console.warn.bind(console);
+        console.strinfo = console.info.bind(console);
+        console.strtimeEnd = console.timeEnd.bind(console);
+        console.strdebug = console.debug.bind(console);
+
+        console.log = function() {
+            saveLog("log", arguments);
+        };
+        console.warn = function() {
+            saveLog("warn", arguments);
+        };
+        console.error = function() {
+            saveLog("error", arguments);
+        };
+        console.info = function() {
+            saveLog("info", arguments);
+        };
+        console.timeEnd = function() {
+            saveLog("timeEnd", arguments);
+        };
+        console.debug = function() {
+            saveLog("debug", arguments);
+        };
+
+        this.persistentLogEnabled = true;
     }
 
     componentWillMount() {
+        if (!__DEV__) {
+            this._enablePersistingLog();
+        }
+
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
                 this.setState({
@@ -78,6 +180,7 @@ class AppInit extends React.Component {
     }
 
     componentDidMount() {
+        this.mounted = true;
         //Detect OS for platform specific fixes
         if (navigator.platform.indexOf("Win") > -1) {
             var main = document.getElementById("content");
@@ -89,6 +192,10 @@ class AppInit extends React.Component {
                     windowsClass;
             }
         }
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     _statusCallback(status) {
@@ -124,7 +231,9 @@ class AppInit extends React.Component {
                             ) : syncError ? (
                                 <SyncError />
                             ) : (
-                                <InitError />
+                                <BodyClassName className={theme}>
+                                    <InitError />
+                                </BodyClassName>
                             )}
                         </div>
                     </div>

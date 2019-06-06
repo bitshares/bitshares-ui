@@ -4,7 +4,6 @@ import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalCitadel from "./WithdrawModalCitadel";
-import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import AssetName from "components/Utility/AssetName";
@@ -12,8 +11,11 @@ import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress, getDepositAddress} from "common/gatewayMethods";
 import {blockTradesAPIs, openledgerAPIs, citadelAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
+import DisableCopyText from "../DisableCopyText";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import {Modal} from "bitshares-ui-style-guide";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 class CitadelGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -48,6 +50,7 @@ class CitadelGatewayDepositRequest extends React.Component {
         };
 
         this.state = {
+            isModalVisible: false,
             receive_address: null,
             url: props.url || urls[props.gateway],
             loading: false,
@@ -55,25 +58,20 @@ class CitadelGatewayDepositRequest extends React.Component {
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
-        this._copy = this._copy.bind(this);
-        document.addEventListener("copy", this._copy);
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
     }
 
-    _copy(e) {
-        try {
-            if (this.state.clipboardText)
-                e.clipboardData.setData("text/plain", this.state.clipboardText);
-            else
-                e.clipboardData.setData(
-                    "text/plain",
-                    counterpart
-                        .translate("gateway.use_copy_button")
-                        .toUpperCase()
-                );
-            e.preventDefault();
-        } catch (err) {
-            console.error(err);
-        }
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     _getDepositObject() {
@@ -92,10 +90,6 @@ class CitadelGatewayDepositRequest extends React.Component {
             account: this.props.account.get("name"),
             stateCallback: this.addDepositAddress
         });
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener("copy", this._copy);
     }
 
     componentWillReceiveProps(np) {
@@ -143,16 +137,6 @@ class CitadelGatewayDepositRequest extends React.Component {
 
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
-    }
-
-    toClipboard(clipboardText) {
-        try {
-            this.setState({clipboardText}, () => {
-                document.execCommand("copy");
-            });
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     render() {
@@ -378,11 +362,25 @@ class CitadelGatewayDepositRequest extends React.Component {
                             {emptyAddressDeposit ? (
                                 <Translate content="gateway.please_generate_address" />
                             ) : (
-                                deposit_address_fragment
+                                <DisableCopyText
+                                    replaceCopyText={counterpart.translate(
+                                        "gateway.use_copy_button"
+                                    )}
+                                >
+                                    deposit_address_fragment
+                                </DisableCopyText>
                             )}
                             <div>
                                 {deposit_memo && (
-                                    <span>memo: {deposit_memo}</span>
+                                    <span>
+                                        <DisableCopyText
+                                            replaceCopyText={counterpart.translate(
+                                                "gateway.use_copy_button"
+                                            )}
+                                        >
+                                            memo: {deposit_memo}
+                                        </DisableCopyText>
+                                    </span>
                                 )}
                             </div>
                             <div
@@ -390,26 +388,19 @@ class CitadelGatewayDepositRequest extends React.Component {
                                 style={{paddingTop: 10}}
                             >
                                 {deposit_address_fragment ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            clipboardText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_address" />
-                                    </div>
+                                    <CopyToClipboard text={clipboardText}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_address" />
+                                            cidatel
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 {memoText ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            memoText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_memo" />
-                                    </div>
+                                    <CopyToClipboard text={memoText}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_memo" />
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 <button
                                     className={"button spinner-button-circle"}
@@ -557,34 +548,39 @@ class CitadelGatewayDepositRequest extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <BaseModal id={withdraw_modal_id} overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <WithdrawModalCitadel
-                                account={this.props.account.get("name")}
-                                issuer={this.props.issuer_account.get("name")}
-                                asset={this.props.receive_asset.get("symbol")}
-                                url={this.state.url}
-                                output_coin_name={this.props.deposit_asset_name}
-                                gateFee={gateFee}
-                                output_coin_symbol={this.props.deposit_asset}
-                                output_coin_type={this.props.deposit_coin_type}
-                                output_wallet_type={
-                                    this.props.deposit_wallet_type
-                                }
-                                output_supports_memos={
-                                    this.props.supports_output_memos
-                                }
-                                memo_prefix={withdraw_memo_prefix}
-                                modal_id={withdraw_modal_id}
-                                balance={
-                                    this.props.account.get("balances").toJS()[
-                                        this.props.receive_asset.get("id")
-                                    ]
-                                }
-                            />
-                        </div>
-                    </BaseModal>
+                    <Modal
+                        onCancel={this.hideModal}
+                        title={counterpart.translate("gateway.withdraw_coin", {
+                            coin: this.props.deposit_asset_name,
+                            symbol: this.props.deposit_asset
+                        })}
+                        footer={null}
+                        visible={this.state.isModalVisible}
+                        id={withdraw_modal_id}
+                        overlay={true}
+                    >
+                        <WithdrawModalCitadel
+                            account={this.props.account.get("name")}
+                            issuer={this.props.issuer_account.get("name")}
+                            asset={this.props.receive_asset.get("symbol")}
+                            url={this.state.url}
+                            output_coin_name={this.props.deposit_asset_name}
+                            gateFee={gateFee}
+                            output_coin_symbol={this.props.deposit_asset}
+                            output_coin_type={this.props.deposit_coin_type}
+                            output_wallet_type={this.props.deposit_wallet_type}
+                            output_supports_memos={
+                                this.props.supports_output_memos
+                            }
+                            memo_prefix={withdraw_memo_prefix}
+                            modal_id={withdraw_modal_id}
+                            balance={
+                                this.props.account.get("balances").toJS()[
+                                    this.props.receive_asset.get("id")
+                                ]
+                            }
+                        />
+                    </Modal>
                 </div>
             );
         }

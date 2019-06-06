@@ -2,9 +2,76 @@ div#CenterContent {
     padding-bottom: 2rem !important;
 }
 
+.exchange--price-alert--show-modal {
+    cursor: pointer;
+}
+
+.exchange--price-alert {
+    .exchange--price-alert--description {
+    }
+
+    .exchange--price-alert--items {
+        margin: 16px 0;
+    }
+
+    .exchange--price-alert--items--add {
+        text-align: right;
+        padding-right: 32px;
+    }
+
+    .exchange--price-alert--item {
+        margin: 8px 0 !important;
+
+        &:first-child {
+            margin-top: 0 !important;
+        }
+
+        &:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .exchange--price-alert--item--type {
+        }
+        .exchange--price-alert--item--price {
+        }
+        .exchange--price-alert--item--control {
+            padding: 0 !important;
+            border: 0 !important;
+
+            &:focus {
+                box-shadow: none !important;
+            }
+        }
+    }
+}
+
 .market-layout {
-    > .grid-block {
-        // padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
+    .column-header {
+        width: 100%;
+        padding-right: 10px;
+
+        > ul {
+            list-style-type: none;
+            margin-left: 0px;
+            width: 100%;
+            margin-bottom: 0px;
+
+            > li {
+                font-size: 80%;
+                cursor: pointer;
+                display: inline-block;
+                margin-right: 15px;
+                text-transform: uppercase;
+            }
+
+            > li.last {
+                margin-right: 0px;
+            }
+
+            li.active {
+                cursor: default;
+            }
+        }
     }
 
     > .left-column {
@@ -55,12 +122,23 @@ div#CenterContent {
     > thead > tr > th {
         font-size: 14px;
         padding: 5px 5px;
-        text-align: right;
+        text-align: right !important;
     }
 
     > tbody > tr > td {
         font-size: 12px;
         padding-bottom: 4px;
+    }
+
+    .sticky-table-container {
+        width: 100%;
+    }
+}
+
+// Mozilla Specific Padding Issues on Sticky Table Wrapper
+@-moz-document url-prefix() {
+    .order-table-container .sticky-table .sticky-table-y-wrapper {
+        padding-right: 0px !important;
     }
 }
 
@@ -106,6 +184,53 @@ p.order-table-title {
 
 form.order-form {
     padding: 10px;
+
+    .ant-form-item {
+        margin-bottom: 0;
+    }
+
+    .ant-input {
+        text-align: right;
+    }
+
+    .ant-form-item-label {
+        text-align: left;
+        font-family: Roboto Medium, Monospaced Number, Chinese Quote,
+            -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, PingFang SC,
+            Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial,
+            sans-serif;
+
+        label {
+            font-size: 90% !important;
+        }
+    }
+
+    .ant-input-group-addon {
+        text-align: left;
+        width: 60% !important;
+    }
+}
+
+.exchange--buy-sell-form {
+    // override "Extra" of Ant.Tabs (Buy/Sell Asset) to put it
+    // on left side instead of right
+    .ant-tabs-extra-content {
+        float: left !important;
+        padding: 0 15px;
+        margin-right: 12px;
+    }
+}
+
+.buy-form {
+    > div.ant-tabs-bar {
+        border-bottom: 1px solid #6ba583 !important;
+    }
+}
+
+.sell-form {
+    > div.ant-tabs-bar {
+        border-bottom: 1px solid #e3745b !important;
+    }
 }
 
 #market-charts {
@@ -138,7 +263,7 @@ form.order-form {
     .transition-container {
         display: table-row-group;
     }
-    > .table-container {
+    .table-container {
         flex-grow: 1;
         width: 100%;
         position: relative;
@@ -178,7 +303,6 @@ form.order-form {
             padding-right: $scrollBarSpacePadding;
         }
         .text-center.spread {
-            color: grey;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -195,16 +319,16 @@ form.order-form {
             }
         }
     }
-    .bottom-header {
+    .column {
         width: 100%;
-        height: 2rem;
+        height: 3rem;
         .button.outline {
             border-left: none;
         }
     }
     .order-table-container {
         width: 100%;
-        height: calc(100% - 32px);
+        height: 100%;
     }
     .top-header {
         text-align: right;
@@ -318,10 +442,6 @@ ul.market-stats {
     margin-left: 25px;
 }
 
-.bottom-stats li {
-    // border-right: 1px solid $border-color;
-}
-
 .stats .stat {
     text-align: center;
     padding: 2px 5px;
@@ -378,6 +498,8 @@ div.bucket-option {
     font-size: 90%;
     line-height: 1.75rem;
     height: 1.75rem;
+    white-space: nowrap;
+    z-index: 100; // Make sure unwrapped content isn't hidden under companion input
 }
 
 .buy-sell-input {
@@ -463,7 +585,10 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .market-right-padding-only {
-    padding: 0 0.6rem 0 0 !important;
+    table td:nth-last-child(1),
+    table th:nth-last-child(1) {
+        padding: 0 0.6rem 0 0 !important;
+    }
 }
 
 .mymarkets-header {
@@ -482,8 +607,24 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 1rem;
     font-weight: 500;
     text-transform: uppercase;
-    padding: 6px 10px;
     overflow: hidden;
+}
+
+.exchange-content-header.bid,
+.exchange-content-header.ask {
+    padding: 10px;
+}
+
+.exchange-content-header.bid {
+    border-bottom: 1px solid #6ba583 !important;
+}
+
+.exchange-content-header.ask {
+    border-bottom: 1px solid #e3745b !important;
+}
+
+.exchange-padded {
+    padding-right: 5px !important;
 }
 
 .mymarkets-base-select {
@@ -508,6 +649,13 @@ input[type="number"]::-webkit-outer-spin-button {
 
 table thead tr th.mymarkets-header {
     padding-bottom: 9px !important;
+}
+
+.table-no-padding {
+    tr,
+    td {
+        padding: 0px !important;
+    }
 }
 
 .title-star {
@@ -568,6 +716,11 @@ table thead tr th.mymarkets-header {
 }
 @media (max-width: 1180px) {
     .hide-order-5 {
+        display: none !important;
+    }
+}
+@media (max-width: 1340px) {
+    .hide-order-6 {
         display: none !important;
     }
 }
@@ -706,14 +859,25 @@ tbody.orderbook > tr.my-order > td {
     font-weight: bold;
 }
 
-.marketPicker {
-    border: 1px solid black;
-    position: absolute;
-    z-index: 100;
-    width: 400px;
-    min-height: 300px;
-    padding: 10px;
+.vertical-panel {
+    .vp__header {
+        border-bottom: 1px solid white;
+        margin: 10px;
+        padding-bottom: 10px;
 
+        > span {
+            padding-bottom: 2px;
+            margin-right: 10px;
+        }
+
+        > span.selected,
+        > span:hover {
+            border-bottom: 5px solid cyan;
+        }
+    }
+}
+
+.marketPicker {
     .marketPicker__header {
         padding: 0 5px;
         margin-top: 1px;
@@ -740,8 +904,8 @@ tbody.orderbook > tr.my-order > td {
     }
 
     .marketPicker__subHeader {
-        padding: 10px 5px 0px 5px;
         font-size: 1rem;
+        margin-bottom: 16px;
     }
 
     input {
@@ -762,4 +926,9 @@ tbody.orderbook > tr.my-order > td {
             border-bottom: 1px solid black;
         }
     }
+}
+
+// DatePicker Layer Issues
+.tether-element {
+    z-index: 100;
 }

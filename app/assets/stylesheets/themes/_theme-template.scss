@@ -54,22 +54,126 @@
     $explorer--witnesses--info-border,
     $explorer--witnesses--info-table-title-color,
     $explorer--witnesses--info-table-text-color,
-    $explorer--assets--bg
+    $explorer--assets--bg,
+    $negative-color-alternative,
+    $positive-color-alternative,
+    $separator-line,
+    $medium-color,
+    $dark-help-text
 ) {
     $hamburger-submenu-display-endpoint: 990px;
-
+    .showcases-grid {
+        margin: 32px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .showcases-grid--wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        max-width: calc((450px + 32px) * 3); // 450px + 32px padding * 3 cells
+    }
+    .showcases-grid--wrapper--item {
+        color: $secondary-text-color;
+        padding: 1rem;
+        min-width: 380px;
+        width: 33.3%;
+        height: 320px;
+        h2.no-margin {
+            margin: 0;
+        }
+        span.icon {
+            margin: 0;
+            svg {
+                margin: 0;
+            }
+        }
+    }
+    .showcases-grid--wrapper--item--wrapper {
+        padding: 1rem;
+        height: calc(320px - 2rem);
+        transition: 0.3s;
+        border-radius: 10px;
+        cursor: pointer;
+        background-color: $header-color;
+        border: 1px solid $header-color;
+        &:hover {
+            background-color: $header-color;
+            border-color: $link-text-color;
+        }
+        &:focus {
+            border-color: transparentize($link-text-color, 0.95);
+            outline: none !important;
+            box-shadow: 0 0 0 2px transparentize($link-text-color, 0.85);
+        }
+    }
+    .showcases-grid--wrapper--item--wrapper--disabled {
+        padding: 1rem;
+        height: calc(320px - 2rem);
+        transition: 0.3s;
+        border-radius: 10px;
+        background-color: $header-color;
+        border: 1px solid $header-color;
+    }
+    .showcases-grid--wrapper--item--wrapper--content {
+        padding: 1rem;
+        display: flex;
+        height: calc(100% - 32px);
+        align-items: center;
+    }
+    .showcases-grid--wrapper--item--wrapper--content--description {
+        line-height: 1.5rem;
+    }
+    .exchange--chart-control {
+        background: $panel-bg-color;
+    }
+    @media (max-width: 1150px) {
+        .showcases-grid--wrapper {
+            width: 900px;
+        }
+        .showcases-grid--wrapper--item {
+            width: 50%;
+        }
+    }
+    @media (max-width: 750px) {
+        .showcases-grid--wrapper {
+            width: 450px;
+        }
+        .showcases-grid--wrapper--item {
+            width: 100%;
+        }
+    }
+    .exchange--price-alert--show-modal--active {
+        color: $link-text-color;
+    }
+    .price-alert--notification--pair-name {
+        font-weight: 600;
+    }
+    .price-alert--notification--icon {
+        &.price-alert--notification--icon--up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--icon--down {
+            color: $negative-color;
+        }
+    }
+    .price-alert--notification--actual-price {
+        &.price-alert--notification--actual-price-up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--actual-price-down {
+            color: $negative-color;
+        }
+    }
     .explore-witness--info {
         width: 100%;
-
         border: 1px solid $explorer--witnesses--info-border;
         background: $explorer--witnesses--info-bg;
-
         padding: 12px;
         border-radius: 5px;
-
         table {
             width: 100%;
-
             thead {
                 th {
                     font-weight: 400;
@@ -78,7 +182,6 @@
                     padding-bottom: 8px;
                 }
             }
-
             tbody {
                 td {
                     color: $explorer--witnesses--info-table-text-color;
@@ -86,10 +189,10 @@
             }
         }
     }
-
     #incognito {
         background: $incognito-bg;
     }
+
     .settings-select {
         height: 36px;
         padding: 0 12px;
@@ -106,11 +209,25 @@
         border-bottom: 0 !important;
         max-width: 100% !important;
     }
+    .modal-separator {
+        border-color: $secondary-text-color;
+    }
     .positive {
         color: $positive-color !important;
     }
     .negative {
         color: $negative-color !important;
+    }
+    .amount-selector-field {
+        .amount-selector-field--label {
+        }
+        .amount-selector-field--balance {
+            float: right;
+            cursor: pointer;
+            &:hover {
+                color: $link-text-color;
+            }
+        }
     }
     .dark-text-color {
         color: $dark-text-color;
@@ -118,7 +235,7 @@
     .fz_12 {
         font-size: 12px;
     }
-    #unlock_wallet_modal2 {
+    .unlock_wallet_modal2 {
         .upload-button {
             border-color: $border-color;
             span {
@@ -148,19 +265,15 @@
             background-color: #fff;
         }
     }
-
     .font-secondary {
         color: $secondary-text-color;
     }
-
     svg > path {
         transition: all 0.3s ease 0s;
     }
-
     #content-wrapper {
         @include color($primary-text-color, $bg-color);
     }
-
     hr {
         border-color: $dark-text-color;
         background-color: $dark-text-color !important;
@@ -173,9 +286,11 @@
             color: lighten($link-text-color, 4%);
         }
     }
-    label,
-    label > span {
-        color: $primary-text-color;
+    *#{$ant-fix} > {
+        label,
+        label > span {
+            color: $primary-text-color;
+        }
     }
     // select:hover {
     // background-color: $panel-bg-color;
@@ -217,6 +332,7 @@
     .txtlabel.warning {
         color: $warning-color;
     }
+
     .txtlabel.cancel,
     .label.alert {
         color: $alert-color;
@@ -230,7 +346,6 @@
     .txtann.warning {
         color: $warning-color;
     }
-
     .txtann.error {
         color: $alert-color;
     }
@@ -244,7 +359,6 @@
     .notification-success {
         border-left-color: $success-color !important;
     }
-
     .action-sheet {
         @include color($light-text-color, $super-light-panel-bg-color);
         &::after {
@@ -257,8 +371,14 @@
                 @include color(
                     $light-text-color,
                     lighten($super-light-panel-bg-color, 4%)
-                ); // color: $link-text-color;
+                );
+                // color: $link-text-color;
             }
+        }
+    }
+    .account-browsing-mode {
+        button {
+            margin-right: 24px;
         }
     }
     .__react_component_tooltip.type-light {
@@ -276,7 +396,6 @@
             border-left-color: $super-light-panel-bg-color !important;
         }
     }
-
     .json-inspector__key {
         color: $secondary-text-color !important;
     }
@@ -288,13 +407,18 @@
     h6 {
         color: $primary-text-color;
     }
-
     // copyicons
     .copyIcon {
         background-color: $button-bg-color;
         > button.copyIcon {
             background-color: $button-bg-color;
         }
+    }
+
+    .modal#marketPicker,
+    .modal#settingsModal {
+        background-color: $bg-color;
+        border: 1px solid black;
     }
     .modal {
         @include color($light-text-color, $account-cells);
@@ -363,6 +487,15 @@
     }
     .page-layout {
         background-color: lighten($account-header, 4%);
+        .column-header {
+            > ul {
+                border-bottom: 1px solid $panel-bg-color;
+                > li.active,
+                li:hover {
+                    border-bottom: 3px solid lightblue;
+                }
+            }
+        }
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
@@ -382,7 +515,7 @@
         .right-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
-            background-color: darken($bg-color, 4%);
+            background-color: $panel-bg-color;
         }
     }
     .asset-prefix {
@@ -459,7 +592,6 @@
             background-color: lighten($alert-color, 4%) !important;
         }
     }
-
     .header a.button.create-account {
         transition: color 0s !important;
         color: $button-bg-color !important;
@@ -561,6 +693,15 @@
     .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
+    .header-dropdown-sub-link.enabled {
+        color: $secondary-text-color;
+        &:hover {
+            color: $link-text-color;
+        }
+    }
+    .blue {
+        color: $button-bg-color;
+    }
     .grp-menu-item button {
         &:hover,
         &:focus,
@@ -591,7 +732,8 @@
         }
         svg > path {
             fill: #fff;
-        } // svg:hover > path { fill: $primary-text-color; }
+        }
+        // svg:hover > path { fill: $primary-text-color; }
     }
     .settings-cog {
         svg > path {
@@ -649,6 +791,10 @@
             color: $account-dimmed !important;
             background-color: $bg-color !important;
         }
+    }
+    // Sticky Order-Row
+    div.sticky-table-row.order-row:hover {
+        background-color: lighten($bg-color, 4%);
     }
     // block-list
     .block-list {
@@ -712,8 +858,7 @@
             }
             > li > span {
                 color: $light-text-color;
-            }
-            /* Hover state */
+            } /* Hover state */
             li:hover > span {
                 @include color(
                     $light-text-color,
@@ -730,7 +875,6 @@
             border-color: $secondary-text-color transparent;
         }
     }
-
     .account-image {
         .icon:hover {
             svg path {
@@ -791,7 +935,8 @@
         color: $primary-text-color;
         &:hover,
         &:focus,
-        &:active {
+        &:active,
+        &:disabled {
             background-color: $input-background;
         }
         &:focus {
@@ -883,7 +1028,6 @@
             border-bottom: 1px solid $button-bg-color;
         }
     }
-
     // Tabs
     .tabs {
         border-bottom-color: $dark-text-color;
@@ -1041,7 +1185,6 @@
             color: $secondary-text-color;
         }
     }
-
     // Formatted assets
     .facolor-success {
         color: $success-color;
@@ -1058,7 +1201,6 @@
     .facolor-error {
         color: $error-text-color;
     }
-
     .facolor-fee {
         color: $fee-color;
     }
@@ -1275,17 +1417,17 @@
             color: $secondary-text-color;
         }
     }
+    div.exchange-content-header {
+        background-color: transparent !important;
+    }
     .exchange-content-header {
         color: $light-text-color;
-        background-color: $header-color !important;
-        border-bottom: 1px solid $button-bg-color;
-        &.bid {
-            border-bottom: 1px solid $bid-color;
-        }
-        &.ask {
-            border-bottom: 1px solid $ask-color;
-        }
     }
+
+    .exchange-content-header--buy-sell-form {
+        border-bottom: 0 !important;
+    }
+
     // .block-content-header {
     // //text-transform: uppercase;
     // @include RobotoLight;
@@ -1355,9 +1497,7 @@
             background-color: $panel-bg-color !important;
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
-            padding: 10px 0 !important;
-            @include RobotoMedium;
-            font-size: 13px;
+            padding: 7px 0 !important;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1367,6 +1507,9 @@
     }
     .left-order-book {
         background-color: $bg-color;
+        .orderbook-center-title {
+            color: $inactive-text-color;
+        }
         .spread .spread-value {
             color: $primary-text-color;
         }
@@ -1379,7 +1522,6 @@
             height: 100%;
             width: 100%;
         }
-
         #sticky-header-row {
             background-color: $panel-bg-color;
         }
@@ -1391,11 +1533,11 @@
             }
         }
     }
-    .order-table {
-        > tbody > tr:nth-of-type(even) {
-            background-color: $row-accent-color;
-        }
-    }
+    // .order-table {
+    // > tbody > tr:nth-of-type(even) {
+    // background-color: $row-accent-color;
+    // }
+    // }
     .mymarkets-header {
         background-color: $header-color;
     }
@@ -1426,16 +1568,12 @@
                 color: $negative-color !important;
             }
         }
-        &.clickable:hover {
-            background-color: lighten($panel-bg-color, 4%);
-        }
     }
     .stat-text {
         margin-top: 3px;
         font-size: 11px;
         color: gray;
     }
-
     .buy-sell-box {
         background-color: $header-color;
         > select {
@@ -1475,13 +1613,9 @@
         text-transform: uppercase;
         cursor: pointer;
     }
-
-    div.exchange-content-header {
-        background-color: $header-color !important;
-    }
-    .table > tbody > tr:nth-of-type(even) {
-        background-color: lighten($bg-color, 4%);
-    }
+    // .table > tbody > tr:nth-of-type(even) {
+    // background-color: lighten($bg-color, 4%);
+    // }
     // bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
@@ -1542,6 +1676,7 @@
         border-bottom: 1px solid lighten($bg-color, 4%);
         border-top: 1px solid lighten($bg-color, 4%);
     }
+
     // Settings
     .settings-menu {
         > ul {
@@ -1653,7 +1788,6 @@
             border-bottom: 2px solid #020202;
         }
     }
-
     ul.dashboard-links {
         > li.active {
             color: $primary-text-color;
@@ -1705,7 +1839,6 @@
     td.pub-key {
         word-break: break-all;
     }
-
     /* Table view account */
     div.grid-content.app-tables {
         background-color: $account-background;
@@ -1713,7 +1846,6 @@
     div.tabs-container {
         background-color: $account-background;
     }
-
     div.account-tabs {
         > div.service-selector {
             background-color: $bg-color;
@@ -1842,6 +1974,9 @@
     }
     .footer {
         div.footer-status {
+            > span.testnet {
+                font-size: 0.85rem;
+            }
             > span.success {
                 color: $success-color;
             }
@@ -1866,7 +2001,6 @@
             animation-direction: reverse;
         }
     }
-
     @keyframes pulsate-green {
         0% {
             color: $pulsate-green-start;
@@ -1884,7 +2018,7 @@
         }
     }
     .introjs-launcher {
-        margin-left: 15px;
+        margin-left: 5px;
         background-color: $bs-blue;
         padding: 0 10px;
         font-size: 18px;
@@ -1961,8 +2095,7 @@
     .order-book-button-v {
         display: none;
     }
-
-    @include breakpoint(large) {
+    @include breakpoint(medium) {
         .order-book-button-v {
             display: inline-block;
             margin-left: 5px;
@@ -2042,44 +2175,51 @@
         }
     }
     .expiration-datetime-picker {
-        width: 225px;
+        &.scaled-orders {
+            > div {
+                margin-top: -5px;
+            }
+        }
+
         > div {
-            float: right;
+            float: left;
+            min-width: 145px;
         }
         input {
-            width: 160px;
             padding: 0;
             margin: 0 5px 0 0;
             background: transparent;
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
-            text-align: right;
-            font-size: 0.9rem;
-            height: 28px;
+            text-align: left;
+            font-size: 90%;
+            line-height: 1.75rem;
+            height: 1.75rem;
             &:hover {
                 background: transparent;
             }
         }
         select {
-            float: right;
             width: auto;
             padding: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
-            font-size: 0.9rem;
-            height: 28px;
             margin: 0 0 1px;
+            font-size: 90%;
+            line-height: 1.75rem;
+            height: 1.75rem;
             > option {
                 background-color: $light-panel-bg-color;
             }
         }
+        .expiration-datetime-picker--select--specific {
+            float: right;
+        }
     }
     .marketPicker {
-        background: $bg-color;
-        box-shadow: 2px 2px 5px darken($bg-color, 30%);
         .results {
             background: $input-background;
             border: 1px solid $bg-color;
@@ -2088,7 +2228,6 @@
     .qr-address-scanner {
         &-btn {
             background: #049cce;
-
             height: 2.4rem;
             border-radius: 0 5px 5px 0;
             width: 40px;
@@ -2112,7 +2251,7 @@
         }
         &-status {
             font-size: 0.95rem;
-            margin: 24px;
+            margin: 12px 24px 0 24px;
             &-title {
                 margin-bottom: 12px;
                 margin-top: 12px;
@@ -2152,6 +2291,168 @@
                 background-color: $light-panel-bg-color;
             }
         }
+    }
+    .login-selector--language-select {
+        .login-selector--language-select--icon {
+            font-size: 18px;
+            margin-top: 7px;
+            margin-right: 7px;
+            color: $link-text-color;
+        }
+        .login-selector--language-select--wrapper {
+            margin-left: 0;
+            // center language select for width icon takes
+        }
+    }
+    .registration-layout {
+        .attention-note {
+            background-color: rgba($medium-color, 0.06);
+        }
+        .attention-text {
+            color: $medium-color;
+        }
+        .button-primary {
+            background-color: $button-bg-color;
+            color: $light-text-color;
+            &:hover {
+                background-color: lighten($button-bg-color, 10%) !important;
+            }
+            &:active {
+                background-color: lighten($button-bg-color, 15%) !important;
+            }
+        }
+        .button-secondary {
+            background-color: initial;
+            color: $button-bg-color;
+            border-color: $button-bg-color;
+            &:hover {
+                border-color: lighten($button-bg-color, 10%) !important;
+                color: lighten($button-bg-color, 10%) !important;
+            }
+            &:active {
+                border-color: lighten($button-bg-color, 15%) !important;
+                color: lighten($button-bg-color, 10%) !important;
+            }
+        }
+        .registration-title {
+            color: $light-text-color;
+        }
+        .selection-block {
+            .selection-title,
+            .choice-model,
+            .model-option {
+                color: $light-text-color;
+            }
+            .recommended {
+                background-color: $positive-color-alternative;
+                color: $dark-help-text;
+            }
+            .model-option-value {
+                color: $positive-color-alternative;
+            }
+            .account-option-value {
+                color: $negative-color-alternative;
+            }
+            .account-security {
+                color: $medium-color;
+            }
+            .option-border {
+                border-bottom-color: $separator-line;
+            }
+            div.inactive-left-block,
+            div.inactive-right-block {
+                background-color: darken($modal-bg-color, 10);
+            }
+        }
+        .plate.inactive-model-block {
+            background-color: transparentize($modal-bg-color, 0.6);
+        }
+        .plate {
+            background-color: $modal-bg-color;
+        }
+        span.checkbox {
+            border-color: $button-bg-color;
+            background-color: transparentize($button-bg-color, 0.9);
+        }
+
+        span.checkbox-active {
+            border-color: $button-bg-color;
+            background-color: $button-bg-color;
+            svg path {
+                fill: $bg-color;
+            }
+        }
+        .file-input-container {
+            background-color: darken($modal-bg-color, 5);
+            border-color: transparentize($button-bg-color, 0.5);
+            .upload-text {
+                color: transparentize($light-text-color, 0.3);
+            }
+            &:hover,
+            &.dropHover {
+                border-color: $button-bg-color;
+                background-color: darken($modal-bg-color, 10);
+            }
+            &.downloaded {
+                border-color: $button-bg-color;
+                background-color: transparentize($button-bg-color, 0.8);
+            }
+            &.invalid {
+                border-color: $negative-color-alternative;
+                background-color: transparentize(
+                    $negative-color-alternative,
+                    0.9
+                );
+            }
+        }
+        .dismiss-icon {
+            color: $negative-color-alternative;
+        }
+        .approve-icon svg path {
+            fill: $positive-color-alternative;
+        }
+        @include breakpoint(small only) {
+            .plate {
+                background-color: darken($modal-bg-color, 10);
+                .header-block,
+                .wallet-block,
+                .account-block,
+                .wallet-block-registration,
+                .account-block-registration {
+                    background-color: $modal-bg-color;
+                    .overflow-bg-block {
+                        .content {
+                            background-color: $modal-bg-color;
+                        }
+                    }
+                }
+            }
+            .small-container {
+                border: 1px solid transparentize($light-text-color, 0.8);
+                background-color: transparentize($light-text-color, 0.9);
+                .active-upload-text {
+                    background-color: transparentize($dark-text-color, 0.9);
+                }
+            }
+        }
+    }
+    i.anticon.icon-fill {
+        &:hover {
+            color: $bs-blue;
+            cursor: pointer;
+        }
+    }
+    .icon-fill {
+        svg > path {
+            fill: $light-text-color;
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+        }
+    }
+    .modal--transaction-confirm {
+        zindex: 10000; // make transaction confirm modal above another modals
     }
 }
 .rc-time-picker-panel {
@@ -2232,7 +2533,7 @@
     .menu-dropdown-wrapper {
         height: 65px;
         width: 65px;
-        text-align: center;
+        text-align: left;
         border-radius: 0;
         .hamburger .icon {
             position: relative;
@@ -2269,7 +2570,8 @@
 }
 .truncated {
     flex: 1;
-    min-width: 0; /* or some value */
+    min-width: 0;
+    /* or some value */
     .text {
         white-space: nowrap;
         overflow: hidden;
