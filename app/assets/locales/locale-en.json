@@ -1953,9 +1953,12 @@
             "update_mandate": "Update existing authorization"
         },
         "htlc": {
+            "first_stage": "1st stage",
+            "second_stage": "2nd stage",
+            "custom": "Custom",
             "actions": "Actions",
             "amount": "Amount",
-            "claim": "Claim",
+            "redeem": "Redeem",
             "create_htlc": "Create HTLC",
             "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "enter_secret_preimage": "Enter secret preimage",
@@ -1972,7 +1975,7 @@
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
-            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below.",
             "recipient": "Recipient",
             "redeem_htlc": "Redeem HTLC",
             "sender": "Sender",

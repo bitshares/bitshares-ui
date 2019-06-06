@@ -12,7 +12,6 @@ const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
 import opComponents from "./operations";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import Operation from "../Account/RecentTransactions";
 
 require("./operations.scss");
 

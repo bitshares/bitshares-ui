@@ -8,33 +8,43 @@ import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
 let inProgress = {};
 
-const calculateHash = ({cipher, preimage}) => {
-    let preimage_hash_cipher = -1;
-    let preimage_hash_calculated = "";
+const calculateHash = (cipher, preimage) => {
+    let preimage_hash_calculated = null;
     switch (cipher) {
         case "sha256":
-            preimage_hash_cipher = 2;
             preimage_hash_calculated = hash.sha256(preimage);
-
             break;
         case "ripemd160":
-            preimage_hash_cipher = 0;
             preimage_hash_calculated = hash.ripemd160(preimage);
-
             break;
         case "sha1":
             throw new Error(
                 "sha1 is not considered a secure hashing algorithm, plaase use sha256"
             );
-
-            preimage_hash_cipher = 1;
-            preimage_hash_calculated = hash.sha1(preimage);
-
             break;
         default:
             throw new Error("Wrong cipher name provided when creating htlc op");
     }
-    return {preimage_hash_cipher, preimage_hash_calculated};
+    return preimage_hash_calculated;
+};
+const getCipherInt = cipher => {
+    let preimage_hash_cipher = null;
+    switch (cipher) {
+        case "sha256":
+            preimage_hash_cipher = 2;
+            break;
+        case "ripemd160":
+            preimage_hash_cipher = 0;
+            break;
+        case "sha1":
+            throw new Error(
+                "sha1 is not considered a secure hashing algorithm, plaase use sha256"
+            );
+            break;
+        default:
+            throw new Error("Wrong cipher name provided when creating htlc op");
+    }
+    return preimage_hash_cipher;
 };
 class HtlcActions {
     create({
@@ -43,15 +53,24 @@ class HtlcActions {
         asset_id,
         amount,
         lock_time,
-        preimage,
-        cipher
+        preimage_cipher,
+        preimage = null,
+        preimage_hash = null,
+        preimage_size = null
     }) {
         const tr = WalletApi.new_transaction();
 
-        const {preimage_hash_cipher, preimage_hash_calculated} = calculateHash({
-            cipher,
-            preimage
-        });
+        let preimage_hash_cipher = getCipherInt(preimage_cipher);
+        if (preimage && !preimage_hash) {
+            preimage_hash = calculateHash(preimage_cipher, preimage);
+        }
+        if (!preimage_size) {
+            if (preimage) {
+                preimage_size = preimage.length;
+            } else {
+                throw Error("Preimage must be given if size is empty");
+            }
+        }
 
         tr.add_type_operation("htlc_create", {
             from: from_account_id,
@@ -64,8 +83,8 @@ class HtlcActions {
                 amount: amount,
                 asset_id: asset_id
             },
-            preimage_hash: [preimage_hash_cipher, preimage_hash_calculated],
-            preimage_size: preimage.length,
+            preimage_hash: [preimage_hash_cipher, preimage_hash],
+            preimage_size: preimage_size,
             claim_period_seconds: lock_time
         });
 
@@ -140,8 +159,8 @@ class HtlcActions {
         };
     }
 
-    calculateHash({preimage, cipher}) {
-        const {preimage_hash_calculated} = calculateHash({cipher, preimage});
+    calculateHash(preimage, cipher) {
+        const preimage_hash_calculated = calculateHash(cipher, preimage);
         const size = preimage_hash_calculated.length;
         let hash = new Buffer(preimage_hash_calculated).toString("hex");
         return {hash, size};
