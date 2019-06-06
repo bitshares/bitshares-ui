@@ -9,19 +9,22 @@ import {Form, Input, Button} from "bitshares-ui-style-guide";
 import AssetSelect from "./AssetSelect";
 import {ChainStore} from "bitsharesjs";
 import SetDefaultFeeAssetModal from "../Modal/SetDefaultFeeAssetModal";
-import {Asset} from "common/MarketClasses";
+import {debounce} from "lodash-es";
+import {
+    checkFeeStatusAsync,
+    shouldPayFeeWithAssetAsync
+} from "common/trxHelper";
 
 // TODO remove duplicated logic against amount selector
 class FeeAssetSelector extends DecimalChecker {
     static propTypes = {
         label: PropTypes.string, // a translation key for the label
+        main_asset_id: PropTypes.string,
+        memo: PropTypes.string,
         account: PropTypes.any,
-        feeAmount: PropTypes.any,
-        amount: PropTypes.any,
         placeholder: PropTypes.string,
         onChange: PropTypes.func,
         tabIndex: PropTypes.number,
-        error: PropTypes.string,
         scroll_length: PropTypes.number,
         selectDisabled: PropTypes.bool
     };
@@ -35,37 +38,84 @@ class FeeAssetSelector extends DecimalChecker {
     constructor(props) {
         super(props);
         this.state = {
-            asset: null,
             assets: [],
-            feeAsset: null,
+            fee_amount: 0,
             fee_asset_id: "1.3.0",
-            feeAmount: new Asset({amount: 0}),
             feeStatus: {},
-            isModalVisible: false
+            isModalVisible: false,
+            error: null
         };
+        this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
 
-    componentWillReceiveProps(np) {
-        console.log(np.amount);
-        console.log(np.feeAmount);
-        this.setState({
-            assets: this._getAvailableAssets(np.account),
-            fee_asset_id: np.feeAmount
-                ? np.feeAmount.asset_id
-                : this.props.feeAmount.asset_id
-        });
+    _updateFee(asset_id, memo, onChange) {
+        // Original asset id should be passed to child component along with from_account
+        let {account, main_asset_id} = this.props;
+        let feeID = asset_id || this.state.fee_asset_id;
+        if (!account) return null;
+        checkFeeStatusAsync({
+            accountID: account.get("id"),
+            feeID,
+            options: ["price_per_kbyte"],
+            data: {
+                type: "memo",
+                content: memo
+            }
+        })
+            .then(({fee, hasPoolBalance}) => {
+                shouldPayFeeWithAssetAsync(account, fee)
+                    .then(should => {
+                        should
+                            ? this.setState(
+                                  {
+                                      // TODO how should it be handeled? Can it be not the same as fee?
+                                      fee_asset_id: main_asset_id
+                                  },
+                                  () =>
+                                      this._updateFee(
+                                          main_asset_id,
+                                          this.props.memo,
+                                          this.props.onChange
+                                      )
+                              )
+                            : this.setState({
+                                  fee_amount: fee.getAmount({real: true}),
+                                  fee_asset_id: fee.asset_id,
+                                  error: !hasPoolBalance
+                              });
+                        if (onChange) {
+                            onChange(fee);
+                        }
+                        this.setState({
+                            assets: this._getAvailableAssets(account),
+                            fee_amount: fee.getAmount({real: true}),
+                            fee_asset_id: fee.asset_id
+                        });
+                    })
+                    .catch(err => console.error(err));
+            })
+            .catch(err => console.error(err));
+    }
+
+    componentWillReceiveProps(np, ns) {
+        const memo_changed = np.memo !== this.props.memo;
+        const account_changed =
+            np.account.get("id") !== this.props.account.get("id");
+        const needsFeeCalculation =
+            memo_changed || !this.state.fee_amount || account_changed;
+        if (needsFeeCalculation) {
+            this._updateFee(this.state.fee_asset_id, np.memo, np.onChange);
+        }
     }
 
     _getAsset() {
         const {assets, fee_asset_id} = this.state;
         return ChainStore.getAsset(
-            assets.length && this.props.feeAmount
-                ? this.props.feeAmount.asset_id
+            fee_asset_id
+                ? fee_asset_id
                 : assets.length === 1
                     ? assets[0]
-                    : fee_asset_id
-                        ? fee_asset_id
-                        : assets[0]
+                    : "1.3.0"
         );
     }
 
@@ -118,28 +168,14 @@ class FeeAssetSelector extends DecimalChecker {
         return value;
     }
 
-    _onChange(e) {
-        console.log(e);
-        if (this.props.onChange)
-            this.props.onChange({
-                amount: this.getNumericEventValue(e),
-                asset: this._getAsset()
-            });
-    }
-
     onAssetChange(selected_asset) {
-        if (this.props.onChange) {
-            this.props.onChange({
-                amount: this.props.amount,
-                asset: selected_asset
-            });
-        }
+        this._updateFee(selected_asset, this.props.memo, this.props.onChange);
     }
 
     render() {
-        let value = this.props.error
-            ? counterpart.translate(this.props.error)
-            : this.formatAmount(this.props.amount);
+        let value = this.state.error
+            ? counterpart.translate("transfer.errors.insufficient")
+            : this.formatAmount(this.state.fee_amount);
 
         const label = this.props.label ? (
             <div className="amount-selector-field--label">
@@ -159,7 +195,10 @@ class FeeAssetSelector extends DecimalChecker {
                 </div>
             );
         }*/
-
+        const assets =
+            this.state.assets.length > 0
+                ? this.state.assets
+                : [this._getAsset().get("id") || "1.3.0"];
         return (
             <div>
                 <Form.Item
@@ -177,7 +216,6 @@ class FeeAssetSelector extends DecimalChecker {
                             disabled={this.props.disabled}
                             value={value || ""}
                             placeholder={this.props.placeholder}
-                            onChange={this._onChange.bind(this)}
                             tabIndex={this.props.tabIndex}
                             onPaste={
                                 this.props.onPaste || this.onPaste.bind(this)
@@ -191,7 +229,7 @@ class FeeAssetSelector extends DecimalChecker {
                                 style={{width: "130px"}}
                                 selectStyle={{width: "100%"}}
                                 value={this._getAsset().get("symbol")}
-                                assets={Immutable.List(this.state.assets)}
+                                assets={Immutable.List(assets)}
                                 onChange={this.onAssetChange.bind(this)}
                                 disabled={
                                     this.props.selectDisabled ? true : undefined

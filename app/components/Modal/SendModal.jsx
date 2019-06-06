@@ -50,10 +50,6 @@ class SendModal extends React.Component {
         this.nestedRef = null;
 
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
-
-        // TODO extract
-        this._updateFee = debounce(this._updateFee.bind(this), 250);
-        this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
 
         ZfApi.subscribe("transaction_confirm_actions", (name, msg) => {
@@ -225,8 +221,7 @@ class SendModal extends React.Component {
             }
         }
 
-        // TODO extract
-        if (ns.open && !this.state.open) this._checkFeeStatus(ns);
+        if (ns.open && !this.state.open) this._checkBalance(ns);
         if (!ns.open && !this.state.open) return false;
         return true;
     }
@@ -243,7 +238,6 @@ class SendModal extends React.Component {
                 to_account: np.to_name
                     ? ChainStore.getAccount(np.to_name)
                     : null,
-                feeStatus: {},
                 feeAmount: getUninitializedFeeAmount()
             });
         }
@@ -252,7 +246,6 @@ class SendModal extends React.Component {
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
         if (!asset || !from_account) return;
-        this._updateFee();
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn([
             "balances",
@@ -265,10 +258,7 @@ class SendModal extends React.Component {
             ? ChainStore.getObject(feeBalanceID)
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this.setState(
-                {feeAmount: getUninitializedFeeAmount()},
-                this._updateFee
-            );
+            this.setState({feeAmount: getUninitializedFeeAmount()});
         }
         if (!balanceObject || !feeAmount) return;
         if (!amount) return this.setState({balanceError: false});
@@ -282,59 +272,17 @@ class SendModal extends React.Component {
         this.setState({balanceError: !hasBalance});
     }
 
-    // TODO extract (it always returns empty object for statuses)
-    _checkFeeStatus(state = this.state) {
-        let {from_account, open} = state;
-        if (!from_account || !open) return;
-
-        const assets = Object.keys(from_account.get("balances").toJS()).sort(
-            utils.sortID
-        );
-        let feeStatus = {};
-        let p = [];
-        assets.forEach(a => {
-            p.push(
-                checkFeeStatusAsync({
-                    accountID: from_account.get("id"),
-                    feeID: a,
-                    options: ["price_per_kbyte"],
-                    data: {
-                        type: "memo",
-                        content: this.state.memo
-                    }
-                })
-            );
-        });
-        Promise.all(p)
-            .then(status => {
-                assets.forEach((a, idx) => {
-                    feeStatus[a] = status[idx];
-                });
-
-                if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
-                    this.setState({
-                        feeStatus
-                    });
-                }
-                this._checkBalance();
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }
-
     _setTotal(asset_id, balance_id) {
         const {feeAmount} = this.state;
         let balanceObject = ChainStore.getObject(balance_id);
         let transferAsset = ChainStore.getObject(asset_id);
 
-        let balance = new Asset({
-            amount: balanceObject.get("balance"),
-            asset_id: transferAsset.get("id"),
-            precision: transferAsset.get("precision")
-        });
-
         if (balanceObject) {
+            let balance = new Asset({
+                amount: balanceObject.get("balance"),
+                asset_id: transferAsset.get("id"),
+                precision: transferAsset.get("precision")
+            });
             if (feeAmount.asset_id === balance.asset_id) {
                 balance.minus(feeAmount);
             }
@@ -346,84 +294,21 @@ class SendModal extends React.Component {
     }
 
     _getAvailableAssets(state = this.state) {
-        // TODO extract
-        // FIXME incorrect state is used, why did it work? did it work at all?
-        const {feeStatus} = this.state;
-        function hasFeePoolBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasPoolBalance;
-        }
-
-        function hasBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasBalance;
-        }
-
         const {from_account, from_error} = state;
         let asset_types = [];
-        let fee_asset_types = [];
         if (!(from_account && from_account.get("balances") && !from_error)) {
-            return {asset_types, fee_asset_types};
+            return {asset_types};
         }
         let account_balances = state.from_account.get("balances").toJS();
         asset_types = Object.keys(account_balances).sort(utils.sortID);
-        fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
         for (let key in account_balances) {
             let balanceObject = ChainStore.getObject(account_balances[key]);
             if (balanceObject && balanceObject.get("balance") === 0) {
                 asset_types.splice(asset_types.indexOf(key), 1);
-                if (fee_asset_types.includes(key)) {
-                    fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                }
             }
         }
 
-        fee_asset_types = fee_asset_types.filter(a => {
-            return hasFeePoolBalance(a) && hasBalance(a);
-        });
-
-        return {asset_types, fee_asset_types};
-    }
-
-    // TODO extract
-    _updateFee(state = this.state) {
-        if (!state.open) return;
-        // Original asset id should be passed to child component along with from_account
-        let {feeAmount, from_account, asset_id} = state;
-        let feeID = feeAmount.asset_id;
-        const {fee_asset_types} = this._getAvailableAssets(state);
-        if (fee_asset_types.length === 1 && fee_asset_types[0] !== feeID) {
-            feeID = fee_asset_types[0];
-        }
-        if (!from_account) return null;
-        checkFeeStatusAsync({
-            accountID: from_account.get("id"),
-            feeID,
-            options: ["price_per_kbyte"],
-            data: {
-                type: "memo",
-                // TODO - how to handle memo?
-                content: state.memo
-            }
-        }).then(({fee, hasBalance, hasPoolBalance}) =>
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {
-                                  // TODO how should it be handeled? Can it be not the same as fee?
-                                  fee_asset_id: asset_id
-                              },
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
-            )
-        );
+        return {asset_types};
     }
 
     setNestedRef(ref) {
@@ -465,24 +350,15 @@ class SendModal extends React.Component {
         );
     }
 
-    // TODO refactor after extraction
-    onFeeChanged({asset}) {
-        // TODO feeAmount should be received from fee asset selector component
-        if (!asset) return;
-
-        if (typeof asset !== "object") {
-            asset = ChainStore.getAsset(asset);
-        }
+    onFeeChanged(fee) {
+        if (!fee) return;
 
         this.setState(
             {
-                feeAmount: new Asset({
-                    amount: this.state.feeAmount.amount,
-                    asset_id: asset.get("id")
-                }),
+                feeAmount: fee,
                 error: null
             },
-            this._updateFee
+            this._checkBalance
         );
     }
 
@@ -502,8 +378,7 @@ class SendModal extends React.Component {
                 account_balances[current_asset_id]
             );
         }
-        // TODO review and check if it works properly without updateFee
-        this.setState({memo: e.target.value}, this._updateFee);
+        this.setState({memo: e.target.value}, this._checkBalance);
     }
 
     onTrxIncluded(confirm_store_state) {
@@ -578,13 +453,9 @@ class SendModal extends React.Component {
         let from_error =
             from_account && !from_my_account && !propose ? true : false;
         // TODO extract
-        let {asset_types, fee_asset_types} = this._getAvailableAssets();
+        let {asset_types} = this._getAvailableAssets();
         let balance = null;
 
-        // TODO extract ???
-        // It seems that we could just receive fee amount and fee asset in parent component to correctly handle submition of transaction
-        // Estimate fee
-        let fee = this.state.feeAmount.getAmount({real: true});
         if (from_account && from_account.get("balances") && !from_error) {
             let account_balances = from_account.get("balances").toJS();
             let _error = this.state.balanceError ? "has-error" : "";
@@ -592,7 +463,6 @@ class SendModal extends React.Component {
                 asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                let feeID = this.state.feeAmount.asset_id;
 
                 balance = (
                     <span>
@@ -611,8 +481,8 @@ class SendModal extends React.Component {
                                 this,
                                 current_asset_id,
                                 account_balances[current_asset_id],
-                                fee,
-                                feeID
+                                feeAmount.getAmount({real: true}),
+                                feeAmount.asset_id
                             )}
                         >
                             <BalanceComponent
@@ -819,15 +689,8 @@ class SendModal extends React.Component {
                                     label="transfer.fee"
                                     disabled={true}
                                     account={from_account}
-                                    amount={fee}
-                                    feeAmount={feeAmount}
                                     onChange={this.onFeeChanged.bind(this)}
                                     tabIndex={tabIndex++}
-                                    error={
-                                        this.state.hasPoolBalance === false
-                                            ? "transfer.errors.insufficient"
-                                            : null
-                                    }
                                     scroll_length={2}
                                 />
                             </Form>

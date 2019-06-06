@@ -37,7 +37,7 @@ class SetDefaultFeeAssetModal extends React.Component {
             .sort((a, b) => a.balance - b.balance)
             .map(asset => {
                 return (
-                    <tr>
+                    <tr key={asset.id}>
                         <td style={{textAlign: "center"}}>
                             <Radio
                                 onChange={this._onSelectedAsset.bind(this)}
