@@ -23,7 +23,7 @@ import debounceRender from "react-debounce-render";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {getPossibleGatewayPrefixes, gatewayPrefixes} from "common/gateways";
 import QuoteSelectionModal from "./QuoteSelectionModal";
-import {Input, Icon} from "bitshares-ui-style-guide";
+import SearchInput from "../Utility/SearchInput";
 
 class MarketGroup extends React.Component {
     static defaultProps = {
@@ -970,7 +970,7 @@ class MyMarkets extends React.Component {
                         <div className="search-wrapper">
                             <form>
                                 <div className="filter inline-block">
-                                    <Input
+                                    <SearchInput
                                         autoComplete="off"
                                         style={{
                                             fontSize: "0.9rem",
@@ -982,12 +982,16 @@ class MyMarkets extends React.Component {
                                         placeholder={counterpart.translate(
                                             "exchange.filter"
                                         )}
-                                        maxLength="16"
+                                        maxLength={16}
                                         name="focus"
                                         required="required"
                                         value={this.state.myMarketFilter}
                                         onChange={this.handleSearchUpdate}
-                                        addonAfter={<Icon type="search" />}
+                                        onClear={() =>
+                                            this.handleSearchUpdate({
+                                                target: {value: ""}
+                                            })
+                                        }
                                     />
                                 </div>
                             </form>
@@ -1052,7 +1056,7 @@ class MyMarkets extends React.Component {
                                             placeholder={counterpart.translate(
                                                 "exchange.search"
                                             )}
-                                            maxLength="16"
+                                            maxLength={16}
                                             tabIndex={2}
                                             ref="findSearchInput"
                                         />

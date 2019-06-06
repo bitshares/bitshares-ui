@@ -2,6 +2,31 @@
 @import "./../style-guide-fixes";
 
 @mixin theme(
+    $header-menu--active--icon-background,
+    $header-menu--active--box-shadow,
+    $header-menu-background-color,
+    $header-menu-item--hover--background-color,
+    $selector-active-border-color,
+    $selector-active-text-color,
+    $selector-border-color,
+    $selector-text-color,
+    $tabs-content-background-color,
+    $tabs-border-size,
+    $tabs-border-color,
+    $tabs-background-color,
+    $tabs-item-background-color,
+    $tabs-item-color,
+    $tabs-item-border-size,
+    $tabs-item-border-color,
+    $tabs-item--active--color,
+    $tabs-item--active--border-color,
+    $tabs-item--active--background-color,
+    $header-background-color,
+    $header-shadow,
+    $header-item--color,
+    $header-item-background-color,
+    $header-item--active--background-color,
+    $header-item--active--color,
     $explorer-tab-content-background-color,
     $tab-content-background-color,
     $primary-text-color,
@@ -59,9 +84,55 @@
     $positive-color-alternative,
     $separator-line,
     $medium-color,
-    $dark-help-text
+    $dark-help-text,
+    $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
+    ul.header-menu {
+        .divider {
+            margin: 0;
+        }
+        background-color: $header-menu-background-color !important;
+    }
+
+    .menu-dropdown-wrapper {
+        &.active {
+            background: $header-menu--active--icon-background !important;
+            ul.header-menu {
+                box-shadow: $header-menu--active--box-shadow;
+
+                li {
+                    &:hover {
+                        background-color: $header-menu-item--hover--background-color;
+                    }
+                }
+            }
+        }
+    }
+
+    .selector {
+        > * {
+            border: 1px solid $selector-border-color !important;
+            border-right: 0 !important;
+            color: $selector-text-color !important;
+
+            line-height: 1.9rem;
+            &:last-child {
+                border-right: 1px solid $selector-border-color !important;
+            }
+        }
+
+        > *:not(.inactive) {
+            color: $selector-active-text-color !important;
+            border: 1px solid $selector-active-border-color !important;
+        }
+
+        > *:not(.inactive) + * {
+            border-left: 0 !important;
+        }
+    }
+
     .showcases-grid {
         margin: 32px 0;
         display: flex;
@@ -192,7 +263,6 @@
     #incognito {
         background: $incognito-bg;
     }
-
     .settings-select {
         height: 36px;
         padding: 0 12px;
@@ -230,6 +300,14 @@
             &:hover {
                 color: $link-text-color;
             }
+        }
+    }
+    .form-input-header {
+        .form-input-header--label {
+        }
+        .form-input-header--right {
+            float: right;
+            cursor: pointer;
         }
     }
     .dark-text-color {
@@ -298,6 +376,7 @@
     // select:hover {
     // background-color: $panel-bg-color;
     // }
+
     .label.success {
         color: $success-color;
         border-color: $success-color;
@@ -335,7 +414,6 @@
     .txtlabel.warning {
         color: $warning-color;
     }
-
     .txtlabel.cancel,
     .label.alert {
         color: $alert-color;
@@ -374,8 +452,7 @@
                 @include color(
                     $light-text-color,
                     lighten($super-light-panel-bg-color, 4%)
-                );
-                // color: $link-text-color;
+                ); // color: $link-text-color;
             }
         }
     }
@@ -417,7 +494,6 @@
             background-color: $button-bg-color;
         }
     }
-
     .modal#marketPicker,
     .modal#settingsModal {
         background-color: $bg-color;
@@ -865,7 +941,8 @@
             }
             > li > span {
                 color: $light-text-color;
-            } /* Hover state */
+            }
+            /* Hover state */
             li:hover > span {
                 @include color(
                     $light-text-color,
@@ -1052,7 +1129,7 @@
         }
     }
     .tab-content {
-        background-color: $tab-content-background-color;
+        background-color: $tabs-content-background-color;
         div.header-selector {
             .filter input {
                 background-color: $bg-color;
@@ -1430,11 +1507,9 @@
     .exchange-content-header {
         color: $light-text-color;
     }
-
     .exchange-content-header--buy-sell-form {
         border-bottom: 0 !important;
     }
-
     // .block-content-header {
     // //text-transform: uppercase;
     // @include RobotoLight;
@@ -1496,6 +1571,7 @@
     .ask {
         background-color: $ask-color !important;
     }
+
     .orderbook-latest-price {
         > div {
             $orderbook-center-horizontal-margin: 5px;
@@ -1544,6 +1620,7 @@
     // > tbody > tr:nth-of-type(even) {
     // background-color: $row-accent-color;
     // }
+
     // }
     .mymarkets-header {
         background-color: $header-color;
@@ -1711,6 +1788,15 @@
     .unstyled-list {
         list-style: none;
         margin-left: 0;
+        margin-bottom: 0;
+    }
+    .settings-container {
+        // hardcode style overriding for style-guide labels of Form.Item
+        .ant-form-item-label label {
+            font-weight: 500 !important;
+            text-transform: uppercase !important;
+            color: $settings-label-color !important;
+        }
     }
     .settings--notifications {
         .settings--notifications--group {
@@ -1742,6 +1828,14 @@
             }
         }
     }
+
+    .danger > svg > path {
+        fill: darken($alert-color, 15%) !important;
+    }
+    .warning > svg > path {
+        fill: darken($warning-color, 15%) !important;
+    }
+
     tr.margin-row {
         > td.danger {
             background-color: darken($alert-color, 15%) !important;
@@ -1862,18 +1956,27 @@
     div.account-tabs {
         > div.service-selector {
             background-color: $bg-color;
+            border-bottom: $tabs-border-size solid $tabs-border-color;
         }
     }
     ul.account-overview {
+        background-color: $tabs-background-color;
         li {
             transition: all 0.3s ease 0s;
+
+            background-color: $tabs-item-background-color;
+
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: $tabs-item-border-size solid $tabs-item-border-color;
+
             > a {
-                color: $account-dimmed;
-                background-color: transparent;
+                background-color: $tabs-item-background-color;
+                color: $tabs-item-color;
                 border: none;
                 transition: all 0.3s ease 0s;
                 &:hover {
-                    background-color: lighten($account-header, 4%);
                     color: $account-primarytext;
                 }
                 > div.tab-subtext {
@@ -1882,7 +1985,9 @@
             }
             &.is-active,
             &:hover {
-                background-color: lighten($account-header, 4%);
+                border-bottom: $tabs-item-border-size solid
+                    $tabs-item--active--border-color;
+                background-color: $tabs-item--active--background-color;
                 > a {
                     color: $account-primarytext;
                 }
@@ -1951,6 +2056,15 @@
                 }
             }
         }
+    }
+    .ant-table-content .ant-table-footer .total-value {
+        .value {
+            color: $account-green;
+        }
+    }
+    .ant-table-placeholder {
+        min-height: 130px;
+        z-index: 0 !important;
     }
     div.account-creation {
         border: 1px solid $account-cells;
@@ -2071,7 +2185,41 @@
         background-color: transparent !important;
     }
     .header-container {
-        background-color: $account-background;
+        background-color: $header-background-color;
+
+        box-shadow: $header-shadow;
+
+        z-index: 1;
+
+        .menu-group {
+            .menu-bar {
+                li {
+                    a {
+                        text-decoration: none;
+                        background: $header-item-background-color;
+                        color: $header-item--color;
+                        svg path {
+                            fill: $header-item--color !important;
+                        }
+                        &:hover {
+                            background-color: $header-item--active--background-color !important;
+                            color: $header-item--active--color;
+                            svg path {
+                                fill: $header-item--active--color !important;
+                            }
+                        }
+                        &.active {
+                            background-color: $header-item--active--background-color !important;
+                            color: $header-item--active--color;
+                            svg path {
+                                fill: $header-item--active--color !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         .menu-dropdown-wrapper {
             &.active {
                 background: $panel-bg-color;
@@ -2193,7 +2341,6 @@
                 margin-top: -5px;
             }
         }
-
         > div {
             float: left;
             min-width: 145px;
@@ -2259,6 +2406,7 @@
         }
         &-modal {
         }
+
         &-input-field {
             border-radius: 5px 0 0 5px !important;
         }
@@ -2387,7 +2535,6 @@
             border-color: $button-bg-color;
             background-color: transparentize($button-bg-color, 0.9);
         }
-
         span.checkbox-active {
             border-color: $button-bg-color;
             background-color: $button-bg-color;

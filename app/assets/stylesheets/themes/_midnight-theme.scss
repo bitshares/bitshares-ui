@@ -86,8 +86,90 @@ $explorer--assets--bg: $bg-color;
 
 // * * *
 
+// * * * * Settings
+
+$settings-label-color: rgba(255, 255, 255, 0.5);
+
+//
+
+// color palette
+
+// branding colors
+$primary-color: #337ab7;
+
+// help colors
+$primary-dark: #191a1f;
+$white: #fff;
+$dark: rgba(0, 0, 0, 0.6);
+$dark-1: lighten($dark, 30%);
+$dark-2: lighten($dark, 60%);
+$dark-3: lighten($dark, 90%);
+
+// Header
+$header-background-color: lighten($primary-dark, 10%);
+$header-shadow: 0 2px 9px 0 lighten($primary-dark, 10%) !important;
+$header-item--color: darken($white, 10%);
+$header-item-background-color: lighten($primary-dark, 10%);
+$header-item--active--background-color: lighten($primary-dark, 10%);
+
+$header-item--active--color: $link-text-color;
+
+// Tabs (old, not style-guide)
+$tabs-border-size: 1px;
+$tabs-border-color: lighten($primary-dark, 5%);
+$tabs-background-color: $primary-dark;
+$tabs-item-background-color: $primary-dark;
+$tabs-item-color: $white;
+$tabs-item-border-size: 3px;
+$tabs-item-border-color: $primary-dark;
+$tabs-item--active--color: $dark;
+$tabs-item--active--border-color: $primary-color;
+$tabs-item--active--background-color: $primary-dark;
+$tabs-item--active--border-color: $primary-color;
+$tabs-content-background-color: $primary-dark;
+
+// Selector
+
+$selector-active-border-color: $primary-color;
+$selector-active-text-color: $primary-color;
+
+$selector-border-color: lighten($primary-dark, 5%);
+$selector-text-color: lighten($primary-dark, 35%);
+
+// Header Menu
+
+$header-menu--active--icon-background: $primary-dark;
+$header-menu--active--box-shadow: 0 4px 9px 0 #00000015;
+$header-menu-background-color: lighten($primary-dark, 5%);
+$header-menu-item--hover--background-color: lighten($primary-dark, 10%);
+
 .midnightTheme {
     @include theme(
+        $header-menu--active--icon-background,
+        $header-menu--active--box-shadow,
+        $header-menu-background-color,
+        $header-menu-item--hover--background-color,
+        $selector-active-border-color,
+        $selector-active-text-color,
+        $selector-border-color,
+        $selector-text-color,
+        $tabs-content-background-color,
+        $tabs-border-size,
+        $tabs-border-color,
+        $tabs-background-color,
+        $tabs-item-background-color,
+        $tabs-item-color,
+        $tabs-item-border-size,
+        $tabs-item-border-color,
+        $tabs-item--active--color,
+        $tabs-item--active--border-color,
+        $tabs-item--active--background-color,
+        $header-background-color,
+        $header-shadow,
+        $header-item--color,
+        $header-item-background-color,
+        $header-item--active--background-color,
+        $header-item--active--color,
         $explorer-tab-content-background-color,
         $tab-content-background-color,
         $primary-text-color,
@@ -145,6 +227,7 @@ $explorer--assets--bg: $bg-color;
         $positive-color-alternative,
         $separator-line,
         $medium-color,
-        $dark-help-text
+        $dark-help-text,
+        $settings-label-color
     );
 }

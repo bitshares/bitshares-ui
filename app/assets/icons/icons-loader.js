@@ -31,6 +31,7 @@ let icons = [
     "grouping",
     "hamburger-x",
     "hamburger",
+    "htlc",
     "hourglass",
     "key",
     "list",

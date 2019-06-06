@@ -84,6 +84,10 @@ class SettingsActions {
     setPriceAlert(value) {
         return value;
     }
+
+    hideNewsHeadline(value) {
+        return value;
+    }
 }
 
 export default alt.createActions(SettingsActions);

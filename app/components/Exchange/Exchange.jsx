@@ -66,8 +66,8 @@ class Exchange extends React.Component {
                 ask: props.exchange.getIn(["lastExpiration", "ask"]) || "YEAR"
             },
             expirationCustomTime: {
-                bid: moment().add(1, "day"),
-                ask: moment().add(1, "day")
+                bid: "Specific",
+                ask: "Specific"
             },
             feeStatus: {}
         };
@@ -530,13 +530,13 @@ class Exchange extends React.Component {
     }
 
     /*
-    * Force re-rendering component when state changes.
-    * This is required for an updated value of component width
-    *
-    * It will trigger a re-render twice
-    * - Once when state is changed
-    * - Once when forceReRender is set to false
-    */
+     * Force re-rendering component when state changes.
+     * This is required for an updated value of component width
+     *
+     * It will trigger a re-render twice
+     * - Once when state is changed
+     * - Once when forceReRender is set to false
+     */
     _forceRender(np, ns) {
         if (this.state.forceReRender) {
             this.setState({
@@ -1517,9 +1517,9 @@ class Exchange extends React.Component {
     _orderbookClick(order) {
         const isBid = order.isBid();
         /*
-        * Because we are using a bid order to construct an ask and vice versa,
-        * totalToReceive becomes forSale, and totalForSale becomes toReceive
-        */
+         * Because we are using a bid order to construct an ask and vice versa,
+         * totalToReceive becomes forSale, and totalForSale becomes toReceive
+         */
         let forSale = order.totalToReceive({noCache: true});
         // let toReceive = order.totalForSale({noCache: true});
         let toReceive = forSale.times(order.sellPrice());

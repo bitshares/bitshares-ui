@@ -88,6 +88,10 @@ div#CenterContent {
     }
 }
 
+.ant-collapse-header {
+    padding-left: 40px !important;
+}
+
 .top-bar {
     border-bottom: 1px solid grey;
 
@@ -208,6 +212,12 @@ form.order-form {
     .ant-input-group-addon {
         text-align: left;
         width: 60% !important;
+    }
+
+    .expiration-datetime-picker--hidden {
+        display: flex;
+        visibility: hidden;
+        height: 0;
     }
 }
 
