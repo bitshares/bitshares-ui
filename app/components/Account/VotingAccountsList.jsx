@@ -54,7 +54,12 @@ const accountItemRow = props => {
         about: link && link.indexOf(".") !== -1 ? link : null,
         votes,
         title: `account.votes.${isActive ? "active_short" : "inactive"}`,
-        supported: `settings.${isSupported ? "yes" : "no"}`,
+        supported: {
+            translate: `settings.${isSupported ? "yes" : "no"}`,
+            proxy,
+            item_id,
+            onAction
+        },
         toggle: {proxy, isSupported, item_id, onAction}
     };
 };
@@ -222,9 +227,9 @@ class VotingAccountsList extends React.Component {
                 dataIndex: "supported",
                 align: "center",
                 sorter: (a, b) => {
-                    return a.supported > b.supported
+                    return a.supported.translate > b.supported.translate
                         ? 1
-                        : a.supported < b.supported
+                        : a.supported.translate < b.supported.translate
                             ? -1
                             : 0;
                 },
@@ -235,8 +240,14 @@ class VotingAccountsList extends React.Component {
                                 maxWidth: cw[0],
                                 whiteSpace: "nowrap"
                             }}
+                            className={item.proxy ? "" : "clickable"}
+                            onClick={
+                                item.proxy
+                                    ? () => {}
+                                    : item.onAction.bind(this, item.item_id)
+                            }
                         >
-                            <Translate content={item} />
+                            <Translate content={item.translate} />
                         </span>
                     );
                 }
@@ -282,6 +293,10 @@ class VotingAccountsList extends React.Component {
                 }
             }
         ];
+    }
+
+    _decideRowClassName(row, index) {
+        return row.toggle.isSupported ? "" : "unsupported";
     }
 
     render() {
@@ -371,6 +386,7 @@ class VotingAccountsList extends React.Component {
                 {item_rows.length ? (
                     <PaginatedList
                         className="table dashboard-table table-hover"
+                        rowClassName={this._decideRowClassName.bind(this)}
                         rows={item_rows}
                         header={header}
                         pageSize={20}

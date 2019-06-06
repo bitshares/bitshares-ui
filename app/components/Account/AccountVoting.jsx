@@ -103,7 +103,9 @@ class AccountVoting extends React.Component {
             ns.workerTableIndex !== this.state.workerTableIndex ||
             ns.vote_ids.size !== this.state.vote_ids.size ||
             ns.current_proxy_input !== this.state.current_proxy_input ||
-            ns.filterSearch !== this.state.filterSearch
+            ns.filterSearch !== this.state.filterSearch ||
+            ns.witnesses !== this.state.witnesses ||
+            ns.committee !== this.state.committee
         );
     }
 
@@ -954,18 +956,18 @@ class AccountVoting extends React.Component {
                                                 )}
                                             </Radio>
 
-                                            {expiredWorkersLength ? (
-                                                <Radio value={2}>
-                                                    <Translate content="account.votes.expired" />
-                                                </Radio>
-                                            ) : null}
-
                                             {pollsLength ? (
                                                 <Radio value={3}>
                                                     {counterpart.translate(
                                                         "account.votes.polls",
                                                         {count: pollsLength}
                                                     )}
+                                                </Radio>
+                                            ) : null}
+
+                                            {expiredWorkersLength ? (
+                                                <Radio value={2}>
+                                                    <Translate content="account.votes.expired" />
                                                 </Radio>
                                             ) : null}
                                         </Radio.Group>

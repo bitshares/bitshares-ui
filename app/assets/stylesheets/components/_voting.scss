@@ -12,4 +12,27 @@
     .ant-row {
         padding-bottom: 20px;
     }
+    .unsupported {
+        > td {
+            color: grey;
+            > a {
+                color: grey;
+            }
+            > span {
+                > a {
+                    color: grey;
+                }
+            }
+            > span {
+                > div {
+                    > a {
+                        color: grey;
+                    }
+                }
+            }
+            svg > path {
+                fill: grey;
+            }
+        }
+    }
 }

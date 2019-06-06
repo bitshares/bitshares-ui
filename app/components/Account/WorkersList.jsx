@@ -331,13 +331,27 @@ class WorkerList extends React.Component {
                 sorter: (a, b) => a.daily_pay.daily_pay - b.daily_pay.daily_pay,
                 render: item => {
                     return (
-                        <EquivalentValueComponent
-                            hide_asset
-                            fromAsset="1.3.0"
-                            toAsset={item.preferredUnit}
-                            amount={item.daily_pay}
+                        <span
+                            className={!item.proxy ? "clickable" : ""}
                             style={{whiteSpace: "nowrap"}}
-                        />
+                            onClick={
+                                item.proxy
+                                    ? () => {}
+                                    : this[
+                                          item.approvalState
+                                              ? "onReject"
+                                              : "onApprove"
+                                      ].bind(this, item)
+                            }
+                        >
+                            <EquivalentValueComponent
+                                hide_asset
+                                fromAsset="1.3.0"
+                                toAsset={item.preferredUnit}
+                                amount={item.daily_pay}
+                                style={{whiteSpace: "nowrap"}}
+                            />
+                        </span>
                     );
                 }
             },
@@ -354,7 +368,7 @@ class WorkerList extends React.Component {
                 render: item => {
                     return (
                         <span
-                            className="clickable"
+                            className={!item.proxy ? "clickable" : ""}
                             style={{whiteSpace: "nowrap"}}
                             onClick={
                                 item.proxy
@@ -444,7 +458,11 @@ class WorkerList extends React.Component {
                         : {isExpired, fundedPercent},
                 daily_pay: {
                     preferredUnit: item.preferredUnit,
-                    daily_pay: worker.daily_pay
+                    daily_pay: worker.daily_pay,
+                    proxy: hasProxy,
+                    approvalState,
+                    worker: item.worker,
+                    vote_ids
                 },
                 budget:
                     !isPoll && (isExpired || isProposed)
@@ -523,6 +541,10 @@ class WorkerList extends React.Component {
             parseInt(worker.get("total_votes_for"), 10) -
             parseInt(worker.get("total_votes_against"), 10)
         );
+    }
+
+    _decideRowClassName(row, index) {
+        return row.toggle.approvalState ? "" : "unsupported";
     }
 
     render() {
@@ -645,7 +667,7 @@ class WorkerList extends React.Component {
                     worker: worker
                 };
             });
-
+        // fixme: don't call setState in render
         setWorkersLength(
             newWorkers.length,
             activeWorkers.length,
@@ -664,9 +686,10 @@ class WorkerList extends React.Component {
         return (
             <PaginatedList
                 className="table dashboard-table table-hover"
+                rowClassName={this._decideRowClassName.bind(this)}
                 rows={this.getData(workers)}
                 header={workersHeader}
-                pageSize={20}
+                pageSize={50}
                 label="utility.total_x_assets"
                 leftPadding="1.5rem"
             />

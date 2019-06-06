@@ -39,7 +39,7 @@ SupplyPercentage = BindToChainState(SupplyPercentage);
 
 class FormattedAsset extends React.Component {
     static propTypes = {
-        amount: PropTypes.any.isRequired,
+        amount: PropTypes.any, // amount could be undefined or null when component is loading
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
         color: PropTypes.string,
@@ -50,7 +50,7 @@ class FormattedAsset extends React.Component {
     };
 
     static defaultProps = {
-        amount: 0,
+        amount: null,
         decimalOffset: 0,
         hide_asset: false,
         hide_amount: false,
@@ -86,6 +86,8 @@ class FormattedAsset extends React.Component {
             asPercentage,
             pulsate
         } = this.props;
+
+        if (amount === undefined || amount == null) return null; // still loading
 
         if (asset && asset.toJS) asset = asset.toJS();
 
