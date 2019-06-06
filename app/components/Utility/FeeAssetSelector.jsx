@@ -41,71 +41,74 @@ class FeeAssetSelector extends DecimalChecker {
             assets: [],
             fee_amount: 0,
             fee_asset_id: "1.3.0",
+            fees: {},
             feeStatus: {},
             isModalVisible: false,
             error: null
         };
         this._updateFee = debounce(this._updateFee.bind(this), 250);
+        this._getFees = debounce(this._getFees.bind(this), 500);
+    }
+
+    async _getFees(assets, account, data) {
+        const accountID = account.get("id");
+        let result = this.state.fees;
+        for (let asset_id of assets) {
+            const {fee} = await checkFeeStatusAsync({
+                accountID,
+                feeID: asset_id,
+                options: ["price_per_kbyte"],
+                data
+            });
+            result[asset_id] = fee.getAmount({real: true});
+        }
+        this.setState({result});
     }
 
     _updateFee(asset_id, memo, onChange) {
         // Original asset id should be passed to child component along with from_account
-        let {account, main_asset_id} = this.props;
-        let feeID = asset_id || this.state.fee_asset_id;
+        let {account} = this.props;
         if (!account) return null;
 
+        let feeID = asset_id || this.state.fee_asset_id;
+        const trxData = {
+            type: "memo",
+            content: memo
+        };
+        this._getFees(this.state.assets, account, trxData);
         checkFeeStatusAsync({
             accountID: account.get("id"),
             feeID,
             options: ["price_per_kbyte"],
-            data: {
-                type: "memo",
-                content: memo
-            }
+            data: trxData
         })
             .then(({fee, hasPoolBalance}) => {
-                shouldPayFeeWithAssetAsync(account, fee)
-                    .then(should => {
-                        should
-                            ? this.setState(
-                                  {
-                                      // TODO how should it be handeled? Can it be not the same as fee?
-                                      fee_asset_id: main_asset_id
-                                  },
-                                  () =>
-                                      this._updateFee(
-                                          main_asset_id,
-                                          this.props.memo,
-                                          this.props.onChange
-                                      )
-                              )
-                            : this.setState({
-                                  fee_amount: fee.getAmount({real: true}),
-                                  fee_asset_id: fee.asset_id,
-                                  error: !hasPoolBalance
-                              });
-                        if (onChange) {
-                            onChange(fee);
-                        }
-                        this.setState({
-                            assets: this._getAvailableAssets(account),
-                            fee_amount: fee.getAmount({real: true}),
-                            fee_asset_id: fee.asset_id
-                        });
-                    })
-                    .catch(err => console.error(err));
+                this.setState({
+                    fee_amount: fee.getAmount({real: true}),
+                    fee_asset_id: fee.asset_id,
+                    error: !hasPoolBalance
+                });
+                if (onChange) {
+                    onChange(fee);
+                }
+                this.setState({
+                    assets: this._getAvailableAssets(account),
+                    fee_amount: fee.getAmount({real: true}),
+                    fee_asset_id: fee.asset_id
+                });
             })
             .catch(err => console.error(err));
     }
 
     componentWillReceiveProps(np, ns) {
+        const {fee_amount, fee_asset_id} = this.state;
         const memo_changed = np.memo !== this.props.memo;
         const account_changed =
             np.account.get("id") !== this.props.account.get("id");
         const needsFeeCalculation =
-            memo_changed || !this.state.fee_amount || account_changed;
+            memo_changed || !fee_amount || account_changed;
         if (needsFeeCalculation) {
-            this._updateFee(this.state.fee_asset_id, np.memo, np.onChange);
+            this._updateFee(fee_asset_id, np.memo, np.onChange);
         }
     }
 
@@ -121,19 +124,6 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     _getAvailableAssets(account) {
-        /* TODO uncomment when it comes to feeStatus
-        const {feeStatus} = this.state;
-        function hasFeePoolBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasPoolBalance;
-        }
-
-        function hasBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasBalance;
-        }
-        */
-
         let fee_asset_types = [];
         if (!(account && account.get("balances"))) {
             return fee_asset_types;
@@ -149,11 +139,23 @@ class FeeAssetSelector extends DecimalChecker {
             }
         }
 
-        /*fee_asset_types = fee_asset_types.filter(a => {
+        /* TODO uncomment when it comes to feeStatus
+        const {feeStatus} = this.state;
+        function hasFeePoolBalance(id) {
+            if (feeStatus[id] === undefined) return true;
+            return feeStatus[id] && feeStatus[id].hasPoolBalance;
+        }
+
+        function hasBalance(id) {
+            if (feeStatus[id] === undefined) return true;
+            return feeStatus[id] && feeStatus[id].hasBalance;
+        }
+        fee_asset_types = fee_asset_types.filter(a => {
             return hasFeePoolBalance(a) && hasBalance(a);
         });*/
 
-        this.setState({balances: account_balances});
+        this.setState({balances: account_balances, assets: fee_asset_types});
+        this._updateFee(account, this.props.memo, this.props.onChange);
         return fee_asset_types;
     }
 
@@ -254,7 +256,7 @@ class FeeAssetSelector extends DecimalChecker {
                     account={this.props.account}
                     asset_types={this.state.assets.map((asset, i) => ({
                         asset,
-                        fee: 0.1 * i
+                        fee: this.state.fees[asset]
                     }))}
                     current_asset={this.state.fee_asset_id}
                     onChange={this.onAssetChange.bind(this)}
