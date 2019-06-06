@@ -106,12 +106,13 @@ $dark-2: lighten($dark, 60%);
 $dark-3: lighten($dark, 90%);
 
 // Header
-$header-background-color: $primary-dark;
+$header-background-color: $dark;
+$header-shadow: 0 !important;
 $header-item--color: $white;
-$header-item-background-color: $primary-dark;
+$header-item-background-color: $dark;
 $header-item--active--background-color: $primary-dark;
 
-$header-item--active--color: $primary-color;
+$header-item--active--color: $white;
 
 // Tabs (old, not style-guide)
 $tabs-border-size: 1px;
@@ -164,6 +165,7 @@ $header-menu-item--hover--background-color: lighten($primary-dark, 10%);
         $tabs-item--active--border-color,
         $tabs-item--active--background-color,
         $header-background-color,
+        $header-shadow,
         $header-item--color,
         $header-item-background-color,
         $header-item--active--background-color,

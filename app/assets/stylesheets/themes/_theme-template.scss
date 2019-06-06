@@ -22,6 +22,7 @@
     $tabs-item--active--border-color,
     $tabs-item--active--background-color,
     $header-background-color,
+    $header-shadow,
     $header-item--color,
     $header-item-background-color,
     $header-item--active--background-color,
@@ -2177,7 +2178,7 @@
     .header-container {
         background-color: $header-background-color;
 
-        box-shadow: 0 0 7px rgba(0, 0, 0, 0.1) !important;
+        box-shadow: $header-shadow;
 
         z-index: 1;
 
@@ -2192,12 +2193,14 @@
                             fill: $header-item--color !important;
                         }
                         &:hover {
+                            background-color: $header-item--active--background-color !important;
                             color: $header-item--active--color;
                             svg path {
                                 fill: $header-item--active--color !important;
                             }
                         }
                         &.active {
+                            background-color: $header-item--active--background-color !important;
                             color: $header-item--active--color;
                             svg path {
                                 fill: $header-item--active--color !important;

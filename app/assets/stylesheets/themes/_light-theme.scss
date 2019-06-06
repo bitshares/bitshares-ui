@@ -104,6 +104,7 @@ $dark-3: lighten($dark, 90%);
 
 // Header
 $header-background-color: $white;
+$header-shadow: 0 4px 9px 0 #00000015 !important;
 $header-item--color: $dark;
 $header-item-background-color: $white;
 $header-item--active--background-color: $white;
@@ -161,6 +162,7 @@ $header-menu-item--hover--background-color: lighten($primary-color, 40%);
         $tabs-item--active--border-color,
         $tabs-item--active--background-color,
         $header-background-color,
+        $header-shadow,
         $header-item--color,
         $header-item-background-color,
         $header-item--active--background-color,
@@ -228,5 +230,13 @@ $header-menu-item--hover--background-color: lighten($primary-color, 40%);
 
     .change-up {
         font-weight: bold;
+    }
+
+    thead[class*="ant-table-thead"] th {
+        background-color: #2196f3bb !important;
+    }
+    div[class*="ant-table-footer"] {
+        background-color: #2196f3bb !important;
+        color: white;
     }
 }
