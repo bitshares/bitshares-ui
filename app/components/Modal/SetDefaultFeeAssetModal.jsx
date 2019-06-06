@@ -4,19 +4,36 @@ import AssetWrapper from "../../components/Utility/AssetWrapper";
 import {ChainStore} from "bitsharesjs";
 import AccountStore from "stores/AccountStore";
 import {connect} from "alt-react";
-import {Radio, Modal, Checkbox} from "bitshares-ui-style-guide";
+import {Button, Radio, Modal, Checkbox} from "bitshares-ui-style-guide";
 
 class SetDefaultFeeAssetModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             useByDefault: true,
-            selectedAssetId: ""
+            selectedAssetId: null,
+            balances: {}
         };
     }
 
-    shouldComponentUpdate(np) {
-        return np.selectedAssetId !== this.state.selectedAssetId;
+    componentWillReceiveProps(np) {
+        if (np.account && np.asset_types) {
+            const balances = np.account.get("balances").toJS();
+            this.setState({
+                selectedAssetId: np.current_asset
+                    ? np.current_asset
+                    : this.state.selectedAssetId,
+                balances: np.asset_types
+                    .map(assetInfo => assetInfo.asset)
+                    .reduce((result, asset_id) => {
+                        const balanceObject = ChainStore.getObject(
+                            balances[asset_id]
+                        );
+                        result[asset_id] = balanceObject.get("balance");
+                        return result;
+                    }, {})
+            });
+        }
     }
 
     _onSelectedAsset(event) {
@@ -27,14 +44,16 @@ class SetDefaultFeeAssetModal extends React.Component {
 
     _getAssetsRows(assets) {
         return assets
-            .map(asset => ({
-                id: asset.get("id"),
-                asset: asset.get("symbol"),
-                link: `/asset/${asset.get("symbol")}`,
-                balance: 0,
-                fee: 0
+            .map(assetInfo => ({
+                id: assetInfo.asset.get("id"),
+                asset: assetInfo.asset.get("symbol"),
+                link: `/asset/${assetInfo.asset.get("symbol")}`,
+                balance:
+                    assetInfo.balance /
+                    Math.pow(10, assetInfo.asset.get("precision")),
+                fee: assetInfo.fee
             }))
-            .sort((a, b) => a.balance - b.balance)
+            .sort((a, b) => b.balance - a.balance)
             .map(asset => {
                 return (
                     <tr key={asset.id}>
@@ -57,10 +76,19 @@ class SetDefaultFeeAssetModal extends React.Component {
             });
     }
 
+    onSubmit() {
+        this.props.onChange(this.state.selectedAssetId);
+        this.props.close();
+    }
+
     render() {
-        const assets = this.props.asset_types.map(id =>
-            ChainStore.getAsset(id)
-        );
+        const assets = this.state.balances
+            ? this.props.asset_types.map(assetInfo => ({
+                  ...assetInfo,
+                  asset: ChainStore.getAsset(assetInfo.asset),
+                  balance: this.state.balances[assetInfo.asset]
+              }))
+            : [];
         let assetRows = this._getAssetsRows(assets);
 
         return (
@@ -68,6 +96,18 @@ class SetDefaultFeeAssetModal extends React.Component {
                 visible={this.props.show}
                 overlay={true}
                 onCancel={this.props.close}
+                footer={[
+                    <Button
+                        key="submit"
+                        disabled={!this.state.selectedAssetId}
+                        onClick={this.onSubmit.bind(this)}
+                    >
+                        <Translate component="span" content="modal.ok" />
+                    </Button>,
+                    <Button key="cancel" onClick={this.props.close}>
+                        <Translate component="span" content="transfer.cancel" />
+                    </Button>
+                ]}
             >
                 <p>Select asset to pay fee</p>
 
@@ -100,8 +140,10 @@ class SetDefaultFeeAssetModal extends React.Component {
             </Modal>
         );
     }
+
     _setSelectedAssetAsDefault() {
         this.setState({useByDefault: !this.state.useByDefault});
+        // TODO reference settings
     }
 }
 

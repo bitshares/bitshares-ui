@@ -53,6 +53,7 @@ class FeeAssetSelector extends DecimalChecker {
         let {account, main_asset_id} = this.props;
         let feeID = asset_id || this.state.fee_asset_id;
         if (!account) return null;
+
         checkFeeStatusAsync({
             accountID: account.get("id"),
             feeID,
@@ -152,6 +153,7 @@ class FeeAssetSelector extends DecimalChecker {
             return hasFeePoolBalance(a) && hasBalance(a);
         });*/
 
+        this.setState({balances: account_balances});
         return fee_asset_types;
     }
 
@@ -249,7 +251,13 @@ class FeeAssetSelector extends DecimalChecker {
                 <SetDefaultFeeAssetModal
                     className="modal"
                     show={this.state.isModalVisible}
-                    asset_types={this.state.assets}
+                    account={this.props.account}
+                    asset_types={this.state.assets.map((asset, i) => ({
+                        asset,
+                        fee: 0.1 * i
+                    }))}
+                    current_asset={this.state.fee_asset_id}
+                    onChange={this.onAssetChange.bind(this)}
                     close={() => {
                         this.setState({isModalVisible: false});
                     }}
