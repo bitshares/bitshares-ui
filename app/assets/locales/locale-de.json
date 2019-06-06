@@ -293,6 +293,8 @@
             "primary": "Primäreinstellungen",
             "quote": "Kursangabe",
             "quote_name": "Kursangabenname",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Kurzer Name (max 32 Buchstaben)",
             "symbol": "Symbol",
             "to": "An Konto übergeben",
@@ -396,7 +398,8 @@
             "empty_white_by": "Keine Konten haben %(account)s weißgelistet.",
             "title": "Weißliste",
             "white_by": "Weißgelistet durch",
-            "whitelist_authorities": "Weißlisten Verwalter"
+            "whitelist_authorities": "Weißlisten Verwalter",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -772,6 +775,7 @@
             },
             "not_found": "Die Anlage %(name)s existiert nicht",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Authoritäten der Schwarzliste",
                 "blacklist_markets": "Schwarzgelistete Märkte",
                 "max_market_fee": "Maximale Marktgebühr",
@@ -829,7 +833,7 @@
                 "current_supply": "Aktuelle Verfügbarkeit",
                 "issuer": "Herausgeber",
                 "market_fee": "Marktgebühr",
-                "max_market_fee": "Maximale Marktgebühr",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Stealth Verfügbarkeit"
             },
             "title": "Anlagen",
@@ -837,7 +841,9 @@
                 "blacklist_authorities": "Schwarzlisten Bevollmächtigte",
                 "blacklist_markets": "Markt Schwarzliste",
                 "enable_flag": "Der Weißlistenschalter muss aktiviert werden, damit Bevollmächtigte eingetragen werden können",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Weißlisten Bevollmächtigte",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Markt Weißliste"
             }
         },
@@ -1949,8 +1955,8 @@
         "htlc": {
             "actions": "Actions",
             "amount": "Amount",
-            "claim": "Claim",
             "create_htlc": "Create HTLC",
+            "custom": "Custom",
             "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "enter_secret_preimage": "Enter secret preimage",
             "expiration": "Expiration",
@@ -1963,12 +1969,15 @@
             "expires": "Expires",
             "extend": "Extend",
             "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
             "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
             "recipient": "Recipient",
+            "redeem": "Redeem",
             "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",

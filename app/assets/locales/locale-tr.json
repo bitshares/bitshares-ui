@@ -293,6 +293,8 @@
             "primary": "Ana ayarlar",
             "quote": "Miktar",
             "quote_name": "Dijital Varlık",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Kısa ad (maksimum 32 harf)",
             "symbol": "Sembol",
             "to": "Hesaba çıkar",
@@ -396,7 +398,8 @@
             "empty_white_by": "%(account)s adlı hesap hiçbir izin listesinde değil.",
             "title": "İzin Listesi",
             "white_by": "İzin listesine alan",
-            "whitelist_authorities": "Whitelist authority"
+            "whitelist_authorities": "Whitelist authority",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -766,6 +769,7 @@
             },
             "not_found": "%(name)s diye bir dijital varlık mevcut değil",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Kara liste yetkilileri",
                 "blacklist_markets": "Kara listeli piyasalar",
                 "max_market_fee": "Maksimum piyasa ücreti",
@@ -823,7 +827,7 @@
                 "current_supply": "Mevcut Arz",
                 "issuer": "İhraç Eden",
                 "market_fee": "Piyasa ücreti",
-                "max_market_fee": "Maksimum piyasa ücreti",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Gizli arz"
             },
             "title": "Aktif",
@@ -831,7 +835,9 @@
                 "blacklist_authorities": "Blacklist authorities",
                 "blacklist_markets": "Market blacklist",
                 "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Whitelist authorities",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Market whitelist"
             }
         },
@@ -1943,8 +1949,8 @@
         "htlc": {
             "actions": "Actions",
             "amount": "Amount",
-            "claim": "Claim",
             "create_htlc": "Create HTLC",
+            "custom": "Custom",
             "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "enter_secret_preimage": "Enter secret preimage",
             "expiration": "Expiration",
@@ -1957,12 +1963,15 @@
             "expires": "Expires",
             "extend": "Extend",
             "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
             "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
             "recipient": "Recipient",
+            "redeem": "Redeem",
             "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",

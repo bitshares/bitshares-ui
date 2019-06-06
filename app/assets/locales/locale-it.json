@@ -293,6 +293,8 @@
             "primary": "Impostazioni principali",
             "quote": "Quantità asset quotato",
             "quote_name": "Asset quotato",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Nome breve (massimo 32 caratteri)",
             "symbol": "Simbolo",
             "to": "Emetti nell'account",
@@ -396,7 +398,8 @@
             "empty_white_by": "Nessun account ha messo %(account)s in whitelist.",
             "title": "Whitelist",
             "white_by": "Messo in whitelist da",
-            "whitelist_authorities": "Autorità whitelist"
+            "whitelist_authorities": "Autorità whitelist",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -766,6 +769,7 @@
             },
             "not_found": "L'asset %(name)s non esiste",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Autorità blacklist",
                 "blacklist_markets": "Mercati in blacklist",
                 "max_market_fee": "Massima commissione di mercato",
@@ -823,7 +827,7 @@
                 "current_supply": "Disponibilità corrente",
                 "issuer": "Erogatore",
                 "market_fee": "Commissione di mercato",
-                "max_market_fee": "Massima commissione di mercato",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Disponibilità nascosta"
             },
             "title": "Asset",
@@ -831,7 +835,9 @@
                 "blacklist_authorities": "Autorita blacklist",
                 "blacklist_markets": "Blacklist mercato",
                 "enable_flag": "Il flag 'whitelist' deve essere abilitato per impostare le autorità whitelist",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Autorità whitelist",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Whitelist mercato"
             }
         },
@@ -1943,8 +1949,8 @@
         "htlc": {
             "actions": "Actions",
             "amount": "Amount",
-            "claim": "Claim",
             "create_htlc": "Create HTLC",
+            "custom": "Custom",
             "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "enter_secret_preimage": "Enter secret preimage",
             "expiration": "Expiration",
@@ -1957,12 +1963,15 @@
             "expires": "Expires",
             "extend": "Extend",
             "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
             "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
             "recipient": "Recipient",
+            "redeem": "Redeem",
             "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",

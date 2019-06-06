@@ -293,6 +293,8 @@
             "primary": "Configuraciones primarias",
             "quote": "Cita cantidad de activos",
             "quote_name": "Cita activos",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Nombre corto (max 32 caracteres)",
             "symbol": "Simbolo",
             "to": "Emitir a la cuenta",
@@ -396,7 +398,8 @@
             "empty_white_by": "ninguna cuenta ha sido incluida en la lista blanca %(account)s.",
             "title": "Lista blanca",
             "white_by": "Incluido en la lista blanca por",
-            "whitelist_authorities": "Autoridad de lista blanca"
+            "whitelist_authorities": "Autoridad de lista blanca",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -772,6 +775,7 @@
             },
             "not_found": "El activo %(name)s no existe",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Autoridades de la lista negra",
                 "blacklist_markets": "Mercados de la lista negra",
                 "max_market_fee": "Comisión de mercado máxima",
@@ -829,7 +833,7 @@
                 "current_supply": "Current supply",
                 "issuer": "Emisor",
                 "market_fee": "Comisión de mercado",
-                "max_market_fee": "Comisión de mercado máxima",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Suministro de sigilo"
             },
             "title": "Activo",
@@ -837,7 +841,9 @@
                 "blacklist_authorities": "autoridades de lista negra",
                 "blacklist_markets": "Lista negra de mercado",
                 "enable_flag": "El indicador de lista blanca debe estar habilitado para establecer autoridades de lista blanca",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Autoridades de lista blanca",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Lista blanca de mercado"
             }
         },
@@ -1949,8 +1955,8 @@
         "htlc": {
             "actions": "Actions",
             "amount": "Amount",
-            "claim": "Claim",
             "create_htlc": "Create HTLC",
+            "custom": "Custom",
             "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "enter_secret_preimage": "Enter secret preimage",
             "expiration": "Expiration",
@@ -1963,12 +1969,15 @@
             "expires": "Expires",
             "extend": "Extend",
             "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
             "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
             "recipient": "Recipient",
+            "redeem": "Redeem",
             "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",

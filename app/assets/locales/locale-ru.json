@@ -293,6 +293,8 @@
             "primary": "Основные настройки",
             "quote": "Количество котируемого актива",
             "quote_name": "Котируемый актив",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Короткое имя (максимум 32 символа)",
             "symbol": "Символ",
             "to": "Эмитировать на аккаунт",
@@ -396,7 +398,8 @@
             "empty_white_by": "Ни один аккаунт не добавил в белый список %(account)s.",
             "title": "Белый список",
             "white_by": "Добавлен в белый список ",
-            "whitelist_authorities": "Источник белого списка"
+            "whitelist_authorities": "Источник белого списка",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -772,6 +775,7 @@
             },
             "not_found": "Актив %(name)s не существует",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Поставщики чёрного списка",
                 "blacklist_markets": "Рынки черного списка",
                 "max_market_fee": "Максимальная комиссия рынка",
@@ -829,7 +833,7 @@
                 "current_supply": "Текущее предложение",
                 "issuer": "Эмитент",
                 "market_fee": "Рыночная комиссия",
-                "max_market_fee": "Максимальная рыночная комиссия",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Стелс предложение"
             },
             "title": "Актив",
@@ -837,7 +841,9 @@
                 "blacklist_authorities": "Поставщики чёрного списка",
                 "blacklist_markets": "Чёрный список рынков",
                 "enable_flag": "Чтобы задать поставщиков белого списка, нужно активировать флажок белого списка",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Поставщики белого списка",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Белый список рынков"
             }
         },
@@ -1949,8 +1955,8 @@
         "htlc": {
             "actions": "Actions",
             "amount": "Amount",
-            "claim": "Claim",
             "create_htlc": "Create HTLC",
+            "custom": "Custom",
             "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "enter_secret_preimage": "Enter secret preimage",
             "expiration": "Expiration",
@@ -1963,12 +1969,15 @@
             "expires": "Expires",
             "extend": "Extend",
             "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
             "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
             "recipient": "Recipient",
+            "redeem": "Redeem",
             "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",
