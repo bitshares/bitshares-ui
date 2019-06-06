@@ -108,11 +108,11 @@ $dark-3: lighten($dark, 90%);
 // Header
 $header-background-color: lighten($primary-dark, 10%);
 $header-shadow: 0 2px 9px 0 lighten($primary-dark, 10%) !important;
-$header-item--color: $white;
+$header-item--color: darken($white, 10%);
 $header-item-background-color: lighten($primary-dark, 10%);
 $header-item--active--background-color: lighten($primary-dark, 10%);
 
-$header-item--active--color: $primary-color;
+$header-item--active--color: $link-text-color;
 
 // Tabs (old, not style-guide)
 $tabs-border-size: 1px;
