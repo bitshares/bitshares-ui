@@ -421,7 +421,7 @@
         "check_latency_feedback_country": "最优地区延迟检测 (%(pinged)s/%(totalToPing)s 节点)",
         "check_latency_feedback_last": "最新可连接节点延迟检测（%(pinged)s/%(totalToPing)s节点）",
         "check_latency_feedback_region": "最优区域延迟检测 (%(pinged)s/%(totalToPing)s 节点)",
-        "check_latency_feedback_rest": "剩余节点延迟检测（%(pinged)s/%(totalToPing)s节点）",
+        "check_latency_feedback_rest": "其它节点延迟检测（%(pinged)s/%(totalToPing)s节点）",
         "check_latency_feedback_world": "区域延迟检测（%(pinged)s/%(totalToPing)s节点）",
         "connected": "已连接",
         "connecting": "正在连接 API 服务: %(server)s",
@@ -695,7 +695,7 @@
         "settle_globally_settled": "即时强清",
         "settle_globally_settled_tooltip": "此资产处于全局清算中。你可以以全局清算价格清算此资产（请查看交易标题或资产详情)",
         "settle_offset": "Settlement price offset: %(offset)s%",
-        "settle_orders": "强清单",
+        "settle_orders": "强清挂单",
         "settlement_hint": "你正在准备强制清算{long}。{market_link}当前价格",
         "short": "借贷",
         "show_all_orders": "显示全部%(rowcount)s行挂单",
@@ -793,7 +793,7 @@
                 "maximum_short_squeeze_price": "强平价格(MSSP)",
                 "maximum_short_squeeze_ratio": "强平惩罚比率 (MSSR)",
                 "min_feeds": "最少喂价者",
-                "settlement_price": "强清价",
+                "settlement_price": "喂价",
                 "title": "喂价"
             },
             "price_feed_data": {
@@ -803,11 +803,11 @@
                 "maximum_short_squeeze_ratio": "强平惩罚比率MSSR",
                 "published": "发布时间",
                 "publisher": "发布人",
-                "settlement_price": "强清价",
+                "settlement_price": "喂价",
                 "title": "喂价数据"
             },
             "settlement": {
-                "current_settled": "已被清算量",
+                "current_settled": "已被强清量",
                 "delay": "强清延时",
                 "force_settlement": "强制清算",
                 "gs_auto_revive_price": "自动复活价格（没有/有 竞价）",
@@ -825,7 +825,7 @@
                 "settle_remaining_volume": "剩余可强清量",
                 "settlement_funds": "强清资金",
                 "settlement_funds_collateral_ratio": "强清资金抵押率",
-                "settlement_price": "强清价",
+                "settlement_price": "强清价格",
                 "title": "强制清算"
             },
             "summary": {
@@ -884,7 +884,7 @@
             "op_type": "操作类型",
             "previous": "上一个区块",
             "previous_secret": "上一个密文",
-            "settlement_price": "强清价",
+            "settlement_price": "强清价格",
             "short_limit": "借贷限制",
             "time": "区块生成时间",
             "title": "区块",
@@ -1010,7 +1010,7 @@
             "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
             "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
             "win": "",
-            "xbtsx": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 XBTS 提供的网关服务进行充值提现。"
+            "xbtsx": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by XBTS."
         },
         "balance": "当前余额",
         "balance_asset": "当前 %(asset)s 余额",
@@ -1280,7 +1280,7 @@
         "question_circle": "帮助",
         "reverse_orderbook": "反转订单薄",
         "server": "区块浏览",
-        "settle": "清算",
+        "settle": "强清",
         "share": "关于",
         "shuffle": "切换交易对",
         "text": {
@@ -1450,12 +1450,12 @@
             "header_propose": "提议帐号 <span class=\"send-name\">%(fromName)s</span> 转账"
         },
         "settle": {
-            "amount": "要清算数量",
+            "amount": "要强清数量",
             "delay": "Estimated delay: %(amount)s hours",
             "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
             "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
-            "submit": "清算资产",
-            "title": "请求清算资产 %(asset)s"
+            "submit": "强清资产",
+            "title": "请求强清资产 %(asset)s"
         },
         "withdraw": {
             "address": "提币到地址",
@@ -1540,8 +1540,8 @@
         "asset_global_settle": "{account} 请求以 {price} 的价格进行全局清算 {asset}",
         "asset_issue": "{account} 将 {amount} 发行给 {to}",
         "asset_reserve": "{account} 销毁了 {amount}",
-        "asset_settle": "{account} 请求清算 {amount}",
-        "asset_settle_cancel": "{account} 取消清算 {amount}",
+        "asset_settle": "{account} 请求强清 {amount}",
+        "asset_settle_cancel": "{account} 取消强清 {amount}",
         "asset_settle_instant": "{account} 以 {price}即时强清了 {amount} ",
         "asset_update": "{account} 更新了资产 {asset}",
         "asset_update_feed_producers": "{account} 更新了资产 {asset} 的喂价者",
@@ -1603,7 +1603,7 @@
         "asset_create": "使用账户 {account} 创建资产 %(asset)s",
         "asset_issue": "使用账户 {account} 将 {amount} 发行给 {to}",
         "asset_reserve": "使用账户 {account} 销毁 (reserve){amount}",
-        "asset_settle": "为{account}请求清算资产 {amount} ",
+        "asset_settle": "为{account}请求强清资产 {amount} ",
         "asset_update": "使用账户 {account} 更新资产 {asset}",
         "call_order_update": "将账户 {account} 的 {debtSymbol} 债务调整 {debt}，抵押物调整 {collateral}",
         "changes_to_active": "Changes to active",
@@ -1795,7 +1795,7 @@
         "orderbook_autoscroll": "挂单自动滚动",
         "orderbook_grouping": "挂单分组",
         "orderbook_reverse": "挂单反转",
-        "password": "钱包密码",
+        "password": "密码",
         "passwordLogin": "登录模式",
         "password_text": "修改本地钱包密码。",
         "personal_active": "你仅激活了私人节点, 如果想移除或者修改它,你必须先连接到其它节点.",
@@ -1817,7 +1817,7 @@
         "scrollbars_hide": "缩减滚动栏",
         "show": "显示",
         "showAssetPercent": "在账户页上显示资产/供应量占比",
-        "showSettles": "在深度图中显示强清单",
+        "showSettles": "在深度图中显示强清挂单",
         "skipped": "略过",
         "switch": "切换接入点",
         "testnet_nodes": "测试网",
@@ -1973,7 +1973,7 @@
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
-            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below.",
             "recipient": "Recipient",
             "redeem": "Redeem",
             "redeem_htlc": "Redeem HTLC",
@@ -1998,10 +1998,10 @@
         },
         "timed_transfer": {
             "description": "创建一个在特定时间执行的转账.",
-            "title": "延时转账"
+            "title": "定时转账"
         },
         "voting": {
-            "description": "投票决定区块生产者、理事会成员及工作提案来影响与推动比特股区块链的战略性决策及发展。",
+            "description": "投票决定区块生产者-见证人、理事会成员及工作提案来影响与推动比特股区块链的战略性决策及发展。",
             "title": "投票"
         }
     },
@@ -2017,7 +2017,7 @@
         "bridge": "桥接服务允许充值一些外部资产并迅速交易转换成想要的网关资产.",
         "bridge_TRADE": "BlockTrades 是提供即时资产交易的桥接服务。详情和使用条款请参阅 https://blocktrades.us",
         "buy_min": "你将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
-        "call_limit": "市场中抵押率最低的债仓的平仓价",
+        "call_limit": "抵押率最低的抵押触发平仓的价格。",
         "call_price": "强制平仓触发价。如果喂价低于该价格，债仓将被强制平仓。",
         "close_position": "平仓。你至少需要 %(amount)s %(asset)s 进行平仓",
         "coll_ratio": "债仓抵押率计算公式为：抵押物 * 喂价 / 债务",
@@ -2039,7 +2039,7 @@
         "hide_asset": "从列表中隐藏资产",
         "lack_funds": "没有足够资产执行此操作",
         "latest_price": "市场最新成交价",
-        "legacy_explanation": "隐藏重复提案, 诈骗者一般是那些超过 2 个月没有活跃,但是最近蠢蠢欲动.",
+        "legacy_explanation": "隐藏重复、垃圾提案及开始启动超过2个月没有活跃的提案。",
         "login": "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
         "login-tooltip": {
             "incorrectPassword": {
@@ -2070,7 +2070,7 @@
             }
         },
         "login_required": "请登录选择账户来执行此操作",
-        "margin_price": "这是触发平仓的最大价格。也被称为挤压价格。",
+        "margin_price": "强制平仓在市场上能够成交的最低价格，等于平仓触发价/MSSR。",
         "market_fee": "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s%% 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
         "memo_tip": "您可以在备注里留下可选信息。你可以填入任意信息，但是交易所通常用备注来分辨充值信息。",
         "no_groups_available": "没有可用的分组使用此API服务",
@@ -2083,7 +2083,7 @@
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "此提案由未知账户创建或提议目标为未知账户，此未知账户（不在联系单或白名单中）。警惕诈骗行为并小心检查所有操作。",
         "proxy_remove": "你有一个代理设置，清除输入字段就可以简单移除代理。",
-        "proxy_search": "",
+        "proxy_search": "查找一个账户来作为你的投票代理",
         "registration": {
             "accountModel": "账号模式允许你只需要账户名和密码就可以从任意计算机和浏览器上登录自己的账户。但<strong>你的密码将有可能被暴力破解！因此使用长密码非常重要，密码长度最好在 20 位字符以上！</strong>",
             "accountName": "账户名必须为4到63位字符,必须含有拉丁字母,短划线,数字.",
@@ -2191,7 +2191,7 @@
         "received": "已接收",
         "seller": "卖家",
         "sent": "发送",
-        "settlement_date": "清算时间",
+        "settlement_date": "强清时间",
         "to": " 提取到",
         "transaction_confirmed": "交易已确认",
         "trxTypes": {
@@ -2208,12 +2208,12 @@
             "asset_claim_pool": "申领资产手续费池",
             "asset_create": "创建资产",
             "asset_fund_fee_pool": "注资资产手续费池",
-            "asset_global_settle": "全局资产清算",
+            "asset_global_settle": "全局资产强清",
             "asset_issue": "资产发行",
             "asset_publish_feed": "发布资产喂价",
             "asset_reserve": "销毁资产",
-            "asset_settle": "资产清算",
-            "asset_settle_cancel": "取消资产清算",
+            "asset_settle": "资产强清",
+            "asset_settle_cancel": "取消资产强清",
             "asset_update": "更新资产",
             "asset_update_bitasset": "更新智能货币",
             "asset_update_feed_producers": "更新资产喂价提供者",
@@ -2454,7 +2454,7 @@
         "create_password": "使用密码创建一个账户",
         "create_success": "本地钱包创建成功",
         "create_text": "%(wallet_name)s本地钱包保存在你的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过传输备份文件可以轻松实现钱包的跨浏览器或跨计算机的迁移。",
-        "create_w_a": "创建一个本地钱包来容纳账户",
+        "create_w_a": "创建一个本地钱包来存放账户",
         "create_wallet": "创建新的本地钱包",
         "create_wallet_backup": "从备份创建新钱包",
         "current_pass": "当前密码",
@@ -2469,7 +2469,7 @@
         "done": "完成",
         "dont_ask_for_backup": "不要询问我再次备份",
         "download": "下载",
-        "enter_password": "请输入密码",
+        "enter_password": "请输入钱包密码",
         "existing_password": "当前密码",
         "first_account_paid": "由于这是你的第一个账户，水龙头服务将为你支付账户在区块链上的注册费用。",
         "generated": "生成的密码",
@@ -2514,7 +2514,7 @@
         "ok_done": "好的，打开资产总览",
         "pass_incorrect": "密码错误",
         "pass_length": "密码必须包含至少 %(minLength)s 位字符。理想的密码应为 20 位或更长，并且为数字、字母和特殊符号的组合。",
-        "password": "密码",
+        "password": "钱包密码",
         "password_crucial": "现在就请你将密码记下来，无论是写在纸上、使用密码管理软件或是别的什么可以在你忘记密码时能够取回的方法。这一点至关重要。一旦你忘记密码，你就无法再访问账户，<strong>我们没有办法帮助你恢复</strong>。",
         "password_lose_warning": "<strong>重要：如果你忘记了密码，你将无法登录自己的账户，即不能重置也无法取回密码！确保你已经记住自己的密码或是将其写下安放在合适的地方！</strong>",
         "password_model": "帐号模式",

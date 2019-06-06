@@ -2083,7 +2083,7 @@
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "Esta propuesta fue creada por o se dirige a una cuenta desconocida (no en contactos o lista blanca). Tenga cuidado con los intentos de estafa y revise cuidadosamente las operaciones contenidas.",
         "proxy_remove": "Tiene un conjunto de proxy, para eliminarlo, simplemente borre este campo de entrada",
-        "proxy_search": "",
+        "proxy_search": "Busque una cuenta que se utilizará como su proxy para votar",
         "registration": {
             "accountModel": "La billetera en la nube le permite iniciar sesión en su billetera desde cualquier lugar con solo su nombre de cuenta y contraseña, pero su contraseña es vulnerable a ataques de fuerza bruta, lo que significa que es importante usar una contraseña muy larga, ¡idealmente más de 20 caracteres!",
             "accountName": "El nombre de la cuenta debe contener de 4 a 63 caracteres y debe constar de letras latinas, guiones, dígitos.",
