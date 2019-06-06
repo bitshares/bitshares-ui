@@ -77,7 +77,11 @@ class SetDefaultFeeAssetModal extends React.Component {
     }
 
     onSubmit() {
-        this.props.onChange(this.state.selectedAssetId);
+        const {selectedAssetId, useByDefault} = this.state;
+        this.props.onChange(selectedAssetId);
+        if (useByDefault) {
+            // TODO change state of settings
+        }
         this.props.close();
     }
 
@@ -97,19 +101,33 @@ class SetDefaultFeeAssetModal extends React.Component {
                 overlay={true}
                 onCancel={this.props.close}
                 footer={[
-                    <Button
-                        key="submit"
-                        disabled={!this.state.selectedAssetId}
-                        onClick={this.onSubmit.bind(this)}
-                    >
-                        <Translate component="span" content="modal.ok" />
-                    </Button>,
-                    <Button key="cancel" onClick={this.props.close}>
-                        <Translate component="span" content="transfer.cancel" />
-                    </Button>
+                    <div style={{position: "relative", left: "0px"}}>
+                        <Button key="cancel" onClick={this.props.close}>
+                            <Translate
+                                component="span"
+                                content="transfer.cancel"
+                            />
+                        </Button>
+                        <Button
+                            key="submit"
+                            type="primary"
+                            disabled={!this.state.selectedAssetId}
+                            onClick={this.onSubmit.bind(this)}
+                        >
+                            <Translate
+                                component="span"
+                                content="explorer.asset.fee_pool.use_selected_asset"
+                            />
+                        </Button>
+                    </div>
                 ]}
             >
-                <p>Select asset to pay fee</p>
+                <p>
+                    <Translate
+                        component="span"
+                        content="explorer.asset.fee_pool.select_fee_asset"
+                    />
+                </p>
 
                 <table className="table dashboard-table">
                     <thead>
@@ -135,7 +153,10 @@ class SetDefaultFeeAssetModal extends React.Component {
                     checked={this.state.useByDefault}
                     style={{paddingTop: "30px"}}
                 >
-                    Make selected asset default for paying fees
+                    <Translate
+                        component="span"
+                        content="explorer.asset.fee_pool.use_asset_as_default_fee"
+                    />
                 </Checkbox>
             </Modal>
         );
@@ -143,7 +164,6 @@ class SetDefaultFeeAssetModal extends React.Component {
 
     _setSelectedAssetAsDefault() {
         this.setState({useByDefault: !this.state.useByDefault});
-        // TODO reference settings
     }
 }
 

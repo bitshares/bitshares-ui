@@ -749,7 +749,10 @@
                 "pool_balance": "Pool balance",
                 "pool_text": "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Fee Pool",
-                "unclaimed_issuer_income": "Unclaimed issuer income"
+                "unclaimed_issuer_income": "Unclaimed issuer income",
+                "use_selected_asset": "Use selected asset",
+                "select_fee_asset": "Select asset to pay fee",
+                "use_asset_as_default_fee": "Make selected asset default for paying fees"
             },
             "feed_producer": "Feed producer",
             "feed_producer_text": "Approved feed producers may publish a new feed using the form below:",
