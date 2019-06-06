@@ -2,6 +2,31 @@
 @import "./../style-guide-fixes";
 
 @mixin theme(
+    $header-menu--active--icon-background,
+    $header-menu--active--box-shadow,
+    $header-menu-background-color,
+    $header-menu-item--hover--background-color,
+    $selector-active-border-color,
+    $selector-active-text-color,
+    $selector-border-color,
+    $selector-text-color,
+    $tabs-content-background-color,
+    $tabs-border-size,
+    $tabs-border-color,
+    $tabs-background-color,
+    $tabs-item-background-color,
+    $tabs-item-color,
+    $tabs-item-border-size,
+    $tabs-item-border-color,
+    $tabs-item--active--color,
+    $tabs-item--active--border-color,
+    $tabs-item--active--background-color,
+    $header-background-color,
+    $header-shadow,
+    $header-item--color,
+    $header-item-background-color,
+    $header-item--active--background-color,
+    $header-item--active--color,
     $explorer-tab-content-background-color,
     $tab-content-background-color,
     $primary-text-color,
@@ -63,6 +88,51 @@
     $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
+    ul.header-menu {
+        .divider {
+            margin: 0;
+        }
+        background-color: $header-menu-background-color !important;
+    }
+
+    .menu-dropdown-wrapper {
+        &.active {
+            background: $header-menu--active--icon-background !important;
+            ul.header-menu {
+                box-shadow: $header-menu--active--box-shadow;
+
+                li {
+                    &:hover {
+                        background-color: $header-menu-item--hover--background-color;
+                    }
+                }
+            }
+        }
+    }
+
+    .selector {
+        > * {
+            border: 1px solid $selector-border-color !important;
+            border-right: 0 !important;
+            color: $selector-text-color !important;
+
+            line-height: 1.9rem;
+            &:last-child {
+                border-right: 1px solid $selector-border-color !important;
+            }
+        }
+
+        > *:not(.inactive) {
+            color: $selector-active-text-color !important;
+            border: 1px solid $selector-active-border-color !important;
+        }
+
+        > *:not(.inactive) + * {
+            border-left: 0 !important;
+        }
+    }
+
     .showcases-grid {
         margin: 32px 0;
         display: flex;
@@ -1059,7 +1129,7 @@
         }
     }
     .tab-content {
-        background-color: $tab-content-background-color;
+        background-color: $tabs-content-background-color;
         div.header-selector {
             .filter input {
                 background-color: $bg-color;
@@ -1886,18 +1956,27 @@
     div.account-tabs {
         > div.service-selector {
             background-color: $bg-color;
+            border-bottom: $tabs-border-size solid $tabs-border-color;
         }
     }
     ul.account-overview {
+        background-color: $tabs-background-color;
         li {
             transition: all 0.3s ease 0s;
+
+            background-color: $tabs-item-background-color;
+
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: $tabs-item-border-size solid $tabs-item-border-color;
+
             > a {
-                color: $account-dimmed;
-                background-color: transparent;
+                background-color: $tabs-item-background-color;
+                color: $tabs-item-color;
                 border: none;
                 transition: all 0.3s ease 0s;
                 &:hover {
-                    background-color: lighten($account-header, 4%);
                     color: $account-primarytext;
                 }
                 > div.tab-subtext {
@@ -1906,7 +1985,9 @@
             }
             &.is-active,
             &:hover {
-                background-color: lighten($account-header, 4%);
+                border-bottom: $tabs-item-border-size solid
+                    $tabs-item--active--border-color;
+                background-color: $tabs-item--active--background-color;
                 > a {
                     color: $account-primarytext;
                 }
@@ -2103,7 +2184,41 @@
         background-color: transparent !important;
     }
     .header-container {
-        background-color: $account-background;
+        background-color: $header-background-color;
+
+        box-shadow: $header-shadow;
+
+        z-index: 1;
+
+        .menu-group {
+            .menu-bar {
+                li {
+                    a {
+                        text-decoration: none;
+                        background: $header-item-background-color;
+                        color: $header-item--color;
+                        svg path {
+                            fill: $header-item--color !important;
+                        }
+                        &:hover {
+                            background-color: $header-item--active--background-color !important;
+                            color: $header-item--active--color;
+                            svg path {
+                                fill: $header-item--active--color !important;
+                            }
+                        }
+                        &.active {
+                            background-color: $header-item--active--background-color !important;
+                            color: $header-item--active--color;
+                            svg path {
+                                fill: $header-item--active--color !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         .menu-dropdown-wrapper {
             &.active {
                 background: $panel-bg-color;
