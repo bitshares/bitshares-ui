@@ -2064,6 +2064,7 @@
     }
     .ant-table-placeholder {
         min-height: 130px;
+        z-index: 0;
     }
     div.account-creation {
         border: 1px solid $account-cells;
