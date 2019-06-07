@@ -585,10 +585,19 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             });
 
         // get basic data from blocktrades
+        let headers = {
+            Accept: "application/json"
+        };
+        if (this.state.isUserAuthorized) {
+            headers = {
+                Accept: "application/json",
+                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+            };
+        }
         let coin_types_url = checkUrl + "/coins";
         let coin_types_promise = fetch(coin_types_url, {
             method: "get",
-            headers: new Headers({Accept: "application/json"})
+            headers
         }).then(response => response.json());
 
         let wallet_types_url = checkUrl + "/wallets";
@@ -1101,9 +1110,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         // check api.blocktrades.us/v2
         let checkUrl = this.state.url;
         this.urlConnection(checkUrl, 0);
+        let headers = {
+            Accept: "application/json"
+        };
+        if (this.state.isUserAuthorized) {
+            headers = {
+                Accept: "application/json",
+                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+            };
+        }
         let coin_types_promisecheck = fetch(checkUrl + "/coins", {
             method: "get",
-            headers: new Headers({Accept: "application/json"})
+            headers
         }).then(response => response.json());
         let trading_pairs_promisecheck = fetch(checkUrl + "/trading-pairs", {
             method: "get",
@@ -1226,13 +1244,19 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.state.input_address_requests_in_progress[input_coin_type][
             output_coin_type
         ] = true;
-
+        let headers = {
+            Accept: "application/json"
+        };
+        if (this.state.isUserAuthorized) {
+            headers = {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+            };
+        }
         fetch(this.state.url + "/simple-api/initiate-trade", {
             method: "post",
-            headers: new Headers({
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            }),
+            headers,
             body: body
         }).then(
             reply => {
@@ -1366,7 +1390,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.state.deposit_limit_requests_in_progress[input_coin_type][
             output_coin_type
         ] = true;
-
+        let headers = {
+            "Content-Type": "application/x-www-form-urlencoded"
+        };
+        if (this.state.isUserAuthorized) {
+            headers = {
+                "Content-Type": "application/x-www-form-urlencoded",
+                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+            };
+        }
         let deposit_limit_url =
             this.state.url +
             "/deposit-limits?inputCoinType=" +
@@ -1375,7 +1407,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             encodeURIComponent(output_coin_type);
         let deposit_limit_promise = fetch(deposit_limit_url, {
             method: "get",
-            headers: new Headers({Accept: "application/json"})
+            headers
         }).then(response => response.json());
         deposit_limit_promise.then(
             reply => {
@@ -1440,7 +1472,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         if (deposit_withdraw_or_convert == "conversion") {
             this.setState({failed_calculate_conversion: null});
         }
-
+        let headers = {
+            Accept: "application/json"
+        };
+        if (this.state.isUserAuthorized) {
+            headers = {
+                Accept: "application/json",
+                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+            };
+        }
         let estimate_output_url =
             this.state.url +
             "/estimate-output-amount?inputAmount=" +
@@ -1451,7 +1491,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             encodeURIComponent(output_coin_type);
         let estimate_output_promise = fetch(estimate_output_url, {
             method: "get",
-            headers: new Headers({Accept: "application/json"})
+            headers
         }).then(response => response.json());
         estimate_output_promise.then(
             reply => {
@@ -1563,6 +1603,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             this.setState({failed_calculate_conversion: null});
         }
 
+        let headers = {
+            Accept: "application/json"
+        };
+        if (this.state.isUserAuthorized) {
+            headers = {
+                Accept: "application/json",
+                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+            };
+        }
         let estimate_input_url =
             this.state.url +
             "/estimate-input-amount?outputAmount=" +
@@ -1573,7 +1622,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             encodeURIComponent(output_coin_type);
         let estimate_input_promise = fetch(estimate_input_url, {
             method: "get",
-            headers: new Headers({Accept: "application/json"})
+            headers
         }).then(response => response.json());
         estimate_input_promise.then(
             reply => {
@@ -1848,9 +1897,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     signin() {
         const client_id = "10ecf048-b982-467b-9965-0b0926330869";
         const response_type = "code";
-        const grant_type = "authorization_code";
+        const grant_type = "authorization_code,refresh_token";
         const scope =
-            "openid email profile create_new_mappings view_client_transaction_history";
+            "offline openid email profile create_new_mappings view_client_transaction_history";
         const state = this.makeState(16);
         const redirect_uri = "https://192.168.6.139:9051/deposit-withdraw";
 
