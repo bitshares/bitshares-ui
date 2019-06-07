@@ -145,7 +145,7 @@ export default class SettingsEntry extends React.Component {
 
             case "fee_asset":
                 options = null;
-                value = <FeeAssetSettings key="fee_asset" />;
+                value = true;
                 component = <FeeAssetSettings key="fee_asset_component" />;
                 break;
 

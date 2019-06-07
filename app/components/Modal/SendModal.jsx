@@ -93,8 +93,6 @@ class SendModal extends React.Component {
             propose: false,
             propose_account: "",
             feeAmount: getUninitializedFeeAmount(),
-            // TODO extract ??
-            feeStatus: {},
             maxAmount: false,
             hidden: false
         };
@@ -126,8 +124,6 @@ class SendModal extends React.Component {
                 propose: false,
                 propose_account: "",
                 feeAmount: getUninitializedFeeAmount(),
-                // TODO extract ???
-                feeStatus: {},
                 maxAmount: false,
                 hidden: false
             },
@@ -452,7 +448,7 @@ class SendModal extends React.Component {
             from_name === this.props.passwordAccount;
         let from_error =
             from_account && !from_my_account && !propose ? true : false;
-        // TODO extract
+
         let {asset_types} = this._getAvailableAssets();
         let balance = null;
 
