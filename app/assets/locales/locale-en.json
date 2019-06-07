@@ -772,6 +772,12 @@
                 "whitelist_authorities": "Whitelist authorities",
                 "whitelist_markets": "Whitelist markets"
             },
+            "prediction_market_asset": {
+                "prediction": "Prediction",
+                "tooltip_prediction": "The prediction is a statement defined by the asset owner. If the statement is true, this prediction market asset should be resolved to a settlement price of 1 by the asset owner.",
+                "resolution_date": "Resolution date",
+                "tooltip_resolution_date": "The resolution date is an informal statement when the asset owner intends to resolve this betting market."
+            },
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
