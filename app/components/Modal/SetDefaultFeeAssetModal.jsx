@@ -1,10 +1,12 @@
 import React from "react";
+import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import AssetWrapper from "../../components/Utility/AssetWrapper";
 import SettingsActions from "actions/SettingsActions";
 import {ChainStore, FetchChain} from "bitsharesjs";
 import {connect} from "alt-react";
-import {Button, Radio, Modal, Checkbox} from "bitshares-ui-style-guide";
+import {Link} from "react-router-dom";
+import {Table, Button, Radio, Modal, Checkbox} from "bitshares-ui-style-guide";
 import SettingsStore from "../../stores/SettingsStore";
 import AccountStore from "../../stores/AccountStore";
 
@@ -56,39 +58,15 @@ class SetDefaultFeeAssetModal extends React.Component {
     }
 
     _getAssetsRows(assets) {
-        return assets
-            .map(assetInfo => ({
-                id: assetInfo.asset.get("id"),
-                asset: assetInfo.asset.get("symbol"),
-                link: `/asset/${assetInfo.asset.get("symbol")}`,
-                balance:
-                    assetInfo.balance /
-                    Math.pow(10, assetInfo.asset.get("precision")),
-                fee: assetInfo.fee
-            }))
-            .sort((a, b) => b.balance - a.balance)
-            .map(asset => {
-                return (
-                    <tr key={asset.id}>
-                        <td style={{textAlign: "center"}}>
-                            <Radio
-                                onChange={this._onSelectedAsset.bind(this)}
-                                checked={
-                                    this.state.selectedAssetId === asset.id
-                                }
-                                value={asset.id}
-                            />
-                        </td>
-                        <td style={{textAlign: "left"}}>
-                            <a href={asset.link}>{asset.asset}</a>
-                        </td>
-                        <td style={{textAlign: "right"}}>{asset.balance}</td>
-                        {this.props.displayFees ? (
-                            <td style={{textAlign: "right"}}>{asset.fee}</td>
-                        ) : null}
-                    </tr>
-                );
-            });
+        return assets.map(assetInfo => ({
+            id: assetInfo.asset.get("id"),
+            asset: assetInfo.asset.get("symbol"),
+            link: `/asset/${assetInfo.asset.get("symbol")}`,
+            balance:
+                assetInfo.balance /
+                Math.pow(10, assetInfo.asset.get("precision")),
+            fee: assetInfo.fee
+        }));
     }
 
     onSubmit() {
@@ -101,6 +79,43 @@ class SetDefaultFeeAssetModal extends React.Component {
             });
         }
         this.props.close();
+    }
+
+    _getColumns() {
+        const columns = [
+            {
+                key: "id",
+                title: "",
+                render: asset => (
+                    <Radio
+                        onChange={this._onSelectedAsset.bind(this)}
+                        checked={this.state.selectedAssetId === asset.id}
+                        value={asset.id}
+                    />
+                )
+            },
+            {
+                key: "asset",
+                title: counterpart.translate("account.asset"),
+                align: "left",
+                render: asset => <Link to={asset.link}>{asset.asset}</Link>
+            },
+            {
+                key: "balance",
+                title: counterpart.translate("exchange.balance"),
+                align: "right",
+                render: asset => <span>{asset.balance}</span>
+            }
+        ];
+        if (this.props.displayFees) {
+            columns.push({
+                key: "fee",
+                title: counterpart.translate("account.transactions.fee"),
+                align: "right",
+                render: asset => <span>{asset.fee}</span>
+            });
+        }
+        return columns;
     }
 
     render() {
@@ -116,64 +131,45 @@ class SetDefaultFeeAssetModal extends React.Component {
                       balance: this.state.balances[asset_id]
                   }))
             : [];
-        let assetRows = this._getAssetsRows(assets);
-
+        let dataSource = this._getAssetsRows(assets);
+        const footer = (
+            <div style={{position: "relative", left: "0px"}}>
+                <Button key="cancel" onClick={this.props.close}>
+                    <Translate component="span" content="transfer.cancel" />
+                </Button>
+                <Button
+                    key="submit"
+                    type="primary"
+                    disabled={!this.state.selectedAssetId}
+                    onClick={this.onSubmit.bind(this)}
+                >
+                    <Translate
+                        component="span"
+                        content="explorer.asset.fee_pool.use_selected_asset"
+                    />
+                </Button>
+            </div>
+        );
         return (
             <Modal
                 visible={this.props.show}
                 overlay={true}
                 onCancel={this.props.close}
-                footer={[
-                    <div style={{position: "relative", left: "0px"}}>
-                        <Button key="cancel" onClick={this.props.close}>
-                            <Translate
-                                component="span"
-                                content="transfer.cancel"
-                            />
-                        </Button>
-                        <Button
-                            key="submit"
-                            type="primary"
-                            disabled={!this.state.selectedAssetId}
-                            onClick={this.onSubmit.bind(this)}
-                        >
-                            <Translate
-                                component="span"
-                                content="explorer.asset.fee_pool.use_selected_asset"
-                            />
-                        </Button>
-                    </div>
-                ]}
-                key="wrtfsadfs"
+                title={counterpart.translate(
+                    "explorer.asset.fee_pool.select_fee_asset"
+                )}
+                footer={[footer]}
             >
-                <p>
-                    <Translate
-                        component="span"
-                        content="explorer.asset.fee_pool.select_fee_asset"
-                    />
-                </p>
+                <Table
+                    columns={this._getColumns(this.props.displayFees)}
+                    pagination={{
+                        hideOnSinglePage: true,
+                        pageSize: 20
+                    }}
+                    dataSource={dataSource}
+                    footer={null}
+                />
 
-                <table className="table dashboard-table">
-                    <thead>
-                        <tr>
-                            <th style={{width: "10px"}} />
-                            <th style={{textAlign: "left"}}>
-                                <Translate content="account.asset" />
-                            </th>
-                            <th style={{textAlign: "right"}}>
-                                <Translate content="exchange.balance" />
-                            </th>
-                            {this.props.displayFees ? (
-                                <Translate
-                                    component="th"
-                                    content="account.transactions.fee"
-                                    style={{textAlign: "right"}}
-                                />
-                            ) : null}
-                        </tr>
-                    </thead>
-                    <tbody>{assetRows}</tbody>
-                </table>
                 <Checkbox
                     onClick={this._setSelectedAssetAsDefault.bind(this)}
                     disabled={this.props.forceDefault}
