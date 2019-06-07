@@ -9,6 +9,7 @@ import {Radio, Tooltip, Button, Form} from "bitshares-ui-style-guide";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import {ChainStore} from "bitsharesjs";
 import {Asset, Price} from "../../lib/common/MarketClasses";
+import assetUtils from "../../lib/common/asset_utils";
 
 class AssetResolvePrediction extends React.Component {
     static propTypes = {
@@ -100,6 +101,10 @@ class AssetResolvePrediction extends React.Component {
             asset.bitasset.options.short_backing_asset
         );
 
+        let description = assetUtils.parseDescription(
+            asset.options.description
+        );
+
         return (
             <div>
                 <Form
@@ -107,6 +112,30 @@ class AssetResolvePrediction extends React.Component {
                     className="full-width"
                     layout="vertical"
                 >
+                    <div>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "explorer.asset.prediction_market_asset.tooltip_prediction"
+                            )}
+                            placement={"topLeft"}
+                        >
+                            <Translate content="explorer.asset.prediction_market_asset.prediction" />
+                            {": "}
+                            <p>{description.condition}</p>
+                        </Tooltip>
+                    </div>
+                    <div>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "explorer.asset.prediction_market_asset.tooltip_resolution_date"
+                            )}
+                            placement={"topLeft"}
+                        >
+                            <Translate content="explorer.asset.prediction_market_asset.resolution_date" />
+                            {": "}
+                            <p>{description.expiry}</p>
+                        </Tooltip>
+                    </div>
                     <Radio.Group
                         onChange={this.onChangeRadio.bind(this)}
                         value={this.state.globalSettlementPrice}
@@ -115,13 +144,13 @@ class AssetResolvePrediction extends React.Component {
                             value={1}
                             disabled={this.state.customPrice ? true : undefined}
                         >
-                            <Translate content="settings.yes" />
+                            <Translate content="boolean.true" />
                         </Radio>
                         <Radio
                             value={0}
                             disabled={this.state.customPrice ? true : undefined}
                         >
-                            <Translate content="settings.no" />
+                            <Translate content="boolean.false" />
                         </Radio>
                         <Radio
                             value={
