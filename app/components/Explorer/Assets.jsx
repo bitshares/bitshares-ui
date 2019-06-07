@@ -14,8 +14,9 @@ import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
-import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
+import {Radio, Table, Select, Icon} from "bitshares-ui-style-guide";
 import {List} from "antd";
+import SearchInput from "../Utility/SearchInput";
 
 let accountStorage = new ls("__graphene__");
 
@@ -440,12 +441,16 @@ class Assets extends React.Component {
                                         <Icon type="loading" />
                                     ) : null}
                                 </span>
-                                <Input
+                                <SearchInput
                                     placeholder={"Filter..."}
                                     value={this.state.filterSearch}
                                     style={{width: "200px"}}
                                     onChange={this.handleFilterChange}
-                                    addonAfter={<Icon type="search" />}
+                                    onClear={() =>
+                                        this.handleFilterChange({
+                                            target: {value: ""}
+                                        })
+                                    }
                                 />
                                 <Radio.Group
                                     value={this.state.activeFilter}

@@ -35,7 +35,8 @@ class Settings extends React.Component {
             "showSettles",
             "walletLockTimeout",
             "themes",
-            "showAssetPercent"
+            "showAssetPercent",
+            "viewOnlyMode"
         ];
         // disable that the user can change login method if only one is allowed
         if (getAllowedLogins().length > 1) general.push("passwordLogin");
@@ -153,6 +154,7 @@ class Settings extends React.Component {
         if (getFaucet().show) menuEntries.push("faucet_address");
 
         menuEntries.push("reset");
+        menuEntries.push("viewOnlyMode");
 
         return menuEntries;
     }
@@ -259,6 +261,7 @@ class Settings extends React.Component {
             case "showSettles":
             case "showAssetPercent":
             case "passwordLogin":
+            case "viewOnlyMode":
                 let reference = defaults[setting][0];
                 if (reference.translate) reference = reference.translate;
                 SettingsActions.changeSetting({

@@ -13,7 +13,7 @@ import AssetName from "../Utility/AssetName";
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
-import { DatePicker } from "antd";
+import {DatePicker} from "antd";
 import moment from "moment";
 import Icon from "../Icon/Icon";
 import SettleModal from "../Modal/SettleModal";
@@ -207,7 +207,7 @@ class BuySell extends React.Component {
             hideHeader,
             verticalOrderForm
         } = this.props;
-        const { expirationCustomTime } = this.props;
+        const {expirationCustomTime} = this.props;
 
         let clientWidth = this.refs.order_form
             ? this.refs.order_form.clientWidth
@@ -577,17 +577,19 @@ class BuySell extends React.Component {
         let expirationTip;
 
         if (this.props.expirationType !== "SPECIFIC") {
-            expirationTip = this.props.expirations[this.props.expirationType]
-                .get();
+            expirationTip = this.props.expirations[
+                this.props.expirationType
+            ].get();
         }
 
         const expirationsOptionsList = Object.keys(this.props.expirations).map(
             key => (
                 <option value={key} key={key}>
-                    {key === "SPECIFIC" && expirationCustomTime !== "Specific" ?
-                        moment(expirationCustomTime)
-                            .format("Do MMM YYYY hh:mm A") :
-                        this.props.expirations[key].title}
+                    {key === "SPECIFIC" && expirationCustomTime !== "Specific"
+                        ? moment(expirationCustomTime).format(
+                              "Do MMM YYYY hh:mm A"
+                          )
+                        : this.props.expirations[key].title}
                 </option>
             )
         );
@@ -1126,11 +1128,13 @@ class BuySell extends React.Component {
                                         showTime
                                         showToday={false}
                                         disabledDate={current =>
-                                            current < moment().add(59, "minutes")}
+                                            current <
+                                            moment().add(59, "minutes")
+                                        }
                                         value={
-                                            expirationCustomTime !== "Specific" ?
-                                                expirationCustomTime :
-                                                moment().add(1, "hour")
+                                            expirationCustomTime !== "Specific"
+                                                ? expirationCustomTime
+                                                : moment().add(1, "hour")
                                         }
                                         onChange={
                                             this.props.onExpirationCustomChange
@@ -1143,8 +1147,9 @@ class BuySell extends React.Component {
                                         onBlur={this.onExpirationSelectBlur}
                                         data-tip={
                                             expirationTip &&
-                                            moment(expirationTip)
-                                                .format("Do MMM YYYY hh:mm A")
+                                            moment(expirationTip).format(
+                                                "Do MMM YYYY hh:mm A"
+                                            )
                                         }
                                         value={this.props.expirationType}
                                     >

@@ -18,7 +18,7 @@ class Icon extends React.Component {
     }
 
     render() {
-        let classes = "icon " + this.props.name;
+        let classes = "icon ";
         if (this.props.size) {
             classes += " icon-" + this.props.size;
         }

@@ -1,6 +1,7 @@
 import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 import {Tooltip} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 export const HtlcRedeem = ({op, changeColor}) => {
     changeColor("success");

@@ -1192,15 +1192,19 @@ class Header extends React.Component {
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <AccountBrowsingMode location={this.props.location} />
+                    <AccountBrowsingMode
+                        history={this.props.history}
+                        location={this.props.location}
+                    />
                     <div>
                         <div className="text account-name">
                             <span onClick={this._toggleAccountDropdownMenu}>
                                 {currentAccount}
                             </span>
                             <AccountBrowsingMode
+                                history={this.props.history}
                                 location={this.props.location}
-                                usernameViewIcon={true}
+                                usernameViewIcon
                             />
                         </div>
                         {walletBalance}

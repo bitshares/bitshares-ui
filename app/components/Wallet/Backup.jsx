@@ -87,12 +87,12 @@ class BackupRestore extends Component {
         let restored = has_new_wallet;
         const wallet_types = (
             <Link to="/help/introduction/wallets">
-                ({counterpart.translate("wallet.wallet_types")})
+                {counterpart.translate("wallet.wallet_types")}
             </Link>
         );
         const backup_types = (
             <Link to="/help/introduction/backups">
-                ({counterpart.translate("wallet.backup_types")})
+                {counterpart.translate("wallet.backup_types")}
             </Link>
         );
 
