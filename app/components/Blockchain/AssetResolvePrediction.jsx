@@ -52,18 +52,18 @@ class AssetResolvePrediction extends React.Component {
     onSubmit() {
         const {asset, account} = this.props;
 
-        let quote = new Asset({
+        let base = new Asset({
             real: this.state.globalSettlementPrice,
             asset_id: this.props.asset.id,
             precision: this.props.asset.precision
         });
-        let baseAsset = ChainStore.getAsset(
+        let quoteAsset = ChainStore.getAsset(
             asset.bitasset.options.short_backing_asset
         );
-        let base = new Asset({
+        let quote = new Asset({
             real: 1,
             asset_id: this.props.asset.bitasset.options.short_backing_asset,
-            precision: baseAsset.get("precision")
+            precision: quoteAsset.get("precision")
         });
 
         let price = new Price({
@@ -140,10 +140,10 @@ class AssetResolvePrediction extends React.Component {
                         label="explorer.asset.price_feed.global_settlement_price"
                         amount={this.state.globalSettlementPrice}
                         onChange={this.onChange.bind(this)}
-                        asset={asset.id}
-                        base={base.get("symbol")}
+                        asset={base.get("id")}
+                        base={asset.symbol}
                         isPrice
-                        assets={[asset.id]}
+                        assets={[base.get("id")]}
                         placeholder="0.0"
                         style={{
                             width: "100%"

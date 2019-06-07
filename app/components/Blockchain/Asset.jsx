@@ -24,6 +24,8 @@ import AssetPublishFeed from "./AssetPublishFeed";
 import AssetResolvePrediction from "./AssetResolvePrediction";
 import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
+import {Tooltip} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class AssetFlag extends React.Component {
     render() {
@@ -339,6 +341,9 @@ class Asset extends React.Component {
         var issuer = ChainStore.getObject(asset.issuer, false, false);
         var issuerName = issuer ? issuer.get("name") : "";
 
+        let isPrediction =
+            "bitasset" in asset && asset.bitasset.is_prediction_market;
+
         // Add <a to any links included in the description
         let description = assetUtils.parseDescription(
             asset.options.description
@@ -357,9 +362,9 @@ class Asset extends React.Component {
         let preferredMarket = description.market
             ? description.market
             : core_asset
-            ? core_asset.get("symbol")
-            : "BTS";
-        if ("bitasset" in asset && asset.bitasset.is_prediction_market) {
+                ? core_asset.get("symbol")
+                : "BTS";
+        if (isPrediction) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
             );
@@ -386,10 +391,12 @@ class Asset extends React.Component {
                     section="summary"
                     symbol={(prefix || "") + name}
                     description={desc}
+                    prediction={"asdsad"}
                     issuer={issuerName}
                     hide_issuer="true"
                 />
                 {short_name ? <p>{short_name}</p> : null}
+
                 <Link
                     className="button market-button"
                     to={`/market/${asset.symbol}_${preferredMarket}`}
@@ -412,6 +419,59 @@ class Asset extends React.Component {
         );
 
         let bitNames = Object.keys(flagBooleans);
+
+        let isPrediction =
+            "bitasset" in asset && asset.bitasset.is_prediction_market;
+        let predictionRows = null;
+        if (isPrediction) {
+            let description = assetUtils.parseDescription(
+                asset.options.description
+            );
+            predictionRows = (
+                <React.Fragment>
+                    <tr>
+                        <td>
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "explorer.asset.prediction_market_asset.tooltip_prediction"
+                                )}
+                            >
+                                <Translate content="explorer.asset.prediction_market_asset.prediction" />
+                            </Tooltip>
+                        </td>
+                        <td>
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "explorer.asset.prediction_market_asset.tooltip_prediction"
+                                )}
+                            >
+                                {description.condition}
+                            </Tooltip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "explorer.asset.prediction_market_asset.tooltip_resolution_date"
+                                )}
+                            >
+                                <Translate content="explorer.asset.prediction_market_asset.resolution_date" />
+                            </Tooltip>
+                        </td>
+                        <td>
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "explorer.asset.prediction_market_asset.tooltip_resolution_date"
+                                )}
+                            >
+                                {description.expiry}
+                            </Tooltip>
+                        </td>
+                    </tr>
+                </React.Fragment>
+            );
+        }
 
         var currentSupply = dynamic ? (
             <tr>
@@ -478,6 +538,7 @@ class Asset extends React.Component {
                             </td>
                             <td> {this._assetType(asset)} </td>
                         </tr>
+                        {isPrediction && predictionRows}
                         <tr>
                             <td>
                                 <Translate content="explorer.asset.summary.issuer" />
