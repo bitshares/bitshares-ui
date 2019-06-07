@@ -262,6 +262,8 @@ class FeeAssetSelector extends DecimalChecker {
                         asset,
                         fee: this.state.fees[asset]
                     }))}
+                    displayFees={true}
+                    forceDefault={false}
                     current_asset={this.state.fee_asset_id}
                     onChange={this.onAssetChange.bind(this)}
                     close={() => {

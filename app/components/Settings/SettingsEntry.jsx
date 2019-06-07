@@ -3,6 +3,8 @@ import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import Notify from "notifyjs";
+import FeeAssetSettings from "./FeeAssetSettings";
+
 import {Checkbox, Select, Input, Form} from "bitshares-ui-style-guide";
 
 const FormItem = Form.Item;
@@ -139,6 +141,12 @@ export default class SettingsEntry extends React.Component {
                     </div>
                 );
 
+                break;
+
+            case "fee_asset":
+                options = null;
+                value = <FeeAssetSettings key="fee_asset" />;
+                component = <FeeAssetSettings key="fee_asset_component" />;
                 break;
 
             case "defaultMarkets":

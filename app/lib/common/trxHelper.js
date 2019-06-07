@@ -336,16 +336,11 @@ function checkBalance(amount, sendAsset, feeAmount, balance) {
 }
 
 function shouldPayFeeWithAssetAsync(fromAccount, feeAmount) {
-    /* TODO function does not work properly 
-        since there is no resolve - it always returns falsy value:
-            * undefined - instead true
-            * false - on false
-    */
     if (fromAccount && feeAmount && feeAmount.asset_id === "1.3.0") {
         const balanceID = fromAccount.getIn(["balances", feeAmount.asset_id]);
         return FetchChain("getObject", balanceID).then(balanceObject => {
             const balance = balanceObject.get("balance");
-            if (balance <= feeAmount.amount) return true;
+            return balance <= feeAmount.amount;
         });
     }
     return new Promise(resolve => resolve(false));

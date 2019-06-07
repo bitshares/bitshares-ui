@@ -2,38 +2,50 @@ import React from "react";
 import Translate from "react-translate-component";
 import AssetWrapper from "../../components/Utility/AssetWrapper";
 import SettingsActions from "actions/SettingsActions";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 import {connect} from "alt-react";
 import {Button, Radio, Modal, Checkbox} from "bitshares-ui-style-guide";
 import SettingsStore from "../../stores/SettingsStore";
+import AccountStore from "../../stores/AccountStore";
 
 class SetDefaultFeeAssetModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            useByDefault: false,
+            useByDefault: props.forceDefault ? true : false,
             selectedAssetId: null,
             balances: {}
         };
     }
 
+    _updateStateForAccount(account, current_asset) {
+        const balances = account.get("balances").toJS();
+        this.setState({
+            selectedAssetId: current_asset
+                ? current_asset
+                : this.state.selectedAssetId,
+            balances: Object.keys(balances).reduce((result, asset_id) => {
+                const balanceObject = ChainStore.getObject(balances[asset_id]);
+                result[asset_id] = balanceObject.get("balance");
+                return result;
+            }, {})
+        });
+    }
+
     componentWillReceiveProps(np) {
-        if (np.account && np.asset_types) {
-            const balances = np.account.get("balances").toJS();
-            this.setState({
-                selectedAssetId: np.current_asset
-                    ? np.current_asset
-                    : this.state.selectedAssetId,
-                balances: np.asset_types
-                    .map(assetInfo => assetInfo.asset)
-                    .reduce((result, asset_id) => {
-                        const balanceObject = ChainStore.getObject(
-                            balances[asset_id]
-                        );
-                        result[asset_id] = balanceObject.get("balance");
-                        return result;
-                    }, {})
-            });
+        let account = np.account;
+        if (!np.account) {
+            account = ChainStore.getAccount(np.currentAccount);
+        }
+        if (account) {
+            if (
+                np.asset_types ||
+                !this.state.balances ||
+                account.get("accountName") !== this.props.currentAccount ||
+                selectedAssetId !== np.current_asset
+            ) {
+                this._updateStateForAccount(account, np.current_asset);
+            }
         }
     }
 
@@ -71,7 +83,9 @@ class SetDefaultFeeAssetModal extends React.Component {
                             <a href={asset.link}>{asset.asset}</a>
                         </td>
                         <td style={{textAlign: "right"}}>{asset.balance}</td>
-                        <td style={{textAlign: "right"}}>{asset.fee}</td>
+                        {this.props.displayFees ? (
+                            <td style={{textAlign: "right"}}>{asset.fee}</td>
+                        ) : null}
                     </tr>
                 );
             });
@@ -91,11 +105,16 @@ class SetDefaultFeeAssetModal extends React.Component {
 
     render() {
         const assets = this.state.balances
-            ? this.props.asset_types.map(assetInfo => ({
-                  ...assetInfo,
-                  asset: ChainStore.getAsset(assetInfo.asset),
-                  balance: this.state.balances[assetInfo.asset]
-              }))
+            ? this.props.asset_types
+                ? this.props.asset_types.map(assetInfo => ({
+                      ...assetInfo,
+                      asset: ChainStore.getAsset(assetInfo.asset),
+                      balance: this.state.balances[assetInfo.asset]
+                  }))
+                : Object.keys(this.state.balances).map(asset_id => ({
+                      asset: ChainStore.getAsset(asset_id),
+                      balance: this.state.balances[asset_id]
+                  }))
             : [];
         let assetRows = this._getAssetsRows(assets);
 
@@ -125,6 +144,7 @@ class SetDefaultFeeAssetModal extends React.Component {
                         </Button>
                     </div>
                 ]}
+                key="wrtfsadfs"
             >
                 <p>
                     <Translate
@@ -143,17 +163,20 @@ class SetDefaultFeeAssetModal extends React.Component {
                             <th style={{textAlign: "right"}}>
                                 <Translate content="exchange.balance" />
                             </th>
-                            <Translate
-                                component="th"
-                                content="account.transactions.fee"
-                                style={{textAlign: "right"}}
-                            />
+                            {this.props.displayFees ? (
+                                <Translate
+                                    component="th"
+                                    content="account.transactions.fee"
+                                    style={{textAlign: "right"}}
+                                />
+                            ) : null}
                         </tr>
                     </thead>
                     <tbody>{assetRows}</tbody>
                 </table>
                 <Checkbox
                     onClick={this._setSelectedAssetAsDefault.bind(this)}
+                    disabled={this.props.forceDefault}
                     checked={this.state.useByDefault}
                     style={{paddingTop: "30px"}}
                 >
@@ -188,11 +211,12 @@ SetDefaultFeeAssetModalConnectWrapper = connect(
     SetDefaultFeeAssetModalConnectWrapper,
     {
         listenTo() {
-            return [SettingsStore];
+            return [SettingsStore, AccountStore];
         },
         getProps(props) {
             return {
-                settings: SettingsStore.getState().settings
+                settings: SettingsStore.getState().settings,
+                currentAccount: AccountStore.getState().currentAccount
             };
         }
     }
