@@ -112,7 +112,7 @@
     }
 
     .selector {
-        > * {
+        > .inline-block {
             border: 1px solid $selector-border-color !important;
             border-right: 0 !important;
             color: $selector-text-color !important;
@@ -123,12 +123,12 @@
             }
         }
 
-        > *:not(.inactive) {
+        > *:not(.inactive).inline-block {
             color: $selector-active-text-color !important;
             border: 1px solid $selector-active-border-color !important;
         }
 
-        > *:not(.inactive) + * {
+        > *:not(.inactive).inline-block + * {
             border-left: 0 !important;
         }
     }
