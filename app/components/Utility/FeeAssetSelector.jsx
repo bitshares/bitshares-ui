@@ -10,10 +10,9 @@ import AssetSelect from "./AssetSelect";
 import {ChainStore} from "bitsharesjs";
 import SetDefaultFeeAssetModal from "../Modal/SetDefaultFeeAssetModal";
 import {debounce} from "lodash-es";
-import {
-    checkFeeStatusAsync,
-    shouldPayFeeWithAssetAsync
-} from "common/trxHelper";
+import {connect} from "alt-react";
+import SettingsStore from "../../stores/SettingsStore";
+import {checkFeeStatusAsync} from "common/trxHelper";
 
 // TODO remove duplicated logic against amount selector
 class FeeAssetSelector extends DecimalChecker {
@@ -26,7 +25,8 @@ class FeeAssetSelector extends DecimalChecker {
         onChange: PropTypes.func,
         tabIndex: PropTypes.number,
         scroll_length: PropTypes.number,
-        selectDisabled: PropTypes.bool
+        selectDisabled: PropTypes.bool,
+        settings: PropTypes.any
     };
 
     static defaultProps = {
@@ -37,10 +37,14 @@ class FeeAssetSelector extends DecimalChecker {
 
     constructor(props) {
         super(props);
+
         this.state = {
             assets: [],
             fee_amount: 0,
-            fee_asset_id: "1.3.0",
+            fee_asset_id:
+                ChainStore.assets_by_symbol.get(
+                    props.settings.get("fee_asset")
+                ) || "1.3.0",
             fees: {},
             feeStatus: {},
             isModalVisible: false,
@@ -97,7 +101,7 @@ class FeeAssetSelector extends DecimalChecker {
                     fee_asset_id: fee.asset_id
                 });
             })
-            .catch(err => console.error(err));
+            .catch(err => console.warn(`Failed to check fee status: ${err}`));
     }
 
     componentWillReceiveProps(np, ns) {
@@ -274,4 +278,16 @@ class FeeAssetSelector extends DecimalChecker {
 }
 FeeAssetSelector = AssetWrapper(FeeAssetSelector);
 
-export default FeeAssetSelector;
+export default connect(
+    FeeAssetSelector,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps(props) {
+            return {
+                settings: SettingsStore.getState().settings
+            };
+        }
+    }
+);

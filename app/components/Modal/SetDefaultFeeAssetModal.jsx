@@ -1,16 +1,17 @@
 import React from "react";
 import Translate from "react-translate-component";
 import AssetWrapper from "../../components/Utility/AssetWrapper";
+import SettingsActions from "actions/SettingsActions";
 import {ChainStore} from "bitsharesjs";
-import AccountStore from "stores/AccountStore";
 import {connect} from "alt-react";
 import {Button, Radio, Modal, Checkbox} from "bitshares-ui-style-guide";
+import SettingsStore from "../../stores/SettingsStore";
 
 class SetDefaultFeeAssetModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            useByDefault: true,
+            useByDefault: false,
             selectedAssetId: null,
             balances: {}
         };
@@ -80,7 +81,10 @@ class SetDefaultFeeAssetModal extends React.Component {
         const {selectedAssetId, useByDefault} = this.state;
         this.props.onChange(selectedAssetId);
         if (useByDefault) {
-            // TODO change state of settings
+            SettingsActions.changeSetting({
+                setting: "fee_asset",
+                value: ChainStore.getAsset(selectedAssetId).get("symbol")
+            });
         }
         this.props.close();
     }
@@ -184,11 +188,11 @@ SetDefaultFeeAssetModalConnectWrapper = connect(
     SetDefaultFeeAssetModalConnectWrapper,
     {
         listenTo() {
-            return [AccountStore];
+            return [SettingsStore];
         },
         getProps(props) {
             return {
-                currentAccount: AccountStore.getState().currentAccount
+                settings: SettingsStore.getState().settings
             };
         }
     }

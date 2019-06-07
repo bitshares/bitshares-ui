@@ -1,7 +1,6 @@
 import React from "react";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
-import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
 import Notify from "notifyjs";
 import {Checkbox, Select, Input, Form} from "bitshares-ui-style-guide";
@@ -122,20 +121,21 @@ export default class SettingsEntry extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        {!!value.allow && Notify.needsPermission && (
-                            <a
-                                href="https://goo.gl/zZ7NHY"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="external-link"
-                            >
-                                <Translate
-                                    component="div"
-                                    className="settings--notifications--no-browser-support"
-                                    content="settings.browser_notifications_disabled_by_browser_notify"
-                                />
-                            </a>
-                        )}
+                        {!!value.allow &&
+                            Notify.needsPermission && (
+                                <a
+                                    href="https://goo.gl/zZ7NHY"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="external-link"
+                                >
+                                    <Translate
+                                        component="div"
+                                        className="settings--notifications--no-browser-support"
+                                        content="settings.browser_notifications_disabled_by_browser_notify"
+                                    />
+                                </a>
+                            )}
                     </div>
                 );
 
@@ -178,7 +178,7 @@ export default class SettingsEntry extends React.Component {
                                   `settings.${entry.translate}`
                               )
                             : entry;
-                        if (setting === "unit") {
+                        if (setting === "unit" || setting === "fee_asset") {
                             option = <AssetName name={entry} />;
                         }
                         let key = entry.translate ? entry.translate : entry;

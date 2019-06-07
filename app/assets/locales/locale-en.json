@@ -1735,6 +1735,7 @@
         "enable_wallet": "Enable local wallet",
         "faucet_address": "Faucet",
         "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
+        "fee_asset": "Default fee paying asset",
         "general": "General",
         "general_text": "Adjust the basic settings.",
         "global_settings": "Default Global Settings",
