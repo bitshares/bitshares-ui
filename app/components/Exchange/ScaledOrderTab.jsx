@@ -26,7 +26,7 @@ import {
     preciseMultiply,
     preciseMinus
 } from "../../services/Math";
-import { DatePicker } from "antd";
+import {DatePicker} from "antd";
 
 class ScaledOrderForm extends Component {
     constructor(props) {
@@ -679,17 +679,19 @@ class ScaledOrderForm extends Component {
         let expirationTip;
 
         if (this.props.expirationType !== "SPECIFIC") {
-            expirationTip = this.props.expirations[this.props.expirationType]
-                .get();
+            expirationTip = this.props.expirations[
+                this.props.expirationType
+            ].get();
         }
 
         const expirationsOptionsList = Object.keys(this.props.expirations).map(
             key => (
                 <option value={key} key={key}>
-                    {key === "SPECIFIC" && expirationCustomTime !== "Specific" ?
-                        moment(expirationCustomTime)
-                            .format("Do MMM YYYY hh:mm A") :
-                        this.props.expirations[key].title}
+                    {key === "SPECIFIC" && expirationCustomTime !== "Specific"
+                        ? moment(expirationCustomTime).format(
+                              "Do MMM YYYY hh:mm A"
+                          )
+                        : this.props.expirations[key].title}
                 </option>
             )
         );
@@ -777,24 +779,26 @@ class ScaledOrderForm extends Component {
                                 showTime
                                 showToday={false}
                                 disabledDate={current =>
-                                    current < moment().add(59, "minutes")}
+                                    current < moment().add(59, "minutes")
+                                }
                                 value={
-                                    expirationCustomTime !== "Specific" ?
-                                        expirationCustomTime :
-                                        moment().add(1, "hour")
+                                    expirationCustomTime !== "Specific"
+                                        ? expirationCustomTime
+                                        : moment().add(1, "hour")
                                 }
                                 onChange={this.props.onExpirationCustomChange}
                             />
                             <select
                                 className="cursor-pointer"
-                                style={{ marginTop: "5px" }}
+                                style={{marginTop: "5px"}}
                                 onChange={this.onExpirationSelectChange}
                                 onClick={this.onExpirationSelectClick}
                                 onBlur={this.onExpirationSelectBlur}
                                 data-tip={
                                     expirationTip &&
-                                    moment(expirationTip)
-                                        .format("Do MMM YYYY hh:mm A")
+                                    moment(expirationTip).format(
+                                        "Do MMM YYYY hh:mm A"
+                                    )
                                 }
                                 value={this.props.expirationType}
                             >

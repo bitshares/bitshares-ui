@@ -330,7 +330,7 @@ class AccountOverview extends React.Component {
                                         className="selector inline-block"
                                         style={{
                                             position: "relative",
-                                            top: "6px"
+                                            top: "8px"
                                         }}
                                     >
                                         <div

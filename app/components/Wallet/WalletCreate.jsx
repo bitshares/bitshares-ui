@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, {Component, Fragment} from "react";
 import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import BrainkeyInput from "components/Wallet/BrainkeyInputStyleGuide";
@@ -10,7 +10,7 @@ import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import PropTypes from "prop-types";
 import {getWalletName} from "branding";
-import { Button, Form, Input } from "bitshares-ui-style-guide";
+import {Button, Form, Input} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 
 class CreateNewWallet extends Component {
@@ -166,16 +166,16 @@ class CreateNewWallet extends Component {
                     </div>
                     <PasswordConfirm onValid={this.onPassword.bind(this)} />
                     {has_wallet ? (
-                        <Form.Item
-                            label={counterpart.translate("wallet.name")}
-                        >
+                        <Form.Item label={counterpart.translate("wallet.name")}>
                             <div className="no-overflow">
                                 <section>
                                     <Input
                                         tabIndex={3}
                                         type="text"
                                         id="wallet_public_name"
-                                        defaultValue={this.state.wallet_public_name}
+                                        defaultValue={
+                                            this.state.wallet_public_name
+                                        }
                                     />
                                     <div className="has-error">
                                         {errors.wallet_public_name}
@@ -189,7 +189,9 @@ class CreateNewWallet extends Component {
                         {this.state.custom_brainkey ? (
                             <div>
                                 <Form.Item
-                                    label={counterpart.translate("wallet.brainkey")}
+                                    label={counterpart.translate(
+                                        "wallet.brainkey"
+                                    )}
                                 >
                                     <BrainkeyInput
                                         tabIndex={4}
@@ -214,9 +216,7 @@ class CreateNewWallet extends Component {
                             <Translate content="wallet.create_wallet" />
                         </Button>
 
-                        <Button
-                            onClick={this.onBack.bind(this)}
-                        >
+                        <Button onClick={this.onBack.bind(this)}>
                             <Translate content="wallet.cancel" />
                         </Button>
                     </div>
@@ -236,14 +236,17 @@ class CreateNewWallet extends Component {
     }
 }
 
-CreateNewWallet = connect(CreateNewWallet, {
-    listenTo() {
-        return [WalletManagerStore];
-    },
-    getProps() {
-        return WalletManagerStore.getState();
+CreateNewWallet = connect(
+    CreateNewWallet,
+    {
+        listenTo() {
+            return [WalletManagerStore];
+        },
+        getProps() {
+            return WalletManagerStore.getState();
+        }
     }
-});
+);
 
 class WalletCreate extends Component {
     render() {
@@ -257,12 +260,12 @@ class WalletCreate extends Component {
 const CreateWalletFromBrainkey = props => {
     const wallet_types = (
         <Link to="/help/introduction/wallets">
-            ({counterpart.translate("wallet.wallet_types")})
+            {counterpart.translate("wallet.wallet_types")}
         </Link>
     );
     const backup_types = (
         <Link to="/help/introduction/backups">
-            ({counterpart.translate("wallet.backup_types")})
+            {counterpart.translate("wallet.backup_types")}
         </Link>
     );
 
@@ -273,11 +276,11 @@ const CreateWalletFromBrainkey = props => {
                 <Translate
                     content="settings.restore_brainkey_text"
                     component="p"
-                    style={{ maxWidth: "40rem" }}
+                    style={{maxWidth: "40rem"}}
                 />
                 <Translate
                     component="p"
-                    style={{ paddingBottom: 10 }}
+                    style={{paddingBottom: 10}}
                     wallet={wallet_types}
                     backup={backup_types}
                     content="wallet.read_more"

@@ -7,12 +7,14 @@ import PropTypes from "prop-types";
 class LinkToAccountById extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccountName.isRequired,
-        subpage: PropTypes.string.isRequired
+        subpage: PropTypes.string.isRequired,
+        maxDisplayAccountNameLength: PropTypes.number
     };
 
     static defaultProps = {
         subpage: "overview",
-        autosubscribe: false
+        autosubscribe: false,
+        maxDisplayAccountNameLength: 20
     };
 
     shouldComponentUpdate(nextProps) {
@@ -28,7 +30,8 @@ class LinkToAccountById extends React.Component {
             return <span>{this.props.account.get("id")}</span>;
         }
 
-        const maxDisplayAccountNameLength = 20;
+        const maxDisplayAccountNameLength =
+            this.props.maxDisplayAccountNameLength > 0 ? 20 : Infinity;
 
         return this.props.noLink ? (
             <span>

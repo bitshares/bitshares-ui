@@ -39,10 +39,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- fundPool error ----->",
-                        error
-                    );
+                    console.log("----- fundPool error ----->", error);
                     dispatch(false);
                 });
         };
@@ -67,10 +64,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- fundPool error ----->",
-                        error
-                    );
+                    console.log("----- fundPool error ----->", error);
                     dispatch(false);
                 });
         };
@@ -93,10 +87,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- claimPool error ----->",
-                        error
-                    );
+                    console.log("----- claimPool error ----->", error);
                     dispatch(false);
                 });
         };
@@ -130,10 +121,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:122] ----- collateralBid error ----->",
-                        error
-                    );
+                    console.log("----- collateralBid error ----->", error);
                     dispatch(false);
                 });
         };
@@ -156,10 +144,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- updateOwner error ----->",
-                        error
-                    );
+                    console.log("----- updateOwner error ----->", error);
                     dispatch(false);
                 });
         };
@@ -184,7 +169,7 @@ class AssetActions {
                 })
                 .catch(error => {
                     console.log(
-                        "[AssetActions.js:150] ----- updateFeedProducers error ----->",
+                        "----- updateFeedProducers error ----->",
                         error
                     );
                     dispatch(false);
@@ -212,10 +197,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- claimFees error ----->",
-                        error
-                    );
+                    console.log("----- claimFees error ----->", error);
                     dispatch(false);
                 });
         };
@@ -280,8 +262,6 @@ class AssetActions {
         let max_market_fee = new big(createObject.max_market_fee || 0)
             .times(precision)
             .toString();
-        // console.log("max_supply:", max_supply);
-        // console.log("max_market_fee:", max_market_fee);
 
         let corePrecision = utils.get_asset_precision(
             ChainStore.getAsset(cer.base.asset_id).get("precision")
@@ -316,7 +296,10 @@ class AssetActions {
                 whitelist_markets: [],
                 blacklist_markets: [],
                 description: description,
-                extensions: null
+                extensions: {
+                    reward_percent: createObject.reward_percent * 100 || 0,
+                    whitelist_market_fee_sharing: []
+                }
             },
             is_prediction_market: is_prediction_market,
             extensions: null
@@ -335,10 +318,7 @@ class AssetActions {
                     dispatch(true);
                 })
                 .catch(error => {
-                    console.log(
-                        "[AssetActions.js:150] ----- createAsset error ----->",
-                        error
-                    );
+                    console.log("----- createAsset error ----->", error);
                     dispatch(false);
                 });
         };
@@ -395,7 +375,15 @@ class AssetActions {
             let cr_base_amount = new big(core_exchange_rate.base.amount)
                 .times(cr_base_precision)
                 .toString();
-            console.log("auths:", auths);
+
+            let extensions = asset.getIn(["options", "extensions"]).toJS();
+            if (update.reward_percent !== undefined) {
+                extensions.reward_percent = update.reward_percent * 100;
+            }
+            if (auths.whitelist_market_fee_sharing) {
+                extensions.whitelist_market_fee_sharing = auths.whitelist_market_fee_sharing.toJS();
+            }
+
             let updateObject = {
                 fee: {
                     amount: 0,
@@ -416,7 +404,7 @@ class AssetActions {
                     blacklist_authorities: auths.blacklist_authorities.toJS(),
                     whitelist_markets: auths.whitelist_markets.toJS(),
                     blacklist_markets: auths.blacklist_markets.toJS(),
-                    extensions: asset.getIn(["options", "extensions"]),
+                    extensions: extensions,
                     core_exchange_rate: {
                         quote: {
                             amount: cr_quote_amount,
@@ -496,15 +484,12 @@ class AssetActions {
 
         return WalletDb.process_transaction(tr, null, true)
             .then(result => {
-                // console.log("asset create result:", result);
+                console.log("asset create result:", result);
                 // this.dispatch(account_id);
                 return true;
             })
             .catch(error => {
-                console.log(
-                    "[AssetActions.js:150] ----- updateAsset error ----->",
-                    error
-                );
+                console.log("----- updateAsset error ----->", error);
                 return false;
             });
     }
@@ -626,10 +611,7 @@ class AssetActions {
                 })
                 .catch(error => {
                     dispatch(false);
-                    console.log(
-                        "[AssetActions.js:150] ----- reserveAsset error ----->",
-                        error
-                    );
+                    console.log("----- reserveAsset error ----->", error);
                     return false;
                 });
         };
