@@ -14,7 +14,6 @@ import {connect} from "alt-react";
 import SettingsStore from "../../stores/SettingsStore";
 import {checkFeeStatusAsync} from "common/trxHelper";
 
-// TODO remove duplicated logic against amount selector
 class FeeAssetSelector extends DecimalChecker {
     static propTypes = {
         label: PropTypes.string, // a translation key for the label
@@ -194,15 +193,6 @@ class FeeAssetSelector extends DecimalChecker {
             </div>
         ) : null;
 
-        let addonAfter = null;
-
-        /*if (this.props.isPrice) {
-            addonAfter = (
-                <div>
-                    {this._getAsset().get("symbol")}/{this.props.base}
-                </div>
-            );
-        }*/
         const assets =
             this.state.assets.length > 0
                 ? this.state.assets
@@ -229,7 +219,6 @@ class FeeAssetSelector extends DecimalChecker {
                                 this.props.onPaste || this.onPaste.bind(this)
                             }
                             onKeyPress={this.onKeyPress.bind(this)}
-                            /*addonAfter={addonAfter}*/
                         />
 
                         {!this.props.isPrice ? (
@@ -252,7 +241,7 @@ class FeeAssetSelector extends DecimalChecker {
                     onClick={this.openSetDefaultAssetModal.bind(this)}
                     style={{float: "right", height: "25px"}}
                 >
-                    Select another asset
+                    {counterpart.translate("settings.change_default_fee_asset")}
                 </Button>
                 <SetDefaultFeeAssetModal
                     className="modal"

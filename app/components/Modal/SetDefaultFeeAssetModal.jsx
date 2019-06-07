@@ -3,7 +3,7 @@ import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import AssetWrapper from "../../components/Utility/AssetWrapper";
 import SettingsActions from "actions/SettingsActions";
-import {ChainStore, FetchChain} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs";
 import {connect} from "alt-react";
 import {Link} from "react-router-dom";
 import {Table, Button, Radio, Modal, Checkbox} from "bitshares-ui-style-guide";

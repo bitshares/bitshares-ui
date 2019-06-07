@@ -1,8 +1,11 @@
 import React from "react";
+import counterpart from "counterpart";
 import {connect} from "alt-react";
 import SettingsStore from "../../stores/SettingsStore";
 import {ChainStore} from "bitsharesjs";
 import {Button} from "bitshares-ui-style-guide";
+import Translate from "react-translate-component";
+import AssetName from "../Utility/AssetName";
 
 import SetDefaultFeeAssetModal from "../Modal/SetDefaultFeeAssetModal";
 
@@ -17,21 +20,38 @@ class FeeAssetSettings extends React.Component {
 
     render() {
         return (
-            <div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center"
+                }}
+            >
+                <Translate
+                    component="span"
+                    content="settings.current_fee_asset"
+                    style={{marginRight: "10px"}}
+                />
+                <AssetName
+                    name={ChainStore.getAsset(this.state.current_asset).get(
+                        "symbol"
+                    )}
+                />
                 <Button
+                    style={{margin: "15px"}}
                     key="open_change_fee_asset"
                     type="primary"
                     onClick={() => {
                         this.setState({showModal: true});
                     }}
                 >
-                    Change default asset
+                    {counterpart.translate("settings.change_default_fee_asset")}
                 </Button>
                 <SetDefaultFeeAssetModal
                     key="change_fee_asset_modal"
                     className="modal"
                     show={this.state.showModal}
-                    current_asset={this.props.fee_asset}
+                    current_asset={this.state.current_asset}
                     displayFees={false}
                     forceDefault={true}
                     onChange={value => {
