@@ -2,17 +2,18 @@ import React from "react";
 const TradingView = require("../../../charting_library/charting_library.min.js");
 import colors from "assets/colors";
 import {getResolutionsFromBuckets, getTVTimezone} from "./tradingViewClasses";
-import {Modal, Input, Table, Button} from "bitshares-ui-style-guide";
+import {Modal, Input, Table, Button, Icon} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
+import SettingsStore from "stores/SettingsStore";
+import SettingsActions from "actions/SettingsActions";
+import {connect} from "alt-react";
 
-// import {connect} from "alt-react";
 // import MarketsStore from "stores/MarketsStore";
 
-export default class TradingViewPriceChart extends React.Component {
+class TradingViewPriceChart extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            charts: [],
             showSaveModal: false,
             showLoadModal: false
         };
@@ -176,12 +177,14 @@ export default class TradingViewPriceChart extends React.Component {
     }
 
     shouldComponentUpdate(np, state) {
-        if (state.showLoadModal !== this.state.showLoadModal) return true;
-        if (state.showSaveModal !== this.state.showSaveModal) return true;
-        if (np.chartHeight !== this.props.chartHeight) return true;
-        if (!!this.tvWidget) return false;
-        if (!np.marketReady) return false;
-        return true;
+        return (
+            state.showLoadModal !== this.state.showLoadModal ||
+            state.showSaveModal !== this.state.showSaveModal ||
+            np.chartHeight !== this.props.chartHeight ||
+            this.props.charts.size !== np.charts.size ||
+            this.tvWidget ||
+            np.marketReady
+        );
     }
 
     _onWheel(e) {
@@ -193,22 +196,26 @@ export default class TradingViewPriceChart extends React.Component {
         const that = this;
         this.tvWidget.save(function(object) {
             let chart = {};
+            chart.key = layoutName.current.state.value || "";
             chart.object = object;
             chart.name = layoutName.current.state.value || "";
             chart.symbol =
                 that.props.quoteSymbol + " / " + that.props.baseSymbol;
             chart.modified = new Date().toLocaleDateString("en-US");
-            that.setState(
-                {charts: [...that.state.charts, chart], showSaveModal: false},
-                (that.layoutName.current.state.value = null)
-            );
+            SettingsActions.addChartLayout(chart);
+            that.setState({showSaveModal: false}, () => {
+                if (that.layoutName.current.state) {
+                    that.layoutName.current.state.value = null;
+                }
+            });
         });
     }
     hideModal() {
-        this.setState(
-            {showSaveModal: false, showLoadModal: false},
-            (this.layoutName.current.state.value = null)
-        );
+        this.setState({showSaveModal: false, showLoadModal: false});
+    }
+
+    handleDelete(name) {
+        SettingsActions.deleteChartLayout(name);
     }
 
     render() {
@@ -227,14 +234,30 @@ export default class TradingViewPriceChart extends React.Component {
                 title: "Active Symbol",
                 dataIndex: "symbol",
                 key: "symbol"
+            },
+            {
+                title: "Actions",
+                dataIndex: "actions",
+                key: "actions",
+                render: (text, record) => {
+                    return (
+                        <Icon
+                            style={{width: "32px"}}
+                            onClick={this.handleDelete.bind(this, record.name)}
+                            type="delete"
+                        />
+                    );
+                }
             }
         ];
 
-        const onRow = (record, rowIndex) => {
+        const onRow = record => {
             return {
                 onClick: event => {
-                    this.tvWidget.load(record.object);
-                    this.hideModal();
+                    if (!event.target.dataset.icon) {
+                        this.hideModal();
+                        this.tvWidget.load(record.object);
+                    }
                 }
             };
         };
@@ -257,7 +280,7 @@ export default class TradingViewPriceChart extends React.Component {
                     ]}
                 >
                     <Table
-                        dataSource={this.state.charts}
+                        dataSource={this.props.charts.toArray() || []}
                         columns={columns}
                         onRow={onRow}
                     />
@@ -289,3 +312,17 @@ export default class TradingViewPriceChart extends React.Component {
         );
     }
 }
+
+export default connect(
+    TradingViewPriceChart,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                charts: SettingsStore.getState().chartLayouts
+            };
+        }
+    }
+);
