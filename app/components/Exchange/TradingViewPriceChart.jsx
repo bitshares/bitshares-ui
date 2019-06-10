@@ -257,7 +257,10 @@ class TradingViewPriceChart extends React.Component {
                     if (!event.target.dataset.icon) {
                         this.hideModal();
                         this.tvWidget.load(record.object);
-                    }
+                    } else if (
+                        event.target.parentElement.childElementCount === 1
+                    )
+                        this.hideModal();
                 }
             };
         };
