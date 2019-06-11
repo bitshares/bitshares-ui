@@ -21,7 +21,7 @@ class Icon extends React.Component {
         let classes = "icon ";
         if (this.props.name !== "warning") {
             // fixme remove warning, otherwise color is being overwritten. should be handled by adjusting the CSS instead
-            classes = this.props.name;
+            classes = classes + this.props.name;
         }
         if (this.props.size) {
             classes += " icon-" + this.props.size;
