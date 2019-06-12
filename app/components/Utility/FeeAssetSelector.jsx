@@ -95,6 +95,8 @@ class FeeAssetSelector extends DecimalChecker {
         const {fee_amount, fee_asset_id} = this.state;
         const memo_changed = np.memo !== this.props.memo;
         const account_changed =
+            np.account &&
+            this.props.account &&
             np.account.get("id") !== this.props.account.get("id");
         const needsFeeCalculation =
             memo_changed || !fee_amount || account_changed;
@@ -183,6 +185,10 @@ class FeeAssetSelector extends DecimalChecker {
                 {counterpart.translate(this.props.label)}
             </div>
         ) : null;
+
+        const canChangeFeeParams =
+            !this.props.selectDisabled && this.props.account;
+
         return (
             <div>
                 <Form.Item
@@ -204,11 +210,11 @@ class FeeAssetSelector extends DecimalChecker {
                             style={{width: "130px"}}
                             selectStyle={{width: "100%"}}
                             value={currentAsset.get("symbol")}
-                            assets={Immutable.List(assets)}
-                            onChange={this.onAssetChange.bind(this)}
-                            disabled={
-                                this.props.selectDisabled ? true : undefined
+                            assets={
+                                canChangeFeeParams ? Immutable.List(assets) : []
                             }
+                            onChange={this.onAssetChange.bind(this)}
+                            disabled={!canChangeFeeParams}
                         />
                     </Input.Group>
                 </Form.Item>
@@ -217,7 +223,7 @@ class FeeAssetSelector extends DecimalChecker {
                     type="secondary"
                     onClick={this.openSetDefaultAssetModal.bind(this)}
                     style={{float: "right", height: "25px"}}
-                    disabled={this.props.selectDisabled ? true : undefined}
+                    disabled={!canChangeFeeParams}
                 >
                     {counterpart.translate("settings.change_default_fee_asset")}
                 </Button>
