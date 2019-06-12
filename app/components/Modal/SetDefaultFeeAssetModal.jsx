@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import AssetWrapper from "../../components/Utility/AssetWrapper";
@@ -42,11 +43,11 @@ class SetDefaultFeeAssetModal extends React.Component {
         if (!np.account) {
             account = ChainStore.getAccount(np.currentAccount);
         }
+
         if (account) {
             if (
-                np.asset_types ||
                 !this.state.balances ||
-                account.get("accountName") !== this.props.currentAccount ||
+                account.get("name") !== this.props.currentAccount ||
                 (np.current_asset &&
                     this.state.selectedAssetId !== np.current_asset)
             ) {
@@ -193,6 +194,24 @@ class SetDefaultFeeAssetModal extends React.Component {
         this.setState({useByDefault: !this.state.useByDefault});
     }
 }
+
+SetDefaultFeeAssetModal.propTypes = {
+    // account which pays fee (defaults to current user account)
+    currentAccount: PropTypes.any,
+    // array of assets available
+    asset_types: PropTypes.array,
+    // defines if Fee column will be displayed (requires fee to be set in asset_types)
+    displayFees: PropTypes.bool,
+    // forces to use selected asset as default for current account
+    forceDefault: PropTypes.bool,
+    // asset id which should be selected on opening, if not set - user's default fee asset will be used
+    current_asset: PropTypes.string,
+    // Callback to handle change of selected asset
+    onChange: PropTypes.func,
+    // tells if modal is visible or not
+    show: PropTypes.bool,
+    close: PropTypes.func
+};
 
 SetDefaultFeeAssetModal = AssetWrapper(SetDefaultFeeAssetModal);
 

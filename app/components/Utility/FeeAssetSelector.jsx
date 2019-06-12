@@ -15,22 +15,11 @@ import SettingsStore from "../../stores/SettingsStore";
 import {checkFeeStatusAsync} from "common/trxHelper";
 
 class FeeAssetSelector extends DecimalChecker {
-    static propTypes = {
-        label: PropTypes.string, // a translation key for the label
-        main_asset_id: PropTypes.string,
-        memo: PropTypes.string,
-        account: PropTypes.any,
-        placeholder: PropTypes.string,
-        onChange: PropTypes.func,
-        tabIndex: PropTypes.number,
-        selectDisabled: PropTypes.bool,
-        settings: PropTypes.any
-    };
-
     static defaultProps = {
         disabled: false,
         tabIndex: 0,
-        selectDisabled: false
+        selectDisabled: false,
+        label: "transfer.fee"
     };
 
     constructor(props) {
@@ -179,6 +168,12 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     render() {
+        const currentAsset = this._getAsset();
+        const assets =
+            this.state.assets.length > 0
+                ? this.state.assets
+                : [currentAsset.get("id") || "1.3.0"];
+
         let value = this.state.error
             ? counterpart.translate("transfer.errors.insufficient")
             : this.formatAmount(this.state.fee_amount);
@@ -186,16 +181,8 @@ class FeeAssetSelector extends DecimalChecker {
         const label = this.props.label ? (
             <div className="amount-selector-field--label">
                 {counterpart.translate(this.props.label)}
-                <div className="amount-selector-field--balance">
-                    {this.props.display_balance}
-                </div>
             </div>
         ) : null;
-
-        const assets =
-            this.state.assets.length > 0
-                ? this.state.assets
-                : [this._getAsset().get("id") || "1.3.0"];
         return (
             <div>
                 <Form.Item
@@ -206,32 +193,23 @@ class FeeAssetSelector extends DecimalChecker {
                     <Input.Group compact>
                         <Input
                             style={{
-                                width: this.props.isPrice
-                                    ? "100%"
-                                    : "calc(100% - 130px)"
+                                width: "calc(100% - 130px)"
                             }}
-                            disabled={this.props.disabled}
+                            disabled={true}
                             value={value || ""}
-                            placeholder={this.props.placeholder}
                             tabIndex={this.props.tabIndex}
-                            onPaste={
-                                this.props.onPaste || this.onPaste.bind(this)
-                            }
-                            onKeyPress={this.onKeyPress.bind(this)}
                         />
 
-                        {!this.props.isPrice ? (
-                            <AssetSelect
-                                style={{width: "130px"}}
-                                selectStyle={{width: "100%"}}
-                                value={this._getAsset().get("symbol")}
-                                assets={Immutable.List(assets)}
-                                onChange={this.onAssetChange.bind(this)}
-                                disabled={
-                                    this.props.selectDisabled ? true : undefined
-                                }
-                            />
-                        ) : null}
+                        <AssetSelect
+                            style={{width: "130px"}}
+                            selectStyle={{width: "100%"}}
+                            value={currentAsset.get("symbol")}
+                            assets={Immutable.List(assets)}
+                            onChange={this.onAssetChange.bind(this)}
+                            disabled={
+                                this.props.selectDisabled ? true : undefined
+                            }
+                        />
                     </Input.Group>
                 </Form.Item>
 
@@ -239,6 +217,7 @@ class FeeAssetSelector extends DecimalChecker {
                     type="secondary"
                     onClick={this.openSetDefaultAssetModal.bind(this)}
                     style={{float: "right", height: "25px"}}
+                    disabled={this.props.selectDisabled ? true : undefined}
                 >
                     {counterpart.translate("settings.change_default_fee_asset")}
                 </Button>
@@ -266,6 +245,21 @@ class FeeAssetSelector extends DecimalChecker {
         this.setState({isModalVisible: true});
     }
 }
+
+FeeAssetSelector.propTypes = {
+    // a translation key for the input label
+    label: PropTypes.string,
+    // TODO replace with options or trx builder
+    memo: PropTypes.string,
+    // account which pays fee
+    account: PropTypes.any,
+    // handler for changed Fee (asset, or amount)
+    onChange: PropTypes.func,
+    tabIndex: PropTypes.number,
+    selectDisabled: PropTypes.bool,
+    settings: PropTypes.any
+};
+
 FeeAssetSelector = AssetWrapper(FeeAssetSelector);
 
 export default connect(

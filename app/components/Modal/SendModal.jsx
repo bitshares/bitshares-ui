@@ -684,9 +684,9 @@ class SendModal extends React.Component {
                                     label="transfer.fee"
                                     disabled={true}
                                     account={from_account}
+                                    memo={memo}
                                     onChange={this.onFeeChanged.bind(this)}
                                     tabIndex={tabIndex++}
-                                    scroll_length={2}
                                 />
                             </Form>
                         ) : null}
