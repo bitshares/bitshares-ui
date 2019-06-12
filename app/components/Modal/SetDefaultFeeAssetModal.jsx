@@ -213,6 +213,15 @@ SetDefaultFeeAssetModal.propTypes = {
     close: PropTypes.func
 };
 
+SetDefaultFeeAssetModal.defaultProps = {
+    currentAccount: null,
+    asset_types: [],
+    displayFees: false,
+    forceDefault: false,
+    current_asset: "1.3.0",
+    show: false
+};
+
 SetDefaultFeeAssetModal = AssetWrapper(SetDefaultFeeAssetModal);
 
 class SetDefaultFeeAssetModalConnectWrapper extends React.Component {

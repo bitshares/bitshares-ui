@@ -15,13 +15,6 @@ import SettingsStore from "../../stores/SettingsStore";
 import {checkFeeStatusAsync} from "common/trxHelper";
 
 class FeeAssetSelector extends DecimalChecker {
-    static defaultProps = {
-        disabled: false,
-        tabIndex: 0,
-        selectDisabled: false,
-        label: "transfer.fee"
-    };
-
     constructor(props) {
         super(props);
 
@@ -264,6 +257,15 @@ FeeAssetSelector.propTypes = {
     tabIndex: PropTypes.number,
     selectDisabled: PropTypes.bool,
     settings: PropTypes.any
+};
+
+FeeAssetSelector.defaultProps = {
+    disabled: true,
+    tabIndex: 0,
+    selectDisabled: true,
+    label: "transfer.fee",
+    memo: "",
+    account: null
 };
 
 FeeAssetSelector = AssetWrapper(FeeAssetSelector);
