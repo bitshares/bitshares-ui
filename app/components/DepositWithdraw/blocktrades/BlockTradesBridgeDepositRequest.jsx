@@ -1053,7 +1053,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             );
                             oauthBlocktrades.set(
                                 "exp_time",
-                                Date.now() + rawParsed["exp"] * 1000
+                                rawParsed["exp"] * 1000
                             );
                             this.setState({
                                 isUserAuthorized: true,
