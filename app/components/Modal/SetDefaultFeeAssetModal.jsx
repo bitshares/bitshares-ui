@@ -15,7 +15,10 @@ class SetDefaultFeeAssetModal extends React.Component {
         super(props);
         this.state = {
             useByDefault: props.forceDefault ? true : false,
-            selectedAssetId: null,
+            selectedAssetId:
+                ChainStore.assets_by_symbol.get(
+                    props.settings.get("fee_asset")
+                ) || "1.3.0",
             balances: {}
         };
     }
@@ -44,7 +47,8 @@ class SetDefaultFeeAssetModal extends React.Component {
                 np.asset_types ||
                 !this.state.balances ||
                 account.get("accountName") !== this.props.currentAccount ||
-                selectedAssetId !== np.current_asset
+                (np.current_asset &&
+                    this.state.selectedAssetId !== np.current_asset)
             ) {
                 this._updateStateForAccount(account, np.current_asset);
             }

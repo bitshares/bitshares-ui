@@ -20,6 +20,7 @@ import {ChainTypes} from "bitsharesjs";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
+import SetDefaultFeeAssetModal from "../Modal/SetDefaultFeeAssetModal";
 import {
     Link,
     DirectLink,
@@ -29,7 +30,7 @@ import {
     scrollSpy,
     scroller
 } from "react-scroll";
-import {Tooltip} from "bitshares-ui-style-guide";
+import {Tooltip, Button} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
 
 require("./operations.scss");
@@ -125,6 +126,11 @@ class OperationTable extends React.Component {
 }
 
 class Transaction extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
     componentDidMount() {
         ReactTooltip.rebuild();
     }
@@ -2376,7 +2382,35 @@ class Transaction extends React.Component {
             );
         });
 
-        return <div>{info}</div>;
+        return (
+            <div>
+                {info}
+                <Button
+                    key="open_change_fee_asset"
+                    type="secondary"
+                    style={{float: "right"}}
+                    onClick={() => {
+                        this.setState({showModal: true});
+                    }}
+                >
+                    {counterpart.translate("settings.change_default_fee_asset")}
+                </Button>
+                <SetDefaultFeeAssetModal
+                    key="change_fee_asset_modal"
+                    className="modal"
+                    show={this.state.showModal}
+                    current_asset={this.state.current_asset}
+                    displayFees={false}
+                    forceDefault={true}
+                    onChange={value => {
+                        this.setState({current_asset: value});
+                    }}
+                    close={() => {
+                        this.setState({showModal: false});
+                    }}
+                />
+            </div>
+        );
     }
 }
 

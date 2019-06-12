@@ -23,7 +23,6 @@ class FeeAssetSelector extends DecimalChecker {
         placeholder: PropTypes.string,
         onChange: PropTypes.func,
         tabIndex: PropTypes.number,
-        scroll_length: PropTypes.number,
         selectDisabled: PropTypes.bool,
         settings: PropTypes.any
     };
@@ -246,7 +245,7 @@ class FeeAssetSelector extends DecimalChecker {
                 <SetDefaultFeeAssetModal
                     className="modal"
                     show={this.state.isModalVisible}
-                    account={this.props.account}
+                    currentAccount={this.props.account}
                     asset_types={this.state.assets.map((asset, i) => ({
                         asset,
                         fee: this.state.fees[asset]
