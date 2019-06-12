@@ -1040,43 +1040,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             })
                 .then(r => r.json())
                 .then(body => {
-                    if (body["access_token"]) {
-                        oauthBlocktrades.set("access_token", body.access_token);
-                        this.setState({
-                            isUserAuthorized: true,
-                            retrievingDataFromOauthApi: false
-                        });
-                    } else {
-                        this.setState({
-                            isUserAuthorized: false,
-                            retrievingDataFromOauthApi: false
-                        });
-                    }
-                })
-                .catch(() => {
-                    this.setState({
-                        isUserAuthorized: false,
-                        retrievingDataFromOauthApi: false
-                    });
-                });
-        } else if (oauthBlocktrades.get("access_token", "") !== "") {
-            var data = new URLSearchParams();
-            data.append("token", oauthBlocktrades.get("access_token"));
-            data.append("scope", "");
-
-            const headers = {
-                "Content-Type": "application/x-www-form-urlencoded"
-            };
-
-            fetch("https://devel-4.syncad.com/oauth2/introspect", {
-                method: "POST",
-                body: data.toString(),
-                headers
-            })
-                .then(r => r.json())
-                .then(body => {
-                    if (body["active"]) {
-                        if (body.active === true) {
+                    if (body["id_token"]) {
+                        var base64Url = body["id_token"].split(".")[1];
+                        if (base64Url) {
+                            var base64 = base64Url
+                                .replace("-", "+")
+                                .replace("_", "/");
+                            var rawParsed = JSON.parse(window.atob(base64));
+                            oauthBlocktrades.set(
+                                "access_token",
+                                body.access_token
+                            );
+                            oauthBlocktrades.set(
+                                "exp_time",
+                                Date.now() + rawParsed["exp"] * 1000
+                            );
                             this.setState({
                                 isUserAuthorized: true,
                                 retrievingDataFromOauthApi: false
@@ -1086,7 +1064,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 isUserAuthorized: false,
                                 retrievingDataFromOauthApi: false
                             });
-                            oauthBlocktrades.set("access_token", "");
                         }
                     } else {
                         this.setState({
@@ -1101,6 +1078,21 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         retrievingDataFromOauthApi: false
                     });
                 });
+        } else if (oauthBlocktrades.get("access_token", "") !== "") {
+            const currentTime = Date.now();
+            if (currentTime < oauthBlocktrades.get("exp_time")) {
+                this.setState({
+                    isUserAuthorized: true,
+                    retrievingDataFromOauthApi: false
+                });
+            } else {
+                this.setState({
+                    isUserAuthorized: false,
+                    retrievingDataFromOauthApi: false
+                });
+                oauthBlocktrades.set("access_token", "");
+                oauthBlocktrades.set("exp_time", "");
+            }
         } else {
             this.setState({
                 retrievingDataFromOauthApi: false
