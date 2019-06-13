@@ -293,14 +293,17 @@ export function requestDepositAddress({
     let body_string = JSON.stringify(body);
     if (depositRequests[body_string]) return;
     depositRequests[body_string] = true;
-    fetch(url + "/simple-api/initiate-trade", {
-        method: "post",
-        headers: new Headers({
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        }),
-        body: body_string
-    })
+    fetch(
+        "https://blocktrades.syncad.com/api/v2" + "/simple-api/initiate-trade",
+        {
+            method: "post",
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }),
+            body: body_string
+        }
+    )
         .then(
             reply => {
                 reply.json().then(
@@ -459,18 +462,26 @@ export function getConversionJson(inputs) {
     });
 
     const _cacheString =
-        url + input_coin_type + output_coin_type + account_name;
+        "https://blocktrades.syncad.com/api/v2" +
+        input_coin_type +
+        output_coin_type +
+        account_name;
+    +input_coin_type + output_coin_type + account_name;
     return new Promise((resolve, reject) => {
         if (_conversionCache[_cacheString])
             return resolve(_conversionCache[_cacheString]);
-        fetch(url + "/simple-api/initiate-trade", {
-            method: "post",
-            headers: new Headers({
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            }),
-            body: body
-        })
+        fetch(
+            "https://blocktrades.syncad.com/api/v2" +
+                "/simple-api/initiate-trade",
+            {
+                method: "post",
+                headers: new Headers({
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                }),
+                body: body
+            }
+        )
             .then(reply => {
                 reply
                     .json()

@@ -60,7 +60,6 @@ class ButtonConversion extends React.Component {
 
     componentWillMount() {
         this._updateFee();
-        this._checkFeeStatus();
     }
 
     componentWillUnmount() {
@@ -87,19 +86,26 @@ class ButtonConversion extends React.Component {
                     type: "memo",
                     content: json.inputMemo
                 }
-            }).then(({fee, hasBalance, hasPoolBalance}) => {
-                if (this.unMounted) return;
+            })
+                .then(({fee, hasBalance, hasPoolBalance}) => {
+                    if (this.unMounted) {
+                        this._checkFeeStatus();
+                        return;
+                    }
 
-                this.setState(
-                    {
-                        feeAmount: fee,
-                        hasBalance,
-                        hasPoolBalance,
-                        error: !hasBalance || !hasPoolBalance
-                    },
-                    this._checkFeeStatus
-                );
-            });
+                    this.setState(
+                        {
+                            feeAmount: fee,
+                            hasBalance,
+                            hasPoolBalance,
+                            error: !hasBalance || !hasPoolBalance
+                        },
+                        this._checkFeeStatus
+                    );
+                })
+                .catch(error => {
+                    this._checkFeeStatus();
+                });
         });
     }
 
@@ -479,7 +485,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             coin_symbol: "btc",
             key_for_withdrawal_dialog: "btc",
             supports_output_memos: "",
-            url: blockTradesAPIs.BASE,
+            url: "https://blocktrades.syncad.com/api/v2",
             error: null,
             isUserAuthorized: false,
             retrievingDataFromOauthApi: true,
