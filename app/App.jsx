@@ -9,6 +9,7 @@ import BrowserNotifications from "./components/BrowserNotifications/BrowserNotif
 import Header from "components/Layout/Header";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
+import PredictionMarkets from "./components/PredictionMarkets/PredictionMarkets";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
@@ -520,6 +521,10 @@ class App extends React.Component {
                                     component={Help}
                                 />
                                 <Route path="/htlc" component={Htlc} />
+                                <Route
+                                    path="/pm"
+                                    component={PredictionMarkets}
+                                />
                                 <Route path="*" component={Page404} />
                             </Switch>
                         </div>

@@ -1594,6 +1594,15 @@
         "newer": "Newer",
         "older": "Older"
     },
+    "prediction": {
+        "overview": {
+            "issuer": "House",
+            "prediction": "Prediction",
+            "description": "Description",
+            "odds": "Odds",
+            "action": "Action"
+        }
+    },
     "proposal": {
         "action": "Actions",
         "add": "Add",
@@ -1995,6 +2004,10 @@
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
+        },
+        "prediction_market": {
+            "description": "Prediction markets",
+            "title": "Prediction markets"
         },
         "timed_transfer": {
             "description": "Initiate a transfer that will execute at a specified time.",
