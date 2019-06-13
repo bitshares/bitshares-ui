@@ -2,6 +2,7 @@ import ls from "./localStorage";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
 const blockTradesStorage = new ls("");
+let oauthBlocktrades = new ls("__oauthBlocktrades__");
 
 let fetchInProgess = {};
 let fetchCache = {};
@@ -293,17 +294,14 @@ export function requestDepositAddress({
     let body_string = JSON.stringify(body);
     if (depositRequests[body_string]) return;
     depositRequests[body_string] = true;
-    fetch(
-        "https://blocktrades.syncad.com/api/v2" + "/simple-api/initiate-trade",
-        {
-            method: "post",
-            headers: new Headers({
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            }),
-            body: body_string
-        }
-    )
+    fetch(url + "/simple-api/initiate-trade", {
+        method: "post",
+        headers: new Headers({
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        }),
+        body: body_string
+    })
         .then(
             reply => {
                 reply.json().then(
@@ -447,7 +445,7 @@ export function validateAddress({
 }
 
 let _conversionCache = {};
-export function getConversionJson(inputs) {
+export function getConversionJson(inputs, isUserAuthorized = false) {
     const {input_coin_type, output_coin_type, url, account_name} = inputs;
     if (!input_coin_type || !output_coin_type) return Promise.reject();
     const body = JSON.stringify({
@@ -470,15 +468,23 @@ export function getConversionJson(inputs) {
     return new Promise((resolve, reject) => {
         if (_conversionCache[_cacheString])
             return resolve(_conversionCache[_cacheString]);
+        let headers = {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        };
+        if (isUserAuthorized) {
+            headers = {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+            };
+        }
         fetch(
             "https://blocktrades.syncad.com/api/v2" +
                 "/simple-api/initiate-trade",
             {
                 method: "post",
-                headers: new Headers({
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                }),
+                headers,
                 body: body
             }
         )

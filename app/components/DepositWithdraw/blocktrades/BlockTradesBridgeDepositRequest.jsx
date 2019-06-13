@@ -77,36 +77,38 @@ class ButtonConversion extends React.Component {
 
     _updateFee() {
         const feeID = this._getFeeID();
-        getConversionJson(this.props).then(json => {
-            checkFeeStatusAsync({
-                accountID: this.props.account_id,
-                feeID: feeID,
-                options: ["price_per_kbyte"],
-                data: {
-                    type: "memo",
-                    content: json.inputMemo
-                }
-            })
-                .then(({fee, hasBalance, hasPoolBalance}) => {
-                    if (this.unMounted) {
-                        this._checkFeeStatus();
-                        return;
+        getConversionJson(this.props, this.props.is_user_authorized).then(
+            json => {
+                checkFeeStatusAsync({
+                    accountID: this.props.account_id,
+                    feeID: feeID,
+                    options: ["price_per_kbyte"],
+                    data: {
+                        type: "memo",
+                        content: json.inputMemo
                     }
-
-                    this.setState(
-                        {
-                            feeAmount: fee,
-                            hasBalance,
-                            hasPoolBalance,
-                            error: !hasBalance || !hasPoolBalance
-                        },
-                        this._checkFeeStatus
-                    );
                 })
-                .catch(error => {
-                    this._checkFeeStatus();
-                });
-        });
+                    .then(({fee, hasBalance, hasPoolBalance}) => {
+                        if (this.unMounted) {
+                            this._checkFeeStatus();
+                            return;
+                        }
+
+                        this.setState(
+                            {
+                                feeAmount: fee,
+                                hasBalance,
+                                hasPoolBalance,
+                                error: !hasBalance || !hasPoolBalance
+                            },
+                            this._checkFeeStatus
+                        );
+                    })
+                    .catch(error => {
+                        this._checkFeeStatus();
+                    });
+            }
+        );
     }
 
     _checkFeeStatus(account = this.props.account) {
@@ -116,44 +118,46 @@ class ButtonConversion extends React.Component {
         if (!assets.length) assets = ["1.3.0"];
         let feeStatus = {};
         let p = [];
-        getConversionJson(this.props).then(json => {
-            assets.forEach(a => {
-                p.push(
-                    checkFeeStatusAsync({
-                        accountID: account.get("id"),
-                        feeID: a,
-                        options: ["price_per_kbyte"],
-                        data: {
-                            type: "memo",
-                            content: json.inputMemo
-                        }
-                    })
-                );
-            });
-            Promise.all(p)
-                .then(status => {
-                    if (this.unMounted) return;
-
-                    assets.forEach((a, idx) => {
-                        feeStatus[a] = status[idx];
-                    });
-
-                    if (
-                        !utils.are_equal_shallow(
-                            this.state.feeStatus,
-                            feeStatus
-                        )
-                    ) {
-                        this.setState({
-                            feeStatus
-                        });
-                    }
-                    this._checkBalance();
-                })
-                .catch(err => {
-                    console.error(err);
+        getConversionJson(this.props, this.props.is_user_authorized).then(
+            json => {
+                assets.forEach(a => {
+                    p.push(
+                        checkFeeStatusAsync({
+                            accountID: account.get("id"),
+                            feeID: a,
+                            options: ["price_per_kbyte"],
+                            data: {
+                                type: "memo",
+                                content: json.inputMemo
+                            }
+                        })
+                    );
                 });
-        });
+                Promise.all(p)
+                    .then(status => {
+                        if (this.unMounted) return;
+
+                        assets.forEach((a, idx) => {
+                            feeStatus[a] = status[idx];
+                        });
+
+                        if (
+                            !utils.are_equal_shallow(
+                                this.state.feeStatus,
+                                feeStatus
+                            )
+                        ) {
+                            this.setState({
+                                feeStatus
+                            });
+                        }
+                        this._checkBalance();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
+            }
+        );
     }
 
     _getCurrentBalance(props = this.props) {
@@ -193,7 +197,7 @@ class ButtonConversion extends React.Component {
     onConvert() {
         const {input_coin_type, output_coin_type, amount} = this.props;
         const {balanceError} = this.state;
-        getConversionJson(this.props)
+        getConversionJson(this.props, this.props.is_user_authorized)
             .then(json => {
                 if (
                     json.inputCoinType != input_coin_type ||
@@ -295,6 +299,7 @@ class ButtonConversionContainer extends React.Component {
                 asset={this.props.asset}
                 account={this.props.account}
                 input_coin_type={this.props.input_coin_type}
+                is_user_authorized={this.props.is_user_authorized}
                 output_coin_type={this.props.output_coin_type}
                 account_name={this.props.account_name}
                 amount={
@@ -2546,6 +2551,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             ].walletSymbol
                         }
                         account={this.props.account}
+                        is_user_authorized={this.state.isUserAuthorized}
                         input_coin_type={this.state.conversion_input_coin_type}
                         output_coin_type={
                             this.state.conversion_output_coin_type
