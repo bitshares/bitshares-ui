@@ -1,34 +1,8 @@
 import React, {Component} from "react";
-import Immutable from "immutable";
 import Translate from "react-translate-component";
-import accountUtils from "common/account_utils";
-import {ChainStore, FetchChainObjects} from "bitsharesjs";
-import WorkersList from "../WorkersList";
 import VotingAccountsList from "../VotingAccountsList";
 import cnames from "classnames";
-import {Tabs, Tab} from "../../Utility/Tabs";
-import BindToChainState from "../../Utility/BindToChainState";
-import ChainTypes from "../../Utility/ChainTypes";
-import {Link} from "react-router-dom";
-import ApplicationApi from "api/ApplicationApi";
-import AccountSelector from "../AccountSelector";
-import Icon from "../../Icon/Icon";
-import AssetName from "../../Utility/AssetName";
-import counterpart from "counterpart";
-import {EquivalentValueComponent} from "../../Utility/EquivalentValueComponent";
-import FormattedAsset from "../../Utility/FormattedAsset";
-import SettingsStore from "stores/SettingsStore";
-import {
-    Switch,
-    Tooltip,
-    Row,
-    Col,
-    Radio,
-    Input,
-    Icon as AntIcon,
-    Button
-} from "bitshares-ui-style-guide";
-import AccountStore from "stores/AccountStore";
+import {Input, Icon as AntIcon, Button} from "bitshares-ui-style-guide";
 import JoinWitnessesModal from "../../Modal/JoinWitnessesModal";
 
 export default class Witnesses extends Component {
