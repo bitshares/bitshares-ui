@@ -3,9 +3,6 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import accountUtils from "common/account_utils";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
-import WorkersList from "./WorkersList";
-import VotingAccountsList from "./VotingAccountsList";
-import cnames from "classnames";
 import {Tabs, Tab} from "../Utility/Tabs";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
@@ -13,24 +10,13 @@ import {Link} from "react-router-dom";
 import ApplicationApi from "api/ApplicationApi";
 import AccountSelector from "./AccountSelector";
 import Icon from "../Icon/Icon";
-import AssetName from "../Utility/AssetName";
 import counterpart from "counterpart";
-import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
-import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
-import {
-    Switch,
-    Tooltip,
-    Row,
-    Col,
-    Radio,
-    Input,
-    Icon as AntIcon,
-    Button
-} from "bitshares-ui-style-guide";
+import {Switch, Tooltip, Button} from "bitshares-ui-style-guide";
 import AccountStore from "stores/AccountStore";
 import Witnesses from "./Voting/Witnesses";
 import Committee from "./Voting/Committee";
+import Workers from "./Voting/Workers";
 
 const WITNESSES_KEY = "witnesses";
 const COMMITTEE_KEY = "committee";
@@ -592,9 +578,6 @@ class AccountVoting extends React.Component {
         const accountHasProxy = !!prev_proxy_account_id;
         let preferredUnit = this.props.settings.get("unit") || "1.3.0";
         let hasProxy = !!this.state.proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
-        let publish_buttons_class = cnames("button", {
-            disabled: !this.isChanged()
-        });
         let {globalObject, account} = this.props;
         let budgetObject;
         if (this.state.lastBudgetObject) {
@@ -817,131 +800,50 @@ class AccountVoting extends React.Component {
         hasProxy,
         filterSearch
     ) {
+        const {vote_ids, proxy_vote_ids} = this.state;
+        const setWorkerTableIndex = e => {
+            this.setState({
+                workerTableIndex: e.target.value
+            });
+        };
+
+        const setWorkersLength = this.setWorkersLength.bind(this);
+        const onFilterChange = this.handleFilterChange.bind(this);
+        const onChangeVotes = this.onChangeVotes.bind(this);
+        const getWorkerArray = this._getWorkerArray.bind(this);
         return (
             <Tab title="account.votes.workers_short">
-                <div className="header-selector">
-                    <div style={{float: "right"}}>
-                        <Link to="/create-worker" className="button primary">
-                            <Translate content="account.votes.create_worker" />
-                        </Link>
-                    </div>
-
-                    <div className="selector inline-block">
-                        <Input
-                            placeholder={"Filter..."}
-                            value={this.state.filterSearch}
-                            style={{width: "220px"}}
-                            onChange={this.handleFilterChange.bind(this)}
-                            addonAfter={<AntIcon type="search" />}
-                        />
-                        <Radio.Group
-                            defaultValue={1}
-                            onChange={this._setWorkerTableIndex.bind(this)}
-                        >
-                            <Radio value={0}>
-                                {counterpart.translate("account.votes.new", {
-                                    count: newWorkersLength
-                                })}
-                            </Radio>
-
-                            <Radio value={1}>
-                                {counterpart.translate("account.votes.active", {
-                                    count: activeWorkersLength
-                                })}
-                            </Radio>
-
-                            {pollsLength ? (
-                                <Radio value={3}>
-                                    {counterpart.translate(
-                                        "account.votes.polls",
-                                        {count: pollsLength}
-                                    )}
-                                </Radio>
-                            ) : null}
-
-                            {expiredWorkersLength ? (
-                                <Radio value={2}>
-                                    <Translate content="account.votes.expired" />
-                                </Radio>
-                            ) : null}
-                        </Radio.Group>
-                    </div>
-
-                    {hideLegacy}
-                    <br />
-                    <br />
-                    <Row>
-                        <Col span={3}>
-                            <Translate content="account.votes.threshold" /> (
-                            <AssetName name={preferredUnit} />)
-                        </Col>
-                        <Col
-                            span={3}
-                            style={{
-                                marginLeft: "10px"
-                            }}
-                        >
-                            <FormattedAsset
-                                decimalOffset={4}
-                                hide_asset
-                                amount={voteThreshold}
-                                asset="1.3.0"
-                            />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={3}>
-                            <Translate content="account.votes.total_budget" /> (
-                            <AssetName name={preferredUnit} />)
-                        </Col>
-                        <Col
-                            span={3}
-                            style={{
-                                marginLeft: "10px"
-                            }}
-                        >
-                            {globalObject ? (
-                                <EquivalentValueComponent
-                                    hide_asset
-                                    fromAsset="1.3.0"
-                                    toAsset={preferredUnit}
-                                    amount={totalBudget}
-                                />
-                            ) : null}
-                        </Col>
-                    </Row>
-                </div>
-                <WorkersList
-                    workerTableIndex={workerTableIndex}
+                <Workers
+                    vote_ids={vote_ids}
+                    proxy_vote_ids={proxy_vote_ids}
+                    newWorkersLength={newWorkersLength}
+                    activeWorkersLength={activeWorkersLength}
+                    pollsLength={pollsLength}
+                    expiredWorkersLength={expiredWorkersLength}
+                    hideLegacy={hideLegacy}
                     preferredUnit={preferredUnit}
-                    setWorkersLength={this.setWorkersLength.bind(this)}
+                    voteThreshold={voteThreshold}
+                    globalObject={globalObject}
+                    totalBudget={totalBudget}
                     workerBudget={workerBudget}
                     hideLegacyProposals={hideLegacyProposals}
                     hasProxy={hasProxy}
-                    proxy_vote_ids={this.state.proxy_vote_ids}
-                    vote_ids={this.state.vote_ids}
-                    onChangeVotes={this.onChangeVotes.bind(this)}
-                    getWorkerArray={this._getWorkerArray.bind(this)}
                     filterSearch={filterSearch}
+                    onFilterChange={onFilterChange}
+                    onChangeVotes={onChangeVotes}
+                    getWorkerArray={getWorkerArray}
+                    setWorkersLength={setWorkersLength}
                 />
             </Tab>
         );
     }
 
     getCommittee(hasProxy, globalObject, filterSearch, account) {
-        // this.state = {showCreateCommitteeModal: false};
-        const showCommitteeModal = () => {
-            this.setState({
-                showCreateCommitteeModal: !this.state.showCreateCommitteeModal
-            });
-        };
-
         const {
             all_committee,
             proxy_committee,
             committee,
-            proxy_account_id,
-            showCreateCommitteeModal
+            proxy_account_id
         } = this.state;
         const onFilterChange = this.handleFilterChange.bind(this);
         const validateAccountHandler = this.validateAccount.bind(
