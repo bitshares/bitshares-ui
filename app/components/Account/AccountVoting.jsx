@@ -772,275 +772,275 @@ class AccountVoting extends React.Component {
                             actionButtons={saveText}
                             tabsClass="account-overview no-padding bordered-header content-block"
                         >
-                            <Tab title="explorer.witnesses.title">
-                                <div className={cnames("content-block")}>
-                                    <div className="header-selector">
-                                        <div style={{float: "right"}}>
-                                            <Button
-                                                style={{marginRight: "5px"}}
-                                                onClick={this.showWitnessModal.bind(
-                                                    this
-                                                )}
-                                            >
-                                                <Translate content="account.votes.join_witnesses" />
-                                            </Button>
-                                        </div>
-
-                                        <div className="selector inline-block">
-                                            {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
-                                            <Input
-                                                placeholder={"Filter..."}
-                                                value={this.state.filterSearch}
-                                                style={{width: "220px"}}
-                                                onChange={this.handleFilterChange.bind(
-                                                    this
-                                                )}
-                                                addonAfter={
-                                                    <AntIcon type="search" />
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    <VotingAccountsList
-                                        type="witness"
-                                        label="account.votes.add_witness_label"
-                                        items={this.state.all_witnesses}
-                                        validateAccount={this.validateAccount.bind(
-                                            this,
-                                            "witnesses"
-                                        )}
-                                        onAddItem={this.onAddItem.bind(
-                                            this,
-                                            "witnesses"
-                                        )}
-                                        onRemoveItem={this.onRemoveItem.bind(
-                                            this,
-                                            "witnesses"
-                                        )}
-                                        tabIndex={hasProxy ? -1 : 2}
-                                        supported={
-                                            this.state[
-                                                hasProxy
-                                                    ? "proxy_witnesses"
-                                                    : "witnesses"
-                                            ]
-                                        }
-                                        withSelector={false}
-                                        active={globalObject.get(
-                                            "active_witnesses"
-                                        )}
-                                        proxy={this.state.proxy_account_id}
-                                        filterSearch={filterSearch}
-                                    />
-                                </div>
-                                <JoinWitnessesModal
-                                    visible={this.state.showCreateWitnessModal}
-                                    account={account}
-                                    hideModal={this.showWitnessModal.bind(this)}
-                                />
-                            </Tab>
-
-                            <Tab title="explorer.committee_members.title">
-                                <div className="header-selector">
-                                    <div style={{float: "right"}}>
-                                        <Button
-                                            style={{marginRight: "5px"}}
-                                            onClick={this.showCommitteeModal.bind(
-                                                this
-                                            )}
-                                        >
-                                            <Translate content="account.votes.join_committee" />
-                                        </Button>
-                                    </div>
-
-                                    <div className="selector inline-block">
-                                        {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
-                                        <Input
-                                            placeholder={"Filter..."}
-                                            value={this.state.filterSearch}
-                                            style={{width: "220px"}}
-                                            onChange={this.handleFilterChange.bind(
-                                                this
-                                            )}
-                                            addonAfter={
-                                                <AntIcon type="search" />
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className={cnames("content-block")}>
-                                    <VotingAccountsList
-                                        type="committee"
-                                        label="account.votes.add_committee_label"
-                                        items={this.state.all_committee}
-                                        validateAccount={this.validateAccount.bind(
-                                            this,
-                                            "committee"
-                                        )}
-                                        onAddItem={this.onAddItem.bind(
-                                            this,
-                                            "committee"
-                                        )}
-                                        onRemoveItem={this.onRemoveItem.bind(
-                                            this,
-                                            "committee"
-                                        )}
-                                        tabIndex={hasProxy ? -1 : 3}
-                                        supported={
-                                            this.state[
-                                                hasProxy
-                                                    ? "proxy_committee"
-                                                    : "committee"
-                                            ]
-                                        }
-                                        withSelector={false}
-                                        active={globalObject.get(
-                                            "active_committee_members"
-                                        )}
-                                        proxy={this.state.proxy_account_id}
-                                        filterSearch={filterSearch}
-                                    />
-                                </div>
-                                <JoinCommitteeModal
-                                    visible={
-                                        this.state.showCreateCommitteeModal
-                                    }
-                                    account={account}
-                                    hideModal={this.showCommitteeModal.bind(
-                                        this
-                                    )}
-                                />
-                            </Tab>
-
-                            <Tab title="account.votes.workers_short">
-                                <div className="header-selector">
-                                    <div style={{float: "right"}}>
-                                        <Link
-                                            to="/create-worker"
-                                            className="button primary"
-                                        >
-                                            <Translate content="account.votes.create_worker" />
-                                        </Link>
-                                    </div>
-
-                                    <div className="selector inline-block">
-                                        {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
-                                        <Input
-                                            placeholder={"Filter..."}
-                                            value={this.state.filterSearch}
-                                            style={{width: "220px"}}
-                                            onChange={this.handleFilterChange.bind(
-                                                this
-                                            )}
-                                            addonAfter={
-                                                <AntIcon type="search" />
-                                            }
-                                        />
-                                        <Radio.Group
-                                            defaultValue={1}
-                                            onChange={this._setWorkerTableIndex.bind(
-                                                this
-                                            )}
-                                        >
-                                            <Radio value={0}>
-                                                {counterpart.translate(
-                                                    "account.votes.new",
-                                                    {count: newWorkersLength}
-                                                )}
-                                            </Radio>
-
-                                            <Radio value={1}>
-                                                {counterpart.translate(
-                                                    "account.votes.active",
-                                                    {count: activeWorkersLength}
-                                                )}
-                                            </Radio>
-
-                                            {pollsLength ? (
-                                                <Radio value={3}>
-                                                    {counterpart.translate(
-                                                        "account.votes.polls",
-                                                        {count: pollsLength}
-                                                    )}
-                                                </Radio>
-                                            ) : null}
-
-                                            {expiredWorkersLength ? (
-                                                <Radio value={2}>
-                                                    <Translate content="account.votes.expired" />
-                                                </Radio>
-                                            ) : null}
-                                        </Radio.Group>
-                                    </div>
-
-                                    {hideLegacy}
-                                    <br />
-                                    <br />
-                                    <Row>
-                                        <Col span={3}>
-                                            <Translate content="account.votes.threshold" />{" "}
-                                            (<AssetName name={preferredUnit} />)
-                                        </Col>
-                                        <Col
-                                            span={3}
-                                            style={{
-                                                marginLeft: "10px"
-                                            }}
-                                        >
-                                            <FormattedAsset
-                                                decimalOffset={4}
-                                                hide_asset
-                                                amount={voteThreshold}
-                                                asset="1.3.0"
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col span={3}>
-                                            <Translate content="account.votes.total_budget" />{" "}
-                                            (<AssetName name={preferredUnit} />)
-                                        </Col>
-                                        <Col
-                                            span={3}
-                                            style={{
-                                                marginLeft: "10px"
-                                            }}
-                                        >
-                                            {globalObject ? (
-                                                <EquivalentValueComponent
-                                                    hide_asset
-                                                    fromAsset="1.3.0"
-                                                    toAsset={preferredUnit}
-                                                    amount={totalBudget}
-                                                />
-                                            ) : null}
-                                        </Col>
-                                    </Row>
-                                </div>
-                                <WorkersList
-                                    workerTableIndex={workerTableIndex}
-                                    preferredUnit={preferredUnit}
-                                    setWorkersLength={this.setWorkersLength.bind(
-                                        this
-                                    )}
-                                    workerBudget={workerBudget}
-                                    hideLegacyProposals={hideLegacyProposals}
-                                    hasProxy={hasProxy}
-                                    proxy_vote_ids={this.state.proxy_vote_ids}
-                                    vote_ids={this.state.vote_ids}
-                                    onChangeVotes={this.onChangeVotes.bind(
-                                        this
-                                    )}
-                                    getWorkerArray={this._getWorkerArray.bind(
-                                        this
-                                    )}
-                                    filterSearch={filterSearch}
-                                />
-                            </Tab>
+                            {this.getWitnesses(
+                                hasProxy,
+                                globalObject,
+                                filterSearch,
+                                account
+                            )}
+                            {this.getCommittee(
+                                hasProxy,
+                                globalObject,
+                                filterSearch,
+                                account
+                            )}
+                            {this.getWorkers(
+                                newWorkersLength,
+                                activeWorkersLength,
+                                pollsLength,
+                                expiredWorkersLength,
+                                hideLegacy,
+                                preferredUnit,
+                                voteThreshold,
+                                globalObject,
+                                totalBudget,
+                                workerTableIndex,
+                                workerBudget,
+                                hideLegacyProposals,
+                                hasProxy,
+                                filterSearch
+                            )}
                         </Tabs>
                     </div>
                 </div>
             </div>
+        );
+    }
+
+    getWorkers(
+        newWorkersLength,
+        activeWorkersLength,
+        pollsLength,
+        expiredWorkersLength,
+        hideLegacy,
+        preferredUnit,
+        voteThreshold,
+        globalObject,
+        totalBudget,
+        workerTableIndex,
+        workerBudget,
+        hideLegacyProposals,
+        hasProxy,
+        filterSearch
+    ) {
+        return (
+            <Tab title="account.votes.workers_short">
+                <div className="header-selector">
+                    <div style={{float: "right"}}>
+                        <Link to="/create-worker" className="button primary">
+                            <Translate content="account.votes.create_worker" />
+                        </Link>
+                    </div>
+
+                    <div className="selector inline-block">
+                        <Input
+                            placeholder={"Filter..."}
+                            value={this.state.filterSearch}
+                            style={{width: "220px"}}
+                            onChange={this.handleFilterChange.bind(this)}
+                            addonAfter={<AntIcon type="search" />}
+                        />
+                        <Radio.Group
+                            defaultValue={1}
+                            onChange={this._setWorkerTableIndex.bind(this)}
+                        >
+                            <Radio value={0}>
+                                {counterpart.translate("account.votes.new", {
+                                    count: newWorkersLength
+                                })}
+                            </Radio>
+
+                            <Radio value={1}>
+                                {counterpart.translate("account.votes.active", {
+                                    count: activeWorkersLength
+                                })}
+                            </Radio>
+
+                            {pollsLength ? (
+                                <Radio value={3}>
+                                    {counterpart.translate(
+                                        "account.votes.polls",
+                                        {count: pollsLength}
+                                    )}
+                                </Radio>
+                            ) : null}
+
+                            {expiredWorkersLength ? (
+                                <Radio value={2}>
+                                    <Translate content="account.votes.expired" />
+                                </Radio>
+                            ) : null}
+                        </Radio.Group>
+                    </div>
+
+                    {hideLegacy}
+                    <br />
+                    <br />
+                    <Row>
+                        <Col span={3}>
+                            <Translate content="account.votes.threshold" /> (
+                            <AssetName name={preferredUnit} />)
+                        </Col>
+                        <Col
+                            span={3}
+                            style={{
+                                marginLeft: "10px"
+                            }}
+                        >
+                            <FormattedAsset
+                                decimalOffset={4}
+                                hide_asset
+                                amount={voteThreshold}
+                                asset="1.3.0"
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={3}>
+                            <Translate content="account.votes.total_budget" /> (
+                            <AssetName name={preferredUnit} />)
+                        </Col>
+                        <Col
+                            span={3}
+                            style={{
+                                marginLeft: "10px"
+                            }}
+                        >
+                            {globalObject ? (
+                                <EquivalentValueComponent
+                                    hide_asset
+                                    fromAsset="1.3.0"
+                                    toAsset={preferredUnit}
+                                    amount={totalBudget}
+                                />
+                            ) : null}
+                        </Col>
+                    </Row>
+                </div>
+                <WorkersList
+                    workerTableIndex={workerTableIndex}
+                    preferredUnit={preferredUnit}
+                    setWorkersLength={this.setWorkersLength.bind(this)}
+                    workerBudget={workerBudget}
+                    hideLegacyProposals={hideLegacyProposals}
+                    hasProxy={hasProxy}
+                    proxy_vote_ids={this.state.proxy_vote_ids}
+                    vote_ids={this.state.vote_ids}
+                    onChangeVotes={this.onChangeVotes.bind(this)}
+                    getWorkerArray={this._getWorkerArray.bind(this)}
+                    filterSearch={filterSearch}
+                />
+            </Tab>
+        );
+    }
+
+    getCommittee(hasProxy, globalObject, filterSearch, account) {
+        return (
+            <Tab title="explorer.committee_members.title">
+                <div className="header-selector">
+                    <div style={{float: "right"}}>
+                        <Button
+                            style={{marginRight: "5px"}}
+                            onClick={this.showCommitteeModal.bind(this)}
+                        >
+                            <Translate content="account.votes.join_committee" />
+                        </Button>
+                    </div>
+
+                    <div className="selector inline-block">
+                        <Input
+                            placeholder={"Filter..."}
+                            value={this.state.filterSearch}
+                            style={{width: "220px"}}
+                            onChange={this.handleFilterChange.bind(this)}
+                            addonAfter={<AntIcon type="search" />}
+                        />
+                    </div>
+                </div>
+                <div className={cnames("content-block")}>
+                    <VotingAccountsList
+                        type="committee"
+                        label="account.votes.add_committee_label"
+                        items={this.state.all_committee}
+                        validateAccount={this.validateAccount.bind(
+                            this,
+                            "committee"
+                        )}
+                        onAddItem={this.onAddItem.bind(this, "committee")}
+                        onRemoveItem={this.onRemoveItem.bind(this, "committee")}
+                        tabIndex={hasProxy ? -1 : 3}
+                        supported={
+                            this.state[
+                                hasProxy ? "proxy_committee" : "committee"
+                            ]
+                        }
+                        withSelector={false}
+                        active={globalObject.get("active_committee_members")}
+                        proxy={this.state.proxy_account_id}
+                        filterSearch={filterSearch}
+                    />
+                </div>
+                <JoinCommitteeModal
+                    visible={this.state.showCreateCommitteeModal}
+                    account={account}
+                    hideModal={this.showCommitteeModal.bind(this)}
+                />
+            </Tab>
+        );
+    }
+
+    getWitnesses(hasProxy, globalObject, filterSearch, account) {
+        return (
+            <Tab title="explorer.witnesses.title">
+                <div className={cnames("content-block")}>
+                    <div className="header-selector">
+                        <div style={{float: "right"}}>
+                            <Button
+                                style={{marginRight: "5px"}}
+                                onClick={this.showWitnessModal.bind(this)}
+                            >
+                                <Translate content="account.votes.join_witnesses" />
+                            </Button>
+                        </div>
+
+                        <div className="selector inline-block">
+                            <Input
+                                placeholder={"Filter..."}
+                                value={this.state.filterSearch}
+                                style={{width: "220px"}}
+                                onChange={this.handleFilterChange.bind(this)}
+                                addonAfter={<AntIcon type="search" />}
+                            />
+                        </div>
+                    </div>
+                    <VotingAccountsList
+                        type="witness"
+                        label="account.votes.add_witness_label"
+                        items={this.state.all_witnesses}
+                        validateAccount={this.validateAccount.bind(
+                            this,
+                            "witnesses"
+                        )}
+                        onAddItem={this.onAddItem.bind(this, "witnesses")}
+                        onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
+                        tabIndex={hasProxy ? -1 : 2}
+                        supported={
+                            this.state[
+                                hasProxy ? "proxy_witnesses" : "witnesses"
+                            ]
+                        }
+                        withSelector={false}
+                        active={globalObject.get("active_witnesses")}
+                        proxy={this.state.proxy_account_id}
+                        filterSearch={filterSearch}
+                    />
+                </div>
+                <JoinWitnessesModal
+                    visible={this.state.showCreateWitnessModal}
+                    account={account}
+                    hideModal={this.showWitnessModal.bind(this)}
+                />
+            </Tab>
         );
     }
 }
