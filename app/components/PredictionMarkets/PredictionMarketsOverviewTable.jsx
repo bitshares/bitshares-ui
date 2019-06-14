@@ -73,6 +73,7 @@ export default class PredictionMarketsOverviewTable extends Component {
                 align: "left",
                 onCell,
                 render: dataItem => {
+                    // TODO translation
                     return (
                         <div
                             style={{
@@ -84,7 +85,7 @@ export default class PredictionMarketsOverviewTable extends Component {
                             {this.props.currentAccountId &&
                             this.props.currentAccountId === dataItem.issuer ? (
                                 <Button
-                                    style={{marginTop: "10px", width: "90%"}}
+                                    style={{marginTop: "10px", width: "170px"}}
                                     type="primary"
                                     onClick={() =>
                                         this.onMarketAction(dataItem, "resolve")
@@ -128,7 +129,7 @@ export default class PredictionMarketsOverviewTable extends Component {
     render() {
         let pagination = {
             hideOnSinglePage: true,
-            pageSize: 20,
+            pageSize: 10,
             showTotal: total =>
                 counterpart.translate("utility.total_x_items", {
                     count: total
@@ -136,7 +137,7 @@ export default class PredictionMarketsOverviewTable extends Component {
         };
 
         return (
-            <div style={{paddingTop: "20px"}} key="overview-table">
+            <div style={{paddingTop: "50px"}} key="overview-table">
                 <Table
                     columns={this._getColumns()}
                     dataSource={this.props.markets.map(item => ({

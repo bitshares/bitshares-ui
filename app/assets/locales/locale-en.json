@@ -1600,7 +1600,17 @@
             "prediction": "Prediction",
             "description": "Description",
             "odds": "Odds",
-            "action": "Action"
+            "action": "Action",
+            "create_market": "Create Prediction Market"
+        },
+        "details": {
+            "amount": "Amount",
+            "fee": "Fee",
+            "opinionator": "Opinionator",
+            "opinion": "Opinion",
+            "cancel": "Cancel",
+            "oppose": "Oppose",
+            "add_opinion": "Add opinion"
         }
     },
     "proposal": {

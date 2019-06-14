@@ -1,8 +1,11 @@
 import React, {Component} from "react";
 import counterpart from "counterpart";
 import PredictionMarketsOverviewTable from "./PredictionMarketsOverviewTable";
+import PredictionMarketDetailsTable from "./PredictionMarketDetailsTable";
 import SearchInput from "../Utility/SearchInput";
 import HelpContent from "../Utility/HelpContent";
+import AddOpinionModal from "./AddOpinionModal";
+import CreateMarketModal from "./CreateMarketModal";
 
 import {Button} from "bitshares-ui-style-guide";
 
@@ -32,46 +35,100 @@ const STUB_MARKETS = [
     }
 ];
 
+const STUB_OPINIONS = [
+    {
+        order_id: "1.4.1234",
+        opinionator: "1.2.23881",
+        opinion: "yes",
+        amount: 100,
+        fee: 0.1
+    },
+    {
+        order_id: "1.4.1235",
+        opinionator: STUB_ACCOUNT_ID,
+        opinion: "no",
+        amount: 100500,
+        fee: 0.11
+    },
+    {
+        order_id: "1.4.1236",
+        opinionator: "1.2.23881",
+        opinion: "yes",
+        amount: 200,
+        fee: 0.1
+    },
+    {
+        order_id: "1.4.1237",
+        opinionator: "1.2.23881",
+        opinion: "no",
+        amount: 666,
+        fee: 0.13
+    }
+];
+
 export default class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
         this.state = {
             markets: STUB_MARKETS,
-            searchTerm: ""
+            currentAccountId: STUB_ACCOUNT_ID,
+            searchTerm: "",
+            detailsSearchTerm: "",
+            selectedMarket: null,
+            opinions: [],
+            action: "yes",
+            isCreateMarketModalOpen: false,
+            isAddOpinionModalOpen: false
         };
     }
 
+    async getMarketOpinions(market) {
+        this.setState({opinions: STUB_OPINIONS});
+    }
+
     onMarketAction({market, action}) {
-        console.log(market);
-        console.log(action);
+        this.setState({
+            selectedMarket: market,
+            action
+        });
+        this.getMarketOpinions(market);
     }
 
     onSearch(event) {
         this.setState({searchTerm: event.target.value});
     }
 
-    onRowAction = dataItem => {
-        return {
-            onClick: this.onClick.bind(this, dataItem)
-        };
-    };
-
-    onCreatePredictionMarket() {
-        console.log("Create prediction market");
+    onSearchDetails(event) {
+        this.setState({detailsSearchTerm: event.target.value});
     }
 
-    render() {
+    onCreatePredictionMarketModalOpen() {
+        this.setState({
+            isCreateMarketModalOpen: true
+        });
+    }
+
+    onCreatePredictionMarketModalClose() {
+        this.setState({
+            isCreateMarketModalOpen: false
+        });
+    }
+
+    onAddOpinionModalOpen() {
+        this.setState({
+            isAddOpinionModalOpen: true
+        });
+    }
+
+    onAddOpinionModalClose() {
+        this.setState({
+            isAddOpinionModalOpen: false
+        });
+    }
+
+    getOverviewSection() {
         return (
-            <div
-                className="grid-block vertical"
-                style={{overflow: "visible", margin: "15px"}}
-            >
-                <div
-                    className="grid-block small-12 shrink"
-                    style={{overflow: "visible"}}
-                >
-                    <HelpContent path={"components/PredictionMarkets"} />
-                </div>
+            <div>
                 <div style={{paddingTop: "20px"}}>
                     <SearchInput
                         style={{width: "60%", float: "left"}}
@@ -86,16 +143,94 @@ export default class PredictionMarkets extends Component {
                     />
                     <Button
                         style={{float: "right"}}
-                        onClick={this.onCreatePredictionMarket.bind(this)}
+                        onClick={this.onCreatePredictionMarketModalOpen.bind(
+                            this
+                        )}
                     >
-                        Create Prediction Market
+                        {counterpart.translate(
+                            "prediction.overview.create_market"
+                        )}
                     </Button>
                 </div>
                 <PredictionMarketsOverviewTable
-                    markets={STUB_MARKETS}
-                    currentAccountId={STUB_ACCOUNT_ID}
+                    markets={this.state.markets}
+                    currentAccountId={this.state.currentAccountId}
                     onMarketAction={this.onMarketAction.bind(this)}
                 />
+            </div>
+        );
+    }
+
+    getDetailsSection() {
+        return (
+            <div>
+                <div style={{paddingTop: "20px"}}>
+                    <SearchInput
+                        style={{width: "60%", float: "left"}}
+                        onChange={this.onSearchDetails.bind(this)}
+                        onClear={() => {
+                            this.setState({detailsSearchTerm: ""});
+                        }}
+                        value={this.state.detailsSearchTerm}
+                        maxLength={256}
+                        autoComplete="off"
+                        placeholder={counterpart.translate("exchange.filter")}
+                    />
+                    <Button
+                        style={{float: "right"}}
+                        onClick={this.onAddOpinionModalOpen.bind(this)}
+                    >
+                        {counterpart.translate(
+                            "prediction.details.add_opinion"
+                        )}
+                    </Button>
+                </div>
+                <PredictionMarketDetailsTable
+                    marketData={{
+                        market: this.state.selectedMarket,
+                        opinions: this.state.opinions
+                    }}
+                    currentAccountId={this.state.currentAccountId}
+                    onOppose={dataItem => {
+                        console.log("Oppose", dataItem);
+                    }}
+                />
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            <div
+                className="grid-block vertical"
+                style={{overflow: "visible", margin: "15px"}}
+            >
+                <div
+                    className="grid-block small-12 shrink"
+                    style={{overflow: "visible"}}
+                >
+                    <HelpContent path={"components/PredictionMarkets"} />
+                </div>
+                {this.getOverviewSection()}
+                {this.state.selectedMarket ? this.getDetailsSection() : null}
+                {this.state.isAddOpinionModalOpen ? (
+                    <AddOpinionModal
+                        show={this.state.isAddOpinionModalOpen}
+                        onClose={this.onAddOpinionModalClose.bind(this)}
+                        market={this.state.selectedMarket}
+                        opinion={this.state.initialOpinion}
+                        currentAccountId={this.state.currentAccountId}
+                    />
+                ) : null}
+                {this.state.isCreateMarketModalOpen ? (
+                    <CreateMarketModal
+                        show={this.state.isCreateMarketModalOpen}
+                        onClose={this.onCreatePredictionMarketModalClose.bind(
+                            this
+                        )}
+                        currentAccountId={this.state.currentAccountId}
+                    />
+                ) : null}
             </div>
         );
     }
