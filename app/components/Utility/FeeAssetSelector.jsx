@@ -34,37 +34,31 @@ class FeeAssetSelector extends DecimalChecker {
         this._getFees = debounce(this._getFees.bind(this), 500);
     }
 
-    async _getFees(assets, account, data) {
+    async _getFees(assets, account, trxInfo) {
         const accountID = account.get("id");
         let result = this.state.fees;
         for (let asset_id of assets) {
             const {fee} = await checkFeeStatusAsync({
+                ...trxInfo,
                 accountID,
-                feeID: asset_id,
-                options: ["price_per_kbyte"],
-                data
+                feeID: asset_id
             });
             result[asset_id] = fee.getAmount({real: true});
         }
         this.setState({result});
     }
 
-    _updateFee(asset_id, memo, onChange) {
+    _updateFee(asset_id, trxInfo, onChange) {
         // Original asset id should be passed to child component along with from_account
         let {account} = this.props;
         if (!account) return null;
 
         let feeID = asset_id || this.state.fee_asset_id;
-        const trxData = {
-            type: "memo",
-            content: memo
-        };
-        this._getFees(this.state.assets, account, trxData);
+        this._getFees(this.state.assets, account, trxInfo);
         checkFeeStatusAsync({
+            ...trxInfo,
             accountID: account.get("id"),
-            feeID,
-            options: ["price_per_kbyte"],
-            data: trxData
+            feeID
         })
             .then(({fee, hasPoolBalance}) => {
                 this.setState({
@@ -86,15 +80,18 @@ class FeeAssetSelector extends DecimalChecker {
 
     componentWillReceiveProps(np, ns) {
         const {fee_amount, fee_asset_id} = this.state;
-        const memo_changed = np.memo !== this.props.memo;
+        const trxInfoChanged = !utils.are_equal_shallow(
+            np.trxInfo,
+            this.props.trxInfo
+        );
         const account_changed =
             np.account &&
             this.props.account &&
             np.account.get("id") !== this.props.account.get("id");
         const needsFeeCalculation =
-            memo_changed || !fee_amount || account_changed;
+            trxInfoChanged || !fee_amount || account_changed;
         if (needsFeeCalculation) {
-            this._updateFee(fee_asset_id, np.memo, np.onChange);
+            this._updateFee(fee_asset_id, np.trxInfo, np.onChange);
         }
     }
 
@@ -141,7 +138,7 @@ class FeeAssetSelector extends DecimalChecker {
         });*/
 
         this.setState({balances: account_balances, assets: fee_asset_types});
-        this._updateFee(account, this.props.memo, this.props.onChange);
+        this._updateFee(account, this.props.trxInfo, this.props.onChange);
         return fee_asset_types;
     }
 
@@ -159,7 +156,11 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     onAssetChange(selected_asset) {
-        this._updateFee(selected_asset, this.props.memo, this.props.onChange);
+        this._updateFee(
+            selected_asset,
+            this.props.trxInfo,
+            this.props.onChange
+        );
     }
 
     render() {
@@ -248,15 +249,15 @@ class FeeAssetSelector extends DecimalChecker {
 FeeAssetSelector.propTypes = {
     // a translation key for the input label
     label: PropTypes.string,
-    // TODO replace with options or trx builder
-    memo: PropTypes.string,
     // account which pays fee
     account: PropTypes.any,
     // handler for changed Fee (asset, or amount)
     onChange: PropTypes.func,
     tabIndex: PropTypes.number,
     selectDisabled: PropTypes.bool,
-    settings: PropTypes.any
+    settings: PropTypes.any,
+    // Object wih data required for fee calculation
+    trxInfo: PropTypes.any
 };
 
 FeeAssetSelector.defaultProps = {
@@ -264,8 +265,12 @@ FeeAssetSelector.defaultProps = {
     tabIndex: 0,
     selectDisabled: true,
     label: "transfer.fee",
-    memo: "",
-    account: null
+    account: null,
+    trxInfo: {
+        type: "transfer",
+        options: null,
+        data: {}
+    }
 };
 
 FeeAssetSelector = AssetWrapper(FeeAssetSelector);

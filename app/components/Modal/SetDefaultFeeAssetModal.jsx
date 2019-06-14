@@ -65,6 +65,7 @@ class SetDefaultFeeAssetModal extends React.Component {
     _getAssetsRows(assets) {
         return assets.map(assetInfo => ({
             id: assetInfo.asset.get("id"),
+            key: assetInfo.asset.get("id"),
             asset: assetInfo.asset.get("symbol"),
             link: `/asset/${assetInfo.asset.get("symbol")}`,
             balance:

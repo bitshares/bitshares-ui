@@ -682,9 +682,15 @@ class SendModal extends React.Component {
 
                                 <FeeAssetSelector
                                     label="transfer.fee"
-                                    disabled={true}
                                     account={from_account}
-                                    memo={memo}
+                                    trxInfo={{
+                                        type: "transfer",
+                                        options: ["price_per_kbyte"],
+                                        data: {
+                                            type: "memo",
+                                            content: memo
+                                        }
+                                    }}
                                     onChange={this.onFeeChanged.bind(this)}
                                     tabIndex={tabIndex++}
                                 />
