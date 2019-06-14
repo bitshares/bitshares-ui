@@ -29,10 +29,11 @@ import {
     Button
 } from "bitshares-ui-style-guide";
 import AccountStore from "stores/AccountStore";
-import JoinCommitteeModal from "../Modal/JoinCommitteeModal";
 import Witnesses from "./Voting/Witnesses";
+import Committee from "./Voting/Committee";
 
 const WITNESSES_KEY = "witnesses";
+const COMMITTEE_KEY = "committee";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -928,55 +929,45 @@ class AccountVoting extends React.Component {
     }
 
     getCommittee(hasProxy, globalObject, filterSearch, account) {
+        // this.state = {showCreateCommitteeModal: false};
+        const showCommitteeModal = () => {
+            this.setState({
+                showCreateCommitteeModal: !this.state.showCreateCommitteeModal
+            });
+        };
+
+        const {
+            all_committee,
+            proxy_committee,
+            committee,
+            proxy_account_id,
+            showCreateCommitteeModal
+        } = this.state;
+        const onFilterChange = this.handleFilterChange.bind(this);
+        const validateAccountHandler = this.validateAccount.bind(
+            this,
+            COMMITTEE_KEY
+        );
+        const addCommitteeHandler = this.onAddItem.bind(this, COMMITTEE_KEY);
+        const removeCommitteeHandler = this.onRemoveItem.bind(
+            this,
+            COMMITTEE_KEY
+        );
         return (
             <Tab title="explorer.committee_members.title">
-                <div className="header-selector">
-                    <div style={{float: "right"}}>
-                        <Button
-                            style={{marginRight: "5px"}}
-                            onClick={this.showCommitteeModal.bind(this)}
-                        >
-                            <Translate content="account.votes.join_committee" />
-                        </Button>
-                    </div>
-
-                    <div className="selector inline-block">
-                        <Input
-                            placeholder={"Filter..."}
-                            value={this.state.filterSearch}
-                            style={{width: "220px"}}
-                            onChange={this.handleFilterChange.bind(this)}
-                            addonAfter={<AntIcon type="search" />}
-                        />
-                    </div>
-                </div>
-                <div className={cnames("content-block")}>
-                    <VotingAccountsList
-                        type="committee"
-                        label="account.votes.add_committee_label"
-                        items={this.state.all_committee}
-                        validateAccount={this.validateAccount.bind(
-                            this,
-                            "committee"
-                        )}
-                        onAddItem={this.onAddItem.bind(this, "committee")}
-                        onRemoveItem={this.onRemoveItem.bind(this, "committee")}
-                        tabIndex={hasProxy ? -1 : 3}
-                        supported={
-                            this.state[
-                                hasProxy ? "proxy_committee" : "committee"
-                            ]
-                        }
-                        withSelector={false}
-                        active={globalObject.get("active_committee_members")}
-                        proxy={this.state.proxy_account_id}
-                        filterSearch={filterSearch}
-                    />
-                </div>
-                <JoinCommitteeModal
-                    visible={this.state.showCreateCommitteeModal}
+                <Committee
+                    all_committee={all_committee}
+                    proxy_committee={proxy_committee}
+                    committee={committee}
+                    proxy_account_id={proxy_account_id}
+                    onFilterChange={onFilterChange}
+                    validateAccountHandler={validateAccountHandler}
+                    addCommitteeHandler={addCommitteeHandler}
+                    removeCommitteeHandler={removeCommitteeHandler}
+                    hasProxy={hasProxy}
+                    globalObject={globalObject}
+                    filterSearch={filterSearch}
                     account={account}
-                    hideModal={this.showCommitteeModal.bind(this)}
                 />
             </Tab>
         );
