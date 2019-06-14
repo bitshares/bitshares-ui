@@ -54,8 +54,7 @@ class AccountVoting extends React.Component {
             pollsLength: null,
             expiredWorkersLength: null,
             voteThreshold: null,
-            filterSearch: "",
-            showCreateCommitteeModal: false
+            filterSearch: ""
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -77,8 +76,6 @@ class AccountVoting extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         return (
-            ns.showCreateCommitteeModal !==
-                this.state.showCreateCommitteeModal ||
             ns.workerTableIndex !== this.state.workerTableIndex ||
             ns.prev_proxy_account_id !== this.state.prev_proxy_account_id ||
             ns.newWorkersLength !== this.state.newWorkersLength ||
@@ -87,7 +84,6 @@ class AccountVoting extends React.Component {
             ns.expiredWorkersLength !== this.state.expiredWorkersLength ||
             ns.voteThreshold !== this.state.voteThreshold ||
             ns.hideLegacyProposals !== this.state.hideLegacyProposals ||
-            ns.workerTableIndex !== this.state.workerTableIndex ||
             ns.vote_ids.size !== this.state.vote_ids.size ||
             ns.current_proxy_input !== this.state.current_proxy_input ||
             ns.filterSearch !== this.state.filterSearch ||
@@ -258,12 +254,6 @@ class AccountVoting extends React.Component {
 
     onPublish() {
         this.publish(this.state.proxy_account_id);
-    }
-
-    showCommitteeModal() {
-        this.setState({
-            showCreateCommitteeModal: !this.state.showCreateCommitteeModal
-        });
     }
 
     publish(new_proxy_id) {
@@ -535,12 +525,6 @@ class AccountVoting extends React.Component {
         }
     }
 
-    _setWorkerTableIndex(e) {
-        this.setState({
-            workerTableIndex: e.target.value
-        });
-    }
-
     setWorkersLength(
         newWorkersLength,
         activeWorkersLength,
@@ -801,11 +785,6 @@ class AccountVoting extends React.Component {
         filterSearch
     ) {
         const {vote_ids, proxy_vote_ids} = this.state;
-        const setWorkerTableIndex = e => {
-            this.setState({
-                workerTableIndex: e.target.value
-            });
-        };
 
         const setWorkersLength = this.setWorkersLength.bind(this);
         const onFilterChange = this.handleFilterChange.bind(this);
@@ -833,6 +812,7 @@ class AccountVoting extends React.Component {
                     onChangeVotes={onChangeVotes}
                     getWorkerArray={getWorkerArray}
                     setWorkersLength={setWorkersLength}
+                    workerTableIndex={workerTableIndex}
                 />
             </Tab>
         );
