@@ -29,8 +29,10 @@ import {
     Button
 } from "bitshares-ui-style-guide";
 import AccountStore from "stores/AccountStore";
-import JoinWitnessesModal from "../Modal/JoinWitnessesModal";
 import JoinCommitteeModal from "../Modal/JoinCommitteeModal";
+import Witnesses from "./Voting/Witnesses";
+
+const WITNESSES_KEY = "witnesses";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -66,8 +68,7 @@ class AccountVoting extends React.Component {
             expiredWorkersLength: null,
             voteThreshold: null,
             filterSearch: "",
-            showCreateCommitteeModal: false,
-            showCreateWitnessModal: false
+            showCreateCommitteeModal: false
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -89,7 +90,6 @@ class AccountVoting extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         return (
-            ns.showCreateWitnessModal !== this.state.showCreateWitnessModal ||
             ns.showCreateCommitteeModal !==
                 this.state.showCreateCommitteeModal ||
             ns.workerTableIndex !== this.state.workerTableIndex ||
@@ -213,9 +213,9 @@ class AccountVoting extends React.Component {
         );
     }
 
-    _getVoteObjects(type = "witnesses", vote_ids) {
+    _getVoteObjects(type = WITNESSES_KEY, vote_ids) {
         let current = this.state[`all_${type}`];
-        const isWitness = type === "witnesses";
+        const isWitness = type === WITNESSES_KEY;
         let lastIdx;
         if (!vote_ids) {
             vote_ids = [];
@@ -271,13 +271,6 @@ class AccountVoting extends React.Component {
 
     onPublish() {
         this.publish(this.state.proxy_account_id);
-    }
-
-    showWitnessModal() {
-        console.log("asdasd");
-        this.setState({
-            showCreateWitnessModal: !this.state.showCreateWitnessModal
-        });
     }
 
     showCommitteeModal() {
@@ -431,7 +424,7 @@ class AccountVoting extends React.Component {
 
     validateAccount(collection, account) {
         if (!account) return null;
-        if (collection === "witnesses") {
+        if (collection === WITNESSES_KEY) {
             return FetchChainObjects(
                 ChainStore.getWitnessById,
                 [account.get("id")],
@@ -990,55 +983,40 @@ class AccountVoting extends React.Component {
     }
 
     getWitnesses(hasProxy, globalObject, filterSearch, account) {
+        // make it props
+        // hasProxy, globalObject, filterSearch, account
+        // all_witnesses, proxy_witnesses, witnesses, proxy_account_id;
+        const onFilterChange = this.handleFilterChange.bind(this);
+        const validateAccountHandler = this.validateAccount.bind(
+            this,
+            WITNESSES_KEY
+        );
+        const addWitnessHandler = this.onAddItem.bind(this, WITNESSES_KEY);
+        const removeWitnessHandler = this.onRemoveItem.bind(
+            this,
+            WITNESSES_KEY
+        );
+        const {
+            all_witnesses,
+            proxy_witnesses,
+            witnesses,
+            proxy_account_id
+        } = this.state;
         return (
             <Tab title="explorer.witnesses.title">
-                <div className={cnames("content-block")}>
-                    <div className="header-selector">
-                        <div style={{float: "right"}}>
-                            <Button
-                                style={{marginRight: "5px"}}
-                                onClick={this.showWitnessModal.bind(this)}
-                            >
-                                <Translate content="account.votes.join_witnesses" />
-                            </Button>
-                        </div>
-
-                        <div className="selector inline-block">
-                            <Input
-                                placeholder={"Filter..."}
-                                value={this.state.filterSearch}
-                                style={{width: "220px"}}
-                                onChange={this.handleFilterChange.bind(this)}
-                                addonAfter={<AntIcon type="search" />}
-                            />
-                        </div>
-                    </div>
-                    <VotingAccountsList
-                        type="witness"
-                        label="account.votes.add_witness_label"
-                        items={this.state.all_witnesses}
-                        validateAccount={this.validateAccount.bind(
-                            this,
-                            "witnesses"
-                        )}
-                        onAddItem={this.onAddItem.bind(this, "witnesses")}
-                        onRemoveItem={this.onRemoveItem.bind(this, "witnesses")}
-                        tabIndex={hasProxy ? -1 : 2}
-                        supported={
-                            this.state[
-                                hasProxy ? "proxy_witnesses" : "witnesses"
-                            ]
-                        }
-                        withSelector={false}
-                        active={globalObject.get("active_witnesses")}
-                        proxy={this.state.proxy_account_id}
-                        filterSearch={filterSearch}
-                    />
-                </div>
-                <JoinWitnessesModal
-                    visible={this.state.showCreateWitnessModal}
+                <Witnesses
+                    all_witnesses={all_witnesses}
+                    proxy_witnesses={proxy_witnesses}
+                    witnesses={witnesses}
+                    proxy_account_id={proxy_account_id}
+                    onFilterChange={onFilterChange}
+                    validateAccountHandler={validateAccountHandler}
+                    addWitnessHandler={addWitnessHandler}
+                    removeWitnessHandler={removeWitnessHandler}
+                    hasProxy={hasProxy}
+                    globalObject={globalObject}
+                    filterSearch={filterSearch}
                     account={account}
-                    hideModal={this.showWitnessModal.bind(this)}
                 />
             </Tab>
         );
