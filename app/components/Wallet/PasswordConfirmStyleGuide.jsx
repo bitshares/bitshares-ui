@@ -3,7 +3,7 @@ import Immutable from "immutable";
 import cname from "classnames";
 import PropTypes from "prop-types";
 import counterpart from "counterpart";
-import { Form, Input } from "bitshares-ui-style-guide";
+import {Form, Input} from "bitshares-ui-style-guide";
 
 const FormItem = Form.Item;
 
@@ -106,7 +106,7 @@ export default class PasswordConfirm extends Component {
 
                         <div>
                             {errors.get("password_match") ||
-                            errors.get("password_length")}
+                                errors.get("password_length")}
                         </div>
                     </section>
                 </FormItem>

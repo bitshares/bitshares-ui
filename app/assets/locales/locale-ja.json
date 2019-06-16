@@ -293,6 +293,8 @@
             "primary": "主要設定",
             "quote": "クオートアセット量",
             "quote_name": "クオートアセット",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "ショートネーム (最大32文字)",
             "symbol": "シンボル",
             "to": "アカウントへ発行",
@@ -313,7 +315,7 @@
         },
         "votes": {
             "about": "About",
-            "active": "Active(%(count)s)",
+            "active": "Active (%(count)s)",
             "active_short": "アクティブ",
             "add_committee": "追加",
             "add_committee_label": "委員",
@@ -321,6 +323,7 @@
             "add_witness_label": "証人",
             "already": "アカウントは既にリストに入っています",
             "approve_worker": "承認",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "clear_proxy": "代理人を削除",
             "cm_approved_by": "%(account)sによって承認された委員",
             "cm_not_approved_by": "%(account)sによって承認されていない委員",
@@ -336,13 +339,15 @@
             "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "バックアップ",
             "info": "情報",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "Line",
             "max_pay": "最大総支払い額",
             "missing": "Needed",
             "name": "名前",
-            "new": "Proposed(%(count)s)",
+            "new": "Proposed (%(count)s)",
             "no_proxy": "代理人はいません",
-            "polls": "Polls(%(count)s)",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "代理人にするアカウントを手動で入力",
             "proxy_current": "現在の代理人: ",
             "proxy_known": "または代理人アカウントを選択してください",
@@ -393,7 +398,8 @@
             "empty_white_by": "%(account)sをホワイトリストに登録したアカウントはありません。",
             "title": "ホワイトリスト",
             "white_by": "ホワイトリスト登録者",
-            "whitelist_authorities": "ホワイトリスト権限"
+            "whitelist_authorities": "ホワイトリスト権限",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -730,8 +736,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Cumulative",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
@@ -750,10 +762,14 @@
             "info": "Asset info",
             "invalid": "アセット名%(name)sは無効です",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "マージンポジション"
             },
             "not_found": "アセット%(name)sは存在しません",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "ブラックリスト権限",
                 "blacklist_markets": "ブラックリストマーケット",
                 "max_market_fee": "最大取引手数料",
@@ -811,7 +827,7 @@
                 "current_supply": "現在の供給量",
                 "issuer": "発行者",
                 "market_fee": "取引手数料",
-                "max_market_fee": "最大取引手数料",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "隠れた供給量"
             },
             "title": "アセット",
@@ -819,7 +835,9 @@
                 "blacklist_authorities": "ブラックリスト権限",
                 "blacklist_markets": "マーケットブラックリスト",
                 "enable_flag": "ホワイトリスト権限を設定するには、ホワイトリストのフラグを有効にする必要があります。",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "ホワイトリスト権限",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "マーケットホワイトリスト"
             }
         },
@@ -904,6 +922,7 @@
             "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
@@ -1124,6 +1143,7 @@
             "account": "account"
         },
         "help": "Help",
+        "not_found": "Not found",
         "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code",
         "set": "Set"
@@ -1335,6 +1355,14 @@
         },
         "cancel": "cancel",
         "close": "close",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
         "confirmation": {
             "accept": "はい",
             "cancel": "いいえ",
@@ -1442,6 +1470,17 @@
             "quantity": "数量",
             "submit": "出金",
             "withdraw": "出金"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "enter_public_signing_key": "Enter your public signing key",
+            "invalid_key": "Public Key is invalid",
+            "public_signing_key": "Public Signing Key",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "witness_account": "Witness Account"
         }
     },
     "news": {
@@ -1780,6 +1819,7 @@
         "themes": "テーマ",
         "unit": "アカウントの単位選択",
         "valid_node_url": "ノードURLは ws:// または wss://で始まる必要があります。",
+        "viewOnlyMode": "View only mode",
         "view_keys": "キーを見る",
         "wallet": "ウォレット",
         "walletLockTimeout": "ウォレットの自動ロック時間 (秒。0の場合は無効)",
@@ -1909,8 +1949,8 @@
         "htlc": {
             "actions": "Actions",
             "amount": "Amount",
-            "claim": "Claim",
             "create_htlc": "Create HTLC",
+            "custom": "Custom",
             "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
             "enter_secret_preimage": "Enter secret preimage",
             "expiration": "Expiration",
@@ -1923,12 +1963,15 @@
             "expires": "Expires",
             "extend": "Extend",
             "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
             "from": "From",
             "hash": "Hash",
             "preimage": "Preimage",
             "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
             "recipient": "Recipient",
+            "redeem": "Redeem",
             "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",
@@ -2034,7 +2077,7 @@
         "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
-        "proxy_search": "Search for an account to be used as your proxy for voting",
+        "proxy_search": "",
         "registration": {
             "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
             "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
@@ -2321,6 +2364,10 @@
             "urlNamed": "%(name)s should be url"
         }
     },
+    "voting": {
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "title": "Voting"
+    },
     "walkthrough": {
         "buy_form": "このフォームを使用して買い注文を出します。",
         "buy_orders": "この市場のすべての買い注文を表示する。",
@@ -2361,6 +2408,7 @@
         "backup_explain": "下のボタンをクリックすると、拡張子 .bin のバックアップファイルが生成されます。このファイルはウォレットのパスワードで暗号化されており、アカウントのすべての秘密キーを含んでいます。ウォレットのリストアや他のコンピュータ / ブラウザへの移動に使用することができます。",
         "backup_login": "Backup & login",
         "backup_new_account": "おめでとうございます。新しいアカウントを作成しました。今すぐウォレットのバックアップを作成することを強く推奨します。バックアップがない場合、コンピュータに何か問題が発生した場合にリストアすることはできません。",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "残高を検索",
         "balance_claims": "残高請求",
@@ -2470,6 +2518,7 @@
         "password_show": "パスワードを表示する",
         "paste_private": "秘密キーをここに貼り付けてください (Wallet Import Format - WIF)",
         "pwd4brainkey": "ブレインキーを表示するにはパスワードを入力してください",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "リストアできます",
         "reenter_brainkey": "ブレインキーを再入力してください",
         "remember_me": "Remember me",
@@ -2524,6 +2573,7 @@
         "wallet_model_2": "ウォレットモデルは最高のセキュリティを備えていますが、現在のブラウザとコンピュータに制限されます。ウォレットを他のブラウザやコンピュータに移行するには、バックアップまたはブレインキーを使用します。",
         "wallet_model_3": "<li>複数アカウント</li><li>ウォレットファイルのバックアップが必要</li><li>高度なセキュリティ</li>",
         "wallet_move": "このバックアップファイルによって、他のコンピュータやブラウザにウォレットを移動することができます。このバックアップを使用してウォレットをリストアするには、<strong>あなたのパスワードが必要です！</strong>",
-        "wallet_password": "パスワードを使用してどこでもログイン"
+        "wallet_password": "パスワードを使用してどこでもログイン",
+        "wallet_types": "wallet types"
     }
 }

@@ -899,25 +899,25 @@ class CallOrder {
         let orderDebt = order.iSum
             ? order.debt
             : orderUseCR
-            ? order.max_debt_to_cover.getAmount()
-            : order.amountToReceive().getAmount();
+                ? order.max_debt_to_cover.getAmount()
+                : order.amountToReceive().getAmount();
         let newOrderDebt = newOrder.iSum
             ? newOrder.debt
             : newOrderUseCR
-            ? newOrder.max_debt_to_cover.getAmount()
-            : newOrder.amountToReceive().getAmount();
+                ? newOrder.max_debt_to_cover.getAmount()
+                : newOrder.amountToReceive().getAmount();
 
         /* Determine which collateral values to use */
         let orderCollateral = order.iSum
             ? order.collateral
             : orderUseCR
-            ? order.max_collateral_to_sell.getAmount()
-            : order.amountForSale().getAmount();
+                ? order.max_collateral_to_sell.getAmount()
+                : order.amountForSale().getAmount();
         let newOrderCollateral = newOrder.iSum
             ? newOrder.collateral
             : newOrderUseCR
-            ? newOrder.max_collateral_to_sell.getAmount()
-            : newOrder.amountForSale().getAmount();
+                ? newOrder.max_collateral_to_sell.getAmount()
+                : newOrder.amountForSale().getAmount();
 
         newOrder.debt = newOrderDebt + orderDebt;
         newOrder.collateral = newOrderCollateral + orderCollateral;
@@ -1232,8 +1232,8 @@ class FillOrder {
         this.className = this.isCall
             ? "orderHistoryCall"
             : this.isBid
-            ? "orderHistoryBid"
-            : "orderHistoryAsk";
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
         this.time = fill.time && new Date(utils.makeISODateString(fill.time));
         this.block = fill.block;
         this.account = fill.op.account || fill.op.account_id;
