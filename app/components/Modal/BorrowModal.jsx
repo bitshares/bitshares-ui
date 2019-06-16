@@ -27,8 +27,8 @@ import {BorrowModalView} from "./BorrowModalView";
 class BorrowModalContent extends React.Component {
     static propTypes = {
         quoteAssetObj: ChainTypes.ChainAsset.isRequired,
-        debtBalanceObj: ChainTypes.ChainObject,
         backingAssetObj: ChainTypes.ChainAsset.isRequired,
+        debtBalanceObj: ChainTypes.ChainObject,
         collateralBalanceObj: ChainTypes.ChainObject,
         call_orders: ChainTypes.ChainObjectsList,
         hasCallOrders: PropTypes.bool
@@ -220,8 +220,6 @@ class BorrowModalContent extends React.Component {
                   collateral: amount,
                   collateral_ratio: collateralRatio
               };
-
-        console.log(newState);
 
         this.setState(newState);
         this._validateFields(newState);
@@ -626,8 +624,8 @@ class BorrowModalContent extends React.Component {
     render() {
         let {
             quoteAssetObj,
-            debtBalanceObj,
             backingAssetObj,
+            debtBalanceObj,
             collateralBalanceObj
         } = this.props;
         let {
@@ -640,35 +638,45 @@ class BorrowModalContent extends React.Component {
             useTargetCollateral
         } = this.state;
 
-        let backingPrecision = utils.get_asset_precision(
-            this.props.backingAssetObj.get("precision")
-        );
-
         if (
             !collateral_ratio ||
             isNaN(collateral_ratio) ||
             !(collateral_ratio > 0.0 && collateral_ratio < 1000.0)
-        )
+        ) {
             collateral_ratio = 0;
+        }
+
         debtBalanceObj = !debtBalanceObj
             ? {balance: 0, id: null}
             : debtBalanceObj.toJS();
+
         collateralBalanceObj = !collateralBalanceObj
             ? {balance: 0, id: null}
             : collateralBalanceObj.toJS();
 
+        let backingPrecision = utils.get_asset_precision(
+            this.props.backingAssetObj.get("precision")
+        );
+        let debtPrecision = utils.get_asset_precision(
+            this.props.quoteAssetObj.get("precision")
+        );
+
         // Dynamically update user's remaining collateral
         let currentPosition = this._getCurrentPosition(this.props);
-        let backingBalance = collateralBalanceObj.id
-            ? ChainStore.getObject(collateralBalanceObj.id)
-            : null;
-        let backingAmount = backingBalance ? backingBalance.get("balance") : 0;
         let collateralChange = parseInt(
             this.state.collateral * backingPrecision -
                 currentPosition.collateral,
             10
         );
-        let remainingBackingBalance = backingAmount - collateralChange;
+
+        let debtChange = parseInt(
+            this.state.debtAmount * debtPrecision - currentPosition.debt,
+            10
+        );
+
+        let remainingBackingBalance =
+            collateralBalanceObj.balance - collateralChange;
+        let remainingDebtBalance = debtBalanceObj.balance + debtChange;
 
         let feed_price = this._getFeedPrice();
 
@@ -738,6 +746,7 @@ class BorrowModalContent extends React.Component {
                     backingPrecision={backingPrecision}
                     maintenanceRatio={maintenanceRatio}
                     remainingBackingBalance={remainingBackingBalance}
+                    remainingDebtBalance={remainingDebtBalance}
                     target_collateral_ratio={target_collateral_ratio}
                     unlockedInputType={this.state.unlockedInputType}
                     // Bool Flags

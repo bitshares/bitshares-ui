@@ -37,6 +37,7 @@ export const BorrowModalView = props => {
         backingPrecision,
         maintenanceRatio,
         remainingBackingBalance,
+        remainingDebtBalance,
         target_collateral_ratio,
         unlockedInputType,
 
@@ -90,7 +91,10 @@ export const BorrowModalView = props => {
                 <Translate component="span" content="transfer.available" />:{" "}
                 <span>
                     {debtBalanceObj.id ? (
-                        <BalanceComponent balance={debtBalanceObj.id} />
+                        <FormattedAsset
+                            amount={remainingDebtBalance}
+                            asset={quoteAssetObj.get("id")}
+                        />
                     ) : (
                         <FormattedAsset
                             amount={0}
