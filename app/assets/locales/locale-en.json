@@ -451,6 +451,7 @@
             "collateral": "Insufficient collateral balance",
             "increased_debt_on_margin_call": "You increased your debt, which is not allowed when updating a margin called position"
         },
+        "lockedCR": "Locking Collateral Ratio will override other locked fields",
         "maximize_debt_set_ratio_slider": "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "No valid feeds for %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
