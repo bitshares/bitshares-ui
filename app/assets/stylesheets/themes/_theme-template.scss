@@ -1829,11 +1829,23 @@
         }
     }
 
-    .danger > svg > path {
-        fill: darken($alert-color, 15%) !important;
+    .margin-row > td:last-of-type {
+        padding: 0px !important;
+        margin: 0px !important;
     }
-    .warning > svg > path {
-        fill: darken($warning-color, 15%) !important;
+
+    .margin-ratio {
+        padding: 6px;
+        @include RobotoMedium;
+    }
+
+    .margin-ratio.danger {
+        background-color: darken($alert-color, 15%) !important;
+        color: darken($dark-text-color, 15%);
+    }
+    .margin-ratio.warning {
+        background-color: darken($warning-color, 15%) !important;
+        color: darken($dark-text-color, 15%);
     }
 
     tr.margin-row {
