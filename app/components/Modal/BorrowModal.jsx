@@ -466,6 +466,20 @@ class BorrowModalContent extends React.Component {
 
         var tr = WalletApi.new_transaction();
         if (extensionsProp) {
+            // delta_collateral amount can not be 0
+            let delta_collateral_amount =
+                this.state.collateral != currentPosition.collateral
+                    ? parseInt(
+                          this.state.collateral * backingPrecision -
+                              currentPosition.collateral,
+                          10
+                      )
+                    : parseInt(
+                          this.state.collateral * backingPrecision -
+                              (currentPosition.collateral - 1),
+                          10
+                      );
+
             tr.add_type_operation("call_order_update", {
                 fee: {
                     amount: 0,
@@ -473,11 +487,7 @@ class BorrowModalContent extends React.Component {
                 },
                 funding_account: this.props.account.get("id"),
                 delta_collateral: {
-                    amount: parseInt(
-                        this.state.collateral * backingPrecision -
-                            currentPosition.collateral,
-                        10
-                    ),
+                    amount: delta_collateral_amount,
                     asset_id: this.props.backing_asset.get("id")
                 },
                 delta_debt: {
