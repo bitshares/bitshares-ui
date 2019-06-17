@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import JoinCommitteeModal from "../../Modal/JoinCommitteeModal";
 import VotingAccountsList from "../VotingAccountsList";
@@ -51,7 +52,9 @@ export default class Committee extends Component {
 
                     <div className="selector inline-block">
                         <Input
-                            placeholder={"Filter..."}
+                            placeholder={counterpart.translate(
+                                "explorer.witnesses.filter_by_name"
+                            )}
                             value={filterSearch}
                             style={{width: "220px"}}
                             onChange={onFilterChange}

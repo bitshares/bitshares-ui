@@ -64,7 +64,9 @@ export default class Workers extends React.Component {
 
                     <div className="selector inline-block">
                         <Input
-                            placeholder={"Filter..."}
+                            placeholder={counterpart.translate(
+                                "explorer.witnesses.filter_by_name"
+                            )}
                             value={filterSearch}
                             style={{width: "220px"}}
                             onChange={onFilterChange}
