@@ -140,8 +140,7 @@ class AccountPage extends React.Component {
                             )}
                         />
                         <Route
-                            path={`/account/${account_name}/voting`}
-                            exact
+                            path={`/account/${account_name}/voting/:tab`}
                             render={() => <AccountVoting {...passOnProps} />}
                         />
                         <Route

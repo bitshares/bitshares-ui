@@ -46,6 +46,12 @@ const AccountPage = Loadable({
     loading: LoadingIndicator
 });
 
+const AccountVotingPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "account" */ "./components/Account/AccountVoting"),
+    loading: LoadingIndicator
+});
+
 const Transfer = Loadable({
     loader: () =>
         import(/* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"),

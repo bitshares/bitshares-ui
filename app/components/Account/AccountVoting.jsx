@@ -1,9 +1,10 @@
 import React from "react";
+import {withRouter} from "react-router";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import accountUtils from "common/account_utils";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
-import {Tabs, Tab} from "../Utility/Tabs";
+import {Tab} from "../Utility/Tabs";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {Link} from "react-router-dom";
@@ -12,7 +13,7 @@ import AccountSelector from "./AccountSelector";
 import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
 import SettingsStore from "stores/SettingsStore";
-import {Switch, Tooltip, Button} from "bitshares-ui-style-guide";
+import {Switch, Tooltip, Button, Tabs} from "bitshares-ui-style-guide";
 import AccountStore from "stores/AccountStore";
 import Witnesses from "./Voting/Witnesses";
 import Committee from "./Voting/Committee";
@@ -54,8 +55,29 @@ class AccountVoting extends React.Component {
             pollsLength: null,
             expiredWorkersLength: null,
             voteThreshold: null,
-            filterSearch: ""
+            filterSearch: "",
+            tabs: [
+                {
+                    name: "witnesses",
+                    link: "/account/twat123/voting/witnesses",
+                    translate: "explorer.witnesses.title",
+                    content: Witnesses
+                },
+                {
+                    name: "committee",
+                    link: "/account/twat123/voting/committee",
+                    translate: "explorer.committee_members.title",
+                    content: Committee
+                },
+                {
+                    name: "workers",
+                    link: "/account/twat123/voting/workers",
+                    translate: "account.votes.workers_short",
+                    content: Workers
+                }
+            ]
         };
+
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
@@ -76,6 +98,7 @@ class AccountVoting extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         return (
+            np.location.pathname !== this.props.location.pathname ||
             ns.workerTableIndex !== this.state.workerTableIndex ||
             ns.prev_proxy_account_id !== this.state.prev_proxy_account_id ||
             ns.newWorkersLength !== this.state.newWorkersLength ||
@@ -548,7 +571,7 @@ class AccountVoting extends React.Component {
     }
 
     render() {
-        let {
+        const {
             workerTableIndex,
             prev_proxy_account_id,
             newWorkersLength,
@@ -557,26 +580,161 @@ class AccountVoting extends React.Component {
             expiredWorkersLength,
             voteThreshold,
             hideLegacyProposals,
-            filterSearch
+            filterSearch,
+            all_witnesses,
+            proxy_witnesses,
+            witnesses,
+            all_committee,
+            proxy_committee,
+            committee,
+            vote_ids,
+            proxy_vote_ids,
+            proxy_account_id
         } = this.state;
         const accountHasProxy = !!prev_proxy_account_id;
-        let preferredUnit = this.props.settings.get("unit") || "1.3.0";
-        let hasProxy = !!this.state.proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
-        let {globalObject, account} = this.props;
+        const preferredUnit = this.props.settings.get("unit") || "1.3.0";
+        const hasProxy = !!proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
+        const {globalObject, account} = this.props;
+        const {totalBudget, workerBudget} = this._getBudgets(globalObject);
+
+        const actionButtons = this._getActionButtons();
+
+        const proxyInput = this._getProxyInput(accountHasProxy);
+
+        const hideLegacy = this._getHideLegacyOptions();
+
+        const onFilterChange = this.handleFilterChange.bind(this);
+        const validateAccountHandler = this.validateAccount.bind(
+            this,
+            WITNESSES_KEY
+        );
+        const addWitnessHandler = this.onAddItem.bind(this, WITNESSES_KEY);
+        const removeWitnessHandler = this.onRemoveItem.bind(
+            this,
+            WITNESSES_KEY
+        );
+        const setWorkersLength = this.setWorkersLength.bind(this);
+        const onChangeVotes = this.onChangeVotes.bind(this);
+        const getWorkerArray = this._getWorkerArray.bind(this);
+        const addCommitteeHandler = this.onAddItem.bind(this, COMMITTEE_KEY);
+        const removeCommitteeHandler = this.onRemoveItem.bind(
+            this,
+            COMMITTEE_KEY
+        );
+
+        const onTabChange = value => {
+            this.props.history.push(value);
+        };
+
+        return (
+            <div className="grid-content no-padding page-layout ">
+                <div className="main-content content-block small-12 voting">
+                    <div className="padding">
+                        <div>
+                            <Translate content="voting.title" component="h1" />
+                            <Translate
+                                content="voting.description"
+                                component="p"
+                            />
+                        </div>
+                        <div className="proxy-row">
+                            {proxyInput}
+                            {actionButtons}
+                        </div>
+                    </div>
+
+                    <Tabs
+                        activeKey={this.props.location.pathname}
+                        animated={false}
+                        style={{
+                            display: "table",
+                            height: "100%",
+                            width: "100%"
+                        }}
+                        onChange={onTabChange}
+                    >
+                        {this.state.tabs.map(tab => {
+                            const TabContent = tab.content;
+
+                            return (
+                                <Tabs.TabPane
+                                    key={tab.link}
+                                    tab={counterpart.translate(tab.translate)}
+                                >
+                                    <div className="padding">
+                                        <TabContent
+                                            all_witnesses={all_witnesses}
+                                            proxy_witnesses={proxy_witnesses}
+                                            witnesses={witnesses}
+                                            proxy_account_id={proxy_account_id}
+                                            onFilterChange={onFilterChange}
+                                            validateAccountHandler={
+                                                validateAccountHandler
+                                            }
+                                            addWitnessHandler={
+                                                addWitnessHandler
+                                            }
+                                            removeWitnessHandler={
+                                                removeWitnessHandler
+                                            }
+                                            hasProxy={hasProxy}
+                                            globalObject={globalObject}
+                                            filterSearch={filterSearch}
+                                            account={account}
+                                            all_committee={all_committee}
+                                            proxy_committee={proxy_committee}
+                                            committee={committee}
+                                            addCommitteeHandler={
+                                                addCommitteeHandler
+                                            }
+                                            removeCommitteeHandler={
+                                                removeCommitteeHandler
+                                            }
+                                            vote_ids={vote_ids}
+                                            proxy_vote_ids={proxy_vote_ids}
+                                            newWorkersLength={newWorkersLength}
+                                            activeWorkersLength={
+                                                activeWorkersLength
+                                            }
+                                            pollsLength={pollsLength}
+                                            expiredWorkersLength={
+                                                expiredWorkersLength
+                                            }
+                                            hideLegacy={hideLegacy}
+                                            preferredUnit={preferredUnit}
+                                            voteThreshold={voteThreshold}
+                                            totalBudget={totalBudget}
+                                            workerBudget={workerBudget}
+                                            hideLegacyProposals={
+                                                hideLegacyProposals
+                                            }
+                                            onChangeVotes={onChangeVotes}
+                                            getWorkerArray={getWorkerArray}
+                                            setWorkersLength={setWorkersLength}
+                                            workerTableIndex={workerTableIndex}
+                                        />
+                                    </div>
+                                </Tabs.TabPane>
+                            );
+                        })}
+                    </Tabs>
+                </div>
+            </div>
+        );
+    }
+
+    _getBudgets(globalObject) {
         let budgetObject;
         if (this.state.lastBudgetObject) {
             budgetObject = ChainStore.getObject(this.state.lastBudgetObject);
         }
-
         let totalBudget = 0;
-        // let unusedBudget = 0;
         let workerBudget = globalObject
             ? parseInt(
                   globalObject.getIn(["parameters", "worker_budget_per_day"]),
                   10
               )
             : 0;
-
         if (budgetObject) {
             workerBudget = Math.min(
                 24 * budgetObject.getIn(["record", "worker_budget"]),
@@ -587,39 +745,11 @@ class AccountVoting extends React.Component {
                 workerBudget
             );
         }
+        return {totalBudget, workerBudget};
+    }
 
-        let actionButtons = (
-            <Tooltip
-                title={counterpart.translate(
-                    "account.votes.cast_votes_through_one_operation"
-                )}
-                mouseEnterDelay={0.5}
-            >
-                <div
-                    style={{
-                        float: "right"
-                    }}
-                >
-                    <Button
-                        type="primary"
-                        onClick={this.onPublish}
-                        tabIndex={4}
-                        disabled={!this.isChanged() ? true : undefined}
-                    >
-                        <Translate content="account.votes.publish" />
-                    </Button>
-                    <Button
-                        style={{marginLeft: "8px"}}
-                        onClick={this.onReset}
-                        tabIndex={8}
-                    >
-                        <Translate content="account.perm.reset" />
-                    </Button>
-                </div>
-            </Tooltip>
-        );
-
-        let proxyInput = (
+    _getProxyInput(accountHasProxy) {
+        return (
             <React.Fragment>
                 <AccountSelector
                     label="account.votes.proxy_short"
@@ -670,23 +800,10 @@ class AccountVoting extends React.Component {
                 )}
             </React.Fragment>
         );
+    }
 
-        const saveText = (
-            <div
-                className="inline-block"
-                style={{
-                    float: "right",
-                    visibility: this.isChanged() ? "visible" : "hidden",
-                    color: "red",
-                    padding: "0.85rem",
-                    fontSize: "0.9rem"
-                }}
-            >
-                <Translate content="account.votes.save_finish" />
-            </div>
-        );
-
-        const hideLegacy = (
+    _getHideLegacyOptions() {
+        return (
             <div
                 className="inline-block"
                 style={{marginLeft: "0.5em"}}
@@ -707,191 +824,38 @@ class AccountVoting extends React.Component {
                 </Tooltip>
             </div>
         );
+    }
 
+    _getActionButtons() {
         return (
-            <div className="grid-content no-padding page-layout ">
-                <div className="main-content content-block small-12 voting">
-                    <div className="padding">
-                        <div>
-                            <Translate content="voting.title" component="h1" />
-                            <Translate
-                                content="voting.description"
-                                component="p"
-                            />
-                        </div>
-                        <div className="proxy-row">
-                            {proxyInput}
-                            {actionButtons}
-                        </div>
-                    </div>
-                    <div className="tabs-container generic-bordered-box">
-                        <Tabs
-                            setting="votingTab"
-                            className="account-tabs"
-                            defaultActiveTab={1}
-                            segmented={false}
-                            actionButtons={saveText}
-                            tabsClass="account-overview no-padding bordered-header content-block"
-                        >
-                            {this.getWitnesses(
-                                hasProxy,
-                                globalObject,
-                                filterSearch,
-                                account
-                            )}
-                            {this.getCommittee(
-                                hasProxy,
-                                globalObject,
-                                filterSearch,
-                                account
-                            )}
-                            {this.getWorkers(
-                                newWorkersLength,
-                                activeWorkersLength,
-                                pollsLength,
-                                expiredWorkersLength,
-                                hideLegacy,
-                                preferredUnit,
-                                voteThreshold,
-                                globalObject,
-                                totalBudget,
-                                workerTableIndex,
-                                workerBudget,
-                                hideLegacyProposals,
-                                hasProxy,
-                                filterSearch
-                            )}
-                        </Tabs>
-                    </div>
+            <Tooltip
+                title={counterpart.translate(
+                    "account.votes.cast_votes_through_one_operation"
+                )}
+                mouseEnterDelay={0.5}
+            >
+                <div
+                    style={{
+                        float: "right"
+                    }}
+                >
+                    <Button
+                        type="primary"
+                        onClick={this.onPublish}
+                        tabIndex={4}
+                        disabled={!this.isChanged() ? true : undefined}
+                    >
+                        <Translate content="account.votes.publish" />
+                    </Button>
+                    <Button
+                        style={{marginLeft: "8px"}}
+                        onClick={this.onReset}
+                        tabIndex={8}
+                    >
+                        <Translate content="account.perm.reset" />
+                    </Button>
                 </div>
-            </div>
-        );
-    }
-
-    getWorkers(
-        newWorkersLength,
-        activeWorkersLength,
-        pollsLength,
-        expiredWorkersLength,
-        hideLegacy,
-        preferredUnit,
-        voteThreshold,
-        globalObject,
-        totalBudget,
-        workerTableIndex,
-        workerBudget,
-        hideLegacyProposals,
-        hasProxy,
-        filterSearch
-    ) {
-        const {vote_ids, proxy_vote_ids} = this.state;
-
-        const setWorkersLength = this.setWorkersLength.bind(this);
-        const onFilterChange = this.handleFilterChange.bind(this);
-        const onChangeVotes = this.onChangeVotes.bind(this);
-        const getWorkerArray = this._getWorkerArray.bind(this);
-        return (
-            <Tab title="account.votes.workers_short">
-                <Workers
-                    vote_ids={vote_ids}
-                    proxy_vote_ids={proxy_vote_ids}
-                    newWorkersLength={newWorkersLength}
-                    activeWorkersLength={activeWorkersLength}
-                    pollsLength={pollsLength}
-                    expiredWorkersLength={expiredWorkersLength}
-                    hideLegacy={hideLegacy}
-                    preferredUnit={preferredUnit}
-                    voteThreshold={voteThreshold}
-                    globalObject={globalObject}
-                    totalBudget={totalBudget}
-                    workerBudget={workerBudget}
-                    hideLegacyProposals={hideLegacyProposals}
-                    hasProxy={hasProxy}
-                    filterSearch={filterSearch}
-                    onFilterChange={onFilterChange}
-                    onChangeVotes={onChangeVotes}
-                    getWorkerArray={getWorkerArray}
-                    setWorkersLength={setWorkersLength}
-                    workerTableIndex={workerTableIndex}
-                />
-            </Tab>
-        );
-    }
-
-    getCommittee(hasProxy, globalObject, filterSearch, account) {
-        const {
-            all_committee,
-            proxy_committee,
-            committee,
-            proxy_account_id
-        } = this.state;
-        const onFilterChange = this.handleFilterChange.bind(this);
-        const validateAccountHandler = this.validateAccount.bind(
-            this,
-            COMMITTEE_KEY
-        );
-        const addCommitteeHandler = this.onAddItem.bind(this, COMMITTEE_KEY);
-        const removeCommitteeHandler = this.onRemoveItem.bind(
-            this,
-            COMMITTEE_KEY
-        );
-        return (
-            <Tab title="explorer.committee_members.title">
-                <Committee
-                    all_committee={all_committee}
-                    proxy_committee={proxy_committee}
-                    committee={committee}
-                    proxy_account_id={proxy_account_id}
-                    onFilterChange={onFilterChange}
-                    validateAccountHandler={validateAccountHandler}
-                    addCommitteeHandler={addCommitteeHandler}
-                    removeCommitteeHandler={removeCommitteeHandler}
-                    hasProxy={hasProxy}
-                    globalObject={globalObject}
-                    filterSearch={filterSearch}
-                    account={account}
-                />
-            </Tab>
-        );
-    }
-
-    getWitnesses(hasProxy, globalObject, filterSearch, account) {
-        // make it props
-        // hasProxy, globalObject, filterSearch, account
-        // all_witnesses, proxy_witnesses, witnesses, proxy_account_id;
-        const onFilterChange = this.handleFilterChange.bind(this);
-        const validateAccountHandler = this.validateAccount.bind(
-            this,
-            WITNESSES_KEY
-        );
-        const addWitnessHandler = this.onAddItem.bind(this, WITNESSES_KEY);
-        const removeWitnessHandler = this.onRemoveItem.bind(
-            this,
-            WITNESSES_KEY
-        );
-        const {
-            all_witnesses,
-            proxy_witnesses,
-            witnesses,
-            proxy_account_id
-        } = this.state;
-        return (
-            <Tab title="explorer.witnesses.title">
-                <Witnesses
-                    all_witnesses={all_witnesses}
-                    proxy_witnesses={proxy_witnesses}
-                    witnesses={witnesses}
-                    proxy_account_id={proxy_account_id}
-                    onFilterChange={onFilterChange}
-                    validateAccountHandler={validateAccountHandler}
-                    addWitnessHandler={addWitnessHandler}
-                    removeWitnessHandler={removeWitnessHandler}
-                    hasProxy={hasProxy}
-                    globalObject={globalObject}
-                    filterSearch={filterSearch}
-                    account={account}
-                />
-            </Tab>
+            </Tooltip>
         );
     }
 }
@@ -927,4 +891,4 @@ const FillMissingProps = props => {
     return <AccountVoting {...props} {...missingProps} />;
 };
 
-export default FillMissingProps;
+export default withRouter(FillMissingProps);
