@@ -5,7 +5,7 @@ import counterpart from "counterpart";
 import AssetWrapper from "./AssetWrapper";
 import PropTypes from "prop-types";
 import {DecimalChecker} from "./DecimalChecker";
-import {Form, Input, Button} from "bitshares-ui-style-guide";
+import {Form, Input, Button, Tooltip} from "bitshares-ui-style-guide";
 import AssetSelect from "./AssetSelect";
 import {ChainStore} from "bitsharesjs";
 import SetDefaultFeeAssetModal from "../Modal/SetDefaultFeeAssetModal";
@@ -183,6 +183,23 @@ class FeeAssetSelector extends DecimalChecker {
         const canChangeFeeParams =
             !this.props.selectDisabled && this.props.account;
 
+        const changeDefaultButton = (
+            <Tooltip
+                title={counterpart.translate(
+                    "settings.change_default_fee_asset_tooltip"
+                )}
+            >
+                <Button
+                    type="secondary"
+                    style={{right: "-12px"}}
+                    onClick={this.openSetDefaultAssetModal.bind(this)}
+                    disabled={!canChangeFeeParams}
+                >
+                    {counterpart.translate("settings.change_default")}
+                </Button>
+            </Tooltip>
+        );
+
         return (
             <div>
                 <Form.Item
@@ -198,6 +215,11 @@ class FeeAssetSelector extends DecimalChecker {
                             disabled={true}
                             value={value || ""}
                             tabIndex={this.props.tabIndex}
+                            suffix={
+                                this.state.error
+                                    ? changeDefaultButton
+                                    : undefined
+                            }
                         />
 
                         <AssetSelect
@@ -213,14 +235,6 @@ class FeeAssetSelector extends DecimalChecker {
                     </Input.Group>
                 </Form.Item>
 
-                <Button
-                    type="secondary"
-                    onClick={this.openSetDefaultAssetModal.bind(this)}
-                    style={{float: "right", height: "25px"}}
-                    disabled={!canChangeFeeParams}
-                >
-                    {counterpart.translate("settings.change_default_fee_asset")}
-                </Button>
                 <SetDefaultFeeAssetModal
                     className="modal"
                     show={this.state.isModalVisible}
@@ -263,7 +277,7 @@ FeeAssetSelector.propTypes = {
 FeeAssetSelector.defaultProps = {
     disabled: true,
     tabIndex: 0,
-    selectDisabled: true,
+    selectDisabled: false,
     label: "transfer.fee",
     account: null,
     trxInfo: {

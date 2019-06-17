@@ -247,6 +247,9 @@ class Asset extends React.Component {
         factor = 0,
         negative_invert = false
     ) {
+        if (typeof price == "number" && isNaN(price)) {
+            return "-";
+        }
         var base = price.base;
         var quote = price.quote;
         return (
@@ -1354,8 +1357,12 @@ class Asset extends React.Component {
                 return new Date(feed2[1][0]) - new Date(feed1[1][0]);
             });
 
-        var feed_price_header = assetUtils.extractRawFeedPrice(feeds[0][1][1]);
-        var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
+        var feed_price_header =
+            feeds.length > 0
+                ? assetUtils.extractRawFeedPrice(feeds[0][1][1])
+                : NaN;
+        var core_exchange_rate_header =
+            feeds.length > 0 ? feeds[0][1][1].core_exchange_rate : NaN;
         let dataSource = [];
         let columns = [];
 
