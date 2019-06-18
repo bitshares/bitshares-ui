@@ -271,7 +271,7 @@ class Htlc extends Component {
                             >
                                 <Button>
                                     {counterpart.translate(
-                                        "showcases.htlc.claim"
+                                        "showcases.htlc.redeem"
                                     )}
                                 </Button>
                             </span>

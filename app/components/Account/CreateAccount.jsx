@@ -3,8 +3,8 @@ import {connect} from "alt-react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import AccountNameInput from "./../Forms/AccountNameInput";
-import PasswordInput from "./../Forms/PasswordInput";
+import AccountNameInput from "./../Forms/AccountNameInputStyleGuide";
+import PasswordInput from "./../Forms/PasswordInputStyleGuide";
 import WalletDb from "stores/WalletDb";
 import {Link} from "react-router-dom";
 import AccountSelect from "../Forms/AccountSelect";
@@ -251,6 +251,7 @@ class CreateAccount extends React.Component {
                 style={{maxWidth: "40rem"}}
                 onSubmit={this.onSubmit.bind(this)}
                 noValidate
+                className="create-account-wrapper"
             >
                 <p
                     style={{

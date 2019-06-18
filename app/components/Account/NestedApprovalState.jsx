@@ -235,7 +235,8 @@ class FirstLevel extends React.Component {
             availableKeys,
             globalObject,
             reviewPeriodTime,
-            noFail
+            noFail,
+            failReason
         } = this.props;
         let {requiredPermissions, required, available, expanded} = this.state;
 
@@ -295,7 +296,7 @@ class FirstLevel extends React.Component {
             <div className="nested-approval-state">
                 <div className="root-status">
                     {failed ? (
-                        <Failed />
+                        <Failed reason={failReason} />
                     ) : pendingReview ? (
                         <Review />
                     ) : (
@@ -349,6 +350,7 @@ class ProposalWrapper extends React.Component {
         let available = proposal.get(`available_${type}_approvals`);
         let availableKeys = proposal.get("available_key_approvals");
         let required = proposal.get(`required_${type}_approvals`);
+        let failReason = proposal.get("fail_reason") || " ";
 
         return (
             <FirstLevel
@@ -357,6 +359,7 @@ class ProposalWrapper extends React.Component {
                 available={available}
                 availableKeys={availableKeys}
                 reviewPeriodTime={proposal.get("review_period_time")}
+                failReason={failReason}
             />
         );
     }

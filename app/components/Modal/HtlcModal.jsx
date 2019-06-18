@@ -25,7 +25,8 @@ import {
     Input,
     Icon as AntIcon,
     DatePicker,
-    Tooltip
+    Tooltip,
+    Radio
 } from "bitshares-ui-style-guide";
 import moment from "moment";
 import HtlcActions from "actions/HtlcActions";
@@ -36,13 +37,10 @@ import {hasLoaded} from "../Utility/BindToCurrentAccount";
 
 class Preimage extends React.Component {
     static propTypes = {
-        hash: PropTypes.string,
-        size: PropTypes.number
-    };
-
-    static defaultProps = {
-        hash: null,
-        size: null
+        preimage_hash: PropTypes.string,
+        preimage_size: PropTypes.number,
+        preimage: PropTypes.string,
+        preimage_cipher: PropTypes.string
     };
 
     constructor(props) {
@@ -53,24 +51,14 @@ class Preimage extends React.Component {
 
     getInitialState() {
         return {
-            activeSercret: false,
-            preimage: "",
-            ciphers: ["sha256", "ripemd160"],
-            cipher: "sha256",
-            hash: this.props.hash,
-            size: this.props.size
+            stage: 1,
+            preimage_hash_calculated: null,
+            ciphers: ["sha256", "ripemd160"]
         };
     }
 
     componentDidMount() {
-        if (this.props.size || this.props.hash) {
-            this.setState({
-                size: this.props.size,
-                hash: this.props.hash,
-                preimage: ""
-            });
-        }
-        if (!this.props.hash && !this.hasRandomHash) {
+        if (!this.props.preimage_hash && !this.hasRandomHash) {
             // make sure there is always a hash if no hash given
             this.generateRandom({target: {}});
         }
@@ -78,51 +66,81 @@ class Preimage extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (
-            (this.props.size && this.props.size !== this.state.size) ||
-            (this.props.hash && this.props.hash !== this.state.hash)
+            prevProps.preimage_hash !== this.props.preimage_hash &&
+            !this.props.preimage_hash
         ) {
-            this.setState({
-                size: this.props.size,
-                hash: this.props.hash,
-                preimage: ""
-            });
-        }
-        if (prevProps.hash !== this.props.hash && !this.props.hash) {
             this.hasRandomHash = false;
         }
-        if (!this.props.hash && !this.hasRandomHash) {
+        if (!this.props.preimage_hash && !this.hasRandomHash) {
             // make sure there is always a hash if no hash given
             this.generateRandom({target: {}});
         }
     }
 
-    onClick() {
-        this.setState({
-            activeSercret: !this.state.activeSercret
+    onClick(e) {
+        let redo = false;
+        if (this.state.stage !== e.target.value && e.target.value == 1) {
+            redo = true;
+        }
+        this.setState(
+            {
+                stage: e.target.value
+            },
+            () => (redo ? this.generateRandom() : null)
+        );
+    }
+
+    onSizeChanged(e) {
+        this.props.onAction({
+            preimage_size: !e.target.value ? null : parseInt(e.target.value)
+        });
+    }
+
+    onHashChanged(e) {
+        this.props.onAction({
+            preimage_hash: e.target.value
         });
     }
 
     onInputChanged(e) {
-        let {preimage, cipher} = this.state;
+        let {preimage, preimage_cipher} = this.props;
+        if (!preimage_cipher) {
+            preimage_cipher = "sha256";
+        }
         if (e.target) {
             preimage = e.target.value;
             this.hashingInProgress = false;
         } else {
-            cipher = e;
+            preimage_cipher = e;
         }
-        const {hash} = HtlcActions.calculateHash({preimage, cipher});
-        this.setState(
-            {
-                hash,
-                size: preimage.length,
-                preimage,
-                cipher
-            },
-            this.props.onAction({preimage, cipher})
-        );
+        if (this.state.stage == 2) {
+            this.props.onAction({
+                preimage_cipher: preimage_cipher
+            });
+        } else {
+            const {hash} = HtlcActions.calculateHash(preimage, preimage_cipher);
+            if (this.props.type !== "create") {
+                // user tries to match hash
+                this.props.onAction({
+                    preimage,
+                    preimage_cipher: preimage_cipher,
+                    preimage_size: preimage.length
+                });
+                this.setState({
+                    preimage_hash_calculated: hash
+                });
+            } else {
+                this.props.onAction({
+                    preimage,
+                    preimage_cipher: preimage_cipher,
+                    preimage_hash: hash,
+                    preimage_size: preimage.length
+                });
+            }
+        }
     }
 
-    generateRandom(e) {
+    generateRandom(e = {target: {}}) {
         this.hasRandomHash = true;
         e.target.value = key
             .get_random_key()
@@ -135,14 +153,37 @@ class Preimage extends React.Component {
         let label = (
             <React.Fragment>
                 {counterpart.translate(this.props.label)}
-                <AntIcon
-                    className="inline-block"
-                    style={{fontSize: "1rem", marginLeft: "10px"}}
-                    type={"edit"}
-                    onClick={this.onClick.bind(this)}
-                />
+                {this.props.type == "create" && (
+                    <Radio.Group
+                        value={this.state.stage}
+                        onChange={this.onClick.bind(this)}
+                        style={{
+                            marginBottom: "7px",
+                            marginLeft: "24px"
+                        }}
+                    >
+                        <Radio value={1}>
+                            <Translate content="showcases.htlc.first_stage" />
+                        </Radio>
+                        <Radio value={2}>
+                            <Translate content="showcases.htlc.second_stage" />
+                        </Radio>
+                        <Radio value={3}>
+                            <Translate content="showcases.htlc.custom" />
+                        </Radio>
+                    </Radio.Group>
+                )}
             </React.Fragment>
         );
+
+        // if user redeems, indicate if it matches
+        let hashMatch =
+            this.props.type !== "create" &&
+            this.state.preimage_hash_calculated !== null
+                ? this.state.preimage_hash_calculated ==
+                  this.props.preimage_hash
+                : null;
+
         return (
             <Form.Item label={label}>
                 <span>
@@ -153,27 +194,39 @@ class Preimage extends React.Component {
                 <Input.Group className="content-block transfer-input preimage-row">
                     <Tooltip
                         title={counterpart.translate(
-                            this.props.hash
+                            this.props.type !== "create"
                                 ? "showcases.htlc.tooltip.enter_preimage"
                                 : "showcases.htlc.tooltip.preimage_random"
                         )}
+                        mouseEnterDelay={0.5}
                     >
                         <Input
-                            style={{width: "60%"}}
+                            style={{
+                                width: "60%",
+                                color:
+                                    hashMatch == null
+                                        ? undefined
+                                        : hashMatch
+                                            ? "green"
+                                            : "red"
+                            }}
                             name="preimage"
                             id="preimage"
                             type="text"
                             onChange={this.onInputChanged.bind(this)}
-                            value={this.state.preimage}
+                            value={
+                                this.state.stage == 2 ? "" : this.props.preimage
+                            }
                             placeholder={counterpart.translate(
                                 this.props.hash
                                     ? "showcases.htlc.enter_secret_preimage"
                                     : "showcases.htlc.preimage"
                             )}
-                            readOnly={
-                                this.props.hash
+                            disabled={
+                                this.props.type !== "create"
                                     ? false
-                                    : !this.state.activeSercret
+                                    : this.state.stage == 1 ||
+                                      this.state.stage == 2
                             }
                         />
                     </Tooltip>
@@ -181,7 +234,7 @@ class Preimage extends React.Component {
                         optionLabelProp={"value"}
                         style={{width: "19.5%"}}
                         onChange={this.onInputChanged.bind(this)}
-                        value={this.state.cipher}
+                        value={this.props.preimage_cipher}
                     >
                         {this.state.ciphers.map(cipher => (
                             <Select.Option key={cipher} value={cipher}>
@@ -193,6 +246,7 @@ class Preimage extends React.Component {
                         title={counterpart.translate(
                             "showcases.htlc.tooltip.new_random"
                         )}
+                        mouseEnterDelay={0.5}
                     >
                         <Button
                             type="primary"
@@ -206,9 +260,9 @@ class Preimage extends React.Component {
                             dataPlace="top"
                             text={
                                 "preimage: " +
-                                this.state.preimage +
+                                this.props.preimage +
                                 " hash type: " +
-                                this.state.cipher
+                                this.props.preimage_cipher
                             }
                         />
                     </div>
@@ -219,36 +273,38 @@ class Preimage extends React.Component {
                         title={counterpart.translate(
                             "showcases.htlc.tooltip.preimage_hash"
                         )}
+                        mouseEnterDelay={0.5}
                     >
                         <Input
                             style={{width: "78%"}}
                             name="hash"
                             id="hash"
                             type="text"
-                            value={this.state.hash || ""}
+                            onChange={this.onHashChanged.bind(this)}
+                            value={this.props.preimage_hash || ""}
                             placeholder={counterpart.translate(
                                 "showcases.htlc.hash"
                             )}
-                            readOnly={true}
-                            disabled={this.props.isRedeem ? true : undefined}
+                            disabled={this.state.stage == 1}
                         />
                     </Tooltip>
                     <Tooltip
                         title={counterpart.translate(
                             "showcases.htlc.tooltip.preimage_size"
                         )}
+                        mouseEnterDelay={0.5}
                     >
                         <Input
                             style={{width: "53px", marginRight: "0.2rem"}}
                             name="size"
                             id="size"
                             type="text"
-                            value={this.state.size || ""}
+                            onChange={this.onSizeChanged.bind(this)}
+                            value={this.props.preimage_size || ""}
                             placeholder={counterpart.translate(
                                 "showcases.htlc.size"
                             )}
-                            readOnly={true}
-                            disabled={this.props.isRedeem ? true : undefined}
+                            disabled={this.state.stage == 1}
                         />
                     </Tooltip>
                     <div style={{float: "right"}}>
@@ -256,9 +312,9 @@ class Preimage extends React.Component {
                             dataPlace="top"
                             text={
                                 "hash: " +
-                                this.state.hash +
+                                this.props.preimage_hash +
                                 " preimage size: " +
-                                this.state.size
+                                this.props.preimage_size
                             }
                         />
                     </div>
@@ -305,7 +361,9 @@ class HtlcModal extends React.Component {
             htlcId: "",
             balanceError: false,
             preimage: null,
-            cipher: null,
+            preimage_cipher: null,
+            preimage_hash: null,
+            preimage_size: null,
             claim_period: 86400,
             period: "one_day",
             expirationDate: moment()
@@ -323,7 +381,9 @@ class HtlcModal extends React.Component {
             asset,
             asset_id,
             preimage,
-            cipher,
+            preimage_size,
+            preimage_hash,
+            preimage_cipher,
             claim_period
         } = this.state;
         const {
@@ -338,7 +398,9 @@ class HtlcModal extends React.Component {
                 amount: utils.convert_typed_to_satoshi(amount, asset),
                 lock_time: claim_period,
                 preimage,
-                cipher
+                preimage_size,
+                preimage_hash,
+                preimage_cipher
             })
                 .then(result => {
                     this.props.hideModal();
@@ -412,17 +474,17 @@ class HtlcModal extends React.Component {
                     asset_id: amount.asset_id,
                     period_start_time: expiration, // no selection for that
                     htlcId: operation.payload.id,
-                    hash:
+                    preimage_hash:
                         operation.payload.conditions.hash_lock.preimage_hash[1],
-                    size:
+                    preimage_size:
                         operation.payload.conditions.hash_lock.preimage_hash[0]
                 });
             } else {
                 this.setState({
                     htlcId: operation.payload.id,
-                    hash:
+                    preimage_hash:
                         operation.payload.conditions.hash_lock.preimage_hash[1],
-                    size:
+                    preimage_size:
                         operation.payload.conditions.hash_lock.preimage_hash[0]
                 });
             }
@@ -430,8 +492,8 @@ class HtlcModal extends React.Component {
             // ensure it's always in-sync
             this.setState({
                 htlcId: null,
-                hash: null,
-                size: null
+                preimage_hash: null,
+                preimage_size: null
             });
         }
     }
@@ -442,12 +504,16 @@ class HtlcModal extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         const {operation} = this.props;
-        if (this.props.fromAccount !== prevProps.fromAccount) {
+        if (
+            this.props.fromAccount !== prevProps.fromAccount ||
+            this.state.from_account == null
+        ) {
             // refesh balances and fee
             // write props to state
             this.setState(
                 {
-                    from_account: this.props.fromAccount
+                    from_account: this.props.fromAccount,
+                    from_name: this.props.fromAccount.get("name")
                 },
                 () => {
                     this._updateFee();
@@ -717,8 +783,26 @@ class HtlcModal extends React.Component {
         }
     };
 
-    onHashCreate({preimage, cipher}) {
-        this.setState({preimage, cipher});
+    onPreimageChanged({
+        preimage,
+        preimage_cipher,
+        preimage_hash,
+        preimage_size
+    }) {
+        let stateChange = {};
+        if (preimage !== undefined) {
+            stateChange.preimage = preimage;
+        }
+        if (preimage_cipher !== undefined) {
+            stateChange.preimage_cipher = preimage_cipher;
+        }
+        if (preimage_hash !== undefined) {
+            stateChange.preimage_hash = preimage_hash;
+        }
+        if (preimage_size !== undefined) {
+            stateChange.preimage_size = preimage_size;
+        }
+        this.setState(stateChange);
     }
 
     setPeriod = days => {
@@ -758,10 +842,10 @@ class HtlcModal extends React.Component {
             fee_asset_id,
             balanceError,
             preimage,
-            cipher,
+            preimage_cipher,
             claim_period,
-            hash,
-            size,
+            preimage_hash,
+            preimage_size,
             period_start_time,
             expirationDate
         } = this.state;
@@ -847,6 +931,7 @@ class HtlcModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
+
         const isSubmitNotValid =
             !from_account ||
             !to_account ||
@@ -854,7 +939,7 @@ class HtlcModal extends React.Component {
             !asset ||
             balanceError ||
             from_account.get("id") == to_account.get("id") ||
-            !((cipher && preimage) || hash) ||
+            !((preimage_cipher && preimage) || preimage_hash) ||
             !claim_period;
         let modalTitle =
             operation && operation.type === "create"
@@ -929,17 +1014,15 @@ class HtlcModal extends React.Component {
                 <div className="grid-block vertical no-overflow">
                     <Form className="full-width" layout="vertical">
                         {/* Sender */}
-                        {isRedeem ? (
-                            <AccountSelector
-                                label="showcases.htlc.sender"
-                                accountName={from_name}
-                                account={from_account}
-                                size={60}
-                                typeahead={true}
-                                hideImage
-                                disabled={true}
-                            />
-                        ) : null}
+                        <AccountSelector
+                            label="showcases.htlc.sender"
+                            accountName={from_name}
+                            account={from_account}
+                            size={60}
+                            typeahead={true}
+                            hideImage
+                            disabled={true}
+                        />
 
                         <AccountSelector
                             label="showcases.htlc.recipient"
@@ -984,7 +1067,7 @@ class HtlcModal extends React.Component {
                             >
                                 <Input
                                     type="text"
-                                    value={hash || ""}
+                                    value={preimage_hash || ""}
                                     placeholder={counterpart.translate(
                                         "showcases.htlc.hash"
                                     )}
@@ -994,10 +1077,18 @@ class HtlcModal extends React.Component {
                             </Form.Item>
                         ) : (
                             <Preimage
+                                ref={tmp => (this.preimage = tmp)}
                                 label="showcases.htlc.preimage"
-                                onAction={this.onHashCreate.bind(this)}
-                                hash={hash}
-                                size={size}
+                                onAction={this.onPreimageChanged.bind(this)}
+                                preimage_hash={preimage_hash}
+                                preimage_size={preimage_size}
+                                preimage={preimage}
+                                preimage_cipher={preimage_cipher}
+                                type={
+                                    operation && operation.type
+                                        ? operation.type
+                                        : "create"
+                                }
                             />
                         )}
 

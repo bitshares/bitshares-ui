@@ -6,7 +6,7 @@
         "as_collateral": "抵押物",
         "asset": "资产",
         "asset_details": "资产详情",
-        "average_price": "Average price",
+        "average_price": "平均价格",
         "bittrex_scam": "注意：这个账户不是交易所 Bittrex 的存款账户，请发送至 bittrex-deposit。",
         "bts_market": "市场",
         "collaterals": "抵押债仓",
@@ -25,7 +25,7 @@
         "deposit": "充值BTS",
         "deposit_address": "您的账户名就是您的充值地址",
         "deposit_withdraw": "充币/提币",
-        "download_history": "Download History",
+        "download_history": "下载历史记录",
         "eq_value": "估算值",
         "eq_value_header": "估值 ({asset})",
         "errors": {
@@ -39,15 +39,15 @@
         "existing_accounts": "已有账户",
         "existing_user": "老用户",
         "export_modal": {
-            "coinbase_report": "CoinTracking.info Report",
-            "description": "Enter your desired elastic search instance and click the report type",
-            "full_report": "Full Report",
-            "title": "History Export",
-            "use_custom": "Use custom wrapper"
+            "coinbase_report": "CoinTracking.info报告",
+            "description": "输入你期望的搜索实例并选择报告类型",
+            "full_report": "完整报告",
+            "title": "导出历史记录",
+            "use_custom": "使用自定义格式"
         },
         "filter_orders": "筛选",
         "follow": "添加联系人",
-        "group_by_asset": "Group by asset",
+        "group_by_asset": "按照资产分组",
         "hidden_accounts_row": "隐藏的账户",
         "hide_hidden": "显示",
         "hide_ignored": "隐藏已忽略账户",
@@ -72,7 +72,7 @@
         "member": {
             "annual": "年度会员",
             "available": "可申领数量",
-            "balance_type": "Type",
+            "balance_type": "类型",
             "basic": "普通会员",
             "cashback": "返现",
             "claim": "立即申领",
@@ -293,6 +293,8 @@
             "primary": "主要设定",
             "quote": "标价资产数量",
             "quote_name": "标价资产",
+            "reward_percent": "奖励百分比",
+            "reward_percent_tooltip": "如果设置了市场手续费，奖励百分比则表示有多少市场手续费通过引荐奖励计划进行分享，而不是仅仅奖励资产所有者。",
             "short": "简称 (最多32个字符)",
             "symbol": "资产代码",
             "to": "发行到账户",
@@ -321,6 +323,7 @@
             "add_witness_label": "见证人",
             "already": "账户已经在列表中",
             "approve_worker": "赞成",
+            "cast_votes_through_one_operation": "对见证人，理事会及工人提案进行投票，并统一进行广播。",
             "clear_proxy": "移除投票代理",
             "cm_approved_by": "账户%(account)s赞同的理事会成员",
             "cm_not_approved_by": "账户%(account)s未赞同的理事会成员",
@@ -336,13 +339,15 @@
             "hide_legacy_proposals": "隐藏过期提案",
             "inactive": "备份",
             "info": "信息",
+            "join_committee": "加入理事会",
+            "join_witnesses": "加入见证人",
             "line": "行",
             "max_pay": "最大预算",
             "missing": "仍需票数",
             "name": "账户名",
             "new": "提案预算项目 (%(count)s)",
             "no_proxy": "无代理",
-            "polls": "Polls(%(count)s)",
+            "polls": "BSIPs/调查(%(count)s)",
             "proxy": "手动输入某账户作为你的代理",
             "proxy_current": "你当前的投票代理人是",
             "proxy_known": "或者选择其他账户作为投票代理",
@@ -393,7 +398,8 @@
             "empty_white_by": "%(account)s 未被列入任何白名单",
             "title": "白名单",
             "white_by": "被列入白名单",
-            "whitelist_authorities": "白名单权限"
+            "whitelist_authorities": "白名单权限",
+            "whitelist_market_fee_sharing": "白名单分享市场手续费"
         }
     },
     "account_browsing_mode": {
@@ -415,7 +421,7 @@
         "check_latency_feedback_country": "最优地区延迟检测 (%(pinged)s/%(totalToPing)s 节点)",
         "check_latency_feedback_last": "最新可连接节点延迟检测（%(pinged)s/%(totalToPing)s节点）",
         "check_latency_feedback_region": "最优区域延迟检测 (%(pinged)s/%(totalToPing)s 节点)",
-        "check_latency_feedback_rest": "剩余节点延迟检测（%(pinged)s/%(totalToPing)s节点）",
+        "check_latency_feedback_rest": "其它节点延迟检测（%(pinged)s/%(totalToPing)s节点）",
         "check_latency_feedback_world": "区域延迟检测（%(pinged)s/%(totalToPing)s节点）",
         "connected": "已连接",
         "connecting": "正在连接 API 服务: %(server)s",
@@ -424,7 +430,7 @@
         "retry": "重试",
         "title": "应用初始化错误",
         "understand": "我已明白",
-        "ws_status": "API 节点连接状态"
+        "ws_status": "全节点连接状态"
     },
     "assets": {
         "BTS": "BTS是比特股区块链的核心代币."
@@ -440,7 +446,7 @@
         "close": "平仓",
         "coll_ratio": "抵押率",
         "coll_ratio_target": "目标抵押率",
-        "considered_on_revival": "计入",
+        "considered_on_revival": "已包含",
         "enable_target_collateral_ratio": "使用目标抵押率",
         "errors": {
             "below": "抵押率低于要求的 %(mr)s，不允许操作",
@@ -454,7 +460,7 @@
         "no_valid": " %(asset_symbol)s 无有效喂价",
         "pay_max_debt": "最大偿还债仓",
         "target_collateral_ratio": "目标抵押率",
-        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_explanation": "当债仓被强平时，对应的强平挂单仅会将债仓的抵押率调整至大于等于目标抵押率",
         "target_collateral_ratio_short": "TCR",
         "title": "%(asset_symbol)s 抵押债仓",
         "update": "更新",
@@ -504,7 +510,7 @@
         "buy_sell": "挂单形式",
         "buysell_formatter": "{direction} {asset}",
         "call": "强平触发价",
-        "cancel_selected_orders": "Cancel selected order(s)",
+        "cancel_selected_orders": "撤销挂单(s)",
         "change": "24H涨跌",
         "chart_height": "图表高度 (pixels)",
         "chart_hide": "隐藏图表",
@@ -688,8 +694,8 @@
         "settle_delay_globally_settled": "此资产可以被即时强制清算",
         "settle_globally_settled": "即时强清",
         "settle_globally_settled_tooltip": "此资产处于全局清算中。你可以以全局清算价格清算此资产（请查看交易标题或资产详情)",
-        "settle_offset": "Settlement price offset: %(offset)s%",
-        "settle_orders": "强清单",
+        "settle_offset": "清算补偿：%(offset)s%",
+        "settle_orders": "强清挂单",
         "settlement_hint": "你正在准备强制清算{long}。{market_link}当前价格",
         "short": "借贷",
         "show_all_orders": "显示全部%(rowcount)s行挂单",
@@ -736,8 +742,14 @@
                 "bid": "竞标价格",
                 "collateral": "追加抵押物",
                 "debt": "承担的债仓",
+                "included": {
+                    "no": "否",
+                    "partial": "部分",
+                    "yes": "是"
+                },
                 "title": "抵押物竞价"
             },
+            "cumulative": "累计",
             "fee_pool": {
                 "claim_balance": "申领手续费池余额",
                 "claim_fees": "领取手续费",
@@ -756,10 +768,14 @@
             "info": "资产信息",
             "invalid": "资产名 %(name)s 无效",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "点击切换以累计列之和",
+                "ratio_danger": "债仓低于MCR，将被强平",
+                "ratio_warning": "债仓接近于MCR，有强平危险",
                 "title": "抵押债仓"
             },
             "not_found": "资产 %(name)s 不存在",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "账户包含在市场手续费白名单中",
                 "blacklist_authorities": "黑名单权限",
                 "blacklist_markets": "黑名单市场",
                 "max_market_fee": "市场手续费上限",
@@ -771,27 +787,27 @@
             "price_feed": {
                 "external_feed_price": "喂价（见证人喂价的中值价）",
                 "feed_lifetime": "喂价时间（小时）",
-                "feed_price": "Feed price",
+                "feed_price": "喂价",
                 "global_settlement_price": "全局清算触发价格",
                 "maintenance_collateral_ratio": "维持抵押率(MCR)",
                 "maximum_short_squeeze_price": "强平价格(MSSP)",
                 "maximum_short_squeeze_ratio": "强平惩罚比率 (MSSR)",
                 "min_feeds": "最少喂价者",
-                "settlement_price": "强清价",
+                "settlement_price": "喂价",
                 "title": "喂价"
             },
             "price_feed_data": {
                 "core_exchange_rate": "手续费汇率CER ",
-                "feed_price": "Feed price",
+                "feed_price": "喂价",
                 "maintenance_collateral_ratio": "维持抵押率MCR",
                 "maximum_short_squeeze_ratio": "强平惩罚比率MSSR",
                 "published": "发布时间",
                 "publisher": "发布人",
-                "settlement_price": "强清价",
+                "settlement_price": "喂价",
                 "title": "喂价数据"
             },
             "settlement": {
-                "current_settled": "已被清算量",
+                "current_settled": "已被强清量",
                 "delay": "强清延时",
                 "force_settlement": "强制清算",
                 "gs_auto_revive_price": "自动复活价格（没有/有 竞价）",
@@ -809,7 +825,7 @@
                 "settle_remaining_volume": "剩余可强清量",
                 "settlement_funds": "强清资金",
                 "settlement_funds_collateral_ratio": "强清资金抵押率",
-                "settlement_price": "强清价",
+                "settlement_price": "强清价格",
                 "title": "强制清算"
             },
             "summary": {
@@ -817,7 +833,7 @@
                 "current_supply": "当前供应量",
                 "issuer": "发行人",
                 "market_fee": "市场手续费率",
-                "max_market_fee": "市场手续费上限",
+                "market_fee_referral_reward_percent": "市场手续费引荐奖励",
                 "stealth_supply": "隐私供应量"
             },
             "title": "资产",
@@ -825,7 +841,9 @@
                 "blacklist_authorities": "黑名单权限",
                 "blacklist_markets": "市场黑名单",
                 "enable_flag": "活动标记中启用白名单功能后才能设置白名单账户",
+                "market_fee_enable_flag": "启用市场手续费标记以设置白名单",
                 "whitelist_authorities": "白名单账户",
+                "whitelist_market_fee_sharing": "白名单分享手续费",
                 "whitelist_markets": "市场白名单"
             }
         },
@@ -866,7 +884,7 @@
             "op_type": "操作类型",
             "previous": "上一个区块",
             "previous_secret": "上一个密文",
-            "settlement_price": "强清价",
+            "settlement_price": "强清价格",
             "short_limit": "借贷限制",
             "time": "区块生成时间",
             "title": "区块",
@@ -910,6 +928,7 @@
             "children_authority_depth_warning": "此提案没有得到批准，因为一个许可值已经超过了最大权限值。",
             "failed": "失败",
             "failed_execute": "已批准，执行失败。",
+            "no_reason_available_switch_node": "错误原因: core版本必须>=3.1.0，请升级你的节点。",
             "pending": "待处理",
             "pending_approval": "待处理批准。",
             "pending_review": "已批准, 检查时间.",
@@ -991,7 +1010,7 @@
             "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
             "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
             "win": "",
-            "xbtsx": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 XBTS 提供的网关服务进行充值提现。"
+            "xbtsx": "%(asset)s资产由真实%(backed)s1:1储备背书，可以通过 XBTS 提供的网关服务进行充值提现。"
         },
         "balance": "当前余额",
         "balance_asset": "当前 %(asset)s 余额",
@@ -1130,6 +1149,7 @@
             "account": "账户"
         },
         "help": "帮助",
+        "not_found": "未找到",
         "return_to_top": "返回顶部",
         "scan_qr_code": "扫描二维码",
         "set": "设置"
@@ -1166,16 +1186,16 @@
         "withdraw_legacy": "或传统提币"
     },
     "htlc": {
-        "claim_period": "Seconds to claim",
-        "claim_period_due": "Claimable until",
+        "claim_period": "申领秒数",
+        "claim_period_due": "申领截止日期",
         "id": "HTLC id",
-        "preimage": "Preimage",
-        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
-        "preimage_hash": "Preimage hash",
-        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
-        "redeemer": "Redeemer",
-        "seconds_to_add": "Add seconds to claim period",
-        "update_issuer": "Update issuer"
+        "preimage": "原像",
+        "preimage_explanation": "秘密原像用于计算原像哈希及HTLC的履行。",
+        "preimage_hash": "原像哈希",
+        "preimage_hash_explanation": "原像哈希从秘密原像计算而来，对HTLCs非常重要。拥有秘密原像, HTLC就可以履行。你所见内容为：'(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "兑换者",
+        "seconds_to_add": "添加秒数到申领周期",
+        "update_issuer": "更新发行者"
     },
     "icons": {
         "adjust": "调整债仓",
@@ -1260,7 +1280,7 @@
         "question_circle": "帮助",
         "reverse_orderbook": "反转订单薄",
         "server": "区块浏览",
-        "settle": "清算",
+        "settle": "强清",
         "share": "关于",
         "shuffle": "切换交易对",
         "text": {
@@ -1341,6 +1361,14 @@
         },
         "cancel": "取消",
         "close": "关闭",
+        "committee": {
+            "confirm": "确认",
+            "create_committee": "成为理事会成员",
+            "from": "来自",
+            "text": "活跃理事会成员可以帮助设置比特股区块链的政策及参数：<ul><li>交易费用</li><li>智能资产参数（例如：市场手续费）</li><li>区块链参数（例如：区块大小及时间间隔）</li><li>推荐及解冻参数（例如：终身会员返现及解冻周期）</li><li>其它管理事务</li></ul>提交网站链接或者论坛帖子用于阐述为什么你想要成为理事会成员，以此来得到足够的投票进行激活。理事会成员应该有比特股基本的技术基础，并应具有自治自足区块链管理的知识及专业技能。\n理事会为无报酬职位。",
+            "url": "URL",
+            "web_example": "输入你的理事会提案内容的链接"
+        },
         "confirmation": {
             "accept": "是",
             "cancel": "否",
@@ -1359,7 +1387,7 @@
             "close": "关闭",
             "header": "充值到 %(account_name)s",
             "header_short": "充币",
-            "no_assets": "No depositable assets available",
+            "no_assets": "无充值资产可用",
             "submit": "充币"
         },
         "deposit_withdraw": {
@@ -1414,7 +1442,7 @@
             "from": "销毁来自账户",
             "submit": "销毁",
             "title": "销毁（拥有）资产",
-            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
+            "warning_message": "注意: 销毁（拥有）资产将销毁指定数量的资产。此操作一旦执行不能撤回！"
         },
         "save": "保存",
         "send": {
@@ -1422,12 +1450,12 @@
             "header_propose": "提议帐号 <span class=\"send-name\">%(fromName)s</span> 转账"
         },
         "settle": {
-            "amount": "要清算数量",
-            "delay": "Estimated delay: %(amount)s hours",
-            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
-            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
-            "submit": "清算资产",
-            "title": "请求清算资产 %(asset)s"
+            "amount": "要强清数量",
+            "delay": "强清延时:%(amount)s小时",
+            "max_volume": "最大强清数量: %(amount)s%(asset)s",
+            "remaining_volume": "剩余强清数量: %(amount)s%(asset)s",
+            "submit": "强清资产",
+            "title": "请求强清资产 %(asset)s"
         },
         "withdraw": {
             "address": "提币到地址",
@@ -1442,12 +1470,23 @@
             "gateway_fee": "网关手续费",
             "header": "提币",
             "memo": "Memo备注",
-            "no_assets": "No withdrawable assets available",
+            "no_assets": "无提现资产可用",
             "no_estimate": "此项目无可用估值",
             "no_gateways": "很遗憾,没有网关处理此提币",
             "quantity": "数量",
             "submit": "提币",
             "withdraw": "提币"
+        },
+        "witness": {
+            "confirm": "确认",
+            "create_witness": "成为见证人",
+            "enter_public_signing_key": "输入你的签名公钥",
+            "invalid_key": "公钥无效",
+            "public_signing_key": "签名公钥",
+            "text": "活跃见证人将会被添加到区块生产者队列，并对生产的区块进行签名以获得生产区块奖励。通用准则：<ul><li>预防机制（例如：同时运行一个热切换备份服务器）并进行合适的服务器调试以确保低丢块率（例如：高连接度）</li><li>进行区块生产并参加测试网版本</li><li>为社区提供公共接入点</li><li>对智能资产进行喂价</li></ul>提交网站链接或者论坛帖子用于阐述为什么你想要成为见证人，以此来得到足够的投票实现激活。",
+            "url": "URL",
+            "web_example": "输入你的见证人提案内容",
+            "witness_account": "见证人账户"
         }
     },
     "news": {
@@ -1462,7 +1501,7 @@
         "account_create_failure": "创建账户失败: %(account_name)s - %(error_msg)s",
         "account_permissions_update_warning": "这样设置你的账户权限会使你的账户永远不可用。\n在修改账户权限前，请务必清楚你的行为！！！",
         "account_wallet_create_failure": "创建钱包失败: %(error_msg)s",
-        "asset_issue_failure": "发行资产失败，可能发行的数量无效。",
+        "asset_issue_failure": "发行资产失败，发行的数量可能无效。",
         "backup_file_save_unsupported": "不支持文件保存",
         "balance_claim_error": "申领余额错误：%(error_msg)s",
         "exchange_enter_valid_values": "请输入有效的数量及价格",
@@ -1501,8 +1540,8 @@
         "asset_global_settle": "{account} 请求以 {price} 的价格进行全局清算 {asset}",
         "asset_issue": "{account} 将 {amount} 发行给 {to}",
         "asset_reserve": "{account} 销毁了 {amount}",
-        "asset_settle": "{account} 请求清算 {amount}",
-        "asset_settle_cancel": "{account} 取消清算 {amount}",
+        "asset_settle": "{account} 请求强清 {amount}",
+        "asset_settle_cancel": "{account} 取消强清 {amount}",
         "asset_settle_instant": "{account} 以 {price}即时强清了 {amount} ",
         "asset_update": "{account} 更新了资产 {asset}",
         "asset_update_feed_producers": "{account} 更新了资产 {asset} 的喂价者",
@@ -1514,11 +1553,11 @@
         "committee_member_update_global_parameters": "{account} 更新了全局理事会参数",
         "fill_order_buy": "{account} 以 {price} 的价格购买了 {amount} ",
         "fill_order_sell": "{account} 以 {price} 的价格卖出了 {amount} ",
-        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
-        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
-        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
-        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
-        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
+        "htlc_create": "{from} 已锁定 {amount} ,  {to} 可以在 {lock_period}之前进行兑换",
+        "htlc_extend": "{update_issuer} 将 {seconds_to_add} 秒添加到HTLC {htlc_id} 的兑换周期",
+        "htlc_redeem": "{redeemer} 请求兑换HTLC {htlc_id} ",
+        "htlc_redeemed": "{to} 兑换了 {amount} , 来自 {from}的HTLC {htlc_id}",
+        "htlc_refund": "{to} 获得HTLC {htlc_id}的退款 ",
         "lifetime_upgrade_account": "{account} 升级到终身会员",
         "limit_order_buy": "{account} 提交买单%(order)s, 以 {price} 的价格买入 {amount} ",
         "limit_order_cancel": "{account} 已取消限价单 #%(order)s",
@@ -1557,21 +1596,21 @@
     },
     "proposal": {
         "action": "操作",
-        "add": "Add",
-        "add_vote": "Add vote for",
+        "add": "添加",
+        "add_vote": "添加投票",
         "approve": "批准",
         "approvers": "批准者(s)",
         "asset_create": "使用账户 {account} 创建资产 %(asset)s",
         "asset_issue": "使用账户 {account} 将 {amount} 发行给 {to}",
         "asset_reserve": "使用账户 {account} 销毁 (reserve){amount}",
-        "asset_settle": "为{account}请求清算资产 {amount} ",
+        "asset_settle": "为{account}请求强清资产 {amount} ",
         "asset_update": "使用账户 {account} 更新资产 {asset}",
         "call_order_update": "将账户 {account} 的 {debtSymbol} 债务调整 {debt}，抵押物调整 {collateral}",
-        "changes_to_active": "Changes to active",
-        "changes_to_memo": "Changes to memo",
-        "changes_to_owner": "Changes to owner",
+        "changes_to_active": "切换至资金权限",
+        "changes_to_memo": "切换至备注权限",
+        "changes_to_owner": "切换至账户权限",
         "committee_member_update_global_parameters": "由 {account} 更新理事会全局参数",
-        "danger_operation": "Dangerous operation",
+        "danger_operation": "危险操作",
         "delete": "永久否决",
         "expires": "到期时间",
         "feed_producer": "使用账户 {account} 更新资产 {asset} 的喂价提供者",
@@ -1579,12 +1618,12 @@
         "limit_order_create": "为账户 %(account)s 下单, 以%(sell_amount)s买入 %(buy_amount)s ",
         "limit_order_sell": "为账户 {account} 下单, 以价格 {price} 卖出 {amount}",
         "override_transfer": "由 {issuer} 授权，从账户 {from} 转账 {amount} 到 {to}",
-        "permission_changes": "Permission changes",
+        "permission_changes": "权限更改",
         "proposals": "提案",
         "reject": "否决",
-        "remove": "Remove",
-        "remove_vote": "Remove vote for",
-        "set_threshold": "Set threshold to %(threshold)s",
+        "remove": "移除",
+        "remove_vote": "移除投票",
+        "set_threshold": "调整权重至%(threshold)s",
         "status": "状态",
         "transfer": "从账户 {from} 转账 {amount} 到 {to}",
         "update": {
@@ -1605,7 +1644,7 @@
             "owner_approvals_to_remove": "账户权限(s)已移除"
         },
         "vesting_balance_withdraw": "从 {account} 的解冻余额中提取 {amount}",
-        "votes": "Votes"
+        "votes": "得票"
     },
     "proposal_create": {
         "expiration_time": "有效时间",
@@ -1642,9 +1681,9 @@
         "checkboxRemember": "我已经记住或者以其它方式存储了我的密码, 并安全的下载备份了 .bin 文件。",
         "checkboxUploaded": "我已清楚登录解锁过程中 .bin文件必须上载，没有.bin文件我将无法获得我的资产。",
         "continue": "继续",
-        "copyPassword": "复制密码去保存",
-        "createAccountTitle": "通过Bin-文件创建账户",
-        "createByPassword": "以账户名及密码创建账户",
+        "copyPassword": "复制密码并保存",
+        "createAccountTitle": "使用Bin-文件创建账户",
+        "createByPassword": "使用账户名及密码创建账户",
         "downloadFile": "下载文件",
         "loginByKey": "登录方式",
         "passwordPlaceholder": "最少7个字符",
@@ -1657,7 +1696,7 @@
         "walletDescription": "bin-文件将会自动创建。请下载它并保存在安全位置。登录账户需要上载此文件。",
         "walletLoginByValue": "Bin-文件+密码",
         "walletModelTitle": "通过bin-文件",
-        "walletNote": "请务必牢记，比特股不会存储用户密码，用户密码如果丢失也不能帮助找回及恢复。",
+        "walletNote": "请务必牢记，比特股不会存储用户密码，用户密码如果丢失不能帮助找回及恢复。",
         "whyBinFile": "为什么我需要一个 .bin 文件？"
     },
     "scaled_orders": {
@@ -1756,7 +1795,7 @@
         "orderbook_autoscroll": "挂单自动滚动",
         "orderbook_grouping": "挂单分组",
         "orderbook_reverse": "挂单反转",
-        "password": "钱包密码",
+        "password": "密码",
         "passwordLogin": "登录模式",
         "password_text": "修改本地钱包密码。",
         "personal_active": "你仅激活了私人节点, 如果想移除或者修改它,你必须先连接到其它节点.",
@@ -1778,7 +1817,7 @@
         "scrollbars_hide": "缩减滚动栏",
         "show": "显示",
         "showAssetPercent": "在账户页上显示资产/供应量占比",
-        "showSettles": "在深度图中显示强清单",
+        "showSettles": "在深度图中显示强清挂单",
         "skipped": "略过",
         "switch": "切换接入点",
         "testnet_nodes": "测试网",
@@ -1786,6 +1825,7 @@
         "themes": "主题",
         "unit": "显示记账单位",
         "valid_node_url": "节点地址必须以 ws:// 或 wss:// 开头",
+        "viewOnlyMode": "仅浏览模式",
         "view_keys": "查看密钥",
         "wallet": "本地钱包",
         "walletLockTimeout": "钱包自动锁定时间（秒，0 为禁用）",
@@ -1913,52 +1953,59 @@
             "update_mandate": "更新存在的权限"
         },
         "htlc": {
-            "actions": "Actions",
-            "amount": "Amount",
-            "claim": "Claim",
-            "create_htlc": "Create HTLC",
-            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
-            "enter_secret_preimage": "Enter secret preimage",
-            "expiration": "Expiration",
-            "expiration_date": "Expiration date",
+            "actions": "操作",
+            "amount": "数量",
+            "create_htlc": "创建 HTLC",
+            "custom": "自定义",
+            "description": "HTLC将指定接收方需要接收的资产锁定，接收方可以使用发送方用于创建合约的秘密原像（密码）兑换这些资产。泄露密码会引起连锁反应。",
+            "enter_secret_preimage": "输入秘密原像",
+            "expiration": "有效时间",
+            "expiration_date": "有效日期",
             "expiration_period": {
-                "one_day": "One day",
-                "one_week": "One week",
-                "two_days": "Two days"
+                "one_day": "一天",
+                "one_week": "一周",
+                "two_days": "两天"
             },
-            "expires": "Expires",
-            "extend": "Extend",
-            "extend_htlc": "Extend HTLC",
-            "from": "From",
-            "hash": "Hash",
-            "preimage": "Preimage",
-            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
-            "recipient": "Recipient",
-            "redeem_htlc": "Redeem HTLC",
-            "sender": "Sender",
-            "size": "Size",
-            "title": "Hashed Time-Lock Contracts",
-            "to": "To",
+            "expires": "到期",
+            "extend": "延期",
+            "extend_htlc": "延期HTLC",
+            "first_stage": "第 1 级",
+            "from": "来自",
+            "hash": "哈希",
+            "preimage": "原像",
+            "preimage_has_been_created": "随机原像已经创建并已自动填入。",
+            "recipient": "接收方",
+            "redeem": "兑换",
+            "redeem_htlc": "兑换HTLC",
+            "second_stage": "第 2 级",
+            "sender": "发送方",
+            "size": "大小",
+            "title": "哈希时间锁定合约",
+            "to": "发往",
             "tooltip": {
-                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
-                "new_random": "Roll the dice and create a new random string.",
-                "preimage_button": "Please click to enter secret preimage",
-                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
-                "preimage_input": "Field requires a secret preimage",
-                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
-                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+                "enter_preimage": "输入你从发送方得到的秘密原像",
+                "new_random": "重置并创建新的随机字符串",
+                "preimage_button": "请点击输入秘密原像",
+                "preimage_hash": "原像哈希由上述原像使用指定的哈希算法计算而来。在此行使用复制按钮来保存原像哈希及原像大小。",
+                "preimage_input": "此区域需要秘密原像",
+                "preimage_random": "秘密原像最好的选择是随机字符串。如果你秘密原像易于被猜出或者太短，你可能会丢失你的资产。在此行使用复制按钮来保存原像及使用的哈希算法",
+                "preimage_size": "原像大小是指以上原像的长度。此值也会写入链。在此行使用复制按钮来保存原像哈希及原像大小。"
             }
         },
         "paper_wallet": {
             "description": "创建一个包含有你账户密钥的PDF文件(明文与二维码)。\n钱包未解锁将仅在PDF中添加公钥，不含私钥。\n钱包解锁后将会在PDF中添加公钥与私钥。",
             "title": "纸钱包"
         },
+        "prediction_market": {
+            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "title": "Prediction Markets"
+        },
         "timed_transfer": {
             "description": "创建一个在特定时间执行的转账.",
-            "title": "延时转账"
+            "title": "定时转账"
         },
         "voting": {
-            "description": "投票决定区块生产者、理事会成员及工作提案来影响与推动比特股区块链的战略性决策及发展。",
+            "description": "投票决定区块生产者-见证人、理事会成员及工作提案来影响与推动比特股区块链的战略性决策及发展。",
             "title": "投票"
         }
     },
@@ -1974,7 +2021,7 @@
         "bridge": "桥接服务允许充值一些外部资产并迅速交易转换成想要的网关资产.",
         "bridge_TRADE": "BlockTrades 是提供即时资产交易的桥接服务。详情和使用条款请参阅 https://blocktrades.us",
         "buy_min": "你将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
-        "call_limit": "市场中抵押率最低的债仓的平仓价",
+        "call_limit": "抵押率最低的抵押触发平仓的价格。",
         "call_price": "强制平仓触发价。如果喂价低于该价格，债仓将被强制平仓。",
         "close_position": "平仓。你至少需要 %(amount)s %(asset)s 进行平仓",
         "coll_ratio": "债仓抵押率计算公式为：抵押物 * 喂价 / 债务",
@@ -1996,7 +2043,7 @@
         "hide_asset": "从列表中隐藏资产",
         "lack_funds": "没有足够资产执行此操作",
         "latest_price": "市场最新成交价",
-        "legacy_explanation": "隐藏重复提案, 诈骗者一般是那些超过 2 个月没有活跃,但是最近蠢蠢欲动.",
+        "legacy_explanation": "隐藏重复、垃圾提案及启动开始后超过2个月没有活跃的提案。",
         "login": "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
         "login-tooltip": {
             "incorrectPassword": {
@@ -2027,7 +2074,7 @@
             }
         },
         "login_required": "请登录选择账户来执行此操作",
-        "margin_price": "这是触发平仓的最大价格。也被称为挤压价格。",
+        "margin_price": "强制平仓在市场上能够成交的最低价格，等于平仓触发价/MSSR。",
         "market_fee": "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s%% 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
         "memo_tip": "您可以在备注里留下可选信息。你可以填入任意信息，但是交易所通常用备注来分辨充值信息。",
         "no_groups_available": "没有可用的分组使用此API服务",
@@ -2037,7 +2084,7 @@
         "own_account": "你拥有此账户的密钥",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
         "propose_tip": "提议由另一个用户发起交易",
-        "propose_unhide": "Do not uncheck this unless you know what you are doing",
+        "propose_unhide": "不要取消选中，除非你清楚自己的行为。",
         "propose_unknown": "此提案由未知账户创建或提议目标为未知账户，此未知账户（不在联系单或白名单中）。警惕诈骗行为并小心检查所有操作。",
         "proxy_remove": "你有一个代理设置，清除输入字段就可以简单移除代理。",
         "proxy_search": "查找一个账户来作为你的投票代理",
@@ -2098,7 +2145,7 @@
         "create_key": "创建公钥",
         "csv": "导出到.csv 文件",
         "csv_tip": "将历史数据导出至 csv 格式文件",
-        "cumulative_borrow_amount": "Cumulative Debt",
+        "cumulative_borrow_amount": "累计借贷",
         "custom": "创建自定义操作",
         "delta_collateral": "抵押物变化",
         "delta_debt": "债务变化",
@@ -2115,14 +2162,14 @@
             "_none": "免费",
             "basic_fee": "普通账户名手续费",
             "fee": "普通转账手续费",
-            "fee_per_day": "Price per day",
-            "fee_per_kb": "Price per KByte Transaction Size",
+            "fee_per_day": "每日手续费",
+            "fee_per_kb": "每千字节手续费",
             "long_symbol": "更长的资产代码",
             "membership_annual_fee": "年度会员",
             "membership_lifetime_fee": "终身会员",
             "premium_fee": "高级账户名手续费",
             "price_per_kbyte": "每千字节手续费",
-            "price_per_output": "Price per recipient",
+            "price_per_output": "单接收者手续费",
             "symbol3": "三位资产代码",
             "symbol4": "四位资产代码"
         },
@@ -2148,7 +2195,7 @@
         "received": "已接收",
         "seller": "卖家",
         "sent": "发送",
-        "settlement_date": "清算时间",
+        "settlement_date": "强清时间",
         "to": " 提取到",
         "transaction_confirmed": "交易已确认",
         "trxTypes": {
@@ -2165,12 +2212,12 @@
             "asset_claim_pool": "申领资产手续费池",
             "asset_create": "创建资产",
             "asset_fund_fee_pool": "注资资产手续费池",
-            "asset_global_settle": "全局资产清算",
+            "asset_global_settle": "全局资产强清",
             "asset_issue": "资产发行",
             "asset_publish_feed": "发布资产喂价",
             "asset_reserve": "销毁资产",
-            "asset_settle": "资产清算",
-            "asset_settle_cancel": "取消资产清算",
+            "asset_settle": "资产强清",
+            "asset_settle_cancel": "取消资产强清",
             "asset_update": "更新资产",
             "asset_update_bitasset": "更新智能货币",
             "asset_update_feed_producers": "更新资产喂价提供者",
@@ -2186,11 +2233,11 @@
             "execute_bid": "执行竞价",
             "fba_distribute": "手续费由担保资产分配",
             "fill_order": "订单成交",
-            "htlc_create": "HTLC create",
-            "htlc_extend": "HTLC extend",
-            "htlc_redeem": "HTLC redeem",
-            "htlc_redeemed": "HTLC redeemed",
-            "htlc_refund": "HTLC refund",
+            "htlc_create": "HTLC 创建",
+            "htlc_extend": "HTLC 延长",
+            "htlc_redeem": "HTLC 兑换",
+            "htlc_redeemed": "HTLC 已兑换",
+            "htlc_refund": "HTLC 退款",
             "limit_order_cancel": "取消限价单",
             "limit_order_create": "创建限价单",
             "override_transfer": "强制转账",
@@ -2255,7 +2302,7 @@
         "explict_price": "具体价格",
         "fee": "手续费",
         "final": "转账后余额",
-        "free": "Free",
+        "free": "免费",
         "from": "从",
         "header": "转账详情",
         "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",
@@ -2327,6 +2374,10 @@
             "urlNamed": "%(name)s必须为url链接"
         }
     },
+    "voting": {
+        "description": "比特股区块链允许BTS token持有者投票决定区块生产者(见证人), 理事会成员(区块链管理者), 工作提案(任务赏金及BSIPs/Polls战略决策)。",
+        "title": "投票"
+    },
     "walkthrough": {
         "buy_form": "使用此表单下买单",
         "buy_orders": "查看该市场的所有购买订单。",
@@ -2367,6 +2418,7 @@
         "backup_explain": "点击按钮将生成一个后缀名为 .bin 的备份文件。这个备份文件使用你的钱包密码进行加密。其中包含该钱包中的所有私钥。通过它可以恢复钱包，或者在不同浏览器或者计算机间进行钱包迁移。",
         "backup_login": "备份 & 登录",
         "backup_new_account": "恭喜，你已经创建了一个新账户。强烈建议你立即备份你的钱包。如果你的计算机/浏览器发生意外，而你又没有备份文件，你将永久丢失钱包及其包含的数据和数字资产。",
+        "backup_types": "备份类型",
         "backup_warning": "很明显你未备份你的私钥文件. 为了安全原因我们强烈建议用户在没有备份他们私钥的情况下不要登出.",
         "balance_claim_lookup": "查询余额",
         "balance_claims": "余额导入",
@@ -2406,7 +2458,7 @@
         "create_password": "使用密码创建一个账户",
         "create_success": "本地钱包创建成功",
         "create_text": "%(wallet_name)s本地钱包保存在你的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过传输备份文件可以轻松实现钱包的跨浏览器或跨计算机的迁移。",
-        "create_w_a": "创建一个本地钱包来容纳账户",
+        "create_w_a": "创建一个本地钱包来存放账户",
         "create_wallet": "创建新的本地钱包",
         "create_wallet_backup": "从备份创建新钱包",
         "current_pass": "当前密码",
@@ -2421,7 +2473,7 @@
         "done": "完成",
         "dont_ask_for_backup": "不要询问我再次备份",
         "download": "下载",
-        "enter_password": "请输入密码",
+        "enter_password": "请输入钱包密码",
         "existing_password": "当前密码",
         "first_account_paid": "由于这是你的第一个账户，水龙头服务将为你支付账户在区块链上的注册费用。",
         "generated": "生成的密码",
@@ -2466,7 +2518,7 @@
         "ok_done": "好的，打开资产总览",
         "pass_incorrect": "密码错误",
         "pass_length": "密码必须包含至少 %(minLength)s 位字符。理想的密码应为 20 位或更长，并且为数字、字母和特殊符号的组合。",
-        "password": "密码",
+        "password": "钱包密码",
         "password_crucial": "现在就请你将密码记下来，无论是写在纸上、使用密码管理软件或是别的什么可以在你忘记密码时能够取回的方法。这一点至关重要。一旦你忘记密码，你就无法再访问账户，<strong>我们没有办法帮助你恢复</strong>。",
         "password_lose_warning": "<strong>重要：如果你忘记了密码，你将无法登录自己的账户，即不能重置也无法取回密码！确保你已经记住自己的密码或是将其写下安放在合适的地方！</strong>",
         "password_model": "帐号模式",
@@ -2476,6 +2528,7 @@
         "password_show": "显示我的密码",
         "paste_private": "将私钥粘贴在这里 (钱包导入格式 - WIF)",
         "pwd4brainkey": "输入密码后显示脑钱包密钥",
+        "read_more": "了解关于%(wallet)s及%(backup)s更多内容",
         "ready_to_restore": "准备导入",
         "reenter_brainkey": "请再输入一遍脑钱包密钥",
         "remember_me": "记住我",
@@ -2530,6 +2583,7 @@
         "wallet_model_2": "本地钱包模式的安全性最高，但只能在此电脑和此浏览器下使用。要在其他电脑或其他浏览器中使用该钱包的话，需要使用备份文件或脑钱包密钥对钱包进行迁移。",
         "wallet_model_3": "<li>多重签名账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
-        "wallet_password": "从任意地点使用密码登录"
+        "wallet_password": "从任意地点使用密码登录",
+        "wallet_types": "钱包类型"
     }
 }

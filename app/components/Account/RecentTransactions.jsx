@@ -399,13 +399,9 @@ class RecentTransactions extends React.Component {
               })
             : [];
         let action = (
-            <tr className="total-value" key="total_value">
-                <td style={{textAlign: "center"}}>&nbsp;</td>
-                <td />
-                <td />
-                <td />
-                <td />
-            </tr>
+            <div className="total-value" key="total_value">
+                <span style={{textAlign: "center"}}>&nbsp;</span>
+            </div>
         );
 
         const footer = (
@@ -501,7 +497,7 @@ class RecentTransactions extends React.Component {
                                 </Tooltip>
                             ) : null}
 
-                            {historyCount > 0 ? (
+                            {historyCount > 0 && this.props.dashboard ? (
                                 <Tooltip
                                     placement="bottom"
                                     title={counterpart.translate(

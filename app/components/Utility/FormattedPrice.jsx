@@ -208,8 +208,8 @@ class FormattedPrice extends React.Component {
                     className={noPopOver ? "clickable inline-block" : ""}
                     onClick={noPopOver ? this.onFlip.bind(this) : null}
                 >
-                    <AssetName name={quote.get("symbol")} />/
-                    <AssetName name={base.get("symbol")} />
+                    <AssetName name={quote.get("symbol")} noTip={noPopOver} />/
+                    <AssetName name={base.get("symbol")} noTip={noPopOver} />
                 </span>
             </Tooltip>
         );

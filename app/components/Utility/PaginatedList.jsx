@@ -55,10 +55,17 @@ export default class PaginatedList extends React.Component {
             <div className="paginated-list" style={this.props.style}>
                 <Table
                     dataSource={currentRows}
+                    uns
                     columns={Array.isArray(header) ? header : []}
-                    footer={() => extraRow}
+                    footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
                     onChange={this.props.toggleSortOrder}
                     pagination={false}
+                    rowClassName={
+                        this.props.rowClassName == null
+                            ? undefined
+                            : (record, index) =>
+                                  this.props.rowClassName(record, index)
+                    }
                 />
                 {total > pageSize ? (
                     <Pagination
@@ -78,7 +85,6 @@ export default class PaginatedList extends React.Component {
                         onChange={this.onChange.bind(this)}
                     />
                 ) : null}
-
                 {this.props.children}
             </div>
         );

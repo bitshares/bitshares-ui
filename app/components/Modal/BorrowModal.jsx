@@ -464,6 +464,21 @@ class BorrowModalContent extends React.Component {
             };
         }
 
+        let delta_collateral_amount = parseInt(
+            this.state.collateral * backingPrecision -
+                currentPosition.collateral,
+            10
+        );
+        let delta_debt_amount = parseInt(
+            this.state.short_amount * quotePrecision - currentPosition.debt,
+            10
+        );
+
+        // Amount can not be 0
+        if (delta_collateral_amount == 0 && delta_debt_amount == 0) {
+            delta_collateral_amount = 1;
+        }
+
         var tr = WalletApi.new_transaction();
         if (extensionsProp) {
             tr.add_type_operation("call_order_update", {
@@ -473,19 +488,11 @@ class BorrowModalContent extends React.Component {
                 },
                 funding_account: this.props.account.get("id"),
                 delta_collateral: {
-                    amount: parseInt(
-                        this.state.collateral * backingPrecision -
-                            currentPosition.collateral,
-                        10
-                    ),
+                    amount: delta_collateral_amount,
                     asset_id: this.props.backing_asset.get("id")
                 },
                 delta_debt: {
-                    amount: parseInt(
-                        this.state.short_amount * quotePrecision -
-                            currentPosition.debt,
-                        10
-                    ),
+                    amount: delta_debt_amount,
                     asset_id: this.props.quote_asset.get("id")
                 },
                 extensions: extensionsProp
@@ -498,19 +505,11 @@ class BorrowModalContent extends React.Component {
                 },
                 funding_account: this.props.account.get("id"),
                 delta_collateral: {
-                    amount: parseInt(
-                        this.state.collateral * backingPrecision -
-                            currentPosition.collateral,
-                        10
-                    ),
+                    amount: delta_collateral_amount,
                     asset_id: this.props.backing_asset.get("id")
                 },
                 delta_debt: {
-                    amount: parseInt(
-                        this.state.short_amount * quotePrecision -
-                            currentPosition.debt,
-                        10
-                    ),
+                    amount: delta_debt_amount,
                     asset_id: this.props.quote_asset.get("id")
                 }
             });
@@ -529,14 +528,12 @@ class BorrowModalContent extends React.Component {
         };
 
         if (props && props.hasCallOrders && props.call_orders) {
-            currentPosition = props.call_orders
-                .filter(a => !!a)
-                .find(a => {
-                    return (
-                        a.getIn(["call_price", "quote", "asset_id"]) ===
-                        props.quote_asset.get("id")
-                    );
-                });
+            currentPosition = props.call_orders.filter(a => !!a).find(a => {
+                return (
+                    a.getIn(["call_price", "quote", "asset_id"]) ===
+                    props.quote_asset.get("id")
+                );
+            });
 
             currentPosition = !!currentPosition
                 ? currentPosition.toJS()
@@ -858,8 +855,8 @@ class BorrowModalContent extends React.Component {
                                                 (errors.below_maintenance
                                                     ? "has-error"
                                                     : errors.close_maintenance
-                                                    ? "has-warning"
-                                                    : "")
+                                                        ? "has-warning"
+                                                        : "")
                                             }
                                         >
                                             <span className="borrow-price-label">
