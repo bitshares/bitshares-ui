@@ -173,7 +173,7 @@ class AccountRewards extends React.Component {
                                                     }
                                                 />:
                                             </th>
-                                            <td>${reward.amount}</td>
+                                            <td>${reward.payout}</td>
                                         </tr>
                                         <tr>
                                             <th>
@@ -184,7 +184,7 @@ class AccountRewards extends React.Component {
                                                 />:
                                             </th>
                                             <td>
-                                                {reward.payout} BCO (@{" "}
+                                                {reward.amount} BCO (@{" "}
                                                 {reward.price} BCO/USD)
                                             </td>
                                         </tr>

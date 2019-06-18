@@ -8,6 +8,8 @@ import AccountStore from "../../stores/AccountStore";
 import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
+const logo = require("assets/logo-cryptobridge.png");
+
 class Messages extends React.Component {
     hideImportantMessage(id, e) {
         e.preventDefault();
@@ -45,7 +47,13 @@ class Messages extends React.Component {
                     "user_identification_process"
                 ));
 
+        const hasTradingCompetitionInfo =
+            Date.now() < new Date("2019-12-31").getTime() &&
+            (!hiddenImportantMessages ||
+                !hiddenImportantMessages.includes("trading_competition_info"));
+
         if (
+            !hasTradingCompetitionInfo &&
             !hasUserIdentificationProcessInfo &&
             !requiresTos &&
             !requiresKyc &&
@@ -64,6 +72,37 @@ class Messages extends React.Component {
                         >
                             <Translate content="cryptobridge.competition.message.action" />
                         </Link>
+                    </li>
+                ) : null}
+                {hasTradingCompetitionInfo ? (
+                    <li className="notice">
+                        <div
+                            className="dismiss"
+                            onClick={this.hideImportantMessage.bind(
+                                this,
+                                "trading_competition_info"
+                            )}
+                        >
+                            &times;
+                        </div>
+                        <img
+                            src={logo}
+                            style={{maxWidth: 30, marginRight: "1rem"}}
+                        />
+                        <span>
+                            Win $800 every day in our trading competition!
+                        </span>
+                        <button
+                            className={"button small primary"}
+                            style={{marginLeft: "1rem"}}
+                            onClick={() => {
+                                window.open(
+                                    "https://crypto-bridge.org/trading-competition/"
+                                );
+                            }}
+                        >
+                            Learn more
+                        </button>
                     </li>
                 ) : null}
                 {hasUserIdentificationProcessInfo ? (
