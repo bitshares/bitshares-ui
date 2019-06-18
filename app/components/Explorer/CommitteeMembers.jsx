@@ -8,8 +8,9 @@ import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
-import {Icon, Input, Table} from "bitshares-ui-style-guide";
+import {Table} from "bitshares-ui-style-guide";
 import sanitize from "sanitize";
+import SearchInput from "../Utility/SearchInput";
 
 class CommitteeMemberList extends React.Component {
     static propTypes = {
@@ -169,7 +170,6 @@ class CommitteeMembers extends React.Component {
     }
 
     _onFilter(e) {
-        e.preventDefault();
         this.setState({filterCommitteeMember: e.target.value.toLowerCase()});
 
         SettingsActions.changeViewSetting({
@@ -195,17 +195,22 @@ class CommitteeMembers extends React.Component {
                 <div className="grid-block vertical medium-horizontal">
                     <div className="grid-block vertical">
                         <div className="grid-content">
-                            <Input
+                            <SearchInput
                                 placeholder={counterpart.translate(
                                     "explorer.witnesses.filter_by_name"
                                 )}
+                                value={this.state.filterCommitteeMember}
                                 onChange={this._onFilter.bind(this)}
                                 style={{
                                     width: "200px",
                                     marginBottom: "12px",
                                     marginTop: "4px"
                                 }}
-                                addonAfter={<Icon type="search" />}
+                                onClear={() =>
+                                    this._onFilter({
+                                        target: {value: ""}
+                                    })
+                                }
                             />
                             <CommitteeMemberList
                                 filter={this.state.filterCommitteeMember}

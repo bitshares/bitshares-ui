@@ -19,7 +19,7 @@ export default function SearchInput({
             autoComplete={autoComplete}
             style={style}
             type="text"
-            className={className}
+            className={className + " search-input"}
             placeholder={placeholder}
             maxLength={maxLength}
             name={name}

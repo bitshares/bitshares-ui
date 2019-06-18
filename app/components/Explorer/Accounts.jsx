@@ -9,12 +9,8 @@ import Icon from "../Icon/Icon";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountStore from "stores/AccountStore";
 import LoadingIndicator from "../LoadingIndicator";
-import {
-    Table,
-    Select,
-    Input,
-    Icon as IconStyleGuide
-} from "bitshares-ui-style-guide";
+import {Table, Select, Icon as IconStyleGuide} from "bitshares-ui-style-guide";
+import SearchInput from "../Utility/SearchInput";
 import {ChainStore} from "bitsharesjs";
 
 class Accounts extends React.Component {
@@ -107,8 +103,8 @@ class Accounts extends React.Component {
                     return a.accountId > b.accountId
                         ? 1
                         : a.accountId < b.accountId
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: id => {
                     return <div>{id}</div>;
@@ -154,8 +150,8 @@ class Accounts extends React.Component {
                     return a.accountName > b.accountName
                         ? 1
                         : a.accountName < b.accountName
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: name => {
                     return (
@@ -178,8 +174,8 @@ class Accounts extends React.Component {
                         ? 1
                         : this.balanceObjects[a.accountBalance] <
                           this.balanceObjects[b.accountBalance]
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: balance => {
                     return (
@@ -206,8 +202,8 @@ class Accounts extends React.Component {
                         ? 1
                         : this.balanceObjects[a.accountBalance] <
                           this.balanceObjects[b.accountBalance]
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: balance => {
                     return (
@@ -230,11 +226,11 @@ class Accounts extends React.Component {
             searchAccounts
                 .filter(a => {
                     /*
-                    * This appears to return false negatives, perhaps from
-                    * changed account name rules when moving to graphene?. Either
-                    * way, trying to resolve invalid names fails in the ChainStore,
-                    * which in turn breaks the BindToChainState wrapper
-                    */
+                     * This appears to return false negatives, perhaps from
+                     * changed account name rules when moving to graphene?. Either
+                     * way, trying to resolve invalid names fails in the ChainStore,
+                     * which in turn breaks the BindToChainState wrapper
+                     */
                     // if (!ChainValidation.is_account_name(a, true)) {
                     //     return false;
                     // }
@@ -278,13 +274,15 @@ class Accounts extends React.Component {
                                     marginBottom: "24px"
                                 }}
                             >
-                                <Input
+                                <SearchInput
                                     placeholder={"Search"}
                                     value={this.state.searchTerm}
                                     style={{width: "200px"}}
                                     onChange={this._onSearchChange.bind(this)}
-                                    addonAfter={
-                                        <IconStyleGuide type="search" />
+                                    onClear={() =>
+                                        this._onSearchChange({
+                                            target: {value: ""}
+                                        })
                                     }
                                 />
 

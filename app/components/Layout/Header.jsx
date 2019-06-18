@@ -835,6 +835,29 @@ class Header extends React.Component {
             );
         }
 
+        if (active.indexOf("/htlc") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/htlc") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="htlc"
+                        title="icons.htlc"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="showcases.htlc.title"
+                    />
+                </a>
+            );
+        }
+
         const submenus = {
             [SUBMENUS.SETTINGS]: (
                 <ul
