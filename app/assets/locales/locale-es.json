@@ -1996,6 +1996,10 @@
             "description": "Cree un PDF con las claves de su cuenta impresas (texto plano y código de barras). Si la cartera está desbloqueada, también se agregan las claves privadas.",
             "title": "Billetera de papel"
         },
+        "prediction_market": {
+            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "title": "Prediction Markets"
+        },
         "timed_transfer": {
             "description": "Iniciar una transferencia que se ejecutará a una hora especificada.",
             "title": "Transferencia temporizada"
