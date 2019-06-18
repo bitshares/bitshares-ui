@@ -25,12 +25,12 @@
         "deposit": "Внести депозит в BTS",
         "deposit_address": "Ваш адрес депозита – это имя вашего аккаунта",
         "deposit_withdraw": "Депозит/Вывод",
-        "download_history": "Download History",
+        "download_history": "Скачать историю",
         "eq_value": "Ориентировочная стоимость",
         "eq_value_header": "Стоимость ({asset})",
         "errors": {
             "invalid": "Недействительное имя аккаунта",
-            "memo_missing": "Вы не владеете мемо-ключом от этого аккаунта. Чтобы воспользоваться мемо, пожалуйста, задайте мемо-ключ аккаунта на странице Разрешений.",
+            "memo_missing": "Вы не владеете мемо-ключом от этого аккаунта. Чтобы воспользоваться мемо, пожалуйста, задайте мемо-ключ аккаунта на странице прав доступа.",
             "not_found": "Аккаунт %(name)s не существует, вы уверены, что ввели имя аккаунта правильно?",
             "not_yours": "Не ваш аккаунт",
             "unknown": "Неизвестный аккаунт"
@@ -39,11 +39,11 @@
         "existing_accounts": "Существующие аккаунты",
         "existing_user": "Существующий пользователь",
         "export_modal": {
-            "coinbase_report": "CoinTracking.info Report",
-            "description": "Enter your desired elastic search instance and click the report type",
-            "full_report": "Full Report",
-            "title": "History Export",
-            "use_custom": "Use custom wrapper"
+            "coinbase_report": "Отчёт CoinTracking.info",
+            "description": "Добавьте выбранный вами экземпляр elasticsearch и нажмите на тип отчёта",
+            "full_report": "Полный отчёт",
+            "title": "Экспорт истории",
+            "use_custom": "Использовать кастомную оболочку"
         },
         "filter_orders": "Фильтрация",
         "follow": "Добавить контакт",
@@ -72,7 +72,7 @@
         "member": {
             "annual": "Годовой подписчик",
             "available": "Доступно к востребованию",
-            "balance_type": "Type",
+            "balance_type": "Тип",
             "basic": "Обычный пользователь",
             "cashback": "Остаток вестингового баланса",
             "claim": "Востребовать сейчас",
@@ -173,8 +173,8 @@
             "type": "Тип",
             "use_text": "Использовать",
             "valid_pub": "Действительный публичный ключ",
-            "warning1": "Общий вес активных разрешений в %(weights_total)s должен быть равен или превосходить порог в %(threshold)s",
-            "warning2": "Общий вес разрешений владельца в %(weights_total)s должен быть равен или превосходить порог в %(threshold)s",
+            "warning1": "Общий вес активных прав доступа в %(weights_total)s должен быть равен или превосходить порог в %(threshold)s",
+            "warning2": "Общий вес прав доступа владельца в %(weights_total)s должен быть равен или превосходить порог в %(threshold)s",
             "warning3": "Аккаунт уже в списке",
             "warning4": "Ключ уже в списке",
             "weight": "Вес"
@@ -293,8 +293,8 @@
             "primary": "Основные настройки",
             "quote": "Количество котируемого актива",
             "quote_name": "Котируемый актив",
-            "reward_percent": "Reward percent",
-            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
+            "reward_percent": "Процент вознаграждения",
+            "reward_percent_tooltip": "Если была установлена рыночная комиссия, то процент вознаграждения указывает, какая часть этой комиссии будет распределяться через программу вознаграждения рефералов, помимо отчислений владельцу актива.",
             "short": "Короткое имя (максимум 32 символа)",
             "symbol": "Тикер",
             "to": "Эмитировать на аккаунт",
@@ -315,7 +315,7 @@
         },
         "votes": {
             "about": "Подробнее",
-            "active": "Активно(%(count)s)",
+            "active": "Активно (%(count)s)",
             "active_short": "Активно",
             "add_committee": "Добавить",
             "add_committee_label": "Член комитета",
@@ -323,7 +323,7 @@
             "add_witness_label": "Заверитель",
             "already": "Аккаунт уже в списке",
             "approve_worker": "Утвердить",
-            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
+            "cast_votes_through_one_operation": "Голосуйте за заверителей, членов комитета и рабочие предложения и транслируйте свои голоса в сеть одной операцией.",
             "clear_proxy": "Убрать прокси",
             "cm_approved_by": "Члены комитета, утверждённые %(account)s",
             "cm_not_approved_by": "Члены комитета, не утверждённые %(account)s",
@@ -339,15 +339,15 @@
             "hide_legacy_proposals": "Скрыть устаревшие предложения",
             "inactive": "Резервные",
             "info": "Информация",
-            "join_committee": "Join committee",
-            "join_witnesses": "Join Witnesses",
+            "join_committee": "Присоединитесь к комитету",
+            "join_witnesses": "Присоединитесь к заверителям",
             "line": "Очередь",
             "max_pay": "Максимальная общая выплата",
             "missing": "Необходимо",
             "name": "Имя",
-            "new": "Предложено(%(count)s)",
+            "new": "Предложено (%(count)s)",
             "no_proxy": "Без прокси",
-            "polls": "BSIPs/Polls (%(count)s)",
+            "polls": "Предложения/Опросы (%(count)s)",
             "proxy": "Вручную введите аккаунт в качестве своего прокси",
             "proxy_current": "Ваш текущий прокси",
             "proxy_known": "Или выберите аккаунт в качестве вашего прокси",
@@ -399,7 +399,7 @@
             "title": "Белый список",
             "white_by": "Добавлен в белый список ",
             "whitelist_authorities": "Источник белого списка",
-            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
+            "whitelist_market_fee_sharing": "Белый список распределения комиссии"
         }
     },
     "account_browsing_mode": {
@@ -460,8 +460,8 @@
         "no_valid": "Для %(asset_symbol)s нет действующих котировок",
         "pay_max_debt": "Выплатить максимальный долг",
         "target_collateral_ratio": "Целевой коэффициент обеспечения",
-        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
-        "target_collateral_ratio_short": "TCR",
+        "target_collateral_ratio_explanation": "Когда позиция попадет под маржин колл, соответствующий ордер будет достаточно большим, чтобы привести коэффициент обеспечения позиции к целевому коэффициенту обеспечения (TCR) или превысить его.",
+        "target_collateral_ratio_short": "Целевой коэффициент обеспечения (TCR)",
         "title": "%(asset_symbol)s маржа",
         "update": "Обновить",
         "use_max": "Использовать максимум"
@@ -510,7 +510,7 @@
         "buy_sell": "Форма ордера",
         "buysell_formatter": "{direction} {asset}",
         "call": "Цена досрочного погашения",
-        "cancel_selected_orders": "Cancel selected order(s)",
+        "cancel_selected_orders": "Отменить выбранный ордер(а)",
         "change": "Изменить",
         "chart_height": "Высота графика (в пикселях)",
         "chart_hide": "Скрыть графики",
@@ -694,7 +694,7 @@
         "settle_delay_globally_settled": "Расчёт для данного актива будет произведён немедленно",
         "settle_globally_settled": "Провести мгновенный расчёт",
         "settle_globally_settled_tooltip": "Этот актив попал под глобальное погашение. Вы можете провести мгновенное погашение по цене глобального погашения (смотрите информацию на бирже или в подробностях об активе)",
-        "settle_offset": "Settlement price offset: %(offset)s%",
+        "settle_offset": "Смещение расчетной цены: %(offset)s%",
         "settle_orders": "Ордера на погашение",
         "settlement_hint": "Вы пытаетесь погасить {long}. Текущая цена на {market_link}",
         "short": "Шорт",
@@ -743,13 +743,13 @@
                 "collateral": "Дополнительное залоговое обеспечение",
                 "debt": "Покрытый долг",
                 "included": {
-                    "no": "No",
-                    "partial": "Partially",
-                    "yes": "Yes"
+                    "no": "Нет",
+                    "partial": "Частично",
+                    "yes": "Да"
                 },
                 "title": "Залоговые ставки"
             },
-            "cumulative": "Cumulative",
+            "cumulative": "Кумулятивная",
             "fee_pool": {
                 "claim_balance": "Востребовать остаток пула комиссий",
                 "claim_fees": "Востребовать комиссии",
@@ -768,14 +768,14 @@
             "info": "Информация об активе",
             "invalid": "%(name)s – недопустимое имя актива",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
-                "ratio_danger": "Position is below MCR and will be margin called",
-                "ratio_warning": "Position is near MCR and in danger of being margin called",
+                "click_to_switch_to_cumulative": "Нажмите, чтобы переключиться на кумулятивную сумму столбцов.",
+                "ratio_danger": "Позиция находится ниже поддерживающего коэффициента обеспечения (MCR) и попадёт под маржин колл",
+                "ratio_warning": "Позиция находится близко к поддерживающему коэффициенту обеспечения (MCR) и рискует попасть под маржин колл",
                 "title": "Маржинальные позиции"
             },
             "not_found": "Актив %(name)s не существует",
             "permissions": {
-                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
+                "accounts_in_whitelist_market_fee_sharing": "Аккаунты, включённые в белый список распределения комиссии",
                 "blacklist_authorities": "Поставщики чёрного списка",
                 "blacklist_markets": "Рынки черного списка",
                 "max_market_fee": "Максимальная комиссия рынка",
@@ -787,7 +787,7 @@
             "price_feed": {
                 "external_feed_price": "Цена в котировках (медиана котировок заверителей)",
                 "feed_lifetime": "Срок действия котировок (в часах)",
-                "feed_price": "Feed price",
+                "feed_price": "Цена котировок",
                 "global_settlement_price": "Глобальное погашение запускается при цене",
                 "maintenance_collateral_ratio": "Поддерживающий коэффициент обеспечения (MCR)",
                 "maximum_short_squeeze_price": "Максимальная цена короткого сжатия (MSSP)",
@@ -798,12 +798,12 @@
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER (основной обменный курс)",
-                "feed_price": "Feed price",
-                "maintenance_collateral_ratio": "MCR (коэффициент обеспечения поддержки)",
+                "feed_price": "Цена котировок",
+                "maintenance_collateral_ratio": "MCR (поддерживающий коэффициент обеспечения)",
                 "maximum_short_squeeze_ratio": "MSSR (максимальный коэффициент короткого сжатия)",
                 "published": "Опубликованы",
                 "publisher": "Производитель",
-                "settlement_price": "Цена погашения",
+                "settlement_price": "Цена принудительного погашения",
                 "title": "Данные котировок"
             },
             "settlement": {
@@ -825,7 +825,7 @@
                 "settle_remaining_volume": "Доступный для расчёта объём",
                 "settlement_funds": "Расчётный фонд",
                 "settlement_funds_collateral_ratio": "Залоговый коэффициент расчётного фонда",
-                "settlement_price": "Цена погашения",
+                "settlement_price": "Цена принудительного погашения",
                 "title": "Погашение"
             },
             "summary": {
@@ -833,7 +833,7 @@
                 "current_supply": "Текущее предложение",
                 "issuer": "Эмитент",
                 "market_fee": "Рыночная комиссия",
-                "market_fee_referral_reward_percent": "Market fee referral reward",
+                "market_fee_referral_reward_percent": "Реферальное вознаграждение с рыночной комиссии",
                 "stealth_supply": "Стелс предложение"
             },
             "title": "Актив",
@@ -841,9 +841,9 @@
                 "blacklist_authorities": "Поставщики чёрного списка",
                 "blacklist_markets": "Чёрный список рынков",
                 "enable_flag": "Чтобы задать поставщиков белого списка, нужно активировать флажок белого списка",
-                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
+                "market_fee_enable_flag": "Чтобы задать белый список, нужно включить флажок рыночной комиссии ",
                 "whitelist_authorities": "Поставщики белого списка",
-                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
+                "whitelist_market_fee_sharing": "Белый список распределения комиссии",
                 "whitelist_markets": "Белый список рынков"
             }
         },
@@ -884,7 +884,7 @@
             "op_type": "Тип операции",
             "previous": "Предыдущий",
             "previous_secret": "Предыдущий секретный хеш",
-            "settlement_price": "Цена погашения",
+            "settlement_price": "Цена принудительного погашения",
             "short_limit": "Предел шорта",
             "time": "Время",
             "title": "Блок",
@@ -928,7 +928,7 @@
             "children_authority_depth_warning": "Это предложение может не получить утверждения, так как данные права доступа превышают максимальный уровень полномочий.",
             "failed": "Неутвержденные",
             "failed_execute": "Утвержденные, не удалось выполнить.",
-            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
+            "no_reason_available_switch_node": "Причина сбоя доступна только с релизом ядра ≥ 3.1.0, пожалуйста, переключите ваш узел.",
             "pending": "Ожидающие",
             "pending_approval": "Ожидающие утверждения",
             "pending_review": "Утвержденные, ожидающие проверки",
@@ -1010,7 +1010,7 @@
             "rudex": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Rudex.",
             "trade": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Blocktrades.",
             "win": "",
-            "xbtsx": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by XBTS."
+            "xbtsx": "Актив %(asset)s обеспечен реальными %(backed)s в соотношении 1:1 и может быть введён/выведен с помощью сервиса шлюза от XBTS."
         },
         "balance": "Текущий баланс",
         "balance_asset": "Текущий баланс %(asset)s",
@@ -1149,7 +1149,7 @@
             "account": "аккаунт"
         },
         "help": "Помощь",
-        "not_found": "Not found",
+        "not_found": "Не найдено",
         "return_to_top": "Вернуться к началу",
         "scan_qr_code": "Сканировать QR-код",
         "set": "Задать"
@@ -1186,16 +1186,16 @@
         "withdraw_legacy": "или старой формой вывода"
     },
     "htlc": {
-        "claim_period": "Seconds to claim",
-        "claim_period_due": "Claimable until",
+        "claim_period": "Секунд на востребование",
+        "claim_period_due": "Востребование возможно до",
         "id": "HTLC id",
-        "preimage": "Preimage",
-        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
-        "preimage_hash": "Preimage hash",
-        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
-        "redeemer": "Redeemer",
-        "seconds_to_add": "Add seconds to claim period",
-        "update_issuer": "Update issuer"
+        "preimage": "Прообраз",
+        "preimage_explanation": "Для вычисления хеша прообраза использовался секретный прообраз, также необходимый для получения данного HTLC",
+        "preimage_hash": "Хеш прообраза",
+        "preimage_hash_explanation": "Хеш прообраза вычисляется из секретного прообраза и является обязательным для HTLC. HTLC может быть получен только с секретным прообразом. Контент, который вы видите: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "Получатель",
+        "seconds_to_add": "Добавить секунды к периоду востребования",
+        "update_issuer": "Обновить эмитента"
     },
     "icons": {
         "adjust": "Настроить маржинальную позицию",
@@ -1362,12 +1362,12 @@
         "cancel": "отменить",
         "close": "закрыть",
         "committee": {
-            "confirm": "CONFIRM",
-            "create_committee": "Become a committee member",
-            "from": "From",
-            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "confirm": "ПОДТВЕРДИТЬ",
+            "create_committee": "Станьте членом комитета",
+            "from": "От",
+            "text": "После голосования и утверждения на позицию активного члена комитета вы можете участвовать в установлении политики и параметров блокчейна BitShares, таких как: <ul><li>Комиссии за транзакции</li>Параметры BitAssets (например, рыночные комиссии)<li><li>Параметры блокчейна (например, размер блока и интервал)</li><li>Параметры рефералов и вестинга (процент кешбэка для пожизненных членов и вестинговый период)</li><li>Другие вопросы управления</li></ul>Отправьте ссылку на свой веб-сайт или пост на форуме, объясняющий, почему именно вы будете образцовым участником, чтобы привлечь достаточно голосов и получить активный статус. Члены комитета должны иметь базовое техническое понимание платформы BitShares и обладать знанием и опытом в ключевых аспектах управления автономным блокчейном. Это неоплачиваемая позиция.",
             "url": "URL",
-            "web_example": "Enter link to your committee proposal post"
+            "web_example": "Добавьте ссылку на свой пост с предложением кандидатуры члена комитета"
         },
         "confirmation": {
             "accept": "Да",
@@ -1387,7 +1387,7 @@
             "close": "Закрыть",
             "header": "Разместить депозит на %(account_name)s",
             "header_short": "Внести депозит",
-            "no_assets": "No depositable assets available",
+            "no_assets": "Нет доступных для депозита активов",
             "submit": "Внести депозит"
         },
         "deposit_withdraw": {
@@ -1442,7 +1442,7 @@
             "from": "Сжечь с аккаунта",
             "submit": "Сжечь",
             "title": "Сжечь (зарезервировать) актив",
-            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
+            "warning_message": "Обратите внимание, что сжигание актива (резервирование) уничтожит указанное количество выбранного актива. Это действие не может быть отменено после подтверждения!"
         },
         "save": "сохранить",
         "send": {
@@ -1451,9 +1451,9 @@
         },
         "settle": {
             "amount": "Сумма к погашению",
-            "delay": "Estimated delay: %(amount)s hours",
-            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
-            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
+            "delay": "Примерная задержка: %(amount)s часов",
+            "max_volume": "Максимальный расчётный объём: %(amount)s %(asset)s",
+            "remaining_volume": "Доступный для расчёта объём: %(amount)s %(asset)s",
             "submit": "Провести расчёт по активу",
             "title": "Запросить погашение %(asset)s"
         },
@@ -1470,7 +1470,7 @@
             "gateway_fee": "Комиссия шлюза",
             "header": "Вывод",
             "memo": "Мемо",
-            "no_assets": "No withdrawable assets available",
+            "no_assets": "Нет доступных активов для вывода",
             "no_estimate": "Для этого объекта нет доступных оценок",
             "no_gateways": "Извините, для обработки этой операции вывода нет доступных шлюзов",
             "quantity": "Количество",
@@ -1478,15 +1478,15 @@
             "withdraw": "Вывод"
         },
         "witness": {
-            "confirm": "CONFIRM",
-            "create_witness": "Become a witness member",
-            "enter_public_signing_key": "Enter your public signing key",
-            "invalid_key": "Public Key is invalid",
-            "public_signing_key": "Public Signing Key",
-            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "confirm": "ПОДТВЕРДИТЬ",
+            "create_witness": "Станьте заверителем",
+            "enter_public_signing_key": "Введите свой публичный подписывающий ключ",
+            "invalid_key": "Недействительный публичный ключ",
+            "public_signing_key": "Публичный подписывающий ключ",
+            "text": "После голосования и утверждения на позицию активного заверителя вы будете добавлены в ротацию производителей блоков и должны будете производить блоки, подписанные вашим подписывающим ключом, получая вознаграждение в BTS за каждый из них. Распространенными критериями, которые помогают обосновать утверждение своей кандидатуры, являются:<ul><li> наличие запасных вариантов (например, резервного сервера для горячей замены) и сервера соответствующих спецификаций для обеспечения как можно меньшего количества пропущенных блоков (т.н. высокой степени связности)</li><li>участие в производстве блоков и развёртывании релизов в тестовой сети</li><li>предоставление публичного узла для сообщества</li><li>публикация котировок для BitAssets</li></ul> Добавьте ссылку на свой веб-сайт или пост на форуме, объясняющий, почему именно вы являетесь подходящим кандидатом, чтобы привлечь достаточно голосов и получить активный статус.",
             "url": "URL",
-            "web_example": "Enter link to your witness proposal post",
-            "witness_account": "Witness Account"
+            "web_example": "Добавьте ссылку на свой пост с предложением кандидатуры заверителя",
+            "witness_account": "Аккаунт заверителя"
         }
     },
     "news": {
@@ -1542,7 +1542,7 @@
         "asset_reserve": "{account} сжег (зарезервировал) {amount}",
         "asset_settle": "{account} запросил погашение {amount}",
         "asset_settle_cancel": "{account} отменил погашение {amount}",
-        "asset_settle_instant": "{account} провёл мгновенный расчёт {amount} по цене {price}",
+        "asset_settle_instant": "{account} провёл мгновенный расчёт {amount} по цене {price}.",
         "asset_update": "{account} обновил актив {asset}",
         "asset_update_feed_producers": "{account} обновил производителей котировок для актива {asset}",
         "asset_update_issuer": "{from_account} отправил {asset} {to_account}",
@@ -1553,11 +1553,11 @@
         "committee_member_update_global_parameters": "{account} обновил общие параметры комитета",
         "fill_order_buy": "{account} купил {amount} по цене {price} в ордере #%(order)s",
         "fill_order_sell": "{account} продал {amount} по цене {price} в ордере #%(order)s",
-        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
-        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
-        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
-        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
-        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
+        "htlc_create": "{from} заблокировал {amount} для {to} для востребования до {lock_period}",
+        "htlc_extend": "{update_issuer} добавил {seconds_to_add} секунд к периоду востребования HTLC {htlc_id}",
+        "htlc_redeem": "{redeemer} запросил получение с HTLC {htlc_id}",
+        "htlc_redeemed": "{to} получил {amount} с HTLC {htlc_id} от {from}",
+        "htlc_refund": "{to} получил возврат средств с HTLC {htlc_id}",
         "lifetime_upgrade_account": "{account} обновился до пожизненного членства",
         "limit_order_buy": "{account} разместил ордер %(order)s на покупку {amount} по {price}",
         "limit_order_cancel": "{account} отменил ордер #%(order)s",
@@ -1574,7 +1574,7 @@
         "transfer": "{from} отправил {amount} на {to}",
         "transfer_account": "Владение {account} передано {to}",
         "unlisted_by": "{lister} удалил аккаунт {listee} из списка",
-        "update_account": "{account} обновил данные своего аккаунта",
+        "update_account": "{account} обновил данные своего аккаунта {change}",
         "vesting_balance_withdraw": "{account} вывел с вестингового баланса {amount}",
         "whitelisted_by": "{lister} добавил аккаунт {listee} в белый список",
         "witness_create": "{account} был обновлен до статуса заверителя",
@@ -1596,8 +1596,8 @@
     },
     "proposal": {
         "action": "Действия",
-        "add": "Add",
-        "add_vote": "Add vote for",
+        "add": "Добавить",
+        "add_vote": "Добавить голос за",
         "approve": "Утвердить",
         "approvers": "Утвердитель(и)",
         "asset_create": "Создать актив %(asset)s, используя аккаунт {account}",
@@ -1606,11 +1606,11 @@
         "asset_settle": "Запросить погашение {amount} на {account}",
         "asset_update": "Обновить актив {asset}, используя аккаунт {account}",
         "call_order_update": "Заменить {debtSymbol} долг {account} на {debt} и залог на {collateral}",
-        "changes_to_active": "Changes to active",
-        "changes_to_memo": "Changes to memo",
-        "changes_to_owner": "Changes to owner",
+        "changes_to_active": "Изменения в активном",
+        "changes_to_memo": "Изменения в мемо",
+        "changes_to_owner": "Изменения во владельце",
         "committee_member_update_global_parameters": "Обновить глобальные параметры комитета {account}",
-        "danger_operation": "Dangerous operation",
+        "danger_operation": "Опасная операция",
         "delete": "Отклонить навсегда",
         "expires": "Истекает",
         "feed_producer": "Обновить производителей котировок для актива {asset}, используя аккаунт {account}",
@@ -1618,12 +1618,12 @@
         "limit_order_create": "Разместить ордер на покупку %(buy_amount)s за %(sell_amount)s для %(account)s",
         "limit_order_sell": "Разместить ордер на продажу {amount} за {price} для {account}",
         "override_transfer": "Перевести {amount} от {from} к {to} по поручению {issuer}",
-        "permission_changes": "Permission changes",
+        "permission_changes": "Изменения в правах доступа",
         "proposals": "Предложения",
         "reject": "Отклонить",
-        "remove": "Remove",
-        "remove_vote": "Remove vote for",
-        "set_threshold": "Set threshold to %(threshold)s",
+        "remove": "Удалить",
+        "remove_vote": "Удалить голос за",
+        "set_threshold": "Задать пороговое значение в %(threshold)s",
         "status": "Статус",
         "transfer": "Перевести {amount} с {from} на {to}",
         "update": {
@@ -1634,7 +1634,7 @@
             "owner_approvals_to_add": "Подтверждения владельцев к добавлению",
             "owner_approvals_to_remove": "Подтверждения владельцев к удалению"
         },
-        "update_account": "Обновить данные аккаунта для {account}",
+        "update_account": "Обновить данные аккаунта для {account} {change}",
         "updated": {
             "active_approvals_to_add": "Активное утверждение(я) добавлено",
             "active_approvals_to_remove": "Активное утверждение(я) удалено",
@@ -1644,7 +1644,7 @@
             "owner_approvals_to_remove": "Подтверждение(я) владельца удалено"
         },
         "vesting_balance_withdraw": "Вывести {amount} с вестингового баланса {account}",
-        "votes": "Votes"
+        "votes": "Голоса"
     },
     "proposal_create": {
         "expiration_time": "Окончание срока действия",
@@ -1825,7 +1825,7 @@
         "themes": "Тема",
         "unit": "Предпочтительные единицы счета",
         "valid_node_url": "URL-адрес узла должен начинаться с ws:// или wss://",
-        "viewOnlyMode": "View only mode",
+        "viewOnlyMode": "Ограниченный режим просмотра",
         "view_keys": "Просмотреть ключи",
         "wallet": "Локальный кошелек",
         "walletLockTimeout": "Время автоблокировки кошелька (в секундах, 0 – для отключения)",
@@ -1953,48 +1953,52 @@
             "update_mandate": "Обновить существующую авторизацию"
         },
         "htlc": {
-            "actions": "Actions",
-            "amount": "Amount",
-            "create_htlc": "Create HTLC",
-            "custom": "Custom",
-            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
-            "enter_secret_preimage": "Enter secret preimage",
-            "expiration": "Expiration",
-            "expiration_date": "Expiration date",
+            "actions": "Действия",
+            "amount": "Сумма",
+            "create_htlc": "Создать HTLC",
+            "custom": "Кастомный",
+            "description": "HTLC блокирует средства для конкретного получателя, который может востребовать эти средства, предоставив секретный прообраз (пароль), использовавшийся отправителем для создания контракта. Раскрытие пароля происходит вне блокчейна.",
+            "enter_secret_preimage": "Введите секретный прообраз",
+            "expiration": "Истекает",
+            "expiration_date": "Окончание срока действия",
             "expiration_period": {
-                "one_day": "One day",
-                "one_week": "One week",
-                "two_days": "Two days"
+                "one_day": "Один день",
+                "one_week": "Одна неделя",
+                "two_days": "Два дня"
             },
-            "expires": "Expires",
-            "extend": "Extend",
-            "extend_htlc": "Extend HTLC",
-            "first_stage": "1st stage",
-            "from": "From",
-            "hash": "Hash",
-            "preimage": "Preimage",
-            "preimage_has_been_created": "A random preimage has been created and filled in automatically below.",
-            "recipient": "Recipient",
-            "redeem": "Redeem",
-            "redeem_htlc": "Redeem HTLC",
-            "second_stage": "2nd stage",
-            "sender": "Sender",
-            "size": "Size",
-            "title": "Hashed Time-Lock Contracts",
-            "to": "To",
+            "expires": "Истекает",
+            "extend": "Продлить",
+            "extend_htlc": "Продлить HTLC",
+            "first_stage": "1-й этап",
+            "from": "От",
+            "hash": "Хеш",
+            "preimage": "Прообраз",
+            "preimage_has_been_created": "Ниже был автоматически создан и заполнен случайный прообраз.",
+            "recipient": "Получатель",
+            "redeem": "Востребовать",
+            "redeem_htlc": "Востребовать HTLC",
+            "second_stage": "2-й этап",
+            "sender": "Отправитель",
+            "size": "Размер",
+            "title": "Хешированные контракты с временным замком",
+            "to": "Кому",
             "tooltip": {
-                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
-                "new_random": "Roll the dice and create a new random string.",
-                "preimage_button": "Please click to enter secret preimage",
-                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
-                "preimage_input": "Field requires a secret preimage",
-                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
-                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+                "enter_preimage": "Введите секретный прообраз, который вы получили от отправителя",
+                "new_random": "Бросьте кости и создайте новую случайную строку.",
+                "preimage_button": "Нажмите, чтобы ввести секретный прообраз",
+                "preimage_hash": "Хеш прообраза вычисляется из вышеупомянутого прообраза с использованием указанного алгоритма хеширования. Используйте кнопку копирования в этой строке, чтобы сохранить хеш и размер прообраза.",
+                "preimage_input": "В данном поле требуется секретный прообраз",
+                "preimage_random": "Наиболее секретный выбор – это случайная строка. Если ваш секрет может быть угадан или слишком короток, вы рискуете потерять свои средства. Используйте кнопку копирования в этой строке, чтобы сохранить прообраз и алгоритм хеширования.",
+                "preimage_size": "Размер прообраза – это длина указанного выше прообраза. Это значение также будет записано в блокчейн. Используйте кнопку копирования в этой строке, чтобы сохранить хеш и размер прообраза."
             }
         },
         "paper_wallet": {
             "description": "Создайте PDF-файл с напечатанными ключами вашего аккаунта (простой текст и штрих-код). Если кошелек разблокирован, в файл также добавляются приватные ключи.",
             "title": "Бумажный кошелёк"
+        },
+        "prediction_market": {
+            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "title": "Prediction Markets"
         },
         "timed_transfer": {
             "description": "Инициируйте перевод, который будет выполнен в указанное время.",
@@ -2028,7 +2032,7 @@
         "debug_report": "Сообщите нам об обнаруженной ошибке или неожиданном поведении программы. Нажмите, чтобы просмотреть консольный журнал браузера, создать скриншот и ознакомиться с инструкцией по способам сообщения о своей проблеме.",
         "deposit_tip": "Чтобы разместить депозит, зайдите в свой внешний %(asset)s кошелёк и переведите средства на адрес, указанный на этой странице. Вы получите депозит, как только перевод будет подтвержден. Если там указано мемо, то его обязательно необходимо использовать в вашем переводе.",
         "disconnected": "Вы не подключены к узлу API, попробуйте перезагрузиться или задать новую точку доступа в настройках",
-        "feed_price": "Это текущая цена котировок из внешних источников",
+        "feed_price": "Это текущая цена котировок из внешних источников (средняя от всех цен котировок, предоставленных заверителями)",
         "filter_ops": "Используйте этот список для фильтрации вашей истории по типу операции.",
         "follow_user": "Вы подписаны на этого пользователя",
         "follow_user_add": "Нажмите, чтобы подписаться на этого пользователя",
@@ -2071,19 +2075,19 @@
         },
         "login_required": "Пожалуйста, войдите в выбранный аккаунт, чтобы совершить данное действие",
         "margin_price": "Это максимальная цена, которую может быть вынуждена заплатить позиция, попавшая под маржин колл. Также она называется ценой сжатия – Squeeze Price.",
-        "market_fee": "Владелец %(asset)s назначил для ордеров на покупку рыночную комиссию в размере %(percent)s%%. Эта комиссия будет вычтена из суммы, полученной вами при выполнении ордера, в момент же размещения ордера она не взимается.",
+        "market_fee": "Владелец %(asset)s назначил для ордеров на покупку рыночную комиссию в размере %(percent)s. Эта комиссия будет вычтена из суммы, полученной вами при выполнении ордера, в момент же размещения ордера она не взимается.",
         "memo_tip": "Вы можете опционально добавить в поле мемо сообщение. Это позволит вам использовать его для личных заметок, а также для идентификации депозитов на биржах.",
         "no_groups_available": "На используемом API сервере нет доступных групп",
         "no_price": "Для этого актива нет доступной недавней цены, которая может быть использована для оценки его стоимости.",
         "nodes_popup": "Нажмите здесь, чтобы открыть всплывающее окно настроек доступа, позволяющее вам при необходимости переключаться между узлами",
         "over_limit": "Мост не обладает достаточным количеством желаемого актива для данного ордера на покупку",
         "own_account": "Вы обладаете ключами от этого аккаунта",
-        "propose_scam": "Это предложение было создано известным мошенником или человеком из вашего чёрного списка, не подтверждайте его!",
+        "propose_scam": "Это предложение было создано известным мошенником или человеком из вашего чёрного списка – подтверждение невозможно!",
         "propose_tip": "Предложить другому пользователю инициировать транзакцию",
-        "propose_unhide": "Do not uncheck this unless you know what you are doing",
+        "propose_unhide": "Не снимайте эту галочку, если не уверены в своих действиях",
         "propose_unknown": "Это предложение было создано или предназначено для неизвестного аккаунта (отсутствующего в контактах или белом списке). Остерегайтесь попытки мошенничества и тщательно проверяйте содержащиеся в нём операции.",
-        "proxy_remove": "Вы задали прокси; чтобы его удалить, просто очистите данное поле ввода",
-        "proxy_search": "Найдите аккаунт, который будет использоваться в качестве вашего прокси для голосования",
+        "proxy_remove": "Вы задали прокси; чтобы его удалить, просто очистите данное поле ввода и нажмите сохранить, или же сразу нажмите \"удалить прокси\"",
+        "proxy_search": "Найдите аккаунт, который будет использоваться в качестве вашего прокси для голосования. При этом ваш аккаунт будет вести себя так, как если бы вы голосовали точно так же, как ваш прокси.",
         "registration": {
             "accountModel": "Облачный кошелек позволяет вам войти в свой кошелек откуда угодно, используя только имя вашего аккаунта и пароль, однако ваш пароль уязвим для брутфорс-атак, а значит, вам нужно использовать очень длинный пароль, в идеале – 20+ символов!",
             "accountName": "Имя аккаунта должно содержать от 4 до 63 символов, среди которых должны быть латинские буквы, дефис и цифры. ",
@@ -2140,8 +2144,8 @@
         "confirm": "Пожалуйста, подтвердите транзакцию",
         "create_key": "Создан публичный ключ",
         "csv": "Экспортировать в .csv",
-        "csv_tip": "Скачайте полную историю аккаунта в виде разделенного запятыми .csv файла, используя формат Cointracking.info",
-        "cumulative_borrow_amount": "Cumulative Debt",
+        "csv_tip": "Скачайте полную историю аккаунта в виде разделенного запятыми .csv файла, используя формат Cointracking.info или raw",
+        "cumulative_borrow_amount": "Кумулятивный долг",
         "custom": "Создал специальную операцию",
         "delta_collateral": "Изменение залогового обеспечения",
         "delta_debt": "Изменение долга",
@@ -2158,14 +2162,14 @@
             "_none": "Без комиссий",
             "basic_fee": "Базовая комиссия",
             "fee": "Обычная комиссия за транзакцию",
-            "fee_per_day": "Price per day",
-            "fee_per_kb": "Price per KByte Transaction Size",
+            "fee_per_day": "Цена за день",
+            "fee_per_kb": "Цена за Кбайт размера транзакции",
             "long_symbol": "Длинные символы",
             "membership_annual_fee": "Годовое членство",
             "membership_lifetime_fee": "Пожизненное членство",
             "premium_fee": "Комиссия для премиум имён",
             "price_per_kbyte": "Цена за Кбайт данных транзакции",
-            "price_per_output": "Price per recipient",
+            "price_per_output": "Цена за получателя",
             "symbol3": "Тикеры с тремя знаками",
             "symbol4": "Тикеры с четырьмя знаками"
         },
@@ -2229,11 +2233,11 @@
             "execute_bid": "Выполнить ставку",
             "fba_distribute": "Распределение обеспеченного комиссией актива",
             "fill_order": "Выполнение ордера",
-            "htlc_create": "HTLC create",
-            "htlc_extend": "HTLC extend",
-            "htlc_redeem": "HTLC redeem",
-            "htlc_redeemed": "HTLC redeemed",
-            "htlc_refund": "HTLC refund",
+            "htlc_create": "Создать HTLC",
+            "htlc_extend": "Продлить HTLC",
+            "htlc_redeem": "Востребовать HTLC",
+            "htlc_redeemed": "Востребовано HTLC",
+            "htlc_refund": "Вернуть HTLC",
             "limit_order_cancel": "Отмена ордера",
             "limit_order_create": "Размещение ордера",
             "override_transfer": "Замена перевода",
@@ -2245,10 +2249,10 @@
             "transfer_to_blind": "Перевод на слепой аккаунт",
             "vesting_balance_create": "Создание вестингового баланса",
             "vesting_balance_withdraw": "Вывод вестингового баланса",
-            "withdraw_permission_claim": "Востребование разрешения на вывод",
-            "withdraw_permission_create": "Создание разрешения на вывод",
-            "withdraw_permission_delete": "Удаление разрешения на вывод",
-            "withdraw_permission_update": "Обновление разрешения на вывод",
+            "withdraw_permission_claim": "Востребование прав доступа к выводу",
+            "withdraw_permission_create": "Создание прав доступа к выводу",
+            "withdraw_permission_delete": "Удаление прав доступа к выводу",
+            "withdraw_permission_update": "Обновление прав доступа к выводу",
             "witness_create": "Создание заверителя",
             "witness_update": "Обновление заверителя",
             "witness_withdraw_pay": "Вывод зарплаты заверителя",
@@ -2262,10 +2266,10 @@
             "white_and_black_listed": "В чёрном и белом списках",
             "white_listed": "В белом списке"
         },
-        "withdraw_permission_claim": "Востребовал разрешение на вывод средств для аккаунта",
-        "withdraw_permission_create": "Дал разрешение на вывод средств аккаунту",
-        "withdraw_permission_delete": "Удалил разрешение на вывод средств для аккаунта",
-        "withdraw_permission_update": "Обновил разрешение на вывод средств для аккаунта"
+        "withdraw_permission_claim": "Востребовал право доступа к выводу средств для аккаунта",
+        "withdraw_permission_create": "Дал право доступа к выводу средств аккаунту",
+        "withdraw_permission_delete": "Удалил право доступа к выводу средств для аккаунта",
+        "withdraw_permission_update": "Обновил право доступа к выводу средств для аккаунта"
     },
     "transfer": {
         "again": "СДЕЛАТЬ НОВЫЙ ПЕРЕВОД",
@@ -2298,7 +2302,7 @@
         "explict_price": "Заданная цена:",
         "fee": "Комиссия",
         "final": "Итоговый баланс",
-        "free": "Free",
+        "free": "Бесплатно",
         "from": "От",
         "header": "Детали транзакции",
         "header_subheader": "Переводы используются для отправки средств другим владельцам аккаунтов %(wallet_name)s",
@@ -2371,8 +2375,8 @@
         }
     },
     "voting": {
-        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
-        "title": "Voting"
+        "description": "Блокчейн BitShares позволяет держателям его базового токена BTS голосовать за производителей блоков (заверителей), членов комитета (управления блокчейном), рабочие предложения (оплата блокчейном задач и стратегических решений через Предложения/Опросы).",
+        "title": "Голосование"
     },
     "walkthrough": {
         "buy_form": "Разместите ордера на покупку, используя эту форму.",
@@ -2414,7 +2418,7 @@
         "backup_explain": "Нажав на кнопку ниже, вы создадите резервную копию с расширением .bin. Этот файл зашифрован паролем вашего кошелька и содержит все приватные ключи вашего аккаунта. Он может быть использован для восстановления вашего кошелька или его перемещения на другой компьютер/браузер.",
         "backup_login": "Резервное копирование и вход в систему",
         "backup_new_account": "Поздравляем, вы только что создали новый аккаунт в %(wallet_name)s, работающем на базе блокчейна BitShares! Настоятельно рекомендуем вам сразу же создать резервную копию кошелька. Без резервной копии восстановить ваш аккаунт в случае повреждения компьютера будет невозможно.",
-        "backup_types": "backup types",
+        "backup_types": "Типы резервных копий",
         "backup_warning": "Файл резервной копии ваших приватных ключей ещё не создавался. В целях безопасности мы рекомендуем пользователям не входить в систему без предварительно созданной резервной копии своих приватных ключей.",
         "balance_claim_lookup": "Просмотреть балансы",
         "balance_claims": "Востребование балансов",
@@ -2524,7 +2528,7 @@
         "password_show": "Показать мой пароль",
         "paste_private": "Вставьте приватные ключи сюда (Wallet Import Format - WIF)",
         "pwd4brainkey": "Введите ваш пароль, чтобы увидеть свой brainkey",
-        "read_more": "Read more about %(wallet)s and %(backup)s.",
+        "read_more": "Узнайте подробности о %(wallet)s и %(backup)s.",
         "ready_to_restore": "Готов к восстановлению",
         "reenter_brainkey": "Введите brainkey повторно",
         "remember_me": "Запомнить меня",
@@ -2580,6 +2584,6 @@
         "wallet_model_3": "<li>Несколько аккаунтов</li><li>Требуется резервное копирование файлов кошелька</li><li>Высокий уровень безопасности</li>",
         "wallet_move": "Резервная копия также может использоваться для перемещения вашего локального кошелька на другие компьютеры или браузеры. Для восстановления локального кошелька из резервной копии <strong>вам также понадобится ваш пароль!</strong>",
         "wallet_password": "Входите откуда угодно, используя пароль",
-        "wallet_types": "wallet types"
+        "wallet_types": "Типы кошельков"
     }
 }
