@@ -1630,45 +1630,13 @@ class Asset extends React.Component {
                     return 0;
                 },
                 render: item => {
-                    let icon = "";
-
-                    if (item.status == "danger") {
-                        icon = (
-                            <Tooltip
-                                title={counterpart.translate(
-                                    "explorer.asset.margin_positions.ratio_danger"
-                                )}
-                                placement="left"
-                            >
-                                <Icon
-                                    style={{paddingLeft: 10}}
-                                    className="danger"
-                                    type="warning"
-                                />
-                            </Tooltip>
-                        );
-                    }
-
-                    if (item.status == "warning") {
-                        icon = (
-                            <Tooltip
-                                title={counterpart.translate(
-                                    "explorer.asset.margin_positions.ratio_warning"
-                                )}
-                                placement="left"
-                            >
-                                <Icon
-                                    style={{paddingLeft: 10}}
-                                    className="warning"
-                                    type="exclamation-circle"
-                                />
-                            </Tooltip>
-                        );
-                    }
+                    let classNames = "margin-ratio " + item.status;
 
                     return (
                         <React.Fragment>
-                            {item.ratio.toFixed(3)} {icon}
+                            <div className={classNames}>
+                                {item.ratio.toFixed(3)}
+                            </div>
                         </React.Fragment>
                     );
                 }
@@ -1707,6 +1675,7 @@ class Asset extends React.Component {
                 rowKey="feedMargins"
                 columns={columns}
                 dataSource={dataSource}
+                rowClassName="margin-row"
                 pagination={{
                     pageSize: Number(25)
                 }}
