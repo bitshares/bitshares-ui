@@ -10,21 +10,34 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
-import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
 const leftAlign = {textAlign: "left !important"};
 const rightAlign = {textAlign: "right"};
 import ReactTooltip from "react-tooltip";
-import {Tooltip, Button} from "bitshares-ui-style-guide";
+import {Tooltip, Checkbox, Button} from "bitshares-ui-style-guide";
 
 class ExchangeTableHeader extends React.Component {
     render() {
-        let {baseSymbol, quoteSymbol, isMyAccount} = this.props;
+        let {baseSymbol, quoteSymbol, isMyAccount, selected} = this.props;
 
         return (
             <thead>
                 <tr>
+                    <th style={{width: "6%", textAlign: "center"}}>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "exchange.cancel_selected_orders"
+                            )}
+                            placement="left"
+                        >
+                            <Checkbox
+                                className="order-cancel-toggle"
+                                checked={selected}
+                                onChange={this.props.onCancelToggle}
+                            />
+                        </Tooltip>
+                    </th>
                     <th style={rightAlign}>
                         <Translate
                             className="header-sub-title"
@@ -45,25 +58,11 @@ class ExchangeTableHeader extends React.Component {
                             </span>
                         ) : null}
                     </th>
-                    <th style={leftAlign}>
+                    <th style={rightAlign}>
                         <Translate
                             className="header-sub-title"
                             content="transaction.expiration"
                         />
-                    </th>
-                    <th style={{width: "6%", textAlign: "center"}}>
-                        <Tooltip
-                            title={counterpart.translate(
-                                "exchange.cancel_selected_orders"
-                            )}
-                            placement="left"
-                        >
-                            <input
-                                type="checkbox"
-                                className="order-cancel-toggle"
-                                onChange={this.props.onCancelToggle}
-                            />
-                        </Tooltip>
                     </th>
                 </tr>
             </thead>
@@ -83,12 +82,13 @@ class ExchangeOrderRow extends React.Component {
             nextProps.order.id !== this.props.order.id ||
             nextProps.quote !== this.props.quote ||
             nextProps.base !== this.props.base ||
-            nextProps.order.market_base !== this.props.order.market_base
+            nextProps.order.market_base !== this.props.order.market_base ||
+            nextProps.selected !== this.props.selected
         );
     }
 
     render() {
-        let {base, quote, order} = this.props;
+        let {base, quote, order, selected} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
         let tdClass = isCall
@@ -99,6 +99,22 @@ class ExchangeOrderRow extends React.Component {
 
         return (
             <tr key={order.id}>
+                <td className="text-center" style={{width: "6%"}}>
+                    {isCall ? null : (
+                        <Tooltip
+                            title={counterpart.translate(
+                                "exchange.cancel_selected_orders"
+                            )}
+                            placement="left"
+                        >
+                            <Checkbox
+                                className="orderCancel"
+                                checked={selected}
+                                onChange={this.props.onCheckCancel}
+                            />
+                        </Tooltip>
+                    )}
+                </td>
                 <td className={tdClass} style={{paddingLeft: 10}}>
                     <PriceText
                         price={order.getPrice()}
@@ -126,7 +142,6 @@ class ExchangeOrderRow extends React.Component {
                     <Tooltip title={order.expiration.toLocaleString()}>
                         <div
                             style={{
-                                width: "25%",
                                 textAlign: "right",
                                 whiteSpace: "nowrap"
                             }}
@@ -142,22 +157,6 @@ class ExchangeOrderRow extends React.Component {
                                   )}
                         </div>
                     </Tooltip>
-                </td>
-                <td className="text-center" style={{width: "6%"}}>
-                    {isCall ? null : (
-                        <Tooltip
-                            title={counterpart.translate(
-                                "exchange.cancel_selected_orders"
-                            )}
-                            placement="left"
-                        >
-                            <input
-                                type="checkbox"
-                                className="orderCancel"
-                                onChange={this.props.onCheckCancel}
-                            />
-                        </Tooltip>
-                    )}
                 </td>
             </tr>
         );
@@ -273,16 +272,9 @@ class MyOpenOrders extends React.Component {
 
     resetSelected() {
         this.setState({selectedOrders: []});
-
-        let checkboxes = document.querySelectorAll(".orderCancel");
-
-        checkboxes.forEach(item => {
-            if (item.checked) item.checked = false;
-        });
     }
 
     onCancelToggle(evt) {
-        let checkboxes = document.querySelectorAll(".orderCancel");
         const orders = this._getOrders();
         let selectedOrders = [];
 
@@ -295,10 +287,6 @@ class MyOpenOrders extends React.Component {
         } else {
             this.setState({selectedOrders: []});
         }
-
-        checkboxes.forEach(item => {
-            item.checked = evt.target.checked;
-        });
     }
 
     _cancelLimitOrders() {
@@ -415,19 +403,9 @@ class MyOpenOrders extends React.Component {
         let contentContainer;
         let footerContainer;
 
-        // Is asset a BitAsset with Settlements
-        let baseIsBitAsset =
-            base.get("bitasset_data_id") && settleOrders.size > 0
-                ? true
-                : false;
-        let quoteIsBitAsset =
-            quote.get("bitasset_data_id") && settleOrders.size > 0
-                ? true
-                : false;
+        /* Users Open Orders Tab (default) */
+        let totalMyOrders = 0;
 
-        {
-            /* Users Open Orders Tab (default) */
-        }
         if (!activeTab || activeTab == "my_orders") {
             const orders = this._getOrders();
             let emptyRow = (
@@ -461,6 +439,10 @@ class MyOpenOrders extends React.Component {
                             order={order}
                             base={base}
                             quote={quote}
+                            selected={
+                                this.state.selectedOrders.length > 0 &&
+                                this.state.selectedOrders.includes(order.id)
+                            }
                             onCancel={this.props.onCancel.bind(this, order.id)}
                             onCheckCancel={this.onCheckCancel.bind(
                                 this,
@@ -486,6 +468,10 @@ class MyOpenOrders extends React.Component {
                             order={order}
                             base={base}
                             quote={quote}
+                            selected={
+                                this.state.selectedOrders.length > 0 &&
+                                this.state.selectedOrders.includes(order.id)
+                            }
                             onCancel={this.props.onCancel.bind(this, order.id)}
                             onCheckCancel={this.onCheckCancel.bind(
                                 this,
@@ -509,7 +495,9 @@ class MyOpenOrders extends React.Component {
                 return a.props.price - b.props.price;
             });
 
+            totalMyOrders = rows.length;
             let rowsLength = rows.length;
+
             if (!showAll) {
                 rows.splice(rowCount, rows.length);
             }
@@ -623,6 +611,11 @@ class MyOpenOrders extends React.Component {
                                 <ExchangeTableHeader
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
+                                    selected={
+                                        this.state.selectedOrders.length > 0 &&
+                                        this.state.selectedOrders.length ==
+                                            totalMyOrders
+                                    }
                                     onCancelToggle={this.onCancelToggle.bind(
                                         this
                                     )}
