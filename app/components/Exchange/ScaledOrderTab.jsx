@@ -960,7 +960,7 @@ class ScaledOrderTab extends Component {
         const sellAmount = i =>
             values.action === SCALED_ORDER_ACTION_TYPES.BUY
                 ? Number(
-                      (amountPerOrder * (priceLower + step * i)).toFixed(6)
+                      (amountPerOrder / (priceLower + step * i)).toFixed(6)
                   ) * Math.pow(10, sellAsset.get("precision"))
                 : Number(amountPerOrder.toFixed(6)) *
                   Math.pow(10, sellAsset.get("precision"));
@@ -968,7 +968,7 @@ class ScaledOrderTab extends Component {
         const buyAmount = i =>
             values.action === SCALED_ORDER_ACTION_TYPES.SELL
                 ? Number(
-                      (amountPerOrder * (priceLower + step * i)).toFixed(6)
+                      (amountPerOrder / (priceLower + step * i)).toFixed(6)
                   ) * Math.pow(10, buyAsset.get("precision"))
                 : Number(amountPerOrder.toFixed(6)) *
                   Math.pow(10, buyAsset.get("precision"));
