@@ -749,7 +749,7 @@
                 },
                 "title": "Ofertas Colaterales"
             },
-            "cumulative": "Cumulative",
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Balance de la cuota de la reclamación",
                 "claim_fees": "Reclamar tarifas",

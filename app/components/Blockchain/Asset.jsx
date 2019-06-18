@@ -1475,7 +1475,14 @@ class Asset extends React.Component {
 
         let columns = [];
         let dataSource = [];
-
+        const cummulativeSuffix = cumulativeGrouping ? (
+            <span>
+                &nbsp;(
+                <Translate content="explorer.asset.cumulative" />)
+            </span>
+        ) : (
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        );
         columns = [
             {
                 key: "borrower",
@@ -1501,15 +1508,7 @@ class Asset extends React.Component {
                 title: (
                     <React.Fragment>
                         <Translate content="transaction.collateral" />
-                        {cumulativeGrouping ? (
-                            <span>
-                                &nbsp;(
-                                <Translate content="explorer.asset.cumulative" />
-                                )
-                            </span>
-                        ) : (
-                            ""
-                        )}
+                        {cummulativeSuffix}
                     </React.Fragment>
                 ),
                 dataIndex: "collateral",
@@ -1546,15 +1545,7 @@ class Asset extends React.Component {
                 title: (
                     <React.Fragment>
                         <Translate content="transaction.borrow_amount" />
-                        {cumulativeGrouping ? (
-                            <span>
-                                &nbsp;(
-                                <Translate content="explorer.asset.cumulative" />
-                                )
-                            </span>
-                        ) : (
-                            ""
-                        )}
+                        {cummulativeSuffix}
                     </React.Fragment>
                 ),
                 dataIndex: "debt",

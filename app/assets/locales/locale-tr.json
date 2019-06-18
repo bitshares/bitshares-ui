@@ -743,7 +743,7 @@
                 },
                 "title": "Collateral Bids"
             },
-            "cumulative": "Cumulative",
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Ücretleri talep et",
