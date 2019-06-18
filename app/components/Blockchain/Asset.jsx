@@ -1483,6 +1483,50 @@ class Asset extends React.Component {
         ) : (
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         );
+
+        let debt_cum = 0;
+        let coll_cum = 0;
+
+        this.state.callOrders.map(c => {
+            debt_cum += c.debt;
+            coll_cum += c.collateral;
+
+            dataSource.push({
+                borrower: c.borrower,
+                collateral: {
+                    amount: cumulativeGrouping ? coll_cum : c.collateral,
+                    asset: c.getCollateral().asset_id
+                },
+                debt: {
+                    amount: cumulativeGrouping ? debt_cum : c.debt,
+                    asset: c.amountToReceive().asset_id
+                },
+                call: c.call_price,
+                tcr: c.order.target_collateral_ratio,
+                cr: {
+                    ratio: c.getRatio(),
+                    status: c.getStatus()
+                }
+            });
+        });
+        const unitInfo = key => {
+            let item = dataSource[0][key];
+            return dataSource.length ? (
+                <span>
+                    <br />
+                    {item.base ? (
+                        this.formattedPrice(item, false, true)
+                    ) : (
+                        <FormattedAsset
+                            asset={item.asset}
+                            amount={item.amount}
+                            hide_amount={true}
+                        />
+                    )}
+                </span>
+            ) : null;
+        };
+
         columns = [
             {
                 key: "borrower",
@@ -1509,6 +1553,7 @@ class Asset extends React.Component {
                     <React.Fragment>
                         <Translate content="transaction.collateral" />
                         {cummulativeSuffix}
+                        {unitInfo("collateral")}
                     </React.Fragment>
                 ),
                 dataIndex: "collateral",
@@ -1534,6 +1579,7 @@ class Asset extends React.Component {
                                 <FormattedAsset
                                     amount={item.amount}
                                     asset={item.asset}
+                                    hide_asset={true}
                                 />
                             </span>
                         </Tooltip>
@@ -1546,6 +1592,7 @@ class Asset extends React.Component {
                     <React.Fragment>
                         <Translate content="transaction.borrow_amount" />
                         {cummulativeSuffix}
+                        {unitInfo("debt")}
                     </React.Fragment>
                 ),
                 dataIndex: "debt",
@@ -1571,6 +1618,7 @@ class Asset extends React.Component {
                                 <FormattedAsset
                                     amount={item.amount}
                                     asset={item.asset}
+                                    hide_asset={true}
                                 />
                             </span>
                         </Tooltip>
@@ -1579,18 +1627,15 @@ class Asset extends React.Component {
             },
             {
                 key: "call",
-                title: <Translate content="exchange.call" />,
+                title: (
+                    <span>
+                        <Translate content="exchange.call" />
+                        {unitInfo("call")}
+                    </span>
+                ),
                 dataIndex: "call",
                 render: item => {
-                    return (
-                        <FormattedPrice
-                            base_amount={item.base.amount}
-                            base_asset={item.base.asset_id}
-                            quote_amount={item.quote.amount}
-                            quote_asset={item.quote.asset_id}
-                            noPopOver
-                        />
-                    );
+                    return this.formattedPrice(item, true, false);
                 }
             },
             {
@@ -1633,32 +1678,6 @@ class Asset extends React.Component {
                 }
             }
         ];
-
-        let debt_cum = 0;
-        let coll_cum = 0;
-
-        this.state.callOrders.map(c => {
-            debt_cum += c.debt;
-            coll_cum += c.collateral;
-
-            dataSource.push({
-                borrower: c.borrower,
-                collateral: {
-                    amount: cumulativeGrouping ? coll_cum : c.collateral,
-                    asset: c.getCollateral().asset_id
-                },
-                debt: {
-                    amount: cumulativeGrouping ? debt_cum : c.debt,
-                    asset: c.amountToReceive().asset_id
-                },
-                call: c.call_price,
-                tcr: c.order.target_collateral_ratio,
-                cr: {
-                    ratio: c.getRatio(),
-                    status: c.getStatus()
-                }
-            });
-        });
 
         return (
             <Table
