@@ -182,7 +182,7 @@ class TradingViewPriceChart extends React.Component {
             state.showSaveModal !== this.state.showSaveModal ||
             np.chartHeight !== this.props.chartHeight ||
             this.props.charts.size !== np.charts.size ||
-            this.tvWidget ||
+            !this.tvWidget ||
             np.marketReady
         );
     }
