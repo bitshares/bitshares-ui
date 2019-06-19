@@ -123,7 +123,7 @@ class CommitteeMemberList extends React.Component {
                 title: "WEBPAGE",
                 dataIndex: "url",
                 render: item => (
-                    <a href={item} target="_blank">
+                    <a href={item} target="_blank" rel="noopener noreferrer">
                         {item}
                     </a>
                 )
