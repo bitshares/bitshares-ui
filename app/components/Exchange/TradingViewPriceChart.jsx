@@ -14,10 +14,6 @@ export default class TradingViewPriceChart extends React.Component {
         if (!dataFeed) return;
         if (!!this.tvWidget) return;
 
-        dataFeed.update({
-            onMarketChange: this._setSymbol.bind(this)
-        });
-
         if (__DEV__)
             console.log(
                 "currentResolution",
@@ -115,6 +111,9 @@ export default class TradingViewPriceChart extends React.Component {
         this.tvWidget.onChartReady(() => {
             if (__DEV__) console.log("*** Chart Ready ***");
             if (__DEV__) console.timeEnd("*** Chart load time: ");
+            dataFeed.update({
+                onMarketChange: this._setSymbol.bind(this)
+            });
         });
 
         this._onWheel = this._onWheel.bind(this);
