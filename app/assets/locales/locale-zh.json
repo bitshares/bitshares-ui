@@ -749,7 +749,7 @@
                 },
                 "title": "抵押物竞价"
             },
-            "cumulative": "累计",
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "申领手续费池余额",
                 "claim_fees": "领取手续费",
