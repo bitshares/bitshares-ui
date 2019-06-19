@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {Input, Icon} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 
+const searchInput = React.createRef();
 export default function SearchInput({
     onChange,
     value,
@@ -22,10 +23,13 @@ export default function SearchInput({
             onChange({
                 target: {value: ""}
             });
+            searchInput.current.focus();
         };
     }
+
     return (
         <Input
+            ref={searchInput}
             autoComplete={autoComplete}
             style={style}
             type={type}
@@ -44,7 +48,9 @@ export default function SearchInput({
                         // always include DOM the icon, otherwise user looses focus when it appears and input resizes
                         className={value ? "cursor-pointer" : "hide"}
                     />
-                ) : null
+                ) : (
+                    <span />
+                )
             }
             {...other}
         />
