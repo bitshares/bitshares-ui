@@ -345,8 +345,8 @@ class Asset extends React.Component {
         let preferredMarket = description.market
             ? description.market
             : core_asset
-            ? core_asset.get("symbol")
-            : "BTS";
+                ? core_asset.get("symbol")
+                : "BTS";
         if ("bitasset" in asset && asset.bitasset.is_prediction_market) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
@@ -1500,12 +1500,16 @@ class Asset extends React.Component {
                 key: "collateral",
                 title: (
                     <React.Fragment>
-                        {cumulativeGrouping ? (
-                            <span>&Sigma; &nbsp;</span>
-                        ) : (
-                            <span>&ensp; &ensp;</span>
-                        )}
                         <Translate content="transaction.collateral" />
+                        {cumulativeGrouping ? (
+                            <span>
+                                &nbsp;(
+                                <Translate content="explorer.asset.cumulative" />
+                                )
+                            </span>
+                        ) : (
+                            ""
+                        )}
                     </React.Fragment>
                 ),
                 dataIndex: "collateral",
@@ -1541,12 +1545,16 @@ class Asset extends React.Component {
                 key: "debt",
                 title: (
                     <React.Fragment>
-                        {cumulativeGrouping ? (
-                            <span>&Sigma; &nbsp;</span>
-                        ) : (
-                            <span>&ensp; &ensp;</span>
-                        )}
                         <Translate content="transaction.borrow_amount" />
+                        {cumulativeGrouping ? (
+                            <span>
+                                &nbsp;(
+                                <Translate content="explorer.asset.cumulative" />
+                                )
+                            </span>
+                        ) : (
+                            ""
+                        )}
                     </React.Fragment>
                 ),
                 dataIndex: "debt",
