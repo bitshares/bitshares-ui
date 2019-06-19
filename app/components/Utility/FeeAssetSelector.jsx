@@ -45,7 +45,7 @@ class FeeAssetSelector extends DecimalChecker {
             });
             result[asset_id] = fee.getAmount({real: true});
         }
-        this.setState({result});
+        this.setState({fees: result});
     }
 
     _updateFee(asset_id, trxInfo, onChange) {
@@ -143,7 +143,7 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     componentDidMount() {
-        this.onAssetChange(this._getAsset());
+        this.onAssetChange(this.state.fee_asset_id);
     }
 
     formatAmount(v) {
@@ -156,6 +156,7 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     onAssetChange(selected_asset) {
+        this.setState({fee_asset_id: selected_asset});
         this._updateFee(
             selected_asset,
             this.props.trxInfo,

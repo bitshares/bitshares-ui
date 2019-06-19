@@ -1775,6 +1775,7 @@
         "faucet_address": "Faucet",
         "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
         "fee_asset": "Default fee paying asset",
+        "can_change_default_fee_asset_tooltip": "The default asset used to pay transaction fees can be changed in the settings",
         "change_default_fee_asset": "Change default fee asset",
         "change_default_fee_asset_tooltip": "Change the default asset that is used to pay the transaction fee",
         "change_default": "Change default",

@@ -40,13 +40,13 @@ class SetDefaultFeeAssetModal extends React.Component {
 
     componentWillReceiveProps(np) {
         let account = np.account;
-        if (!np.account) {
+        if (!account) {
             account = ChainStore.getAccount(np.currentAccount);
         }
 
         if (account) {
             if (
-                !this.state.balances ||
+                Object.keys(this.state.balances).length === 0 ||
                 account.get("name") !== this.props.currentAccount ||
                 (np.current_asset &&
                     this.state.selectedAssetId !== np.current_asset)
@@ -125,18 +125,20 @@ class SetDefaultFeeAssetModal extends React.Component {
     }
 
     render() {
-        const assets = this.state.balances
-            ? this.props.asset_types
-                ? this.props.asset_types.map(assetInfo => ({
-                      ...assetInfo,
-                      asset: ChainStore.getAsset(assetInfo.asset),
-                      balance: this.state.balances[assetInfo.asset]
-                  }))
-                : Object.keys(this.state.balances).map(asset_id => ({
-                      asset: ChainStore.getAsset(asset_id),
-                      balance: this.state.balances[asset_id]
-                  }))
-            : [];
+        let assets = [];
+        if (this.state.balances) {
+            assets = Object.keys(this.state.balances).map(asset_id => ({
+                asset: ChainStore.getAsset(asset_id),
+                balance: this.state.balances[asset_id]
+            }));
+            if (this.props.asset_types.length > 0) {
+                assets = this.props.asset_types.map(assetInfo => ({
+                    ...assetInfo,
+                    asset: ChainStore.getAsset(assetInfo.asset),
+                    balance: this.state.balances[assetInfo.asset]
+                }));
+            }
+        }
         let dataSource = this._getAssetsRows(assets);
         const footer = (
             <div style={{position: "relative", left: "0px"}}>
@@ -243,9 +245,12 @@ SetDefaultFeeAssetModalConnectWrapper = connect(
             return [SettingsStore, AccountStore];
         },
         getProps(props) {
+            const currentAccount =
+                props.currentAccount ||
+                ChainStore.getAccount(AccountStore.getState().currentAccount);
             return {
                 settings: SettingsStore.getState().settings,
-                currentAccount: AccountStore.getState().currentAccount
+                currentAccount
             };
         }
     }
