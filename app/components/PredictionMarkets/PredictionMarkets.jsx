@@ -126,6 +126,13 @@ export default class PredictionMarkets extends Component {
         });
     }
 
+    getNewMarketParameters = value => {
+        this.setState({
+            markets: [...this.state.markets, value],
+            isCreateMarketModalOpen: false
+        });
+    };
+
     getOverviewSection() {
         return (
             <div>
@@ -229,6 +236,7 @@ export default class PredictionMarkets extends Component {
                             this
                         )}
                         currentAccountId={this.state.currentAccountId}
+                        getNewMarketParameters={this.getNewMarketParameters}
                     />
                 ) : null}
             </div>

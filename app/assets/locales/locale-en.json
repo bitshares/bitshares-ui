@@ -1611,6 +1611,15 @@
             "cancel": "Cancel",
             "oppose": "Oppose",
             "add_opinion": "Add opinion"
+        },
+        "create_market_modal": {
+            "title": "Create prediction market",
+            "symbol": "Symbol",
+            "condition": "Condition",
+            "description": "Description",
+            "resolution_date": "Resolution date",
+            "backing_asset": "Backing asset",
+            "participation_fee": "Participation fee"
         }
     },
     "proposal": {
