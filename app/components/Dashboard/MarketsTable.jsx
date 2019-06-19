@@ -138,8 +138,8 @@ class MarketsTable extends React.Component {
             }
         },
         volumeValue: function(a, b) {
-            let aPrice = a.volume;
-            let bPrice = b.volume;
+            let aPrice = a.volume || "0";
+            let bPrice = b.volume || "0";
             if (aPrice && bPrice) {
                 return this.sort(aPrice, bPrice);
             } else {
@@ -374,15 +374,19 @@ class MarketsTable extends React.Component {
                     style={{textAlign: "right"}}
                     className={cnames(changeClass)}
                 >
-                    {!marketStats || !marketStats.change
-                        ? null
-                        : marketStats.change}
+                    {
+                        !marketStats ||
+                        !marketStats.change ||
+                        marketStats.change === "0.00"
+                            ? 0
+                            : marketStats.change
+                    }
                     %
                 </span>
             ),
             volume:
                 !marketStats || !marketStats.volumeQuote
-                    ? null
+                    ? 0
                     : utils.format_volume(
                           marketStats.volumeQuote,
                           basePrecision
