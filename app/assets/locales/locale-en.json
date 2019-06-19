@@ -2287,6 +2287,7 @@
         "copy_address": "Copy Address",
         "copy_memo": "Copy Memo",
         "errors": {
+            "asset_unsupported": "Asset %(currency)s is not supported by this blockchain.",
             "balance": "The final balance must be larger than 0",
             "insufficient": "Insufficient funds",
             "memo_error": "The transfer memo parsing error, please try again later.",
@@ -2308,14 +2309,19 @@
         "header": "Transfer details",
         "header_subheader": "Send funds from an account you control to another %(wallet_name)s account holder.",
         "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
+        "items": "Items",
+        "amount": "Amount",
         "memo": "Memo / Message",
         "memo_unlock": "Unlock your wallet/account in order to see this memo",
         "optional": "Optional",
+        "pay_button": "Pay %(asset)s to %(name)s",
         "pay_from": "Pay From",
+        "pay_invoice": "Pay Invoice",
         "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "see": "SEE MY TRANSFERS",
         "send": "Send",
-        "to": "To",
+        "to": "Pay To",
+        "total": "Total: ",
         "warn_name_unable_read_memo": "Proposed sender will be unable to read this memo!"
     },
     "trx_error": {
