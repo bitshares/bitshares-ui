@@ -206,11 +206,6 @@ class CommitteeMembers extends React.Component {
                                     marginBottom: "12px",
                                     marginTop: "4px"
                                 }}
-                                onClear={() =>
-                                    this._onFilter({
-                                        target: {value: ""}
-                                    })
-                                }
                             />
                             <CommitteeMemberList
                                 filter={this.state.filterCommitteeMember}

@@ -294,8 +294,8 @@ class WitnessList extends React.Component {
                         ? -1
                         : a.lastConfirmedBlock.timestamp <
                           b.lastConfirmedBlock.timestamp
-                        ? 1
-                        : 0;
+                            ? 1
+                            : 0;
                 }
             },
             {
@@ -318,8 +318,8 @@ class WitnessList extends React.Component {
                     return a.blocksMissed > b.blocksMissed
                         ? 1
                         : a.blocksMissed < b.blocksMissed
-                        ? -1
-                        : 0;
+                            ? -1
+                            : 0;
                 }
             },
             {
@@ -506,18 +506,12 @@ class Witnesses extends React.Component {
                                 placeholder={counterpart.translate(
                                     "explorer.witnesses.filter_by_name"
                                 )}
-                                value={this.state.filterWitness}
                                 onChange={this._onFilter.bind(this)}
                                 style={{
                                     width: "200px",
                                     marginBottom: "12px",
                                     marginTop: "4px"
                                 }}
-                                onClear={() =>
-                                    this._onFilter({
-                                        target: {value: ""}
-                                    })
-                                }
                             />
 
                             <WitnessList

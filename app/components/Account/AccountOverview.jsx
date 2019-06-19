@@ -320,16 +320,8 @@ class AccountOverview extends React.Component {
                                 <div className="header-selector">
                                     <div className="filter inline-block">
                                         <SearchInput
-                                            type="text"
-                                            placeholder="Filter..."
                                             value={this.state.filterValue}
                                             onChange={this._handleFilterInput}
-                                            addonAfter={<Icon type="search" />}
-                                            onClear={() =>
-                                                this._handleFilterInput({
-                                                    target: {value: ""}
-                                                })
-                                            }
                                         />
                                     </div>
                                     <div

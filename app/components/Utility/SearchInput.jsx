@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Input, Icon} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 export default function SearchInput({
     onChange,
@@ -12,13 +13,22 @@ export default function SearchInput({
     name,
     autoComplete,
     onClear,
+    type,
     ...other
 }) {
+    if (onClear == undefined) {
+        // if onClear=null, then it won't be rendered
+        onClear = () => {
+            onChange({
+                target: {value: ""}
+            });
+        };
+    }
     return (
         <Input
             autoComplete={autoComplete}
             style={style}
-            type="text"
+            type={type}
             className={className + " search-input"}
             placeholder={placeholder}
             maxLength={maxLength}
@@ -47,6 +57,7 @@ SearchInput.propTypes = {
     placeholder: PropTypes.string,
     style: PropTypes.object,
     className: PropTypes.string,
+    type: PropTypes.string,
     name: PropTypes.string,
     autoComplete: PropTypes.string,
     maxLength: PropTypes.number,
@@ -54,11 +65,12 @@ SearchInput.propTypes = {
 };
 
 SearchInput.defaultProps = {
-    placeholder: "",
+    placeholder: counterpart.translate("exchange.filter"),
     style: {},
     className: "",
-    name: "",
-    autoComplete: "on",
-    maxLength: "",
-    onClear: null
+    type: "text",
+    name: "focus",
+    autoComplete: "off",
+    maxLength: 16,
+    onClear: undefined
 };
