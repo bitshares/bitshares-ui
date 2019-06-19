@@ -33,6 +33,7 @@ import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import _ from "lodash-es";
 
 class AccountPortfolioList extends React.Component {
     constructor(props) {
@@ -481,254 +482,320 @@ class AccountPortfolioList extends React.Component {
             settings.get("unit") || this.props.core_asset.get("symbol");
         const showAssetPercent = settings.get("showAssetPercent", false);
 
-        return [
-            {
-                title: (
-                    <Translate
-                        component="span"
-                        content="account.asset"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "asset",
-                align: "left",
-                sorter: this.sortFunctions.alphabetic,
-                sortOrder: portfolioSort === "asset" && portfolioSortDirection,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                title: (
-                    <Translate
-                        content="account.qty"
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    />
-                ),
-                dataIndex: "qty",
-                align: "right",
-                sorter: this.sortFunctions.qty,
-                sortOrder: portfolioSort === "qty" && portfolioSortDirection,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                className: "column-hide-small",
-                title: (
-                    <span
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    >
-                        <Translate content="exchange.price" /> (
-                        <AssetName name={preferredUnit} noTip />)
-                    </span>
-                ),
-                dataIndex: "price",
-                align: "right",
-                sorter: this.sortFunctions.priceValue,
-                sortOrder: portfolioSort === "price" && portfolioSortDirection,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                className: "column-hide-small",
-                title: (
-                    <Translate
-                        content="account.hour_24_short"
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    />
-                ),
-                dataIndex: "hour24",
-                align: "right",
-                sorter: this.sortFunctions.changeValue,
-                sortOrder: portfolioSort === "hour24" && portfolioSortDirection,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                className: "column-hide-small",
-                title: (
-                    <span
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    >
-                        <TranslateWithLinks
-                            noLink
-                            string="account.eq_value_header"
-                            keys={[
-                                {
-                                    type: "asset",
-                                    value: preferredUnit,
-                                    arg: "asset"
-                                }
-                            ]}
-                            noTip
+        return _.filter(
+            [
+                {
+                    title: (
+                        <Translate
+                            component="span"
+                            content="account.asset"
+                            style={{whiteSpace: "nowrap"}}
                         />
-                    </span>
-                ),
-                dataIndex: "value",
-                align: "right",
-                sorter: this.sortFunctions.totalValue,
-                sortOrder: portfolioSort === "value" && portfolioSortDirection,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            showAssetPercent
-                ? {
-                      title: (
-                          <Translate
-                              component="span"
-                              content="account.percent"
-                              style={{whiteSpace: "nowrap"}}
-                          />
-                      ),
-                      dataIndex: "percent",
-                      align: "right",
-                      render: item => {
-                          return (
-                              <span style={{whiteSpace: "nowrap"}}>{item}</span>
-                          );
+                    ),
+                    dataIndex: "asset",
+                    align: "left",
+                    sorter: this.sortFunctions.alphabetic,
+                    sortOrder:
+                        portfolioSort === "asset" && portfolioSortDirection,
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    title: (
+                        <Translate
+                            content="account.qty"
+                            style={{
+                                marginRight: "5px",
+                                whiteSpace: "nowrap"
+                            }}
+                        />
+                    ),
+                    dataIndex: "qty",
+                    align: "right",
+                    sorter: this.sortFunctions.qty,
+                    sortOrder:
+                        portfolioSort === "qty" && portfolioSortDirection,
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    className: "column-hide-small",
+                    title: (
+                        <span
+                            style={{
+                                marginRight: "5px",
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <Translate content="exchange.price" /> (
+                            <AssetName name={preferredUnit} noTip />)
+                        </span>
+                    ),
+                    dataIndex: "price",
+                    align: "right",
+                    sorter: this.sortFunctions.priceValue,
+                    sortOrder:
+                        portfolioSort === "price" && portfolioSortDirection,
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    className: "column-hide-small",
+                    title: (
+                        <Translate
+                            content="account.hour_24_short"
+                            style={{
+                                marginRight: "5px",
+                                whiteSpace: "nowrap"
+                            }}
+                        />
+                    ),
+                    dataIndex: "hour24",
+                    align: "right",
+                    sorter: this.sortFunctions.changeValue,
+                    sortOrder:
+                        portfolioSort === "hour24" && portfolioSortDirection,
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    className: "column-hide-small",
+                    title: (
+                        <span
+                            style={{
+                                marginRight: "5px",
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <TranslateWithLinks
+                                noLink
+                                string="account.eq_value_header"
+                                keys={[
+                                    {
+                                        type: "asset",
+                                        value: preferredUnit,
+                                        arg: "asset"
+                                    }
+                                ]}
+                                noTip
+                            />
+                        </span>
+                    ),
+                    dataIndex: "value",
+                    align: "right",
+                    sorter: this.sortFunctions.totalValue,
+                    sortOrder:
+                        portfolioSort === "value" && portfolioSortDirection,
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                showAssetPercent
+                    ? {
+                          title: (
+                              <Translate
+                                  component="span"
+                                  content="account.percent"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "percent",
+                          align: "right",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
                       }
-                  }
-                : {},
-            {
-                title: (
-                    <Translate
-                        content="header.payments"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "payments",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                    : {},
+                {
+                    title: (
+                        <Translate
+                            content="header.payments"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "payments",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                this.props.enabledColumns["buy"]
+                    ? {
+                          title: (
+                              <Translate
+                                  content="exchange.buy"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "buy",
+                          align: "center",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
+                      }
+                    : null,
+                this.props.enabledColumns["deposit"]
+                    ? {
+                          title: (
+                              <Translate
+                                  content="modal.deposit.submit"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "deposit",
+                          align: "center",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
+                      }
+                    : {},
+                this.props.enabledColumns["withdraw"]
+                    ? {
+                          title: (
+                              <Translate
+                                  content="modal.withdraw.submit"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "withdraw",
+                          align: "center",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
+                      }
+                    : {},
+                this.props.enabledColumns["trade"]
+                    ? {
+                          title: (
+                              <Translate
+                                  content="account.trade"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "trade",
+                          align: "center",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
+                      }
+                    : {},
+                this.props.enabledColumns["borrow"]
+                    ? {
+                          title: (
+                              <Translate
+                                  content="exchange.borrow_short"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "borrow",
+                          align: "center",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
+                      }
+                    : {},
+                this.props.enabledColumns["settle"]
+                    ? {
+                          title: (
+                              <Translate
+                                  content="account.settle"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "settle",
+                          align: "center",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
+                      }
+                    : {},
+                this.props.enabledColumns["burn"]
+                    ? {
+                          className: "column-hide-small",
+                          title: (
+                              <Translate
+                                  content="modal.reserve.submit"
+                                  style={{whiteSpace: "nowrap"}}
+                              />
+                          ),
+                          dataIndex: "burn",
+                          align: "center",
+                          render: item => {
+                              return (
+                                  <span style={{whiteSpace: "nowrap"}}>
+                                      {item}
+                                  </span>
+                              );
+                          }
+                      }
+                    : {},
+                {
+                    className: "column-hide-small",
+                    title: (
+                        <Translate
+                            content={
+                                shownAssets == "active"
+                                    ? "exchange.hide"
+                                    : "account.perm.show"
+                            }
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "hide",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
                 }
-            },
-            {
-                title: (
-                    <Translate
-                        content="exchange.buy"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "buy",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                title: (
-                    <Translate
-                        content="modal.deposit.submit"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "deposit",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                title: (
-                    <Translate
-                        content="modal.withdraw.submit"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "withdraw",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                title: (
-                    <Translate
-                        content="account.trade"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "trade",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                title: (
-                    <Translate
-                        content="exchange.borrow_short"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "borrow",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                title: (
-                    <Translate
-                        content="account.settle"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "settle",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                className: "column-hide-small",
-                title: (
-                    <Translate
-                        content="modal.reserve.submit"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "burn",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            },
-            {
-                className: "column-hide-small",
-                title: (
-                    <Translate
-                        content={
-                            shownAssets == "active"
-                                ? "exchange.hide"
-                                : "account.perm.show"
-                        }
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
-                dataIndex: "hide",
-                align: "center",
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
-                }
-            }
-        ];
+            ],
+            item => !_.isEmpty(item)
+        );
     }
 
     _renderBalances(balanceList, optionalAssets, visible) {

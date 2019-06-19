@@ -464,9 +464,28 @@ class SettingsStore {
             this.starredMarkets = Immutable.Map(ss.get(this.starredKey, []));
             this.userMarkets = Immutable.Map(ss.get(this.marketsKey, {}));
 
+            // If ViewSettings haven't been set already, get the default object
+            if (this.viewSettings.size === 0) {
+                this.onChangeViewSetting({
+                    enabledColumns: this._getDefaultViewSettings()
+                });
+            }
+
             this.initDone = true;
             resolve();
         });
+    }
+
+    _getDefaultViewSettings() {
+        return {
+            buy: true,
+            deposit: true,
+            withdraw: true,
+            trade: true,
+            borrow: true,
+            settle: true,
+            burn: true
+        };
     }
 
     _getDefaultMarkets() {

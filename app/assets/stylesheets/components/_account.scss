@@ -541,3 +541,17 @@ div.tabs-container {
         }
     }
 }
+
+.columnSelector {
+    position: relative;
+    float: right;
+    top: 8px;
+    width: 200px;
+}
+
+.columnSelector-option {
+    padding: 10px;
+    .ant-checkbox-wrapper {
+        width: 100%;
+    }
+}

@@ -45,6 +45,16 @@
             "title": "History Export",
             "use_custom": "Use custom wrapper"
         },
+        "enabled_columns": {
+            "default": "Customize the Columns",
+            "buy": "Buy",
+            "deposit": "Deposit",
+            "withdraw": "Withdraw",
+            "trade": "Trade",
+            "borrow": "Borrow",
+            "settle": "Settle",
+            "burn": "Burn"
+        },
         "filter_orders": "Filter...",
         "follow": "Add contact",
         "group_by_asset": "Group by asset",
