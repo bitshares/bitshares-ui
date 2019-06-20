@@ -186,11 +186,11 @@ class WithdrawModalNew extends React.Component {
             });
 
             if (fromAsset && toAsset) {
-                if (toAsset.get("precision") !== fromAsset.get("precision"))
-                    toAsset = toAsset.set(
-                        "precision",
-                        fromAsset.get("precision")
-                    );
+                // if (toAsset.get("precision") !== fromAsset.get("precision"))
+                //     toAsset = toAsset.set(
+                //         "precision",
+                //         fromAsset.get("precision")
+                //     );
 
                 MarketsActions.getMarketStats(toAsset, fromAsset, true);
             }
