@@ -98,7 +98,13 @@ class AccountOverview extends React.Component {
     }
 
     render() {
-        let {account, hiddenAssets, settings, orders} = this.props;
+        let {
+            account,
+            hiddenAssets,
+            settings,
+            orders,
+            settleOrders
+        } = this.props;
         let {shownAssets} = this.state;
 
         if (!account) {
@@ -212,6 +218,16 @@ class AccountOverview extends React.Component {
                 hide_asset
             />
         );
+
+        let settleValue = (
+            <TotalBalanceValue
+                noTip
+                balances={Immutable.List()}
+                settleOrders={settleOrders}
+                hide_asset
+            />
+        );
+
         let marginValue = (
             <TotalBalanceValue
                 noTip
@@ -415,6 +431,22 @@ class AccountOverview extends React.Component {
                                         </span>
                                         <span className="value">
                                             {ordersValue}
+                                        </span>
+                                    </div>
+                                </AccountOrders>
+                            </Tab>
+
+                            <Tab
+                                title="account.settle_orders"
+                                subText={settleValue}
+                            >
+                                <AccountOrders {...this.props} type="settle">
+                                    <div className="total-value">
+                                        <span className="text">
+                                            {totalValueText}
+                                        </span>
+                                        <span className="value">
+                                            {settleValue}
                                         </span>
                                     </div>
                                 </AccountOrders>

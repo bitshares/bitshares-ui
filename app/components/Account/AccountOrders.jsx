@@ -2,7 +2,7 @@ import React from "react";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs";
-import {LimitOrder} from "common/MarketClasses";
+import {LimitOrder, SettleOrder} from "common/MarketClasses";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
@@ -36,7 +36,10 @@ class AccountOrders extends React.Component {
     _getFilteredOrders() {
         let {filterValue} = this.state;
 
-        let orders = this.props.account.get("orders") || [];
+        let orders =
+            (this.props.type !== "settle"
+                ? this.props.account.get("orders")
+                : this.props.settleOrders) || [];
 
         return orders.filter(item => {
             let order = ChainStore.getObject(item).toJS();
@@ -75,7 +78,10 @@ class AccountOrders extends React.Component {
                     : base.get("id");
                 let marketBaseId = direction ? base.get("id") : quote.get("id");
 
-                let limitOrder = new LimitOrder(order, assets, marketQuoteId);
+                let limitOrder =
+                    this.props.type !== "settle"
+                        ? new LimitOrder(order, assets, marketQuoteId)
+                        : new SettleOrder(order, assets, marketQuoteId);
 
                 let marketBase = ChainStore.getAsset(marketBaseId);
                 let marketQuote = ChainStore.getAsset(marketQuoteId);
@@ -504,14 +510,15 @@ class AccountOrders extends React.Component {
     }
 
     render() {
-        let {account} = this.props;
+        let {account, settleOrders = []} = this.props;
         let {filterValue, selectedOrders} = this.state;
 
         if (!account.get("orders")) {
             return null;
         }
 
-        let orders = account.get("orders");
+        let orders =
+            this.props.type !== "settle" ? account.get("orders") : settleOrders;
         const ordersCount = orders.size;
         if (filterValue) {
             orders = this._getFilteredOrders.call(this);
