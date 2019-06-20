@@ -13,6 +13,7 @@ const STUB_ACCOUNT_ID = "1.2.23882";
 
 const STUB_MARKETS = [
     {
+        symbol: "TWW",
         asset_id: "1.3.0",
         issuer: STUB_ACCOUNT_ID,
         condition: "Tramp will win",
@@ -20,6 +21,7 @@ const STUB_MARKETS = [
         odds: ""
     },
     {
+        symbol: "TWW",
         asset_id: "1.3.1",
         issuer: "1.2.23881",
         condition: "Tramp will win",
@@ -27,6 +29,7 @@ const STUB_MARKETS = [
         odds: ""
     },
     {
+        symbol: "TWW",
         asset_id: "1.3.2",
         issuer: "1.2.23881",
         condition: "Tramp will win",
@@ -35,36 +38,42 @@ const STUB_MARKETS = [
     }
 ];
 
-const STUB_OPINIONS = [
-    {
-        order_id: "1.4.1234",
-        opinionator: "1.2.23881",
-        opinion: "yes",
-        amount: 100,
-        fee: 0.1
-    },
-    {
-        order_id: "1.4.1235",
-        opinionator: STUB_ACCOUNT_ID,
-        opinion: "no",
-        amount: 100500,
-        fee: 0.11
-    },
-    {
-        order_id: "1.4.1236",
-        opinionator: "1.2.23881",
-        opinion: "yes",
-        amount: 200,
-        fee: 0.1
-    },
-    {
-        order_id: "1.4.1237",
-        opinionator: "1.2.23881",
-        opinion: "no",
-        amount: 666,
-        fee: 0.13
-    }
-];
+const STUB_OPINIONS = {
+    "1.3.0": [
+        {
+            order_id: "1.4.1234",
+            opinionator: "1.2.23881",
+            opinion: "yes",
+            amount: 100,
+            fee: 0.1
+        },
+        {
+            order_id: "1.4.1235",
+            opinionator: STUB_ACCOUNT_ID,
+            opinion: "no",
+            amount: 100500,
+            fee: 0.11
+        }
+    ],
+    "1.3.1": [
+        {
+            order_id: "1.4.1236",
+            opinionator: "1.2.23881",
+            opinion: "yes",
+            amount: 200,
+            fee: 0.1
+        }
+    ],
+    "1.3.2": [
+        {
+            order_id: "1.4.1237",
+            opinionator: "1.2.23881",
+            opinion: "no",
+            amount: 666,
+            fee: 0.13
+        }
+    ]
+};
 
 export default class PredictionMarkets extends Component {
     constructor(props) {
@@ -83,7 +92,9 @@ export default class PredictionMarkets extends Component {
     }
 
     async getMarketOpinions(market) {
-        this.setState({opinions: STUB_OPINIONS});
+        let opinions = STUB_OPINIONS[market.asset_id];
+        opinions = opinions === undefined ? [{}] : opinions;
+        this.setState({opinions: opinions});
     }
 
     onMarketAction({market, action}) {
@@ -132,6 +143,30 @@ export default class PredictionMarkets extends Component {
             isCreateMarketModalOpen: false
         });
     };
+
+    getNewOpinionParameters = value => {
+        if (this.state.opinions[0].order_id) {
+            this.setState({
+                opinions: [...this.state.opinions, value],
+                isAddOpinionModalOpen: false
+            });
+        } else {
+            this.setState({
+                opinions: [value],
+                isAddOpinionModalOpen: false
+            });
+        }
+    };
+
+    getNewAssetId() {
+        //TODO
+        return String(Math.random());
+    }
+
+    getNewOpinionId() {
+        //TODO
+        return String(Math.random());
+    }
 
     getOverviewSection() {
         return (
@@ -192,16 +227,18 @@ export default class PredictionMarkets extends Component {
                         )}
                     </Button>
                 </div>
-                <PredictionMarketDetailsTable
-                    marketData={{
-                        market: this.state.selectedMarket,
-                        opinions: this.state.opinions
-                    }}
-                    currentAccountId={this.state.currentAccountId}
-                    onOppose={dataItem => {
-                        console.log("Oppose", dataItem);
-                    }}
-                />
+                {this.state.opinions[0].order_id ? (
+                    <PredictionMarketDetailsTable
+                        marketData={{
+                            market: this.state.selectedMarket,
+                            opinions: this.state.opinions
+                        }}
+                        currentAccountId={this.state.currentAccountId}
+                        onOppose={dataItem => {
+                            console.log("Oppose", dataItem);
+                        }}
+                    />
+                ) : null}
             </div>
         );
     }
@@ -227,6 +264,8 @@ export default class PredictionMarkets extends Component {
                         market={this.state.selectedMarket}
                         opinion={this.state.initialOpinion}
                         currentAccountId={this.state.currentAccountId}
+                        getNewOpinionParameters={this.getNewOpinionParameters}
+                        newOpinionId={this.getNewOpinionId()}
                     />
                 ) : null}
                 {this.state.isCreateMarketModalOpen ? (
@@ -237,6 +276,7 @@ export default class PredictionMarkets extends Component {
                         )}
                         currentAccountId={this.state.currentAccountId}
                         getNewMarketParameters={this.getNewMarketParameters}
+                        newMarketId={this.getNewAssetId()}
                     />
                 ) : null}
             </div>

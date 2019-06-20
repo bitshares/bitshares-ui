@@ -1620,6 +1620,15 @@
             "resolution_date": "Resolution date",
             "backing_asset": "Backing asset",
             "participation_fee": "Participation fee"
+        },
+        "add_opinion_modal": {
+            "title": "Add opinion",
+            "symbol": "Symbol",
+            "condition": "Condition",
+            "opinion": "Opinion",
+            "yes": "YES",
+            "no": "NO",
+            "amount": "Amount"
         }
     },
     "proposal": {

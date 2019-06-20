@@ -71,7 +71,7 @@ export default class PredictionMarketsOverviewTable extends Component {
                 key: "action",
                 title: counterpart.translate("prediction.overview.action"),
                 align: "left",
-                onCell,
+                //              onCell,
                 render: dataItem => {
                     // TODO translation
                     return (
