@@ -26,37 +26,42 @@ export default class CreateMarketModal extends Modal {
         this.handleConditionChange = this.handleConditionChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
-        this.onAssetChange = this.onAssetChange.bind(this);
-        this.onFeeChange = this.onFeeChange.bind(this);
+        this.handleAssetChange = this.handleAssetChange.bind(this);
     }
 
     handleSymbolChange(event) {
         let newMarket = this.state.newMarketParameters;
         newMarket.symbol = event.target.value;
+        newMarket.issuer = this.props.currentAccountId;
+        newMarket.asset_id = this.props.newMarketId;
         this.setState({newMarketParameters: newMarket});
     }
 
     handleConditionChange(event) {
         let newMarket = this.state.newMarketParameters;
         newMarket.condition = event.target.value;
+        newMarket.issuer = this.props.currentAccountId;
+        newMarket.asset_id = this.props.newMarketId;
         this.setState({newMarketParameters: newMarket});
     }
 
     handleDescriptionChange(event) {
         let newMarket = this.state.newMarketParameters;
         newMarket.description = event.target.value;
+        newMarket.issuer = this.props.currentAccountId;
+        newMarket.asset_id = this.props.newMarketId;
         this.setState({newMarketParameters: newMarket});
     }
 
     handleDateChange(event) {
         let newMarket = this.state.newMarketParameters;
         newMarket.resolution_date = event.target.value;
+        newMarket.issuer = this.props.currentAccountId;
+        newMarket.asset_id = this.props.newMarketId;
         this.setState({newMarketParameters: newMarket});
     }
 
-    onAssetChange() {}
-
-    onFeeChange() {}
+    handleAssetChange() {}
 
     render() {
         return (
@@ -127,7 +132,7 @@ export default class CreateMarketModal extends Modal {
                                         "1.3.106",
                                         "1.3.103"
                                     ]}
-                                    onChange={this.onAssetChange}
+                                    onChange={this.handleAssetChange}
                                     tabIndex={5}
                                 />
                             </label>
@@ -136,7 +141,6 @@ export default class CreateMarketModal extends Modal {
                             <label className="left-label">
                                 <Translate content="prediction.create_market_modal.participation_fee" />
                                 <AmountSelector
-                                    onChange={this.onFeeChange}
                                     tabIndex={6}
                                     disabled={true}
                                     assets={[
@@ -161,7 +165,9 @@ export default class CreateMarketModal extends Modal {
 CreateMarketModal.propTypes = {
     show: PropTypes.bool,
     onClose: PropTypes.func,
-    currentAccountId: PropTypes.string
+    currentAccountId: PropTypes.string,
+    getNewMarketParameters: PropTypes.func,
+    newMarketId: PropTypes.string
 };
 
 CreateMarketModal.defaultProps = {
