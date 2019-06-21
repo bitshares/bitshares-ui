@@ -14,11 +14,12 @@ import {connect} from "alt-react";
 import SettingsStore from "../../stores/SettingsStore";
 import {checkFeeStatusAsync} from "common/trxHelper";
 
-class FeeAssetSelector extends DecimalChecker {
+class FeeAssetSelector extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            asset: null,
             assets: [],
             fee_amount: 0,
             fee_asset_id:
@@ -31,7 +32,6 @@ class FeeAssetSelector extends DecimalChecker {
             error: null
         };
         this._updateFee = debounce(this._updateFee.bind(this), 250);
-        this._getFees = debounce(this._getFees.bind(this), 500);
     }
 
     async _getFees(assets, account, trxInfo) {
@@ -48,8 +48,14 @@ class FeeAssetSelector extends DecimalChecker {
         this.setState({fees: result});
     }
 
+    shouldComponentUpdate(np, ns) {
+        return (
+            ns.fee_amount !== this.state.fee_amount ||
+            ns.fee_asset_id !== this.state.fee_asset_id
+        );
+    }
+
     _updateFee(asset_id, trxInfo, onChange) {
-        // Original asset id should be passed to child component along with from_account
         let {account} = this.props;
         if (!account) return null;
 
@@ -75,7 +81,9 @@ class FeeAssetSelector extends DecimalChecker {
                     fee_asset_id: fee.asset_id
                 });
             })
-            .catch(err => console.warn(`Failed to check fee status: ${err}`));
+            .catch(err => {
+                console.warn(err);
+            });
     }
 
     componentWillReceiveProps(np, ns) {
@@ -96,14 +104,19 @@ class FeeAssetSelector extends DecimalChecker {
     }
 
     _getAsset() {
-        const {assets, fee_asset_id} = this.state;
-        return ChainStore.getAsset(
-            fee_asset_id
-                ? fee_asset_id
-                : assets.length === 1
-                    ? assets[0]
-                    : "1.3.0"
-        );
+        const {assets, fee_asset_id, asset} = this.state;
+        if (!asset || fee_asset_id !== asset.get("id")) {
+            const selectedAsset = ChainStore.getAsset(
+                fee_asset_id
+                    ? fee_asset_id
+                    : assets.length === 1
+                        ? assets[0]
+                        : "1.3.0"
+            );
+            this.setState({asset: selectedAsset});
+            return selectedAsset;
+        }
+        return asset;
     }
 
     _getAvailableAssets(account) {
@@ -114,6 +127,7 @@ class FeeAssetSelector extends DecimalChecker {
         const account_balances = account.get("balances").toJS();
         fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
         for (let key in account_balances) {
+            console.log(account_balances[key]);
             let balanceObject = ChainStore.getObject(account_balances[key]);
             if (balanceObject && balanceObject.get("balance") === 0) {
                 if (fee_asset_types.includes(key)) {
@@ -146,15 +160,6 @@ class FeeAssetSelector extends DecimalChecker {
         this.onAssetChange(this.state.fee_asset_id);
     }
 
-    formatAmount(v) {
-        /*// TODO: use asset's precision to format the number*/
-        if (!v) v = "";
-        if (typeof v === "number") v = v.toString();
-        let value = v.trim().replace(/,/g, "");
-
-        return value;
-    }
-
     onAssetChange(selected_asset) {
         this.setState({fee_asset_id: selected_asset});
         this._updateFee(
@@ -173,7 +178,7 @@ class FeeAssetSelector extends DecimalChecker {
 
         let value = this.state.error
             ? counterpart.translate("transfer.errors.insufficient")
-            : this.formatAmount(this.state.fee_amount);
+            : this.state.fee_amount;
 
         const label = this.props.label ? (
             <div className="amount-selector-field--label">
