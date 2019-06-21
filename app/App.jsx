@@ -9,7 +9,6 @@ import BrowserNotifications from "./components/BrowserNotifications/BrowserNotif
 import Header from "components/Layout/Header";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
-import PredictionMarketsPage from "./components/PredictionMarkets/PMAssetsContainer";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
@@ -38,6 +37,12 @@ const Exchange = Loadable({
 const Explorer = Loadable({
     loader: () =>
         import(/* webpackChunkName: "explorer" */ "./components/Explorer/Explorer"),
+    loading: LoadingIndicator
+});
+
+const PredictionMarketsPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "pm" */ "./components/PredictionMarkets/PMAssetsContainer"),
     loading: LoadingIndicator
 });
 

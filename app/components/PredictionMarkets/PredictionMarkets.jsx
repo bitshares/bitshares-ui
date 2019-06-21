@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import AssetActions from "actions/AssetActions";
 import counterpart from "counterpart";
 import PredictionMarketsOverviewTable from "./PredictionMarketsOverviewTable";
 import PredictionMarketDetailsTable from "./PredictionMarketDetailsTable";
@@ -7,6 +8,7 @@ import HelpContent from "../Utility/HelpContent";
 import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
 import {Button} from "bitshares-ui-style-guide";
+import Immutable from "immutable";
 
 const STUB_ACCOUNT_ID = "1.2.23882";
 
@@ -98,7 +100,6 @@ const STUB_OPINIONS = {
 export default class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             markets: STUB_MARKETS,
             currentAccountId: STUB_ACCOUNT_ID,
@@ -110,6 +111,11 @@ export default class PredictionMarkets extends Component {
             isCreateMarketModalOpen: false,
             isAddOpinionModalOpen: false
         };
+        AssetActions.getAssetList.defer("M", 100);
+    }
+
+    shouldComponentUpdate(np, ns) {
+        return !Immutable.is(np.assets, this.props.assets);
     }
 
     async getMarketOpinions(market) {
@@ -127,6 +133,7 @@ export default class PredictionMarkets extends Component {
     }
 
     onSearch(event) {
+        console.log(this.props.assets);
         this.setState({
             searchTerm: (event.target.value || "").toUpperCase(),
             selectedMarket: null
