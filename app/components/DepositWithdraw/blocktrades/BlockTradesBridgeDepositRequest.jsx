@@ -1044,67 +1044,112 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     componentWillMount() {
         let params = QueryString.parse(this.props.params.search);
 
-        if (params["code"]) {
-            this.manager.signinRedirectCallback().then(result => {
-                console.log("resulttttt", result);
-            });
-            var data = new URLSearchParams();
-            data.append("grant_type", "authorization_code");
-            data.append("code", params["code"]);
-            data.append(
-                "redirect_uri",
-                "https://192.168.6.139:9051/deposit-withdraw"
-            );
-            data.append("client_id", "10ecf048-b982-467b-9965-0b0926330869");
-            const headers = {
-                "Content-Type": "application/x-www-form-urlencoded"
-            };
+        // check the current user and manage authorization
+        this.manager
+            .getUser()
+            .then(async user => {
+                if (!user) {
+                    // any current user found, so do something when not logged in
 
-            fetch("https://blocktrades.us/oauth2/token", {
-                method: "POST",
-                body: data.toString(),
-                headers
-            })
-                .then(r => r.json())
-                .then(body => {
-                    if (body["id_token"]) {
-                        var base64Url = body["id_token"].split(".")[1];
-                        if (base64Url) {
-                            var base64 = base64Url
-                                .replace("-", "+")
-                                .replace("_", "/");
-                            var rawParsed = JSON.parse(window.atob(base64));
-                            oauthBlocktrades.set(
-                                "access_token",
-                                body.access_token
-                            );
-                            oauthBlocktrades.set(
-                                "exp_time",
-                                rawParsed["exp"] * 1000
-                            );
-                            this.setState({
-                                isUserAuthorized: true,
-                                retrievingDataFromOauthApi: false
-                            });
+                    try {
+                        const url = location.href;
+                        // exchange authorization code with user data.
+                        // this saves user info to the session storage
+                        const userData = await this.manager.signinRedirectCallback(
+                            url
+                        );
+
+                        console.log(userData);
+
+                        // you can do some early operation here
+                        // for example decide whether you want to use refresh token
+                        const {refresh_token} = userData;
+
+                        // if refresh token is undefined, user didn't check `keep logged in`
+                        if (!refresh_token) {
+                            // shouldn't try silently refresh
                         } else {
-                            this.setState({
-                                isUserAuthorized: false,
-                                retrievingDataFromOauthApi: false
-                            });
+                            // refresh silently
                         }
-                    } else {
-                        this.setState({
-                            isUserAuthorized: false,
-                            retrievingDataFromOauthApi: false
-                        });
+                    } catch (error) {
+                        // avoid page refresh errors with the same code param
+                        // Error: No matching state found in storage
+                        // this error is occured because there is no valid state saved in localstorage
+                        // user should be redirected to somewhere, maybe deposit-withdraw
+                        // we come to here when:
+                        // 1: there is no code param or there is no valid code param
+                        // 2: there is no valid state in the localstorage
+                        // you should handle these edge cases.
+                        console.log(error);
                     }
-                })
-                .catch(() => {
-                    this.setState({
-                        isUserAuthorized: false,
-                        retrievingDataFromOauthApi: false
-                    });
-                });
+                } else {
+                    // there is a user, do something with user data
+                    // user date is saved in the session storage oidc.blocktrades
+                    console.log(user);
+                }
+            })
+            .catch(error => {
+                // handle unexpected error
+                throw error;
+            });
+
+        if (params["code"]) {
+            // var data = new URLSearchParams();
+            // data.append("grant_type", "authorization_code");
+            // data.append("code", params["code"]);
+            // data.append(
+            //     "redirect_uri",
+            //     "https://192.168.6.139:9051/deposit-withdraw"
+            // );
+            // data.append("client_id", "10ecf048-b982-467b-9965-0b0926330869");
+            // const headers = {
+            //     "Content-Type": "application/x-www-form-urlencoded"
+            // };
+            // fetch("https://blocktrades.us/oauth2/token", {
+            //     method: "POST",
+            //     body: data.toString(),
+            //     headers
+            // })
+            //     .then(r => r.json())
+            //     .then(body => {
+            //         if (body["id_token"]) {
+            //             var base64Url = body["id_token"].split(".")[1];
+            //             if (base64Url) {
+            //                 var base64 = base64Url
+            //                     .replace("-", "+")
+            //                     .replace("_", "/");
+            //                 var rawParsed = JSON.parse(window.atob(base64));
+            //                 oauthBlocktrades.set(
+            //                     "access_token",
+            //                     body.access_token
+            //                 );
+            //                 oauthBlocktrades.set(
+            //                     "exp_time",
+            //                     rawParsed["exp"] * 1000
+            //                 );
+            //                 this.setState({
+            //                     isUserAuthorized: true,
+            //                     retrievingDataFromOauthApi: false
+            //                 });
+            //             } else {
+            //                 this.setState({
+            //                     isUserAuthorized: false,
+            //                     retrievingDataFromOauthApi: false
+            //                 });
+            //             }
+            //         } else {
+            //             this.setState({
+            //                 isUserAuthorized: false,
+            //                 retrievingDataFromOauthApi: false
+            //             });
+            //         }
+            //     })
+            //     .catch(() => {
+            //         this.setState({
+            //             isUserAuthorized: false,
+            //             retrievingDataFromOauthApi: false
+            //         });
+            //     });
         } else if (oauthBlocktrades.get("access_token", "") !== "") {
             const currentTime = Date.now();
             if (currentTime < oauthBlocktrades.get("exp_time")) {
@@ -1915,17 +1960,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     signin() {
         this.manager.signinRedirect();
-        const client_id = "10ecf048-b982-467b-9965-0b0926330869";
-        const response_type = "code";
-        const grant_type = "authorization_code,refresh_token";
-        const scope =
-            "offline openid email create_new_mappings view_client_transaction_history";
-        const state = this.makeState(16);
-        const redirect_uri = "https://192.168.6.139:9051/deposit-withdraw";
+        // const client_id = "10ecf048-b982-467b-9965-0b0926330869";
+        // const response_type = "code";
+        // const grant_type = "authorization_code,refresh_token";
+        // const scope =
+        //     "offline openid email create_new_mappings view_client_transaction_history";
+        // const state = this.makeState(16);
+        // const redirect_uri = "https://192.168.6.139:9051/deposit-withdraw";
 
-        const base = "https://blocktrades.us/oauth2/auth";
-        const url = `?client_id=${client_id}&response_type=${response_type}&grant_type=${grant_type}&scope=${scope}&state=${state}&redirect_uri=${redirect_uri}`; // eslint-disable-line
-        window.location.assign(base + url);
+        // const base = "https://blocktrades.us/oauth2/auth";
+        // const url = `?client_id=${client_id}&response_type=${response_type}&grant_type=${grant_type}&scope=${scope}&state=${state}&redirect_uri=${redirect_uri}`; // eslint-disable-line
+        // window.location.assign(base + url);
     }
 
     render() {
