@@ -127,7 +127,6 @@ class FeeAssetSelector extends React.Component {
         const account_balances = account.get("balances").toJS();
         fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
         for (let key in account_balances) {
-            console.log(account_balances[key]);
             let balanceObject = ChainStore.getObject(account_balances[key]);
             if (balanceObject && balanceObject.get("balance") === 0) {
                 if (fee_asset_types.includes(key)) {
@@ -135,21 +134,6 @@ class FeeAssetSelector extends React.Component {
                 }
             }
         }
-
-        /* TODO uncomment when it comes to feeStatus
-        const {feeStatus} = this.state;
-        function hasFeePoolBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasPoolBalance;
-        }
-
-        function hasBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasBalance;
-        }
-        fee_asset_types = fee_asset_types.filter(a => {
-            return hasFeePoolBalance(a) && hasBalance(a);
-        });*/
 
         this.setState({balances: account_balances, assets: fee_asset_types});
         this._updateFee(account, this.props.trxInfo, this.props.onChange);
