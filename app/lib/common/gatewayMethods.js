@@ -460,10 +460,7 @@ export function getConversionJson(inputs, isUserAuthorized = false) {
     });
 
     const _cacheString =
-        "https://blocktrades.syncad.com/api/v2" +
-        input_coin_type +
-        output_coin_type +
-        account_name;
+        url + input_coin_type + output_coin_type + account_name;
     +input_coin_type + output_coin_type + account_name;
     return new Promise((resolve, reject) => {
         if (_conversionCache[_cacheString])
@@ -479,15 +476,11 @@ export function getConversionJson(inputs, isUserAuthorized = false) {
                 Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
             };
         }
-        fetch(
-            "https://blocktrades.syncad.com/api/v2" +
-                "/simple-api/initiate-trade",
-            {
-                method: "post",
-                headers,
-                body: body
-            }
-        )
+        fetch(url + "/simple-api/initiate-trade", {
+            method: "post",
+            headers,
+            body: body
+        })
             .then(reply => {
                 reply
                     .json()

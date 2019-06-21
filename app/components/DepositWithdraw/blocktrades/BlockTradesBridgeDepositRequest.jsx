@@ -18,6 +18,7 @@ import PropTypes from "prop-types";
 import {Modal} from "bitshares-ui-style-guide";
 import QueryString from "query-string";
 import ls from "common/localStorage";
+import {UserManager} from "oidc-client";
 
 let oauthBlocktrades = new ls("__oauthBlocktrades__");
 
@@ -485,12 +486,24 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             input_from_output: 1
         };
 
+        this.manager = new UserManager({
+            authority: "https://blocktrades.us/",
+            automaticSilentRenew: true,
+            client_id: "10ecf048-b982-467b-9965-0b0926330869",
+            redirect_uri: "https://192.168.6.139:9051/deposit-withdraw",
+            silent_redirect_uri: "http://127.0.0.1:8800/silent-auth-callback",
+            response_type: "code",
+            scope:
+                "offline openid email create_new_mappings view_client_transaction_history",
+            loadUserInfo: true
+        });
+
         this.state = {
             isModalVisible: false,
             coin_symbol: "btc",
             key_for_withdrawal_dialog: "btc",
             supports_output_memos: "",
-            url: "https://blocktrades.syncad.com/api/v2",
+            url: blockTradesAPIs,
             error: null,
             isUserAuthorized: false,
             retrievingDataFromOauthApi: true,
@@ -1032,6 +1045,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         let params = QueryString.parse(this.props.params.search);
 
         if (params["code"]) {
+            this.manager.signinRedirectCallback().then(result => {
+                console.log("resulttttt", result);
+            });
             var data = new URLSearchParams();
             data.append("grant_type", "authorization_code");
             data.append("code", params["code"]);
@@ -1044,7 +1060,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 "Content-Type": "application/x-www-form-urlencoded"
             };
 
-            fetch("https://devel-4.syncad.com/oauth2/token", {
+            fetch("https://blocktrades.us/oauth2/token", {
                 method: "POST",
                 body: data.toString(),
                 headers
@@ -1898,15 +1914,16 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     signin() {
+        this.manager.signinRedirect();
         const client_id = "10ecf048-b982-467b-9965-0b0926330869";
         const response_type = "code";
         const grant_type = "authorization_code,refresh_token";
         const scope =
-            "offline openid email profile create_new_mappings view_client_transaction_history";
+            "offline openid email create_new_mappings view_client_transaction_history";
         const state = this.makeState(16);
         const redirect_uri = "https://192.168.6.139:9051/deposit-withdraw";
 
-        const base = "https://devel-4.syncad.com/oauth2/auth";
+        const base = "https://blocktrades.us/oauth2/auth";
         const url = `?client_id=${client_id}&response_type=${response_type}&grant_type=${grant_type}&scope=${scope}&state=${state}&redirect_uri=${redirect_uri}`; // eslint-disable-line
         window.location.assign(base + url);
     }
