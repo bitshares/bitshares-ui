@@ -147,9 +147,10 @@ export default class PredictionMarketsOverviewTable extends Component {
             );
         });
 
-        filteredMarkets.map(item => ({
+        let i = 0;
+        filteredMarkets = filteredMarkets.map(item => ({
             ...item,
-            key: item.asset_id
+            key: `${item.asset_id}${i++}`
         }));
 
         return (

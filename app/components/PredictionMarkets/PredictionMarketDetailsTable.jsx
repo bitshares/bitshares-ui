@@ -113,16 +113,21 @@ export default class PredictionMarketDetailsTable extends Component {
         };
 
         let filteredOpinions = this.props.marketData.opinions.filter(
-            item =>
-                (item.opiniator + item.opinion)
-                    .toUpperCase()
-                    .indexOf(this.props.detailsSearchTerm) !== -1
+            item => {
+                console.log(item);
+                return (
+                    (item.opiniator + item.opinion)
+                        .toUpperCase()
+                        .indexOf(this.props.detailsSearchTerm) !== -1
+                );
+            }
             //TODO filter with opiniator name, not with issuer id
         );
 
-        filteredMarkets.map(item => ({
+        let i = 0;
+        filteredOpinions = filteredOpinions.map(item => ({
             ...item,
-            key: item.order_id
+            key: `${item.order_id}${i++}`
         }));
 
         return (

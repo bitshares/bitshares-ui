@@ -98,6 +98,7 @@ const STUB_OPINIONS = {
 export default class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
+        console.log(props);
         this.state = {
             markets: STUB_MARKETS,
             currentAccountId: STUB_ACCOUNT_ID,
@@ -113,8 +114,8 @@ export default class PredictionMarkets extends Component {
 
     async getMarketOpinions(market) {
         let opinions = STUB_OPINIONS[market.asset_id];
-        opinions = opinions === undefined ? [{}] : opinions;
-        this.setState({opinions: opinions});
+        opinions = !opinions ? [] : opinions;
+        this.setState({opinions});
     }
 
     onMarketAction({market, action}) {
