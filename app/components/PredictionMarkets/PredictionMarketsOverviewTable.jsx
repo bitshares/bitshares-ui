@@ -4,6 +4,7 @@ import counterpart from "counterpart";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import {Table, Button} from "bitshares-ui-style-guide";
+import {ChainStore} from "bitsharesjs";
 
 export default class PredictionMarketsOverviewTable extends Component {
     onMarketAction(dataItem, option = "yes") {
@@ -136,14 +137,26 @@ export default class PredictionMarketsOverviewTable extends Component {
                 })
         };
 
+        let filteredMarkets = this.props.markets.filter(item => {
+            //TODO filter with issuer name, not with issuer id
+            //let acountName = ChainStore.getAccount(item.issuer).get("name");
+            return (
+                (item.issuer + item.condition + item.description)
+                    .toUpperCase()
+                    .indexOf(this.props.searchTerm) !== -1
+            );
+        });
+
+        filteredMarkets.map(item => ({
+            ...item,
+            key: item.asset_id
+        }));
+
         return (
             <div style={{paddingTop: "50px"}} key="overview-table">
                 <Table
                     columns={this._getColumns()}
-                    dataSource={this.props.markets.map(item => ({
-                        ...item,
-                        key: item.asset_id
-                    }))}
+                    dataSource={filteredMarkets}
                     pagination={pagination}
                     footer={null}
                 />
@@ -155,7 +168,8 @@ export default class PredictionMarketsOverviewTable extends Component {
 PredictionMarketsOverviewTable.propTypes = {
     markets: PropTypes.array.isRequired,
     onMarketAction: PropTypes.func.isRequired,
-    currentAccountId: PropTypes.string
+    currentAccountId: PropTypes.string,
+    searchTerm: PropTypes.string
 };
 
 PredictionMarketsOverviewTable.defaultProps = {

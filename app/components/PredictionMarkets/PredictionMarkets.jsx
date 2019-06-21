@@ -6,7 +6,6 @@ import SearchInput from "../Utility/SearchInput";
 import HelpContent from "../Utility/HelpContent";
 import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
-
 import {Button} from "bitshares-ui-style-guide";
 
 const STUB_ACCOUNT_ID = "1.2.23882";
@@ -16,16 +15,36 @@ const STUB_MARKETS = [
         symbol: "TWW",
         asset_id: "1.3.0",
         issuer: STUB_ACCOUNT_ID,
-        condition: "Tramp will win",
-        description: "Some very long description ".repeat(4),
+        condition: "T will win",
+        description:
+            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque ",
         odds: ""
     },
     {
         symbol: "TWW",
         asset_id: "1.3.1",
         issuer: "1.2.23881",
-        condition: "Tramp will win",
-        description: "Some very long description ".repeat(4),
+        condition: "Tr will win",
+        description:
+            "natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,",
+        odds: ""
+    },
+    {
+        symbol: "TWW",
+        asset_id: "1.3.2",
+        issuer: "1.2.23881",
+        condition: "Tra will win",
+        description:
+            "imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus",
+        odds: ""
+    },
+    {
+        symbol: "TWW",
+        asset_id: "1.3.2",
+        issuer: "1.2.23881",
+        condition: "Tram will win",
+        description:
+            "Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus",
         odds: ""
     },
     {
@@ -33,7 +52,8 @@ const STUB_MARKETS = [
         asset_id: "1.3.2",
         issuer: "1.2.23881",
         condition: "Tramp will win",
-        description: "Some very long description ".repeat(4),
+        description:
+            " Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque",
         odds: ""
     }
 ];
@@ -106,11 +126,16 @@ export default class PredictionMarkets extends Component {
     }
 
     onSearch(event) {
-        this.setState({searchTerm: event.target.value});
+        this.setState({
+            searchTerm: (event.target.value || "").toUpperCase(),
+            selectedMarket: null
+        });
     }
 
     onSearchDetails(event) {
-        this.setState({detailsSearchTerm: event.target.value});
+        this.setState({
+            detailsSearchTerm: (event.target.value || "").toUpperCase()
+        });
     }
 
     onCreatePredictionMarketModalOpen() {
@@ -145,7 +170,7 @@ export default class PredictionMarkets extends Component {
     };
 
     getNewOpinionParameters = value => {
-        if (this.state.opinions[0].order_id) {
+        if (this.state.opinions) {
             this.setState({
                 opinions: [...this.state.opinions, value],
                 isAddOpinionModalOpen: false
@@ -198,6 +223,7 @@ export default class PredictionMarkets extends Component {
                     markets={this.state.markets}
                     currentAccountId={this.state.currentAccountId}
                     onMarketAction={this.onMarketAction.bind(this)}
+                    searchTerm={this.state.searchTerm}
                 />
             </div>
         );
@@ -227,7 +253,7 @@ export default class PredictionMarkets extends Component {
                         )}
                     </Button>
                 </div>
-                {this.state.opinions[0].order_id ? (
+                {this.state.opinions ? (
                     <PredictionMarketDetailsTable
                         marketData={{
                             market: this.state.selectedMarket,
@@ -237,6 +263,7 @@ export default class PredictionMarkets extends Component {
                         onOppose={dataItem => {
                             console.log("Oppose", dataItem);
                         }}
+                        detailsSearchTerm={this.state.detailsSearchTerm}
                     />
                 ) : null}
             </div>

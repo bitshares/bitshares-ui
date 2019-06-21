@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import counterpart from "counterpart";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import {Table, Button} from "bitshares-ui-style-guide";
+import {ChainStore} from "bitsharesjs";
 
 export default class PredictionMarketDetailsTable extends Component {
     _getColumns() {
@@ -111,14 +112,24 @@ export default class PredictionMarketDetailsTable extends Component {
                 })
         };
 
+        let filteredOpinions = this.props.marketData.opinions.filter(
+            item =>
+                (item.opiniator + item.opinion)
+                    .toUpperCase()
+                    .indexOf(this.props.detailsSearchTerm) !== -1
+            //TODO filter with opiniator name, not with issuer id
+        );
+
+        filteredMarkets.map(item => ({
+            ...item,
+            key: item.order_id
+        }));
+
         return (
             <div style={{paddingTop: "50px"}} key="overview-table">
                 <Table
                     columns={this._getColumns()}
-                    dataSource={this.props.marketData.opinions.map(item => ({
-                        ...item,
-                        key: item.order_id
-                    }))}
+                    dataSource={filteredOpinions}
                     pagination={pagination}
                     footer={null}
                 />
@@ -130,7 +141,8 @@ export default class PredictionMarketDetailsTable extends Component {
 PredictionMarketDetailsTable.propTypes = {
     marketData: PropTypes.any.isRequired,
     onOppose: PropTypes.func.isRequired,
-    currentAccountId: PropTypes.string
+    currentAccountId: PropTypes.string,
+    detailsSearchTerm: PropTypes.string
 };
 
 PredictionMarketDetailsTable.defaultProps = {

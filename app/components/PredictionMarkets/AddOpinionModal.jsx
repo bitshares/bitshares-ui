@@ -51,7 +51,6 @@ export default class AddOpinionModal extends Modal {
                 onOk={() => {
                     this.props.getNewOpinionParameters(
                         this.state.newOpinionParameters
-                        //         this.props.market
                     );
                 }}
                 onCancel={this.props.onClose}
