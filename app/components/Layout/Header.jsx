@@ -852,7 +852,7 @@ class Header extends React.Component {
                     <Translate
                         className="column-hide-small"
                         component="span"
-                        content="showcases.htlc.title"
+                        content="showcases.htlc.title_short"
                     />
                 </a>
             );
