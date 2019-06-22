@@ -17,12 +17,14 @@ class AmountSelector extends DecimalChecker {
         onChange: PropTypes.func,
         tabIndex: PropTypes.number,
         error: PropTypes.string,
-        scroll_length: PropTypes.number
+        scroll_length: PropTypes.number,
+        selectDisabled: PropTypes.bool
     };
 
     static defaultProps = {
         disabled: false,
-        tabIndex: 0
+        tabIndex: 0,
+        selectDisabled: false
     };
 
     componentDidMount() {
@@ -59,14 +61,14 @@ class AmountSelector extends DecimalChecker {
             ? counterpart.translate(this.props.error)
             : this.formatAmount(this.props.amount);
 
-        const label = (
+        const label = this.props.label ? (
             <div className="amount-selector-field--label">
-                {counterpart.translate(this.props.label).toUpperCase()}:
+                {counterpart.translate(this.props.label)}
                 <div className="amount-selector-field--balance">
                     {this.props.display_balance}
                 </div>
             </div>
-        );
+        ) : null;
 
         let addonAfter = null;
 
@@ -108,6 +110,9 @@ class AmountSelector extends DecimalChecker {
                             value={this.props.asset.get("symbol")}
                             assets={Immutable.List(this.props.assets)}
                             onChange={this.onAssetChange.bind(this)}
+                            disabled={
+                                this.props.selectDisabled ? true : undefined
+                            }
                         />
                     ) : null}
                 </Input.Group>

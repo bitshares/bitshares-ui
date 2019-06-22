@@ -24,14 +24,7 @@ class DepositModalContent extends DecimalChecker {
     constructor() {
         super();
 
-        this.state = {
-            depositAddress: "",
-            selectedAsset: "",
-            selectedGateway: null,
-            fetchingAddress: false,
-            backingAsset: null,
-            gatewayStatus: availableGateways
-        };
+        this.state = this._intitalState();
 
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
         this.addDepositAddress = this.addDepositAddress.bind(this);
@@ -43,7 +36,56 @@ class DepositModalContent extends DecimalChecker {
 
     componentWillMount() {
         let {asset} = this.props;
+        this._setDepositAsset(asset);
+    }
 
+    shouldComponentUpdate(np, ns) {
+        if (np.asset !== this.props.asset) {
+            this.setState(this._intitalState());
+            this._setDepositAsset(np.asset);
+        }
+        return !utils.are_equal_shallow(ns, this.state);
+    }
+
+    onGatewayChanged(selectedGateway) {
+        this._getDepositAddress(this.state.selectedAsset, selectedGateway);
+    }
+
+    onAssetSelected(asset) {
+        if (asset.gateway == "")
+            return this.setState({
+                selectedAsset: asset.id,
+                selectedGateway: null
+            });
+
+        let {selectedAsset, selectedGateway} = _onAssetSelected.call(
+            this,
+            asset.id,
+            "depositAllowed",
+            (availableGateways, balancesByGateway) => {
+                if (availableGateways && availableGateways.length == 1)
+                    return availableGateways[0]; //autoselect gateway if exactly 1 item
+                return null;
+            }
+        );
+
+        if (selectedGateway) {
+            this._getDepositAddress(selectedAsset, selectedGateway);
+        }
+    }
+
+    _intitalState() {
+        return {
+            depositAddress: "",
+            selectedAsset: "",
+            selectedGateway: null,
+            fetchingAddress: false,
+            backingAsset: null,
+            gatewayStatus: availableGateways
+        };
+    }
+
+    _setDepositAsset(asset) {
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
         this.setState({coinToGatewayMapping});
 
@@ -60,35 +102,6 @@ class DepositModalContent extends DecimalChecker {
             this._getDepositAddress(assetName, assetGateway);
         } else {
             this.setState({selectedAsset: "BTS"});
-        }
-    }
-
-    shouldComponentUpdate(np, ns) {
-        return !utils.are_equal_shallow(ns, this.state);
-    }
-
-    onGatewayChanged(e) {
-        if (!e.target.value) return;
-        this._getDepositAddress(this.state.selectedAsset, e.target.value);
-    }
-
-    onAssetSelected(asset, assetDetails) {
-        if (assetDetails.gateway == "")
-            return this.setState({selectedAsset: asset, selectedGateway: null});
-
-        let {selectedAsset, selectedGateway} = _onAssetSelected.call(
-            this,
-            asset,
-            "depositAllowed",
-            (availableGateways, balancesByGateway) => {
-                if (availableGateways && availableGateways.length == 1)
-                    return availableGateways[0]; //autoselect gateway if exactly 1 item
-                return null;
-            }
-        );
-
-        if (selectedGateway) {
-            this._getDepositAddress(selectedAsset, selectedGateway);
         }
     }
 
@@ -258,7 +271,7 @@ class DepositModalContent extends DecimalChecker {
         const QR = isAddressValid ? (
             <CryptoLinkFormatter
                 size={140}
-                address={depositAddress.address}
+                address={usingGateway ? depositAddress.address : account}
                 asset={selectedAsset}
             />
         ) : (
@@ -281,7 +294,7 @@ class DepositModalContent extends DecimalChecker {
                         <div className="no-margin no-padding">
                             <div className="inline-label input-wrapper">
                                 <DepositWithdrawAssetSelector
-                                    defaultValue={selectedAsset}
+                                    defaultValue={this.state.selectedAsset}
                                     onSelect={this.onAssetSelected.bind(this)}
                                     selectOnBlur
                                 />
@@ -317,7 +330,7 @@ class DepositModalContent extends DecimalChecker {
                     ) : (
                         <div
                             className="container-row"
-                            style={{textAlign: "center"}}
+                            style={{textAlign: "center", paddingTop: 15}}
                         >
                             <LoadingIndicator type="three-bounce" />
                         </div>

@@ -420,3 +420,26 @@ body {
         left: -25px;
     }
 }
+
+.input-addon-before {
+    position: absolute;
+    height: 100%;
+    border: 1px solid #adadad;
+    padding: 0 15px;
+    border-radius: 6px;
+    left: 0;
+    display: flex !important;
+    align-items: center;
+}
+
+.date-picker-width100 input.ant-input {
+    height: 2.4rem;
+    background-color: #2d2d2d;
+    border: 0;
+    color: #e0e0e0;
+    border-radius: 6px;
+    &:focus {
+        border: none !important;
+        box-shadow: none;
+    }
+}

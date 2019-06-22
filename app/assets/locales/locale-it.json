@@ -6,6 +6,7 @@
         "as_collateral": "Garanzia",
         "asset": "Asset",
         "asset_details": "Dettagli asset",
+        "average_price": "Average price",
         "bittrex_scam": "Questo non è il vero account Bittrex, per favore invia al seguente account: bittrex-deposit.",
         "bts_market": "Mercato",
         "collaterals": "Posizioni con margine",
@@ -24,6 +25,7 @@
         "deposit": "Deposita BTS",
         "deposit_address": "Il tuo indirizzo di deposito è il nome del tuo account",
         "deposit_withdraw": "Deposita/Preleva",
+        "download_history": "Download History",
         "eq_value": "Valore stimato",
         "eq_value_header": "Valore ({asset})",
         "errors": {
@@ -36,8 +38,16 @@
         "estimate_value": "Valore stimato dell'Account",
         "existing_accounts": "Account esistenti",
         "existing_user": "Utente esistente",
+        "export_modal": {
+            "coinbase_report": "CoinTracking.info Report",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "title": "History Export",
+            "use_custom": "Use custom wrapper"
+        },
         "filter_orders": "Filter",
         "follow": "Aggiungi contatto",
+        "group_by_asset": "Group by asset",
         "hidden_accounts_row": "Hidden Accounts",
         "hide_hidden": "Attivi",
         "hide_ignored": "Nascondi account nascosti",
@@ -62,6 +72,7 @@
         "member": {
             "annual": "Abbonato annuale",
             "available": "Pronto per la riscossione",
+            "balance_type": "Type",
             "basic": "Membro Basic",
             "cashback": "Saldo del bilancio vesting",
             "claim": "Riscuoti ora",
@@ -282,6 +293,8 @@
             "primary": "Impostazioni principali",
             "quote": "Quantità asset quotato",
             "quote_name": "Asset quotato",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Nome breve (massimo 32 caratteri)",
             "symbol": "Simbolo",
             "to": "Emetti nell'account",
@@ -310,6 +323,7 @@
             "add_witness_label": "Witness",
             "already": "L'account è già nella lista",
             "approve_worker": "Approva",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "clear_proxy": "Rimuovi proxy",
             "cm_approved_by": "Membri del comitato approvati da %(account)s",
             "cm_not_approved_by": "Membri del comitato non approvati da %(account)s",
@@ -325,12 +339,15 @@
             "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Backup",
             "info": "Informazioni",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "Linea",
             "max_pay": "Salario totale massimo",
             "missing": "Necessari",
             "name": "Nome",
             "new": "Worker proposti",
             "no_proxy": "Nessun proxy",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Inserisci manualmente un account come tuo proxy",
             "proxy_current": "Il tuo proxy attuale è",
             "proxy_known": "O scegli un account come tuo proxy",
@@ -381,7 +398,8 @@
             "empty_white_by": "Nessun account ha messo %(account)s in whitelist.",
             "title": "Whitelist",
             "white_by": "Messo in whitelist da",
-            "whitelist_authorities": "Autorità whitelist"
+            "whitelist_authorities": "Autorità whitelist",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -414,6 +432,9 @@
         "understand": "Ho capito",
         "ws_status": "Stato della connessione del full node"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -439,6 +460,8 @@
         "no_valid": "Nessun feed valido per %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
         "target_collateral_ratio": "Target Collateral Ratio",
+        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "%(asset_symbol)s con margine",
         "update": "Aggiorna",
         "use_max": "Use Max"
@@ -487,6 +510,7 @@
         "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
+        "cancel_selected_orders": "Cancel selected order(s)",
         "change": "Variazione",
         "chart_height": "Chart height (pixels)",
         "chart_hide": "Hide Charts",
@@ -517,6 +541,7 @@
         "invalid_price": "Prezzo non valido",
         "invert": "Inverti il prezzo",
         "latest": "Ultimo prezzo",
+        "limit": "Limit",
         "lowest_ask": "Offerta (ask) più bassa",
         "maintenance": "Prezzo Maintenance Call",
         "market": "Mercato",
@@ -586,6 +611,7 @@
         "receive": "Ricevi",
         "remove": "Remove",
         "rsi": "Relative Strength Index",
+        "scaled": "Scaled",
         "search": "Cerca qui altri mercati",
         "sell": "Vendi",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
@@ -632,7 +658,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -654,8 +682,13 @@
             }
         },
         "settle": "Settlement",
+        "settle_better_marketprice": "Market price is in favour",
+        "settle_better_settleprice": "Settlement price is in favour",
+        "settle_delay": "This asset will settle in %(hours)s hours",
+        "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Settle instantly",
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
+        "settle_offset": "Settlement price offset: %(offset)s%",
         "settle_orders": "Ordini settle",
         "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Short",
@@ -703,8 +736,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Riscuoti commissioni",
@@ -723,10 +762,14 @@
             "info": "Asset info",
             "invalid": "Il nome di asset %(name)s non è valido",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Posizioni con margine"
             },
             "not_found": "L'asset %(name)s non esiste",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Autorità blacklist",
                 "blacklist_markets": "Mercati in blacklist",
                 "max_market_fee": "Massima commissione di mercato",
@@ -738,21 +781,23 @@
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
+                "feed_price": "Feed price",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Rapporto di garanzia di mantenimento (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Massimo short sqeeze ratio (MSSR)",
                 "min_feeds": "Minimum feeds",
-                "settlement_price": "Prezzo di settlement",
+                "settlement_price": "",
                 "title": "Price Feed"
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
+                "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
                 "published": "Pubblicato",
                 "publisher": "Publisher",
-                "settlement_price": "Prezzo di settlement",
+                "settlement_price": "",
                 "title": "Dati del Price Feed"
             },
             "settlement": {
@@ -774,7 +819,7 @@
                 "settle_remaining_volume": "Remaining settleable volume",
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
-                "settlement_price": "Settlement Price",
+                "settlement_price": "",
                 "title": "Settlement"
             },
             "summary": {
@@ -782,7 +827,7 @@
                 "current_supply": "Disponibilità corrente",
                 "issuer": "Erogatore",
                 "market_fee": "Commissione di mercato",
-                "max_market_fee": "Massima commissione di mercato",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Disponibilità nascosta"
             },
             "title": "Asset",
@@ -790,7 +835,9 @@
                 "blacklist_authorities": "Autorita blacklist",
                 "blacklist_markets": "Blacklist mercato",
                 "enable_flag": "Il flag 'whitelist' deve essere abilitato per impostare le autorità whitelist",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Autorità whitelist",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Whitelist mercato"
             }
         },
@@ -831,7 +878,7 @@
             "op_type": "Tipo di operazione",
             "previous": "Precedente",
             "previous_secret": "Segreto precedente",
-            "settlement_price": "Prezzo di settlement",
+            "settlement_price": "",
             "short_limit": "Limite di Short",
             "time": "Ora",
             "title": "Blocco",
@@ -875,6 +922,7 @@
             "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
@@ -948,15 +996,15 @@
         "asset_to_withdraw": "Asset da prelevare:",
         "asset_unavailable": "The gateway for %(asset)s is not in service",
         "assets": {
-            "bit": "<br/>bit%(asset)s è un derivato che segue il valore reale di %(backed)s. È decentralizzato al 100%%, trustless e supportato da una garanzia trattenuta dalla blockchain in uno smart contract.",
-            "bitcny": "<br/><br/>bitCNY v 1:1 verso veri Yuan usando un servizio di gateway come Magic Wallet. For more info, vedi https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Openledger.",
-            "rudex": "",
-            "trade": "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades.",
+            "bit": "bit%(asset)s è un derivato che segue il valore reale di %(backed)s. È decentralizzato al 100%%, trustless e supportato da una garanzia trattenuta dalla blockchain in uno smart contract.",
+            "bitcny": "bitCNY v 1:1 verso veri Yuan usando un servizio di gateway come Magic Wallet. For more info, vedi https://www.magicw.net/",
+            "bridge": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "gdex": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da GDex.",
+            "open": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da OpenLedger.",
+            "rudex": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Rudex.",
+            "trade": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades.",
             "win": "",
-            "xbts": ""
+            "xbtsx": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da XBTS."
         },
         "balance": "Saldo attuale",
         "balance_asset": "Saldo %(asset)s attuale",
@@ -1091,7 +1139,11 @@
         "cancel": "Cancel",
         "close": "Close",
         "confirm": "Confirm",
+        "field_type": {
+            "account": "account"
+        },
         "help": "Help",
+        "not_found": "Not found",
         "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code",
         "set": "Set"
@@ -1126,6 +1178,18 @@
         "unlocked_tip": "<br/>Clicca per fare il logout e bloccare il tuo portafoglio.<br/><br/>Chiudere la finestra del browser effettuerà automaticamente il log out.",
         "update_asset": "Aggiorna Asset",
         "withdraw_legacy": "or Legacy Withdraw"
+    },
+    "htlc": {
+        "claim_period": "Seconds to claim",
+        "claim_period_due": "Claimable until",
+        "id": "HTLC id",
+        "preimage": "Preimage",
+        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
+        "preimage_hash": "Preimage hash",
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "Redeemer",
+        "seconds_to_add": "Add seconds to claim period",
+        "update_issuer": "Update issuer"
     },
     "icons": {
         "adjust": "Adjust margin position",
@@ -1291,6 +1355,14 @@
         },
         "cancel": "cancel",
         "close": "close",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
         "confirmation": {
             "accept": "Sì",
             "cancel": "No",
@@ -1309,6 +1381,7 @@
             "close": "Close",
             "header": "Deposit to %(account_name)s",
             "header_short": "Deposit",
+            "no_assets": "No depositable assets available",
             "submit": "Deposita"
         },
         "deposit_withdraw": {
@@ -1362,7 +1435,8 @@
             "amount": "Quantità da riservare",
             "from": "Account da cui riservare",
             "submit": "Riserva",
-            "title": "Riserva (brucia) asset"
+            "title": "Riserva (brucia) asset",
+            "warning_message": "Note that asset burn (reserve) will destroy the amount of selected asset. This action can not be reverted once submitted!"
         },
         "save": "save",
         "send": {
@@ -1371,6 +1445,9 @@
         },
         "settle": {
             "amount": "Quantità di cui fare settlement",
+            "delay": "Estimated delay: %(amount)s hours",
+            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
+            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
             "submit": "Fai il settlement",
             "title": "Richiedi settlement di %(asset)s"
         },
@@ -1387,11 +1464,23 @@
             "gateway_fee": "Gateway Fee",
             "header": "Withdraw (beta)",
             "memo": "Memo",
+            "no_assets": "No withdrawable assets available",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
             "submit": "Preleva",
             "withdraw": "Withdraw"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "enter_public_signing_key": "Enter your public signing key",
+            "invalid_key": "Public Key is invalid",
+            "public_signing_key": "Public Signing Key",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "witness_account": "Witness Account"
         }
     },
     "news": {
@@ -1413,6 +1502,7 @@
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
         "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
         "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
+        "exchange_unknown_error_place_scaled_order": "Unknown error. Failed to place Scaled Order",
         "import_keys_already_imported": "This wallet has already been imported",
         "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
         "import_keys_error_unknown": "Key import error: %(error_msg)s",
@@ -1457,6 +1547,11 @@
         "committee_member_update_global_parameters": "{account} ha aggiornato i parametri globali del comitato",
         "fill_order_buy": "{account} ha acquistato {amount} per {price}",
         "fill_order_sell": "{account} ha venduto {amount} per {price}",
+        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
+        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
+        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
         "lifetime_upgrade_account": "{account} è stato promosso a membro a vita",
         "limit_order_buy": "{account} ha fatto un ordine per comprare {amount} a {price}",
         "limit_order_cancel": "{account} ha annullato l'ordine #%(order)s",
@@ -1495,6 +1590,8 @@
     },
     "proposal": {
         "action": "Azioni",
+        "add": "Add",
+        "add_vote": "Add vote for",
         "approve": "Approva",
         "approvers": "Approver(s)",
         "asset_create": "Crea l'asset %(asset)s usando l'account {account}",
@@ -1503,7 +1600,11 @@
         "asset_settle": "Richiedi un settlement di",
         "asset_update": "Aggiorna l'asset {asset} usando l'account {account}",
         "call_order_update": "Cambia il debito {account} {debtSymbol} di {debt} e la garanzia di {collateral}",
+        "changes_to_active": "Changes to active",
+        "changes_to_memo": "Changes to memo",
+        "changes_to_owner": "Changes to owner",
         "committee_member_update_global_parameters": "Aggiorna i parametri globali del comitato da {account}",
+        "danger_operation": "Dangerous operation",
         "delete": "Permanently reject",
         "expires": "Scade",
         "feed_producer": "Aggiorna i produttori di feed per l'asset {asset} usando l'account {account}",
@@ -1511,8 +1612,12 @@
         "limit_order_create": "Ordina l'acquisto di %(buy_amount)s per %(sell_amount)s per %(account)s",
         "limit_order_sell": "Ordina la vendita di {amount} a {price} per {account}",
         "override_transfer": "Trasferisci {amount} da {from} a {to} per autorità di {issuer}",
+        "permission_changes": "Permission changes",
         "proposals": "Proposals",
         "reject": "Respingi",
+        "remove": "Remove",
+        "remove_vote": "Remove vote for",
+        "set_threshold": "Set threshold to %(threshold)s",
         "status": "Stato",
         "transfer": "Trasferisci {amount} da {from} a {to}",
         "update": {
@@ -1532,7 +1637,8 @@
             "owner_approvals_to_add": "Owner approval(s) added",
             "owner_approvals_to_remove": "Owner approval(s) removed"
         },
-        "vesting_balance_withdraw": "Preleva {amount} dal saldo vesting di {account}"
+        "vesting_balance_withdraw": "Preleva {amount} dal saldo vesting di {account}",
+        "votes": "Votes"
     },
     "proposal_create": {
         "expiration_time": "Data di scadenza",
@@ -1586,6 +1692,30 @@
         "walletModelTitle": "By bin-file",
         "walletNote": "Please keep in mind, that Lampgram doesn't store users passwords and couldn't recover users accounts after password loss.",
         "whyBinFile": "Why do I need a .bin file?"
+    },
+    "scaled_orders": {
+        "action": {
+            "buy": "Buy",
+            "sell": "Sell",
+            "title": "Action"
+        },
+        "distribution": {
+            "flat": "Flat",
+            "title": "Distribution"
+        },
+        "fee": "Fee",
+        "market_fee": "Market Fee",
+        "order_count": "Order Count",
+        "order_s": "Order(s)",
+        "please_log_in": "You need to login before use Scaled Orders",
+        "preview_table": {
+            "price": "Price"
+        },
+        "price_lower": "Price Lower",
+        "price_upper": "Price Upper",
+        "quantity": "Quantity",
+        "title": "Scaled Order",
+        "total": "Total"
     },
     "settings": {
         "access": "Accesso",
@@ -1689,6 +1819,7 @@
         "themes": "Tema",
         "unit": "Unità preferite per l'account",
         "valid_node_url": "L'URL del Nodo deve iniziare con ws:// oppure wss://",
+        "viewOnlyMode": "View only mode",
         "view_keys": "Vedi chiavi",
         "wallet": "Portafoglio",
         "walletLockTimeout": "Tempo di autoblocco del portafoglio (in secondi, 0 per disabilitare)",
@@ -1705,6 +1836,9 @@
             "action": "Peer 1 (%(peer_left)s) offers to send %(assets_left)s to Peer 2 (%(peer_right)s) and receives %(assets_right)s in return. ",
             "add_escrow": "Add escrow",
             "add_escrow_tooltip": "Adds or removes an escrow to this barter. This escrow will have to approve the resulting proposal as well. The escrow can serve as a witness only, or also be the custodian of Peer 1's funds.",
+            "balance_warning": "Balance Warning",
+            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s",
+            "balance_warning_tooltip": "%(peer)s does not have enough funds to execute the transfers when the proposal gets approved and executes. This is not an issue when creating the proposal, but the balances must match when executed",
             "bartering_asset": "Bartering asset",
             "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
             "error_fill_in_escrow_name": "Please fill in the account name of the escrow",
@@ -1784,12 +1918,81 @@
             "title_long": "Create a Collateralized Debt Position"
         },
         "direct_debit": {
+            "amount_to_withdraw": "Amount to collect",
+            "authorized_account": "Payee",
+            "authorizing_account": "Payer",
+            "claim": "Claim",
+            "claim_funds": "Claim funds",
+            "create": "Create",
+            "create_new_mandate": "Create authorization",
+            "current_period_expires": "Current period ends",
+            "delete": "Delete",
             "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
-            "title": "Direct debit"
+            "expires": "Expires",
+            "first_period_not_started": "First period has not started!",
+            "limit": "limit",
+            "limit_per_period": "Maximum amount per period",
+            "num_of_periods": "Number of periods",
+            "period": "Specify period",
+            "start_date": "First period starts on",
+            "title": "Direct debit",
+            "tooltip": {
+                "authorized_account": "The account that is eligible to collect from your account.",
+                "limit_per_period": "The payee may collect a maximum amount of the specified asset (up to) per period. The payee can only collect once per period, even if not collected in full.",
+                "num_of_periods": "After the start time this amount of periods are available consecutively.",
+                "period": "One period lasts the indicated time interval, e.g. 2 weeks.",
+                "start_time": "The start time of the first period must be in the future when broadcasting."
+            },
+            "update": "Update",
+            "update_mandate": "Update existing authorization"
+        },
+        "htlc": {
+            "actions": "Actions",
+            "amount": "Amount",
+            "create_htlc": "Create HTLC",
+            "custom": "Custom",
+            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
+            "enter_secret_preimage": "Enter secret preimage",
+            "expiration": "Expiration",
+            "expiration_date": "Expiration date",
+            "expiration_period": {
+                "one_day": "One day",
+                "one_week": "One week",
+                "two_days": "Two days"
+            },
+            "expires": "Expires",
+            "extend": "Extend",
+            "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
+            "from": "From",
+            "hash": "Hash",
+            "preimage": "Preimage",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "recipient": "Recipient",
+            "redeem": "Redeem",
+            "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
+            "sender": "Sender",
+            "size": "Size",
+            "title": "Hashed Time-Lock Contracts",
+            "to": "To",
+            "tooltip": {
+                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
+                "new_random": "Roll the dice and create a new random string.",
+                "preimage_button": "Please click to enter secret preimage",
+                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
+                "preimage_input": "Field requires a secret preimage",
+                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
+                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+            }
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
+        },
+        "prediction_market": {
+            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "title": "Prediction Markets"
         },
         "timed_transfer": {
             "description": "Initiate a transfer that will execute at a specified time.",
@@ -1827,7 +2030,7 @@
         "filter_ops": "Usa questa lista per filtrare il tuo storico secondo il tipo di operazione.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -1864,18 +2067,21 @@
                 "model": "Cloud wallet"
             }
         },
+        "login_required": "Please login to the selected account to perform this action",
         "margin_price": "Questo è il prezzo massimo che una posizione con margine può essere tenuta a pagare in caso di chiamata. È anche detto Squeeze Price.",
-        "market_fee": "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s%% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
+        "market_fee": "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
         "memo_tip": "Puoi includere qualsiasi messaggio nel campo 'memo'. Il memo è facoltativo, ma in genere richiesto per i trasferimenti verso un exchange.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "Non c'è nessun prezzo disponibile per questo asset che possa essere usato per stimarne il valore.",
         "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
+        "own_account": "You hold keys for this account",
         "propose_scam": "Questa proposta è stata creata da un noto ciarlatano, non approvarla!",
         "propose_tip": "Propose another user to initiate a transaction",
+        "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
-        "proxy_search": "Search for an account to be used as your proxy for voting",
+        "proxy_search": "",
         "registration": {
             "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
             "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
@@ -1883,6 +2089,8 @@
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
+        "required_input": "Field requires a valid %(type)s",
+        "scam_account": "Account is suspected scammer",
         "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in %(backingAsset)s dopo un'attesa di %(settleDelay)s ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
         "settle_price": "Questo è il prezzo a cui i settle order saranno eseguiti.",
@@ -1893,6 +2101,7 @@
         "sync_yes": "Il nodo corrente è sincronizzato con la blockchain",
         "target_collateral_ratio": "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions": "Clicca qui per effettuare un trasferimento, o per depositare/prelevare quegli asset che lo permettono.",
+        "unlock_account_name": "Click to edit the account name, e.g. when your account is set as permission of another account.",
         "update_position": "Clicca qui per aggiornare la tua posizione. Puoi cambiare il debito e/o i livelli di garanzia della tua posizione in qualunque momento.",
         "withdraw_address": "Se non sei già in possesso di un indirizzo %(asset)s, per favore creane uno per completare il prelievo.",
         "withdraw_full": "Clicca per prelevare l'intero saldo"
@@ -1930,6 +2139,7 @@
         "create_key": "Creata una chiave pubblica",
         "csv": "Esporta in .csv",
         "csv_tip": "Scarica lo storico in un file separato da virgola (.csv)",
+        "cumulative_borrow_amount": "Cumulative Debt",
         "custom": "Ha creato un'operazione personalizzata",
         "delta_collateral": "Variazione garanzia",
         "delta_debt": "Variazione debito",
@@ -1946,11 +2156,14 @@
             "_none": "Gratuita",
             "basic_fee": "Tariffa di base",
             "fee": "Commissione di transazione normale",
+            "fee_per_day": "Price per day",
+            "fee_per_kb": "Price per KByte Transaction Size",
             "long_symbol": "Simboli più lunghi",
             "membership_annual_fee": "Membership annuale",
             "membership_lifetime_fee": "Membership a vita",
             "premium_fee": "Tariffa per i nomi Premium",
             "price_per_kbyte": "Prezzo per KByte della dimensione della transazione",
+            "price_per_output": "Price per recipient",
             "symbol3": "Simboli con 3 caratteri",
             "symbol4": "Simboli con 4 caratteri"
         },
@@ -2014,6 +2227,11 @@
             "execute_bid": "Execute bid",
             "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Completa ordine",
+            "htlc_create": "HTLC create",
+            "htlc_extend": "HTLC extend",
+            "htlc_redeem": "HTLC redeem",
+            "htlc_redeemed": "HTLC redeemed",
+            "htlc_refund": "HTLC refund",
             "limit_order_cancel": "Annulla un ordine",
             "limit_order_create": "Fai un ordine",
             "override_transfer": "Override del trasferimento",
@@ -2078,6 +2296,7 @@
         "explict_price": "Explict price:",
         "fee": "Commissione",
         "final": "Saldo finale",
+        "free": "Free",
         "from": "Da",
         "header": "Dettagli trasferimento",
         "header_subheader": "Transfers are used for sending funds to other Lampgram Account Holders",
@@ -2103,6 +2322,56 @@
         "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
+    "validation": {
+        "messages": {
+            "balance": "Insufficient balance. Available only: %(balance)s %(symbol)s",
+            "email": "The field should be email",
+            "emailNamed": "%(name)s should be email",
+            "float": "The field should be float",
+            "floatNamed": "%(name)s should be float",
+            "integer": "The field should be integer",
+            "integerNamed": "%(name)s should be integer",
+            "max": "The field should be less than %(max)s",
+            "maxNamed": "%(name)s should be less than %(max)s",
+            "min": "The field should higher than %(min)s",
+            "minNamed": "%(name)s should be higher than %(min)s",
+            "number": "The field should be number",
+            "numberNamed": "%(name)s should be number",
+            "oneOf": "The field should be one of: %(list)s",
+            "oneOfNamed": "%(name)s should be one of: %(list)s",
+            "range": "The field should be in range from %(min)s to %(max)s",
+            "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
+            "required": "The field is required",
+            "requiredNamed": "%(name)s is required",
+            "test": "",
+            "types": {
+                "array": "The field should be array",
+                "arrayNamed": "%(name)s should be array",
+                "boolean": "The field should be boolean",
+                "booleanNamed": "%(name)s should be boolean",
+                "date": "The field should be date",
+                "dateNamed": "%(name)s should be date",
+                "enum": "The field should be one of %(list)s",
+                "enumNamed": "%(name)s should be one of %(list)s",
+                "hex": "The field should be hex",
+                "hexNamed": "%(name)s should be hex",
+                "method": "The field should be method",
+                "methodNamed": "%(name)s should be method",
+                "object": "The field should be object",
+                "objectNamed": "%(name)s should be object",
+                "regexp": "The field should be regexp",
+                "regexpNamed": "%(name)s should be regexp",
+                "string": "The field should be string",
+                "stringNamed": "%(name)s should be string"
+            },
+            "url": "The field should be url",
+            "urlNamed": "%(name)s should be url"
+        }
+    },
+    "voting": {
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "title": "Voting"
+    },
     "walkthrough": {
         "buy_form": "Inserisci ordini di acquisto utilizzando questo modulo.",
         "buy_orders": "Visualizza tutti gli ordini di acquisto per questo mercato.",
@@ -2122,6 +2391,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "Indietro",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "Visualizza l'azione del prezzo di una risorsa utilizzando la tabella dei prezzi.",
         "restore_account": "Ripristina un portafoglio utilizzando il tuo file di backup.",
         "sell_form": "Inserisci ordini di vendita utilizzando questo modulo.",
@@ -2142,6 +2412,7 @@
         "backup_explain": "Cliccando il seguente tasto verrà generato un file di backup con estensione .bin. Questo file è crittografato con la password del tuo portafoglio, e contiene tutte le chiavi private per i tuoi account. Può essere usato per ripristinare il tuo portafoglio, o spostarlo su un altro computer/browser.",
         "backup_login": "Backup & login",
         "backup_new_account": "Congratulazioni, hai appena creato un nuovo account! È fortemente consigliato effettuare adesso il backup del tuo portafoglio. Senza un backup, non c'è nessun modo per recuperare il tuo portafoglio se succede qualcosa al tuo computer.",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Cerca saldi",
         "balance_claims": "Riscossione Saldi",
@@ -2251,6 +2522,7 @@
         "password_show": "Mostrami la mia password",
         "paste_private": "Incolla qui le chiavi private (Wallet Import Format - WIF)",
         "pwd4brainkey": "Inserisci la tua password per mostrare la tua brainkey",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Pronto al ripristino",
         "reenter_brainkey": "Reinserisci brainkey",
         "remember_me": "Remember me",
@@ -2305,24 +2577,7 @@
         "wallet_model_2": "La modalità portafoglio è la più sicura, ma è limitata al tuo computer e al tuo browser corrente. Per spostare il portafoglio su un altro browser o computer, puoi utilizzare il file di backup o la brainkey.",
         "wallet_model_3": "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
         "wallet_move": "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
-        "wallet_password": "Fai il login dovunque usando la tua password"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "Gateway Fee",
-            "get_deposit_address": "get deposit address",
-            "support_block": "For support, please contact Winex at:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
+        "wallet_password": "Fai il login dovunque usando la tua password",
+        "wallet_types": "wallet types"
     }
 }

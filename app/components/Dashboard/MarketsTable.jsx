@@ -8,8 +8,11 @@ import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import utils from "common/utils";
 import PaginatedList from "../Utility/PaginatedList";
-import MarketsRow from "./MarketsRow";
-import {Input, Icon} from "bitshares-ui-style-guide";
+import {Input, Tooltip} from "bitshares-ui-style-guide";
+import Icon from "../Icon/Icon";
+import AssetName from "../Utility/AssetName";
+import {Link} from "react-router-dom";
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 
 class MarketsTable extends React.Component {
     constructor() {
@@ -18,12 +21,13 @@ class MarketsTable extends React.Component {
             filter: "",
             showFlip: false,
             showHidden: false,
-            markets: [],
-            sortBy: "volumeQuote",
-            sortDirection: true
+            markets: []
         };
 
         this.update = this.update.bind(this);
+        for (let key in this.sortFunctions) {
+            this.sortFunctions[key] = this.sortFunctions[key].bind(this);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -37,13 +41,6 @@ class MarketsTable extends React.Component {
 
     componentWillUnmount() {
         ChainStore.unsubscribe(this.update);
-    }
-
-    _onToggleSort(key) {
-        if (key === this.state.sortBy) {
-            return this.setState({sortDirection: !this.state.sortDirection});
-        }
-        this.setState({sortBy: key});
     }
 
     update(nextProps = null) {
@@ -64,6 +61,7 @@ class MarketsTable extends React.Component {
                         inverted: undefined,
                         quote: market.quote,
                         base: market.base,
+                        basePrecision: base.get("precision"),
                         isHidden: props.hiddenMarkets.includes(marketName),
                         isFavorite: props.isFavorite,
                         marketStats: props.allMarketStats.get(marketName, {}),
@@ -106,66 +104,342 @@ class MarketsTable extends React.Component {
         });
     }
 
+    sort(aPrice, bPrice) {
+        const convert = price => {
+            price = price.replace(/\,/g, "");
+            if (price.includes("k")) price = price.replace(/k/g, "") * 1000;
+            return price;
+        };
+        aPrice = convert(aPrice);
+        bPrice = convert(bPrice);
+
+        if (aPrice === null && bPrice !== null) {
+            return 1;
+        } else if (aPrice !== null && bPrice === null) {
+            return -1;
+        } else {
+            return aPrice - bPrice;
+        }
+    }
+
+    sortFunctions = {
+        alphabetic: function(a, b, force) {
+            if (a.key > b.key) return force ? 1 : -1;
+            if (a.key < b.key) return force ? -1 : 1;
+            return 0;
+        },
+        priceValue: function(a, b) {
+            let aPrice = a.price.props.children;
+            let bPrice = b.price.props.children;
+            if (aPrice && bPrice) {
+                return this.sort(aPrice, bPrice);
+            } else {
+                return this.sortFunctions.alphabetic(a, b, true);
+            }
+        },
+        volumeValue: function(a, b) {
+            let aPrice = a.volume;
+            let bPrice = b.volume;
+            if (aPrice && bPrice) {
+                return this.sort(aPrice, bPrice);
+            } else {
+                return this.sortFunctions.alphabetic(a, b, true);
+            }
+        },
+        changeValue: function(a, b) {
+            let aValue = a.hour_24.props.children[0];
+            let bValue = b.hour_24.props.children[0];
+
+            if (aValue && bValue) {
+                let aChange =
+                    parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
+                let bChange =
+                    parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
+
+                return aChange - bChange;
+            }
+        }
+    };
+
+    getHeader() {
+        const {showFlip, showHidden} = this.state;
+        return [
+            {
+                dataIndex: "star",
+                align: "right",
+                width: "75px",
+                render: item => {
+                    return (
+                        <span style={{whiteSpace: "nowrap", cursor: "pointer"}}>
+                            {item}
+                        </span>
+                    );
+                }
+            },
+            {
+                title: <Translate content="account.asset" />,
+                dataIndex: "asset",
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            {item}
+                        </span>
+                    );
+                }
+            },
+            this.props.isFavorite
+                ? {}
+                : {
+                      title: (
+                          <Translate content="account.user_issued_assets.quote_name" />
+                      ),
+                      dataIndex: "quote_name",
+                      align: "right",
+                      render: item => {
+                          return (
+                              <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                          );
+                      }
+                  },
+            {
+                title: <Translate content="exchange.price" />,
+                dataIndex: "price",
+                align: "right",
+                sorter: this.sortFunctions.priceValue,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="account.hour_24_short" />,
+                dataIndex: "hour_24",
+                align: "right",
+                sorter: this.sortFunctions.changeValue,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="exchange.volume" />,
+                dataIndex: "volume",
+                align: "right",
+                sorter: this.sortFunctions.volumeValue,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            showFlip
+                ? {
+                      title: <Translate content="exchange.flip" />,
+                      dataIndex: "flip",
+                      render: item => {
+                          return (
+                              <span
+                                  className="column-hide-small"
+                                  style={{whiteSpace: "nowrap"}}
+                              >
+                                  {item}
+                              </span>
+                          );
+                      }
+                  }
+                : {},
+            {
+                title: (
+                    <Translate
+                        content={
+                            !showHidden ? "exchange.hide" : "account.perm.show"
+                        }
+                    />
+                ),
+                dataIndex: "hide",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            }
+        ];
+    }
+
+    _setInterval(nextProps = null) {
+        let {base, quote} = nextProps || this.props;
+        this.statsChecked = new Date();
+        this.statsInterval = MarketsActions.getMarketStatsInterval(
+            35 * 1000,
+            base,
+            quote
+        );
+    }
+
+    _clearInterval() {
+        if (this.statsInterval) this.statsInterval();
+    }
+
+    _onError(imgName) {
+        if (!this.state.imgError) {
+            this.refs[imgName.toLowerCase()].src = "asset-symbols/bts.png";
+            this.setState({
+                imgError: true
+            });
+        }
+    }
+
+    _toggleFavoriteMarket(quote, base) {
+        let marketID = `${quote}_${base}`;
+        if (!this.props.starredMarkets.has(marketID)) {
+            SettingsActions.addStarMarket(quote, base);
+        } else {
+            SettingsActions.removeStarMarket(quote, base);
+        }
+    }
+    getTableData(row) {
+        let {base, quote, marketStats, isHidden, inverted, basePrecision} = row;
+
+        function getImageName(symbol) {
+            if (symbol === "OPEN.BTC" || symbol === "GDEX.BTC") return symbol;
+            if (symbol.startsWith("RUDEX.")) return symbol;
+
+            let imgName = symbol.split(".");
+            return imgName.length === 2 ? imgName[1] : imgName[0];
+        }
+        let imgName = getImageName(quote);
+        let changeClass = !marketStats
+            ? ""
+            : parseFloat(marketStats.change) > 0
+                ? "change-up"
+                : parseFloat(marketStats.change) < 0
+                    ? "change-down"
+                    : "";
+
+        let marketID = `${quote}_${base}`;
+
+        const starClass = this.props.starredMarkets.has(marketID)
+            ? "gold-star"
+            : "grey-star";
+
+        return {
+            key: marketID,
+            star: (
+                <div
+                    onClick={this._toggleFavoriteMarket.bind(this, quote, base)}
+                >
+                    <Icon
+                        style={{cursor: "pointer"}}
+                        className={starClass}
+                        name="fi-star"
+                        title="icons.fi_star.market"
+                    />
+                </div>
+            ),
+            asset: (
+                <Link to={`/market/${quote}_${base}`}>
+                    <img
+                        ref={imgName.toLowerCase()}
+                        className="column-hide-small"
+                        onError={this._onError.bind(this, imgName)}
+                        style={{maxWidth: 20, marginRight: 10}}
+                        src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`}
+                    />
+                    <AssetName dataPlace="top" name={quote} />
+                    &nbsp;
+                    {this.props.isFavorite ? (
+                        <span>
+                            :&nbsp;
+                            <AssetName dataPlace="top" name={base} />
+                        </span>
+                    ) : null}
+                </Link>
+            ),
+            quote_name: this.props.isFavorite ? null : (
+                <span style={{textAlign: "right"}}>
+                    <AssetName noTip name={base} />
+                </span>
+            ),
+            price: (
+                <div className="column-hide-small" style={{textAlign: "right"}}>
+                    {marketStats && marketStats.price
+                        ? utils.price_text(
+                              marketStats.price.toReal(true),
+                              ChainStore.getAsset(quote),
+                              ChainStore.getAsset(base)
+                          )
+                        : null}
+                </div>
+            ),
+            hour_24: (
+                <span
+                    style={{textAlign: "right"}}
+                    className={cnames(changeClass)}
+                >
+                    {!marketStats || !marketStats.change
+                        ? null
+                        : marketStats.change}
+                    %
+                </span>
+            ),
+            volume:
+                !marketStats || !marketStats.volumeQuote
+                    ? null
+                    : utils.format_volume(
+                          marketStats.volumeQuote,
+                          basePrecision
+                      ),
+            flip:
+                inverted === null || !this.props.isFavorite ? null : (
+                    <span className="column-hide-small">
+                        <a
+                            onClick={this._handleFlip.bind(
+                                this,
+                                row,
+                                !row.inverted
+                            )}
+                        >
+                            <Icon name="shuffle" title="icons.shuffle" />
+                        </a>
+                    </span>
+                ),
+            hide: (
+                <Tooltip
+                    title={
+                        isHidden ? (
+                            <Translate content="icons.plus_circle.show_market" />
+                        ) : (
+                            <Translate content="icons.cross_circle.hide_market" />
+                        )
+                    }
+                    style={{marginRight: 0}}
+                    onClick={this._handleHide.bind(this, row, !row.isHidden)}
+                >
+                    <Icon
+                        name={isHidden ? "plus-circle" : "cross-circle"}
+                        title={
+                            isHidden
+                                ? "icons.plus_circle.show_market"
+                                : "icons.cross_circle.hide_market"
+                        }
+                        className="icon-14px"
+                    />
+                </Tooltip>
+            )
+        };
+    }
+
     render() {
-        let {markets, showFlip, showHidden, filter} = this.state;
+        let {markets, showHidden, filter} = this.state;
 
         const marketRows = markets
             .filter(m => {
                 if (!!filter || m.isStarred) return true;
                 if (
-                    this.props.onlyLiquid &&
+                    this.props.onlyLiquid ||
                     (m.marketStats && "volumeBase" in m.marketStats)
                 ) {
-                    return !!m.marketStats.volumeBase;
+                    return !!m.marketStats.volumeBase || false;
                 } else {
                     return true;
-                }
-            })
-            .sort((a, b) => {
-                const {sortBy, sortDirection} = this.state;
-
-                switch (sortBy) {
-                    case "price":
-                        if (a.marketStats.price && b.marketStats.price) {
-                            if (sortDirection) {
-                                return (
-                                    b.marketStats.price.toReal() -
-                                    a.marketStats.price.toReal()
-                                );
-                            }
-
-                            return (
-                                a.marketStats.price.toReal() -
-                                b.marketStats.price.toReal()
-                            );
-                        }
-                        break;
-
-                    case "change":
-                        if (sortDirection) {
-                            return (
-                                parseFloat(b.marketStats[sortBy]) -
-                                parseFloat(a.marketStats[sortBy])
-                            );
-                        } else {
-                            return (
-                                parseFloat(a.marketStats[sortBy]) -
-                                parseFloat(b.marketStats[sortBy])
-                            );
-                        }
-
-                        break;
-
-                    default:
-                        if (sortDirection) {
-                            return (
-                                b.marketStats[sortBy] - a.marketStats[sortBy]
-                            );
-                        } else {
-                            return (
-                                a.marketStats[sortBy] - b.marketStats[sortBy]
-                            );
-                        }
                 }
             })
             .map(row => {
@@ -221,22 +495,7 @@ class MarketsTable extends React.Component {
 
                 if (!visible) return null;
 
-                return (
-                    <MarketsRow
-                        {...row}
-                        handleHide={this._handleHide.bind(
-                            this,
-                            row,
-                            !row.isHidden
-                        )}
-                        handleFlip={this._handleFlip.bind(
-                            this,
-                            row,
-                            !row.inverted
-                        )}
-                        starredMarkets={this.props.starredMarkets}
-                    />
-                );
+                return this.getTableData({...row});
             })
             .filter(r => !!r);
         return (
@@ -247,7 +506,7 @@ class MarketsTable extends React.Component {
                             type="text"
                             placeholder="Filter..."
                             onChange={this._handleFilterInput.bind(this)}
-                            addonAfter={<Icon type="search" />}
+                            addonAfter={<AntIcon type="search" />}
                         />
                     </div>
 
@@ -297,85 +556,8 @@ class MarketsTable extends React.Component {
                 <PaginatedList
                     style={{paddingLeft: 0, paddingRight: 0}}
                     className="table dashboard-table table-hover"
-                    header={
-                        <tr>
-                            <th style={{textAlign: "left", width: "75px"}} />
-                            <th style={{textAlign: "left"}}>
-                                <Translate
-                                    component="span"
-                                    content="account.asset"
-                                />
-                            </th>
-                            {this.props.isFavorite ? null : (
-                                <th style={{textAlign: "right"}}>
-                                    <Translate content="account.user_issued_assets.quote_name" />
-                                </th>
-                            )}
-                            <th
-                                onClick={this._onToggleSort.bind(this, "price")}
-                                className={cnames(
-                                    "column-hide-small is-sortable",
-                                    {"is-active": this.state.sortBy === "price"}
-                                )}
-                                style={{textAlign: "right"}}
-                            >
-                                <Translate content="exchange.price" />
-                            </th>
-                            <th
-                                onClick={this._onToggleSort.bind(
-                                    this,
-                                    "change"
-                                )}
-                                className={cnames("is-sortable", {
-                                    "is-active": this.state.sortBy === "change"
-                                })}
-                                style={{textAlign: "right"}}
-                            >
-                                <Translate content="account.hour_24_short" />
-                            </th>
-                            <th
-                                onClick={this._onToggleSort.bind(
-                                    this,
-                                    "volumeQuote"
-                                )}
-                                className={cnames("is-sortable", {
-                                    "is-active":
-                                        this.state.sortBy === "volumeQuote"
-                                })}
-                                style={{textAlign: "right"}}
-                            >
-                                <Translate content="exchange.volume" />
-                            </th>
-                            {showFlip ? (
-                                <th className="column-hide-small">
-                                    <Translate content="exchange.flip" />
-                                </th>
-                            ) : null}
-                            <th>
-                                <Translate
-                                    content={
-                                        !showHidden
-                                            ? "exchange.hide"
-                                            : "account.perm.show"
-                                    }
-                                />
-                            </th>
-                        </tr>
-                    }
-                    rows={
-                        !marketRows.length
-                            ? [
-                                  <tr
-                                      className="table-empty"
-                                      key={"tr-table-empty"}
-                                  >
-                                      <td colSpan={showFlip ? 7 : 6}>
-                                          <Translate content="dashboard.table_empty" />
-                                      </td>
-                                  </tr>
-                              ]
-                            : marketRows
-                    }
+                    header={this.getHeader()}
+                    rows={marketRows.length ? marketRows : []}
                     pageSize={25}
                     label="utility.total_x_markets"
                     leftPadding="1.5rem"

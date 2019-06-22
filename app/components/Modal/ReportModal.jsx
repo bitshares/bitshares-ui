@@ -105,6 +105,7 @@ class ReportModal extends React.Component {
                             href="https://lampgram.com"
                             target="_blank"
                             style={{textAlign: "center", width: "100%"}}
+                            className="external-link"
                         >
                             https://lampgram.com
                         </a>
@@ -119,6 +120,7 @@ class ReportModal extends React.Component {
                             href="https://hackthedex.io"
                             target="_blank"
                             style={{textAlign: "center", width: "100%"}}
+                            className="external-link"
                         >
                             https://hackthedex.io
                         </a>

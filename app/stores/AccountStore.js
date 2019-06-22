@@ -24,8 +24,6 @@ class AccountStore extends BaseStore {
         super();
 
         this.bindListeners({
-            onSetNeverShowBrowsingModeNotice:
-                AccountActions.setNeverShowBrowsingModeNotice,
             onSetCurrentAccount: AccountActions.setCurrentAccount,
             onCreateAccount: AccountActions.createAccount,
             onAccountSearch: AccountActions.accountSearch,
@@ -664,14 +662,6 @@ class AccountStore extends BaseStore {
                     this.setCurrentAccount(account.name);
                 }
             });
-    }
-
-    onSetNeverShowBrowsingModeNotice(value) {
-        ss.set(this._getStorageKey("neverShowBrowsingModeNotice"), value);
-
-        this.setState({
-            neverShowBrowsingModeNotice: value
-        });
     }
 
     onAddAccountContact(name) {

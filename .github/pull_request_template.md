@@ -4,10 +4,10 @@ Closes #[Insert issue number]
 [Insert description of what you did, any description how to test or check your changes are welcome]
 
 <h2>General</h2>
-lease make sure the following is done:
+Please make sure the following is done:
 
 - Pull request is onto develop
-- If you haven't already, have a look at 
+- If you haven't already, have a look at
   - https://github.com/bitshares/bitshares-ui/blob/develop/CODE_OF_CONDUCT.md
   - https://github.com/bitshares/bitshares-ui/blob/develop/CONTRIBUTING.md
 

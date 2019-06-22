@@ -137,21 +137,30 @@ class Proposals extends Component {
 
         let touchedAccounts = [];
         proposal.operations.forEach(o => {
-            touchedAccounts.push(o.getIn([1, "to"]));
+            if (o.get(0) == 6) {
+                touchedAccounts.push(
+                    o.getIn([1, "active", "account_auths", 0, 0])
+                );
+                touchedAccounts.push(
+                    o.getIn([1, "owner", "account_auths", 0, 0])
+                );
+            } else {
+                touchedAccounts.push(o.getIn([1, "to"]));
+            }
         });
 
         let proposer = proposal.proposal.get("proposer");
 
         touchedAccounts.push(proposer);
 
-        if (__DEV__) {
+        /* if (__DEV__) {
             console.log(
                 "Proposed transactions: ",
                 proposal,
                 " touching accounts ",
                 touchedAccounts
             );
-        }
+        } */
 
         touchedAccounts.forEach(_account => {
             if (accountUtils.isKnownScammer(_account)) {
@@ -173,7 +182,16 @@ class Proposals extends Component {
 
         let touchedAccounts = [];
         proposal.operations.forEach(o => {
-            touchedAccounts.push(o.getIn([1, "to"]));
+            if (o.get(0) == 6) {
+                touchedAccounts.push(
+                    o.getIn([1, "active", "account_auths", 0, 0])
+                );
+                touchedAccounts.push(
+                    o.getIn([1, "owner", "account_auths", 0, 0])
+                );
+            } else {
+                touchedAccounts.push(o.getIn([1, "to"]));
+            }
         });
 
         let proposer = proposal.proposal.get("proposer");
@@ -254,6 +272,7 @@ class Proposals extends Component {
                             proposal={true}
                             id={id}
                             proposer={proposer}
+                            collapsed={false}
                         />
                     );
                 })
@@ -352,18 +371,17 @@ class Proposals extends Component {
                         />
                     </td>
                     <td className="approval-buttons">
-                        {this.props.hideFishingProposals &&
-                            isScam && (
-                                <Tooltip
-                                    title={counterpart.translate(
-                                        "tooltip.propose_scam"
-                                    )}
-                                >
-                                    <div className="tooltip has-error scam-error">
-                                        SCAM ATTEMPT
-                                    </div>
-                                </Tooltip>
-                            )}
+                        {isScam && (
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "tooltip.propose_scam"
+                                )}
+                            >
+                                <div className="tooltip has-error scam-error">
+                                    SCAM ATTEMPT
+                                </div>
+                            </Tooltip>
+                        )}
                         {this.props.hideFishingProposals &&
                             !isScam &&
                             isUnknown && (
@@ -377,29 +395,30 @@ class Proposals extends Component {
                                     </div>
                                 </Tooltip>
                             )}
-                        {((!isScam && !isUnknown) ||
-                            !this.props.hideFishingProposals) && (
-                            <button
-                                onClick={
-                                    canApprove
-                                        ? this._onApproveModal.bind(
-                                              this,
-                                              proposalId,
-                                              proposal.account.get("id"),
-                                              "approve"
-                                          )
-                                        : () => {}
-                                }
-                                className={
-                                    "button primary hollow" +
-                                    (canApprove ? "" : " hidden")
-                                }
-                            >
-                                <span>
-                                    <Translate content="proposal.approve" />
-                                </span>
-                            </button>
-                        )}
+                        {!isScam &&
+                            (!isUnknown ||
+                                !this.props.hideFishingProposals) && (
+                                <button
+                                    onClick={
+                                        canApprove
+                                            ? this._onApproveModal.bind(
+                                                  this,
+                                                  proposalId,
+                                                  proposal.account.get("id"),
+                                                  "approve"
+                                              )
+                                            : () => {}
+                                    }
+                                    className={
+                                        "button primary hollow" +
+                                        (canApprove ? "" : " hidden")
+                                    }
+                                >
+                                    <span>
+                                        <Translate content="proposal.approve" />
+                                    </span>
+                                </button>
+                            )}
                         {canReject ? (
                             <button
                                 onClick={this._onApproveModal.bind(
