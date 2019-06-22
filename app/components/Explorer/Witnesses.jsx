@@ -225,7 +225,11 @@ class WitnessList extends React.Component {
             return (
                 <Popover
                     content={
-                        <a href={item} target="_blank">
+                        <a
+                            href={item}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             {item}
                         </a>
                     }
