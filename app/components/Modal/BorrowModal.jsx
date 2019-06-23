@@ -483,6 +483,21 @@ class BorrowModalContent extends React.Component {
             };
         }
 
+        let delta_collateral_amount = parseInt(
+            this.state.collateral * backingPrecision -
+                currentPosition.collateral,
+            10
+        );
+        let delta_debt_amount = parseInt(
+            this.state.short_amount * quotePrecision - currentPosition.debt,
+            10
+        );
+
+        // Amount can not be 0
+        if (delta_collateral_amount == 0 && delta_debt_amount == 0) {
+            delta_collateral_amount = 1;
+        }
+
         var tr = WalletApi.new_transaction();
         if (extensionsProp) {
             tr.add_type_operation("call_order_update", {
@@ -492,20 +507,12 @@ class BorrowModalContent extends React.Component {
                 },
                 funding_accountObj: this.props.accountObj.get("id"),
                 delta_collateral: {
-                    amount: parseInt(
-                        this.state.collateral * backingPrecision -
-                            currentPosition.collateral,
-                        10
-                    ),
-                    asset_id: this.props.backingAssetObj.get("id")
+                    amount: delta_collateral_amount,
+                    asset_id: this.props.backing_asset.get("id")
                 },
                 delta_debt: {
-                    amount: parseInt(
-                        this.state.debtAmount * quotePrecision -
-                            currentPosition.debt,
-                        10
-                    ),
-                    asset_id: this.props.quoteAssetObj.get("id")
+                    amount: delta_debt_amount,
+                    asset_id: this.props.quote_asset.get("id")
                 },
                 extensions: extensionsProp
             });
@@ -517,20 +524,12 @@ class BorrowModalContent extends React.Component {
                 },
                 funding_accountObj: this.props.accountObj.get("id"),
                 delta_collateral: {
-                    amount: parseInt(
-                        this.state.collateral * backingPrecision -
-                            currentPosition.collateral,
-                        10
-                    ),
-                    asset_id: this.props.backingAssetObj.get("id")
+                    amount: delta_collateral_amount,
+                    asset_id: this.props.backing_asset.get("id")
                 },
                 delta_debt: {
-                    amount: parseInt(
-                        this.state.debtAmount * quotePrecision -
-                            currentPosition.debt,
-                        10
-                    ),
-                    asset_id: this.props.quoteAssetObj.get("id")
+                    amount: delta_debt_amount,
+                    asset_id: this.props.quote_asset.get("id")
                 }
             });
         }

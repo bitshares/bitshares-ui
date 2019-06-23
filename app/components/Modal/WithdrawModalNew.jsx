@@ -588,7 +588,8 @@ class WithdrawModalNew extends React.Component {
 
     onGatewayChanged(selectedGateway) {
         this.setState({selectedGateway}, () => {
-            this.setState(this._getAssetPairVariables(), this.updateFee);
+            this.setState(this._getAssetPairVariables());
+            this.updateGatewayFee();
         });
     }
 
@@ -654,6 +655,25 @@ class WithdrawModalNew extends React.Component {
 
                 return backingCoin === selectedAsset;
             });
+    }
+
+    updateGatewayFee() {
+        const {selectedGateway, selectedAsset} = this.state;
+        let gateFee = 0;
+
+        if (selectedGateway && selectedAsset) {
+            this.props.backedCoins.get(selectedGateway).forEach(item => {
+                if (
+                    item.symbol ===
+                        [selectedGateway, selectedAsset].join(".") ||
+                    item.backingCoinType === selectedAsset
+                ) {
+                    gateFee = item.gateFee || 0;
+                }
+            });
+        }
+
+        this.setState({gateFee});
     }
 
     validateAddress(address) {

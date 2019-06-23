@@ -11,6 +11,7 @@ import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import stringSimilarity from "string-similarity";
 import {hiddenProposals} from "../../lib/common/hideProposals";
+import sanitize from "sanitize";
 
 class WorkerList extends React.Component {
     constructor(props) {
@@ -136,7 +137,10 @@ class WorkerList extends React.Component {
                                                 ? "visible"
                                                 : "hidden"
                                     }}
-                                    href={item.url}
+                                    href={sanitize(item.url, {
+                                        whiteList: [], // empty, means filter out all tags
+                                        stripIgnoreTag: true // filter out all HTML not in the whilelist
+                                    })}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
