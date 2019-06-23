@@ -58,15 +58,6 @@
         <h1 class="centerDiv" style="">Loading...</h1>
     </main>
     <script>
-        if (window.performance) {
-            console.info("window.performance works fine on this browser");
-        }
-        if (performance.navigation.type == 1) {
-            window.location.href = "/";
-        } else {
-            console.info("This page is not reloaded");
-        }
-
         function ieVersion(uaString) {
             uaString = uaString || navigator.userAgent;
             var match = /\b(MSIE |Trident.*?rv:|Edge\/)(\d+)/.exec(uaString);
