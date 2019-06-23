@@ -121,13 +121,13 @@ class Block extends React.Component {
             this.props.dynGlobalObject.get("head_block_number"),
             parseInt(height, 10) + 1
         );
-        this.props.history.push(`/block/${nextBlock}`);
+        this.props.history.push(`/exchange/block/${nextBlock}`);
     }
 
     _previousBlock() {
         let height = this.props.match.params.height;
         let previousBlock = Math.max(1, parseInt(height, 10) - 1);
-        this.props.history.push(`/block/${previousBlock}`);
+        this.props.history.push(`/exchange/block/${previousBlock}`);
     }
 
     toggleInput(e) {
@@ -137,7 +137,7 @@ class Block extends React.Component {
 
     _onKeyDown(e) {
         if (e && e.keyCode === 13) {
-            this.props.history.push(`/block/${e.target.value}`);
+            this.props.history.push(`/exchange/block/${e.target.value}`);
             this.setState({showInput: false});
         }
     }

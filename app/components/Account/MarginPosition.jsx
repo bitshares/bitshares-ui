@@ -260,7 +260,7 @@ class MarginPosition extends React.Component {
         return (
             <tr className="margin-row">
                 <td style={alignLeft}>
-                    <Link to={`/asset/${debtAsset.get("symbol")}`}>
+                    <Link to={`/exchange/asset/${debtAsset.get("symbol")}`}>
                         <AssetName noTip name={debtAsset.get("symbol")} />
                     </Link>
                 </td>
@@ -359,7 +359,7 @@ class MarginPosition extends React.Component {
                 </td>
                 <td style={{textAlign: "center"}}>
                     <Link
-                        to={`/market/${debtAsset.get(
+                        to={`/exchange/market/${debtAsset.get(
                             "symbol"
                         )}_${collateralAsset.get("symbol")}`}
                     >

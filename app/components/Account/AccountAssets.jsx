@@ -139,12 +139,14 @@ class AccountAssets extends React.Component {
     _editButtonClick(symbol, account_name, e) {
         e.preventDefault();
         this.props.history.push(
-            `/account/${account_name}/update-asset/${symbol}`
+            `/exchange/account/${account_name}/update-asset/${symbol}`
         );
     }
 
     _createButtonClick(account_name) {
-        this.props.history.push(`/account/${account_name}/create-asset`);
+        this.props.history.push(
+            `/exchange/account/${account_name}/create-asset`
+        );
     }
 
     render() {
@@ -205,7 +207,7 @@ class AccountAssets extends React.Component {
                 return (
                     <tr key={asset.symbol}>
                         <td style={{textAlign: "left"}}>
-                            <Link to={`/asset/${asset.symbol}`}>
+                            <Link to={`/exchange/asset/${asset.symbol}`}>
                                 {asset.symbol}
                             </Link>
                         </td>

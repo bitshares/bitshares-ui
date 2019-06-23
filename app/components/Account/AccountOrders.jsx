@@ -257,7 +257,7 @@ class AccountOrders extends React.Component {
                 render: dataItem => {
                     return (
                         <Link
-                            to={`/market/${dataItem.quote.get(
+                            to={`/exchange/market/${dataItem.quote.get(
                                 "symbol"
                             )}_${dataItem.base.get("symbol")}`}
                         >

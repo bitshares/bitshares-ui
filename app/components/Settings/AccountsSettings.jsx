@@ -72,7 +72,7 @@ class AccountsSettings extends React.Component {
                                 <td>{account}</td>
                                 <td>
                                     <Link
-                                        to={`/account/${account}/permissions`}
+                                        to={`/exchange/account/${account}/permissions`}
                                     >
                                         <Translate content="settings.view_keys" />
                                     </Link>
@@ -87,16 +87,19 @@ class AccountsSettings extends React.Component {
     }
 }
 
-AccountsSettings = connect(AccountsSettings, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            myAccounts: AccountStore.getMyAccounts(),
-            hiddenAccounts: AccountStore.getState().myHiddenAccounts
-        };
+AccountsSettings = connect(
+    AccountsSettings,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                myAccounts: AccountStore.getMyAccounts(),
+                hiddenAccounts: AccountStore.getState().myHiddenAccounts
+            };
+        }
     }
-});
+);
 
 export default AccountsSettings;

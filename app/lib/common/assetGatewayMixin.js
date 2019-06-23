@@ -168,7 +168,7 @@ function gatewaySelector(args) {
 
     let supportLink =
         !!selectedGateway && !!gatewayStatus[selectedGateway]
-            ? "/help/gateways/" +
+            ? "/exchange/help/gateways/" +
               gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
             : null;
 

@@ -572,7 +572,7 @@ class CreateAccountPassword extends React.Component {
                                 <Translate content="wallet.tips_dashboard" />:
                             </td>
                             <td>
-                                <Link to="/">
+                                <Link to="/exchange/">
                                     <Translate content="header.dashboard" />
                                 </Link>
                             </td>
@@ -584,7 +584,7 @@ class CreateAccountPassword extends React.Component {
                             </td>
                             <td>
                                 <Link
-                                    to={`/account/${
+                                    to={`/exchange/account/${
                                         this.state.accountName
                                     }/overview`}
                                 >
@@ -598,7 +598,7 @@ class CreateAccountPassword extends React.Component {
                                 <Translate content="wallet.tips_deposit" />:
                             </td>
                             <td>
-                                <Link to="/deposit-withdraw">
+                                <Link to="/exchange/deposit-withdraw">
                                     <Translate content="wallet.link_deposit" />
                                 </Link>
                             </td>
@@ -609,7 +609,7 @@ class CreateAccountPassword extends React.Component {
                                 <Translate content="wallet.tips_transfer" />:
                             </td>
                             <td>
-                                <Link to="/transfer">
+                                <Link to="/exchange/transfer">
                                     <Translate content="wallet.link_transfer" />
                                 </Link>
                             </td>
@@ -620,7 +620,7 @@ class CreateAccountPassword extends React.Component {
                                 <Translate content="wallet.tips_settings" />:
                             </td>
                             <td>
-                                <Link to="/settings">
+                                <Link to="/exchange/settings">
                                     <Translate content="header.settings" />
                                 </Link>
                             </td>

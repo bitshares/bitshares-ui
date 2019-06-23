@@ -28,8 +28,8 @@ class MarketListItem extends Component {
         const marketSymbol = market[1]["quote"];
         const linkTo =
             quoteSymbol == marketPickerAsset
-                ? `/market/${marketSymbol}_${baseSymbol}`
-                : `/market/${quoteSymbol}_${marketSymbol}`;
+                ? `/exchange/market/${marketSymbol}_${baseSymbol}`
+                : `/exchange/market/${quoteSymbol}_${marketSymbol}`;
         return (
             <li key={market[0]} style={{height: 40}}>
                 <Link style={{display: "flex"}} onClick={onClose} to={linkTo}>

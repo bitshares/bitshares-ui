@@ -40,7 +40,7 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.props.history.push(`/block/${this.props.block}`);
+        this.props.history.push(`/exchange/block/${this.props.block}`);
     }
 
     render() {
@@ -113,7 +113,9 @@ class ProposedOperation extends React.Component {
         return utils.is_object_id(name_or_id) ? (
             <LinkToAccountById account={name_or_id} />
         ) : (
-            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>
+            <Link to={`/exchange/account/${name_or_id}/overview`}>
+                {name_or_id}
+            </Link>
         );
     }
 
@@ -122,7 +124,7 @@ class ProposedOperation extends React.Component {
         return utils.is_object_id(symbol_or_id) ? (
             <LinkToAssetById asset={symbol_or_id} />
         ) : (
-            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>
+            <Link to={`/exchange/asset/${symbol_or_id}`}>{symbol_or_id}</Link>
         );
     }
 

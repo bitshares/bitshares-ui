@@ -40,7 +40,7 @@ class Page404 extends React.Component {
                         <Translate content={"page404." + this.props.subtitle} />
                     </div>
                     <div className="page-404-button-back">
-                        <Link to={"/"}>
+                        <Link to={"/exchange/"}>
                             <Translate
                                 component="button"
                                 className="button"
@@ -54,13 +54,16 @@ class Page404 extends React.Component {
     }
 }
 
-export default (Page404 = connect(Page404, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            theme: SettingsStore.getState().settings.get("themes")
-        };
+export default (Page404 = connect(
+    Page404,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                theme: SettingsStore.getState().settings.get("themes")
+            };
+        }
     }
-}));
+));

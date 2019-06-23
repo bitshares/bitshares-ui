@@ -29,6 +29,6 @@ Lampgram делает для бизнеса то, что Биткойн сдел
 
 Этот кошелек обеспечивает доступ к большинству функций сети Lampgram, включая
 
-- [BitAssets (БитАктивы)](/help/assets/mpa)
-- [Выпущенные пользователем активы](/help/assets/uia)
-- [Биржу – The DEX](/help/dex/introduction)
+- [BitAssets (БитАктивы)](/exchange/help/assets/mpa)
+- [Выпущенные пользователем активы](/exchange/help/assets/uia)
+- [Биржу – The DEX](/exchange/help/dex/introduction)

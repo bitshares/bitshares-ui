@@ -291,7 +291,7 @@ export default class ExchangeHeader extends React.Component {
                                     onClick={() => {
                                         MarketsActions.switchMarket();
                                     }}
-                                    to={`/market/${baseSymbol}_${quoteSymbol}`}
+                                    to={`/exchange/market/${baseSymbol}_${quoteSymbol}`}
                                     data-intro={translator.translate(
                                         "walkthrough.switch_button"
                                     )}

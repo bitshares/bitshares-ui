@@ -92,7 +92,7 @@ class FormattedPrice extends React.Component {
         const {marketName, first, second} = this.state;
         const inverted = this.props.marketDirections.get(marketName);
         this.props.history.push(
-            `/market/${
+            `/exchange/market/${
                 !inverted ? first.get("symbol") : second.get("symbol")
             }_${!inverted ? second.get("symbol") : first.get("symbol")}`
         );

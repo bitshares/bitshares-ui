@@ -107,7 +107,7 @@ class ReportModal extends React.Component {
                             style={{textAlign: "center", width: "100%"}}
                             className="external-link"
                         >
-                            https://lampgram.com
+                            https://github.com/bitshares/bitshares-ui
                         </a>
                         <br />
                         <Translate content="modal.report.explanatory_text_3" />

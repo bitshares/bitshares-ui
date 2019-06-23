@@ -689,7 +689,7 @@ class AccountVoting extends React.Component {
                             top: 9
                         }}
                     >
-                        <Link to="/help/voting">
+                        <Link to="/exchange/help/voting">
                             <Icon
                                 name="question-circle"
                                 title="icons.question_circle"
@@ -916,7 +916,7 @@ class AccountVoting extends React.Component {
                                 <div className="header-selector">
                                     <div style={{float: "right"}}>
                                         <Link
-                                            to="/create-worker"
+                                            to="/exchange/create-worker"
                                             className="button primary"
                                         >
                                             <Translate content="account.votes.create_worker" />

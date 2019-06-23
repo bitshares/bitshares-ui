@@ -48,7 +48,9 @@ export default class TranslateWithLinks extends React.Component {
         ) : noLink ? (
             <span>{name_or_id}</span>
         ) : (
-            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>
+            <Link to={`/exchange/account/${name_or_id}/overview`}>
+                {name_or_id}
+            </Link>
         );
     }
 
@@ -60,7 +62,7 @@ export default class TranslateWithLinks extends React.Component {
         ) : noLink ? (
             <AssetName name={symbol_or_id} dataPlace="top" noTip={noTip} />
         ) : (
-            <Link to={`/asset/${symbol_or_id}`}>
+            <Link to={`/exchange/asset/${symbol_or_id}`}>
                 <AssetName name={symbol_or_id} dataPlace="top" noTip={noTip} />
             </Link>
         );

@@ -164,7 +164,7 @@ class Assets extends React.Component {
                     },
                     render: item => {
                         return (
-                            <Link to={`/asset/${item}`}>
+                            <Link to={`/exchange/asset/${item}`}>
                                 <AssetName name={item} />
                             </Link>
                         );
@@ -216,7 +216,7 @@ class Assets extends React.Component {
                     dataIndex: "marketId",
                     render: item => {
                         return (
-                            <Link to={`/market/${item}`}>
+                            <Link to={`/exchange/market/${item}`}>
                                 <Icon type={"line-chart"} />{" "}
                                 <Translate content="header.exchange" />
                             </Link>
@@ -272,7 +272,7 @@ class Assets extends React.Component {
                     },
                     render: item => {
                         return (
-                            <Link to={`/asset/${item}`}>
+                            <Link to={`/exchange/asset/${item}`}>
                                 <AssetName name={item} />
                             </Link>
                         );
@@ -324,7 +324,7 @@ class Assets extends React.Component {
                     dataIndex: "marketId",
                     render: item => {
                         return (
-                            <Link to={`/market/${item}`}>
+                            <Link to={`/exchange/market/${item}`}>
                                 <Icon type={"line-chart"} />{" "}
                                 <Translate content="header.exchange" />
                             </Link>
@@ -506,7 +506,7 @@ class Assets extends React.Component {
                                             actions={[
                                                 <Link
                                                     className="button outline"
-                                                    to={`/market/${
+                                                    to={`/exchange/market/${
                                                         item.marketID
                                                     }`}
                                                 >

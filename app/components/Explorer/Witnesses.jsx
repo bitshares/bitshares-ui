@@ -24,7 +24,9 @@ class WitnessRow extends React.Component {
 
     _onRowClick(e) {
         e.preventDefault();
-        this.props.history.push(`/account/${this.props.witness.get("name")}`);
+        this.props.history.push(
+            `/exchange/account/${this.props.witness.get("name")}`
+        );
     }
 
     // componentWillUnmount() {
@@ -117,7 +119,7 @@ class WitnessList extends React.Component {
 
     handleBlockIdClick(blockId) {
         return () => {
-            this.props.history.push(`/block/${blockId}`);
+            this.props.history.push(`/exchange/block/${blockId}`);
         };
     }
 

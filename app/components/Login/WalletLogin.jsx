@@ -62,7 +62,7 @@ class WalletLogin extends Component {
                     onClick={e => e.stopPropagation()}
                 >
                     <Translate content="tooltip.login-tooltip.withoutBinFileBlock.begin" />
-                    <Link to="/create-wallet-brainkey">
+                    <Link to="/exchange/create-wallet-brainkey">
                         <Translate
                             component="u"
                             className="active-upload-text cursor-pointer"
