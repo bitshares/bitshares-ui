@@ -1981,6 +1981,7 @@
             "sender": "发送方",
             "size": "大小",
             "title": "哈希时间锁定合约",
+            "title_short": "HTLC",
             "to": "发往",
             "tooltip": {
                 "enter_preimage": "输入你从发送方得到的秘密原像",
@@ -1997,7 +1998,7 @@
             "title": "纸钱包"
         },
         "prediction_market": {
-            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
             "title": "Prediction Markets"
         },
         "timed_transfer": {
