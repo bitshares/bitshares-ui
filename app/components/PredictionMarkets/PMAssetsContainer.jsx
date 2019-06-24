@@ -11,11 +11,7 @@ class PMAssetsContainer extends React.Component {
                 stores={[AssetStore]}
                 inject={{
                     assets: () => {
-                        return AssetStore.getState().assets.filter(
-                            a =>
-                                a.bitasset_data &&
-                                !a.bitasset_data.is_prediction_market
-                        );
+                        return AssetStore.getState().assets;
                     }
                 }}
             >

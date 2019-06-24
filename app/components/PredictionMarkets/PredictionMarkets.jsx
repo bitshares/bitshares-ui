@@ -102,6 +102,8 @@ export default class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            assets: [],
+            lastAssetSymbol: null,
             markets: STUB_MARKETS,
             currentAccountId: STUB_ACCOUNT_ID,
             searchTerm: "",
@@ -114,11 +116,48 @@ export default class PredictionMarkets extends Component {
             isAddOpinionModalOpen: false,
             isResolveModalOpen: false
         };
-        AssetActions.getAssetList.defer("M", 100);
     }
 
-    shouldComponentUpdate(np, ns) {
-        return !Immutable.is(np.assets, this.props.assets);
+    componentWillReceiveProps(np) {
+        let searchAsset = this.state.lastAssetSymbol;
+        if (np.assets) {
+            const assets = np.assets;
+            const lastAsset = assets
+                .sort((a, b) => {
+                    if (a.symbol > b.symbol) {
+                        return 1;
+                    } else if (a.symbol < b.symbol) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                })
+                .last();
+            searchAsset = lastAsset ? lastAsset.symbol : "A";
+            this.setState({
+                assets: [
+                    ...this.state.assets,
+                    ...assets.filter(
+                        a =>
+                            a.bitasset_data &&
+                            a.bitasset_data.is_prediction_market
+                    )
+                ]
+            });
+        }
+        if (
+            !this.state.lastAssetSymbol ||
+            this.state.lastAssetSymbol !== searchAsset
+        ) {
+            this._updateAssetsList(searchAsset);
+            this.setState({
+                lastAssetSymbol: searchAsset
+            });
+        }
+    }
+
+    async _updateAssetsList(lastAsset) {
+        AssetActions.getAssetList.defer(lastAsset, 100);
     }
 
     async getMarketOpinions(market) {
@@ -340,6 +379,7 @@ export default class PredictionMarkets extends Component {
                 className="grid-block vertical"
                 style={{overflow: "visible", margin: "15px"}}
             >
+                {JSON.stringify(this.state.assets)}
                 <div
                     className="grid-block small-12 shrink"
                     style={{overflow: "visible"}}
