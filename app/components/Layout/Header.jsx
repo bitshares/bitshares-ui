@@ -256,11 +256,6 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
-        if (this.props.location.pathname.indexOf("/account/") !== -1) {
-            let currentPath = this.props.location.pathname.split("/");
-            currentPath[2] = account_name;
-            this.props.history.push(currentPath.join("/"));
-        }
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
             Notification.success({
@@ -1192,17 +1187,13 @@ class Header extends React.Component {
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <AccountBrowsingMode
-                        history={this.props.history}
-                        location={this.props.location}
-                    />
+                    <AccountBrowsingMode location={this.props.location} />
                     <div>
                         <div className="text account-name">
                             <span onClick={this._toggleAccountDropdownMenu}>
                                 {currentAccount}
                             </span>
                             <AccountBrowsingMode
-                                history={this.props.history}
                                 location={this.props.location}
                                 usernameViewIcon
                             />
