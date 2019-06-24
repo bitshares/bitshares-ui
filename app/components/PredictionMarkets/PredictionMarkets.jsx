@@ -7,6 +7,7 @@ import SearchInput from "../Utility/SearchInput";
 import HelpContent from "../Utility/HelpContent";
 import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
+import ResolveModal from "./ResolveModal";
 import {Button} from "bitshares-ui-style-guide";
 import Immutable from "immutable";
 
@@ -107,9 +108,11 @@ export default class PredictionMarkets extends Component {
             detailsSearchTerm: "",
             selectedMarket: null,
             opinions: [],
-            action: "yes",
+            preselectedOpinion: "no",
+            preselectedAmount: 0,
             isCreateMarketModalOpen: false,
-            isAddOpinionModalOpen: false
+            isAddOpinionModalOpen: false,
+            isResolveModalOpen: false
         };
         AssetActions.getAssetList.defer("M", 100);
     }
@@ -125,10 +128,38 @@ export default class PredictionMarkets extends Component {
     }
 
     onMarketAction({market, action}) {
-        this.setState({
-            selectedMarket: market,
-            action
-        });
+        switch (action) {
+            case "resolve": {
+                this.setState({
+                    selectedMarket: market,
+                    preselectedAmount: 0,
+                    isResolveModalOpen: true
+                });
+                break;
+            }
+            case "yes": {
+                this.setState({
+                    selectedMarket: market,
+                    preselectedAmount: 0,
+                    preselectedOpinion: "yes"
+                });
+                break;
+            }
+            case "no": {
+                this.setState({
+                    selectedMarket: market,
+                    preselectedAmount: 0,
+                    preselectedOpinion: "no"
+                });
+                break;
+            }
+            default: {
+                this.setState({
+                    selectedMarket: market,
+                    preselectedAmount: 0
+                });
+            }
+        }
         this.getMarketOpinions(market);
     }
 
@@ -136,7 +167,8 @@ export default class PredictionMarkets extends Component {
         console.log(this.props.assets);
         this.setState({
             searchTerm: (event.target.value || "").toUpperCase(),
-            selectedMarket: null
+            selectedMarket: null,
+            preselectedAmount: 0
         });
     }
 
@@ -170,6 +202,25 @@ export default class PredictionMarkets extends Component {
         });
     }
 
+    onResolveModalOpen() {
+        this.setState({
+            isResolveModalOpen: true
+        });
+    }
+
+    onResolveModalClose() {
+        this.setState({
+            isResolveModalOpen: false
+        });
+    }
+
+    onOppose = value => {
+        this.setState({
+            preselectedOpinion: value.opinion === "no" ? "yes" : "no",
+            preselectedAmount: value.amount
+        });
+    };
+
     getNewMarketParameters = value => {
         this.setState({
             markets: [...this.state.markets, value],
@@ -189,6 +240,13 @@ export default class PredictionMarkets extends Component {
                 isAddOpinionModalOpen: false
             });
         }
+    };
+
+    getResolveParameters = value => {
+        console.log(`Resolved ${value.asset_id}:${value.result}`);
+        this.setState({
+            isResolveModalOpen: false
+        });
     };
 
     getNewAssetId() {
@@ -268,9 +326,7 @@ export default class PredictionMarkets extends Component {
                             opinions: this.state.opinions
                         }}
                         currentAccountId={this.state.currentAccountId}
-                        onOppose={dataItem => {
-                            console.log("Oppose", dataItem);
-                        }}
+                        onOppose={this.onOppose}
                         detailsSearchTerm={this.state.detailsSearchTerm}
                     />
                 ) : null}
@@ -301,6 +357,8 @@ export default class PredictionMarkets extends Component {
                         currentAccountId={this.state.currentAccountId}
                         getNewOpinionParameters={this.getNewOpinionParameters}
                         newOpinionId={this.getNewOpinionId()}
+                        preselectedOpinion={this.state.preselectedOpinion}
+                        preselectedAmount={this.state.preselectedAmount}
                     />
                 ) : null}
                 {this.state.isCreateMarketModalOpen ? (
@@ -312,6 +370,15 @@ export default class PredictionMarkets extends Component {
                         currentAccountId={this.state.currentAccountId}
                         getNewMarketParameters={this.getNewMarketParameters}
                         newMarketId={this.getNewAssetId()}
+                    />
+                ) : null}
+                {this.state.isResolveModalOpen ? (
+                    <ResolveModal
+                        show={this.state.isResolveModalOpen}
+                        onClose={this.onResolveModalClose.bind(this)}
+                        market={this.state.selectedMarket}
+                        currentAccountId={this.state.currentAccountId}
+                        getResolveParameters={this.getResolveParameters}
                     />
                 ) : null}
             </div>
