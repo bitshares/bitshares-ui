@@ -144,15 +144,40 @@ class NewsHeadline extends React.Component {
             const type = item.type === "critical" ? "error" : item.type; // info & warning
             const begin = new Date(item.begin_date.split(".").reverse());
             const end = new Date(item.end_date.split(".").reverse());
+            let content = item.content;
             if (now >= begin && now <= end) {
+                // only recognize links that start with http and are ended with an exclamation mark
+                let urlTest = /(https?):\/\/(www\.)?[^!]+/g;
+                let urls = content.match(urlTest);
+                if (urls && urls.length) {
+                    urls.forEach(url => {
+                        let _split = content.split(url);
+                        content = (
+                            <span>
+                                {_split[0]}
+                                <a
+                                    target="_blank"
+                                    className="external-link"
+                                    rel="noopener noreferrer"
+                                    href={url}
+                                    style={{cursor: "pointer"}}
+                                >
+                                    {url}
+                                </a>
+                                {_split[1]}
+                            </span>
+                        );
+                    });
+                }
                 acc = [
                     ...acc,
                     <div className="git-info" key={`git-alert${index}`}>
-                        <Alert type={type} message={item.content} banner />
+                        <Alert type={type} message={content} banner />
                         {type === "info" || type === "warning" ? (
                             <Icon
                                 type="close"
-                                className="close-icon clickable"
+                                className="close-icon"
+                                style={{cursor: "pointer"}}
                                 onClick={this.onClose.bind(this, item)}
                             />
                         ) : null}

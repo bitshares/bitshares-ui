@@ -1,18 +1,20 @@
 function createNotifcationString() {
-    let jsonObject = {
+    // may contain links, must start with http and be ended with "!"
+    var jsonObject = {
         notifications: [
-            {
-                type: "info",
-                begin_date: "16.05.2019",
-                end_date: "31.06.2019",
-                content: "This is the headline newsfeed!"
-            },
             {
                 type: "warning",
                 begin_date: "16.05.2019",
-                end_date: "01.01.2020",
+                end_date: "31.12.2019",
                 content:
-                    "This wallet is connected to the testnet of the BitShares Blockchain!"
+                    "Please be aware of scam attempts using Proposed Transactions in your Dashboard. Never approve a proposal if you are not expecting one!"
+            },
+            {
+                type: "info",
+                begin_date: "02.07.2019",
+                end_date: "09.07.2019",
+                content:
+                    "2nd Global Graphene Blockchain Developer Conference is happening on 6th-7th July 2019 in Shanghai. Get more information here http://gbacenter.org/event/index_en.html/!"
             }
         ],
         blacklists: {
@@ -21,9 +23,9 @@ function createNotifcationString() {
         }
     };
     // has to coincide with branding.js/getConfigurationAsset().explanation
-    let explanation =
+    var explanation =
         "This asset is used for decentralized configuration of the BitShares UI placed under bitshares.org.";
-    let assetDescriptionString =
+    var assetDescriptionString =
         explanation + "\n" + JSON.stringify(jsonObject, null, 2);
     console.log(assetDescriptionString);
     return assetDescriptionString;
