@@ -5,6 +5,11 @@ import debounceRender from "react-debounce-render";
 import BindToChainState from "./BindToChainState";
 import {connect} from "alt-react";
 import AccountStore from "../../stores/AccountStore";
+import LoadingIndicator from "../LoadingIndicator";
+
+export const hasLoaded = function hasLoaded(currentAccount) {
+    return !!currentAccount && !!currentAccount.get("id");
+};
 
 export const bindToCurrentAccount = function bindToCurrentAccount(
     WrappedComponent
@@ -25,7 +30,11 @@ export const bindToCurrentAccount = function bindToCurrentAccount(
         }
 
         render() {
-            return <WrappedComponent {...this.props} />;
+            if (hasLoaded(this.props.currentAccount)) {
+                return <WrappedComponent {...this.props} />;
+            } else {
+                return <LoadingIndicator />;
+            }
         }
     };
 
@@ -52,8 +61,4 @@ export const bindToCurrentAccount = function bindToCurrentAccount(
             }
         }
     );
-};
-
-export const hasLoaded = function hasLoaded(currentAccount) {
-    return !!currentAccount && !!currentAccount.get("id");
 };
