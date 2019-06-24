@@ -1475,6 +1475,57 @@ class Asset extends React.Component {
 
         let columns = [];
         let dataSource = [];
+        const cummulativeSuffix = cumulativeGrouping ? (
+            <span>
+                &nbsp;(
+                <Translate content="explorer.asset.cumulative" />)
+            </span>
+        ) : (
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        );
+
+        let debt_cum = 0;
+        let coll_cum = 0;
+
+        this.state.callOrders.map(c => {
+            debt_cum += c.debt;
+            coll_cum += c.collateral;
+
+            dataSource.push({
+                borrower: c.borrower,
+                collateral: {
+                    amount: cumulativeGrouping ? coll_cum : c.collateral,
+                    asset: c.getCollateral().asset_id
+                },
+                debt: {
+                    amount: cumulativeGrouping ? debt_cum : c.debt,
+                    asset: c.amountToReceive().asset_id
+                },
+                call: c.call_price,
+                tcr: c.order.target_collateral_ratio,
+                cr: {
+                    ratio: c.getRatio(),
+                    status: c.getStatus()
+                }
+            });
+        });
+        const unitInfo = key => {
+            let item = dataSource[0][key];
+            return dataSource.length ? (
+                <span>
+                    <br />
+                    {item.base ? (
+                        this.formattedPrice(item, false, true)
+                    ) : (
+                        <FormattedAsset
+                            asset={item.asset}
+                            amount={item.amount}
+                            hide_amount={true}
+                        />
+                    )}
+                </span>
+            ) : null;
+        };
 
         columns = [
             {
@@ -1501,15 +1552,8 @@ class Asset extends React.Component {
                 title: (
                     <React.Fragment>
                         <Translate content="transaction.collateral" />
-                        {cumulativeGrouping ? (
-                            <span>
-                                &nbsp;(
-                                <Translate content="explorer.asset.cumulative" />
-                                )
-                            </span>
-                        ) : (
-                            ""
-                        )}
+                        {cummulativeSuffix}
+                        {unitInfo("collateral")}
                     </React.Fragment>
                 ),
                 dataIndex: "collateral",
@@ -1535,6 +1579,7 @@ class Asset extends React.Component {
                                 <FormattedAsset
                                     amount={item.amount}
                                     asset={item.asset}
+                                    hide_asset={true}
                                 />
                             </span>
                         </Tooltip>
@@ -1546,15 +1591,8 @@ class Asset extends React.Component {
                 title: (
                     <React.Fragment>
                         <Translate content="transaction.borrow_amount" />
-                        {cumulativeGrouping ? (
-                            <span>
-                                &nbsp;(
-                                <Translate content="explorer.asset.cumulative" />
-                                )
-                            </span>
-                        ) : (
-                            ""
-                        )}
+                        {cummulativeSuffix}
+                        {unitInfo("debt")}
                     </React.Fragment>
                 ),
                 dataIndex: "debt",
@@ -1580,6 +1618,7 @@ class Asset extends React.Component {
                                 <FormattedAsset
                                     amount={item.amount}
                                     asset={item.asset}
+                                    hide_asset={true}
                                 />
                             </span>
                         </Tooltip>
@@ -1588,18 +1627,15 @@ class Asset extends React.Component {
             },
             {
                 key: "call",
-                title: <Translate content="exchange.call" />,
+                title: (
+                    <span>
+                        <Translate content="exchange.call" />
+                        {unitInfo("call")}
+                    </span>
+                ),
                 dataIndex: "call",
                 render: item => {
-                    return (
-                        <FormattedPrice
-                            base_amount={item.base.amount}
-                            base_asset={item.base.asset_id}
-                            quote_amount={item.quote.amount}
-                            quote_asset={item.quote.asset_id}
-                            noPopOver
-                        />
-                    );
+                    return this.formattedPrice(item, true, false);
                 }
             },
             {
@@ -1630,76 +1666,18 @@ class Asset extends React.Component {
                     return 0;
                 },
                 render: item => {
-                    let icon = "";
-
-                    if (item.status == "danger") {
-                        icon = (
-                            <Tooltip
-                                title={counterpart.translate(
-                                    "explorer.asset.margin_positions.ratio_danger"
-                                )}
-                                placement="left"
-                            >
-                                <Icon
-                                    style={{paddingLeft: 10}}
-                                    className="danger"
-                                    type="warning"
-                                />
-                            </Tooltip>
-                        );
-                    }
-
-                    if (item.status == "warning") {
-                        icon = (
-                            <Tooltip
-                                title={counterpart.translate(
-                                    "explorer.asset.margin_positions.ratio_warning"
-                                )}
-                                placement="left"
-                            >
-                                <Icon
-                                    style={{paddingLeft: 10}}
-                                    className="warning"
-                                    type="exclamation-circle"
-                                />
-                            </Tooltip>
-                        );
-                    }
+                    let classNames = "margin-ratio " + item.status;
 
                     return (
                         <React.Fragment>
-                            {item.ratio.toFixed(3)} {icon}
+                            <div className={classNames}>
+                                {item.ratio.toFixed(3)}
+                            </div>
                         </React.Fragment>
                     );
                 }
             }
         ];
-
-        let debt_cum = 0;
-        let coll_cum = 0;
-
-        this.state.callOrders.map(c => {
-            debt_cum += c.debt;
-            coll_cum += c.collateral;
-
-            dataSource.push({
-                borrower: c.borrower,
-                collateral: {
-                    amount: cumulativeGrouping ? coll_cum : c.collateral,
-                    asset: c.getCollateral().asset_id
-                },
-                debt: {
-                    amount: cumulativeGrouping ? debt_cum : c.debt,
-                    asset: c.amountToReceive().asset_id
-                },
-                call: c.call_price,
-                tcr: c.order.target_collateral_ratio,
-                cr: {
-                    ratio: c.getRatio(),
-                    status: c.getStatus()
-                }
-            });
-        });
 
         return (
             <Table
@@ -1707,6 +1685,7 @@ class Asset extends React.Component {
                 rowKey="feedMargins"
                 columns={columns}
                 dataSource={dataSource}
+                rowClassName="margin-row"
                 pagination={{
                     pageSize: Number(25)
                 }}

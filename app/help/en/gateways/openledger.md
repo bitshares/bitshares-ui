@@ -8,4 +8,3 @@ OpenLedger is a gateway service built on the Bitshares Exchange. A gateway servi
 ## Support
 If you have questions or experience delays with sending or receiving assets:
 - [Open a Ticket](https://openledger.freshdesk.com/support/home)
-- [Telegram Chat](https://t.me/OpenLedgerDC).

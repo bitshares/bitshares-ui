@@ -108,6 +108,8 @@ class MarketsTable extends React.Component {
         const convert = price => {
             price = price.replace(/\,/g, "");
             if (price.includes("k")) price = price.replace(/k/g, "") * 1000;
+            if (price.includes("M"))
+                price = price.replace(/M/g, "") * 1000 * 1000;
             return price;
         };
         aPrice = convert(aPrice);
@@ -138,25 +140,29 @@ class MarketsTable extends React.Component {
             }
         },
         volumeValue: function(a, b) {
-            let aPrice = a.volume;
-            let bPrice = b.volume;
+            let aPrice = a.volume || 0;
+            let bPrice = b.volume || 0;
+            let compared = 0;
             if (aPrice && bPrice) {
-                return this.sort(aPrice, bPrice);
-            } else {
+                compared = aPrice - bPrice;
+            }
+            if (compared == 0) {
                 return this.sortFunctions.alphabetic(a, b, true);
+            } else {
+                return compared;
             }
         },
         changeValue: function(a, b) {
-            let aValue = a.hour_24.props.children[0];
-            let bValue = b.hour_24.props.children[0];
-
-            if (aValue && bValue) {
-                let aChange =
-                    parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
-                let bChange =
-                    parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
-
-                return aChange - bChange;
+            let aValue = parseFloat(a.hour_24);
+            let bValue = parseFloat(b.hour_24);
+            let compared = 0;
+            if (aValue && bValue && !isNaN(aValue) && !isNaN(bValue)) {
+                compared = aValue - bValue;
+            }
+            if (compared == 0) {
+                return this.sortFunctions.alphabetic(a, b, true);
+            } else {
+                return compared;
             }
         }
     };
@@ -219,8 +225,21 @@ class MarketsTable extends React.Component {
                 dataIndex: "hour_24",
                 align: "right",
                 sorter: this.sortFunctions.changeValue,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                render: (text, record, index) => {
+                    const changeClass =
+                        parseFloat(record.hour_24) > 0
+                            ? "change-up"
+                            : parseFloat(record.hour_24) < 0
+                                ? "change-down"
+                                : "";
+                    return (
+                        <span
+                            style={{whiteSpace: "nowrap", textAlign: "right"}}
+                            className={changeClass}
+                        >
+                            {record.hour_24}%
+                        </span>
+                    );
                 }
             },
             {
@@ -228,8 +247,16 @@ class MarketsTable extends React.Component {
                 dataIndex: "volume",
                 align: "right",
                 sorter: this.sortFunctions.volumeValue,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                defaultSortOrder: "descend",
+                render: (text, record, index) => {
+                    return (
+                        <span style={{whiteSpace: "nowrap"}}>
+                            {utils.format_volume(
+                                record.volume,
+                                record.basePrecision
+                            )}
+                        </span>
+                    );
                 }
             },
             showFlip
@@ -306,13 +333,6 @@ class MarketsTable extends React.Component {
             return imgName.length === 2 ? imgName[1] : imgName[0];
         }
         let imgName = getImageName(quote);
-        let changeClass = !marketStats
-            ? ""
-            : parseFloat(marketStats.change) > 0
-                ? "change-up"
-                : parseFloat(marketStats.change) < 0
-                    ? "change-down"
-                    : "";
 
         let marketID = `${quote}_${base}`;
 
@@ -369,24 +389,16 @@ class MarketsTable extends React.Component {
                         : null}
                 </div>
             ),
-            hour_24: (
-                <span
-                    style={{textAlign: "right"}}
-                    className={cnames(changeClass)}
-                >
-                    {!marketStats || !marketStats.change
-                        ? null
-                        : marketStats.change}
-                    %
-                </span>
-            ),
+            hour_24:
+                !marketStats ||
+                !marketStats.change ||
+                marketStats.change === "0.00"
+                    ? 0
+                    : marketStats.change,
             volume:
                 !marketStats || !marketStats.volumeQuote
-                    ? null
-                    : utils.format_volume(
-                          marketStats.volumeQuote,
-                          basePrecision
-                      ),
+                    ? 0
+                    : marketStats.volumeQuote,
             flip:
                 inverted === null || !this.props.isFavorite ? null : (
                     <span className="column-hide-small">
@@ -423,7 +435,8 @@ class MarketsTable extends React.Component {
                         className="icon-14px"
                     />
                 </Tooltip>
-            )
+            ),
+            basePrecision: basePrecision
         };
     }
 

@@ -47,7 +47,6 @@ class AssetName extends React.Component {
             FetchChainObjects(ChainStore.getAccountName, [
                 this.props.asset.get("issuer")
             ]).then(result => {
-                console.log(result);
                 // re-render, ChainStore cache now has the object
                 this.setState({assetIssuerName: result[0]});
             });
