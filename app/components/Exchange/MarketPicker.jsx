@@ -325,7 +325,7 @@ class MarketPickerWrapper extends Component {
                     <Translate content="exchange.market_picker.sub_title" />
                     &nbsp;
                     <Link
-                        to={`/asset/${marketPickerAsset}`}
+                        to={`/exchange/asset/${marketPickerAsset}`}
                         style={{
                             cursor: "pointer",
                             color: "lightblue !important"

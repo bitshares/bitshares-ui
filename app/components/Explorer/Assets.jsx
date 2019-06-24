@@ -525,7 +525,7 @@ class Assets extends React.Component {
                                                             }}
                                                         >
                                                             <Link
-                                                                to={`/asset/${
+                                                                to={`/exchange/asset/${
                                                                     item.asset
                                                                         .symbol
                                                                 }`}
