@@ -13,54 +13,6 @@ import Immutable from "immutable";
 
 const STUB_ACCOUNT_ID = "1.2.23882";
 
-const STUB_MARKETS = [
-    {
-        symbol: "TWW",
-        asset_id: "1.3.0",
-        issuer: STUB_ACCOUNT_ID,
-        condition: "T will win",
-        description:
-            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque ",
-        odds: ""
-    },
-    {
-        symbol: "TWW",
-        asset_id: "1.3.1",
-        issuer: "1.2.23881",
-        condition: "Tr will win",
-        description:
-            "natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,",
-        odds: ""
-    },
-    {
-        symbol: "TWW",
-        asset_id: "1.3.2",
-        issuer: "1.2.23881",
-        condition: "Tra will win",
-        description:
-            "imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus",
-        odds: ""
-    },
-    {
-        symbol: "TWW",
-        asset_id: "1.3.2",
-        issuer: "1.2.23881",
-        condition: "Tram will win",
-        description:
-            "Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus",
-        odds: ""
-    },
-    {
-        symbol: "TWW",
-        asset_id: "1.3.2",
-        issuer: "1.2.23881",
-        condition: "Tramp will win",
-        description:
-            " Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque",
-        odds: ""
-    }
-];
-
 const STUB_OPINIONS = {
     "1.3.0": [
         {
@@ -104,7 +56,7 @@ export default class PredictionMarkets extends Component {
         this.state = {
             assets: [],
             lastAssetSymbol: null,
-            markets: STUB_MARKETS,
+            markets: [],
             currentAccountId: STUB_ACCOUNT_ID,
             searchTerm: "",
             detailsSearchTerm: "",
@@ -116,6 +68,7 @@ export default class PredictionMarkets extends Component {
             isAddOpinionModalOpen: false,
             isResolveModalOpen: false
         };
+        this._updateAssetsList("A");
     }
 
     componentWillReceiveProps(np) {
@@ -144,6 +97,7 @@ export default class PredictionMarkets extends Component {
                     )
                 ]
             });
+            this.updateMarketsList();
         }
         if (
             !this.state.lastAssetSymbol ||
@@ -158,6 +112,29 @@ export default class PredictionMarkets extends Component {
 
     async _updateAssetsList(lastAsset) {
         AssetActions.getAssetList.defer(lastAsset, 100);
+    }
+
+    updateMarketsList() {
+        let markets = [];
+        for (let item of this.state.assets) {
+            let market = {};
+            market.asset_id = item[1]["id"];
+            market.issuer = item[1]["issuer"];
+            //    market.condition =
+            try {
+                market.description = JSON.parse(
+                    item[1]["options"]["description"]
+                ).main;
+            } catch (e) {
+                market.description = item[1]["options"]["description"];
+            }
+            market.symbol = item[1]["symbol"];
+
+            markets.push(market);
+        }
+        this.setState({
+            markets
+        });
     }
 
     async getMarketOpinions(market) {
@@ -379,7 +356,6 @@ export default class PredictionMarkets extends Component {
                 className="grid-block vertical"
                 style={{overflow: "visible", margin: "15px"}}
             >
-                {JSON.stringify(this.state.assets)}
                 <div
                     className="grid-block small-12 shrink"
                     style={{overflow: "visible"}}
