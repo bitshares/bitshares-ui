@@ -14,9 +14,9 @@ export default class PredictionMarketsOverviewTable extends Component {
         });
     }
 
-    onRowAction = () => {
+    onRowAction = dataItem => {
         return {
-            onClick: this.onMarketAction.bind(this)
+            onClick: this.onMarketAction.bind(this, dataItem)
         };
     };
 
@@ -138,10 +138,11 @@ export default class PredictionMarketsOverviewTable extends Component {
         };
 
         let filteredMarkets = this.props.markets.filter(item => {
-            //TODO filter with issuer name, not with issuer id
-            //let acountName = ChainStore.getAccount(item.issuer).get("name");
+            let accountName = ChainStore.getAccount(item.issuer)
+                ? ChainStore.getAccount(item.issuer).get("name")
+                : null;
             return (
-                (item.issuer + item.condition + item.description)
+                (accountName + "\0" + item.condition + "\0" + item.description)
                     .toUpperCase()
                     .indexOf(this.props.searchTerm) !== -1
             );

@@ -112,17 +112,16 @@ export default class PredictionMarketDetailsTable extends Component {
                 })
         };
 
-        let filteredOpinions = this.props.marketData.opinions.filter(
-            item => {
-                console.log(item);
-                return (
-                    (item.opiniator + item.opinion)
-                        .toUpperCase()
-                        .indexOf(this.props.detailsSearchTerm) !== -1
-                );
-            }
-            //TODO filter with opiniator name, not with issuer id
-        );
+        let filteredOpinions = this.props.marketData.opinions.filter(item => {
+            let accountName = ChainStore.getAccount(item.opinionator)
+                ? ChainStore.getAccount(item.opinionator).get("name")
+                : null;
+            return (
+                (accountName + "\0" + item.opinion)
+                    .toUpperCase()
+                    .indexOf(this.props.detailsSearchTerm) !== -1
+            );
+        });
 
         let i = 0;
         filteredOpinions = filteredOpinions.map(item => ({

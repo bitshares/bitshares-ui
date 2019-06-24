@@ -11,11 +11,11 @@ export default class AddOpinionModal extends Modal {
             newOpinionParameters: {
                 order_id: null,
                 opinionator: null,
-                opinion: "no",
-                amount: null,
+                opinion: this.props.preselectedOpinion,
+                amount: this.props.preselectedAmount,
                 fee: null
             },
-            bool_opinion: false
+            bool_opinion: this.props.preselectedOpinion === "yes" ? true : false
         };
 
         this.handleOpinionChange = this.handleOpinionChange.bind(this);
@@ -133,7 +133,9 @@ AddOpinionModal.propTypes = {
     opinion: PropTypes.any,
     currentAccountId: PropTypes.string,
     getNewOpinionParameters: PropTypes.func,
-    newOpinionId: PropTypes.string
+    newOpinionId: PropTypes.string,
+    preselectedOpinion: PropTypes.string,
+    preselectedAmount: PropTypes.number
 };
 
 AddOpinionModal.defaultProps = {
