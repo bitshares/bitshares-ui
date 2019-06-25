@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import assetUtils from "common/asset_utils";
 import AssetActions from "actions/AssetActions";
 import counterpart from "counterpart";
 import PredictionMarketsOverviewTable from "./PredictionMarketsOverviewTable";
@@ -115,23 +116,16 @@ export default class PredictionMarkets extends Component {
     }
 
     updateMarketsList() {
-        let markets = [];
-        for (let item of this.state.assets) {
-            let market = {};
-            market.asset_id = item[1]["id"];
-            market.issuer = item[1]["issuer"];
-            //    market.condition =
-            try {
-                market.description = JSON.parse(
-                    item[1]["options"]["description"]
-                ).main;
-            } catch (e) {
-                market.description = item[1]["options"]["description"];
-            }
-            market.symbol = item[1]["symbol"];
-
-            markets.push(market);
-        }
+        const markets = this.state.assets.map(item => ({
+            asset_id: item[1].id,
+            issuer: item[1].issuer,
+            description: assetUtils.parseDescription(
+                item[1].options.description
+            ).main,
+            symbol: item[1].symbol,
+            // TODO use real condition
+            condition: "Unknown"
+        }));
         this.setState({
             markets
         });
