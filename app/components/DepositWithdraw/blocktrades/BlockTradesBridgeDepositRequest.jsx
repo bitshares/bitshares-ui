@@ -25,6 +25,8 @@ let oidcStorage = new ls(
     "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
 );
 
+const POST_LOGOUT_REDIRECT_URI = "https://192.168.6.139:9051/deposit-withdraw";
+
 class ButtonConversion extends React.Component {
     static propTypes = {
         balance: ChainTypes.ChainObject,
@@ -1109,7 +1111,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         automaticSilentRenew,
                         userStore: new WebStorageStateStore({
                             store: window.localStorage
-                        })
+                        }),
+                        post_logout_redirect_uri: POST_LOGOUT_REDIRECT_URI
                     });
                     this.setState({
                         retrievingDataFromOauthApi: false
@@ -1159,6 +1162,13 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             });
 
             this.urlConnectionInit();
+        }
+
+        // checks the url and finishes logout flow
+        try {
+            this.manager.signoutRedirectCallback(location.href);
+        } catch (error) {
+            // here error will occure when there is no good state value
         }
     }
 
@@ -1954,8 +1964,17 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         this.manager.signinRedirect();
     }
 
-    onLogout() {
-        this.manager.signoutRedirect();
+    async onLogout() {
+        try {
+            const {id_token} = await this.manager.getUser();
+            const response = await this.manager.signoutRedirect({
+                id_token_hint: id_token,
+                state: "logout",
+                post_logout_redirect_uri: POST_LOGOUT_REDIRECT_URI
+            });
+        } catch (err) {
+            throw err;
+        }
     }
 
     render() {
