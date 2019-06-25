@@ -1981,6 +1981,7 @@
             "sender": "Отправитель",
             "size": "Размер",
             "title": "Хешированные контракты с временным замком",
+            "title_short": "HTLC",
             "to": "Кому",
             "tooltip": {
                 "enter_preimage": "Введите секретный прообраз, который вы получили от отправителя",
@@ -1997,7 +1998,7 @@
             "title": "Бумажный кошелёк"
         },
         "prediction_market": {
-            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
             "title": "Prediction Markets"
         },
         "timed_transfer": {

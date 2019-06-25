@@ -2076,7 +2076,7 @@
     }
     .ant-table-placeholder {
         min-height: 130px;
-        z-index: 0 !important;
+        z-index: 0;
     }
     div.account-creation {
         border: 1px solid $account-cells;
@@ -2201,7 +2201,7 @@
 
         box-shadow: $header-shadow;
 
-        z-index: 1;
+        z-index: 1010;
 
         .menu-group {
             .menu-bar {
