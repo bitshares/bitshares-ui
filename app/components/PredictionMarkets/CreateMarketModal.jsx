@@ -14,56 +14,107 @@ export default class CreateMarketModal extends Modal {
                 issuer: null,
                 condition: null,
                 description: null,
-                odds: null,
                 symbol: null,
                 resolution_date: null,
                 backing_asset: null,
-                participation_fee: null
-            }
+                participation_fee: null,
+                feeAsset: null
+            },
+            showWarning: true
         };
 
-        this.handleSymbolChange = this.handleSymbolChange.bind(this);
-        this.handleConditionChange = this.handleConditionChange.bind(this);
-        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-        this.handleDateChange = this.handleDateChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleAssetChange = this.handleAssetChange.bind(this);
+        this.handleFeeChange = this.handleFeeChange.bind(this);
     }
 
-    handleSymbolChange(event) {
+    handleChange(event) {
         let newMarket = this.state.newMarketParameters;
-        newMarket.symbol = event.target.value;
         newMarket.issuer = this.props.currentAccountId;
         newMarket.asset_id = this.props.newMarketId;
-        this.setState({newMarketParameters: newMarket});
+        switch (event.target.name) {
+            case "symbol":
+                newMarket.symbol = event.target.value;
+                break;
+            case "condition":
+                newMarket.condition = event.target.value;
+                break;
+            case "description":
+                newMarket.description = event.target.value;
+                break;
+            case "resolution_date":
+                newMarket.resolution_date = event.target.value;
+                break;
+        }
+        if (this.checkFullBlank()) {
+            this.setState({
+                newMarketParameters: newMarket,
+                showWarning: false
+            });
+        } else {
+            this.setState({
+                newMarketParameters: newMarket,
+                showWarning: true
+            });
+        }
     }
 
-    handleConditionChange(event) {
+    handleAssetChange(asset) {
+        if (asset) {
+            let newMarket = this.state.newMarketParameters;
+            newMarket.backing_asset = asset;
+            newMarket.issuer = this.props.currentAccountId;
+            newMarket.asset_id = this.props.newMarketId;
+            this.setState({newMarketParameters: newMarket});
+            if (this.checkFullBlank()) {
+                this.setState({showWarning: false});
+            } else {
+                this.setState({showWarning: true});
+            }
+        }
+    }
+
+    handleFeeChange({asset}) {
+        function handleWarning() {
+            if (this.checkFullBlank()) {
+                this.setState({showWarning: false});
+            } else {
+                this.setState({showWarning: true});
+            }
+        }
+
         let newMarket = this.state.newMarketParameters;
-        newMarket.condition = event.target.value;
-        newMarket.issuer = this.props.currentAccountId;
-        newMarket.asset_id = this.props.newMarketId;
-        this.setState({newMarketParameters: newMarket});
+        newMarket.feeAsset = asset;
+        if (typeof asset === "string") {
+            this.setState({newMarketParameters: newMarket}, handleWarning);
+        }
     }
 
-    handleDescriptionChange(event) {
-        let newMarket = this.state.newMarketParameters;
-        newMarket.description = event.target.value;
-        newMarket.issuer = this.props.currentAccountId;
-        newMarket.asset_id = this.props.newMarketId;
-        this.setState({newMarketParameters: newMarket});
+    checkFullBlank() {
+        return this.state.newMarketParameters.symbol &&
+            this.state.newMarketParameters.asset_id &&
+            this.state.newMarketParameters.issuer &&
+            this.state.newMarketParameters.condition &&
+            this.state.newMarketParameters.description &&
+            this.state.newMarketParameters.resolution_date &&
+            typeof this.state.newMarketParameters.backing_asset === "string" &&
+            typeof this.state.newMarketParameters.feeAsset === "string"
+            ? true
+            : false;
     }
-
-    handleDateChange(event) {
-        let newMarket = this.state.newMarketParameters;
-        newMarket.resolution_date = event.target.value;
-        newMarket.issuer = this.props.currentAccountId;
-        newMarket.asset_id = this.props.newMarketId;
-        this.setState({newMarketParameters: newMarket});
-    }
-
-    handleAssetChange() {}
 
     render() {
+        let onOkFunction;
+
+        if (this.checkFullBlank()) {
+            onOkFunction = () =>
+                this.props.getNewMarketParameters(
+                    this.state.newMarketParameters
+                );
+        } else {
+            onOkFunction = () => {};
+        }
+
         return (
             <Modal
                 title={
@@ -71,9 +122,7 @@ export default class CreateMarketModal extends Modal {
                 }
                 visible={this.props.show}
                 onOk={() => {
-                    this.props.getNewMarketParameters(
-                        this.state.newMarketParameters
-                    );
+                    onOkFunction();
                 }}
                 onCancel={this.props.onClose}
                 overlay={true}
@@ -84,8 +133,9 @@ export default class CreateMarketModal extends Modal {
                             <label className="left-label">
                                 <Translate content="prediction.create_market_modal.symbol" />
                                 <Input
+                                    name="symbol"
                                     type="text"
-                                    onChange={this.handleSymbolChange}
+                                    onChange={this.handleChange}
                                     tabIndex={1}
                                 />
                             </label>
@@ -94,8 +144,9 @@ export default class CreateMarketModal extends Modal {
                             <label className="left-label">
                                 <Translate content="prediction.create_market_modal.condition" />
                                 <Input
+                                    name="condition"
                                     type="text"
-                                    onChange={this.handleConditionChange}
+                                    onChange={this.handleChange}
                                     tabIndex={2}
                                 />
                             </label>
@@ -104,7 +155,8 @@ export default class CreateMarketModal extends Modal {
                             <label className="left-label">
                                 <Translate content="prediction.create_market_modal.description" />
                                 <Input.TextArea
-                                    onChange={this.handleDescriptionChange}
+                                    name="description"
+                                    onChange={this.handleChange}
                                     tabIndex={3}
                                 />
                             </label>
@@ -113,8 +165,9 @@ export default class CreateMarketModal extends Modal {
                             <label className="left-label">
                                 <Translate content="prediction.create_market_modal.resolution_date" />
                                 <Input
+                                    name="resolution_date"
                                     type="date"
-                                    onChange={this.handleDateChange}
+                                    onChange={this.handleChange}
                                     tabIndex={4}
                                 />
                             </label>
@@ -132,6 +185,10 @@ export default class CreateMarketModal extends Modal {
                                         "1.3.106",
                                         "1.3.103"
                                     ]}
+                                    asset={
+                                        this.state.newMarketParameters
+                                            .backing_asset
+                                    }
                                     onChange={this.handleAssetChange}
                                     tabIndex={5}
                                 />
@@ -152,9 +209,18 @@ export default class CreateMarketModal extends Modal {
                                         "1.3.106",
                                         "1.3.103"
                                     ]}
+                                    asset={
+                                        this.state.newMarketParameters.feeAsset
+                                    }
+                                    onChange={this.handleFeeChange}
                                 />
                             </label>
                         </Form.Item>
+                        <div>
+                            {this.state.showWarning ? (
+                                <Translate content="prediction.create_market_modal.warning" />
+                            ) : null}
+                        </div>
                     </Form>
                 </div>
             </Modal>

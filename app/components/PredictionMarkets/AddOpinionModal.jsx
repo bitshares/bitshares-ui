@@ -15,7 +15,10 @@ export default class AddOpinionModal extends Modal {
                 amount: this.props.preselectedAmount,
                 fee: null
             },
-            bool_opinion: this.props.preselectedOpinion === "yes" ? true : false
+            bool_opinion:
+                this.props.preselectedOpinion === "yes" ? true : false,
+            showWarning: true,
+            selectedAsset: null
         };
 
         this.handleOpinionChange = this.handleOpinionChange.bind(this);
@@ -34,14 +37,46 @@ export default class AddOpinionModal extends Modal {
     }
 
     handleAmountChange({amount, asset}) {
-        let newOpinion = this.state.newOpinionParameters;
-        newOpinion.amount = amount;
-        newOpinion.opinionator = this.props.currentAccountId;
-        newOpinion.order_id = this.props.newOpinionId;
-        this.setState({newOpinionParameter: newOpinion});
+        function handleWarning() {
+            if (this.checkFullBlank()) {
+                this.setState({showWarning: false});
+            } else {
+                this.setState({showWarning: true});
+            }
+        }
+
+        if (amount) {
+            let newOpinion = this.state.newOpinionParameters;
+            newOpinion.amount = amount;
+            newOpinion.opinionator = this.props.currentAccountId;
+            newOpinion.order_id = this.props.newOpinionId;
+            this.setState({newOpinionParameter: newOpinion}, handleWarning);
+        }
+
+        if (typeof asset === "string") {
+            this.setState({selectedAsset: asset}, handleWarning);
+        }
+    }
+
+    checkFullBlank() {
+        return this.state.newOpinionParameters.amount &&
+            this.state.selectedAsset
+            ? true
+            : false;
     }
 
     render() {
+        let onOkFunction;
+
+        if (this.checkFullBlank()) {
+            onOkFunction = () =>
+                this.props.getNewOpinionParameters(
+                    this.state.newOpinionParameters
+                );
+        } else {
+            onOkFunction = () => {};
+        }
+
         return (
             <Modal
                 title={
@@ -49,9 +84,7 @@ export default class AddOpinionModal extends Modal {
                 }
                 visible={this.props.show}
                 onOk={() => {
-                    this.props.getNewOpinionParameters(
-                        this.state.newOpinionParameters
-                    );
+                    onOkFunction();
                 }}
                 onCancel={this.props.onClose}
                 overlay={true}
@@ -116,9 +149,15 @@ export default class AddOpinionModal extends Modal {
                                         "1.3.106",
                                         "1.3.103"
                                     ]}
+                                    asset={this.state.selectedAsset}
                                 />
                             </label>
                         </Form.Item>
+                        <div>
+                            {this.state.showWarning ? (
+                                <Translate content="prediction.add_opinion_modal.warning" />
+                            ) : null}
+                        </div>
                     </Form>
                 </div>
             </Modal>

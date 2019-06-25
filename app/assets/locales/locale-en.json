@@ -1619,7 +1619,8 @@
             "description": "Description",
             "resolution_date": "Resolution date",
             "backing_asset": "Backing asset",
-            "participation_fee": "Participation fee"
+            "participation_fee": "Participation fee",
+            "warning": "Fill all blanks"
         },
         "add_opinion_modal": {
             "title": "Add opinion",
@@ -1628,7 +1629,8 @@
             "opinion": "Opinion",
             "yes": "YES",
             "no": "NO",
-            "amount": "Amount"
+            "amount": "Amount",
+            "warning": "Set amount"
         },
         "resolve_modal": {
             "title": "Resolve"
