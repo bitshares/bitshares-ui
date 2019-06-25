@@ -40,7 +40,7 @@ $row-accent-color: #ffffff;
 $header-color: #dcdcdc;
 
 // Account table view colors
-$account-header: #b1b1b1;
+$account-header: #eaeaea;
 $account-cells: #dadada;
 $account-green: #488a00;
 $account-primarytext: $primary-text-color;
@@ -84,8 +84,89 @@ $explorer--assets--bg: $bg-color;
 
 // * * *
 
+// * * * * Settings
+
+$settings-label-color: rgba(0, 0, 0, 0.65);
+
+//
+
+// color palette
+
+// branding colors
+$primary-color: #337ab7;
+
+// help colors
+$white: #fff;
+$dark: rgba(0, 0, 0, 0.6);
+$dark-1: lighten($dark, 30%);
+$dark-2: lighten($dark, 60%);
+$dark-3: lighten($dark, 90%);
+
+// Header
+$header-background-color: $white;
+$header-shadow: 0 4px 9px 0 #00000015 !important;
+$header-item--color: lighten($dark, 20%);
+$header-item-background-color: $white;
+$header-item--active--background-color: $white;
+
+$header-item--active--color: $link-text-color;
+
+// Tabs (old, not style-guide)
+$tabs-border-size: 1px;
+$tabs-border-color: $dark-3;
+$tabs-background-color: $white;
+$tabs-item-background-color: $white;
+$tabs-item-color: $dark;
+$tabs-item-border-size: 3px;
+$tabs-item-border-color: $white;
+$tabs-item--active--color: $dark;
+$tabs-item--active--border-color: $primary-color;
+$tabs-item--active--background-color: $white;
+$tabs-item--active--border-color: $primary-color;
+$tabs-content-background-color: $white;
+
+// Selector
+
+$selector-active-border-color: $primary-color;
+$selector-active-text-color: $primary-color;
+
+$selector-border-color: $dark-3;
+$selector-text-color: $dark-1;
+
+// Header Menu
+
+$header-menu--active--icon-background: $white;
+$header-menu--active--box-shadow: 0 4px 9px 0 #00000015;
+$header-menu-background-color: #fff;
+$header-menu-item--hover--background-color: lighten($primary-color, 40%);
+
 .lightTheme {
     @include theme(
+        $header-menu--active--icon-background,
+        $header-menu--active--box-shadow,
+        $header-menu-background-color,
+        $header-menu-item--hover--background-color,
+        $selector-active-border-color,
+        $selector-active-text-color,
+        $selector-border-color,
+        $selector-text-color,
+        $tabs-content-background-color,
+        $tabs-border-size,
+        $tabs-border-color,
+        $tabs-background-color,
+        $tabs-item-background-color,
+        $tabs-item-color,
+        $tabs-item-border-size,
+        $tabs-item-border-color,
+        $tabs-item--active--color,
+        $tabs-item--active--border-color,
+        $tabs-item--active--background-color,
+        $header-background-color,
+        $header-shadow,
+        $header-item--color,
+        $header-item-background-color,
+        $header-item--active--background-color,
+        $header-item--active--color,
         $explorer-tab-content-background-color,
         $tab-content-background-color,
         $primary-text-color,
@@ -143,10 +224,19 @@ $explorer--assets--bg: $bg-color;
         $positive-color-alternative,
         $separator-line,
         $medium-color,
-        $dark-help-text
+        $dark-help-text,
+        $settings-label-color
     );
 
     .change-up {
         font-weight: bold;
+    }
+
+    thead[class*="ant-table-thead"] th {
+        background-color: #2196f3bb !important;
+    }
+    div[class*="ant-table-footer"] {
+        background-color: #2196f3bb !important;
+        color: white;
     }
 }

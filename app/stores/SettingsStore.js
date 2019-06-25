@@ -55,7 +55,8 @@ class SettingsStore {
             onSetUserMarket: SettingsActions.setUserMarket,
             onUpdateLatencies: SettingsActions.updateLatencies,
             onModifyPreferedBases: SettingsActions.modifyPreferedBases,
-            onUpdateUnits: SettingsActions.updateUnits
+            onUpdateUnits: SettingsActions.updateUnits,
+            onHideNewsHeadline: SettingsActions.hideNewsHeadline
         });
 
         this.initDone = false;
@@ -88,6 +89,10 @@ class SettingsStore {
         this.exchange = fromJS(ss.get("exchange", {}));
 
         this.priceAlert = fromJS(ss.get("priceAlert", []));
+
+        this.hiddenNewsHeadline = Immutable.List(
+            ss.get("hiddenNewsHeadline", [])
+        );
     }
 
     /**
@@ -112,7 +117,8 @@ class SettingsStore {
                     transferToMe: true
                 }
             },
-            rememberMe: true
+            rememberMe: true,
+            viewOnlyMode: true
         };
     }
 
@@ -136,7 +142,7 @@ class SettingsStore {
                 "ja"
             ],
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
-            unit: getUnits(this._getChainId()),
+            unit: getUnits(),
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
             themes: ["darkTheme", "lightTheme", "midnightTheme"],
@@ -150,7 +156,8 @@ class SettingsStore {
                     transferToMe: [true, false]
                 }
             },
-            rememberMe: [true, false]
+            rememberMe: [true, false],
+            viewOnlyMode: [{translate: "show"}, {translate: "hide"}]
         };
     }
 
@@ -438,9 +445,9 @@ class SettingsStore {
             };
             let coreAsset = coreAssets[this.starredKey] || "BTS";
             /*
-            * Update units depending on the chain, also make sure the 0 index
-            * asset is always the correct CORE asset name
-            */
+             * Update units depending on the chain, also make sure the 0 index
+             * asset is always the correct CORE asset name
+             */
             this.onUpdateUnits();
             this.defaults.unit[0] = coreAsset;
 
@@ -753,9 +760,16 @@ class SettingsStore {
     }
 
     onUpdateUnits() {
-        this.defaults.unit = getUnits(this._getChainId());
+        this.defaults.unit = getUnits();
         if (this.defaults.unit.indexOf(this.settings.get("unit")) === -1) {
             this.settings = this.settings.set("unit", this.defaults.unit[0]);
+        }
+    }
+
+    onHideNewsHeadline(payload) {
+        if (payload && this.hiddenNewsHeadline.indexOf(payload)) {
+            this.hiddenNewsHeadline = this.hiddenNewsHeadline.push(payload);
+            ss.set("hiddenNewsHeadline", this.hiddenNewsHeadline.toJS());
         }
     }
 }

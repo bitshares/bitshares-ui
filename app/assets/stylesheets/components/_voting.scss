@@ -1,0 +1,38 @@
+.voting {
+    .proxy-row {
+    }
+    .ant-radio-group {
+        padding-top: 4px !important;
+        padding-left: 26px !important;
+        .ant-radio-wrapper {
+            font-family: "Roboto-Regular", arial, sans-serif !important;
+            font-size: 16px !important;
+        }
+    }
+    .ant-row {
+        padding-bottom: 20px;
+    }
+    .unsupported {
+        > td {
+            color: grey;
+            > a {
+                color: grey;
+            }
+            > span {
+                > a {
+                    color: grey;
+                }
+            }
+            > span {
+                > div {
+                    > a {
+                        color: grey;
+                    }
+                }
+            }
+            svg > path {
+                fill: grey;
+            }
+        }
+    }
+}

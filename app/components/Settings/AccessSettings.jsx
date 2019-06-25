@@ -8,7 +8,7 @@ import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
 import LoadingButton from "../Utility/LoadingButton";
-import {Switch} from "bitshares-ui-style-guide";
+import {Switch, Button} from "bitshares-ui-style-guide";
 
 const autoSelectionUrl = "wss://fake.automatic-selection.com";
 
@@ -97,7 +97,7 @@ class AutoSelectionNode extends React.Component {
                         />
                         <Translate
                             component="div"
-                            style={{paddingLeft: "1rem", paddingTop: "0.1rem"}}
+                            style={{paddingLeft: "1rem", paddingTop: "0.2rem"}}
                             content="settings.automatic"
                             totalNodes={totalNodes}
                         />
@@ -617,8 +617,8 @@ class AccessSettings extends React.Component {
                         <div
                             style={{paddingLeft: "1rem", paddingBottom: "1rem"}}
                         >
-                            <div
-                                className="button"
+                            <Button
+                                type="primary"
                                 onClick={props.showAddNodeModal}
                             >
                                 <Translate
@@ -626,7 +626,7 @@ class AccessSettings extends React.Component {
                                     component="span"
                                     content="settings.add_api"
                                 />
-                            </div>
+                            </Button>
                         </div>
                     )}
                     {this.state.activeTab === "testnet_nodes" && (

@@ -246,6 +246,11 @@ class ProposalModal extends React.Component {
                                     <AccountSelect
                                         account_names={myAccounts}
                                         onChange={this.onChangePayee.bind(this)}
+                                        selected={
+                                            myAccounts.length === 1
+                                                ? myAccounts
+                                                : null
+                                        }
                                     />
                                 </div>
 

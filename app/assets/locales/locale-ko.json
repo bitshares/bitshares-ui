@@ -6,6 +6,7 @@
         "as_collateral": "Collateral",
         "asset": "자산",
         "asset_details": "Asset details",
+        "average_price": "Average price",
         "bittrex_scam": "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
         "bts_market": "종목",
         "collaterals": "보증금 포지션",
@@ -24,6 +25,7 @@
         "deposit": "Deposit BTS",
         "deposit_address": "Your deposit address is your account name",
         "deposit_withdraw": "입출금",
+        "download_history": "Download History",
         "eq_value": "Estimated Value",
         "eq_value_header": "Value ({asset})",
         "errors": {
@@ -36,8 +38,16 @@
         "estimate_value": "Estimated Account value",
         "existing_accounts": "기존 계정",
         "existing_user": "Existing user",
+        "export_modal": {
+            "coinbase_report": "CoinTracking.info Report",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "title": "History Export",
+            "use_custom": "Use custom wrapper"
+        },
         "filter_orders": "Filter",
         "follow": "팔로우",
+        "group_by_asset": "Group by asset",
         "hidden_accounts_row": "Hidden Accounts",
         "hide_hidden": "Active",
         "hide_ignored": "Hide hidden accounts",
@@ -62,6 +72,7 @@
         "member": {
             "annual": "연간회원",
             "available": "Available to claim",
+            "balance_type": "Type",
             "basic": "기본회원",
             "cashback": "캐쉬백",
             "claim": "Claim now",
@@ -282,6 +293,8 @@
             "primary": "Primary settings",
             "quote": "Quote asset amount",
             "quote_name": "Quote asset",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Short name (max 32 characters)",
             "symbol": "약자",
             "to": "다음 계정으로 발행",
@@ -302,7 +315,7 @@
         },
         "votes": {
             "about": "About",
-            "active": "Active(%(count)s)",
+            "active": "Active (%(count)s)",
             "active_short": "Active",
             "add_committee": "추가",
             "add_committee_label": "위원",
@@ -310,6 +323,7 @@
             "add_witness_label": "증인",
             "already": "Account is already in the list",
             "approve_worker": "Approve worker proposal",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "clear_proxy": "Remove proxy",
             "cm_approved_by": "Committee members approved by %(account)s",
             "cm_not_approved_by": "Committee members not approved by %(account)s",
@@ -325,12 +339,15 @@
             "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Inactive",
             "info": "정보",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "Line",
             "max_pay": "Maximum total pay",
             "missing": "Needed",
             "name": "이름",
-            "new": "Proposed(%(count)s)",
+            "new": "Proposed (%(count)s)",
             "no_proxy": "대리투표 사용안함",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "대리투표 계정",
             "proxy_current": "Your current proxy is",
             "proxy_known": "Or choose an account as your proxy",
@@ -381,7 +398,8 @@
             "empty_white_by": "No accounts have whitelisted %(account)s.",
             "title": "Whitelist",
             "white_by": "Whitelisted by",
-            "whitelist_authorities": "Whitelist authority"
+            "whitelist_authorities": "Whitelist authority",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -442,6 +460,8 @@
         "no_valid": "%(asset_symbol)s 에 대한 유효한 가격정보가 없음",
         "pay_max_debt": "Pay Max Debt",
         "target_collateral_ratio": "Target Collateral Ratio",
+        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "Collateral position for %(asset_symbol)s",
         "update": "Update",
         "use_max": "Use Max"
@@ -490,6 +510,7 @@
         "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
         "call": "콜 가격",
+        "cancel_selected_orders": "Cancel selected order(s)",
         "change": "Change",
         "chart_height": "Chart height (pixels)",
         "chart_hide": "Hide Charts",
@@ -715,8 +736,14 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -735,10 +762,14 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Margin positions"
             },
             "not_found": "자산 %(name)s이 존재하지 않음",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Blacklist authorities",
                 "blacklist_markets": "Blacklist markets",
                 "max_market_fee": "최대 거래수수료",
@@ -796,7 +827,7 @@
                 "current_supply": "현재 공급량",
                 "issuer": "발행자",
                 "market_fee": "거래 수수료",
-                "max_market_fee": "최대 거래수수료",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "익명 공급량"
             },
             "title": "자산",
@@ -804,7 +835,9 @@
                 "blacklist_authorities": "Blacklist authorities",
                 "blacklist_markets": "Market blacklist",
                 "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Whitelist authorities",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Market whitelist"
             }
         },
@@ -889,6 +922,7 @@
             "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
@@ -970,7 +1004,7 @@
             "rudex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Rudex.",
             "trade": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
             "win": "",
-            "xbts": ""
+            "xbtsx": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by XBTS."
         },
         "balance": "Balance",
         "balance_asset": "Current %(asset)s balance",
@@ -1109,6 +1143,7 @@
             "account": "account"
         },
         "help": "Help",
+        "not_found": "Not found",
         "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code",
         "set": "Set"
@@ -1143,6 +1178,18 @@
         "unlocked_tip": "지갑이 잠금해제 되어있습니다. 잠금을 눌러주세요.",
         "update_asset": "Update Asset",
         "withdraw_legacy": "or Legacy Withdraw"
+    },
+    "htlc": {
+        "claim_period": "Seconds to claim",
+        "claim_period_due": "Claimable until",
+        "id": "HTLC id",
+        "preimage": "Preimage",
+        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
+        "preimage_hash": "Preimage hash",
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "Redeemer",
+        "seconds_to_add": "Add seconds to claim period",
+        "update_issuer": "Update issuer"
     },
     "icons": {
         "adjust": "Adjust margin position",
@@ -1308,6 +1355,14 @@
         },
         "cancel": "cancel",
         "close": "close",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
         "confirmation": {
             "accept": "Yes",
             "cancel": "No",
@@ -1326,6 +1381,7 @@
             "close": "Close",
             "header": "Deposit to %(account_name)s",
             "header_short": "Deposit",
+            "no_assets": "No depositable assets available",
             "submit": "Deposit"
         },
         "deposit_withdraw": {
@@ -1389,6 +1445,9 @@
         },
         "settle": {
             "amount": "Amount to settle",
+            "delay": "Estimated delay: %(amount)s hours",
+            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
+            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
             "submit": "Settle asset",
             "title": "Request settlement of %(asset)s"
         },
@@ -1405,11 +1464,23 @@
             "gateway_fee": "Gateway Fee",
             "header": "Withdraw (beta)",
             "memo": "Memo",
+            "no_assets": "No withdrawable assets available",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
             "submit": "Withdraw",
             "withdraw": "Withdraw"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "enter_public_signing_key": "Enter your public signing key",
+            "invalid_key": "Public Key is invalid",
+            "public_signing_key": "Public Signing Key",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "witness_account": "Witness Account"
         }
     },
     "news": {
@@ -1476,6 +1547,11 @@
         "committee_member_update_global_parameters": "{account} updated the global committee parameters",
         "fill_order_buy": "{account} bought {amount} at {price}",
         "fill_order_sell": "{account} sold {amount} at {price}",
+        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
+        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
+        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
         "lifetime_upgrade_account": "{account} was upgraded to lifetime member",
         "limit_order_buy": "{account} placed an order to buy {amount} at {price}",
         "limit_order_cancel": "{account} cancelled order #%(order)s",
@@ -1514,6 +1590,8 @@
     },
     "proposal": {
         "action": "Actions",
+        "add": "Add",
+        "add_vote": "Add vote for",
         "approve": "Approve",
         "approvers": "Approver(s)",
         "asset_create": "Create the asset %(asset)s using the account {account}",
@@ -1522,7 +1600,11 @@
         "asset_settle": "Request a settlement of",
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
+        "changes_to_active": "Changes to active",
+        "changes_to_memo": "Changes to memo",
+        "changes_to_owner": "Changes to owner",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
+        "danger_operation": "Dangerous operation",
         "delete": "Permanently reject",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
@@ -1530,8 +1612,12 @@
         "limit_order_create": "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell": "Place an order to sell {amount} at {price} for {account}",
         "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "permission_changes": "Permission changes",
         "proposals": "Proposals",
         "reject": "Reject",
+        "remove": "Remove",
+        "remove_vote": "Remove vote for",
+        "set_threshold": "Set threshold to %(threshold)s",
         "status": "Status",
         "transfer": "Transfer {amount} from {from} to {to}",
         "update": {
@@ -1551,7 +1637,8 @@
             "owner_approvals_to_add": "Owner approval(s) added",
             "owner_approvals_to_remove": "Owner approval(s) removed"
         },
-        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
+        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
+        "votes": "Votes"
     },
     "proposal_create": {
         "expiration_time": "Expiration time",
@@ -1732,6 +1819,7 @@
         "themes": "Theme",
         "unit": "선호 화폐단위",
         "valid_node_url": "Node URL must begin with ws:// or wss://",
+        "viewOnlyMode": "View only mode",
         "view_keys": "View keys",
         "wallet": "Local Wallet",
         "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
@@ -1858,9 +1946,54 @@
             "update": "Update",
             "update_mandate": "Update existing authorization"
         },
+        "htlc": {
+            "actions": "Actions",
+            "amount": "Amount",
+            "create_htlc": "Create HTLC",
+            "custom": "Custom",
+            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
+            "enter_secret_preimage": "Enter secret preimage",
+            "expiration": "Expiration",
+            "expiration_date": "Expiration date",
+            "expiration_period": {
+                "one_day": "One day",
+                "one_week": "One week",
+                "two_days": "Two days"
+            },
+            "expires": "Expires",
+            "extend": "Extend",
+            "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
+            "from": "From",
+            "hash": "Hash",
+            "preimage": "Preimage",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "recipient": "Recipient",
+            "redeem": "Redeem",
+            "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
+            "sender": "Sender",
+            "size": "Size",
+            "title": "Hashed Time-Lock Contracts",
+            "title_short": "HTLC",
+            "to": "To",
+            "tooltip": {
+                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
+                "new_random": "Roll the dice and create a new random string.",
+                "preimage_button": "Please click to enter secret preimage",
+                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
+                "preimage_input": "Field requires a secret preimage",
+                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
+                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+            }
+        },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
+        },
+        "prediction_market": {
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
+            "title": "Prediction Markets"
         },
         "timed_transfer": {
             "description": "Initiate a transfer that will execute at a specified time.",
@@ -1944,11 +2077,12 @@
         "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
         "own_account": "You hold keys for this account",
-        "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+        "propose_scam": "This proposal was created by a known scammer or from someone that you blacklisted! Approval not possible.",
         "propose_tip": "Propose another user to initiate a transaction",
+        "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
-        "proxy_search": "Search for an account to be used as your proxy for voting",
+        "proxy_search": "",
         "registration": {
             "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
             "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
@@ -2006,6 +2140,7 @@
         "create_key": "공개키 생성",
         "csv": "Export to .csv",
         "csv_tip": "Download history as comma separated .csv file",
+        "cumulative_borrow_amount": "Cumulative Debt",
         "custom": "Created a custom operation",
         "delta_collateral": "담보금 변경",
         "delta_debt": "대출액 변경",
@@ -2022,11 +2157,14 @@
             "_none": "Free of Charge",
             "basic_fee": "Basic Fee",
             "fee": "Regular Transaction Fee",
+            "fee_per_day": "Price per day",
+            "fee_per_kb": "Price per KByte Transaction Size",
             "long_symbol": "Longer Symbols",
             "membership_annual_fee": "Annual Membership",
             "membership_lifetime_fee": "Lifetime Membership",
             "premium_fee": "Fee for Premium Names",
             "price_per_kbyte": "Price per KByte Transaction Size",
+            "price_per_output": "Price per recipient",
             "symbol3": "Symbols with 3 Characters",
             "symbol4": "Symbols with 4 Characters"
         },
@@ -2090,6 +2228,11 @@
             "execute_bid": "Execute bid",
             "fba_distribute": "Fee backed asset distribution",
             "fill_order": "매매 체결",
+            "htlc_create": "HTLC create",
+            "htlc_extend": "HTLC extend",
+            "htlc_redeem": "HTLC redeem",
+            "htlc_redeemed": "HTLC redeemed",
+            "htlc_refund": "HTLC refund",
             "limit_order_cancel": "주문 취소",
             "limit_order_create": "주문",
             "override_transfer": "Override transfer",
@@ -2154,6 +2297,7 @@
         "explict_price": "Explict price:",
         "fee": "수수료",
         "final": "전송 후 잔고",
+        "free": "Free",
         "from": "보내는 사람",
         "header": "Transfer details",
         "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
@@ -2225,6 +2369,10 @@
             "urlNamed": "%(name)s should be url"
         }
     },
+    "voting": {
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "title": "Voting"
+    },
     "walkthrough": {
         "buy_form": "이 양식을 사용하여 구매 주문을하십시오.",
         "buy_orders": "이 시장에 대한 모든 구매 주문을보십시오.",
@@ -2265,6 +2413,7 @@
         "backup_explain": "Clicking on the button below will generate a backup file with a .bin extension. This file is encrypted with your wallet password, and contains all the private keys for your accounts. It can be used to restore your wallet, or move it to a different computer/browser.",
         "backup_login": "Backup & login",
         "backup_new_account": "Congratulations, you've just created a new account on the BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "잔고 검색",
         "balance_claims": "잔고 청구",
@@ -2374,6 +2523,7 @@
         "password_show": "Show me my password",
         "paste_private": "Paste private keys here (Wallet Import Format - WIF)",
         "pwd4brainkey": "브레인키를 확인하시려면 비밀번호를 입력하세요",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "복원할 준비가 되었습니다",
         "reenter_brainkey": "브레인키를 다시 입력하세요",
         "remember_me": "Remember me",
@@ -2428,6 +2578,7 @@
         "wallet_model_2": "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_password": "Login anywhere using your password"
+        "wallet_password": "Login anywhere using your password",
+        "wallet_types": "wallet types"
     }
 }

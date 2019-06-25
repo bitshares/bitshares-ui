@@ -13,9 +13,10 @@ import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import ls from "common/localStorage";
-import PaginatedList from "../Utility/PaginatedList";
 import {Apis} from "bitsharesjs-ws";
-import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
+import {Radio, Table, Select, Icon} from "bitshares-ui-style-guide";
+import {List} from "antd";
+import SearchInput from "../Utility/SearchInput";
 
 let accountStorage = new ls("__graphene__");
 
@@ -407,61 +408,11 @@ class Assets extends React.Component {
                                 ? coreAsset.get("symbol")
                                 : "BTS");
 
-                    return (
-                        <tr key={asset.id.split(".")[2]}>
-                            <td style={{width: "80%"}}>
-                                <div
-                                    style={{paddingTop: 10, fontWeight: "bold"}}
-                                >
-                                    <Link to={`/asset/${asset.symbol}`}>
-                                        <AssetName name={asset.symbol} />
-                                    </Link>
-                                    {description.condition ? (
-                                        <span> ({description.condition})</span>
-                                    ) : null}
-                                </div>
-                                {description ? (
-                                    <div
-                                        style={{
-                                            padding: "10px 20px 5px 0",
-                                            lineHeight: "18px"
-                                        }}
-                                    >
-                                        {description.main}
-                                    </div>
-                                ) : null}
-                                <div
-                                    style={{
-                                        padding: "0 20px 5px 0",
-                                        lineHeight: "18px"
-                                    }}
-                                >
-                                    <LinkToAccountById account={asset.issuer} />
-                                    <span>
-                                        {" "}
-                                        -{" "}
-                                        <FormattedAsset
-                                            amount={
-                                                asset.dynamic.current_supply
-                                            }
-                                            asset={asset.id}
-                                        />
-                                    </span>
-                                    {description.expiry ? (
-                                        <span> - {description.expiry}</span>
-                                    ) : null}
-                                </div>
-                            </td>
-                            <td style={{width: "20%"}}>
-                                <Link
-                                    className="button outline"
-                                    to={`/market/${marketID}`}
-                                >
-                                    <Translate content="header.exchange" />
-                                </Link>
-                            </td>
-                        </tr>
-                    );
+                    return {
+                        asset,
+                        description,
+                        marketID
+                    };
                 })
                 .toArray();
         }
@@ -490,12 +441,10 @@ class Assets extends React.Component {
                                         <Icon type="loading" />
                                     ) : null}
                                 </span>
-                                <Input
-                                    placeholder={"Filter..."}
+                                <SearchInput
                                     value={this.state.filterSearch}
                                     style={{width: "200px"}}
                                     onChange={this.handleFilterChange}
-                                    addonAfter={<Icon type="search" />}
                                 />
                                 <Radio.Group
                                     value={this.state.activeFilter}
@@ -540,22 +489,143 @@ class Assets extends React.Component {
                             </div>
 
                             {activeFilter == "prediction" ? (
-                                <div
-                                    className="grid-block"
+                                <List
                                     style={{paddingBottom: 20}}
-                                >
-                                    <PaginatedList rows={pm} pageSize={6} />
-                                </div>
+                                    size="large"
+                                    itemLayout="horizontal"
+                                    dataSource={pm}
+                                    renderItem={item => (
+                                        <List.Item
+                                            key={item.asset.id.split(".")[2]}
+                                            actions={[
+                                                <Link
+                                                    className="button outline"
+                                                    to={`/market/${
+                                                        item.marketID
+                                                    }`}
+                                                >
+                                                    <Translate content="header.exchange" />
+                                                </Link>
+                                            ]}
+                                        >
+                                            <List.Item.Meta
+                                                title={
+                                                    <div>
+                                                        <span
+                                                            style={{
+                                                                paddingTop: 10,
+                                                                fontWeight:
+                                                                    "bold"
+                                                            }}
+                                                        >
+                                                            <Link
+                                                                to={`/asset/${
+                                                                    item.asset
+                                                                        .symbol
+                                                                }`}
+                                                            >
+                                                                <AssetName
+                                                                    name={
+                                                                        item
+                                                                            .asset
+                                                                            .symbol
+                                                                    }
+                                                                />
+                                                            </Link>
+                                                        </span>
+                                                        {item.description
+                                                            .condition ? (
+                                                            <span>
+                                                                {" "}
+                                                                (
+                                                                {
+                                                                    item
+                                                                        .description
+                                                                        .condition
+                                                                }
+                                                                )
+                                                            </span>
+                                                        ) : null}
+                                                    </div>
+                                                }
+                                                description={
+                                                    <span>
+                                                        {item.description ? (
+                                                            <div
+                                                                style={{
+                                                                    padding:
+                                                                        "10px 20px 5px 0",
+                                                                    lineHeight:
+                                                                        "18px"
+                                                                }}
+                                                            >
+                                                                {
+                                                                    item
+                                                                        .description
+                                                                        .main
+                                                                }
+                                                            </div>
+                                                        ) : null}
+                                                        <span
+                                                            style={{
+                                                                padding:
+                                                                    "0 20px 5px 0",
+                                                                lineHeight:
+                                                                    "18px"
+                                                            }}
+                                                        >
+                                                            <LinkToAccountById
+                                                                account={
+                                                                    item.asset
+                                                                        .issuer
+                                                                }
+                                                            />
+                                                            <span>
+                                                                {" "}
+                                                                -{" "}
+                                                                <FormattedAsset
+                                                                    amount={
+                                                                        item
+                                                                            .asset
+                                                                            .dynamic
+                                                                            .current_supply
+                                                                    }
+                                                                    asset={
+                                                                        item
+                                                                            .asset
+                                                                            .id
+                                                                    }
+                                                                />
+                                                            </span>
+                                                            {item.description
+                                                                .expiry ? (
+                                                                <span>
+                                                                    {" "}
+                                                                    -{" "}
+                                                                    {
+                                                                        item
+                                                                            .description
+                                                                            .expiry
+                                                                    }
+                                                                </span>
+                                                            ) : null}
+                                                        </span>
+                                                    </span>
+                                                }
+                                            />
+                                        </List.Item>
+                                    )}
+                                    pagination={{
+                                        position: "bottom",
+                                        pageSize: 6
+                                    }}
+                                />
                             ) : (
                                 <Table
                                     style={{width: "100%", marginTop: "16px"}}
                                     rowKey="symbol"
                                     columns={columns}
                                     dataSource={dataSource}
-                                    pagination={{
-                                        position: "bottom",
-                                        pageSize: Number(this.state.rowsOnPage)
-                                    }}
                                 />
                             )}
                         </div>

@@ -1,0 +1,10 @@
+.paginated-list {
+    .ant-table-body {
+        overflow: auto;
+        width: 100%;
+        height: 100%;
+    }
+    .ant-table td {
+        white-space: nowrap;
+    }
+}

@@ -2,7 +2,6 @@ import React from "react";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
-import AssetName from "../Utility/AssetName";
 import MarginPositionsTable from "./MarginPositionsTable";
 import {RecentTransactions} from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
@@ -18,17 +17,14 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Input, Icon, Switch} from "bitshares-ui-style-guide";
+import {Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
+import SearchInput from "../Utility/SearchInput";
 
 class AccountOverview extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            sortKey: props.viewSettings.get("portfolioSort", "totalValue"),
-            sortDirection: props.viewSettings.get(
-                "portfolioSortDirection",
-                true
-            ), // alphabetical A -> B, numbers high to low
             shownAssets: props.viewSettings.get("shownAssets", "active"),
             alwaysShowAssets: [
                 "BTS"
@@ -48,7 +44,6 @@ class AccountOverview extends React.Component {
     }
 
     _handleFilterInput(e) {
-        e.preventDefault();
         this.setState({
             filterValue: e.target.value
         });
@@ -96,144 +91,10 @@ class AccountOverview extends React.Component {
         });
     }
 
-    _toggleSortOrder(key) {
-        if (this.state.sortKey === key) {
-            SettingsActions.changeViewSetting({
-                portfolioSortDirection: !this.state.sortDirection
-            });
-            this.setState({
-                sortDirection: !this.state.sortDirection
-            });
-        } else {
-            SettingsActions.changeViewSetting({
-                portfolioSort: key
-            });
-            this.setState({
-                sortDirection: false,
-                sortKey: key
-            });
-        }
-    }
     _toggleHideProposal() {
         this.setState({
             hideFishingProposals: !this.state.hideFishingProposals
         });
-    }
-
-    getHeader() {
-        let {settings} = this.props;
-        let {shownAssets} = this.state;
-
-        const preferredUnit =
-            settings.get("unit") || this.props.core_asset.get("symbol");
-        const showAssetPercent = settings.get("showAssetPercent", false);
-
-        return (
-            <tr>
-                <th
-                    style={{textAlign: "left"}}
-                    className={cnames("clickable is-sortable", {
-                        "is-active": this.state.sortKey === "alphabetic"
-                    })}
-                    onClick={this._toggleSortOrder.bind(this, "alphabetic")}
-                >
-                    <Translate component="span" content="account.asset" />
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "qty")}
-                    className={cnames("clickable is-sortable", {
-                        "is-active": this.state.sortKey === "qty"
-                    })}
-                    style={{textAlign: "right"}}
-                >
-                    <Translate content="account.qty" />
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "priceValue")}
-                    className={cnames(
-                        "column-hide-small clickable is-sortable",
-                        {"is-active": this.state.sortKey === "priceValue"}
-                    )}
-                    style={{textAlign: "right"}}
-                >
-                    <Translate content="exchange.price" /> (
-                    <AssetName name={preferredUnit} noTip />)
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "changeValue")}
-                    className={cnames(
-                        "column-hide-small clickable is-sortable",
-                        {"is-active": this.state.sortKey === "changeValue"}
-                    )}
-                    style={{textAlign: "right"}}
-                >
-                    <Translate content="account.hour_24_short" />
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "totalValue")}
-                    style={{textAlign: "right"}}
-                    className={cnames(
-                        "column-hide-small clickable is-sortable",
-                        {"is-active": this.state.sortKey === "totalValue"}
-                    )}
-                >
-                    <TranslateWithLinks
-                        noLink
-                        string="account.eq_value_header"
-                        keys={[
-                            {
-                                type: "asset",
-                                value: preferredUnit,
-                                arg: "asset"
-                            }
-                        ]}
-                        noTip
-                    />
-                </th>
-                {showAssetPercent ? (
-                    <th
-                        style={{
-                            textAlign: "right"
-                        }}
-                    >
-                        <Translate component="span" content="account.percent" />
-                    </th>
-                ) : null}
-                <th>
-                    <Translate content="header.payments" />
-                </th>
-                <th>
-                    <Translate content="exchange.buy" />
-                </th>
-                <th>
-                    <Translate content="modal.deposit.submit" />
-                </th>
-                <th>
-                    <Translate content="modal.withdraw.submit" />
-                </th>
-                <th>
-                    <Translate content="account.trade" />
-                </th>
-                <th>
-                    <Translate content="exchange.borrow_short" />
-                </th>
-                <th>
-                    <Translate content="account.settle" />
-                </th>
-                <th className="column-hide-small">
-                    <Translate content="modal.reserve.submit" />
-                </th>
-                <th className="column-hide-small">
-                    <Translate
-                        content={
-                            shownAssets == "active"
-                                ? "exchange.hide"
-                                : "account.perm.show"
-                        }
-                    />
-                </th>
-            </tr>
-        );
     }
 
     render() {
@@ -386,31 +247,15 @@ class AccountOverview extends React.Component {
         );
 
         const includedPortfolioBalance = (
-            <tr key="portfolio" className="total-value">
-                <td colSpan="2" style={{textAlign: "left"}}>
-                    {totalValueText}
-                </td>
-                <td className="column-hide-small" />
-                <td className="column-hide-small" />
-                <td style={{textAlign: "right"}}>
-                    {portfolioActiveAssetsBalance}
-                </td>
-                <td colSpan="9" />
-            </tr>
+            <span key="portfolio" className="total-value">
+                {totalValueText}: {portfolioActiveAssetsBalance}
+            </span>
         );
 
         const hiddenPortfolioBalance = (
-            <tr key="portfolio" className="total-value">
-                <td colSpan="2" style={{textAlign: "left"}}>
-                    {totalValueText}
-                </td>
-                <td className="column-hide-small" />
-                <td className="column-hide-small" />
-                <td style={{textAlign: "right"}}>
-                    {portfolioHiddenAssetsBalance}
-                </td>
-                <td colSpan="9" />
-            </tr>
+            <span key="portfolio" className="total-value">
+                {totalValueText}: {portfolioHiddenAssetsBalance}
+            </span>
         );
 
         includedPortfolioList = (
@@ -426,12 +271,10 @@ class AccountOverview extends React.Component {
                 hiddenAssets={hiddenAssets}
                 orders={orders}
                 account={this.props.account}
-                sortKey={this.state.sortKey}
-                sortDirection={this.state.sortDirection}
                 isMyAccount={this.props.isMyAccount}
                 balances={this.props.balances}
-                header={this.getHeader()}
                 extraRow={includedPortfolioBalance}
+                viewSettings={this.props.viewSettings}
             />
         );
 
@@ -448,12 +291,10 @@ class AccountOverview extends React.Component {
                 hiddenAssets={hiddenAssets}
                 orders={orders}
                 account={this.props.account}
-                sortKey={this.state.sortKey}
-                sortDirection={this.state.sortDirection}
                 isMyAccount={this.props.isMyAccount}
                 balances={this.props.balances}
-                header={this.getHeader()}
                 extraRow={hiddenPortfolioBalance}
+                viewSettings={this.props.viewSettings}
             />
         );
 
@@ -478,18 +319,16 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="header-selector">
                                     <div className="filter inline-block">
-                                        <Input
-                                            type="text"
-                                            placeholder="Filter..."
+                                        <SearchInput
+                                            value={this.state.filterValue}
                                             onChange={this._handleFilterInput}
-                                            addonAfter={<Icon type="search" />}
                                         />
                                     </div>
                                     <div
                                         className="selector inline-block"
                                         style={{
                                             position: "relative",
-                                            top: "6px"
+                                            top: "8px"
                                         }}
                                     >
                                         <div
@@ -568,21 +407,14 @@ class AccountOverview extends React.Component {
                                 subText={ordersValue}
                             >
                                 <AccountOrders {...this.props}>
-                                    <tr className="total-value">
-                                        <td
-                                            colSpan="8"
-                                            style={{textAlign: "right"}}
-                                        >
+                                    <div className="total-value">
+                                        <span className="text">
                                             {totalValueText}
-                                        </td>
-                                        <td
-                                            colSpan="1"
-                                            style={{textAlign: "right"}}
-                                        >
+                                        </span>
+                                        <span className="value">
                                             {ordersValue}
-                                        </td>
-                                        {this.props.isMyAccount ? <td /> : null}
-                                    </tr>
+                                        </span>
+                                    </div>
                                 </AccountOrders>
                             </Tab>
 
@@ -657,16 +489,24 @@ class AccountOverview extends React.Component {
                                         )}
                                         style={{cursor: "pointer"}}
                                     >
-                                        <Switch
-                                            style={{margin: 16}}
-                                            checked={
-                                                this.state.hideFishingProposals
-                                            }
-                                            onChange={this._toggleHideProposal.bind(
-                                                this
+                                        <Tooltip
+                                            title={counterpart.translate(
+                                                "tooltip.propose_unhide"
                                             )}
-                                        />
-                                        <Translate content="account.deactivate_suspicious_proposals" />
+                                            placement="bottom"
+                                        >
+                                            <Switch
+                                                style={{margin: 16}}
+                                                checked={
+                                                    this.state
+                                                        .hideFishingProposals
+                                                }
+                                                onChange={this._toggleHideProposal.bind(
+                                                    this
+                                                )}
+                                            />
+                                            <Translate content="account.deactivate_suspicious_proposals" />
+                                        </Tooltip>
                                     </div>
                                     <Proposals
                                         className="dashboard-table"

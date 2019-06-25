@@ -31,6 +31,7 @@ let icons = [
     "grouping",
     "hamburger-x",
     "hamburger",
+    "htlc",
     "hourglass",
     "key",
     "list",
@@ -66,7 +67,8 @@ let icons = [
     "attention",
     "checkmark",
     "paperclip",
-    "wallet"
+    "wallet",
+    "prediction"
 ];
 
 let iconsMap = {};
