@@ -1036,6 +1036,7 @@
         "convert": "Internal conversion",
         "convert_coin": "Convert to %(coin)s (%(symbol)s)",
         "convert_now": "Convert now",
+        "logout_now": "Logout now",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
         "deposit": "Deposit",
