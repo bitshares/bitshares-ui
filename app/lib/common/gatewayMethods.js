@@ -2,7 +2,9 @@ import ls from "./localStorage";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
 const blockTradesStorage = new ls("");
-let oauthBlocktrades = new ls("__oauthBlocktrades__");
+let oidcStorage = new ls(
+    "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
+);
 
 let fetchInProgess = {};
 let fetchCache = {};
@@ -473,7 +475,7 @@ export function getConversionJson(inputs, isUserAuthorized = false) {
             headers = {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${oauthBlocktrades.get("access_token")}`
+                Authorization: `Bearer ${oidcStorage.get("")["access_token"]}`
             };
         }
         fetch(url + "/simple-api/initiate-trade", {
