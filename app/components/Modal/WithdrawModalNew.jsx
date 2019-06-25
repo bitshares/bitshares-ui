@@ -186,6 +186,7 @@ class WithdrawModalNew extends React.Component {
             });
 
             if (fromAsset && toAsset) {
+                // todo: when was this used and what is it good for?
                 // if (toAsset.get("precision") !== fromAsset.get("precision"))
                 //     toAsset = toAsset.set(
                 //         "precision",
@@ -658,13 +659,14 @@ class WithdrawModalNew extends React.Component {
     }
 
     updateGatewayFee() {
-        const { selectedGateway, selectedAsset } = this.state;
+        const {selectedGateway, selectedAsset} = this.state;
         let gateFee = 0;
 
         if (selectedGateway && selectedAsset) {
             this.props.backedCoins.get(selectedGateway).forEach(item => {
                 if (
-                    item.symbol === [selectedGateway, selectedAsset].join(".") ||
+                    item.symbol ===
+                        [selectedGateway, selectedAsset].join(".") ||
                     item.backingCoinType === selectedAsset
                 ) {
                     gateFee = item.gateFee || 0;
@@ -672,7 +674,7 @@ class WithdrawModalNew extends React.Component {
             });
         }
 
-        this.setState({ gateFee });
+        this.setState({gateFee});
     }
 
     validateAddress(address) {
