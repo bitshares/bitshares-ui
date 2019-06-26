@@ -27,8 +27,9 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
+import PaginatedList from "../Utility/PaginatedList";
 import MarketUtils from "common/market_utils";
-import {Table, Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
+import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
@@ -1315,34 +1316,22 @@ class AccountPortfolioList extends React.Component {
     render() {
         const currentBridges =
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
-        const header = this.getHeader();
+
         return (
             <div>
-                <Table
+                <PaginatedList
                     className="table dashboard-table table-hover"
-                    dataSource={this._renderBalances(
+                    rows={this._renderBalances(
                         this.props.balanceList,
                         this.props.optionalAssets,
                         this.props.visible
                     )}
-                    uns
-                    columns={Array.isArray(header) ? header : []}
-                    footer={() => <span>&nbsp;</span>}
-                    onChange={this.toggleSortOrder}
-                    pagination={{
-                        hideOnSinglePage: true,
-                        pageSize: 20,
-                        showTotal: (total, range) =>
-                            counterpart.translate("utility.total_x_assets", {
-                                count: total
-                            })
-                    }}
-                    rowClassName={
-                        this.props.rowClassName == null
-                            ? undefined
-                            : (record, index) =>
-                                  this.props.rowClassName(record, index)
-                    }
+                    header={this.getHeader()}
+                    pageSize={20}
+                    label="utility.total_x_assets"
+                    extraRow={this.props.extraRow}
+                    leftPadding="1.5rem"
+                    toggleSortOrder={this.toggleSortOrder}
                 >
                     {this._renderSendModal()}
                     {(this.state.isSettleModalVisible ||
@@ -1403,7 +1392,7 @@ class AccountPortfolioList extends React.Component {
                             }}
                         />
                     )}
-                </Table>
+                </PaginatedList>
             </div>
         );
     }
