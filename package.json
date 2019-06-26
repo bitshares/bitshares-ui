@@ -1,14 +1,14 @@
 {
     "name": "BitShares2-light",
-    "version": "3.1.190618-rc1",
+    "version": "3.1.190618",
     "description": "Reference UI to showcase all features of the BitShares blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Worker <ui-dev@bitshares.org>",
     "contributors": [
-        "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
+        "Sigve Kvalsvik",
         "James Calfee",
         "Dan Larimer",
-        "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
+        "Valentine Zavgorodnev"
     ],
     "license": "MIT",
     "engines": {
