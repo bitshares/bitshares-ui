@@ -26,6 +26,11 @@ let oidcStorage = new ls(
 );
 
 const POST_LOGOUT_REDIRECT_URI = "https://192.168.6.139:9051/deposit-withdraw";
+const AUTHORITY = "https://blocktrades.us/";
+const CLIENT_ID = "10ecf048-b982-467b-9965-0b0926330869";
+const REDIRECT_URI = "https://192.168.6.139:9051/deposit-withdraw";
+const SCOPE =
+    "offline openid email profile create_new_mappings view_client_transaction_history";
 
 class ButtonConversion extends React.Component {
     static propTypes = {
@@ -498,16 +503,15 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         }
 
         this.manager = new UserManager({
-            authority: "https://blocktrades.us/",
-            client_id: "10ecf048-b982-467b-9965-0b0926330869",
-            redirect_uri: "https://192.168.6.139:9051/deposit-withdraw",
-            silent_redirect_uri: "http://127.0.0.1:8800/silent-auth-callback",
+            authority: AUTHORITY,
+            client_id: CLIENT_ID,
+            redirect_uri: REDIRECT_URI,
             response_type: "code",
-            scope:
-                "offline openid email profile create_new_mappings view_client_transaction_history",
+            scope: SCOPE,
             loadUserInfo: true,
             automaticSilentRenew,
-            userStore: new WebStorageStateStore({store: window.localStorage})
+            userStore: new WebStorageStateStore({store: window.localStorage}),
+            post_logout_redirect_uri: POST_LOGOUT_REDIRECT_URI
         });
 
         this.state = {
@@ -1064,8 +1068,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
 
     componentWillMount() {
         let params = QueryString.parse(this.props.params.search);
-        console.log("this.manager", this.manager);
-
         if (params["code"]) {
             this.setState({
                 isUserAuthorized: true
@@ -1074,7 +1076,6 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 .signinRedirectCallback()
                 .then(() => {
                     this.urlConnectionInit();
-                    console.log("wwwwwwwwwwww");
                 })
                 .catch(() => {
                     this.urlConnectionInit();
@@ -1085,9 +1086,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                 });
 
             this.manager.events.addUserLoaded(() => {
-                console.log("wwwwww");
                 this.manager.getUser().then(user => {
-                    console.log("userrrrr b", user);
                     let automaticSilentRenew = false;
 
                     if (user["refresh_token"] !== undefined) {
@@ -1098,15 +1097,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     }
 
                     this.manager = new UserManager({
-                        authority: "https://blocktrades.us/",
-                        client_id: "10ecf048-b982-467b-9965-0b0926330869",
-                        redirect_uri:
-                            "https://192.168.6.139:9051/deposit-withdraw",
-                        silent_redirect_uri:
-                            "http://127.0.0.1:8800/silent-auth-callback",
+                        authority: AUTHORITY,
+                        client_id: CLIENT_ID,
+                        redirect_uri: REDIRECT_URI,
                         response_type: "code",
-                        scope:
-                            "offline openid email profile create_new_mappings view_client_transaction_history",
+                        scope: SCOPE,
                         loadUserInfo: true,
                         automaticSilentRenew,
                         userStore: new WebStorageStateStore({
@@ -1117,21 +1112,18 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     this.setState({
                         retrievingDataFromOauthApi: false
                     });
+                    this.manager.events.addAccessTokenExpired(() => {
+                        if (!this.unMounted) {
+                            this.removeOauthUser();
+                        }
+                    });
+
+                    this.manager.events.addSilentRenewError(() => {
+                        if (!this.unMounted) {
+                            this.removeOauthUser();
+                        }
+                    });
                 });
-            });
-
-            this.manager.events.addAccessTokenExpired(() => {
-                if (!this.unMounted) {
-                    console.log("session expired");
-                    this.removeOauthUser();
-                }
-            });
-
-            this.manager.events.addSilentRenewError(() => {
-                if (!this.unMounted) {
-                    console.log("session expiring error");
-                    this.removeOauthUser();
-                }
             });
         } else {
             this.manager.getUser().then(user => {
@@ -1147,14 +1139,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     });
                     this.manager.events.addAccessTokenExpired(() => {
                         if (!this.unMounted) {
-                            console.log("session expired");
                             this.removeOauthUser();
                         }
                     });
 
                     this.manager.events.addSilentRenewError(() => {
                         if (!this.unMounted) {
-                            console.log("session expiring error");
                             this.removeOauthUser();
                         }
                     });
