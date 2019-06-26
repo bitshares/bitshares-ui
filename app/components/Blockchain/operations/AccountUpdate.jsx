@@ -47,8 +47,6 @@ export const AccountUpdate = ({op, fromComponent, collapsed}) => {
     const votes = op[1].new_options ? op[1].new_options.votes : undefined;
     const memo_key = op[1].new_options ? op[1].new_options.memo_key : undefined;
 
-    console.log(op[1]);
-
     const owner = op[1].owner ? op[1].owner : undefined;
     const active = op[1].active ? op[1].active : undefined;
 
