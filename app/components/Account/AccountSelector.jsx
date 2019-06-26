@@ -231,7 +231,9 @@ class AccountSelector extends React.Component {
                 account.get("name")
             );
             account.accountType = this.getInputType(account.get("name"));
-            account.accountStatus = ChainStore.getAccountMemberStatus(account);
+            account.accountStatus =
+                ChainStore.getAccountMemberStatus(account) ||
+                "unknown";
             account.statusText = !account.isKnownScammer
                 ? counterpart.translate(
                       "account.member." + account.accountStatus
@@ -272,9 +274,9 @@ class AccountSelector extends React.Component {
                     if (this.props.excludeAccounts.indexOf(accountName) !== -1)
                         return null;
                     let account = ChainStore.getAccount(accountName);
-                    let account_status = ChainStore.getAccountMemberStatus(
-                        account
-                    );
+                    let account_status =
+                        ChainStore.getAccountMemberStatus(account) ||
+                        "unknown";
                     let account_status_text = !accountUtils.isKnownScammer(
                         accountName
                     )
