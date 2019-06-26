@@ -20,4 +20,7 @@ app/stats-dev.json
 app/stats-prod.json
 app/test/MarketClasses.js
 yarn.lock
-charting_library/charting_library.zip
+charting_library
+!charting_library/*.md5
+!charting_library/install-charting-library.js
+!charting_library/package-charting-library.js
