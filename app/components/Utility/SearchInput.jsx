@@ -72,7 +72,6 @@ SearchInput.propTypes = {
 
 SearchInput.defaultProps = {
     placeholder: counterpart.translate("exchange.filter"),
-    value: "",
     style: {},
     className: "",
     type: "text",
