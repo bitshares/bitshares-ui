@@ -1083,7 +1083,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             this.urlConnectionInit();
                         })
                         .catch(() => {
-                            this.removeOauthUser();
+                            this.setState({
+                                isUserAuthorized: false,
+                                retrievingDataFromOauthApi: false
+                            });
+                            this.manager.removeUser();
+                            oauthBlocktrades.set("is_refresh_token", false);
                             this.urlConnectionInit();
                         });
                 } else {
@@ -1110,12 +1115,14 @@ class BlockTradesBridgeDepositRequest extends React.Component {
     }
 
     removeOauthUser() {
-        this.setState({
-            isUserAuthorized: false,
-            retrievingDataFromOauthApi: false
-        });
-        this.manager.removeUser();
-        oauthBlocktrades.set("is_refresh_token", false);
+        if (this.manager.settings.automaticSilentRenew === false) {
+            this.setState({
+                isUserAuthorized: false,
+                retrievingDataFromOauthApi: false
+            });
+            this.manager.removeUser();
+            oauthBlocktrades.set("is_refresh_token", false);
+        }
     }
 
     componentWillMount() {
@@ -1126,15 +1133,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
             });
             this.manager
                 .signinRedirectCallback()
-                .then(() => {
-                    this.urlConnectionInit();
-                })
-                .catch(() => {
-                    this.handlingOauthUser();
-                });
-
-            this.manager.events.addUserLoaded(() => {
-                this.manager.getUser().then(user => {
+                .then(user => {
                     let automaticSilentRenew = false;
 
                     if (user["refresh_token"] !== undefined) {
@@ -1171,8 +1170,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             this.removeOauthUser();
                         }
                     });
+                    this.urlConnectionInit();
+                })
+                .catch(() => {
+                    this.handlingOauthUser();
                 });
-            });
         } else {
             this.handlingOauthUser();
         }
