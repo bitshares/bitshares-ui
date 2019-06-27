@@ -51,7 +51,8 @@ class FeeAssetSelector extends React.Component {
     shouldComponentUpdate(np, ns) {
         return (
             ns.fee_amount !== this.state.fee_amount ||
-            ns.fee_asset_id !== this.state.fee_asset_id
+            ns.fee_asset_id !== this.state.fee_asset_id ||
+            ns.isModalVisible !== this.state.isModalVisible
         );
     }
 
@@ -136,7 +137,11 @@ class FeeAssetSelector extends React.Component {
         }
 
         this.setState({balances: account_balances, assets: fee_asset_types});
-        this._updateFee(account, this.props.trxInfo, this.props.onChange);
+        this._updateFee(
+            this.state.fee_asset_id,
+            this.props.trxInfo,
+            this.props.onChange
+        );
         return fee_asset_types;
     }
 
