@@ -653,10 +653,6 @@ class Asset extends React.Component {
                     "id"
                 )]: this.props.backingAsset.toJS()
             };
-            let feedPrice = this._getFeedPrice();
-
-            // Invalid feedPrice returned for asset
-            if (!feedPrice) return;
 
             // Convert supply to calculable values
             let current_supply_value = currentSupply;
@@ -685,10 +681,6 @@ class Asset extends React.Component {
                     10,
                     assets[bitAsset.options.short_backing_asset].precision
                 );
-            settlement_fund_collateral_ratio =
-                current_collateral_value /
-                feedPrice.toReal() /
-                current_supply_value;
 
             let bids_collateral =
                 bids.collateral /
@@ -696,10 +688,19 @@ class Asset extends React.Component {
                     10,
                     assets[bitAsset.options.short_backing_asset].precision
                 );
-            total_collateral_ratio =
-                (current_collateral_value + bids_collateral) /
-                feedPrice.toReal() /
-                current_supply_value;
+
+            let feedPrice = this._getFeedPrice();
+            if (feedPrice) {
+                settlement_fund_collateral_ratio =
+                    current_collateral_value /
+                    feedPrice.toReal() /
+                    current_supply_value;
+
+                total_collateral_ratio =
+                    (current_collateral_value + bids_collateral) /
+                    feedPrice.toReal() /
+                    current_supply_value;
+            }
         } else {
             /***
              * Non Global Settlement Assets
@@ -787,9 +788,11 @@ class Asset extends React.Component {
                                     <Translate content="explorer.asset.settlement.settlement_funds_collateral_ratio" />
                                 </td>
                                 <td>
-                                    {settlement_fund_collateral_ratio.toFixed(
-                                        6
-                                    )}
+                                    {settlement_fund_collateral_ratio
+                                        ? settlement_fund_collateral_ratio.toFixed(
+                                              6
+                                          )
+                                        : "-"}
                                 </td>
                             </tr>
                             <tr>
@@ -825,7 +828,11 @@ class Asset extends React.Component {
                                         }
                                     />
                                 </td>
-                                <td>{total_collateral_ratio.toFixed(6)}</td>
+                                <td>
+                                    {total_collateral_ratio
+                                        ? total_collateral_ratio.toFixed(6)
+                                        : "-"}
+                                </td>
                             </tr>
                         </tbody>
                     ) : (
@@ -1071,6 +1078,7 @@ class Asset extends React.Component {
 
                     <BidCollateralOperation
                         asset={asset.symbol}
+                        core={asset.bitasset.options.short_backing_asset}
                         funderAccountName={this.props.currentAccount}
                         onUpdate={this.updateOnCollateralBid.bind(this)}
                         hideBalance
@@ -1339,13 +1347,15 @@ class Asset extends React.Component {
             return null;
         }
 
+        var feeds = bitAsset.feeds;
+        var feed_price_header = assetUtils.extractRawFeedPrice(feeds[0][1][1]);
+        var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
+
+        // Filter by valid feed lifetime, Sort by published date
         let now = new Date().getTime();
         let oldestValidDate = new Date(
             now - asset.bitasset.options.feed_lifetime_sec * 1000
         );
-
-        // Filter by valid feed lifetime, Sort by published date
-        var feeds = bitAsset.feeds;
         feeds = feeds
             .filter(a => {
                 return new Date(a[1][0]) > oldestValidDate;
@@ -1354,8 +1364,6 @@ class Asset extends React.Component {
                 return new Date(feed2[1][0]) - new Date(feed1[1][0]);
             });
 
-        var feed_price_header = assetUtils.extractRawFeedPrice(feeds[0][1][1]);
-        var core_exchange_rate_header = feeds[0][1][1].core_exchange_rate;
         let dataSource = [];
         let columns = [];
 
@@ -1466,6 +1474,11 @@ class Asset extends React.Component {
                 columns={columns}
                 dataSource={dataSource}
                 pagination={false}
+                locale={{
+                    emptyText: (
+                        <Translate content="explorer.asset.price_feed_data.empty" />
+                    )
+                }}
             />
         );
     }
@@ -1689,6 +1702,11 @@ class Asset extends React.Component {
                 pagination={{
                     pageSize: Number(25)
                 }}
+                locale={{
+                    emptyText: (
+                        <Translate content="explorer.asset.margin_positions.empty" />
+                    )
+                }}
             />
         );
     }
@@ -1831,6 +1849,11 @@ class Asset extends React.Component {
                 dataSource={dataSource}
                 pagination={{
                     pageSize: Number(25)
+                }}
+                locale={{
+                    emptyText: (
+                        <Translate content="explorer.asset.collateral_bid.empty" />
+                    )
                 }}
             />
         );

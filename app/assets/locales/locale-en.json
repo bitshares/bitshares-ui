@@ -742,6 +742,7 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "empty": "No collateral bids",
                 "included": {
                     "no": "No",
                     "partial": "Partially",
@@ -768,6 +769,7 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
+                "empty": "No margin positions",
                 "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
@@ -797,6 +799,7 @@
                 "title": "Price Feed"
             },
             "price_feed_data": {
+                "empty": "No valid feed producers",
                 "core_exchange_rate": "CER",
                 "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
