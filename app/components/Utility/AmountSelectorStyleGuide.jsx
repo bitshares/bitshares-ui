@@ -33,7 +33,7 @@ class AmountSelector extends DecimalChecker {
 
     formatAmount(v) {
         /*// TODO: use asset's precision to format the number*/
-        if (!v) v = "";
+        if (!v && typeof v !== "number") v = "";
         if (typeof v === "number") v = v.toString();
         let value = v.trim().replace(/,/g, "");
 
@@ -64,9 +64,11 @@ class AmountSelector extends DecimalChecker {
         const label = this.props.label ? (
             <div className="amount-selector-field--label">
                 {counterpart.translate(this.props.label)}
-                <div className="amount-selector-field--balance">
-                    {this.props.display_balance}
-                </div>
+                {this.props.display_balance && (
+                    <div className="amount-selector-field--balance">
+                        {this.props.display_balance}
+                    </div>
+                )}
             </div>
         ) : null;
 
