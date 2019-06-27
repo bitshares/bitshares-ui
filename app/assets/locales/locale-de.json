@@ -1057,7 +1057,7 @@
         "deposit_warning_memo": "Einzahlung von %(asset)s muss eine Notitz aufweißen, ansonsten wird es nicht gutgeschrieben",
         "fee": "Gateway-Gebühr",
         "fiat": "Fiatwährung",
-        "fiat_text": "Hinweis: Fiat Gateways sind geschlossen, bis auf einen weiteren Hinweis. Entschuldigung für die Unannehmlichkeit. Bitte folgen Sie unsere letzten Neuigkeiten und Aktualisierung hier <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>!",
+        "fiat_text": "Hinweis: Fiat Gateways sind geschlossen, bis auf einen weiteren Hinweis. Entschuldigung für die Unannehmlichkeit. Bitte folgen Sie unsere letzten Neuigkeiten und Aktualisierung hier <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>!",
         "frozen": "Das Benutzerkonto %(account)s war eingefroren.",
         "gateway": "Gateway",
         "gateway_text": "Auswahl für Einzahlung oder Auszahlung hier:",

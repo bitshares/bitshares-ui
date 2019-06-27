@@ -1051,7 +1051,7 @@
         "deposit_warning_memo": "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "fee": "ゲートウェイ手数料",
         "fiat": "法定通貨",
-        "fiat_text": "注意：法定通貨のゲートウェイは当面の間、利用不可となります。最新情報は<a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>から確認してください。",
+        "fiat_text": "注意：法定通貨のゲートウェイは当面の間、利用不可となります。最新情報は<a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>から確認してください。",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "ゲートウェイ",
         "gateway_text": "ここで入金または出金を選択してください",
