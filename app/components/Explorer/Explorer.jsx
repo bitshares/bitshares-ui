@@ -1,15 +1,17 @@
 import React from "react";
-import Witnesses from "./Witnesses";
-import CommitteeMembers from "./CommitteeMembers";
-import FeesContainer from "../Blockchain/FeesContainer";
-import BlocksContainer from "./BlocksContainer";
-import AssetsContainer from "./AssetsContainer";
-import AccountsContainer from "./AccountsContainer";
-import counterpart from "counterpart";
-import MarketsContainer from "../Exchange/MarketsContainer";
-import {Tabs} from "bitshares-ui-style-guide";
+import {Tabs, Tab} from "../Utility/Tabs";
 
 class Explorer extends React.Component {
+    static propTypes = {
+        tab: React.PropTypes.string,
+        content: React.PropTypes.object
+    };
+
+    static defaultProps = {
+        tab: "blocks",
+        content: null
+    };
+
     constructor(props) {
         super(props);
 
@@ -18,75 +20,70 @@ class Explorer extends React.Component {
                 {
                     name: "blocks",
                     link: "/explorer/blocks",
-                    translate: "explorer.blocks.title",
-                    content: BlocksContainer
+                    translate: "explorer.blocks.title"
                 },
-                {
-                    name: "assets",
-                    link: "/explorer/assets",
-                    translate: "explorer.assets.title",
-                    content: AssetsContainer
-                },
+                // {
+                //     name: "assets",
+                //     link: "/explorer/assets",
+                //     translate: "explorer.assets.title"
+                // },
                 {
                     name: "accounts",
                     link: "/explorer/accounts",
-                    translate: "explorer.accounts.title",
-                    content: AccountsContainer
-                },
-                {
-                    name: "witnesses",
-                    link: "/explorer/witnesses",
-                    translate: "explorer.witnesses.title",
-                    content: Witnesses
-                },
-                {
-                    name: "committee_members",
-                    link: "/explorer/committee-members",
-                    translate: "explorer.committee_members.title",
-                    content: CommitteeMembers
-                },
-                {
-                    name: "markets",
-                    link: "/explorer/markets",
-                    translate: "markets.title",
-                    content: MarketsContainer
-                },
-                {
-                    name: "fees",
-                    link: "/explorer/fees",
-                    translate: "fees.title",
-                    content: FeesContainer
+                    translate: "explorer.accounts.title"
                 }
+                // ,
+                // {
+                //     name: "witnesses",
+                //     link: "/explorer/witnesses",
+                //     translate: "explorer.witnesses.title"
+                // },
+                // {
+                //     name: "committee_members",
+                //     link: "/explorer/committee-members",
+                //     translate: "explorer.committee_members.title"
+                // }
+                // ,
+                // {
+                //     name: "markets",
+                //     link: "/explorer/markets",
+                //     translate: "markets.title"
+                // },
+                // {name: "fees", link: "/explorer/fees", translate: "fees.title"}
             ]
         };
     }
 
     render() {
-        const onChange = value => {
-            this.props.history.push(value);
-        };
+        let defaultActiveTab = this.state.tabs.findIndex(
+            t => t.name === this.props.tab
+        );
+
+        let tabs = [];
+
+        for (var i = 0; i < this.state.tabs.length; i++) {
+            let currentTab = this.state.tabs[i];
+
+            let tabContent = defaultActiveTab == i ? this.props.content : null;
+            let isLinkTo = defaultActiveTab == i ? "" : currentTab.link;
+
+            tabs.push(
+                <Tab key={i} title={currentTab.translate} isLinkTo={isLinkTo}>
+                    {tabContent}
+                </Tab>
+            );
+        }
 
         return (
             <Tabs
-                activeKey={this.props.location.pathname}
-                animated={false}
-                style={{display: "table", height: "100%", width: "100%"}}
-                onChange={onChange}
+                defaultActiveTab={defaultActiveTab}
+                segmented={false}
+                setting="explorerTab-{this.props.tab}"
+                className="account-tabs"
+                tabsClass="account-overview bordered-header content-block"
+                contentClass="tab-content padding"
             >
-                {this.state.tabs.map(tab => {
-                    const TabContent = tab.content;
-
-                    return (
-                        <Tabs.TabPane
-                            key={tab.link}
-                            tab={counterpart.translate(tab.translate)}
-                        >
-                            <div className="padding">
-                                <TabContent />
-                            </div>
-                        </Tabs.TabPane>
-                    );
-                })}
+                {tabs}
             </Tabs>
         );
     }

@@ -1,12 +1,19 @@
+import {ChainStore} from "bitsharesjs/es";
 import React from "react";
-import {ChainStore} from "bitsharesjs";
+import IntlStore from "stores/IntlStore";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
+import IntlActions from "actions/IntlActions";
 import NotificationStore from "stores/NotificationStore";
-import {withRouter} from "react-router-dom";
+import intlData from "./components/Utility/intlData";
+import alt from "alt-instance";
+import {connect, supplyFluxContext} from "alt-react";
+import {IntlProvider} from "react-intl";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import BrowserNotifications from "./components/BrowserNotifications/BrowserNotificationsContainer";
 import Header from "components/Layout/Header";
+// import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
@@ -14,144 +21,19 @@ import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
+import WalletManagerStore from "stores/WalletManagerStore";
 import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
-import {updateGatewayBackers} from "common/gatewayUtils";
-import titleUtils from "common/titleUtils";
-import {BodyClassName, Notification} from "bitshares-ui-style-guide";
-import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
-import Loadable from "react-loadable";
-import NewsHeadline from "components/Layout/NewsHeadline";
-
-import {Route, Switch, Redirect} from "react-router-dom";
-
-// Nested route components
-import Page404 from "./components/Page404/Page404";
-
-const Exchange = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"),
-    loading: LoadingIndicator
-});
-
-const Explorer = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "explorer" */ "./components/Explorer/Explorer"),
-    loading: LoadingIndicator
-});
-
-const AccountPage = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "account" */ "./components/Account/AccountPage"),
-    loading: LoadingIndicator
-});
-
-const Transfer = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"),
-    loading: LoadingIndicator
-});
-
-const AccountDepositWithdraw = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "deposit-withdraw" */ "./components/Account/AccountDepositWithdraw"),
-    loading: LoadingIndicator
-});
-
-const News = Loadable({
-    loader: () => import(/* webpackChunkName: "news" */ "./components/News"),
-    loading: LoadingIndicator
-});
-
-const Settings = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "settings" */ "./components/Settings/SettingsContainer"),
-    loading: LoadingIndicator
-});
-
-const Help = Loadable({
-    loader: () => import(/* webpackChunkName: "help" */ "./components/Help"),
-    loading: LoadingIndicator
-});
-
-const Asset = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "asset" */ "./components/Blockchain/Asset"),
-    loading: LoadingIndicator
-});
-
-const Block = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "block" */ "./components/Blockchain/BlockContainer"),
-    loading: LoadingIndicator
-});
-
-const DashboardAccountsOnly = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "dashboard-accounts" */ "./components/Dashboard/DashboardAccountsOnly"),
-    loading: LoadingIndicator
-});
-
-const DashboardPage = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "dashboard" */ "./components/Dashboard/DashboardPage"),
-    loading: LoadingIndicator
-});
-
-const WalletManager = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "wallet" */ "./components/Wallet/WalletManager"),
-    loading: LoadingIndicator
-});
-
-const ExistingAccount = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "existing-account" */ "./components/Wallet/ExistingAccount"),
-    loading: LoadingIndicator
-});
-
-const CreateWorker = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "create-worker" */ "./components/Account/CreateWorker"),
-    loading: LoadingIndicator
-});
-
-const Barter = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "settings" */ "./components/Showcases/Barter"),
-    loading: LoadingIndicator
-});
-
-const Borrow = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "settings" */ "./components/Showcases/Borrow"),
-    loading: LoadingIndicator
-});
-
-const Htlc = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "settings" */ "./components/Showcases/Htlc"),
-    loading: LoadingIndicator
-});
-
-const DirectDebit = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "settings" */ "./components/Showcases/DirectDebit"),
-    loading: LoadingIndicator
-});
-
-import LoginSelector from "./components/LoginSelector";
-import Login from "./components/Login/Login";
-import RegistrationSelector from "./components/Registration/RegistrationSelector";
-import WalletRegistration from "./components/Registration/WalletRegistration";
-import AccountRegistration from "./components/Registration/AccountRegistration";
-import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
-import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
-import PriceAlertNotifications from "./components/PriceAlertNotifications";
 
 class App extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
+
+        // Check for mobile device to disable chat
+        const user_agent = navigator.userAgent.toLowerCase();
+        let isSafari = /^((?!chrome|android).)*safari/i.test(
+            navigator.userAgent
+        );
 
         let syncFail =
             ChainStore.subError &&
@@ -160,85 +42,46 @@ class App extends React.Component {
                 ? true
                 : false;
         this.state = {
-            isBrowserSupportModalVisible: false,
             loading: false,
             synced: this._syncStatus(),
             syncFail,
+            theme: SettingsStore.getState().settings.get("themes"),
             incognito: false,
             incognitoWarningDismissed: false,
             height: window && window.innerHeight
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
+        this._onSettingsChange = this._onSettingsChange.bind(this);
         this._chainStoreSub = this._chainStoreSub.bind(this);
         this._syncStatus = this._syncStatus.bind(this);
         this._getWindowHeight = this._getWindowHeight.bind(this);
-
-        this.showBrowserSupportModal = this.showBrowserSupportModal.bind(this);
-        this.hideBrowserSupportModal = this.hideBrowserSupportModal.bind(this);
-
-        Notification.config({
-            duration: DEFAULT_NOTIFICATION_DURATION,
-            top: 90
-        });
     }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this._getWindowHeight);
         NotificationStore.unlisten(this._onNotificationChange);
+        SettingsStore.unlisten(this._onSettingsChange);
         ChainStore.unsubscribe(this._chainStoreSub);
         clearInterval(this.syncCheckInterval);
     }
 
-    /**
-     * Returns the current blocktime, or exception if not yet available
-     * @returns {Date}
-     */
-    getBlockTime() {
+    _syncStatus(setState = false) {
+        let synced = true;
         let dynGlobalObject = ChainStore.getObject("2.1.0");
         if (dynGlobalObject) {
             let block_time = dynGlobalObject.get("time");
             if (!/Z$/.test(block_time)) {
                 block_time += "Z";
             }
-            return new Date(block_time);
-        } else {
-            throw new Error("Blocktime not available right now");
-        }
-    }
 
-    /**
-     * Returns the delta between the current time and the block time in seconds, or -1 if block time not available yet
-     *
-     * Note: Could be integrating properly with BlockchainStore to send out updates, but not necessary atp
-     */
-    getBlockTimeDelta() {
-        try {
             let bt =
-                (this.getBlockTime().getTime() +
+                (new Date(block_time).getTime() +
                     ChainStore.getEstimatedChainTimeOffset()) /
                 1000;
             let now = new Date().getTime() / 1000;
-            return Math.abs(now - bt);
-        } catch (err) {
-            return -1;
+            synced = Math.abs(now - bt) < 5;
         }
-    }
-
-    hideBrowserSupportModal() {
-        this.setState({
-            isBrowserSupportModalVisible: false
-        });
-    }
-
-    showBrowserSupportModal() {
-        this.setState({
-            isBrowserSupportModalVisible: true
-        });
-    }
-
-    _syncStatus(setState = false) {
-        let synced = this.getBlockTimeDelta() < 5;
         if (setState && synced !== this.state.synced) {
             this.setState({synced});
         }
@@ -252,6 +95,7 @@ class App extends React.Component {
                 passive: true
             });
             NotificationStore.listen(this._onNotificationChange.bind(this));
+            SettingsStore.listen(this._onSettingsChange);
             ChainStore.subscribe(this._chainStoreSub);
             AccountStore.tryToSetCurrentAccount();
         } catch (e) {
@@ -261,10 +105,7 @@ class App extends React.Component {
 
     componentDidMount() {
         this._setListeners();
-        this.syncCheckInterval = setInterval(
-            this._syncStatus.bind(this, true),
-            5000
-        );
+        this.syncCheckInterval = setInterval(this._syncStatus, 5000);
         const user_agent = navigator.userAgent.toLowerCase();
         if (
             !(
@@ -274,10 +115,10 @@ class App extends React.Component {
                 user_agent.indexOf("edge") > -1
             )
         ) {
-            this.showBrowserSupportModal();
+            this.refs.browser_modal.show();
         }
 
-        this.props.history.listen(this._rebuildTooltips);
+        this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
 
@@ -286,19 +127,6 @@ class App extends React.Component {
                 this.setState({incognito});
             }.bind(this)
         );
-        updateGatewayBackers();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.location !== prevProps.location) {
-            this.onRouteChanged();
-        }
-    }
-
-    onRouteChanged() {
-        document.title = titleUtils.GetTitleByPath(
-            this.props.location.pathname
-        );
     }
 
     _onIgnoreIncognitoWarning() {
@@ -306,14 +134,12 @@ class App extends React.Component {
     }
 
     _rebuildTooltips() {
-        if (this.rebuildTimeout) return;
         ReactTooltip.hide();
 
-        this.rebuildTimeout = setTimeout(() => {
+        setTimeout(() => {
             if (this.refs.tooltip) {
                 this.refs.tooltip.globalRebuild();
             }
-            this.rebuildTimeout = null;
         }, 1500);
     }
 
@@ -348,6 +174,15 @@ class App extends React.Component {
             this.refs.notificationSystem.addNotification(notification);
     }
 
+    _onSettingsChange() {
+        let {settings} = SettingsStore.getState();
+        if (settings.get("themes") !== this.state.theme) {
+            this.setState({
+                theme: settings.get("themes")
+            });
+        }
+    }
+
     _getWindowHeight() {
         this.setState({height: window && window.innerHeight});
     }
@@ -359,9 +194,12 @@ class App extends React.Component {
     // }
 
     render() {
-        let {incognito, incognitoWarningDismissed} = this.state;
-        let {walletMode, theme, location, match, ...others} = this.props;
+        let {theme, incognito, incognitoWarningDismissed} = this.state;
+        let {walletMode} = this.props;
+
         let content = null;
+
+        let showFooter = 1;
 
         if (this.state.syncFail) {
             content = <SyncError />;
@@ -373,161 +211,22 @@ class App extends React.Component {
                     />
                 </div>
             );
+        } else if (this.props.location.pathname === "/init-error") {
+            content = (
+                <div className="grid-frame vertical">{this.props.children}</div>
+            );
         } else if (__DEPRECATED__) {
             content = <Deprecate {...this.props} />;
         } else {
-            let accountName =
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount;
-            accountName =
-                accountName && accountName !== "null"
-                    ? accountName
-                    : "committee-account";
             content = (
                 <div className="grid-frame vertical">
-                    <NewsHeadline />
-                    <Header height={this.state.height} {...others} />
-                    <div id="mainContainer" className="grid-block">
+                    {<Header height={this.state.height} />}
+                    <div className="grid-block">
                         <div className="grid-block vertical">
-                            <Switch>
-                                <Route
-                                    path="/"
-                                    exact
-                                    component={DashboardPage}
-                                />
-                                <Route
-                                    path="/account/:account_name"
-                                    component={AccountPage}
-                                />
-                                <Route
-                                    path="/accounts"
-                                    component={DashboardAccountsOnly}
-                                />
-                                <Route
-                                    path="/market/:marketID"
-                                    component={Exchange}
-                                />
-                                <Route
-                                    path="/settings/:tab"
-                                    component={Settings}
-                                />
-                                <Route path="/settings" component={Settings} />
-
-                                <Route
-                                    path="/transfer"
-                                    exact
-                                    component={Transfer}
-                                />
-                                <Route
-                                    path="/deposit-withdraw"
-                                    exact
-                                    component={AccountDepositWithdraw}
-                                />
-                                <Route
-                                    path="/create-account"
-                                    component={LoginSelector}
-                                />
-                                <Route path="/login" component={Login} />
-                                <Route
-                                    path="/registration"
-                                    exact
-                                    component={RegistrationSelector}
-                                />
-                                <Route
-                                    path="/registration/local"
-                                    exact
-                                    component={WalletRegistration}
-                                />
-                                <Route
-                                    path="/registration/cloud"
-                                    exact
-                                    component={AccountRegistration}
-                                />
-                                <Route path="/news" exact component={News} />
-                                <Redirect
-                                    path={"/voting"}
-                                    to={{
-                                        pathname: `/account/${accountName}/voting`
-                                    }}
-                                />
-                                {/* Explorer routes */}
-                                <Route
-                                    path="/explorer/:tab"
-                                    component={Explorer}
-                                />
-                                <Route path="/explorer" component={Explorer} />
-                                <Route
-                                    path="/asset/:symbol"
-                                    component={Asset}
-                                />
-                                <Route
-                                    exact
-                                    path="/block/:height"
-                                    component={Block}
-                                />
-                                <Route
-                                    exact
-                                    path="/block/:height/:txIndex"
-                                    component={Block}
-                                />
-                                <Route path="/borrow" component={Borrow} />
-
-                                <Route path="/barter" component={Barter} />
-                                <Route
-                                    path="/direct-debit"
-                                    component={DirectDebit}
-                                />
-
-                                <Route
-                                    path="/spotlight"
-                                    component={ShowcaseGrid}
-                                />
-
-                                {/* Wallet backup/restore routes */}
-                                <Route
-                                    path="/wallet"
-                                    component={WalletManager}
-                                />
-                                <Route
-                                    path="/create-wallet-brainkey"
-                                    component={CreateWalletFromBrainkey}
-                                />
-                                <Route
-                                    path="/existing-account"
-                                    component={ExistingAccount}
-                                />
-
-                                <Route
-                                    path="/create-worker"
-                                    component={CreateWorker}
-                                />
-
-                                {/* Help routes */}
-                                <Route exact path="/help" component={Help} />
-                                <Route
-                                    exact
-                                    path="/help/:path1"
-                                    component={Help}
-                                />
-                                <Route
-                                    exact
-                                    path="/help/:path1/:path2"
-                                    component={Help}
-                                />
-                                <Route
-                                    exact
-                                    path="/help/:path1/:path2/:path3"
-                                    component={Help}
-                                />
-                                <Route path="/htlc" component={Htlc} />
-                                <Route path="*" component={Page404} />
-                            </Switch>
+                            {this.props.children}
                         </div>
                     </div>
-                    <Footer
-                        synced={this.state.synced}
-                        history={this.props.history}
-                    />
+                    {showFooter ? <Footer synced={this.state.synced} /> : null}
                     <ReactTooltip
                         ref="tooltip"
                         place="top"
@@ -540,44 +239,101 @@ class App extends React.Component {
 
         return (
             <div
-                style={{backgroundColor: !theme ? "#2a2a2a" : null}}
-                className={theme}
+                style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}}
+                className={this.state.theme}
             >
-                <BodyClassName className={theme}>
-                    {walletMode && incognito && !incognitoWarningDismissed ? (
-                        <Incognito
-                            onClickIgnore={this._onIgnoreIncognitoWarning.bind(
-                                this
-                            )}
-                        />
-                    ) : null}
-                    <div id="content-wrapper">
-                        {content}
-                        <NotificationSystem
-                            ref="notificationSystem"
-                            allowHTML={true}
-                            style={{
-                                Containers: {
-                                    DefaultStyle: {
-                                        width: "425px"
-                                    }
+                {walletMode && incognito && !incognitoWarningDismissed ? (
+                    <Incognito
+                        onClickIgnore={this._onIgnoreIncognitoWarning.bind(
+                            this
+                        )}
+                    />
+                ) : null}
+                <div id="content-wrapper">
+                    {content}
+                    <NotificationSystem
+                        ref="notificationSystem"
+                        allowHTML={true}
+                        style={{
+                            Containers: {
+                                DefaultStyle: {
+                                    width: "425px"
                                 }
-                            }}
-                        />
-                        <TransactionConfirm />
-                        <BrowserNotifications />
-                        <PriceAlertNotifications />
-                        <WalletUnlockModal />
-                        <BrowserSupportModal
-                            visible={this.state.isBrowserSupportModalVisible}
-                            hideModal={this.hideBrowserSupportModal}
-                            showModal={this.showBrowserSupportModal}
-                        />
-                    </div>
-                </BodyClassName>
+                            }
+                        }}
+                    />
+                    <TransactionConfirm />
+                    <BrowserNotifications />
+                    <WalletUnlockModal />
+                    <BrowserSupportModal ref="browser_modal" />
+                </div>
             </div>
         );
     }
 }
 
-export default withRouter(App);
+class RootIntl extends React.Component {
+    componentWillMount() {
+        IntlActions.switchLocale(this.props.locale);
+    }
+
+    render() {
+        return (
+            <IntlProvider
+                locale={this.props.locale}
+                formats={intlData.formats}
+                initialNow={Date.now()}
+            >
+                <App {...this.props} />
+            </IntlProvider>
+        );
+    }
+}
+
+RootIntl = connect(RootIntl, {
+    listenTo() {
+        return [IntlStore, WalletManagerStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            locale: IntlStore.getState().currentLocale,
+            walletMode:
+                !SettingsStore.getState().settings.get("passwordLogin") ||
+                !!WalletManagerStore.getState().current_wallet
+        };
+    }
+});
+
+class Root extends React.Component {
+    static childContextTypes = {
+        router: React.PropTypes.object,
+        location: React.PropTypes.object
+    };
+
+    componentDidMount() {
+        //Detect OS for platform specific fixes
+        if (navigator.platform.indexOf("Win") > -1) {
+            var main = document.getElementById("content");
+            var windowsClass = "windows";
+            if (main.className.indexOf("windows") === -1) {
+                main.className =
+                    main.className +
+                    (main.className.length ? " " : "") +
+                    windowsClass;
+            }
+        }
+    }
+
+    getChildContext() {
+        return {
+            router: this.props.router,
+            location: this.props.location
+        };
+    }
+
+    render() {
+        return <RootIntl {...this.props} />;
+    }
+}
+
+export default supplyFluxContext(alt)(Root);
