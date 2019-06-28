@@ -26,7 +26,6 @@ import AssetResolvePrediction from "./AssetResolvePrediction";
 import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
 import {Tooltip, Icon, Table, Tabs as AntTabs} from "bitshares-ui-style-guide";
-import counterpart from "counterpart";
 // TODO: Replace remaining old style Tabs with new
 
 class AssetFlag extends React.Component {
