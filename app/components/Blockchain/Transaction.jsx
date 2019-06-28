@@ -70,7 +70,13 @@ class OpType extends React.Component {
                         {trxTypes[ops[this.props.type]]}
                     </span>
                 </td>
-                <td />
+                <td
+                    className="json-link"
+                    onClick={this.props.openJSONModal}
+                >
+                    <Translate component="a" content="transaction.view_json"/>
+                </td>
+
             </tr>
         );
     }
@@ -133,15 +139,10 @@ class OperationTable extends React.Component {
                             txIndex={this.props.txIndex}
                             type={operation[0]}
                             color={this.props.color}
+                            openJSONModal={this.openJSONModal}
                         />
                         {this.props.children}
                         {fee_row}
-                        <tr><td
-                            className="json-link"
-                            onClick={this.openJSONModal}
-                        >
-                            <Translate component="a" content="transaction.view_json"/>
-                        </td></tr>
                     </tbody>
                 </table>
                 <JSONModal
