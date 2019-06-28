@@ -109,6 +109,22 @@ export default class PredictionMarkets extends Component {
                 lastAssetSymbol: searchAsset
             });
         }
+        console.log(this.props.markets);
+        const asks = this.props.markets.asks.map(element => ({
+            order_id: element.id,
+            opinionator: element.seller,
+            opinion: "yes",
+            amount: element.for_sale,
+            fee: element.fee
+        }));
+        const bids = this.props.markets.bids.map(element => ({
+            order_id: element.id,
+            opinionator: element.seller,
+            opinion: "no",
+            amount: element.for_sale,
+            fee: element.fee
+        }));
+        this.setState({opinions: [...asks, ...bids]});
     }
 
     async _updateAssetsList(lastAsset) {
@@ -132,22 +148,30 @@ export default class PredictionMarkets extends Component {
     }
 
     async getMarketOpinions(market) {
+        if (this.state.subscribedMarket) {
+            await MarketsActions.unSubscribeMarket(
+                this.state.subscribedMarket.base,
+                this.state.subscribedMarket.quote
+            );
+        }
         const base = ChainStore.getAsset(
             market.options.core_exchange_rate.base.asset_id
         );
         const quote = ChainStore.getAsset(
             market.options.core_exchange_rate.quote.asset_id
         );
-        MarketsActions.subscribeMarket.defer(
+        await MarketsActions.subscribeMarket(
             base,
             quote,
             this.props.bucketSize,
             this.props.currentGroupOrderLimit
         );
-        console.log(this.props.markets);
-        let opinions = STUB_OPINIONS[market.asset_id];
-        opinions = !opinions ? [] : opinions;
-        this.setState({opinions});
+        this.setState({
+            subscribedMarket: {
+                base,
+                quote
+            }
+        });
     }
 
     onMarketAction({market, action}) {
