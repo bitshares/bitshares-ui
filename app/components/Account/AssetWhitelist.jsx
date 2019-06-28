@@ -16,12 +16,13 @@ class AssetWhitelist extends React.Component {
 
         this.state = {
             listType: props.assetWhiteListType,
-            accountTable: props.assetWhiteListType.indexOf("market") === -1,
+            accountTable: props.assetWhiteListType.indexOf("markets") === -1,
             listTypes: [
                 "whitelist_authorities",
                 "blacklist_authorities",
                 "whitelist_markets",
-                "blacklist_markets"
+                "blacklist_markets",
+                "whitelist_market_fee_sharing"
             ],
             assetInput: null,
             asset_id: null
@@ -31,13 +32,26 @@ class AssetWhitelist extends React.Component {
     renderAccountTables() {
         const {listType} = this.state;
 
-        if (!this.props.whiteListEnabled)
+        let showFlagEnableError = false;
+        let errorLabel = "explorer.asset.whitelist.enable_flag";
+
+        if (listType === "whitelist_market_fee_sharing") {
+            // market fee sharing whitelist
+            if (!this.props.marketFeeEnabled) {
+                showFlagEnableError = true;
+                errorLabel = "explorer.asset.whitelist.market_fee_enable_flag";
+            }
+        } else {
+            showFlagEnableError = !this.props.whiteListEnabled;
+        }
+
+        if (showFlagEnableError)
             return (
                 <div>
                     <Translate
                         className="txtlabel cancel"
                         component="p"
-                        content="explorer.asset.whitelist.enable_flag"
+                        content={errorLabel}
                     />
                 </div>
             );
@@ -190,7 +204,7 @@ class AssetWhitelist extends React.Component {
     _onSwitchType(type) {
         this.setState({
             listType: type,
-            accountTable: type.indexOf("market") === -1
+            accountTable: type.indexOf("markets") === -1
         });
         SettingsActions.changeViewSetting({
             assetWhiteListType: type
@@ -198,7 +212,7 @@ class AssetWhitelist extends React.Component {
     }
 
     render() {
-        const {accountTable} = this.state;
+        const {accountTable, listType} = this.state;
         const activeIndex = this.state.listTypes.indexOf(this.state.listType);
 
         return (
@@ -239,16 +253,19 @@ class AssetWhitelist extends React.Component {
     }
 }
 
-export default connect(AssetWhitelist, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            assetWhiteListType: SettingsStore.getState().viewSettings.get(
-                "assetWhiteListType",
-                "whitelist_authorities"
-            )
-        };
+export default connect(
+    AssetWhitelist,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                assetWhiteListType: SettingsStore.getState().viewSettings.get(
+                    "assetWhiteListType",
+                    "whitelist_authorities"
+                )
+            };
+        }
     }
-});
+);

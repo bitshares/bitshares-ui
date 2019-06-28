@@ -8,7 +8,6 @@ import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
-import PaginatedList from "../Utility/PaginatedList";
 import {Input, Icon, Table, Switch} from "bitshares-ui-style-guide";
 import AccountOrderRowDescription from "./AccountOrderRowDescription";
 import CollapsibleTable from "../Utility/CollapsibleTable";
@@ -29,7 +28,9 @@ class AccountOrders extends React.Component {
         this.state = {
             selectedOrders: [],
             filterValue: "",
-            areAssetsGrouped: false
+            areAssetsGrouped: props.viewSettings.get(
+                "accountOrdersGrouppedByAsset"
+            )
         };
     }
 
@@ -525,6 +526,9 @@ class AccountOrders extends React.Component {
         );
 
         let onGroupChange = (checked, evt) => {
+            SettingsActions.changeViewSetting({
+                accountOrdersGrouppedByAsset: checked
+            });
             this.setState({areAssetsGrouped: checked});
         };
 
@@ -566,7 +570,10 @@ class AccountOrders extends React.Component {
                         <div className="group-by">
                             <Translate content="account.group_by_asset" />
                             <span className="text">:</span>
-                            <Switch onChange={onGroupChange} />
+                            <Switch
+                                onChange={onGroupChange}
+                                checked={this.state.areAssetsGrouped}
+                            />
                         </div>
                     ) : null}
                 </div>
@@ -585,7 +592,8 @@ AccountOrders = connect(
         },
         getProps() {
             return {
-                marketDirections: SettingsStore.getState().marketDirections
+                marketDirections: SettingsStore.getState().marketDirections,
+                viewSettings: SettingsStore.getState().viewSettings
             };
         }
     }

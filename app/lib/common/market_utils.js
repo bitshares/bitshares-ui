@@ -144,8 +144,7 @@ const MarketUtils = {
             finalPrice = fromPrice;
         }
         if (!finalPrice) return null;
-        const finalId =
-            finalPrice.base.asset_id + "_" + finalPrice.quote.asset_id;
+        const finalId = [finalPrice.base.asset_id, finalPrice.quote.asset_id];
         if (
             finalId.indexOf(toAsset.get("id")) === -1 ||
             finalId.indexOf(fromAsset.get("id")) === -1

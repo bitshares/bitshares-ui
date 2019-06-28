@@ -154,8 +154,8 @@ class LoadingButton extends React.Component {
         return this.processingOnClick
             ? this.state.loading
             : this.props.isLoading == null
-            ? false
-            : this.props.isLoading;
+                ? false
+                : this.props.isLoading;
     }
 
     render() {

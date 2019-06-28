@@ -648,7 +648,7 @@ export const settingsAPIs = {
             operator: "'Exotic flavors' infra worker",
             contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
         },
-        
+
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",

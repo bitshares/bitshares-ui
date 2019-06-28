@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 import cname from "classnames";
 import {hash, key} from "bitsharesjs";
-import { Input } from "bitshares-ui-style-guide";
+import {Input} from "bitshares-ui-style-guide";
 
 let dictionary_set;
 
@@ -144,9 +144,9 @@ export default class BrainkeyInput extends Component {
                 brnkey.length < 50
                     ? null
                     : hash
-                        .sha1(brnkey)
-                        .toString("hex")
-                        .substring(0, 4);
+                          .sha1(brnkey)
+                          .toString("hex")
+                          .substring(0, 4);
         }
         this.setState(state);
 

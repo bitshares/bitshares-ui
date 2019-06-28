@@ -187,9 +187,6 @@ class AccountDepositWithdraw extends React.Component {
             name: "Openledger (OPEN.X)",
             template: (
                 <div className="content-block">
-                    {/* <div className="float-right">
-                            <a href="https://www.ccedk.com/" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a>
-                        </div> */}
                     <div
                         className="service-selector"
                         style={{marginBottom: "2rem"}}
@@ -411,8 +408,6 @@ class AccountDepositWithdraw extends React.Component {
             template: (
                 <div>
                     <div className="content-block">
-                        {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
-
                         <div
                             className="service-selector"
                             style={{marginBottom: "2rem"}}

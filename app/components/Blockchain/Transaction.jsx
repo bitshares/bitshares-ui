@@ -20,18 +20,11 @@ import {ChainTypes} from "bitsharesjs";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
-import {
-    Link,
-    DirectLink,
-    Element,
-    Events,
-    animateScroll as scroll,
-    scrollSpy,
-    scroller
-} from "react-scroll";
+import {Link, DirectLink} from "react-scroll";
 import {Tooltip} from "bitshares-ui-style-guide";
 import JSONModal from "components/Modal/JSONModal";
 import asset_utils from "../../lib/common/asset_utils";
+import sanitize from "sanitize";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -70,13 +63,9 @@ class OpType extends React.Component {
                         {trxTypes[ops[this.props.type]]}
                     </span>
                 </td>
-                <td
-                    className="json-link"
-                    onClick={this.props.openJSONModal}
-                >
-                    <Translate component="a" content="transaction.view_json"/>
+                <td className="json-link" onClick={this.props.openJSONModal}>
+                    <Translate component="a" content="transaction.view_json" />
                 </td>
-
             </tr>
         );
     }
@@ -98,15 +87,15 @@ class OperationTable extends React.Component {
     }
 
     openJSONModal = () => {
-        this.setState({ visible: true });
+        this.setState({visible: true});
     };
 
     closeJSONModal = () => {
-        this.setState({ visible: false });
+        this.setState({visible: false});
     };
 
     render() {
-        const { operation } = this.props;
+        const {operation} = this.props;
         let fee_row = (
             <tr>
                 <td>
@@ -2032,7 +2021,12 @@ class Transaction extends React.Component {
                                     content="explorer.workers.website"
                                 />
                             </td>
-                            <td>{op[1].url}</td>
+                            <td>
+                                {sanitize(op[1].url, {
+                                    whiteList: [], // empty, means filter out all tags
+                                    stripIgnoreTag: true // filter out all HTML not in the whilelist
+                                })}
+                            </td>
                         </tr>
                     );
 

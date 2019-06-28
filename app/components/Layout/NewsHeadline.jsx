@@ -6,12 +6,30 @@ import {Carousel} from "antd";
 import SettingsActions from "actions/SettingsActions";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
-import {getHeadFeedAsset} from "../../branding";
+import {getConfigurationAsset} from "../../branding";
+import {hash} from "bitsharesjs";
+
+const getNewsItemHash = news => {
+    return hash
+        .sha1(news.type + news.begin_date + news.end_date + news.content)
+        .toString("hex");
+};
 
 const filterNews = (news, hiddenNewsHeadline) => {
+    console.log("assd");
     return {
         ...Object.values(news).filter(item => {
-            return hiddenNewsHeadline.indexOf(item.content);
+            if (
+                typeof item == "object" &&
+                item.type &&
+                item.begin_date &&
+                item.end_date &&
+                item.content
+            ) {
+                return hiddenNewsHeadline.indexOf(getNewsItemHash(item)) == -1;
+            } else {
+                return false;
+            }
         })
     };
 };
@@ -25,7 +43,7 @@ class NewsHeadline extends React.Component {
     }
 
     componentDidMount() {
-        this.getNewsThroughAsset(getHeadFeedAsset());
+        this.getNewsThroughAsset();
         //this.getNewsFromGitHub.call(this);
     }
 
@@ -65,47 +83,55 @@ class NewsHeadline extends React.Component {
             );
     }
 
-    getNewsThroughAsset(listOfAssetSymbolOrId) {
-        FetchChainObjects(ChainStore.getAsset, listOfAssetSymbolOrId).then(
-            assets => {
-                let notificationList = [];
-                assets.forEach(asset => {
-                    if (!asset) {
-                        return;
-                    }
-                    try {
-                        asset = asset.toJS();
-                        let notification = asset_utils.parseDescription(
-                            asset.options.description
+    getNewsThroughAsset() {
+        let config = getConfigurationAsset();
+        if (typeof config.symbol == "string") {
+            config.symbol = [config.symbol];
+        }
+        FetchChainObjects(ChainStore.getAsset, config.symbol).then(assets => {
+            let notificationList = [];
+            assets.forEach(asset => {
+                if (!asset) {
+                    return;
+                }
+                try {
+                    asset = asset.toJS();
+                    let notification = asset_utils.parseDescription(
+                        asset.options.description
+                    );
+                    if (!!notification.main) {
+                        notification = notification.main.split(
+                            config.explanation
                         );
-                        if (!!notification.main) {
-                            notification = notification.main.split(
-                                "This asset is used to display notifications for the BitShares UI"
-                            );
-                            if (notification.length > 1 && !!notification[1]) {
-                                notificationList.push(
-                                    JSON.parse(notification[1])
-                                );
-                            }
+                        if (notification.length > 1 && !!notification[1]) {
+                            let onChainConfig = JSON.parse(notification[1]);
+                            onChainConfig.notifications.forEach(item => {
+                                notificationList.push(item);
+                            });
                         }
-                    } catch (err) {
-                        console.error(
-                            "Head feed could not be parsed from asset",
-                            asset
-                        );
                     }
-                });
-                const news = filterNews(
-                    notificationList,
-                    this.props.hiddenNewsHeadline
-                );
-                this.setState({news});
-            }
-        );
+                } catch (err) {
+                    console.error(
+                        "Head feed could not be parsed from asset",
+                        asset
+                    );
+                }
+            });
+            const news = filterNews(
+                notificationList,
+                this.props.hiddenNewsHeadline
+            );
+            this.setState({news});
+        });
     }
 
     onClose(item) {
-        SettingsActions.hideNewsHeadline(item);
+        let _hash = getNewsItemHash(item);
+        if (
+            this.props.hiddenNewsHeadline.indexOf(getNewsItemHash(item)) == -1
+        ) {
+            SettingsActions.hideNewsHeadline(_hash);
+        }
     }
 
     render() {
@@ -118,16 +144,41 @@ class NewsHeadline extends React.Component {
             const type = item.type === "critical" ? "error" : item.type; // info & warning
             const begin = new Date(item.begin_date.split(".").reverse());
             const end = new Date(item.end_date.split(".").reverse());
+            let content = item.content;
             if (now >= begin && now <= end) {
+                // only recognize links that start with http and are ended with an exclamation mark
+                let urlTest = /(https?):\/\/(www\.)?[^!]+/g;
+                let urls = content.match(urlTest);
+                if (urls && urls.length) {
+                    urls.forEach(url => {
+                        let _split = content.split(url);
+                        content = (
+                            <span>
+                                {_split[0]}
+                                <a
+                                    target="_blank"
+                                    className="external-link"
+                                    rel="noopener noreferrer"
+                                    href={url}
+                                    style={{cursor: "pointer"}}
+                                >
+                                    {url}
+                                </a>
+                                {_split[1]}
+                            </span>
+                        );
+                    });
+                }
                 acc = [
                     ...acc,
                     <div className="git-info" key={`git-alert${index}`}>
-                        <Alert type={type} message={item.content} banner />
+                        <Alert type={type} message={content} banner />
                         {type === "info" || type === "warning" ? (
                             <Icon
                                 type="close"
                                 className="close-icon"
-                                onClick={this.onClose.bind(this, item.content)}
+                                style={{cursor: "pointer"}}
+                                onClick={this.onClose.bind(this, item)}
                             />
                         ) : null}
                     </div>

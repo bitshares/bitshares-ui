@@ -26,7 +26,7 @@ import {
     preciseMultiply,
     preciseMinus
 } from "../../services/Math";
-import { DatePicker } from "antd";
+import {DatePicker} from "antd";
 
 class ScaledOrderForm extends Component {
     constructor(props) {
@@ -679,17 +679,19 @@ class ScaledOrderForm extends Component {
         let expirationTip;
 
         if (this.props.expirationType !== "SPECIFIC") {
-            expirationTip = this.props.expirations[this.props.expirationType]
-                .get();
+            expirationTip = this.props.expirations[
+                this.props.expirationType
+            ].get();
         }
 
         const expirationsOptionsList = Object.keys(this.props.expirations).map(
             key => (
                 <option value={key} key={key}>
-                    {key === "SPECIFIC" && expirationCustomTime !== "Specific" ?
-                        moment(expirationCustomTime)
-                            .format("Do MMM YYYY hh:mm A") :
-                        this.props.expirations[key].title}
+                    {key === "SPECIFIC" && expirationCustomTime !== "Specific"
+                        ? moment(expirationCustomTime).format(
+                              "Do MMM YYYY hh:mm A"
+                          )
+                        : this.props.expirations[key].title}
                 </option>
             )
         );
@@ -777,24 +779,26 @@ class ScaledOrderForm extends Component {
                                 showTime
                                 showToday={false}
                                 disabledDate={current =>
-                                    current < moment().add(59, "minutes")}
+                                    current < moment().add(59, "minutes")
+                                }
                                 value={
-                                    expirationCustomTime !== "Specific" ?
-                                        expirationCustomTime :
-                                        moment().add(1, "hour")
+                                    expirationCustomTime !== "Specific"
+                                        ? expirationCustomTime
+                                        : moment().add(1, "hour")
                                 }
                                 onChange={this.props.onExpirationCustomChange}
                             />
                             <select
                                 className="cursor-pointer"
-                                style={{ marginTop: "5px" }}
+                                style={{marginTop: "5px"}}
                                 onChange={this.onExpirationSelectChange}
                                 onClick={this.onExpirationSelectClick}
                                 onBlur={this.onExpirationSelectBlur}
                                 data-tip={
                                     expirationTip &&
-                                    moment(expirationTip)
-                                        .format("Do MMM YYYY hh:mm A")
+                                    moment(expirationTip).format(
+                                        "Do MMM YYYY hh:mm A"
+                                    )
                                 }
                                 value={this.props.expirationType}
                             >
@@ -940,7 +944,9 @@ class ScaledOrderTab extends Component {
         )
             return [];
 
-        const step = ((priceUpper - priceLower) / (orderCount - 1)).toFixed(6);
+        const step = ((priceUpper - priceLower) / (orderCount - 1)).toPrecision(
+            5
+        );
 
         const amountPerOrder = amount / orderCount;
 
@@ -953,21 +959,23 @@ class ScaledOrderTab extends Component {
                 ? this.props.quoteAsset
                 : this.props.baseAsset;
 
-        const sellAmount = i =>
-            values.action === SCALED_ORDER_ACTION_TYPES.BUY
-                ? Number(
-                      (amountPerOrder * (priceLower + step * i)).toFixed(6)
-                  ) * Math.pow(10, sellAsset.get("precision"))
-                : Number(amountPerOrder.toFixed(6)) *
-                  Math.pow(10, sellAsset.get("precision"));
+        const sellAmount = i => {
+            let scaledAmount = amountPerOrder * (priceLower + step * i);
+            return values.action === SCALED_ORDER_ACTION_TYPES.BUY
+                ? Number(scaledAmount.toPrecision(5)) *
+                      Math.pow(10, sellAsset.get("precision"))
+                : Number(amountPerOrder.toPrecision(5)) *
+                      Math.pow(10, sellAsset.get("precision"));
+        };
 
-        const buyAmount = i =>
-            values.action === SCALED_ORDER_ACTION_TYPES.SELL
-                ? Number(
-                      (amountPerOrder * (priceLower + step * i)).toFixed(6)
-                  ) * Math.pow(10, buyAsset.get("precision"))
-                : Number(amountPerOrder.toFixed(6)) *
-                  Math.pow(10, buyAsset.get("precision"));
+        const buyAmount = i => {
+            let scaledAmount = amountPerOrder * (priceLower + step * i);
+            return values.action === SCALED_ORDER_ACTION_TYPES.SELL
+                ? Number(scaledAmount.toPrecision(5)) *
+                      Math.pow(10, buyAsset.get("precision"))
+                : Number(amountPerOrder.toPrecision(5)) *
+                      Math.pow(10, buyAsset.get("precision"));
+        };
 
         for (let i = 0; i < orderCount; i += 1) {
             orders.push({
@@ -976,13 +984,11 @@ class ScaledOrderTab extends Component {
                     precision: sellAsset.get("precision"),
                     amount: sellAmount(i)
                 }),
-
                 to_receive: new Asset({
                     asset_id: buyAsset.get("id"),
                     precision: buyAsset.get("precision"),
                     amount: buyAmount(i)
                 }),
-
                 expirationTime: expirationTime
             });
         }
