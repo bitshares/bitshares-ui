@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import assetUtils from "common/asset_utils";
 import AssetActions from "actions/AssetActions";
+import MarketsActions from "actions/MarketsActions";
 import counterpart from "counterpart";
 import PredictionMarketsOverviewTable from "./PredictionMarketsOverviewTable";
 import PredictionMarketDetailsTable from "./PredictionMarketDetailsTable";
@@ -9,6 +10,7 @@ import HelpContent from "../Utility/HelpContent";
 import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
 import ResolveModal from "./ResolveModal";
+import {ChainStore} from "bitsharesjs";
 import {Button} from "bitshares-ui-style-guide";
 
 const STUB_ACCOUNT_ID = "1.2.23882";
@@ -73,9 +75,12 @@ export default class PredictionMarkets extends Component {
 
     componentWillReceiveProps(np) {
         let searchAsset = this.state.lastAssetSymbol;
+        console.log(np.markets);
+        if (this.state.assets) {
+            console.log(this.state.assets[0]);
+        }
         if (np.assets) {
-            const assets = np.assets;
-            const lastAsset = assets
+            const lastAsset = np.assets
                 .sort((a, b) => {
                     if (a.symbol > b.symbol) {
                         return 1;
@@ -87,14 +92,11 @@ export default class PredictionMarkets extends Component {
                 })
                 .last();
             searchAsset = lastAsset ? lastAsset.symbol : "A";
+            const assets = np.assets.filter(
+                a => a.bitasset_data && a.bitasset_data.is_prediction_market
+            );
             this.setState({
-                assets: [
-                    ...assets.filter(
-                        a =>
-                            a.bitasset_data &&
-                            a.bitasset_data.is_prediction_market
-                    )
-                ]
+                assets: [...assets]
             });
             this.updateMarketsList();
         }
@@ -121,7 +123,8 @@ export default class PredictionMarkets extends Component {
                 item[1].options.description
             ).main,
             symbol: item[1].symbol,
-            condition: item[1].options.condition
+            condition: item[1].options.condition,
+            options: item[1].options
         }));
         this.setState({
             markets
@@ -129,6 +132,19 @@ export default class PredictionMarkets extends Component {
     }
 
     async getMarketOpinions(market) {
+        const base = ChainStore.getAsset(
+            market.options.core_exchange_rate.base.asset_id
+        );
+        const quote = ChainStore.getAsset(
+            market.options.core_exchange_rate.quote.asset_id
+        );
+        MarketsActions.subscribeMarket.defer(
+            base,
+            quote,
+            this.props.bucketSize,
+            this.props.currentGroupOrderLimit
+        );
+        console.log(this.props.markets);
         let opinions = STUB_OPINIONS[market.asset_id];
         opinions = !opinions ? [] : opinions;
         this.setState({opinions});
@@ -171,7 +187,7 @@ export default class PredictionMarkets extends Component {
     }
 
     onSearch(event) {
-        console.log(this.props.assets);
+        console.log(this.props.markets);
         this.setState({
             searchTerm: (event.target.value || "").toUpperCase(),
             selectedMarket: null,
