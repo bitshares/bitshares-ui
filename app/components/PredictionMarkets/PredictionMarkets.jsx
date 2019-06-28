@@ -10,7 +10,6 @@ import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
 import ResolveModal from "./ResolveModal";
 import {Button} from "bitshares-ui-style-guide";
-import Immutable from "immutable";
 
 const STUB_ACCOUNT_ID = "1.2.23882";
 
@@ -90,7 +89,6 @@ export default class PredictionMarkets extends Component {
             searchAsset = lastAsset ? lastAsset.symbol : "A";
             this.setState({
                 assets: [
-                    ...this.state.assets,
                     ...assets.filter(
                         a =>
                             a.bitasset_data &&
@@ -123,8 +121,7 @@ export default class PredictionMarkets extends Component {
                 item[1].options.description
             ).main,
             symbol: item[1].symbol,
-            // TODO use real condition
-            condition: "Unknown"
+            condition: item[1].options.condition
         }));
         this.setState({
             markets

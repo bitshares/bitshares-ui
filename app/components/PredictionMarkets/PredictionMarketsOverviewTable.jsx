@@ -29,7 +29,7 @@ export default class PredictionMarketsOverviewTable extends Component {
                 align: "left",
                 onCell,
                 render: dataItem => {
-                    return <LinkToAssetById id={dataItem.asset_id} />;
+                    return <LinkToAssetById asset={dataItem.asset_id} />;
                 }
             },
             {
