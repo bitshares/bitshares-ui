@@ -88,17 +88,20 @@
     $settings-label-color
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
     ul.header-menu {
         .divider {
             margin: 0;
         }
         background-color: $header-menu-background-color !important;
     }
+
     .menu-dropdown-wrapper {
         &.active {
             background: $header-menu--active--icon-background !important;
             ul.header-menu {
                 box-shadow: $header-menu--active--box-shadow;
+
                 li {
                     &:hover {
                         background-color: $header-menu-item--hover--background-color;
@@ -107,24 +110,29 @@
             }
         }
     }
+
     .selector {
         > .inline-block {
             border: 1px solid $selector-border-color !important;
             border-right: 0 !important;
             color: $selector-text-color !important;
+
             line-height: 1.9rem;
             &:last-child {
                 border-right: 1px solid $selector-border-color !important;
             }
         }
+
         > *:not(.inactive).inline-block {
             color: $selector-active-text-color !important;
             border: 1px solid $selector-active-border-color !important;
         }
+
         > *:not(.inactive).inline-block + * {
             border-left: 0 !important;
         }
     }
+
     .showcases-grid {
         margin: 32px 0;
         display: flex;
@@ -135,8 +143,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
-        max-width: calc((450px + 32px) * 3);
-        // 450px + 32px padding * 3 cells
+        max-width: calc((450px + 32px) * 3); // 450px + 32px padding * 3 cells
     }
     .showcases-grid--wrapper--item {
         color: $secondary-text-color;
@@ -368,7 +375,7 @@
     }
     // select:hover {
     // background-color: $panel-bg-color;
-    }
+    // }
 
     .label.success {
         color: $success-color;
@@ -1564,6 +1571,7 @@
     .ask {
         background-color: $ask-color !important;
     }
+
     .orderbook-latest-price {
         > div {
             $orderbook-center-horizontal-margin: 5px;
@@ -1612,6 +1620,7 @@
     // > tbody > tr:nth-of-type(even) {
     // background-color: $row-accent-color;
     // }
+
     // }
     .mymarkets-header {
         background-color: $header-color;
@@ -1702,7 +1711,9 @@
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
     li.stat.clickable {
-        color: $secondary-text-color; // &:hover{ // @include button-focus($primary-text-color, $panel-bg-color, 10);
+        color: $secondary-text-color;
+        // &:hover{
+        // @include button-focus($primary-text-color, $panel-bg-color, 10);
         // }
     }
     .mymarkets-tabs {
@@ -1817,14 +1828,17 @@
             }
         }
     }
+
     .margin-row > td:last-of-type {
         padding: 0px !important;
         margin: 0px !important;
     }
+
     .margin-ratio {
         padding: 6px;
         @include RobotoMedium;
     }
+
     .margin-ratio.danger {
         background-color: darken($alert-color, 15%) !important;
         color: darken($dark-text-color, 15%);
@@ -1833,6 +1847,7 @@
         background-color: darken($warning-color, 15%) !important;
         color: darken($dark-text-color, 15%);
     }
+
     tr.margin-row {
         > td.danger {
             background-color: darken($alert-color, 15%) !important;
@@ -1904,7 +1919,6 @@
             background-color: lighten($positive-color, 5%);
         }
     }
-
     div.ok-indicator {
         color: $secondary-text-color;
         &.success {
@@ -1961,11 +1975,14 @@
         background-color: $tabs-background-color;
         li {
             transition: all 0.3s ease 0s;
+
             background-color: $tabs-item-background-color;
+
             border-top: 0;
             border-left: 0;
             border-right: 0;
             border-bottom: $tabs-item-border-size solid $tabs-item-border-color;
+
             > a {
                 background-color: $tabs-item-background-color;
                 color: $tabs-item-color;
@@ -2181,8 +2198,11 @@
     }
     .header-container {
         background-color: $header-background-color;
+
         box-shadow: $header-shadow;
+
         z-index: 1010;
+
         .menu-group {
             .menu-bar {
                 li {
@@ -2211,6 +2231,7 @@
                 }
             }
         }
+
         .menu-dropdown-wrapper {
             &.active {
                 background: $panel-bg-color;
@@ -2397,6 +2418,7 @@
         }
         &-modal {
         }
+
         &-input-field {
             border-radius: 5px 0 0 5px !important;
         }
@@ -2720,7 +2742,8 @@
 }
 .truncated {
     flex: 1;
-    min-width: 0; /* or some value */
+    min-width: 0;
+    /* or some value */
     .text {
         white-space: nowrap;
         overflow: hidden;
