@@ -77,8 +77,8 @@ class BorrowModalContent extends React.Component {
             };
         } else {
             return {
-                debtAmount: 1,
-                collateral: 1,
+                debtAmount: 0,
+                collateral: 0,
                 collateral_ratio: this._getInitialCollateralRatio(props),
                 target_collateral_ratio: this._getMaintenanceRatio(),
                 errors: this._getInitialErrors(),
@@ -255,21 +255,23 @@ class BorrowModalContent extends React.Component {
             if (!regexp_numeral.test(e.target.value)) {
                 e.target.value = e.target.value.replace(/[^0-9.]/g, "");
             }
-            ratio = parseFloat(e.target.value);
+            ratio = e.target.value;
         } else {
             ratio = e;
         }
 
         if (this.state.unlockedInputType == "debt") {
-            debtAmount = ((this.state.collateral * feed_price) / ratio).toFixed(
-                this.props.backingAssetObj.get("precision")
-            );
+            debtAmount = (
+                (this.state.collateral * feed_price) /
+                parseFloat(ratio)
+            ).toFixed(this.props.backingAssetObj.get("precision"));
             collateral = this.state.collateral;
         } else {
             debtAmount = this.state.debtAmount;
-            collateral = ((this.state.debtAmount / feed_price) * ratio).toFixed(
-                this.props.backingAssetObj.get("precision")
-            );
+            collateral = (
+                (this.state.debtAmount / feed_price) *
+                parseFloat(ratio)
+            ).toFixed(this.props.backingAssetObj.get("precision"));
         }
 
         let newState = {
@@ -489,7 +491,7 @@ class BorrowModalContent extends React.Component {
             10
         );
         let delta_debt_amount = parseInt(
-            this.state.short_amount * quotePrecision - currentPosition.debt,
+            this.state.debtAmount * quotePrecision - currentPosition.debt,
             10
         );
 
@@ -505,14 +507,14 @@ class BorrowModalContent extends React.Component {
                     amount: 0,
                     asset_id: 0
                 },
-                funding_accountObj: this.props.accountObj.get("id"),
+                funding_account: this.props.accountObj.get("id"),
                 delta_collateral: {
                     amount: delta_collateral_amount,
-                    asset_id: this.props.backing_asset.get("id")
+                    asset_id: this.props.backingAssetObj.get("id")
                 },
                 delta_debt: {
                     amount: delta_debt_amount,
-                    asset_id: this.props.quote_asset.get("id")
+                    asset_id: this.props.quoteAssetObj.get("id")
                 },
                 extensions: extensionsProp
             });
@@ -522,19 +524,21 @@ class BorrowModalContent extends React.Component {
                     amount: 0,
                     asset_id: 0
                 },
-                funding_accountObj: this.props.accountObj.get("id"),
+                funding_account: this.props.accountObj.get("id"),
                 delta_collateral: {
                     amount: delta_collateral_amount,
-                    asset_id: this.props.backing_asset.get("id")
+                    asset_id: this.props.backingAssetObj.get("id")
                 },
                 delta_debt: {
                     amount: delta_debt_amount,
-                    asset_id: this.props.quote_asset.get("id")
+                    asset_id: this.props.quoteAssetObj.get("id")
                 }
             });
         }
         WalletDb.process_transaction(tr, null, true).catch(err => {
-            // console.log("unlock failed:", err);
+            if (__DEV__) {
+                console.log("unlock failed:", err);
+            }
         });
 
         ZfApi.publish(this.props.modalId, "close");
@@ -608,8 +612,22 @@ class BorrowModalContent extends React.Component {
         });
     }
 
-    _onLockChange(type, status) {
+    _onLockChange(type) {
+        let unlockedInputType;
+
+        if (type == "debt") {
+            unlockedInputType =
+                this.state.unlockedInputType == "debt" ? "collateral" : "debt";
+        }
+        if (type == "collateral") {
+            unlockedInputType =
+                this.state.unlockedInputType == "collateral"
+                    ? "debt"
+                    : "collateral";
+        }
+
         this.setState({
+            isRatioLocked: false,
             unlockedInputType: type
         });
     }
@@ -643,6 +661,14 @@ class BorrowModalContent extends React.Component {
             !(collateral_ratio > 0.0 && collateral_ratio < 1000.0)
         ) {
             collateral_ratio = 0;
+        }
+
+        // Ensure we don't get massive decimal placement
+        if (
+            collateral_ratio.toString().indexOf(".") != -1 &&
+            collateral_ratio.toString().split(".")[1].length > 2
+        ) {
+            collateral_ratio = collateral_ratio.toFixed(2);
         }
 
         debtBalanceObj = !debtBalanceObj

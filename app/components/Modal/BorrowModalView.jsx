@@ -220,7 +220,11 @@ export const BorrowModalView = props => {
                     display_balance={bitAssetBalanceText}
                     placeholder="0.0"
                     tabIndex={1}
-                    lockStatus={unlockedInputType == "debt" ? false : true}
+                    lockStatus={
+                        unlockedInputType == "debt" || isRatioLocked
+                            ? false
+                            : true
+                    }
                     onLockChange={props.onLockChangeDebt.bind(this)}
                 />
                 <AmountSelector
@@ -233,7 +237,9 @@ export const BorrowModalView = props => {
                     placeholder="0.0"
                     tabIndex={2}
                     lockStatus={
-                        unlockedInputType == "collateral" ? false : true
+                        unlockedInputType == "collateral" || isRatioLocked
+                            ? false
+                            : true
                     }
                     onLockChange={props.onLockChangeCollateral.bind(this)}
                     validateStatus={errors.collateral_balance ? "error" : ""}
@@ -270,7 +276,7 @@ export const BorrowModalView = props => {
                                         value={
                                             collateral_ratio == 0
                                                 ? ""
-                                                : collateral_ratio.toFixed(2)
+                                                : collateral_ratio
                                         }
                                         tabIndex={3}
                                         onChange={props.onRatioChange.bind(
@@ -287,8 +293,8 @@ export const BorrowModalView = props => {
                                                 <Icon
                                                     className={
                                                         !isRatioLocked
-                                                            ? "green"
-                                                            : "blue"
+                                                            ? "grey"
+                                                            : "green"
                                                     }
                                                     type={
                                                         !isRatioLocked

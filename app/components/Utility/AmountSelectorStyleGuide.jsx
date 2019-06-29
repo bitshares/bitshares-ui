@@ -78,7 +78,7 @@ class AmountSelector extends DecimalChecker {
         let addonBefore =
             typeof this.props.lockStatus == "boolean" ? (
                 <Icon
-                    className={!this.props.lockStatus ? "green" : "blue"}
+                    className={!this.props.lockStatus ? "grey" : "green"}
                     type={!this.props.lockStatus ? "unlock" : "lock"}
                     onClick={this._onLockChange.bind(
                         this,
