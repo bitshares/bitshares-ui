@@ -1417,7 +1417,7 @@ class Asset extends React.Component {
             {
                 key: "maximum_short_squeeze_ratio",
                 title: (
-                    <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio" />
+                    <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio" />
                 ),
                 dataIndex: "maximum_short_squeeze_ratio",
                 render: item => {
