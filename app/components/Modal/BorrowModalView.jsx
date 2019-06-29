@@ -284,29 +284,22 @@ export const BorrowModalView = props => {
                                         )}
                                         className="input-group-unbordered-before"
                                         addonBefore={
-                                            <Tooltip
-                                                title={counterpart.translate(
-                                                    "borrow.lockedCR"
+                                            <Icon
+                                                className={
+                                                    !isRatioLocked
+                                                        ? "grey"
+                                                        : "green"
+                                                }
+                                                type={
+                                                    !isRatioLocked
+                                                        ? "unlock"
+                                                        : "lock"
+                                                }
+                                                onClick={props.onLockChangeCR.bind(
+                                                    this
                                                 )}
-                                                placement="right"
-                                            >
-                                                <Icon
-                                                    className={
-                                                        !isRatioLocked
-                                                            ? "grey"
-                                                            : "green"
-                                                    }
-                                                    type={
-                                                        !isRatioLocked
-                                                            ? "unlock"
-                                                            : "lock"
-                                                    }
-                                                    onClick={props.onLockChangeCR.bind(
-                                                        this
-                                                    )}
-                                                    style={{fontSize: "20px"}}
-                                                />
-                                            </Tooltip>
+                                                style={{fontSize: "20px"}}
+                                            />
                                         }
                                     />
                                 </Form.Item>

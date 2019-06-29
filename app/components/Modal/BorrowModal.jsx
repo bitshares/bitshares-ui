@@ -613,19 +613,6 @@ class BorrowModalContent extends React.Component {
     }
 
     _onLockChange(type) {
-        let unlockedInputType;
-
-        if (type == "debt") {
-            unlockedInputType =
-                this.state.unlockedInputType == "debt" ? "collateral" : "debt";
-        }
-        if (type == "collateral") {
-            unlockedInputType =
-                this.state.unlockedInputType == "collateral"
-                    ? "debt"
-                    : "collateral";
-        }
-
         this.setState({
             isRatioLocked: false,
             unlockedInputType: type
@@ -789,9 +776,12 @@ class BorrowModalContent extends React.Component {
                     onLockChangeCR={this._onLockCR.bind(this)}
                     onLockChangeCollateral={this._onLockChange.bind(
                         this,
+                        "debt"
+                    )}
+                    onLockChangeDebt={this._onLockChange.bind(
+                        this,
                         "collateral"
                     )}
-                    onLockChangeDebt={this._onLockChange.bind(this, "debt")}
                     onPayDebt={this._payDebt.bind(this)}
                     onTCRatioChange={this._onTargetRatioChange.bind(this)}
                     onSetUseTCR={this._setUseTargetCollateral.bind(this)}
