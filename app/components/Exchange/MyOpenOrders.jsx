@@ -27,7 +27,7 @@ class ExchangeTableHeader extends React.Component {
                     <th style={{width: "6%", textAlign: "center"}}>
                         <Tooltip
                             title={counterpart.translate(
-                                "exchange.cancel_selected_orders"
+                                "exchange.cancel_order_select_all"
                             )}
                             placement="left"
                         >
@@ -101,18 +101,11 @@ class ExchangeOrderRow extends React.Component {
             <tr key={order.id}>
                 <td className="text-center" style={{width: "6%"}}>
                     {isCall ? null : (
-                        <Tooltip
-                            title={counterpart.translate(
-                                "exchange.cancel_selected_orders"
-                            )}
-                            placement="left"
-                        >
-                            <Checkbox
-                                className="orderCancel"
-                                checked={selected}
-                                onChange={this.props.onCheckCancel}
-                            />
-                        </Tooltip>
+                        <Checkbox
+                            className="orderCancel"
+                            checked={selected}
+                            onChange={this.props.onCheckCancel}
+                        />
                     )}
                 </td>
                 <td className={tdClass} style={{paddingLeft: 10}}>
