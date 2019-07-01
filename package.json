@@ -161,6 +161,7 @@
         "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
         "js-sha256": "^0.2.3",
         "jspdf": "^1.4.1",
+        "jspdf-autotable": "^3.1.1",
         "lodash-es": "^4.17.10",
         "lzma": "2.1.6",
         "moment": "^2.22.2",
