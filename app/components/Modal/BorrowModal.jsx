@@ -9,11 +9,10 @@ import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
 import Immutable from "immutable";
-import {ChainStore} from "bitsharesjs";
 import {List} from "immutable";
 import {Modal, Button} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
-import {BorrowModalView} from "./BorrowModalView";
+import {BorrowModalView} from "./View/BorrowModalView";
 
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset

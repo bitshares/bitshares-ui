@@ -1,12 +1,11 @@
 import React from "react";
 import Translate from "react-translate-component";
-import FormattedAsset from "../Utility/FormattedAsset";
+import FormattedAsset from "../../Utility/FormattedAsset";
 import utils from "common/utils";
-import AmountSelector from "../Utility/AmountSelectorStyleGuide";
-import BalanceComponent from "../Utility/BalanceComponent";
-import FormattedPrice from "../Utility/FormattedPrice";
+import AmountSelector from "../../Utility/AmountSelectorStyleGuide";
+import FormattedPrice from "../../Utility/FormattedPrice";
 import counterpart from "counterpart";
-import HelpContent from "../Utility/HelpContent";
+import HelpContent from "../../Utility/HelpContent";
 import {
     Checkbox,
     Tooltip,
@@ -17,39 +16,49 @@ import {
     Row,
     Col
 } from "bitshares-ui-style-guide";
-import asset_utils from "../../lib/common/asset_utils";
+import asset_utils from "../../../lib/common/asset_utils";
 
-export const BorrowModalView = props => {
-    const {
-        // Objects
-        accountObj,
-        backingAssetObj,
-        collateralBalanceObj,
-        debtBalanceObj,
-        quoteAssetObj,
-        newPosition,
-        errors,
+export function BorrowModalView({
+    // Objects
+    accountObj,
+    backingAssetObj,
+    collateralBalanceObj,
+    debtBalanceObj,
+    quoteAssetObj,
+    newPosition,
+    errors,
 
-        // Strings, Floats and Numbers
-        collateral,
-        collateral_ratio,
-        debtAmount,
-        backingPrecision,
-        maintenanceRatio,
-        remainingBackingBalance,
-        remainingDebtBalance,
-        target_collateral_ratio,
-        unlockedInputType,
+    // Strings, Floats and Numbers
+    collateral,
+    collateral_ratio,
+    debtAmount,
+    backingPrecision,
+    maintenanceRatio,
+    remainingBackingBalance,
+    remainingDebtBalance,
+    target_collateral_ratio,
+    unlockedInputType,
 
-        // Bool Flags
-        disableHelp,
-        isRatioLocked,
-        isOriginalBelowMCR,
-        isPredictionMarket,
-        isValid,
-        useTargetCollateral
-    } = props;
+    // Bool Flags
+    disableHelp,
+    isRatioLocked,
+    isOriginalBelowMCR,
+    isPredictionMarket,
+    isValid,
+    useTargetCollateral,
 
+    // Callbacks
+    onPayDebt,
+    onMaximizeCollatereal,
+    onBorrowChange,
+    onLockChangeDebt,
+    onCollateralChange,
+    onLockChangeCollateral,
+    onRatioChange,
+    onLockChangeCR,
+    onSetUseTCR,
+    onTCRatioChange
+}) {
     let quotePrecision = utils.get_asset_precision(
         quoteAssetObj.get("precision")
     );
@@ -82,7 +91,7 @@ export const BorrowModalView = props => {
                     <span>
                         <Translate
                             component="a"
-                            onClick={props.onPayDebt.bind(this)}
+                            onClick={onPayDebt.bind(this)}
                             content="borrow.pay_max_debt"
                         />
                         &nbsp;
@@ -112,7 +121,7 @@ export const BorrowModalView = props => {
                 <span>
                     <Translate
                         component="a"
-                        onClick={props.onMaximizeCollatereal.bind(this)}
+                        onClick={onMaximizeCollatereal.bind(this)}
                         content="borrow.use_max"
                     />
                     &nbsp;
@@ -214,7 +223,7 @@ export const BorrowModalView = props => {
                 <AmountSelector
                     label="transaction.borrow_amount"
                     amount={debtAmount.toString()}
-                    onChange={props.onBorrowChange.bind(this)}
+                    onChange={onBorrowChange.bind(this)}
                     asset={quoteAssetObj.get("id")}
                     assets={[quoteAssetObj.get("id")]}
                     display_balance={bitAssetBalanceText}
@@ -225,12 +234,12 @@ export const BorrowModalView = props => {
                             ? false
                             : true
                     }
-                    onLockChange={props.onLockChangeDebt.bind(this)}
+                    onLockChange={onLockChangeDebt.bind(this)}
                 />
                 <AmountSelector
                     label="transaction.collateral"
                     amount={collateral.toString()}
-                    onChange={props.onCollateralChange.bind(this)}
+                    onChange={onCollateralChange.bind(this)}
                     asset={backingAssetObj.get("id")}
                     assets={[backingAssetObj.get("id")]}
                     display_balance={backingBalanceText}
@@ -241,7 +250,7 @@ export const BorrowModalView = props => {
                             ? false
                             : true
                     }
-                    onLockChange={props.onLockChangeCollateral.bind(this)}
+                    onLockChange={onLockChangeCollateral.bind(this)}
                     validateStatus={errors.collateral_balance ? "error" : ""}
                     help={
                         errors.collateral_balance
@@ -279,9 +288,7 @@ export const BorrowModalView = props => {
                                                 : collateral_ratio
                                         }
                                         tabIndex={3}
-                                        onChange={props.onRatioChange.bind(
-                                            this
-                                        )}
+                                        onChange={onRatioChange.bind(this)}
                                         className="input-group-unbordered-before"
                                         addonBefore={
                                             <Icon
@@ -295,7 +302,7 @@ export const BorrowModalView = props => {
                                                         ? "unlock"
                                                         : "lock"
                                                 }
-                                                onClick={props.onLockChangeCR.bind(
+                                                onClick={onLockChangeCR.bind(
                                                     this
                                                 )}
                                                 style={{fontSize: "20px"}}
@@ -322,9 +329,7 @@ export const BorrowModalView = props => {
                                         style={{marginBottom: 8}}
                                     >
                                         <Checkbox
-                                            onClick={props.onSetUseTCR.bind(
-                                                this
-                                            )}
+                                            onClick={onSetUseTCR.bind(this)}
                                             checked={useTargetCollateral}
                                             tabIndex={4}
                                         >
@@ -347,7 +352,7 @@ export const BorrowModalView = props => {
                                                     : target_collateral_ratio
                                             }
                                             tabIndex={5}
-                                            onChange={props.onTCRatioChange.bind(
+                                            onChange={onTCRatioChange.bind(
                                                 this
                                             )}
                                         />
@@ -361,7 +366,7 @@ export const BorrowModalView = props => {
                                 min={0}
                                 max={maintenanceRatio * 6}
                                 value={collateral_ratio}
-                                onChange={props.onRatioChange.bind(this)}
+                                onChange={onRatioChange.bind(this)}
                             />
                         </Form.Item>
                     </React.Fragment>
@@ -369,4 +374,4 @@ export const BorrowModalView = props => {
             </Form>
         </div>
     );
-};
+}
