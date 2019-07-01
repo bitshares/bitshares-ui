@@ -22,6 +22,7 @@ import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
 import NewsHeadline from "components/Layout/NewsHeadline";
+import Invoice from "./components/Transfer/Invoice";
 
 import {Route, Switch, Redirect} from "react-router-dom";
 
@@ -417,6 +418,10 @@ class App extends React.Component {
                                     path="/transfer"
                                     exact
                                     component={Transfer}
+                                />
+                                <Route
+                                    path="/invoice/:data"
+                                    component={Invoice}
                                 />
                                 <Route
                                     path="/deposit-withdraw"
