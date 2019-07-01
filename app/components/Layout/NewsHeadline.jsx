@@ -16,7 +16,6 @@ const getNewsItemHash = news => {
 };
 
 const filterNews = (news, hiddenNewsHeadline) => {
-    console.log("assd");
     return {
         ...Object.values(news).filter(item => {
             if (
