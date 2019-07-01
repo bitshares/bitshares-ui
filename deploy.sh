@@ -15,7 +15,7 @@ echo TRAVIS_TAG=$TRAVIS_TAG
 echo TRAVIS_BRANCH=$TRAVIS_BRANCH
 echo TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
 
-if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH =~ [2-9]\.[0-9]\.[0-9]{6}$ ]]
+if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH =~ [2-9]\.[0-9]\.[0-9]{6}\.?[0-9]? ]]
 then
     ## wallet.bitshares.org subdomain (independent repo)
     echo "Pushing new wallet subdomain repo"
