@@ -22,7 +22,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
 import QRScanner from "../QRAddressScanner";
-import {Modal, Button, Select} from "bitshares-ui-style-guide";
+import {Modal, Button, Select, Input} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import {
     gatewaySelector,
@@ -1283,13 +1283,13 @@ class WithdrawModalNew extends React.Component {
                         ) : null}
 
                         {/*MEMO*/}
-                        {isBTS ? (
-                            <div>
+                        {isBTS ||
+                        (backingAsset && backingAsset.supportsMemos) ? (
+                            <div style={{marginBottom: "1em"}}>
                                 <label className="left-label">
                                     <Translate content="modal.withdraw.memo" />
                                 </label>
-                                <input
-                                    type="text"
+                                <Input.TextArea
                                     value={state.memo}
                                     onChange={this.onMemoChanged.bind(this)}
                                 />
