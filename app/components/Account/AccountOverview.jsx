@@ -26,6 +26,7 @@ import {
     Select
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
+import SearchInput from "../Utility/SearchInput";
 
 const {Option} = Select;
 
@@ -77,7 +78,6 @@ class AccountOverview extends React.Component {
     }
 
     _handleFilterInput(e) {
-        e.preventDefault();
         this.setState({
             filterValue: e.target.value
         });
@@ -401,11 +401,9 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="header-selector">
                                     <div className="filter inline-block">
-                                        <Input
-                                            type="text"
-                                            placeholder="Filter..."
+                                        <SearchInput
+                                            value={this.state.filterValue}
                                             onChange={this._handleFilterInput}
-                                            addonAfter={<Icon type="search" />}
                                         />
                                     </div>
                                     <div

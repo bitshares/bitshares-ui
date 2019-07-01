@@ -174,7 +174,7 @@ class FormattedAsset extends React.Component {
                         </span>
                     ) : (
                         <span className="currency">
-                            &nbsp;
+                            {!hide_amount ? <span>&nbsp;</span> : null}
                             <AssetName
                                 noTip={this.props.noTip}
                                 noPrefix={this.props.noPrefix}

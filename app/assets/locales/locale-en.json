@@ -156,6 +156,7 @@
             "confirm_add": "Add",
             "create_paperwallet": "Create Paper Wallet",
             "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
+            "resolve_prediction_disabled_button": "The button will be enabled after resolution date has passed",
             "from": "Imported from account",
             "key": "Key/Name",
             "key_viewer": "Private key viewer",
@@ -172,6 +173,7 @@
             "private": "Private key (WIF - Wallet Import Format)",
             "public": "Public key",
             "publish": "Save",
+            "publish_prediction": "Publish",
             "remove_proxy": "Remove proxy",
             "remove_text": "Remove",
             "reset": "Reset",
@@ -305,6 +307,8 @@
             "quote_name": "Quote asset",
             "reward_percent": "Reward percent",
             "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
+            "resolve_prediction": "Resolve prediction",
+            "resolve_prediction_text": "The asset prediction can be resolved here.",
             "short": "Short name (max 32 characters)",
             "symbol": "Symbol",
             "to": "Issue to account",
@@ -521,6 +525,7 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
         "cancel_selected_orders": "Cancel selected order(s)",
+        "cancel_order_select_all": "Select all orders",
         "change": "Change",
         "chart_height": "Chart height (pixels)",
         "chart_hide": "Hide Charts",
@@ -752,6 +757,7 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "empty": "No collateral bids",
                 "included": {
                     "no": "No",
                     "partial": "Partially",
@@ -759,7 +765,7 @@
                 },
                 "title": "Collateral Bids"
             },
-            "cumulative": "Cumulative",
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -778,6 +784,7 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
+                "empty": "No margin positions",
                 "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
@@ -794,6 +801,12 @@
                 "whitelist_authorities": "Whitelist authorities",
                 "whitelist_markets": "Whitelist markets"
             },
+            "prediction_market_asset": {
+                "prediction": "Prediction",
+                "tooltip_prediction": "The prediction is a statement defined by the asset owner. If the statement is true, this prediction market asset should be resolved to a settlement price of 1 by the asset owner.",
+                "resolution_date": "Resolution date",
+                "tooltip_resolution_date": "The resolution date is an informal statement when the asset owner intends to resolve this betting market."
+            },
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
@@ -807,6 +820,7 @@
                 "title": "Price Feed"
             },
             "price_feed_data": {
+                "empty": "No valid feed producers",
                 "core_exchange_rate": "CER",
                 "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
@@ -1067,7 +1081,7 @@
         "deposit_warning_memo": "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "fee": "Gateway fee",
         "fiat": "Fiat",
-        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
+        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "Gateway",
         "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
@@ -1774,6 +1788,7 @@
         "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
         "confirm_yes": "Always",
         "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes. Error was: %(error)s",
+        "custom": "Custom",
         "darkTheme": "Dark",
         "delete_select": "Select local wallet to delete",
         "disabled": "Disabled",
@@ -1991,6 +2006,7 @@
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",
+            "title_short": "HTLC",
             "to": "To",
             "tooltip": {
                 "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
@@ -2007,7 +2023,7 @@
             "title": "Paper Wallet"
         },
         "prediction_market": {
-            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
             "title": "Prediction Markets"
         },
         "timed_transfer": {

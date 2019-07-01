@@ -50,11 +50,6 @@ class AccountBrowsingMode extends React.Component {
         } else if (Array.isArray(myAccounts) && myAccounts.length) {
             switchToAccountName = myAccounts[0];
         }
-        if (this.props.location.pathname.indexOf("/account/") !== -1) {
-            let currentPath = this.props.location.pathname.split("/");
-            currentPath[2] = switchToAccountName;
-            this.props.history.push(currentPath.join("/"));
-        }
         AccountActions.setCurrentAccount.defer(switchToAccountName);
     }
 
