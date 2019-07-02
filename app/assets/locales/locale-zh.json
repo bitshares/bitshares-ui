@@ -1057,7 +1057,7 @@
         "deposit_warning_memo": "充值 %(asset)s 需要填写备注memo，否则无法入账",
         "fee": "网关手续费",
         "fiat": "法币",
-        "fiat_text": "注意：法币业务暂时停止，请注意未来通知。更多即时信息与更新请关注：<a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
+        "fiat_text": "注意：法币业务暂时停止，请注意未来通知。更多即时信息与更新请关注：<a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>",
         "frozen": "账户 %(account)s 充提服务被冻结",
         "gateway": "网关",
         "gateway_text": "网关能让你将 BitShares 中的资产与外部资产进行互换，比如 OPEN.BTC 到 BTC。",
@@ -1981,6 +1981,7 @@
             "sender": "发送方",
             "size": "大小",
             "title": "哈希时间锁定合约",
+            "title_short": "HTLC",
             "to": "发往",
             "tooltip": {
                 "enter_preimage": "输入你从发送方得到的秘密原像",
@@ -1997,7 +1998,7 @@
             "title": "纸钱包"
         },
         "prediction_market": {
-            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
             "title": "Prediction Markets"
         },
         "timed_transfer": {

@@ -1051,7 +1051,7 @@
         "deposit_warning_memo": "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "fee": "Gateway fee",
         "fiat": "Fiat",
-        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
+        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "Gateway",
         "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
@@ -1975,6 +1975,7 @@
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",
+            "title_short": "HTLC",
             "to": "To",
             "tooltip": {
                 "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
@@ -1991,7 +1992,7 @@
             "title": "Paper Wallet"
         },
         "prediction_market": {
-            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
             "title": "Prediction Markets"
         },
         "timed_transfer": {

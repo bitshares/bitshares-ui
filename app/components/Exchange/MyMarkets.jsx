@@ -971,27 +971,14 @@ class MyMarkets extends React.Component {
                             <form>
                                 <div className="filter inline-block">
                                     <SearchInput
-                                        autoComplete="off"
                                         style={{
                                             fontSize: "0.9rem",
                                             height: "inherit",
                                             position: "relative"
                                         }}
-                                        type="text"
                                         className="no-margin market-filter-input"
-                                        placeholder={counterpart.translate(
-                                            "exchange.filter"
-                                        )}
-                                        maxLength={16}
-                                        name="focus"
-                                        required="required"
                                         value={this.state.myMarketFilter}
                                         onChange={this.handleSearchUpdate}
-                                        onClear={() =>
-                                            this.handleSearchUpdate({
-                                                target: {value: ""}
-                                            })
-                                        }
                                     />
                                 </div>
                             </form>

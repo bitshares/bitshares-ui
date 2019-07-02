@@ -13,7 +13,7 @@ export const LimitOrderCreate = ({
     changeColor("warning");
 
     if (fromComponent === "proposed_operation") {
-        let isAsk = market_utils.isAskOp(op[1]);
+        let isAsk = marketUtils.isAskOp(op[1]);
 
         return (
             <span>

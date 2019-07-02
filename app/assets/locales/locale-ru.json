@@ -1057,7 +1057,7 @@
         "deposit_warning_memo": "Депозит %(asset)s должен содержать мемо (примечание), иначе он не будет зачислен",
         "fee": "Комиссия шлюза",
         "fiat": "Фиат",
-        "fiat_text": "Примечание: Фиатные шлюзы будут закрыты до дальнейшего уведомления. Приносим извинения за неудобства! Пожалуйста, следите за нашими последними новостями и обновлениями здесь <a target='_blank' href='https://blog.openledger.info/'> blog.openledger.info</a>",
+        "fiat_text": "Примечание: Фиатные шлюзы будут закрыты до дальнейшего уведомления. Приносим извинения за неудобства! Пожалуйста, следите за нашими последними новостями и обновлениями здесь <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'> blog.openledger.info</a>",
         "frozen": "Аккаунт пользователя %(account)s был заморожен",
         "gateway": "Шлюз",
         "gateway_text": "Здесь выберите, хотите ли вы разместить депозит или вывести средства",
@@ -1981,6 +1981,7 @@
             "sender": "Отправитель",
             "size": "Размер",
             "title": "Хешированные контракты с временным замком",
+            "title_short": "HTLC",
             "to": "Кому",
             "tooltip": {
                 "enter_preimage": "Введите секретный прообраз, который вы получили от отправителя",
@@ -1997,7 +1998,7 @@
             "title": "Бумажный кошелёк"
         },
         "prediction_market": {
-            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
             "title": "Prediction Markets"
         },
         "timed_transfer": {
