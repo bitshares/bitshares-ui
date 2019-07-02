@@ -4,7 +4,6 @@ import Immutable from "immutable";
 import counterpart from "counterpart";
 import AssetWrapper from "./AssetWrapper";
 import PropTypes from "prop-types";
-import {DecimalChecker} from "./DecimalChecker";
 import {Form, Input, Button, Tooltip} from "bitshares-ui-style-guide";
 import AssetSelect from "./AssetSelect";
 import {ChainStore} from "bitsharesjs";
@@ -23,9 +22,8 @@ class FeeAssetSelector extends React.Component {
             assets: [],
             fee_amount: 0,
             fee_asset_id:
-                ChainStore.assets_by_symbol.get(
-                    props.settings.get("fee_asset")
-                ) || "1.3.0",
+                ChainStore.assets_by_symbol(props.fee_asset).get("fee_asset") ||
+                "1.3.0",
             fees: {},
             feeStatus: {},
             isModalVisible: false,
@@ -234,7 +232,7 @@ class FeeAssetSelector extends React.Component {
                     className="modal"
                     show={this.state.isModalVisible}
                     currentAccount={this.props.account}
-                    asset_types={this.state.assets.map((asset, i) => ({
+                    asset_types={this.state.assets.map(asset => ({
                         asset,
                         fee: this.state.fees[asset]
                     }))}

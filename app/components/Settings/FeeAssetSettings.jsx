@@ -14,7 +14,8 @@ class FeeAssetSettings extends React.Component {
         super(props);
         this.state = {
             showModal: false,
-            current_asset: props.fee_asset
+            current_asset:
+                ChainStore.assets_by_symbol.get(props.fee_asset) || "1.3.0"
         };
     }
 
@@ -74,10 +75,7 @@ export default connect(
         },
         getProps(props) {
             return {
-                fee_asset:
-                    ChainStore.assets_by_symbol.get(
-                        SettingsStore.getState().settings.get("fee_asset")
-                    ) || "1.3.0"
+                fee_asset: SettingsStore.getState().settings.get("fee_asset")
             };
         }
     }

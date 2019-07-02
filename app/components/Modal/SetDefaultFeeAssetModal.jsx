@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
-import AssetWrapper from "../../components/Utility/AssetWrapper";
 import SettingsActions from "actions/SettingsActions";
 import {ChainStore} from "bitsharesjs";
 import {connect} from "alt-react";
@@ -63,7 +62,7 @@ class SetDefaultFeeAssetModal extends React.Component {
     }
 
     _getAssetsRows(assets) {
-        return assets.filter(item => !item).map(assetInfo => ({
+        return assets.filter(item => !!item).map(assetInfo => ({
             id: assetInfo.asset.get("id"),
             key: assetInfo.asset.get("id"),
             asset: assetInfo.asset.get("symbol"),
@@ -225,21 +224,8 @@ SetDefaultFeeAssetModal.defaultProps = {
     show: false
 };
 
-SetDefaultFeeAssetModal = AssetWrapper(SetDefaultFeeAssetModal);
-
-class SetDefaultFeeAssetModalConnectWrapper extends React.Component {
-    render() {
-        return (
-            <SetDefaultFeeAssetModal
-                {...this.props}
-                ref={this.props.refCallback}
-            />
-        );
-    }
-}
-
-SetDefaultFeeAssetModalConnectWrapper = connect(
-    SetDefaultFeeAssetModalConnectWrapper,
+SetDefaultFeeAssetModal = connect(
+    SetDefaultFeeAssetModal,
     {
         listenTo() {
             return [SettingsStore, AccountStore];
@@ -255,4 +241,4 @@ SetDefaultFeeAssetModalConnectWrapper = connect(
         }
     }
 );
-export default SetDefaultFeeAssetModalConnectWrapper;
+export default SetDefaultFeeAssetModal;
