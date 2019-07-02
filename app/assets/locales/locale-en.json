@@ -517,6 +517,7 @@
         "cancel_selected_orders": "Cancel selected order(s)",
         "cancel_order_select_all": "Select all orders",
         "change": "Change",
+        "chart_error": "Chart already exist",
         "chart_height": "Chart height (pixels)",
         "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",

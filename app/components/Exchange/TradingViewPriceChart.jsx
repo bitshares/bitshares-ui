@@ -7,6 +7,7 @@ import counterpart from "counterpart";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import {connect} from "alt-react";
+import Translate from "react-translate-component";
 
 // import MarketsStore from "stores/MarketsStore";
 
@@ -15,10 +16,13 @@ class TradingViewPriceChart extends React.Component {
         super();
         this.state = {
             showSaveModal: false,
-            showLoadModal: false
+            showLoadModal: false,
+            error: false
         };
         this.layoutName = React.createRef();
         this.hideModal = this.hideModal.bind(this);
+        this.resetError = this.resetError.bind(this);
+        this.loadLastChart = this.loadLastChart.bind(this);
     }
     loadTradingView(props) {
         const {dataFeed} = props;
@@ -128,21 +132,24 @@ class TradingViewPriceChart extends React.Component {
             this.tvWidget
                 .createButton()
                 .attr("title", "Load custom charts")
+                .addClass("apply-common-tooltip")
                 .on("click", () => {
                     that.setState({showLoadModal: true});
                 })
-                .append("<span>Load Chart</span>");
+                .append("<span>Load</span>");
             this.tvWidget
                 .createButton()
                 .attr("title", "Save Custom charts")
+                .addClass("apply-common-tooltip")
                 .on("click", () => {
                     that.setState({showSaveModal: true});
                 })
-                .append("<span>Save Chart</span>");
+                .append("<span>Save</span>");
 
             dataFeed.update({
                 onMarketChange: this._setSymbol.bind(this)
             });
+            this.loadLastChart();
         });
 
         this._onWheel = this._onWheel.bind(this);
@@ -157,6 +164,8 @@ class TradingViewPriceChart extends React.Component {
 
     _setSymbol(ticker) {
         if (this.tvWidget) {
+            this.tvWidget.chart().removeAllShapes();
+            this.loadLastChart();
             this.tvWidget.setSymbol(
                 ticker,
                 getResolutionsFromBuckets([this.props.bucketSize])[0]
@@ -193,24 +202,36 @@ class TradingViewPriceChart extends React.Component {
 
     onSubmitConfirmation(e) {
         const {layoutName} = this;
+        const error = this.props.charts.some(
+            chart =>
+                chart.key === layoutName.current.state.value &&
+                chart.symbol ===
+                    this.props.quoteSymbol + "_" + this.props.baseSymbol
+        );
         const that = this;
-        this.tvWidget.save(function(object) {
-            let chart = {};
-            chart.key = layoutName.current.state.value || "";
-            chart.object = object;
-            chart.name = layoutName.current.state.value || "";
-            chart.symbol =
-                that.props.quoteSymbol + " / " + that.props.baseSymbol;
-            chart.modified = new Date().toLocaleDateString("en-US");
-            SettingsActions.addChartLayout(chart);
-            that.setState({showSaveModal: false}, () => {
-                if (that.layoutName.current.state) {
-                    that.layoutName.current.state.value = null;
-                }
+        if (!error) {
+            this.resetError();
+            this.tvWidget.save(function(object) {
+                let chart = {};
+                chart.key = layoutName.current.state.value || "";
+                chart.object = object;
+                chart.name = layoutName.current.state.value || "";
+                chart.symbol =
+                    that.props.quoteSymbol + "_" + that.props.baseSymbol;
+                chart.modified = new Date().toLocaleDateString("en-US");
+                SettingsActions.addChartLayout(chart);
+                that.setState({showSaveModal: false}, () => {
+                    if (that.layoutName.current.state) {
+                        that.layoutName.current.state.value = null;
+                    }
+                });
             });
-        });
+        } else {
+            this.setState({error});
+        }
     }
     hideModal() {
+        this.resetError();
         this.setState({showSaveModal: false, showLoadModal: false});
     }
 
@@ -218,7 +239,30 @@ class TradingViewPriceChart extends React.Component {
         SettingsActions.deleteChartLayout(name);
     }
 
+    resetError() {
+        this.setState({error: false});
+    }
+
+    loadLastChart() {
+        const {charts, quoteSymbol, baseSymbol} = this.props;
+
+        const chart = charts
+            .toArray()
+            .filter(
+                chart =>
+                    chart.symbol === quoteSymbol + "_" + baseSymbol &&
+                    chart.enabled
+            );
+        chart[0] && this.tvWidget.load(chart[0].object);
+    }
+
     render() {
+        const {charts, quoteSymbol, baseSymbol} = this.props;
+        const {error} = this.state;
+        let _error = error ? "has-error" : "";
+        let dataSource = charts
+            .toArray()
+            .filter(chart => chart.symbol === quoteSymbol + "_" + baseSymbol);
         const columns = [
             {
                 title: "Layout Name",
@@ -229,11 +273,6 @@ class TradingViewPriceChart extends React.Component {
                 title: "Modified",
                 dataIndex: "modified",
                 key: "modified"
-            },
-            {
-                title: "Active Symbol",
-                dataIndex: "symbol",
-                key: "symbol"
             },
             {
                 title: "Actions",
@@ -254,11 +293,13 @@ class TradingViewPriceChart extends React.Component {
         const onRow = record => {
             return {
                 onClick: event => {
-                    if (!event.target.dataset.icon) {
+                    if (event.target.localName === "td") {
                         this.hideModal();
+                        SettingsActions.addChartLayout(record);
                         this.tvWidget.load(record.object);
                     } else if (
-                        event.target.parentElement.childElementCount === 1
+                        event.currentTarget.parentElement.childElementCount ===
+                        1
                     )
                         this.hideModal();
                 }
@@ -283,7 +324,7 @@ class TradingViewPriceChart extends React.Component {
                     ]}
                 >
                     <Table
-                        dataSource={this.props.charts.toArray() || []}
+                        dataSource={dataSource || []}
                         columns={columns}
                         onRow={onRow}
                     />
@@ -305,11 +346,28 @@ class TradingViewPriceChart extends React.Component {
                         </Button>
                     ]}
                 >
-                    <Input
-                        placeholder="Enter Chart Layout Name"
-                        ref={this.layoutName}
-                        onPressEnter={this.onSubmitConfirmation.bind(this)}
-                    />
+                    <div>
+                        {error ? (
+                            <span className={_error}>
+                                <Translate content="exchange.chart_error" />
+                            </span>
+                        ) : null}
+                        <span
+                            className={_error}
+                            style={{
+                                borderBottom: "#A09F9F 1px dotted"
+                            }}
+                        >
+                            <Input
+                                placeholder="Enter Chart Layout Name"
+                                ref={this.layoutName}
+                                onChange={this.resetError}
+                                onPressEnter={this.onSubmitConfirmation.bind(
+                                    this
+                                )}
+                            />
+                        </span>
+                    </div>
                 </Modal>
             </div>
         );

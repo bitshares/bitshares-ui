@@ -779,12 +779,17 @@ class SettingsStore {
 
     onAddChartLayout(value) {
         if (value.name) {
+            value.enabled = true;
             const index = this.chartLayouts.findIndex(
-                item => item.name === value.name
+                item => item.name === value.name && item.symbol === value.symbol
             );
             if (index !== -1) {
                 this.chartLayouts = this.chartLayouts.delete(index);
             }
+            this.chartLayouts = this.chartLayouts.map(item => {
+                if (item.symbol === value.symbol) item.enabled = false;
+                return item;
+            });
             this.chartLayouts = this.chartLayouts.push(value);
             ss.set("chartLayouts", this.chartLayouts.toJS());
         }
