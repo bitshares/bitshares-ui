@@ -17,8 +17,9 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Input, Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
+import {Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
+import SearchInput from "../Utility/SearchInput";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -43,7 +44,6 @@ class AccountOverview extends React.Component {
     }
 
     _handleFilterInput(e) {
-        e.preventDefault();
         this.setState({
             filterValue: e.target.value
         });
@@ -319,11 +319,9 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="header-selector">
                                     <div className="filter inline-block">
-                                        <Input
-                                            type="text"
-                                            placeholder="Filter..."
+                                        <SearchInput
+                                            value={this.state.filterValue}
                                             onChange={this._handleFilterInput}
-                                            addonAfter={<Icon type="search" />}
                                         />
                                     </div>
                                     <div
