@@ -8,7 +8,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import {connect} from "alt-react";
 import accountUtils from "common/account_utils";
-import {List} from "immutable";
+import {List, Set} from "immutable";
 import Page404 from "../Page404/Page404";
 import {Route, Switch, Redirect} from "react-router-dom";
 import {Apis} from "bitsharesjs-ws";
@@ -86,14 +86,14 @@ class AccountPage extends React.Component {
             wallet_locked,
             account,
             hiddenAssets
-        } = this.props;
+        } = this.props;        
 
         if (!account) {
             return <Page404 />;
         }
         let account_name = this.props.account.get("name");
         let isMyAccount = AccountStore.isMyAccount(account);
-        const {settleOrders} = this.state;
+        let {settleOrders} = this.state;
 
         let passOnProps = {
             account_name,
@@ -107,7 +107,7 @@ class AccountPage extends React.Component {
             contained: true,
             balances: account.get("balances", List()).toList(),
             orders: account.get("orders", List()).toList(),
-            settleOrders: List(settleOrders).toList(),
+            settleOrders: new Set(settleOrders),
             viewSettings: this.props.viewSettings,
             proxy: account.getIn(["options", "voting_account"]),
             history: this.props.history

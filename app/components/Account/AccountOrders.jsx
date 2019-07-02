@@ -2,13 +2,12 @@ import React from "react";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs";
-import {LimitOrder, SettleOrder} from "common/MarketClasses";
+import {LimitOrder, SettleOrder, FeedPrice} from "common/MarketClasses";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
-import PaginatedList from "../Utility/PaginatedList";
 import {Input, Icon, Table, Switch} from "bitshares-ui-style-guide";
 import AccountOrderRowDescription from "./AccountOrderRowDescription";
 import CollapsibleTable from "../Utility/CollapsibleTable";
@@ -21,6 +20,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import utils from "common/utils";
+import asset_utils from "common/asset_utils";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -58,11 +58,21 @@ class AccountOrders extends React.Component {
 
     _getDataSource(orders) {
         let dataSource = [];
+        const isSettle = this.props.type === "settle" ? true : false;
 
         orders.forEach(orderID => {
-            let order = ChainStore.getObject(orderID).toJS();
-            let base = ChainStore.getAsset(order.sell_price.base.asset_id);
-            let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+            let order = null;
+            let base = null;
+            let quote = null;
+            if (!isSettle) {
+                order = ChainStore.getObject(orderID).toJS();
+                base = ChainStore.getAsset(order.sell_price.base.asset_id);
+                quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+            } else {
+                order = orderID;
+                base = ChainStore.getAsset(order.balance.asset_id); 
+                quote = ChainStore.getAsset("1.3.0");              
+            }           
 
             if (base && quote) {
                 let assets = {
@@ -71,17 +81,35 @@ class AccountOrders extends React.Component {
                 };
 
                 const {marketName} = marketUtils.getMarketName(base, quote);
-                const direction = this.props.marketDirections.get(marketName);
+                const direction = this.props.marketDirections.get(marketName);               
 
                 let marketQuoteId = direction
                     ? quote.get("id")
                     : base.get("id");
                 let marketBaseId = direction ? base.get("id") : quote.get("id");
+                const feedPriceRaw = asset_utils.extractRawFeedPrice(base);                
+                let sqr = base.getIn([
+                    "bitasset",
+                    "current_feed",
+                    "maximum_short_squeeze_ratio"
+                ]);
+
+                const feed_price = new FeedPrice({
+                    priceObject: feedPriceRaw,
+                    market_base: marketBaseId,
+                    sqr,
+                    assets
+                });
+
+                const bitasset_options = base.getIn([
+                    "bitasset",
+                    "options"
+                ]);
 
                 let limitOrder =
                     this.props.type !== "settle"
                         ? new LimitOrder(order, assets, marketQuoteId)
-                        : new SettleOrder(order, assets, marketQuoteId);
+                        : new SettleOrder(order, assets, marketBaseId, feed_price, bitasset_options);
 
                 let marketBase = ChainStore.getAsset(marketBaseId);
                 let marketQuote = ChainStore.getAsset(marketQuoteId);
@@ -101,6 +129,7 @@ class AccountOrders extends React.Component {
                     quoteColor: !isBid ? "value negative" : "value positive",
                     baseColor: isBid ? "value negative" : "value positive"
                 };
+                if (isSettle) dataItem = {...dataItem, settlement_date: order.settlement_date, feed_price};
 
                 dataSource.push(dataItem);
             }
@@ -144,6 +173,8 @@ class AccountOrders extends React.Component {
             averagePrice,
             marketPrice,
             value;
+
+        const isSettle = this.props.type === "settle";
 
         let getBaseAsset = dataItem =>
             dataItem.order[
@@ -325,15 +356,31 @@ class AccountOrders extends React.Component {
                   ]
                 : [
                       {
-                          key: "description",
-                          title: counterpart.translate("exchange.description"),
-                          render: dataItem => (
-                              <AccountOrderRowDescription {...dataItem} />
-                          ),
-                          onCell: onCell,
-                          className: "clickable"
-                      }
-                  ]),
+                        key: "description",
+                        title: counterpart.translate("exchange.description"),
+                        render: dataItem => !isSettle ? (
+                            <AccountOrderRowDescription {...dataItem} />
+                        ) : (
+                            <Translate
+                                content={"exchange.settlement_description"}                            
+                                quoteAsset={utils.format_number(
+                                    dataItem.order.for_sale.getAmount({real: true}),
+                                    dataItem.quote.get("precision"),
+                                    false
+                                )}
+                                quoteName={
+                                    <AssetName
+                                        noTip
+                                        customClass={dataItem.quoteColor}
+                                        name={dataItem.quote.get("symbol")}
+                                    />
+                                }
+                            />
+                        ),
+                        onCell: onCell,
+                        className: "clickable"
+                    }
+                ]),
             {
                 key: "price",
                 title: areAssetsGrouped ? (
@@ -375,6 +422,26 @@ class AccountOrders extends React.Component {
                 onCell: onCell,
                 className: "clickable"
             },
+            isSettle && !areAssetsGrouped ? {
+                key: "settlement_date",
+                title: areAssetsGrouped ? (
+                    <div>
+                        <Translate content="exchange.settlement_date" />
+                        <br />
+                        {marketPrice}
+                    </div>
+                ) : (
+                    counterpart.translate("exchange.settlement_date")
+                ),
+                align: areAssetsGrouped ? "right" : "left",
+                render: dataItem => (
+                    <span>
+                        {dataItem.settlement_date}
+                    </span>
+                ),
+                onCell: onCell,
+                className: "clickable"
+            } : {},
             {
                 key: "value",
                 title: areAssetsGrouped ? (

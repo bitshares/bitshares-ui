@@ -78,7 +78,8 @@ class AccountOverview extends React.Component {
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
             !utils.are_equal_shallow(nextState, this.state) ||
-            this.state.filterValue !== nextState.filterValue
+            this.state.filterValue !== nextState.filterValue ||
+            nextProps.settleOrders !== this.props.settleOrders
         );
     }
 
