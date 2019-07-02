@@ -701,8 +701,12 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                         output_coin_info.backingCoinType !=
                             pair.inputCoinType &&
                         input_coin_info &&
-                        input_coin_info.restricted == false &&
-                        output_coin_info.restricted == false
+                        ((input_coin_info.restricted == false &&
+                            output_coin_info.restricted == false) ||
+                            (input_coin_info.restricted == true &&
+                                input_coin_info.authorized == true) ||
+                            (output_coin_info.restricted == true &&
+                                output_coin_info.authorized == true))
                     ) {
                         // filter out mappings where one of the wallets is offline
                         if (
