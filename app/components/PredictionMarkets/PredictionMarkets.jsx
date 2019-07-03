@@ -117,7 +117,9 @@ export default class PredictionMarkets extends Component {
     }
 
     async getMarketOpinions(market) {
+        console.log("Fetching opinions");
         if (this.state.subscribedMarket) {
+            console.log("Unsubscribe");
             await MarketsActions.unSubscribeMarket(
                 this.state.subscribedMarket.base,
                 this.state.subscribedMarket.quote
@@ -129,6 +131,7 @@ export default class PredictionMarkets extends Component {
         const quote = ChainStore.getAsset(
             market.options.core_exchange_rate.quote.asset_id
         );
+        console.log("Subscribe");
         await MarketsActions.subscribeMarket(
             base,
             quote,
@@ -243,14 +246,8 @@ export default class PredictionMarkets extends Component {
         console.log("Cancel", opinion);
     };
 
-    getNewMarketParameters = value => {
-        this.setState({
-            markets: [...this.state.markets, value],
-            isCreateMarketModalOpen: false
-        });
-    };
-
-    getNewOpinionParameters = value => {
+    onSubmitNewOpinion = value => {
+        // TODO implement handling of new opinion
         if (this.state.opinions) {
             this.setState({
                 opinions: [...this.state.opinions, value],
@@ -264,22 +261,13 @@ export default class PredictionMarkets extends Component {
         }
     };
 
-    getResolveParameters = value => {
-        console.log(`Resolved ${value.asset_id}:${value.result}`);
+    onResolveMarket = market => {
+        // TODO implement handling of market resolvement
+        console.log(`Resolved ${market.asset_id}:${market.result}`);
         this.setState({
             isResolveModalOpen: false
         });
     };
-
-    getNewAssetId() {
-        //TODO
-        return String(Math.random());
-    }
-
-    getNewOpinionId() {
-        //TODO
-        return String(Math.random());
-    }
 
     getOverviewSection() {
         return (
@@ -378,8 +366,7 @@ export default class PredictionMarkets extends Component {
                         market={this.state.selectedMarket}
                         opinion={this.state.initialOpinion}
                         currentAccountId={this.state.currentAccountId}
-                        getNewOpinionParameters={this.getNewOpinionParameters}
-                        newOpinionId={this.getNewOpinionId()}
+                        submitNewOpinion={this.onSubmitNewOpinion}
                         preselectedOpinion={this.state.preselectedOpinion}
                         preselectedAmount={this.state.preselectedAmount}
                     />
@@ -391,8 +378,6 @@ export default class PredictionMarkets extends Component {
                             this
                         )}
                         currentAccountId={this.state.currentAccountId}
-                        getNewMarketParameters={this.getNewMarketParameters}
-                        newMarketId={this.getNewAssetId()}
                     />
                 ) : null}
                 {this.state.isResolveModalOpen ? (
@@ -401,7 +386,7 @@ export default class PredictionMarkets extends Component {
                         onClose={this.onResolveModalClose.bind(this)}
                         market={this.state.selectedMarket}
                         currentAccountId={this.state.currentAccountId}
-                        getResolveParameters={this.getResolveParameters}
+                        onResolveMarket={this.onResolveMarket}
                     />
                 ) : null}
             </div>

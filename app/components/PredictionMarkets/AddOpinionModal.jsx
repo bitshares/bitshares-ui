@@ -9,7 +9,6 @@ export default class AddOpinionModal extends Modal {
         super(props);
         this.state = {
             newOpinionParameters: {
-                order_id: null,
                 opinionator: null,
                 opinion: this.props.preselectedOpinion,
                 amount: this.props.preselectedAmount,
@@ -29,7 +28,6 @@ export default class AddOpinionModal extends Modal {
         let newOpinion = this.state.newOpinionParameters;
         newOpinion.opinion = newOpinion.opinion === "no" ? "yes" : "no";
         newOpinion.opinionator = this.props.currentAccountId;
-        newOpinion.order_id = this.props.newOpinionId;
         this.setState({
             newOpinionParameters: newOpinion,
             bool_opinion: !this.state.bool_opinion
@@ -49,7 +47,6 @@ export default class AddOpinionModal extends Modal {
             let newOpinion = this.state.newOpinionParameters;
             newOpinion.amount = amount;
             newOpinion.opinionator = this.props.currentAccountId;
-            newOpinion.order_id = this.props.newOpinionId;
             this.setState({newOpinionParameter: newOpinion}, handleWarning);
         }
 
@@ -70,9 +67,7 @@ export default class AddOpinionModal extends Modal {
 
         if (this.checkFullBlank()) {
             onOkFunction = () =>
-                this.props.getNewOpinionParameters(
-                    this.state.newOpinionParameters
-                );
+                this.props.submitNewOpinion(this.state.newOpinionParameters);
         } else {
             onOkFunction = () => {};
         }
@@ -153,11 +148,6 @@ export default class AddOpinionModal extends Modal {
                                 />
                             </label>
                         </Form.Item>
-                        <div>
-                            {this.state.showWarning ? (
-                                <Translate content="prediction.add_opinion_modal.warning" />
-                            ) : null}
-                        </div>
                     </Form>
                 </div>
             </Modal>
@@ -171,8 +161,7 @@ AddOpinionModal.propTypes = {
     market: PropTypes.any.isRequired,
     opinion: PropTypes.any,
     currentAccountId: PropTypes.string,
-    getNewOpinionParameters: PropTypes.func,
-    newOpinionId: PropTypes.string,
+    submitNewOpinion: PropTypes.func,
     preselectedOpinion: PropTypes.string,
     preselectedAmount: PropTypes.number
 };

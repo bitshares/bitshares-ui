@@ -11,19 +11,20 @@ export default class ResolveModal extends Modal {
                 asset_id: this.props.market.asset_id,
                 result: "no"
             },
-            bool_result: false
+            isChecked: false
         };
 
         this.handleResultChange = this.handleResultChange.bind(this);
     }
 
     handleResultChange() {
-        let newResolveParameters = this.state.resolveParameters;
-        newResolveParameters.result =
-            newResolveParameters.result === "no" ? "yes" : "no";
+        const isChecked = !this.state.isChecked;
         this.setState({
-            newResolveParameters,
-            bool_result: !this.state.bool_result
+            resolveParameters: {
+                ...this.state.resolveParameters,
+                result: this.state.isChecked ? "yes" : "no"
+            },
+            isChecked
         });
     }
 
@@ -33,9 +34,7 @@ export default class ResolveModal extends Modal {
                 title={<Translate content="prediction.resolve_modal.title" />}
                 visible={this.props.show}
                 onOk={() => {
-                    this.props.getResolveParameters(
-                        this.state.resolveParameters
-                    );
+                    this.props.onResolveMarket(this.state.resolveParameters);
                 }}
                 onCancel={this.props.onClose}
                 overlay={true}
@@ -73,7 +72,7 @@ export default class ResolveModal extends Modal {
                                 style={{marginRight: "10px"}}
                             />
                             <Switch
-                                checked={this.state.bool_result}
+                                checked={this.state.isChecked}
                                 onChange={this.handleResultChange}
                             />
                             <Translate
@@ -89,11 +88,11 @@ export default class ResolveModal extends Modal {
 }
 
 ResolveModal.propTypes = {
-    show: PropTypes.bool,
-    onClose: PropTypes.func,
-    currentAccountId: PropTypes.string,
     market: PropTypes.any.isRequired,
-    getResolveParameters: PropTypes.func
+    onResolveMarket: PropTypes.func.isRequired,
+    currentAccountId: PropTypes.string.isRequired,
+    show: PropTypes.bool,
+    onClose: PropTypes.func
 };
 
 ResolveModal.defaultProps = {
