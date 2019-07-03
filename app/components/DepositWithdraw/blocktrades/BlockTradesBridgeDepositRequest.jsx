@@ -25,10 +25,10 @@ let oidcStorage = new ls(
     "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
 );
 
-const POST_LOGOUT_REDIRECT_URI = "https://192.168.6.139:9051/deposit-withdraw";
+const POST_LOGOUT_REDIRECT_URI = "https://192.168.6.105:9051/deposit-withdraw";
 const AUTHORITY = "https://blocktrades.us/";
 const CLIENT_ID = "10ecf048-b982-467b-9965-0b0926330869";
-const REDIRECT_URI = "https://192.168.6.139:9051/deposit-withdraw";
+const REDIRECT_URI = "https://192.168.6.105:9051/deposit-withdraw";
 const SCOPE =
     "offline openid email profile create_new_mappings view_client_transaction_history";
 
