@@ -139,7 +139,8 @@ export default class PredictionMarkets extends Component {
                 item[1].options.description
             ).main,
             symbol: item[1].symbol,
-            condition: item[1].options.condition,
+            condition: assetUtils.parseDescription(item[1].options.description)
+                .condition,
             options: item[1].options
         }));
         this.setState({
