@@ -22,12 +22,14 @@ class FeeAssetSelector extends React.Component {
             assets: [],
             fee_amount: 0,
             fee_asset_id:
-                ChainStore.assets_by_symbol(props.fee_asset).get("fee_asset") ||
-                "1.3.0",
+                ChainStore.assets_by_symbol.get(
+                    props.settings.get("fee_asset")
+                ) || "1.3.0",
             fees: {},
             feeStatus: {},
             isModalVisible: false,
-            error: null
+            error: null,
+            last_fee_check_params: {}
         };
         this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
@@ -54,40 +56,65 @@ class FeeAssetSelector extends React.Component {
         );
     }
 
-    _updateFee(asset_id, trxInfo, onChange) {
-        let {account} = this.props;
+    __are_equal_shallow(o1, o2) {
+        for (var p in o1) {
+            if (o1.hasOwnProperty(p)) {
+                if (o1[p] !== o2[p]) {
+                    return false;
+                }
+            }
+        }
+        for (var p in o2) {
+            if (o2.hasOwnProperty(p)) {
+                if (o1[p] !== o2[p]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    _updateFee(asset_id, trxInfo, onChange, account = this.props.account) {
         if (!account) return null;
 
         let feeID = asset_id || this.state.fee_asset_id;
         this._getFees(this.state.assets, account, trxInfo);
-        checkFeeStatusAsync({
+        const options = {
             ...trxInfo,
             accountID: account.get("id"),
             feeID
-        })
-            .then(({fee, hasPoolBalance}) => {
-                this.setState({
-                    fee_amount: fee.getAmount({real: true}),
-                    fee_asset_id: fee.asset_id,
-                    error: !hasPoolBalance
+        };
+        if (
+            JSON.stringify(this.state.last_fee_check_params) !==
+            JSON.stringify(options)
+        ) {
+            console.log(this.state.last_fee_check_params);
+            checkFeeStatusAsync(options)
+                .then(({fee, hasPoolBalance}) => {
+                    this.setState({
+                        fee_amount: fee.getAmount({real: true}),
+                        fee_asset_id: fee.asset_id,
+                        error: !hasPoolBalance,
+                        last_fee_check_params: options
+                    });
+                    if (onChange) {
+                        onChange(fee);
+                    }
+                    this.setState({
+                        assets: this._getAvailableAssets(account),
+                        fee_amount: fee.getAmount({real: true}),
+                        fee_asset_id: fee.asset_id
+                    });
+                })
+                .catch(err => {
+                    console.warn(err);
                 });
-                if (onChange) {
-                    onChange(fee);
-                }
-                this.setState({
-                    assets: this._getAvailableAssets(account),
-                    fee_amount: fee.getAmount({real: true}),
-                    fee_asset_id: fee.asset_id
-                });
-            })
-            .catch(err => {
-                console.warn(err);
-            });
+        }
     }
 
     componentWillReceiveProps(np, ns) {
         const {fee_amount, fee_asset_id} = this.state;
-        const trxInfoChanged = !utils.are_equal_shallow(
+        const trxInfoChanged = !this.__are_equal_shallow(
             np.trxInfo,
             this.props.trxInfo
         );
@@ -98,24 +125,19 @@ class FeeAssetSelector extends React.Component {
         const needsFeeCalculation =
             trxInfoChanged || !fee_amount || account_changed;
         if (needsFeeCalculation) {
-            this._updateFee(fee_asset_id, np.trxInfo, np.onChange);
+            this._updateFee(fee_asset_id, np.trxInfo, np.onChange, np.account);
         }
     }
 
     _getAsset() {
-        const {assets, fee_asset_id, asset} = this.state;
-        if (!asset || fee_asset_id !== asset.get("id")) {
-            const selectedAsset = ChainStore.getAsset(
-                fee_asset_id
-                    ? fee_asset_id
-                    : assets.length === 1
-                        ? assets[0]
-                        : "1.3.0"
-            );
-            this.setState({asset: selectedAsset});
-            return selectedAsset;
-        }
-        return asset;
+        const {assets, fee_asset_id} = this.state;
+        return ChainStore.getAsset(
+            fee_asset_id
+                ? fee_asset_id
+                : assets.length === 1
+                    ? assets[0]
+                    : "1.3.0"
+        );
     }
 
     _getAvailableAssets(account) {
@@ -223,7 +245,6 @@ class FeeAssetSelector extends React.Component {
                                 canChangeFeeParams ? Immutable.List(assets) : []
                             }
                             onChange={this.onAssetChange.bind(this)}
-                            disabled={!canChangeFeeParams}
                         />
                     </Input.Group>
                 </Form.Item>
