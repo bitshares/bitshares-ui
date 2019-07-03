@@ -7,8 +7,8 @@ import {ChainStore} from "bitsharesjs";
 import {connect} from "alt-react";
 import {Link} from "react-router-dom";
 import {Table, Button, Radio, Modal, Checkbox} from "bitshares-ui-style-guide";
-import SettingsStore from "../../stores/SettingsStore";
-import AccountStore from "../../stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
+import AccountStore from "stores/AccountStore";
 
 class SetDefaultFeeAssetModal extends React.Component {
     constructor(props) {

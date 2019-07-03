@@ -29,6 +29,7 @@ class FeeAssetSelector extends React.Component {
             feeStatus: {},
             isModalVisible: false,
             error: null,
+            assets_fetched: false,
             last_fee_check_params: {}
         };
         this._updateFee = debounce(this._updateFee.bind(this), 250);
@@ -52,7 +53,9 @@ class FeeAssetSelector extends React.Component {
         return (
             ns.fee_amount !== this.state.fee_amount ||
             ns.fee_asset_id !== this.state.fee_asset_id ||
-            ns.isModalVisible !== this.state.isModalVisible
+            ns.isModalVisible !== this.state.isModalVisible ||
+            ns.assets_fetched !== this.state.assets_fetched ||
+            ns.assets.length !== this.state.assets.length
         );
     }
 
@@ -88,7 +91,6 @@ class FeeAssetSelector extends React.Component {
             JSON.stringify(this.state.last_fee_check_params) !==
             JSON.stringify(options)
         ) {
-            console.log(this.state.last_fee_check_params);
             checkFeeStatusAsync(options)
                 .then(({fee, hasPoolBalance}) => {
                     this.setState({
@@ -140,7 +142,10 @@ class FeeAssetSelector extends React.Component {
         );
     }
 
-    _getAvailableAssets(account) {
+    _getAvailableAssets(account = this.props.account) {
+        if (this.state.assets_fetched && this.state.assets.length > 0) {
+            return this.state.assets;
+        }
         let fee_asset_types = [];
         if (!(account && account.get("balances"))) {
             return fee_asset_types;
@@ -156,7 +161,11 @@ class FeeAssetSelector extends React.Component {
             }
         }
 
-        this.setState({balances: account_balances, assets: fee_asset_types});
+        this.setState({
+            balances: account_balances,
+            assets: fee_asset_types,
+            assets_fetched: true
+        });
         this._updateFee(
             this.state.fee_asset_id,
             this.props.trxInfo,
