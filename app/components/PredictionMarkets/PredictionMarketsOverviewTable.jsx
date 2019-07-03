@@ -74,7 +74,6 @@ export default class PredictionMarketsOverviewTable extends Component {
                 align: "left",
                 //              onCell,
                 render: dataItem => {
-                    // TODO translation
                     return (
                         <div
                             style={{
@@ -92,7 +91,9 @@ export default class PredictionMarketsOverviewTable extends Component {
                                         this.onMarketAction(dataItem, "resolve")
                                     }
                                 >
-                                    Resolve
+                                    {counterpart.translate(
+                                        "prediction.overview.resolve"
+                                    )}
                                 </Button>
                             ) : (
                                 <div
@@ -108,7 +109,9 @@ export default class PredictionMarketsOverviewTable extends Component {
                                             this.onMarketAction(dataItem, "yes")
                                         }
                                     >
-                                        YES
+                                        {counterpart.translate(
+                                            "prediction.overview.yes"
+                                        )}
                                     </Button>
                                     <Button
                                         style={{marginLeft: "5px"}}
@@ -116,7 +119,9 @@ export default class PredictionMarketsOverviewTable extends Component {
                                             this.onMarketAction(dataItem, "no")
                                         }
                                     >
-                                        No
+                                        {counterpart.translate(
+                                            "prediction.overview.no"
+                                        )}
                                     </Button>
                                 </div>
                             )}

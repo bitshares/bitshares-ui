@@ -1,15 +1,15 @@
 import React from "react";
 import AssetStore from "stores/AssetStore";
 import MarketsStore from "stores/MarketsStore";
+import AccountStore from "stores/AccountStore";
 import AltContainer from "alt-container";
 import PredictionMarkets from "./PredictionMarkets";
-import assetUtils from "common/asset_utils";
 
 class PMAssetsContainer extends React.Component {
     render() {
         return (
             <AltContainer
-                stores={[AssetStore]}
+                stores={[AssetStore, AccountStore]}
                 inject={{
                     assets: () => {
                         return AssetStore.getState().assets;
@@ -24,6 +24,12 @@ class PMAssetsContainer extends React.Component {
                     },
                     currentGroupOrderLimit: () => {
                         return MarketsStore.getState().currentGroupLimit;
+                    },
+                    currentAccount: () => {
+                        return (
+                            AccountStore.getState().currentAccount ||
+                            AccountStore.getState().passwordAccount
+                        );
                     }
                 }}
             >

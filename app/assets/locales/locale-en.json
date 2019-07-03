@@ -1601,7 +1601,10 @@
             "description": "Description",
             "odds": "Odds",
             "action": "Action",
-            "create_market": "Create Prediction Market"
+            "create_market": "Create Prediction Market",
+            "resolve": "Resolve",
+            "yes": "Yes",
+            "no": "No"
         },
         "details": {
             "amount": "Amount",

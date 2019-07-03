@@ -13,45 +13,6 @@ import ResolveModal from "./ResolveModal";
 import {ChainStore} from "bitsharesjs";
 import {Button} from "bitshares-ui-style-guide";
 
-const STUB_ACCOUNT_ID = "1.2.23882";
-
-const STUB_OPINIONS = {
-    "1.3.0": [
-        {
-            order_id: "1.4.1234",
-            opinionator: "1.2.23881",
-            opinion: "yes",
-            amount: 100,
-            fee: 0.1
-        },
-        {
-            order_id: "1.4.1235",
-            opinionator: STUB_ACCOUNT_ID,
-            opinion: "no",
-            amount: 100500,
-            fee: 0.11
-        }
-    ],
-    "1.3.1": [
-        {
-            order_id: "1.4.1236",
-            opinionator: "1.2.23881",
-            opinion: "yes",
-            amount: 200,
-            fee: 0.1
-        }
-    ],
-    "1.3.2": [
-        {
-            order_id: "1.4.1237",
-            opinionator: "1.2.23881",
-            opinion: "no",
-            amount: 666,
-            fee: 0.13
-        }
-    ]
-};
-
 export default class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
@@ -59,7 +20,7 @@ export default class PredictionMarkets extends Component {
             assets: [],
             lastAssetSymbol: null,
             markets: [],
-            currentAccountId: STUB_ACCOUNT_ID,
+            currentAccountId: null,
             searchTerm: "",
             detailsSearchTerm: "",
             selectedMarket: null,
@@ -74,6 +35,13 @@ export default class PredictionMarkets extends Component {
     }
 
     componentWillReceiveProps(np) {
+        if (np.currentAccount !== this.props.currentAccount) {
+            this.setState({
+                currentAccountId: ChainStore.getAccount(np.currentAccount).get(
+                    "id"
+                )
+            });
+        }
         let searchAsset = this.state.lastAssetSymbol;
         console.log(np.markets);
         if (this.state.assets) {
@@ -180,9 +148,9 @@ export default class PredictionMarkets extends Component {
             case "resolve": {
                 this.setState({
                     selectedMarket: market,
-                    preselectedAmount: 0,
-                    isResolveModalOpen: true
+                    preselectedAmount: 0
                 });
+                this.onResolveModalOpen();
                 break;
             }
             case "yes": {
@@ -262,11 +230,17 @@ export default class PredictionMarkets extends Component {
         });
     }
 
-    onOppose = value => {
+    onOppose = opinion => {
         this.setState({
-            preselectedOpinion: value.opinion === "no" ? "yes" : "no",
-            preselectedAmount: value.amount
+            preselectedOpinion: opinion.opinion === "no" ? "yes" : "no",
+            preselectedAmount: opinion.amount
         });
+        this.onAddOpinionModalOpen();
+    };
+
+    onCancelOpinion = opinion => {
+        // TODO implement required logic for opinion cancelation
+        console.log("Cancel", opinion);
     };
 
     getNewMarketParameters = value => {
@@ -375,6 +349,7 @@ export default class PredictionMarkets extends Component {
                         }}
                         currentAccountId={this.state.currentAccountId}
                         onOppose={this.onOppose}
+                        onCancel={this.onCancelOpinion}
                         detailsSearchTerm={this.state.detailsSearchTerm}
                     />
                 ) : null}

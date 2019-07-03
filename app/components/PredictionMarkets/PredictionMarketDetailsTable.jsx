@@ -73,7 +73,7 @@ export default class PredictionMarketDetailsTable extends Component {
                                 this.props.currentAccountId ? (
                                 <Button
                                     onClick={() => {
-                                        this.cancelOpinion(dataItem);
+                                        this.props.onCancel(dataItem);
                                     }}
                                 >
                                     {counterpart.translate(
@@ -96,10 +96,6 @@ export default class PredictionMarketDetailsTable extends Component {
                 }
             }
         ];
-    }
-
-    cancelOpinion(opinion) {
-        console.log("Cancel", opinion);
     }
 
     render() {
@@ -145,6 +141,7 @@ export default class PredictionMarketDetailsTable extends Component {
 PredictionMarketDetailsTable.propTypes = {
     marketData: PropTypes.any.isRequired,
     onOppose: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
     currentAccountId: PropTypes.string,
     detailsSearchTerm: PropTypes.string
 };
