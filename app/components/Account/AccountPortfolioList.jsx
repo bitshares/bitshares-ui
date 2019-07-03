@@ -27,7 +27,7 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
-import PaginatedList from "../Utility/PaginatedList";
+import CustomTable from "../Utility/CustomTable";
 import MarketUtils from "common/market_utils";
 import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
@@ -1366,7 +1366,7 @@ class AccountPortfolioList extends React.Component {
 
         return (
             <div>
-                <PaginatedList
+                <CustomTable
                     className="table dashboard-table table-hover"
                     rows={this._renderBalances(
                         this.props.balanceList,
@@ -1441,7 +1441,7 @@ class AccountPortfolioList extends React.Component {
                             }}
                         />
                     )}
-                </PaginatedList>
+                </CustomTable>
             </div>
         );
     }
