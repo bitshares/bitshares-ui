@@ -33,11 +33,11 @@ import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import _ from "lodash-es";
+import lodash from "lodash-es";
 
 class AccountPortfolioList extends React.Component {
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
             isBridgeModalVisible: false,
@@ -482,7 +482,7 @@ class AccountPortfolioList extends React.Component {
             settings.get("unit") || this.props.core_asset.get("symbol");
         const showAssetPercent = settings.get("showAssetPercent", false);
 
-        return _.filter(
+        return lodash.filter(
             [
                 {
                     title: (
@@ -494,6 +494,7 @@ class AccountPortfolioList extends React.Component {
                     ),
                     dataIndex: "asset",
                     align: "left",
+                    allowCustomization: false,
                     sorter: this.sortFunctions.alphabetic,
                     sortOrder:
                         portfolioSort === "asset" && portfolioSortDirection,
@@ -515,6 +516,7 @@ class AccountPortfolioList extends React.Component {
                     ),
                     dataIndex: "qty",
                     align: "right",
+                    allowCustomization: false,
                     sorter: this.sortFunctions.qty,
                     sortOrder:
                         portfolioSort === "qty" && portfolioSortDirection,
@@ -539,6 +541,7 @@ class AccountPortfolioList extends React.Component {
                     ),
                     dataIndex: "price",
                     align: "right",
+                    allowCustomization: false,
                     sorter: this.sortFunctions.priceValue,
                     sortOrder:
                         portfolioSort === "price" && portfolioSortDirection,
@@ -561,6 +564,7 @@ class AccountPortfolioList extends React.Component {
                     ),
                     dataIndex: "hour24",
                     align: "right",
+                    allowCustomization: false,
                     sorter: this.sortFunctions.changeValue,
                     sortOrder:
                         portfolioSort === "hour24" && portfolioSortDirection,
@@ -595,6 +599,7 @@ class AccountPortfolioList extends React.Component {
                     ),
                     dataIndex: "value",
                     align: "right",
+                    allowCustomization: false,
                     sorter: this.sortFunctions.totalValue,
                     sortOrder:
                         portfolioSort === "value" && portfolioSortDirection,
@@ -615,6 +620,7 @@ class AccountPortfolioList extends React.Component {
                           ),
                           dataIndex: "percent",
                           align: "right",
+                          allowCustomization: false,
                           render: item => {
                               return (
                                   <span style={{whiteSpace: "nowrap"}}>
@@ -633,146 +639,119 @@ class AccountPortfolioList extends React.Component {
                     ),
                     dataIndex: "payments",
                     align: "center",
+                    allowCustomization: false,
                     render: item => {
                         return (
                             <span style={{whiteSpace: "nowrap"}}>{item}</span>
                         );
                     }
                 },
-                this.props.enabledColumns["buy"]
-                    ? {
-                          title: (
-                              <Translate
-                                  content="exchange.buy"
-                                  style={{whiteSpace: "nowrap"}}
-                              />
-                          ),
-                          dataIndex: "buy",
-                          align: "center",
-                          render: item => {
-                              return (
-                                  <span style={{whiteSpace: "nowrap"}}>
-                                      {item}
-                                  </span>
-                              );
-                          }
-                      }
-                    : null,
-                this.props.enabledColumns["deposit"]
-                    ? {
-                          title: (
-                              <Translate
-                                  content="modal.deposit.submit"
-                                  style={{whiteSpace: "nowrap"}}
-                              />
-                          ),
-                          dataIndex: "deposit",
-                          align: "center",
-                          render: item => {
-                              return (
-                                  <span style={{whiteSpace: "nowrap"}}>
-                                      {item}
-                                  </span>
-                              );
-                          }
-                      }
-                    : {},
-                this.props.enabledColumns["withdraw"]
-                    ? {
-                          title: (
-                              <Translate
-                                  content="modal.withdraw.submit"
-                                  style={{whiteSpace: "nowrap"}}
-                              />
-                          ),
-                          dataIndex: "withdraw",
-                          align: "center",
-                          render: item => {
-                              return (
-                                  <span style={{whiteSpace: "nowrap"}}>
-                                      {item}
-                                  </span>
-                              );
-                          }
-                      }
-                    : {},
-                this.props.enabledColumns["trade"]
-                    ? {
-                          title: (
-                              <Translate
-                                  content="account.trade"
-                                  style={{whiteSpace: "nowrap"}}
-                              />
-                          ),
-                          dataIndex: "trade",
-                          align: "center",
-                          render: item => {
-                              return (
-                                  <span style={{whiteSpace: "nowrap"}}>
-                                      {item}
-                                  </span>
-                              );
-                          }
-                      }
-                    : {},
-                this.props.enabledColumns["borrow"]
-                    ? {
-                          title: (
-                              <Translate
-                                  content="exchange.borrow_short"
-                                  style={{whiteSpace: "nowrap"}}
-                              />
-                          ),
-                          dataIndex: "borrow",
-                          align: "center",
-                          render: item => {
-                              return (
-                                  <span style={{whiteSpace: "nowrap"}}>
-                                      {item}
-                                  </span>
-                              );
-                          }
-                      }
-                    : {},
-                this.props.enabledColumns["settle"]
-                    ? {
-                          title: (
-                              <Translate
-                                  content="account.settle"
-                                  style={{whiteSpace: "nowrap"}}
-                              />
-                          ),
-                          dataIndex: "settle",
-                          align: "center",
-                          render: item => {
-                              return (
-                                  <span style={{whiteSpace: "nowrap"}}>
-                                      {item}
-                                  </span>
-                              );
-                          }
-                      }
-                    : {},
-                this.props.enabledColumns["burn"]
-                    ? {
-                          className: "column-hide-small",
-                          title: (
-                              <Translate
-                                  content="modal.reserve.submit"
-                                  style={{whiteSpace: "nowrap"}}
-                              />
-                          ),
-                          dataIndex: "burn",
-                          align: "center",
-                          render: item => {
-                              return (
-                                  <span style={{whiteSpace: "nowrap"}}>
-                                      {item}
-                                  </span>
-                              );
-                          }
-                      }
-                    : {},
+                {
+                    title: (
+                        <Translate
+                            content="exchange.buy"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "buy",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    title: (
+                        <Translate
+                            content="modal.deposit.submit"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "deposit",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    title: (
+                        <Translate
+                            content="modal.withdraw.submit"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "withdraw",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    title: (
+                        <Translate
+                            content="account.trade"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "trade",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    title: (
+                        <Translate
+                            content="exchange.borrow_short"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "borrow",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    title: (
+                        <Translate
+                            content="account.settle"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "settle",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
+                {
+                    className: "column-hide-small",
+                    title: (
+                        <Translate
+                            content="modal.reserve.submit"
+                            style={{whiteSpace: "nowrap"}}
+                        />
+                    ),
+                    dataIndex: "burn",
+                    align: "center",
+                    render: item => {
+                        return (
+                            <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                        );
+                    }
+                },
                 {
                     className: "column-hide-small",
                     title: (
@@ -787,6 +766,7 @@ class AccountPortfolioList extends React.Component {
                     ),
                     dataIndex: "hide",
                     align: "center",
+                    allowCustomization: false,
                     render: item => {
                         return (
                             <span style={{whiteSpace: "nowrap"}}>{item}</span>
@@ -794,7 +774,7 @@ class AccountPortfolioList extends React.Component {
                     }
                 }
             ],
-            item => !_.isEmpty(item)
+            item => !lodash.isEmpty(item)
         );
     }
 
@@ -1399,6 +1379,8 @@ class AccountPortfolioList extends React.Component {
                     extraRow={this.props.extraRow}
                     leftPadding="1.5rem"
                     toggleSortOrder={this.toggleSortOrder}
+                    viewSettings={this.props.viewSettings}
+                    viewSettingsKey="portfolioColumns"
                 >
                     {this._renderSendModal()}
                     {(this.state.isSettleModalVisible ||

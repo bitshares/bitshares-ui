@@ -40,6 +40,7 @@ class SettingsStore {
                 SettingsActions.setExchangeTutorialShown,
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
+            onChangeViewSettingsByKey: SettingsActions.changeViewSettingsByKey,
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
@@ -562,6 +563,12 @@ class SettingsStore {
         for (let key in payload) {
             this.viewSettings = this.viewSettings.set(key, payload[key]);
         }
+
+        ss.set("viewSettings_v1", this.viewSettings.toJS());
+    }
+
+    onChangeViewSettingsByKey(payload) {
+        this.viewSettings = this.viewSettings.set(payload.key, payload.value);
 
         ss.set("viewSettings_v1", this.viewSettings.toJS());
     }

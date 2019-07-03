@@ -17,18 +17,9 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {
-    Input,
-    Icon,
-    Switch,
-    Tooltip,
-    Checkbox,
-    Select
-} from "bitshares-ui-style-guide";
+import {Input, Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import SearchInput from "../Utility/SearchInput";
-
-const {Option} = Select;
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -46,35 +37,10 @@ class AccountOverview extends React.Component {
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
             ],
-            hideFishingProposals: true,
-            columnSelector: "default",
-            enabledColumns: props.viewSettings.get("enabledColumns")
+            hideFishingProposals: true
         };
 
         this._handleFilterInput = this._handleFilterInput.bind(this);
-        this._columnSelectorChange = this._columnSelectorChange.bind(this);
-    }
-
-    _columnCheckboxChange(item) {
-        // Copy and modify for state
-        let enabledColumns = Object.assign({}, this.state.enabledColumns);
-        enabledColumns[item] = !enabledColumns[item];
-
-        // Reflect change in Store
-        SettingsActions.changeViewSetting({
-            enabledColumns: enabledColumns
-        });
-
-        this.setState({
-            enabledColumns
-        });
-    }
-
-    _columnSelectorChange() {
-        // Never let an option, other than default be selected
-        this.setState({
-            columnSelector: "default"
-        });
     }
 
     _handleFilterInput(e) {
@@ -130,51 +96,6 @@ class AccountOverview extends React.Component {
         this.setState({
             hideFishingProposals: !this.state.hideFishingProposals
         });
-    }
-
-    /*
-     * _renderEnabledColumnsSelector()
-     * This function receives a list of columns that can be enabled and disabled, 
-     *  and renders a dropdown list of checkboxes to toggle the hiding of those columns.
-     */
-    _renderEnabledColumnsSelector() {
-        return (
-            <div className="inline-block columnSelector">
-                <Select
-                    defaultValue={this.state.columnSelector}
-                    value={this.state.columnSelector}
-                    onChange={this._columnSelectorChange}
-                >
-                    <Option className="columnSelector-option" value="default">
-                        {counterpart.translate(
-                            "account.enabled_columns.default"
-                        )}
-                    </Option>
-                    {Object.keys(this.state.enabledColumns).map((item, key) => {
-                        return (
-                            <Option
-                                key={key}
-                                className="columnSelector-option"
-                                value={item}
-                                disabled
-                            >
-                                <Checkbox
-                                    checked={this.state.enabledColumns[item]}
-                                    onChange={this._columnCheckboxChange.bind(
-                                        this,
-                                        item
-                                    )}
-                                >
-                                    {counterpart.translate(
-                                        `account.enabled_columns.${item}`
-                                    )}
-                                </Checkbox>
-                            </Option>
-                        );
-                    })}
-                </Select>
-            </div>
-        );
     }
 
     render() {
@@ -355,7 +276,6 @@ class AccountOverview extends React.Component {
                 balances={this.props.balances}
                 extraRow={includedPortfolioBalance}
                 viewSettings={this.props.viewSettings}
-                enabledColumns={this.state.enabledColumns}
             />
         );
 
@@ -468,7 +388,6 @@ class AccountOverview extends React.Component {
                                             <Translate content="account.show_visual" />
                                         </div>
                                     </div>
-                                    {this._renderEnabledColumnsSelector()}
                                 </div>
 
                                 {shownAssets != "visual" ? (

@@ -45,15 +45,23 @@
             "title": "History Export",
             "use_custom": "Use custom wrapper"
         },
-        "enabled_columns": {
+        "table_columns": {
             "default": "Customize the Columns",
+            "asset": "Asset",
+            "qty": "QTY",
+            "price": "Price",
+            "hour24": "24HR",
+            "value": "Value",
+            "percent": "Percent",
+            "payments": "Payments",
             "buy": "Buy",
             "deposit": "Deposit",
             "withdraw": "Withdraw",
             "trade": "Trade",
             "borrow": "Borrow",
             "settle": "Settle",
-            "burn": "Burn"
+            "burn": "Burn",
+            "hide": "Show"
         },
         "filter_orders": "Filter...",
         "follow": "Add contact",
