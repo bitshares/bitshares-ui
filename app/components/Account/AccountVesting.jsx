@@ -6,6 +6,7 @@ import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
 import {Apis} from "bitsharesjs-ws";
 import {Tabs, Tab} from "../Utility/Tabs";
+import LoadingIndicator from "components/LoadingIndicator";
 
 class VestingBalance extends React.Component {
     _onClaim(claimAll, e) {
@@ -44,10 +45,6 @@ class VestingBalance extends React.Component {
                         ? 1
                         : earned / (vestingPeriod * balance);
             }
-        }
-
-        if (!cvbAsset) {
-            return null;
         }
 
         if (!balance) {
@@ -89,13 +86,15 @@ class VestingBalance extends React.Component {
                                     <Translate content="account.member.earned" />
                                 </td>
                                 <td>
-                                    {utils.format_number(
-                                        utils.get_asset_amount(
-                                            earned / secondsPerDay,
-                                            cvbAsset
-                                        ),
-                                        0
-                                    )}
+                                    {cvbAsset
+                                        ? utils.format_number(
+                                              utils.get_asset_amount(
+                                                  earned / secondsPerDay,
+                                                  cvbAsset
+                                              ),
+                                              0
+                                          )
+                                        : null}
                                     &nbsp;
                                     <Translate content="account.member.coindays" />
                                 </td>
@@ -107,15 +106,17 @@ class VestingBalance extends React.Component {
                                     <Translate content="account.member.required" />
                                 </td>
                                 <td>
-                                    {utils.format_number(
-                                        utils.get_asset_amount(
-                                            (vb.balance.amount *
-                                                vestingPeriod) /
-                                                secondsPerDay,
-                                            cvbAsset
-                                        ),
-                                        0
-                                    )}
+                                    {cvbAsset
+                                        ? utils.format_number(
+                                              utils.get_asset_amount(
+                                                  (vb.balance.amount *
+                                                      vestingPeriod) /
+                                                      secondsPerDay,
+                                                  cvbAsset
+                                              ),
+                                              0
+                                          )
+                                        : null}
                                     &nbsp;
                                     <Translate content="account.member.coindays" />
                                 </td>
@@ -148,12 +149,15 @@ class VestingBalance extends React.Component {
                                         2
                                     )}
                                     % /{" "}
-                                    <FormattedAsset
-                                        amount={
-                                            availablePercent * vb.balance.amount
-                                        }
-                                        asset={cvbAsset.get("id")}
-                                    />
+                                    {cvbAsset ? (
+                                        <FormattedAsset
+                                            amount={
+                                                availablePercent *
+                                                vb.balance.amount
+                                            }
+                                            asset={cvbAsset.get("id")}
+                                        />
+                                    ) : null}
                                 </td>
                             ) : (
                                 <td>{utils.format_number(100, 2)}%</td>
@@ -181,7 +185,8 @@ class AccountVesting extends React.Component {
         super();
 
         this.state = {
-            vbs: null
+            vbs: [],
+            loading: true
         };
     }
 
@@ -204,7 +209,7 @@ class AccountVesting extends React.Component {
             .db_api()
             .exec("get_vesting_balances", [accountId])
             .then(vbs => {
-                this.setState({vbs});
+                this.setState({vbs, loading: false});
             })
             .catch(err => {
                 console.log("error:", err);
@@ -212,14 +217,7 @@ class AccountVesting extends React.Component {
     }
 
     render() {
-        let {vbs} = this.state;
-        if (
-            !vbs ||
-            !this.props.account ||
-            !this.props.account.get("vesting_balances")
-        ) {
-            return null;
-        }
+        let {vbs, loading} = this.state;
 
         let account = this.props.account.toJS();
 
@@ -258,7 +256,6 @@ class AccountVesting extends React.Component {
                                     content="account.vesting.explain"
                                     component="p"
                                 />
-
                                 {!balances.length ? (
                                     <h4 style={{paddingTop: "1rem"}}>
                                         <Translate
@@ -268,7 +265,10 @@ class AccountVesting extends React.Component {
                                         />
                                     </h4>
                                 ) : (
-                                    balances
+                                    <div>
+                                        {loading ? <LoadingIndicator /> : null}
+                                        {balances}
+                                    </div>
                                 )}
                             </Tab>
                         </Tabs>
