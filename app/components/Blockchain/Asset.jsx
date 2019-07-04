@@ -2071,7 +2071,7 @@ class Asset extends React.Component {
                                     {this.state.collateralBids.length > 0 &&
                                         this.renderCollateralBid(asset)}
                                     {"bitasset" in asset &&
-                                        !asset.bitasset.is_prediction_market &&
+                                        asset.bitasset.is_prediction_market &&
                                         this.renderAssetResolvePrediction(
                                             asset
                                         )}
