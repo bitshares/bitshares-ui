@@ -11,6 +11,7 @@ import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import stringSimilarity from "string-similarity";
 import {hiddenProposals} from "../../lib/common/hideProposals";
+import sanitize from "sanitize";
 
 class WorkerList extends React.Component {
     constructor(props) {
@@ -136,7 +137,10 @@ class WorkerList extends React.Component {
                                                 ? "visible"
                                                 : "hidden"
                                     }}
-                                    href={item.url}
+                                    href={sanitize(item.url, {
+                                        whiteList: [], // empty, means filter out all tags
+                                        stripIgnoreTag: true // filter out all HTML not in the whilelist
+                                    })}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
@@ -406,8 +410,8 @@ class WorkerList extends React.Component {
         ].filter(n => n);
     }
 
-    getData(workers) {
-        let {hasProxy, proxy_vote_ids, vote_ids, voteThreshold} = this.props;
+    getData(workers, voteThreshold = 0) {
+        let {hasProxy, proxy_vote_ids, vote_ids} = this.props;
         vote_ids = hasProxy ? proxy_vote_ids : vote_ids;
         voteThreshold = voteThreshold || 0;
         return workers.map((item, index) => {
@@ -687,7 +691,7 @@ class WorkerList extends React.Component {
             <PaginatedList
                 className="table dashboard-table table-hover"
                 rowClassName={this._decideRowClassName.bind(this)}
-                rows={this.getData(workers)}
+                rows={this.getData(workers, voteThreshold)}
                 header={workersHeader}
                 pageSize={50}
                 label="utility.total_x_assets"

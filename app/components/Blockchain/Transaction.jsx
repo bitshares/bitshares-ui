@@ -20,8 +20,10 @@ import {ChainTypes} from "bitsharesjs";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
+import {Link, DirectLink} from "react-scroll";
 import {Tooltip} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
+import sanitize from "sanitize";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -2004,7 +2006,12 @@ class Transaction extends React.Component {
                                     content="explorer.workers.website"
                                 />
                             </td>
-                            <td>{op[1].url}</td>
+                            <td>
+                                {sanitize(op[1].url, {
+                                    whiteList: [], // empty, means filter out all tags
+                                    stripIgnoreTag: true // filter out all HTML not in the whilelist
+                                })}
+                            </td>
                         </tr>
                     );
 

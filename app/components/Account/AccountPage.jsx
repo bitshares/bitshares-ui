@@ -55,6 +55,14 @@ class AccountPage extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.currentAccount !== this.props.currentAccount) {
+            let currentPath = this.props.location.pathname.split("/");
+            currentPath[2] = this.props.currentAccount;
+            this.props.history.push(currentPath.join("/"));
+        }
+    }
+
     render() {
         let {
             myActiveAccounts,
@@ -204,6 +212,9 @@ export default connect(
             return {
                 myActiveAccounts: AccountStore.getState().myActiveAccounts,
                 searchAccounts: AccountStore.getState().searchAccounts,
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount,
                 settings: SettingsStore.getState().settings,
                 hiddenAssets: SettingsStore.getState().hiddenAssets,
                 wallet_locked: WalletUnlockStore.getState().locked,

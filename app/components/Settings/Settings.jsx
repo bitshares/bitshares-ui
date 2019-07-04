@@ -154,7 +154,6 @@ class Settings extends React.Component {
         if (getFaucet().show) menuEntries.push("faucet_address");
 
         menuEntries.push("reset");
-        menuEntries.push("viewOnlyMode");
 
         return menuEntries;
     }

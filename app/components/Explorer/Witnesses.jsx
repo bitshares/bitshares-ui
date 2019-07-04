@@ -14,6 +14,7 @@ import classNames from "classnames";
 import {withRouter} from "react-router-dom";
 import {Table, Icon, Input, Popover} from "bitshares-ui-style-guide";
 import sanitize from "sanitize";
+import SearchInput from "../Utility/SearchInput";
 
 require("./witnesses.scss");
 
@@ -224,7 +225,11 @@ class WitnessList extends React.Component {
             return (
                 <Popover
                     content={
-                        <a href={item} target="_blank">
+                        <a
+                            href={item}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             {item}
                         </a>
                     }
@@ -391,7 +396,6 @@ class Witnesses extends React.Component {
     }
 
     _onFilter(e) {
-        e.preventDefault();
         this.setState({filterWitness: e.target.value.toLowerCase()});
 
         SettingsActions.changeViewSetting({
@@ -502,17 +506,17 @@ class Witnesses extends React.Component {
                                 </table>
                             </div>
 
-                            <Input
+                            <SearchInput
                                 placeholder={counterpart.translate(
                                     "explorer.witnesses.filter_by_name"
                                 )}
+                                value={this.state.filterWitness}
                                 onChange={this._onFilter.bind(this)}
                                 style={{
                                     width: "200px",
                                     marginBottom: "12px",
                                     marginTop: "4px"
                                 }}
-                                addonAfter={<Icon type="search" />}
                             />
 
                             <WitnessList
