@@ -1699,7 +1699,7 @@ class ConfirmModal extends React.Component {
 
 class AssetUpdateWrapper extends React.Component {
     render() {
-        let asset = this.props.match.params.asset;
+        let asset = this.props.match.params.asset.toUpperCase();
         return <AccountAssetUpdate asset={asset} {...this.props} />;
     }
 }
