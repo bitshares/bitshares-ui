@@ -2066,12 +2066,15 @@ class Asset extends React.Component {
                                     {this.renderFeesClaiming(asset)}
                                     {this.renderAssetOwnerUpdate(asset)}
                                     {"bitasset" in asset &&
-                                    !asset.bitasset.is_prediction_market
-                                        ? this.renderFeedPublish(asset)
-                                        : null}
+                                        !asset.bitasset.is_prediction_market &&
+                                        this.renderFeedPublish(asset)}
                                     {this.state.collateralBids.length > 0 &&
                                         this.renderCollateralBid(asset)}
-                                    {this.renderAssetResolvePrediction(asset)}
+                                    {"bitasset" in asset &&
+                                        !asset.bitasset.is_prediction_market &&
+                                        this.renderAssetResolvePrediction(
+                                            asset
+                                        )}
                                 </div>
                             </Tab>
                         </Tabs>
