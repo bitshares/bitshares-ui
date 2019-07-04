@@ -19,7 +19,12 @@ class FeeAssetSettings extends React.Component {
         };
     }
 
+    shouldComponentUpdate() {
+        return true;
+    }
+
     render() {
+        const asset = ChainStore.getAsset(this.state.current_asset);
         return (
             <div
                 style={{
@@ -33,11 +38,8 @@ class FeeAssetSettings extends React.Component {
                     content="settings.current_fee_asset"
                     style={{marginRight: "10px"}}
                 />
-                <AssetName
-                    name={ChainStore.getAsset(this.state.current_asset).get(
-                        "symbol"
-                    )}
-                />
+                {asset ? <AssetName name={asset.get("symbol")} /> : null}
+
                 <Button
                     style={{margin: "15px"}}
                     key="open_change_fee_asset"
