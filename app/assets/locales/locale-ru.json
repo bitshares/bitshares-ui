@@ -114,6 +114,7 @@
         },
         "new_user": "Новый пользователь?",
         "no_orders": "Нет открытых ордеров",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Открытые ордера",
         "optional": {
