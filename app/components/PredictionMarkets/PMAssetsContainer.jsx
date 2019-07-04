@@ -4,20 +4,19 @@ import MarketsStore from "stores/MarketsStore";
 import AccountStore from "stores/AccountStore";
 import AltContainer from "alt-container";
 import PredictionMarkets from "./PredictionMarkets";
+import BindToChainState from "../Utility/BindToChainState";
 
 class PMAssetsContainer extends React.Component {
     render() {
         return (
             <AltContainer
-                stores={[AssetStore, AccountStore]}
+                stores={[AssetStore, AccountStore, MarketsStore]}
                 inject={{
                     assets: () => {
                         return AssetStore.getState().assets;
                     },
                     markets: () => {
-                        const data = MarketsStore.getState().marketData;
-                        console.log(data);
-                        return data;
+                        return MarketsStore.getState().marketData;
                     },
                     bucketSize: () => {
                         return MarketsStore.getState().bucketSize;
@@ -30,6 +29,24 @@ class PMAssetsContainer extends React.Component {
                             AccountStore.getState().currentAccount ||
                             AccountStore.getState().passwordAccount
                         );
+                    },
+                    marketLimitOrders: () => {
+                        return MarketsStore.getState().marketLimitOrders;
+                    },
+                    marketCallOrders: () => {
+                        return MarketsStore.getState().marketCallOrders;
+                    },
+                    invertedCalls: () => {
+                        return MarketsStore.getState().invertedCalls;
+                    },
+                    marketSettleOrders: () => {
+                        return MarketsStore.getState().marketSettleOrders;
+                    },
+                    totals: () => {
+                        return MarketsStore.getState().totals;
+                    },
+                    activeMarketHistory: () => {
+                        return MarketsStore.getState().activeMarketHistory;
                     }
                 }}
             >
@@ -38,5 +55,9 @@ class PMAssetsContainer extends React.Component {
         );
     }
 }
+
+PMAssetsContainer = BindToChainState(PMAssetsContainer, {
+    show_loader: true
+});
 
 export default PMAssetsContainer;

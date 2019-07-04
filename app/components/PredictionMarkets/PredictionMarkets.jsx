@@ -43,10 +43,6 @@ export default class PredictionMarkets extends Component {
             });
         }
         let searchAsset = this.state.lastAssetSymbol;
-        console.log(np.markets);
-        if (this.state.assets) {
-            console.log(this.state.assets[0]);
-        }
         if (np.assets) {
             const lastAsset = np.assets
                 .sort((a, b) => {
@@ -183,11 +179,8 @@ export default class PredictionMarkets extends Component {
     }
 
     onSearch(event) {
-        console.log(this.props.markets);
         this.setState({
-            searchTerm: (event.target.value || "").toUpperCase(),
-            selectedMarket: null,
-            preselectedAmount: 0
+            searchTerm: (event.target.value || "").toUpperCase()
         });
     }
 
