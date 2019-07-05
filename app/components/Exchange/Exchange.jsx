@@ -2428,40 +2428,40 @@ class Exchange extends React.Component {
             tinyScreen && !this.state.mobileKey.includes("myMarkets")
                 ? null
                 : null;
-                  // <MyMarkets
-                  //     key={`actionCard_${actionCardIndex++}`}
-                  //     className="left-order-book no-overflow order-9"
-                  //     style={{
-                  //         minWidth: 350,
-                  //         height: smallScreen ? 680 : "calc(100vh - 215px)",
-                  //         padding: smallScreen ? 10 : 0
-                  //     }}
-                  //     headerStyle={{
-                  //         width: "100%",
-                  //         display: !smallScreen ? "display: none" : ""
-                  //     }}
-                  //     noHeader={true}
-                  //     listHeight={this.state.height - 450}
-                  //     columns={[
-                  //         {name: "star", index: 1},
-                  //         {name: "market", index: 2},
-                  //         {name: "vol", index: 3},
-                  //         {name: "price", index: 4},
-                  //         {name: "change", index: 5}
-                  //     ]}
-                  //     findColumns={[
-                  //         {name: "market", index: 1},
-                  //         {name: "issuer", index: 2},
-                  //         {name: "vol", index: 3},
-                  //         {name: "add", index: 4}
-                  //     ]}
-                  //     current={`${quoteSymbol}_${baseSymbol}`}
-                  //     location={this.props.location}
-                  //     history={this.props.history}
-                  //     activeTab={
-                  //         tabVerticalPanel ? tabVerticalPanel : "my-market"
-                  //     }
-                  // />
+        // <MyMarkets
+        //     key={`actionCard_${actionCardIndex++}`}
+        //     className="left-order-book no-overflow order-9"
+        //     style={{
+        //         minWidth: 350,
+        //         height: smallScreen ? 680 : "calc(100vh - 215px)",
+        //         padding: smallScreen ? 10 : 0
+        //     }}
+        //     headerStyle={{
+        //         width: "100%",
+        //         display: !smallScreen ? "display: none" : ""
+        //     }}
+        //     noHeader={true}
+        //     listHeight={this.state.height - 450}
+        //     columns={[
+        //         {name: "star", index: 1},
+        //         {name: "market", index: 2},
+        //         {name: "vol", index: 3},
+        //         {name: "price", index: 4},
+        //         {name: "change", index: 5}
+        //     ]}
+        //     findColumns={[
+        //         {name: "market", index: 1},
+        //         {name: "issuer", index: 2},
+        //         {name: "vol", index: 3},
+        //         {name: "add", index: 4}
+        //     ]}
+        //     current={`${quoteSymbol}_${baseSymbol}`}
+        //     location={this.props.location}
+        //     history={this.props.history}
+        //     activeTab={
+        //         tabVerticalPanel ? tabVerticalPanel : "my-market"
+        //     }
+        // />
 
         let orderBook =
             tinyScreen && !this.state.mobileKey.includes("orderBook") ? null : (
@@ -2750,12 +2750,13 @@ class Exchange extends React.Component {
             <div
                 className={"exchange--chart-control"}
                 style={{
-                    height: 33,
-                    right: "13rem",
-                    top: "1px",
-                    position: "absolute",
-                    zIndex: 1,
-                    padding: "0.2rem"
+                    height: 20,
+                    //right: "40rem",
+                    //top: "15px",
+                    //left: "25px",
+                    position: "relative"
+                    //zIndex: 1,
+                    // padding: "0.2rem"
                 }}
             >
                 {chartType == "price_chart" && (
@@ -2775,40 +2776,7 @@ class Exchange extends React.Component {
                         />
                     </Tooltip>
                 )}
-                <Tooltip
-                    title={counterpart.translate(
-                        "exchange.settings.tooltip.increase_chart_height"
-                    )}
-                >
-                    <AntIcon
-                        style={{
-                            cursor: "pointer",
-                            fontSize: "1.4rem",
-                            marginRight: "0.6rem"
-                        }}
-                        onClick={() => {
-                            this.onChangeChartHeight({increase: true});
-                        }}
-                        type={"up"}
-                    />
-                </Tooltip>
-                <Tooltip
-                    title={counterpart.translate(
-                        "exchange.settings.tooltip.decrease_chart_height"
-                    )}
-                >
-                    <AntIcon
-                        style={{
-                            cursor: "pointer",
-                            fontSize: "1.4rem",
-                            marginRight: "0.6rem"
-                        }}
-                        onClick={() => {
-                            this.onChangeChartHeight({increase: false});
-                        }}
-                        type={"down"}
-                    />
-                </Tooltip>
+
                 <Tooltip
                     title={
                         chartType == "market_depth"
@@ -3487,7 +3455,7 @@ class Exchange extends React.Component {
                             }
                         >
                             {!tinyScreen ? (
-                                <div>
+                                <div style={{width: "70%"}}>
                                     {tradingChartHeader}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (

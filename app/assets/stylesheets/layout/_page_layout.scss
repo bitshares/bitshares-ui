@@ -1,11 +1,11 @@
 .page-layout {
     > .grid-block {
-        // border-top: 1px solid transparent;
-        // border-bottom: 1px solid transparent;
+        // border-top: 10px solid transparent;
+        // border-bottom: 10px solid transparent;
         > .grid-content,
         > .grid-block,
         > .grid-container {
-            padding: 0 10px;
+            padding: 0 1px;
         }
     }
 
