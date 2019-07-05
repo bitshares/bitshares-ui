@@ -2425,42 +2425,43 @@ class Exchange extends React.Component {
         );
 
         let myMarkets =
-            tinyScreen && !this.state.mobileKey.includes("myMarkets") ? null : (
-                <MyMarkets
-                    key={`actionCard_${actionCardIndex++}`}
-                    className="left-order-book no-overflow order-9"
-                    style={{
-                        minWidth: 350,
-                        height: smallScreen ? 680 : "calc(100vh - 215px)",
-                        padding: smallScreen ? 10 : 0
-                    }}
-                    headerStyle={{
-                        width: "100%",
-                        display: !smallScreen ? "display: none" : ""
-                    }}
-                    noHeader={true}
-                    listHeight={this.state.height - 450}
-                    columns={[
-                        {name: "star", index: 1},
-                        {name: "market", index: 2},
-                        {name: "vol", index: 3},
-                        {name: "price", index: 4},
-                        {name: "change", index: 5}
-                    ]}
-                    findColumns={[
-                        {name: "market", index: 1},
-                        {name: "issuer", index: 2},
-                        {name: "vol", index: 3},
-                        {name: "add", index: 4}
-                    ]}
-                    current={`${quoteSymbol}_${baseSymbol}`}
-                    location={this.props.location}
-                    history={this.props.history}
-                    activeTab={
-                        tabVerticalPanel ? tabVerticalPanel : "my-market"
-                    }
-                />
-            );
+            tinyScreen && !this.state.mobileKey.includes("myMarkets")
+                ? null
+                : null;
+                  // <MyMarkets
+                  //     key={`actionCard_${actionCardIndex++}`}
+                  //     className="left-order-book no-overflow order-9"
+                  //     style={{
+                  //         minWidth: 350,
+                  //         height: smallScreen ? 680 : "calc(100vh - 215px)",
+                  //         padding: smallScreen ? 10 : 0
+                  //     }}
+                  //     headerStyle={{
+                  //         width: "100%",
+                  //         display: !smallScreen ? "display: none" : ""
+                  //     }}
+                  //     noHeader={true}
+                  //     listHeight={this.state.height - 450}
+                  //     columns={[
+                  //         {name: "star", index: 1},
+                  //         {name: "market", index: 2},
+                  //         {name: "vol", index: 3},
+                  //         {name: "price", index: 4},
+                  //         {name: "change", index: 5}
+                  //     ]}
+                  //     findColumns={[
+                  //         {name: "market", index: 1},
+                  //         {name: "issuer", index: 2},
+                  //         {name: "vol", index: 3},
+                  //         {name: "add", index: 4}
+                  //     ]}
+                  //     current={`${quoteSymbol}_${baseSymbol}`}
+                  //     location={this.props.location}
+                  //     history={this.props.history}
+                  //     activeTab={
+                  //         tabVerticalPanel ? tabVerticalPanel : "my-market"
+                  //     }
+                  // />
 
         let orderBook =
             tinyScreen && !this.state.mobileKey.includes("orderBook") ? null : (
@@ -3265,7 +3266,7 @@ class Exchange extends React.Component {
                     style={{display: "block"}}
                     key={`actionCard_${actionCardIndex++}`}
                 >
-                    <div
+                    {/* <div
                         className="v-align no-padding align-center grid-block footer shrink column"
                         data-intro={translator.translate(
                             "walkthrough.my_markets"
@@ -3288,7 +3289,7 @@ class Exchange extends React.Component {
                             />
                         </Tabs>
                     </div>
-                    {myMarkets}
+                    {myMarkets} */}
                 </div>
             );
 
@@ -3329,35 +3330,34 @@ class Exchange extends React.Component {
                 </div>
             );
 
-            rightPanelContainer = (
-                <div className="grid-block left-column shrink no-overflow">
-                    {enableToggleRight ? (
-                        <div
-                            style={{
-                                width: "auto",
-                                paddingTop: "calc(50vh - 80px)"
-                            }}
-                            onClick={this._togglePanel.bind(this, "right")}
-                        >
-                            <AntIcon
-                                data-intro={translator.translate(
-                                    "walkthrough.panel_hide"
-                                )}
-                                type={
-                                    activePanels.includes("right")
-                                        ? "caret-right"
-                                        : "caret-left"
-                                }
-                            />
-                        </div>
-                    ) : null}
-                    {activePanels.includes("right")
-                        ? !mirrorPanels
-                            ? rightPanel
-                            : leftPanel
-                        : null}
-                </div>
-            );
+            rightPanelContainer = null;
+            // <div className="grid-block left-column shrink no-overflow">
+            //     {enableToggleRight ? (
+            //         <div
+            //             style={{
+            //                 width: "auto",
+            //                 paddingTop: "calc(50vh - 80px)"
+            //             }}
+            //             onClick={this._togglePanel.bind(this, "right")}
+            //         >
+            //             <AntIcon
+            //                 data-intro={translator.translate(
+            //                     "walkthrough.panel_hide"
+            //                 )}
+            //                 type={
+            //                     activePanels.includes("right")
+            //                         ? "caret-right"
+            //                         : "caret-left"
+            //                 }
+            //             />
+            //         </div>
+            //     ) : null}
+            //     {activePanels.includes("right")
+            //         ? !mirrorPanels
+            //             ? rightPanel
+            //             : leftPanel
+            //         : null}
+            // </div>
         }
 
         return (
