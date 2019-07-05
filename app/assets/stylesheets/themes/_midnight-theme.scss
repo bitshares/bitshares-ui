@@ -8,7 +8,7 @@ $primary-text-color: #e0e0e0;
 $secondary-text-color: darken($primary-text-color, 20%);
 $inactive-text-color: darken($primary-text-color, 40%);
 $link-text-color: #049cce;
-$error-text-color: #e3745b;
+$error-text-color: #e6416e;
 
 $settings-select-bg: #1e1f25;
 $settings-select-color: #737373;
@@ -32,7 +32,7 @@ $fee-color: $secondary-text-color;
 
 // Exchange colors
 $bid-color: #50d2c2;
-$ask-color: #e3745b;
+$ask-color: #e6416e;
 $call-color: #bbbf2b;
 $positive-color: #6ec105;
 $negative-color: #e1424a;
@@ -58,7 +58,7 @@ $modal-bg-color: #27384b;
 
 $mobile-input-bg: #1b1c22;
 
-$incognito-bg: #e3745b;
+$incognito-bg: #e6416e;
 
 $positive-color-alternative: #22d173;
 $negative-color-alternative: #ff276d;
