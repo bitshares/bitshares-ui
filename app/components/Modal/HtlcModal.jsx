@@ -328,7 +328,9 @@ class HtlcModal extends React.Component {
         isModalVisible: PropTypes.bool.isRequired,
         hideModal: PropTypes.func.isRequired,
         fromAccount: ChainTypes.ChainObject.isRequired,
-        operation: PropTypes.object // optional, only when editing
+        operation: PropTypes.object, // optional, only when editing
+        // Optional callback to notify on Htlc operation was successfully completed
+        onHtlcUpdated: PropTypes.func
     };
 
     constructor(props) {
@@ -372,6 +374,11 @@ class HtlcModal extends React.Component {
         };
     }
 
+    _onOperationCompleted() {
+        this.props.onHtlcUpdated();
+        this.props.hideModal();
+    }
+
     onSubmit = e => {
         e.preventDefault();
         let {
@@ -403,7 +410,7 @@ class HtlcModal extends React.Component {
                 preimage_cipher
             })
                 .then(result => {
-                    this.props.hideModal();
+                    this._onOperationCompleted();
                 })
                 .catch(err => {
                     // todo: visualize error somewhere
@@ -416,7 +423,7 @@ class HtlcModal extends React.Component {
                 preimage: preimage
             })
                 .then(result => {
-                    this.props.hideModal();
+                    this._onOperationCompleted();
                 })
                 .catch(err => {
                     // todo: visualize error somewhere
@@ -429,7 +436,7 @@ class HtlcModal extends React.Component {
                 seconds_to_add: claim_period
             })
                 .then(result => {
-                    this.props.hideModal();
+                    this._onOperationCompleted();
                 })
                 .catch(err => {
                     // todo: visualize error somewhere

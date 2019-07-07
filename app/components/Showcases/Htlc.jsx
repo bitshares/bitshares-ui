@@ -30,12 +30,13 @@ class Htlc extends Component {
         this.hasLoadedOnce = null;
     }
 
-    async _update() {
+    async _update(forceUpdate = false) {
         let currentAccount = this.props.currentAccount;
 
         if (
-            hasLoaded(currentAccount) &&
-            this.hasLoadedOnce !== currentAccount.get("id")
+            forceUpdate ||
+            (hasLoaded(currentAccount) &&
+                this.hasLoadedOnce !== currentAccount.get("id"))
         ) {
             if (__DEV__) {
                 console.log("Loading HTLC table for", currentAccount.get("id"));
@@ -44,6 +45,9 @@ class Htlc extends Component {
             this.setState({
                 tableIsLoading: true
             });
+            if (forceUpdate) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
             let htlc_list = await HtlcActions.getHTLCs(
                 currentAccount.get("id")
             );
@@ -63,7 +67,6 @@ class Htlc extends Component {
                     ]);
                 } catch (err) {}
             }
-
             this.setState({
                 htlc_list,
                 tableIsLoading: false
@@ -341,6 +344,9 @@ class Htlc extends Component {
                         hideModal={this.hideModal}
                         operation={operationData}
                         fromAccount={this.props.currentAccount}
+                        onHtlcUpdated={() => {
+                            this._update(true);
+                        }}
                     />
                 </Card>
             </div>
