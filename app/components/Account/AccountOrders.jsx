@@ -8,7 +8,7 @@ import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
-import {Input, Icon, Table, Switch} from "bitshares-ui-style-guide";
+import {Input, Icon, Table, Switch, Button} from "bitshares-ui-style-guide";
 import AccountOrderRowDescription from "./AccountOrderRowDescription";
 import CollapsibleTable from "../Utility/CollapsibleTable";
 import {groupBy, sumBy, meanBy} from "lodash-es";
@@ -537,44 +537,50 @@ class AccountOrders extends React.Component {
                 className="grid-content no-overflow no-padding"
                 style={{paddingBottom: 15}}
             >
-                <div className="header-selector">
+                <div
+                    className="header-selector"
+                    style={{display: "inline-block", width: "100%"}}
+                >
                     {orders && ordersCount ? (
-                        <div className="filter inline-block">
-                            <Input
-                                type="text"
-                                placeholder={counterpart.translate(
-                                    "account.filter_orders"
-                                )}
-                                onChange={this.setFilterValue.bind(this)}
-                                addonAfter={<Icon type="search" />}
-                            />
+                        <div className="filter-block">
+                            <div className="filter">
+                                <Input
+                                    type="text"
+                                    placeholder={counterpart.translate(
+                                        "account.filter_orders"
+                                    )}
+                                    onChange={this.setFilterValue.bind(this)}
+                                    addonAfter={<Icon type="search" />}
+                                />
+                            </div>
+                            <div className="group-by">
+                                <Switch
+                                    onChange={onGroupChange}
+                                    checked={this.state.areAssetsGrouped}
+                                />
+                                &nbsp;&nbsp;
+                                <Translate content="account.group_by_asset" />
+                            </div>
                         </div>
                     ) : null}
                     {selectedOrders.length ? (
-                        <button
-                            className="button"
-                            onClick={this.resetSelected.bind(this)}
-                        >
-                            <Translate content="account.reset_orders" />
-                        </button>
-                    ) : null}
-                    {selectedOrders.length ? (
-                        <button
-                            className="button"
-                            onClick={this.cancelSelected.bind(this)}
-                        >
-                            <Translate content="account.submit_orders" />
-                        </button>
-                    ) : null}
-                    {orders && ordersCount ? (
-                        <div className="group-by">
-                            <Translate content="account.group_by_asset" />
-                            <span className="text">:</span>
-                            <Switch
-                                onChange={onGroupChange}
-                                checked={this.state.areAssetsGrouped}
-                            />
-                        </div>
+                        <span className="action-buttons">
+                            <Button
+                                key="submit"
+                                type="primary"
+                                onClick={this.cancelSelected.bind(this)}
+                            >
+                                <Translate content="account.submit_orders" />
+                            </Button>
+                            &nbsp;
+                            <Button
+                                key="cancel"
+                                type="secondary"
+                                onClick={this.resetSelected.bind(this)}
+                            >
+                                <Translate content="account.reset_orders" />
+                            </Button>
+                        </span>
                     ) : null}
                 </div>
 
