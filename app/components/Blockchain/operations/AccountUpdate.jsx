@@ -140,7 +140,7 @@ export const AccountUpdate = ({op, fromComponent, collapsed}) => {
                 _account.get("active").get("weight_threshold") !==
                 active.weight_threshold
             ) {
-                change.active.weight_threshold = owner.weight_threshold;
+                change.active.weight_threshold = active.weight_threshold;
             }
         }
 

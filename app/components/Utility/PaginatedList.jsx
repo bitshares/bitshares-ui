@@ -9,7 +9,6 @@ export default class PaginatedList extends React.Component {
         super(props);
 
         this.state = {
-            page: 1,
             pageSize: props.pageSize
         };
     }
@@ -23,43 +22,26 @@ export default class PaginatedList extends React.Component {
         style: {paddingBottom: "1rem"}
     };
 
-    onChange(page, pageSize) {
-        this.setState({page, pageSize});
-    }
-
     render() {
-        const {page, pageSize} = this.state;
+        const {pageSize} = this.state;
         const {header, rows, extraRow} = this.props;
-        const total = rows.length;
-
-        let currentRows = getRows(page, pageSize);
-
-        function getRows(page, pageSize) {
-            let r = [];
-            for (
-                var i = (page - 1) * pageSize;
-                i < Math.min(total, page * pageSize);
-                i++
-            ) {
-                r.push(rows[i]);
-            }
-            return r;
-        }
-
-        /* Paginated too far or filtered out options without changing the page */
-        if (!currentRows.length && total) {
-            currentRows = getRows(1, pageSize);
-        }
 
         return (
             <div className="paginated-list" style={this.props.style}>
                 <Table
-                    dataSource={currentRows}
+                    dataSource={rows}
                     uns
                     columns={Array.isArray(header) ? header : []}
                     footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
                     onChange={this.props.toggleSortOrder}
-                    pagination={false}
+                    pagination={{
+                        hideOnSinglePage: true,
+                        pageSize: pageSize,
+                        showTotal: (total, range) =>
+                            counterpart.translate(this.props.label, {
+                                count: total
+                            })
+                    }}
                     rowClassName={
                         this.props.rowClassName == null
                             ? undefined
@@ -67,24 +49,6 @@ export default class PaginatedList extends React.Component {
                                   this.props.rowClassName(record, index)
                     }
                 />
-                {total > pageSize ? (
-                    <Pagination
-                        style={{
-                            paddingTop: "1rem",
-                            paddingBottom: "1rem",
-                            paddingLeft: this.props.leftPadding || null
-                        }}
-                        total={total}
-                        showTotal={total =>
-                            counterpart.translate(this.props.label, {
-                                count: total
-                            })
-                        }
-                        pageSize={pageSize}
-                        current={page}
-                        onChange={this.onChange.bind(this)}
-                    />
-                ) : null}
                 {this.props.children}
             </div>
         );
