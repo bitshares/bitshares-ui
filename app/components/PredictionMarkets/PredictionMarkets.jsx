@@ -73,7 +73,7 @@ export default class PredictionMarkets extends Component {
                 lastAssetSymbol: searchAsset
             });
         }
-        console.log(this.props.markets);
+
         const asks = this.props.markets.asks.map(element => ({
             order_id: element.id,
             opinionator: element.seller,
@@ -370,7 +370,7 @@ export default class PredictionMarkets extends Component {
                         onClose={this.onCreatePredictionMarketModalClose.bind(
                             this
                         )}
-                        currentAccountId={this.state.currentAccountId}
+                        currentAccount={this.props.currentAccount}
                     />
                 ) : null}
                 {this.state.isResolveModalOpen ? (

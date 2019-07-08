@@ -8,24 +8,21 @@ import counterpart from "counterpart";
 import AssetActions from "actions/AssetActions";
 import assetUtils from "common/asset_utils";
 import assetConstants from "chain/asset_constants";
+import {ChainStore} from "bitsharesjs";
 
-const IS_BITASSET = false;
+const IS_BITASSET = true;
 
 export default class CreateMarketModal extends Modal {
     constructor(props) {
         super(props);
         this.state = {
             marketOptions: {
-                issuer: this.props.currentAccountId,
-                precision: 4,
+                precision: "5",
                 max_supply: 100000,
                 max_market_fee: 0,
                 market_fee_percent: 0,
                 description: {main: ""},
                 reward_percent: 0,
-                backing_asset: null,
-                participation_fee: null,
-                feeAsset: null,
                 symbol: ""
             },
             showWarning: false,
@@ -55,6 +52,7 @@ export default class CreateMarketModal extends Modal {
         this.handleChange = this.handleChange.bind(this);
         this.handleAssetChange = this.handleAssetChange.bind(this);
         this.handleFeeChange = this.handleFeeChange.bind(this);
+        this.onOk = this.onOk.bind(this);
     }
 
     _getPermissions() {
@@ -75,7 +73,9 @@ export default class CreateMarketModal extends Modal {
 
         let {marketOptions, core_exchange_rate, bitasset_opts} = this.state;
 
-        let {account} = this.props;
+        const accountId = ChainStore.getAccount(this.props.currentAccount).get(
+            "id"
+        );
 
         let flags = assetUtils.getFlags(flagBooleans, IS_BITASSET);
         let permissions = assetUtils.getPermissions(
@@ -87,8 +87,8 @@ export default class CreateMarketModal extends Modal {
             this.state.marketOptions.description
         );
         this.setState({inProgress: true});
-        /*const creationPromise = AssetActions.createAsset(
-            this.state,
+        const creationPromise = AssetActions.createAsset(
+            accountId,
             marketOptions,
             flags,
             permissions,
@@ -97,17 +97,17 @@ export default class CreateMarketModal extends Modal {
             true,
             bitasset_opts,
             description
-        );*/
-        const creationPromise = new Promise(resolve => {
-            setTimeout(resolve, 5000);
-        });
+        );
+        // const creationPromise = new Promise(resolve => {
+        //     setTimeout(resolve, 5000);
+        // });
         creationPromise
             .then(result => {
                 this.setState({inProgress: false});
                 console.log(
                     "... AssetActions.createAsset(account_id, update)",
-                    account.get("id"),
-                    update,
+                    accountId,
+                    marketOptions,
                     flags,
                     permissions
                 );
@@ -130,31 +130,33 @@ export default class CreateMarketModal extends Modal {
                 newMarket[event.target.name] = event.target.value;
                 break;
         }
-        newMarket[event.target.name] = event.target.value;
         this.setState({marketOptions: newMarket});
     }
 
     handleAssetChange(asset) {
         if (asset) {
-            let newMarket = this.state.marketOptions;
-            newMarket.backing_asset = asset;
-            this.setState({marketOptions: newMarket});
+            let newBitassetOpts = this.state.bitasset_opts;
+            let newMarketOptions = this.state.marketOptions;
+            newBitassetOpts.short_backing_asset = asset;
+            newMarketOptions.precision = ChainStore.getAsset(asset).get(
+                "precision"
+            );
+            this.setState({
+                bitasset_opts: newBitassetOpts,
+                marketOptions: newMarketOptions
+            });
         }
     }
 
     handleFeeChange({asset}) {
-        let newMarket = this.state.marketOptions;
-        newMarket.feeAsset = asset;
-        if (typeof asset === "string") {
-            this.setState({marketOptions: newMarket}, handleWarning);
-        }
+        // let newMarket = this.state.marketOptions;
+        // newMarket.feeAsset = asset;
+        // if (typeof asset === "string") {
+        //     this.setState({marketOptions: newMarket}, handleWarning);
+        // }
     }
 
     _isFormValid() {
-        console.log(
-            typeof this.state.marketOptions.description.expiry,
-            this.state.marketOptions.description.expiry
-        );
         return (
             this.state.marketOptions.symbol &&
             this.state.marketOptions.description.main &&
@@ -163,22 +165,22 @@ export default class CreateMarketModal extends Modal {
         );
     }
 
+    onOk(e) {
+        if (this._isFormValid()) {
+            this._createAsset.call(this, e);
+        } else {
+            this.setState({showWarning: true});
+        }
+    }
+
     render() {
         const {showWarning, marketOptions} = this.state;
-
-        const onOkFunction = () => {
-            if (this._isFormValid()) {
-                this._createAsset();
-            } else {
-                this.setState({showWarning: true});
-            }
-        };
 
         const footer = [
             <Button
                 type="primary"
                 key="submit"
-                onClick={onOkFunction}
+                onClick={this.onOk}
                 disabled={this.state.inProgress}
             >
                 {counterpart.translate("global.confirm")}
@@ -198,9 +200,6 @@ export default class CreateMarketModal extends Modal {
                     <Translate content="prediction.create_market_modal.title" />
                 }
                 visible={this.props.show}
-                onOk={() => {
-                    onOkFunction();
-                }}
                 onCancel={this.props.onClose}
                 overlay={true}
                 closable={!this.state.inProgress}
@@ -291,16 +290,15 @@ export default class CreateMarketModal extends Modal {
                                 <Translate content="prediction.create_market_modal.backing_asset" />
                                 <AssetSelect
                                     assets={[
-                                        "1.3.113",
-                                        "1.3.120",
-                                        "1.3.121",
-                                        "1.3.1325",
-                                        "1.3.105",
-                                        "1.3.106",
-                                        "1.3.103"
+                                        "1.3.0",
+                                        "1.3.1",
+                                        "1.3.2",
+                                        "1.3.3",
+                                        "1.3.4"
                                     ]}
-                                    asset={
-                                        this.state.marketOptions.backing_asset
+                                    value={
+                                        this.state.bitasset_opts
+                                            .short_backing_asset
                                     }
                                     onChange={this.handleAssetChange}
                                     tabIndex={5}
@@ -340,7 +338,7 @@ export default class CreateMarketModal extends Modal {
 CreateMarketModal.propTypes = {
     show: PropTypes.bool,
     onClose: PropTypes.func,
-    currentAccountId: PropTypes.string,
+    currentAccount: PropTypes.string,
     newMarketId: PropTypes.string
 };
 
