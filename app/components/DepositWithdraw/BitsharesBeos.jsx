@@ -17,11 +17,58 @@ class BitsharesBeos extends React.Component {
         super(props);
 
         this.state = {
+            assetMemoCoinTypes: {},
+            beosAssets: [],
+            apiUrl: "https://gateway.beos.world/api/v2",
             isModalVisible: false
         };
 
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+    }
+
+    componentWillMount() {
+        let apiUrl = this.state.apiUrl;
+        let assetMemoCoinTypes = {};
+        let beosAssets = [];
+
+        let coinTypesPromisecheck = fetch(apiUrl + "/coins", {
+            method: "get",
+            headers: new Headers({Accept: "application/json"})
+        }).then(response => response.json());
+        let tradingPairsPromisecheck = fetch(apiUrl + "/trading-pairs", {
+            method: "get",
+            headers: new Headers({Accept: "application/json"})
+        }).then(response => response.json());
+        console.log(tradingPairsPromisecheck);
+        Promise.all([coinTypesPromisecheck, tradingPairsPromisecheck]).then(
+            json_responses => {
+                let [coinTypes, tradingPairs] = json_responses;
+
+                coinTypes.forEach(element => {
+                    if (element.walletType === "bitshares2") {
+                        let coinType = null;
+                        let memoCoinType = null;
+
+                        coinType = element.coinType;
+
+                        tradingPairs.find(element => {
+                            if (element.inputCoinType === coinType) {
+                                memoCoinType = element.outputCoinType;
+                            }
+                        });
+
+                        assetMemoCoinTypes[element.walletSymbol] = memoCoinType;
+                        beosAssets.push(element.walletSymbol);
+
+                        this.setState({
+                            assetMemoCoinTypes,
+                            beosAssets
+                        });
+                    }
+                });
+            }
+        );
     }
 
     showModal() {
@@ -66,6 +113,7 @@ class BitsharesBeos extends React.Component {
     };
 
     render() {
+        console.log("fffff", this.state.beosAssets);
         let transferBtsId = this.getTransferBtsId();
         const {beosFee, beosIssuer, beosApiUrl} = this.getParams();
 

@@ -42,6 +42,9 @@ class AccountDepositWithdraw extends React.Component {
     constructor(props) {
         super();
         this.state = {
+            assetMemoCoinTypes: {},
+            beosAssets: [],
+            iUrl: "https://gateway.beos.world/api/v2",
             olService: props.viewSettings.get("olService", "gateway"),
             rudexService: props.viewSettings.get("rudexService", "gateway"),
             bitsparkService: props.viewSettings.get(
@@ -85,6 +88,54 @@ class AccountDepositWithdraw extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
+
+        let iUrl = this.state.iUrl;
+        let assetMemoCoinTypes = {};
+        let beosAssets = [];
+
+        let coinTypesPromisecheck = fetch(iUrl + "/coins", {
+            method: "get",
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            })
+        }).then(response => response.json());
+        let tradingPairsPromisecheck = fetch(iUrl + "/trading-pairs", {
+            method: "get",
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            })
+        }).then(response => response.json());
+
+        Promise.all([coinTypesPromisecheck, tradingPairsPromisecheck]).then(
+            json_responses => {
+                let [coinTypes, tradingPairs] = json_responses;
+
+                coinTypes.forEach(element => {
+                    if (element.walletType === "bitshares2") {
+                        let coinType = null;
+                        let memoCoinType = null;
+
+                        coinType = element.coinType;
+
+                        tradingPairs.find(element => {
+                            if (element.inputCoinType === coinType) {
+                                memoCoinType = element.outputCoinType;
+                            }
+                        });
+
+                        assetMemoCoinTypes[element.walletSymbol] = memoCoinType;
+                        beosAssets.push(element.walletSymbol);
+
+                        this.setState({
+                            assetMemoCoinTypes,
+                            beosAssets
+                        });
+                    }
+                });
+            }
+        );
     }
 
     toggleOLService(service) {
@@ -177,6 +228,8 @@ class AccountDepositWithdraw extends React.Component {
         let serList = [];
         let {account} = this.props;
         let {
+            assetMemoCoinTypes,
+            beosAssets,
             olService,
             btService,
             rudexService,
@@ -507,7 +560,7 @@ class AccountDepositWithdraw extends React.Component {
                 <BitsharesBeos
                     account={account}
                     asset={"BTS"}
-                    assets={["BTS", "BROWNIE.PTS"]}
+                    assets={["BTS"]}
                     params={this.props.location}
                 />
             )
@@ -537,8 +590,8 @@ class AccountDepositWithdraw extends React.Component {
 
     render() {
         let {account, servicesDown} = this.props;
-        let {activeService} = this.state;
-
+        let {beosAssets, activeService} = this.state;
+        console.log("p", beosAssets);
         let openLedgerGatewayCoins = this.props.openLedgerBackedCoins
             .map(coin => {
                 return coin;
