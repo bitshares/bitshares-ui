@@ -140,7 +140,7 @@ class AccountSelector extends React.Component {
         return value;
     }
 
-    _notifyOnChange(selectedAccountName) {
+    _notifyOnChange(selectedAccountName, type) {
         let {props} = this;
 
         let accountName = this.getVerifiedAccountName(selectedAccountName);
@@ -156,7 +156,11 @@ class AccountSelector extends React.Component {
                 [accountName]: false
             })
                 .then(account => {
-                    if (!!account) {
+                    if (
+                        !!account &&
+                        ((this.props.requireActiveSelect && type == "select") ||
+                            !this.props.requireActiveSelect)
+                    ) {
                         props.onAccountChanged(account);
                     }
                 })
@@ -167,7 +171,7 @@ class AccountSelector extends React.Component {
     }
 
     onSelect(selectedAccountName) {
-        this._notifyOnChange(selectedAccountName);
+        this._notifyOnChange(selectedAccountName, "select");
     }
 
     onInputChanged(e) {
@@ -175,7 +179,7 @@ class AccountSelector extends React.Component {
             inputChanged: true
         });
 
-        this._notifyOnChange(e);
+        this._notifyOnChange(e, "input");
     }
 
     onKeyDown(e) {

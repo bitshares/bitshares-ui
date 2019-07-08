@@ -244,11 +244,9 @@ class SendModal extends React.Component {
             this.setState(
                 {
                     from_name: np.from_name,
-                    from_account: ChainStore.getAccount(np.from_name),
+                    from_account: np.from_account,
                     to_name: np.to_name ? np.to_name : "",
-                    to_account: np.to_name
-                        ? ChainStore.getAccount(np.to_name)
-                        : null,
+                    to_account: np.to_account ? np.to_account : null,
                     feeStatus: {},
                     fee_asset_id: "1.3.0",
                     feeAmount: new Asset({amount: 0})
@@ -746,6 +744,7 @@ class SendModal extends React.Component {
                                             typeahead={true}
                                             tabIndex={tabIndex++}
                                             locked={true}
+                                            requireActiveSelect={true}
                                         />
                                         <div className="modal-separator" />
                                     </React.Fragment>
@@ -763,6 +762,7 @@ class SendModal extends React.Component {
                                     typeahead={true}
                                     tabIndex={tabIndex++}
                                     locked={!!propose ? undefined : true}
+                                    requireActiveSelect={true}
                                 />
 
                                 <AccountSelector
@@ -776,6 +776,7 @@ class SendModal extends React.Component {
                                     size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
+                                    requireActiveSelect={true}
                                 />
 
                                 <AmountSelector
