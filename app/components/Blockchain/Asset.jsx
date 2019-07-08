@@ -1643,7 +1643,7 @@ class Asset extends React.Component {
                             )}
                             mouseEnterDelay={0.5}
                         >
-                            <span
+                            <div
                                 onClick={this._toggleCumulativeGrouping.bind(
                                     this
                                 )}
@@ -1654,7 +1654,7 @@ class Asset extends React.Component {
                                     asset={item.asset}
                                     hide_asset={true}
                                 />
-                            </span>
+                            </div>
                         </Tooltip>
                     );
                 }
@@ -1682,7 +1682,7 @@ class Asset extends React.Component {
                             )}
                             mouseEnterDelay={0.5}
                         >
-                            <span
+                            <div
                                 onClick={this._toggleCumulativeGrouping.bind(
                                     this
                                 )}
@@ -1693,7 +1693,7 @@ class Asset extends React.Component {
                                     asset={item.asset}
                                     hide_asset={true}
                                 />
-                            </span>
+                            </div>
                         </Tooltip>
                     );
                 }
