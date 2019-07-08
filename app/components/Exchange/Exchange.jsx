@@ -2751,12 +2751,7 @@ class Exchange extends React.Component {
                 className={"exchange--chart-control"}
                 style={{
                     height: 20,
-                    //right: "40rem",
-                    //top: "15px",
-                    //left: "25px",
                     position: "relative"
-                    //zIndex: 1,
-                    // padding: "0.2rem"
                 }}
             >
                 {chartType == "price_chart" && (
@@ -2977,7 +2972,7 @@ class Exchange extends React.Component {
                 groupTabsCount++;
             }
         });
-
+        //trade history
         let groupTabbed1 =
             groupTabs[1].length > 0 ? (
                 <div
@@ -3071,14 +3066,14 @@ class Exchange extends React.Component {
             }
 
             actionCards.push(groupStandalone);
-            actionCards.push(groupTabbed1);
+            //actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
         } else if (!tinyScreen) {
             actionCards.push(buyForm);
             actionCards.push(sellForm);
             actionCards.push(orderBook);
             actionCards.push(groupStandalone);
-            actionCards.push(groupTabbed1);
+            //actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
             actionCards.push(
                 <div
@@ -3455,13 +3450,17 @@ class Exchange extends React.Component {
                             }
                         >
                             {!tinyScreen ? (
-                                <div style={{width: "70%"}}>
+                                <div>
                                     {tradingChartHeader}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div
                                             className="grid-block shrink no-overflow"
                                             id="market-charts"
+                                            style={{
+                                                width: "70%",
+                                                display: "inline-block"
+                                            }}
                                         >
                                             {tradingViewChart}
                                         </div>
@@ -3470,10 +3469,53 @@ class Exchange extends React.Component {
                                     {/* Market depth chart */}
                                     {chartType &&
                                     chartType == "market_depth" ? (
-                                        <div className="grid-block vertical no-padding shrink">
+                                        <div
+                                            className="grid-block vertical no-padding shrink"
+                                            style={{
+                                                width: "60%",
+                                                display: "inline-block"
+                                            }}
+                                        >
                                             {deptHighChart}
                                         </div>
                                     ) : null}
+                                    {/* Trade history */}
+                                    <div
+                                        className={cnames(
+                                            centerContainerWidth > 1200
+                                                ? groupTabsCount == 1
+                                                    ? "medium-12 xlarge-4"
+                                                    : "medium-6 xlarge-4 "
+                                                : centerContainerWidth > 800
+                                                    ? groupTabsCount == 1
+                                                        ? "medium-12"
+                                                        : "medium-6"
+                                                    : "",
+                                            "small-12 order-5",
+                                            verticalOrderBook
+                                                ? "xlarge-order-5"
+                                                : "",
+                                            !verticalOrderBook &&
+                                            !verticalOrderForm
+                                                ? "xlarge-order-2"
+                                                : ""
+                                        )}
+                                        style={{
+                                            width: "20%",
+                                            display: "inline-block",
+                                            position: "absolute"
+                                        }}
+                                    >
+                                        <Tabs
+                                            activeKey={panelTabsActive[1]}
+                                            onChange={this._setPanelTabInGroup.bind(
+                                                this,
+                                                1
+                                            )}
+                                        >
+                                            {groupTabs[1]}
+                                        </Tabs>
+                                    </div>
                                 </div>
                             ) : null}
 

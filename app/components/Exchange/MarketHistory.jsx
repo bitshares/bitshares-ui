@@ -319,9 +319,9 @@ class MarketHistory extends React.Component {
                         ref="history"
                         style={{
                             minHeight: !this.props.tinyScreen ? 260 : 0,
-                            maxHeight: 260,
-                            overflow: "hidden",
-                            lineHeight: "13px"
+                            maxHeight: 425,
+                            overflow: "auto",
+                            lineHeight: "10px"
                         }}
                     >
                         <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
@@ -337,20 +337,6 @@ class MarketHistory extends React.Component {
                             </TransitionWrapper>
                         </table>
                     </div>
-                    {historyRows && historyRows.length > 11 ? (
-                        <div className="orderbook-showall">
-                            <a onClick={this._onSetShowAll.bind(this)}>
-                                <Translate
-                                    content={
-                                        showAll
-                                            ? "exchange.hide"
-                                            : "exchange.show_all_trades"
-                                    }
-                                    rowcount={historyRows.length}
-                                />
-                            </a>
-                        </div>
-                    ) : null}
                 </div>
             </div>
         );
