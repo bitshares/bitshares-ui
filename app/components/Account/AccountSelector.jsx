@@ -48,7 +48,8 @@ class AccountSelector extends React.Component {
         focus: PropTypes.bool,
         disabled: PropTypes.bool,
         editable: PropTypes.bool,
-        locked: PropTypes.bool
+        locked: PropTypes.bool,
+        requireActiveSelect: PropTypes.bool
     };
 
     static defaultProps = {
@@ -56,7 +57,8 @@ class AccountSelector extends React.Component {
         excludeAccounts: [],
         disabled: null,
         editable: null,
-        locked: false
+        locked: false,
+        requireActiveSelect: true // Should not be set to false, required for fallback
     };
 
     constructor(props) {

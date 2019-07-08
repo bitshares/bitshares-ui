@@ -744,7 +744,6 @@ class SendModal extends React.Component {
                                             typeahead={true}
                                             tabIndex={tabIndex++}
                                             locked={true}
-                                            requireActiveSelect={true}
                                         />
                                         <div className="modal-separator" />
                                     </React.Fragment>
@@ -762,7 +761,6 @@ class SendModal extends React.Component {
                                     typeahead={true}
                                     tabIndex={tabIndex++}
                                     locked={!!propose ? undefined : true}
-                                    requireActiveSelect={true}
                                 />
 
                                 <AccountSelector
@@ -776,7 +774,6 @@ class SendModal extends React.Component {
                                     size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
-                                    requireActiveSelect={true}
                                 />
 
                                 <AmountSelector
