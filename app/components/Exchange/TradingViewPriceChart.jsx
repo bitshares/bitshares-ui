@@ -131,20 +131,34 @@ class TradingViewPriceChart extends React.Component {
             if (__DEV__) console.timeEnd("*** Chart load time: ");
             this.tvWidget
                 .createButton()
-                .attr("title", "Load custom charts")
+                .attr(
+                    "title",
+                    counterpart.translate("exchange.load_custom_charts")
+                )
                 .addClass("apply-common-tooltip")
                 .on("click", () => {
                     that.setState({showLoadModal: true});
                 })
-                .append("<span>Load</span>");
+                .append(
+                    `<span>${counterpart.translate(
+                        "exchange.chart_load"
+                    )}</span>`
+                );
             this.tvWidget
                 .createButton()
-                .attr("title", "Save Custom charts")
+                .attr(
+                    "title",
+                    counterpart.translate("exchange.save_custom_charts")
+                )
                 .addClass("apply-common-tooltip")
                 .on("click", () => {
                     that.setState({showSaveModal: true});
                 })
-                .append("<span>Save</span>");
+                .append(
+                    `<span>${counterpart.translate(
+                        "exchange.chart_save"
+                    )}</span>`
+                );
 
             dataFeed.update({
                 onMarketChange: this._setSymbol.bind(this)
@@ -265,17 +279,17 @@ class TradingViewPriceChart extends React.Component {
             .filter(chart => chart.symbol === quoteSymbol + "_" + baseSymbol);
         const columns = [
             {
-                title: "Layout Name",
+                title: counterpart.translate("exchange.layout_name"),
                 dataIndex: "name",
                 key: "name"
             },
             {
-                title: "Modified",
+                title: counterpart.translate("exchange.modified"),
                 dataIndex: "modified",
                 key: "modified"
             },
             {
-                title: "Actions",
+                title: counterpart.translate("exchange.actions"),
                 dataIndex: "actions",
                 key: "actions",
                 render: (text, record) => {
@@ -314,7 +328,7 @@ class TradingViewPriceChart extends React.Component {
                     id="tv_chart"
                 />
                 <Modal
-                    title={"Load Chart Layout"}
+                    title={counterpart.translate("exchange.load_chart_layout")}
                     closable={false}
                     visible={this.state.showLoadModal}
                     footer={[
@@ -330,7 +344,9 @@ class TradingViewPriceChart extends React.Component {
                     />
                 </Modal>
                 <Modal
-                    title={"Save New Chart Layout "}
+                    title={counterpart.translate(
+                        "exchange.save_new_chart_layout"
+                    )}
                     closable={false}
                     visible={this.state.showSaveModal}
                     footer={[
@@ -359,7 +375,9 @@ class TradingViewPriceChart extends React.Component {
                             }}
                         >
                             <Input
-                                placeholder="Enter Chart Layout Name"
+                                placeholder={counterpart.translate(
+                                    "exchange.enter_chart_layout_name"
+                                )}
                                 ref={this.layoutName}
                                 onChange={this.resetError}
                                 onPressEnter={this.onSubmitConfirmation.bind(
