@@ -73,8 +73,6 @@ class BitsharesBeosModal extends React.Component {
     }
 
     componentWillMount() {
-        console.log("props", this.props.assetMemoCoinTypes);
-        console.log("props", this.props.assets);
         this._updateFee();
         this._updateMultiSigError();
     }
