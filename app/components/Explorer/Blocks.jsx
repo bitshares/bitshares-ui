@@ -315,7 +315,8 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h2>
-                                #{utils.format_number(
+                                #
+                                {utils.format_number(
                                     dynGlobalObject.get("head_block_number"),
                                     0
                                 )}

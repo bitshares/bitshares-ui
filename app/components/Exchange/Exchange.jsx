@@ -2097,14 +2097,8 @@ class Exchange extends React.Component {
                 defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    verticalOrderForm && !smallScreen
-                        ? ""
-                        : centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4"
-                            : centerContainerWidth > 800
-                                ? "medium-6"
-                                : "",
-                    "small-12 exchange-padded middle-content",
+                    "small-3",
+                    "exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 2 : 3} large-order-${
                               buySellTop ? 2 : 5
@@ -2263,14 +2257,7 @@ class Exchange extends React.Component {
                 defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    verticalOrderForm && !smallScreen
-                        ? ""
-                        : centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4"
-                            : centerContainerWidth > 800
-                                ? "medium-6"
-                                : "",
-                    "small-12 exchange-padded middle-content",
+                    "small-3 exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 1 : 2} large-order-${
                               buySellTop ? 1 : 4
@@ -2425,42 +2412,43 @@ class Exchange extends React.Component {
         );
 
         let myMarkets =
-            tinyScreen && !this.state.mobileKey.includes("myMarkets") ? null : (
-                <MyMarkets
-                    key={`actionCard_${actionCardIndex++}`}
-                    className="left-order-book no-overflow order-9"
-                    style={{
-                        minWidth: 350,
-                        height: smallScreen ? 680 : "calc(100vh - 215px)",
-                        padding: smallScreen ? 10 : 0
-                    }}
-                    headerStyle={{
-                        width: "100%",
-                        display: !smallScreen ? "display: none" : ""
-                    }}
-                    noHeader={true}
-                    listHeight={this.state.height - 450}
-                    columns={[
-                        {name: "star", index: 1},
-                        {name: "market", index: 2},
-                        {name: "vol", index: 3},
-                        {name: "price", index: 4},
-                        {name: "change", index: 5}
-                    ]}
-                    findColumns={[
-                        {name: "market", index: 1},
-                        {name: "issuer", index: 2},
-                        {name: "vol", index: 3},
-                        {name: "add", index: 4}
-                    ]}
-                    current={`${quoteSymbol}_${baseSymbol}`}
-                    location={this.props.location}
-                    history={this.props.history}
-                    activeTab={
-                        tabVerticalPanel ? tabVerticalPanel : "my-market"
-                    }
-                />
-            );
+            tinyScreen && !this.state.mobileKey.includes("myMarkets")
+                ? null
+                : null;
+        // <MyMarkets
+        //     key={`actionCard_${actionCardIndex++}`}
+        //     className="left-order-book no-overflow order-9"
+        //     style={{
+        //         minWidth: 350,
+        //         height: smallScreen ? 680 : "calc(100vh - 215px)",
+        //         padding: smallScreen ? 10 : 0
+        //     }}
+        //     headerStyle={{
+        //         width: "100%",
+        //         display: !smallScreen ? "display: none" : ""
+        //     }}
+        //     noHeader={true}
+        //     listHeight={this.state.height - 450}
+        //     columns={[
+        //         {name: "star", index: 1},
+        //         {name: "market", index: 2},
+        //         {name: "vol", index: 3},
+        //         {name: "price", index: 4},
+        //         {name: "change", index: 5}
+        //     ]}
+        //     findColumns={[
+        //         {name: "market", index: 1},
+        //         {name: "issuer", index: 2},
+        //         {name: "vol", index: 3},
+        //         {name: "add", index: 4}
+        //     ]}
+        //     current={`${quoteSymbol}_${baseSymbol}`}
+        //     location={this.props.location}
+        //     history={this.props.history}
+        //     activeTab={
+        //         tabVerticalPanel ? tabVerticalPanel : "my-market"
+        //     }
+        // />
 
         let orderBook =
             tinyScreen && !this.state.mobileKey.includes("orderBook") ? null : (
@@ -2489,19 +2477,7 @@ class Exchange extends React.Component {
                     flipOrderBook={flipOrderBook}
                     orderBookReversed={orderBookReversed}
                     marketReady={marketReady}
-                    wrapperClass={cnames(
-                        centerContainerWidth > 1200
-                            ? "xlarge-8"
-                            : centerContainerWidth > 800
-                                ? ""
-                                : "",
-                        "medium-12 large-12",
-                        "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap shrink",
-                        `order-${buySellTop ? 3 : 1} xlarge-order-${
-                            buySellTop ? 4 : 1
-                        }`
-                    )}
-                    innerClass={cnames(
+                    /*innerClass={cnames(
                         centerContainerWidth > 1200
                             ? "medium-6"
                             : centerContainerWidth > 800
@@ -2509,7 +2485,7 @@ class Exchange extends React.Component {
                                 : "",
                         "small-12 middle-content",
                         !tinyScreen ? "exchange-padded" : ""
-                    )}
+                    )}*/
                     currentAccount={this.props.currentAccount.get("id")}
                     handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
                         this
@@ -2749,12 +2725,8 @@ class Exchange extends React.Component {
             <div
                 className={"exchange--chart-control"}
                 style={{
-                    height: 33,
-                    right: "13rem",
-                    top: "1px",
-                    position: "absolute",
-                    zIndex: 1,
-                    padding: "0.2rem"
+                    height: 20,
+                    position: "relative"
                 }}
             >
                 {chartType == "price_chart" && (
@@ -2774,40 +2746,7 @@ class Exchange extends React.Component {
                         />
                     </Tooltip>
                 )}
-                <Tooltip
-                    title={counterpart.translate(
-                        "exchange.settings.tooltip.increase_chart_height"
-                    )}
-                >
-                    <AntIcon
-                        style={{
-                            cursor: "pointer",
-                            fontSize: "1.4rem",
-                            marginRight: "0.6rem"
-                        }}
-                        onClick={() => {
-                            this.onChangeChartHeight({increase: true});
-                        }}
-                        type={"up"}
-                    />
-                </Tooltip>
-                <Tooltip
-                    title={counterpart.translate(
-                        "exchange.settings.tooltip.decrease_chart_height"
-                    )}
-                >
-                    <AntIcon
-                        style={{
-                            cursor: "pointer",
-                            fontSize: "1.4rem",
-                            marginRight: "0.6rem"
-                        }}
-                        onClick={() => {
-                            this.onChangeChartHeight({increase: false});
-                        }}
-                        type={"down"}
-                    />
-                </Tooltip>
+
                 <Tooltip
                     title={
                         chartType == "market_depth"
@@ -3009,37 +2948,6 @@ class Exchange extends React.Component {
             }
         });
 
-        let groupTabbed1 =
-            groupTabs[1].length > 0 ? (
-                <div
-                    key={`actionCard_${actionCardIndex++}`}
-                    className={cnames(
-                        centerContainerWidth > 1200
-                            ? groupTabsCount == 1
-                                ? "medium-12 xlarge-4"
-                                : "medium-6 xlarge-4 "
-                            : centerContainerWidth > 800
-                                ? groupTabsCount == 1
-                                    ? "medium-12"
-                                    : "medium-6"
-                                : "",
-                        "small-12 order-5",
-                        verticalOrderBook ? "xlarge-order-5" : "",
-                        !verticalOrderBook && !verticalOrderForm
-                            ? "xlarge-order-2"
-                            : ""
-                    )}
-                    style={{paddingRight: 5}}
-                >
-                    <Tabs
-                        activeKey={panelTabsActive[1]}
-                        onChange={this._setPanelTabInGroup.bind(this, 1)}
-                    >
-                        {groupTabs[1]}
-                    </Tabs>
-                </div>
-            ) : null;
-
         let groupTabbed2 =
             groupTabs[2].length > 0 ? (
                 <div
@@ -3093,23 +3001,17 @@ class Exchange extends React.Component {
                 actionCards.push(sellForm);
             }
 
-            if (!verticalOrderBook) {
-                actionCards.push(orderBook);
-            }
-
             if (verticalOrderBook || verticalOrderForm) {
                 actionCards.push(emptyDiv);
             }
 
             actionCards.push(groupStandalone);
-            actionCards.push(groupTabbed1);
+
             actionCards.push(groupTabbed2);
         } else if (!tinyScreen) {
             actionCards.push(buyForm);
             actionCards.push(sellForm);
-            actionCards.push(orderBook);
             actionCards.push(groupStandalone);
-            actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
             actionCards.push(
                 <div
@@ -3265,7 +3167,7 @@ class Exchange extends React.Component {
                     style={{display: "block"}}
                     key={`actionCard_${actionCardIndex++}`}
                 >
-                    <div
+                    {/* <div
                         className="v-align no-padding align-center grid-block footer shrink column"
                         data-intro={translator.translate(
                             "walkthrough.my_markets"
@@ -3288,7 +3190,7 @@ class Exchange extends React.Component {
                             />
                         </Tabs>
                     </div>
-                    {myMarkets}
+                    {myMarkets} */}
                 </div>
             );
 
@@ -3329,40 +3231,40 @@ class Exchange extends React.Component {
                 </div>
             );
 
-            rightPanelContainer = (
-                <div className="grid-block left-column shrink no-overflow">
-                    {enableToggleRight ? (
-                        <div
-                            style={{
-                                width: "auto",
-                                paddingTop: "calc(50vh - 80px)"
-                            }}
-                            onClick={this._togglePanel.bind(this, "right")}
-                        >
-                            <AntIcon
-                                data-intro={translator.translate(
-                                    "walkthrough.panel_hide"
-                                )}
-                                type={
-                                    activePanels.includes("right")
-                                        ? "caret-right"
-                                        : "caret-left"
-                                }
-                            />
-                        </div>
-                    ) : null}
-                    {activePanels.includes("right")
-                        ? !mirrorPanels
-                            ? rightPanel
-                            : leftPanel
-                        : null}
-                </div>
-            );
+            rightPanelContainer = null;
+            // <div className="grid-block left-column shrink no-overflow">
+            //     {enableToggleRight ? (
+            //         <div
+            //             style={{
+            //                 width: "auto",
+            //                 paddingTop: "calc(50vh - 80px)"
+            //             }}
+            //             onClick={this._togglePanel.bind(this, "right")}
+            //         >
+            //             <AntIcon
+            //                 data-intro={translator.translate(
+            //                     "walkthrough.panel_hide"
+            //                 )}
+            //                 type={
+            //                     activePanels.includes("right")
+            //                         ? "caret-right"
+            //                         : "caret-left"
+            //                 }
+            //             />
+            //         </div>
+            //     ) : null}
+            //     {activePanels.includes("right")
+            //         ? !mirrorPanels
+            //             ? rightPanel
+            //             : leftPanel
+            //         : null}
+            // </div>
         }
 
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
+
                 <ExchangeHeader
                     hasAnyPriceAlert={this.props.hasAnyPriceAlert}
                     showPriceAlertModal={this.showPriceAlertModal}
@@ -3487,13 +3389,17 @@ class Exchange extends React.Component {
                             }
                         >
                             {!tinyScreen ? (
-                                <div>
-                                    {tradingChartHeader}
+                                <div style={{display: "flex"}}>
+                                    {/* {tradingChartHeader} */}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div
                                             className="grid-block shrink no-overflow"
                                             id="market-charts"
+                                            style={{
+                                                width: "65%",
+                                                display: "inline-block"
+                                            }}
                                         >
                                             {tradingViewChart}
                                         </div>
@@ -3502,10 +3408,47 @@ class Exchange extends React.Component {
                                     {/* Market depth chart */}
                                     {chartType &&
                                     chartType == "market_depth" ? (
-                                        <div className="grid-block vertical no-padding shrink">
+                                        <div
+                                            className="grid-block vertical no-padding shrink"
+                                            style={{
+                                                width: "65%",
+                                                display: "inline-block"
+                                            }}
+                                        >
                                             {deptHighChart}
                                         </div>
                                     ) : null}
+
+                                    {/* Order book */}
+                                    <div
+                                        className="grid-block shrink no-overflow small-2"
+                                        style={{
+                                            //width: "20%",
+                                            display: "inline-block"
+                                            //position: "absolute"
+                                        }}
+                                    >
+                                        {orderBook}
+                                    </div>
+                                    {/* Trade history */}
+                                    <div
+                                        className="small-2 "
+                                        style={{
+                                            //width: "20%",
+                                            display: "inline-block",
+                                            position: "relative"
+                                        }}
+                                    >
+                                        <Tabs
+                                            activeKey={panelTabsActive[1]}
+                                            onChange={this._setPanelTabInGroup.bind(
+                                                this,
+                                                1
+                                            )}
+                                        >
+                                            {groupTabs[1]}
+                                        </Tabs>
+                                    </div>
                                 </div>
                             ) : null}
 

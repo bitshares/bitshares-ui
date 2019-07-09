@@ -411,7 +411,10 @@ class App extends React.Component {
                                     path="/settings/:tab"
                                     component={Settings}
                                 />
-                                <Route path="/settings" component={Settings} />
+                                <Route
+                                    path="/settings"
+                                    component={Settings}
+                                />
 
                                 <Route
                                     path="/transfer"
@@ -427,7 +430,10 @@ class App extends React.Component {
                                     path="/create-account"
                                     component={LoginSelector}
                                 />
-                                <Route path="/login" component={Login} />
+                                <Route
+                                    path="/login"
+                                    component={Login}
+                                />
                                 <Route
                                     path="/registration"
                                     exact
@@ -443,7 +449,11 @@ class App extends React.Component {
                                     exact
                                     component={AccountRegistration}
                                 />
-                                <Route path="/news" exact component={News} />
+                                <Route
+                                    path="/news"
+                                    exact
+                                    component={News}
+                                />
                                 <Redirect
                                     path={"/voting"}
                                     to={{
@@ -455,7 +465,10 @@ class App extends React.Component {
                                     path="/explorer/:tab"
                                     component={Explorer}
                                 />
-                                <Route path="/explorer" component={Explorer} />
+                                <Route
+                                    path="/explorer"
+                                    component={Explorer}
+                                />
                                 <Route
                                     path="/asset/:symbol"
                                     component={Asset}
@@ -470,9 +483,15 @@ class App extends React.Component {
                                     path="/block/:height/:txIndex"
                                     component={Block}
                                 />
-                                <Route path="/borrow" component={Borrow} />
+                                <Route
+                                    path="/borrow"
+                                    component={Borrow}
+                                />
 
-                                <Route path="/barter" component={Barter} />
+                                <Route
+                                    path="/barter"
+                                    component={Barter}
+                                />
                                 <Route
                                     path="/direct-debit"
                                     component={DirectDebit}
@@ -503,7 +522,11 @@ class App extends React.Component {
                                 />
 
                                 {/* Help routes */}
-                                <Route exact path="/help" component={Help} />
+                                <Route
+                                    exact
+                                    path="/help"
+                                    component={Help}
+                                />
                                 <Route
                                     exact
                                     path="/help/:path1"
@@ -520,7 +543,7 @@ class App extends React.Component {
                                     component={Help}
                                 />
                                 <Route path="/htlc" component={Htlc} />
-                                <Route path="*" component={Page404} />
+                                <Route path="/*" component={Page404} />
                             </Switch>
                         </div>
                     </div>

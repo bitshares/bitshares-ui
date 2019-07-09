@@ -25,7 +25,9 @@ class WitnessRow extends React.Component {
 
     _onRowClick(e) {
         e.preventDefault();
-        this.props.history.push(`/account/${this.props.witness.get("name")}`);
+        this.props.history.push(
+            `/account/${this.props.witness.get("name")}`
+        );
     }
 
     // componentWillUnmount() {
@@ -45,7 +47,7 @@ class WitnessRow extends React.Component {
         if (this.props.most_recent - witness_aslot > 100) {
             color = {borderLeft: "1px solid #FCAB53"};
         } else {
-            color = {borderLeft: "1px solid #50D2C2"};
+            color = {borderLeft: "1px solid rgb(112, 168, 0)"};
         }
         let last_aslot_time = new Date(
             Date.now() -

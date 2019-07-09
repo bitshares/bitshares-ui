@@ -316,7 +316,9 @@ class Asset extends React.Component {
                 var marketName = market + "/" + symbol;
                 return (
                     <span key={marketID}>
-                        <Link to={`/market/${marketID}`}>{marketName}</Link>
+                        <Link to={`/market/${marketID}`}>
+                            {marketName}
+                        </Link>
                         &nbsp;
                     </span>
                 );

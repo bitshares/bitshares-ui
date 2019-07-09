@@ -215,31 +215,53 @@ export default class ExchangeHeader extends React.Component {
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
                     <div className="grid-block shrink">
-                        <div style={{padding: "10px"}}>
+                        {/* <AntIcon
+                            onClick={this.props.showPriceAlertModal}
+                            type={"bell"}
+                            className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
+                            data-intro={translator.translate(
+                                "walkthrough.price_alerts"
+                            )}
+                        />
+                        <a
+                            onClick={() => {
+                                this._addMarket(
+                                    this.props.quoteAsset.get("symbol"),
+                                    this.props.baseAsset.get("symbol")
+                                );
+                            }}
+                            data-intro={translator.translate(
+                                "walkthrough.favourite_button"
+                            )}
+                        >
+                            <Icon
+                                className={starClass}
+                                name="fi-star"
+                                title="icons.fi_star.market"
+                            />
+                        </a> */}
+
+                        <div
+                            style={{
+                                padding: "10px",
+                                borderRight: "1px solid black",
+                                height: "100%"
+                            }}
+                        >
                             {!hasPrediction ? (
                                 <div
                                     style={{
                                         padding: "0 5px",
                                         fontSize: this.props.tinyScreen
                                             ? "13px"
-                                            : "18px",
-                                        marginTop: "1px"
+                                            : "18px"
                                     }}
                                 >
-                                    <AntIcon
-                                        onClick={this.props.showPriceAlertModal}
-                                        type={"bell"}
-                                        className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
-                                        data-intro={translator.translate(
-                                            "walkthrough.price_alerts"
-                                        )}
-                                    />
                                     <span
                                         onClick={this.marketPicker.bind(
                                             this,
                                             quoteSymbol
                                         )}
-                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isQuoteSelected
@@ -259,7 +281,6 @@ export default class ExchangeHeader extends React.Component {
                                             this,
                                             baseSymbol
                                         )}
-                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isBaseSelected
@@ -280,47 +301,6 @@ export default class ExchangeHeader extends React.Component {
                                     >{`${quoteSymbol} : ${baseSymbol}`}</span>
                                 </a>
                             )}
-                            <div className="label-actions">
-                                <Translate
-                                    component="span"
-                                    style={{padding: "5px 0 0 5px"}}
-                                    className="stat-text"
-                                    content="exchange.trading_pair"
-                                />
-                                <Link
-                                    onClick={() => {
-                                        MarketsActions.switchMarket();
-                                    }}
-                                    to={`/market/${baseSymbol}_${quoteSymbol}`}
-                                    data-intro={translator.translate(
-                                        "walkthrough.switch_button"
-                                    )}
-                                >
-                                    <Icon
-                                        className="shuffle"
-                                        name="shuffle"
-                                        title="icons.shuffle"
-                                    />
-                                </Link>
-
-                                <a
-                                    onClick={() => {
-                                        this._addMarket(
-                                            this.props.quoteAsset.get("symbol"),
-                                            this.props.baseAsset.get("symbol")
-                                        );
-                                    }}
-                                    data-intro={translator.translate(
-                                        "walkthrough.favourite_button"
-                                    )}
-                                >
-                                    <Icon
-                                        className={starClass}
-                                        name="fi-star"
-                                        title="icons.fi_star.market"
-                                    />
-                                </a>
-                            </div>
                         </div>
                     </div>
 
@@ -329,7 +309,10 @@ export default class ExchangeHeader extends React.Component {
                         style={{overflow: "visible"}}
                     >
                         <div className="grid-block wrap market-stats-container">
-                            <ul className="market-stats stats top-stats">
+                            <ul
+                                className="market-stats stats top-stats"
+                                style={{marginBottom: "0"}}
+                            >
                                 {latestPrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
@@ -449,31 +432,6 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.squeeze"
                                     />
                                 ) : null}
-                            </ul>
-                            <ul
-                                className="market-stats stats top-stats"
-                                data-position={"left"}
-                                data-step="1"
-                                data-intro={translator.translate(
-                                    "walkthrough.personalize"
-                                )}
-                            >
-                                <li
-                                    className="stressed-stat input clickable"
-                                    style={{padding: "16px 16px 16px 0px"}}
-                                    onClick={this.props.onTogglePersonalize.bind(
-                                        this
-                                    )}
-                                >
-                                    <AntIcon
-                                        type="setting"
-                                        style={{paddingRight: 5}}
-                                    />
-                                    <Translate
-                                        className="hide-order-2"
-                                        content="exchange.settings.header.title"
-                                    />
-                                </li>
                             </ul>
                         </div>
                     </div>

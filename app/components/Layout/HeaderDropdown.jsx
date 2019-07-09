@@ -284,7 +284,10 @@ export default class DropDownMenu extends React.Component {
                         "divider",
                         "desktop-only"
                     )}
-                    onClick={this.props.onNavigate.bind(this, "/settings")}
+                    onClick={this.props.onNavigate.bind(
+                        this,
+                        "/settings"
+                    )}
                 >
                     <div className="table-cell">
                         <Icon size="2x" name="cogs" title="icons.cogs" />
@@ -301,7 +304,10 @@ export default class DropDownMenu extends React.Component {
                         },
                         "divider"
                     )}
-                    onClick={this.props.onNavigate.bind(this, "/spotlight")}
+                    onClick={this.props.onNavigate.bind(
+                        this,
+                        "/spotlight"
+                    )}
                 >
                     <div className="table-cell">
                         <Icon
@@ -497,11 +503,15 @@ export default class DropDownMenu extends React.Component {
                     <li
                         className={cnames(
                             {
-                                active: active.indexOf("/accounts") !== -1
+                                active:
+                                    active.indexOf("/accounts") !== -1
                             },
                             "divider"
                         )}
-                        onClick={this.props.onNavigate.bind(this, "/accounts")}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            "/accounts"
+                        )}
                     >
                         <div className="table-cell">
                             <Icon

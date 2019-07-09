@@ -1176,7 +1176,7 @@
         "payments": "Enviar",
         "payments_legacy": "O Enviar Legado ",
         "settings": "Configuraciónes",
-        "showcases": "Destacar",
+        "showcases": "Spotlight",
         "title": "BitShares - Interfaz de Usiario",
         "unlock": "Desbloquear",
         "unlock_password": "Inicio de sesión en el Cloud Wallet",
@@ -1878,15 +1878,15 @@
             "total_fees_tooltip": " La cuenta que se indica como Peer 1 tendrá que pagar la tarifa de transacción indicada en total para todo el trueque"
         },
         "borrow": {
-            "borrow_tooltip": " También puede encontrar esta función en su Tablero de mandos en la pestaña Posiciones de margen, o haciendo clic en Pedir prestado en el intercambio",
-            "choose": "Elija el SmartCoin para el que desea crear una posición",
+            "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
+            "choose": "Choose the SmartCoin you want to create a position for",
             "description": "Pedir prestado un BitAsset de la cadena de bloques de BitShares block por el bloqueo de la garantía (e.g. bitUSD, bitCNY, etc.)",
-            "do_it": "¡Vamos a hacerlo!",
-            "get_started": " ¡Empezar!",
-            "navigate_with_keys": "El mecanismo de la generación de SmartCoin se explicará en los siguientes pasos. También puede utilizar las teclas de flecha para navegar",
-            "next": "Siguiente",
-            "now_ready": " Finalice la creación de su propia posición de deuda garantizada",
-            "previous": " Anterior",
+            "do_it": "Let's do it",
+            "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
+            "next": "Next",
+            "now_ready": "Finalize the creation of your own Collateralized Debt Position",
+            "previous": "Previous",
             "steps_benefits": {
                 "text": " La creación de una posición de deuda garantizada le permite proporcionar liquidez para su SmartCoin (MPA) deseada, sin renunciar a la propiedad de su garantía, siempre y cuando se asegure la garantía suficiente para garantizar el valor de SmartCoin. Por un lado, vender el SmartCoin recién generado en el mercado abierto creará un apalancamiento en su posición (es decir, lo vende a corto, y tendrá que volver a comprarlo para cerrar la posición). Por otro lado, los titulares de SmartCoin se benefician de SmartCoin, que es significativamente menos volátil, y además pueden solicitar una liquidación de la fuerza para obtener el valor correspondiente en su garantía sin necesidad de mercados.",
                 "text_legend": "Liquidación forzosa: los titulares de un SmartCoin pueden solicitar una liquidación forzosa. El SmartCoin se utiliza para pagar enérgicamente la deuda de las posiciones con menos garantías, mientras que el anterior titular de SmartCoin recibe un aval como si lo hubiera vendido por el precio de liquidación forzada. Cualquier garantía sobrante se devuelve al titular de la posición. Este mecanismo impone un retraso obligatorio después de ser activado para evitar el abuso (24 horas). Precio de liquidación forzada: el precio al que se producirá un precio de liquidación forzada. Se calcula a partir del precio de la alimentación agregando una compensación de liquidación forzada para desincentivar las liquidaciones forzadas. Todas las liquidaciones se convierten en activos de respaldo subyacentes (por ejemplo, BTS en el caso de bitUSD).",
@@ -1894,10 +1894,10 @@
                 "title_within": " ¿Cuales son los beneficios?"
             },
             "steps_concept": {
-                "text": "Una posición de deuda garantizada le permite a cada usuario de la cadena de bloques de BitShares generar SmartCoins (MPA) al proporcionar garantía. La garantía se bloquea hasta que devuelva los SmartCoins que haya generado. De hecho, está tomando prestado el SmartCoin de la cadena de bloques de BitShares.",
-                "text_legend": "Ejemplo bitUSD: Proporcione BTS como garantía para tomar prestado bitUSD",
-                "title": "Concepto",
-                "title_within": " ¿Qué es una posición de deuda garantizada?"
+                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
+                "title": "Concept",
+                "title_within": "What is a Collateralized Debt Position?"
             },
             "steps_costs": {
                 "text": " Un texto más largo Un texto más largo Un texto más largo Un texto más largo Un texto más largo Un texto más largo Un texto más largo Un texto más largo Un texto más largo",
@@ -1905,8 +1905,8 @@
                 "title_within": ""
             },
             "steps_introduction": {
-                "text": "Use esta aplicación de usuario nativa de la cadena de bloques de BitShares para administrar el depósito de garantías y la generación de SmartCoins.",
-                "title_within": "Este es el lugar para generar SmartCoins (Market Pegged Assets, MPA's)"
+                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
             },
             "steps_risks": {
                 "text": "Mientras supervise su posición y se asegure de que la relación de garantía (CR) se mantenga por encima de la relación de garantía de mantenimiento (MCR), su posición no será liquidada. Si el valor de la garantía disminuye y su posición se acerca a MCR, puede cerrar más garantías o pagar parte de la deuda para aumentar el CR. Si no se mantiene por encima de MCR, se producirá una liquidación forzada de su posición (Margin Call). Esto significa que su garantía se vende automáticamente en el mercado respectivo para reducir su deuda, con una multa del 10% para garantizar que se llene el pedido (la multa viene dada por la Relación Máxima de Apretón Corto (MSSR)). Cualquier garantía sobrante le será devuelta una vez que se haya pagado la deuda completa. Puede optar por permitir solo la venta parcial de su posición configurando la Proporción de garantías objetivo (TCR). Si su posición no puede ser forzada a liquidarse debido a las condiciones extremas del mercado y el CR cae por debajo del MSSR, el SmartCoin (MPA) entra automáticamente en un estado de Liquidación Global (GS) y pierde su posición completa al instante.",
@@ -2044,8 +2044,8 @@
         "hide_asset": "Haga clic aquí para ocultar este activo de esta lista.",
         "lack_funds": "No hay fondos suficientes para realizar la operación.",
         "latest_price": "Este es el utlimo precio en el mercado.",
-        "legacy_explanation": "Oculta las propuestas que son duplicados, spam o que se han iniciado pero no están activas durante más de 2 meses.",
-        "login": "Esta %(wallet_name)s billetera de BitShares no ofrece un inicio de sesión tradicional sino que simplemente bloquea o desbloquea una billetera que es <b>solo</b> almacenada localmente en su navegador.<br/><br/> Cada vez que cierre la billetera, esta se bloqueará y se cerrerá efectivamente la sesión.",
+        "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
+        "login": "Esta billetera de BitShares no ofrece un inicio de sesión tradicional sino que simplemente bloquea o desbloquea una billetera que es <b>solo</b> almacenada localmente en su navegador.<br/><br/> Cada vez que cierre la billetera, esta se bloqueará y se cerrerá efectivamente la sesión.",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Ingrese otra contraseña o intente ",
@@ -2417,9 +2417,8 @@
         "back": "Atrás",
         "backup_brainkey": "Apoyo (Backup) Brainkey",
         "backup_explain": "Al hacer clic en el siguiente botón, se generará un archivo de respaldo con una estenciòn .bin . Este archivo está encriptado con su contraseña de billetera y contiene todas las claves privadas para sus cuentas. Se puede usar para restaurar tu billetera o moverla a una computadora / navegador diferente.",
-        "backup_login": "Apoyo (Backup) & iniciar sesion",
+        "backup_login": "Backup & iniciar sesion",
         "backup_new_account": "Felicidades, acaba de crear una nueva cuenta en los BitShares blockchain! Se recomienda encarecidamente que haga una copia de seguridad de su cartera ahora. Sin un respaldo que no hay manera de restaurar su cuenta si algo le sucede a su computadora.",
-        "backup_types": "backup types",
         "backup_warning": "Parece que sus archivos de clave privada no están respaldados. Por razones de seguridad, recomendamos a los usuarios que no inicien sesión sin hacer una copia de seguridad de sus claves privadas.",
         "balance_claim_lookup": "Búsquedas de saldos",
         "balance_claims": "Balances Solicitados",
@@ -2458,7 +2457,7 @@
         "create_importkeys_text": "Para importar claves, primero necesita crear una billetera local para contener las llaves. Complete el cuadro de diálogo siguiente para crear una nueva billetera local. ",
         "create_password": "Crea una nueva cuenta usando una contraseña",
         "create_success": "Su billetera local ha sido creada",
-        "create_text": "El %(wallet_name)s monedero local BitShares se almacena en su navegador, no se almacena en la nube. Una billetera puede contener varias cuentas y se puede transferir fácilmente entre navegadores y computadoras utilizando un archivo de copia de seguridad.",
+        "create_text": "El monedero local BitShares se almacena en su navegador, no se almacena en la nube. Una billetera puede contener varias cuentas y se puede transferir fácilmente entre navegadores y computadoras utilizando un archivo de copia de seguridad.",
         "create_w_a": "Crea una billetera local que contenga una cuenta",
         "create_wallet": "Crear Billetera",
         "create_wallet_backup": "Crear una nueva billetera desde la copia de seguridad",

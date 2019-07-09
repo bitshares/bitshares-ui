@@ -195,7 +195,8 @@ class LoginSelector extends React.Component {
                                     keys={[
                                         {
                                             type: "link",
-                                            value: "/wallet/backup/restore",
+                                            value:
+                                                "/wallet/backup/restore",
                                             translation:
                                                 "account.optional.restore_link",
                                             dataIntro: translator.translate(
@@ -205,7 +206,8 @@ class LoginSelector extends React.Component {
                                         },
                                         {
                                             type: "link",
-                                            value: "/create-account/wallet",
+                                            value:
+                                                "/create-account/wallet",
                                             translation:
                                                 "account.optional.restore_form",
                                             dataIntro: translator.translate(

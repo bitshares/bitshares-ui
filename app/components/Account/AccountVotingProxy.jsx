@@ -209,9 +209,8 @@ class AccountVotingProxy extends React.Component {
                     <div>
                         <p>
                             <Translate content="account.votes.proxy_current" />:
-                            &nbsp;<Link
-                                to={`account/${existingProxy.get("name")}`}
-                            >
+                            &nbsp;
+                            <Link to={`account/${existingProxy.get("name")}`}>
                                 {existingProxy.get("name")}
                             </Link>
                         </p>

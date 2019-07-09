@@ -48,7 +48,9 @@ export default class TranslateWithLinks extends React.Component {
         ) : noLink ? (
             <span>{name_or_id}</span>
         ) : (
-            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>
+            <Link to={`/account/${name_or_id}/overview`}>
+                {name_or_id}
+            </Link>
         );
     }
 

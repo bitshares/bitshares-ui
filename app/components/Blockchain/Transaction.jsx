@@ -128,7 +128,9 @@ class Transaction extends React.Component {
         return utils.is_object_id(name_or_id) ? (
             <LinkToAccountById account={name_or_id} />
         ) : (
-            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>
+            <Link to={`/account/${name_or_id}/overview`}>
+                {name_or_id}
+            </Link>
         );
     }
 

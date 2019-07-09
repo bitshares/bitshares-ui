@@ -80,7 +80,10 @@ class ExistingAccount extends Component {
         );
     }
 }
-ExistingAccount = connect(ExistingAccount, connectObject);
+ExistingAccount = connect(
+    ExistingAccount,
+    connectObject
+);
 
 class ExistingAccountOptions extends Component {
     render() {
@@ -89,7 +92,7 @@ class ExistingAccountOptions extends Component {
             <span>
                 {!has_wallet ? (
                     <div>
-                        <Link to="existing-account/import-backup">
+                        <Link to="/existing-account/import-backup">
                             <Translate
                                 content="wallet.import_backup"
                                 wallet_name={getWalletName()}
@@ -97,12 +100,12 @@ class ExistingAccountOptions extends Component {
                         </Link>
                         <br />
                         <br />
-                        <Link to="existing-account/import-keys">
+                        <Link to="/existing-account/import-keys">
                             <Translate content="wallet.import_bts1" />
                         </Link>
                         <br />
                         <br />
-                        <Link to="existing-account/import-keys">
+                        <Link to="/existing-account/import-keys">
                             <Translate content="wallet.create_wallet" />
                         </Link>
                         <br />
@@ -114,7 +117,7 @@ class ExistingAccountOptions extends Component {
 
                 {has_wallet ? (
                     <span>
-                        <Link to="dashboard">
+                        <Link to="/dashboard">
                             <div className="button outline">
                                 <Translate
                                     component="span"
@@ -122,7 +125,7 @@ class ExistingAccountOptions extends Component {
                                 />
                             </div>
                         </Link>
-                        <Link to="wallet">
+                        <Link to="/wallet">
                             <div className="button outline">
                                 <Translate content="settings.wallets" />
                             </div>
@@ -133,7 +136,10 @@ class ExistingAccountOptions extends Component {
         );
     }
 }
-ExistingAccountOptions = connect(ExistingAccountOptions, connectObject);
+ExistingAccountOptions = connect(
+    ExistingAccountOptions,
+    connectObject
+);
 
 export default ExistingAccount;
 export {ExistingAccountOptions};

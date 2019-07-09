@@ -1,13 +1,13 @@
 module.exports = {
     midnightTheme: {
-        bidColor: "#50D2C2",
+        bidColor: "rgb(112, 168, 0)",
         bidFillColor: "rgba(80, 210, 194, 0.5)",
-        askColor: "#E3745B",
+        askColor: "#e6416e",
         askFillColor: "rgba(227, 116, 91, 0.5)",
         callColor: "#BBBF2B",
         settleColor: "rgba(125, 134, 214, 1)",
         settleFillColor: "rgba(125, 134, 214, 0.5)",
-        positiveColor: "#6BA583",
+        positiveColor: "rgb(112, 168, 0)",
         negativeColor: "#DB0000",
         strokeColor: "#FFFF00",
         primaryText: "#e0e0e0",
@@ -25,14 +25,14 @@ module.exports = {
         textColor: "#e0e0e0"
     },
     darkTheme: {
-        bidColor: "#6BA583",
+        bidColor: "rgb(112, 168, 0)",
         bidFillColor: "rgba(80, 210, 194, 0.5)",
-        askColor: "#E3745B",
+        askColor: "#e6416e",
         askFillColor: "rgba(227, 116, 91, 0.5)",
         callColor: "#BBBF2B",
         settleColor: "rgba(125, 134, 214, 1)",
         settleFillColor: "rgba(125, 134, 214, 0.5)",
-        positiveColor: "#258A14",
+        positiveColor: "rgb(112, 168, 0)",
         negativeColor: "#DB0000",
         strokeColor: "#FFFF00",
         primaryText: "#e0e0e0",
@@ -50,7 +50,7 @@ module.exports = {
         textColor: "#ffffff"
     },
     lightTheme: {
-        bidColor: "#258A14",
+        bidColor: "rgb(112, 168, 0)",
         bidFillColor: "rgba(80, 210, 194, 0.5)",
         askColor: "#EA340B",
         askFillColor: "rgba(227, 116, 91, 0.5)",

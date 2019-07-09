@@ -803,7 +803,11 @@ class AccountPortfolioList extends React.Component {
 
             /* Table content */
             directMarketLink = notCore ? (
-                <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}>
+                <Link
+                    to={`/market/${asset.get(
+                        "symbol"
+                    )}_${preferredMarket}`}
+                >
                     <Icon
                         name="trade"
                         title="icons.trade.trade"
@@ -811,7 +815,11 @@ class AccountPortfolioList extends React.Component {
                     />
                 </Link>
             ) : notCorePrefUnit ? (
-                <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}>
+                <Link
+                    to={`/market/${asset.get(
+                        "symbol"
+                    )}_${preferredUnit}`}
+                >
                     <Icon
                         name="trade"
                         title="icons.trade.trade"

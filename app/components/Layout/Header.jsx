@@ -390,7 +390,7 @@ class Header extends React.Component {
                 })}
                 onClick={this._onNavigate.bind(this, "/")}
             >
-                <img style={{margin: 0, height: 40}} src={logo} />
+                <img style={{marginTop: -11, height: 35}} src={logo} />
             </a>
         );
 
@@ -655,7 +655,8 @@ class Header extends React.Component {
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/signedmessages") !== -1
+                        active:
+                            active.indexOf("/signedmessages") !== -1
                     })}
                 >
                     <Icon
@@ -984,7 +985,10 @@ class Header extends React.Component {
                         />
                     </li>
                     <li
-                        onClick={this._onNavigate.bind(this, "/settings/reset")}
+                        onClick={this._onNavigate.bind(
+                            this,
+                            "/settings/reset"
+                        )}
                     >
                         <Translate
                             content="settings.reset"
@@ -997,7 +1001,7 @@ class Header extends React.Component {
         };
 
         return (
-            <div className="header-container" style={{minHeight: "64px"}}>
+            <div className="header-container" style={{minHeight: "38px"}}>
                 <div>
                     <div
                         className="header menu-group primary"
@@ -1056,39 +1060,35 @@ class Header extends React.Component {
                                         to={`/account/${currentAccount}`}
                                         className={cnames({
                                             active:
-                                                active.indexOf("account/") !==
-                                                    -1 &&
-                                                active.indexOf("/account/") !==
-                                                    -1 &&
-                                                active.indexOf("/assets") ===
-                                                    -1 &&
-                                                active.indexOf("/voting") ===
-                                                    -1 &&
+                                                active.indexOf(
+                                                    "/account/"
+                                                ) !== -1 &&
+                                                active.indexOf(
+                                                    "/account/"
+                                                ) !== -1 &&
+                                                active.indexOf(
+                                                    "/assets"
+                                                ) === -1 &&
+                                                active.indexOf(
+                                                    "/voting"
+                                                ) === -1 &&
                                                 active.indexOf(
                                                     "/signedmessages"
                                                 ) === -1 &&
                                                 active.indexOf(
                                                     "/member-stats"
                                                 ) === -1 &&
-                                                active.indexOf("/vesting") ===
-                                                    -1 &&
-                                                active.indexOf("/whitelist") ===
-                                                    -1 &&
+                                                active.indexOf(
+                                                    "/vesting"
+                                                ) === -1 &&
+                                                active.indexOf(
+                                                    "/whitelist"
+                                                ) === -1 &&
                                                 active.indexOf(
                                                     "/permissions"
                                                 ) === -1
                                         })}
                                     >
-                                        <Icon
-                                            size="1_5x"
-                                            style={{
-                                                position: "relative",
-                                                top: -2,
-                                                left: -8
-                                            }}
-                                            name="dashboard"
-                                            title="icons.dashboard"
-                                        />
                                         <Translate
                                             className="column-hide-small"
                                             content="header.dashboard"
@@ -1113,16 +1113,6 @@ class Header extends React.Component {
                                         tradeUrl
                                     )}
                                 >
-                                    <Icon
-                                        size="1_5x"
-                                        style={{
-                                            position: "relative",
-                                            top: -2,
-                                            left: -8
-                                        }}
-                                        name="trade"
-                                        title="icons.trade.exchange"
-                                    />
                                     <Translate
                                         className="column-hide-small"
                                         component="span"
@@ -1148,16 +1138,6 @@ class Header extends React.Component {
                                         "/explorer/blocks"
                                     )}
                                 >
-                                    <Icon
-                                        size="2x"
-                                        style={{
-                                            position: "relative",
-                                            top: 0,
-                                            left: -8
-                                        }}
-                                        name="server"
-                                        title="icons.server"
-                                    />
                                     <Translate
                                         className="column-hide-small"
                                         component="span"
@@ -1242,7 +1222,9 @@ class Header extends React.Component {
                                 className={cnames(
                                     {
                                         active:
-                                            active.indexOf("/accounts") !== -1
+                                            active.indexOf(
+                                                "/accounts"
+                                            ) !== -1
                                     },
                                     "divider"
                                 )}

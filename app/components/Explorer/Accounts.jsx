@@ -156,7 +156,9 @@ class Accounts extends React.Component {
                 render: name => {
                     return (
                         <div>
-                            <Link to={`/account/${name}/overview`}>{name}</Link>
+                            <Link to={`/account/${name}/overview`}>
+                                {name}
+                            </Link>
                         </div>
                     );
                 }

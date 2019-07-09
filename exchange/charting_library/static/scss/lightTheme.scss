@@ -1,0 +1,30 @@
+// main colors
+
+$primary-background: #eee;
+$primary-border-color: #e0e0e0;
+$primary-background-active: #eee;
+
+$primary-text-color: #656565;
+$primary-text-color-active: #059cce;
+
+$button-success-color: #fff;
+$button-success-border: $primary-text-color-active;
+$button-success-background: $primary-text-color-active;
+
+$button-default-color: $primary-text-color;
+$button-default-border: $primary-background-active;
+$button-default-background: $primary-background-active;
+
+$button-cancel-color: $primary-text-color;
+$button-cancel-border: $primary-background-active;
+$button-cancel-background: $primary-background-active;
+
+$primary-btn-color: $primary-text-color;
+$primary-btn-background: $primary-background;
+$primary-btn-background-active: #edeeec;
+$primary-btn-border-active: $primary-background-active;
+
+$icon-light-color: $primary-text-color;
+$icon-light-color-active: $primary-text-color-active;
+
+@import "../base";

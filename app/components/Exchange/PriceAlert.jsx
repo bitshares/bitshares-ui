@@ -209,7 +209,7 @@ class PriceAlert extends React.Component {
         const baseAssetSymbol = this.props.baseAsset.get("symbol");
         const quoteAssetSymbol = this.props.quoteAsset.get("symbol");
 
-        const linkToExchange = `${quoteAssetSymbol}_${baseAssetSymbol}`;
+        const linkToExchange = `/${quoteAssetSymbol}_${baseAssetSymbol}`;
 
         return (
             <Modal

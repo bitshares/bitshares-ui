@@ -144,7 +144,9 @@ class AccountAssets extends React.Component {
     }
 
     _createButtonClick(account_name) {
-        this.props.history.push(`/account/${account_name}/create-asset`);
+        this.props.history.push(
+            `/account/${account_name}/create-asset`
+        );
     }
 
     render() {

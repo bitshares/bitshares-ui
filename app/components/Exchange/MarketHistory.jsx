@@ -222,15 +222,18 @@ class MarketHistory extends React.Component {
                                         className="tooltip"
                                         style={{whiteSpace: "nowrap"}}
                                     >
-                                        {counterpart.localize(fill.time, {
-                                            type: "date",
-                                            format:
+                                        {counterpart
+                                            .localize(fill.time, {
+                                                type: "time",
+                                                format:
+                                                    "long" /*
                                                 getLocale()
                                                     .toLowerCase()
                                                     .indexOf("en-us") !== -1
                                                     ? "market_history_us"
-                                                    : "market_history"
-                                        })}
+                                                    : "market_history"*/
+                                            })
+                                            .slice(0, 8)}
                                     </div>
                                 </Tooltip>
                             </td>
@@ -319,9 +322,9 @@ class MarketHistory extends React.Component {
                         ref="history"
                         style={{
                             minHeight: !this.props.tinyScreen ? 260 : 0,
-                            maxHeight: 260,
-                            overflow: "hidden",
-                            lineHeight: "13px"
+                            maxHeight: 425,
+                            overflow: "auto",
+                            lineHeight: "10px"
                         }}
                     >
                         <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
@@ -337,20 +340,6 @@ class MarketHistory extends React.Component {
                             </TransitionWrapper>
                         </table>
                     </div>
-                    {historyRows && historyRows.length > 11 ? (
-                        <div className="orderbook-showall">
-                            <a onClick={this._onSetShowAll.bind(this)}>
-                                <Translate
-                                    content={
-                                        showAll
-                                            ? "exchange.hide"
-                                            : "exchange.show_all_trades"
-                                    }
-                                    rowcount={historyRows.length}
-                                />
-                            </a>
-                        </div>
-                    ) : null}
                 </div>
             </div>
         );
