@@ -40,7 +40,6 @@ class BitsharesBeos extends React.Component {
             method: "get",
             headers: new Headers({Accept: "application/json"})
         }).then(response => response.json());
-        console.log(tradingPairsPromisecheck);
         Promise.all([coinTypesPromisecheck, tradingPairsPromisecheck]).then(
             json_responses => {
                 let [coinTypes, tradingPairs] = json_responses;
@@ -60,12 +59,11 @@ class BitsharesBeos extends React.Component {
 
                         assetMemoCoinTypes[element.walletSymbol] = memoCoinType;
                         beosAssets.push(element.walletSymbol);
-
-                        this.setState({
-                            assetMemoCoinTypes,
-                            beosAssets
-                        });
                     }
+                });
+                this.setState({
+                    assetMemoCoinTypes,
+                    beosAssets
                 });
             }
         );
@@ -113,7 +111,9 @@ class BitsharesBeos extends React.Component {
     };
 
     render() {
-        console.log("fffff", this.state.beosAssets);
+        let beosAssets = this.state.beosAssets;
+        let assetMemoCoinTypes = this.state.assetMemoCoinTypes;
+        console.log("check", beosAssets, assetMemoCoinTypes);
         let transferBtsId = this.getTransferBtsId();
         const {beosFee, beosIssuer, beosApiUrl} = this.getParams();
 
