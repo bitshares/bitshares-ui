@@ -1,70 +1,28 @@
 import React from "react";
 import BitsharesBeosModal from "./BitsharesBeosModal";
 import counterpart from "counterpart";
+import ChainTypes from "components/Utility/ChainTypes";
 import Translate from "react-translate-component";
 import BindToChainState from "components/Utility/BindToChainState";
 import QueryString from "query-string";
 import {Modal} from "bitshares-ui-style-guide";
 import {beosAPIs} from "api/apiConfig";
-import {ChainStore} from "bitsharesjs";
 
-class BitsharesBeos extends React.Component {
+class BitsharesBeosModalContainer extends React.Component {
+    static propTypes = {
+        asset: ChainTypes.ChainAsset.isRequired,
+        assets: ChainTypes.ChainAssetsList
+    };
+
     constructor(props) {
         super(props);
 
         this.state = {
-            asset: ChainStore.getAsset("BTS"), // default asset
-            assets: [],
-            coinsList: [],
             isModalVisible: false
         };
 
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
-    }
-
-    async getAvailableCoins() {
-        try {
-            const coinsResponse = await fetch(
-                beosAPIs.BASE + beosAPIs.COINS_LIST
-            );
-            const tradingPairsResponse = await fetch(
-                beosAPIs.BASE + beosAPIs.TRADING_PAIRS
-            );
-
-            const coins = await coinsResponse.json();
-            const tradingPairs = await tradingPairsResponse.json();
-
-            const mappedCoins = coins
-                .filter(({walletType}) => walletType === "bitshares2")
-                .map(({coinType, symbol}) => {
-                    return tradingPairs.filter(({inputCoinType}) => {
-                        return inputCoinType === coinType;
-                    })[0];
-                });
-
-            return mappedCoins;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    getAssets(coinsList) {
-        return coinsList
-            .map(({inputCoinType}) =>
-                ChainStore.getAsset(inputCoinType.toUpperCase())
-            )
-            .filter(a => !!a);
-    }
-
-    componentDidMount() {
-        this.getAvailableCoins()
-            .then(coinsList => {
-                this.setState({assets: this.getAssets(coinsList), coinsList});
-            })
-            .catch(err => {
-                throw err;
-            });
     }
 
     showModal() {
@@ -91,15 +49,14 @@ class BitsharesBeos extends React.Component {
         const {params} = this.props;
         return {
             beosFee: "500",
-            beosApiUrl: beosAPIs.BASE,
+            beosApiUrl: "https://gateway.beos.world/api/v2",
             beosIssuer: "beos.gateway",
             ...QueryString.parse(params.search)
         };
     }
 
     getBalances = () => {
-        const {account} = this.props;
-        const {assets} = this.state;
+        const {assets, account} = this.props;
         return assets.filter(a => !!a).map(a => {
             return account.get("balances").toJS()[a.get("id")];
         });
@@ -112,7 +69,6 @@ class BitsharesBeos extends React.Component {
     render() {
         let transferBtsId = this.getTransferBtsId();
         const {beosFee, beosIssuer, beosApiUrl} = this.getParams();
-        const {asset, assets, coinsList} = this.state;
 
         return (
             <div>
@@ -238,9 +194,14 @@ class BitsharesBeos extends React.Component {
                         hideModal={this.hideModal}
                         showModal={this.showModal}
                         account={this.props.account.get("name")}
-                        asset={asset.get("symbol")}
-                        assets={assets.map(a => a.get("symbol"))}
-                        balance={this.getBalanceById(asset.get("id"))}
+                        asset={this.props.asset.get("symbol")}
+                        assets={this.props.assets
+                            .filter(a => !!a)
+                            .map(a => a.get("symbol"))}
+                        assetMemoCoinTypes={this.props.assetMemoCoinTypes}
+                        balance={this.getBalanceById(
+                            this.props.asset.get("id")
+                        )}
                         balances={this.getBalances()}
                         creator={"eosio"}
                         issuer={beosIssuer}
@@ -253,9 +214,88 @@ class BitsharesBeos extends React.Component {
                         account_contract={"beos.token"}
                         action={"lock"}
                         from={"beos.token"}
-                        coinsList={coinsList}
                     />
                 </Modal>
+            </div>
+        );
+    }
+}
+
+BitsharesBeosModalContainer = BindToChainState(BitsharesBeosModalContainer);
+
+class BitsharesBeos extends React.Component {
+    static propTypes = {
+        asset: ChainTypes.ChainAsset.isRequired,
+        assets: ChainTypes.ChainAssetsList
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            assetMemoCoinTypes: {},
+            beosAssets: []
+        };
+    }
+
+    componentWillMount() {
+        let assetMemoCoinTypes = {};
+        let beosAssets = [];
+
+        let coinTypesPromisecheck = fetch(beosAPIs.BASE + beosAPIs.COINS_LIST, {
+            method: "get",
+            headers: new Headers({Accept: "application/json"})
+        }).then(response => response.json());
+        let tradingPairsPromisecheck = fetch(
+            beosAPIs.BASE + beosAPIs.TRADING_PAIRS,
+            {
+                method: "get",
+                headers: new Headers({Accept: "application/json"})
+            }
+        ).then(response => response.json());
+        Promise.all([coinTypesPromisecheck, tradingPairsPromisecheck]).then(
+            json_responses => {
+                let [coinTypes, tradingPairs] = json_responses;
+
+                coinTypes.forEach(element => {
+                    if (element.walletType === "bitshares2") {
+                        let coinType = null;
+                        let memoCoinType = null;
+
+                        coinType = element.coinType;
+
+                        tradingPairs.find(element => {
+                            if (element.inputCoinType === coinType) {
+                                memoCoinType = element.outputCoinType;
+                            }
+                        });
+
+                        assetMemoCoinTypes[element.walletSymbol] = memoCoinType;
+                        beosAssets.push(element.walletSymbol);
+                    }
+                });
+                this.setState({
+                    assetMemoCoinTypes,
+                    beosAssets
+                });
+            }
+        );
+    }
+
+    render() {
+        let beosAssets = this.state.beosAssets;
+        let assetMemoCoinTypes = this.state.assetMemoCoinTypes;
+
+        return (
+            <div>
+                <BitsharesBeosModalContainer
+                    key={"transfer_bts"}
+                    account={this.props.account}
+                    asset={"BTS"}
+                    assetMemoCoinTypes={assetMemoCoinTypes}
+                    assets={beosAssets}
+                    params={this.props.params}
+                />
             </div>
         );
     }

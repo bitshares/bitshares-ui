@@ -504,7 +504,11 @@ class AccountDepositWithdraw extends React.Component {
         serList.push({
             name: "BitShares EOS",
             template: (
-                <BitsharesBeos account={account} params={this.props.location} />
+                <BitsharesBeos
+                    account={account}
+                    asset={"BTS"}
+                    params={this.props.location}
+                />
             )
         });
 

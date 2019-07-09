@@ -34,8 +34,7 @@ class BitsharesBeosModal extends React.Component {
         balance: ChainTypes.ChainObject,
         balances: ChainTypes.ChainObjectsList,
         beosApiUrl: PropTypes.string.isRequired,
-        beosFee: PropTypes.string.isRequired,
-        coinsList: PropTypes.array.isRequired
+        beosFee: PropTypes.string.isRequired
     };
 
     constructor(props) {
@@ -74,6 +73,8 @@ class BitsharesBeosModal extends React.Component {
     }
 
     componentWillMount() {
+        console.log("props", this.props.assetMemoCoinTypes);
+        console.log("props", this.props.assets);
         this._updateFee();
         this._updateMultiSigError();
     }
@@ -459,7 +460,6 @@ class BitsharesBeosModal extends React.Component {
     onAccountBalance() {
         const {selectedAssetId, fee_amount, fee_amount_creation} = this.state;
         const asset = this.getAssetById(selectedAssetId);
-        console.log(this.getProxyAsset(asset.get("symbol")));
         const balance = this.getBalanceForAsset(selectedAssetId);
         if (balance) {
             let total = new Asset({
@@ -716,18 +716,7 @@ class BitsharesBeosModal extends React.Component {
     }
 
     getProxyAsset(assetSymbol) {
-        const {coinsList} = this.props;
-        let pxasset = "";
-
-        for (let i = 0; i < coinsList.length; i++) {
-            const {inputCoinType, outputCoinType} = coinsList[i];
-            if (inputCoinType === assetSymbol.toLowerCase()) {
-                pxasset = outputCoinType;
-                break;
-            }
-        }
-
-        return pxasset;
+        return this.props.assetMemoCoinTypes[assetSymbol];
     }
 
     getAvailableAssets = () => {
