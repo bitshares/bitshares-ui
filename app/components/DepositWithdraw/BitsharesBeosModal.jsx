@@ -459,6 +459,7 @@ class BitsharesBeosModal extends React.Component {
     onAccountBalance() {
         const {selectedAssetId, fee_amount, fee_amount_creation} = this.state;
         const asset = this.getAssetById(selectedAssetId);
+        console.log(this.getProxyAsset(asset.get("symbol")));
         const balance = this.getBalanceForAsset(selectedAssetId);
         if (balance) {
             let total = new Asset({
@@ -697,19 +698,15 @@ class BitsharesBeosModal extends React.Component {
     };
 
     createMemoForAsset(pxasset, isAccountCreation = false) {
-        const memo = [];
-        switch (pxasset) {
-            case "pxbts":
-                memo.push("pxbts");
-                break;
-            case "pxbrnp":
-                memo.push("pxbrnp");
-                break;
-            default:
-                break;
+        if (!pxasset) {
+            throw new Error("No asset found for memo");
         }
+
+        const memo = [];
         const {memo: userMemo} = this.state;
+
         memo.push(
+            pxasset,
             this.state.account,
             userMemo.trim() ? userMemo : "",
             isAccountCreation ? "create" : ""
@@ -719,17 +716,15 @@ class BitsharesBeosModal extends React.Component {
     }
 
     getProxyAsset(assetSymbol) {
+        const {coinsList} = this.props;
         let pxasset = "";
 
-        switch (assetSymbol) {
-            case "BTS":
-                pxasset = "pxbts";
+        for (let i = 0; i < coinsList.length; i++) {
+            const {inputCoinType, outputCoinType} = coinsList[i];
+            if (inputCoinType === assetSymbol.toLowerCase()) {
+                pxasset = outputCoinType;
                 break;
-            case "BROWNIE.PTS":
-                pxasset = "pxbrnp";
-                break;
-            default:
-                break;
+            }
         }
 
         return pxasset;
