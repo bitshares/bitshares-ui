@@ -3407,7 +3407,7 @@ class Exchange extends React.Component {
                             }
                         >
                             {!tinyScreen ? (
-                                <div>
+                                <div style={{display: "flex"}}>
                                     {/* {tradingChartHeader} */}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
@@ -3415,7 +3415,7 @@ class Exchange extends React.Component {
                                             className="grid-block shrink no-overflow"
                                             id="market-charts"
                                             style={{
-                                                width: "70%",
+                                                width: "65%",
                                                 display: "inline-block"
                                             }}
                                         >
@@ -3429,16 +3429,18 @@ class Exchange extends React.Component {
                                         <div
                                             className="grid-block vertical no-padding shrink"
                                             style={{
-                                                width: "55%",
+                                                width: "65%",
                                                 display: "inline-block"
                                             }}
                                         >
                                             {deptHighChart}
                                         </div>
                                     ) : null}
+
                                     {/* Trade history */}
                                     <div
-                                        className={cnames(
+                                        className="small-2"
+                                        /*{cnames(
                                             centerContainerWidth > 1200
                                                 ? groupTabsCount == 1
                                                     ? "medium-12 xlarge-4"
@@ -3456,11 +3458,11 @@ class Exchange extends React.Component {
                                             !verticalOrderForm
                                                 ? "xlarge-order-2"
                                                 : ""
-                                        )}
+                                        )}*/
                                         style={{
-                                            width: "18%",
+                                            width: "20%",
                                             display: "inline-block",
-                                            position: "absolute"
+                                            position: "relative"
                                         }}
                                     >
                                         <Tabs
@@ -3474,16 +3476,16 @@ class Exchange extends React.Component {
                                         </Tabs>
                                     </div>
                                     {/* Order book */}
-                                    {/*<div
+                                    <div
                                         className="grid-block shrink no-overflow"
                                         style={{
-                                            width: "30%",
-                                            display: "inline-block",
-                                            position: "absolute"
+                                            width: "35%",
+                                            display: "inline-block"
+                                            //position: "absolute"
                                         }}
                                     >
                                         {orderBook}
-                                    </div>*/}
+                                    </div>
                                 </div>
                             ) : null}
 
