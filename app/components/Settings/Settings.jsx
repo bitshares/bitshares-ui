@@ -14,6 +14,7 @@ import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
 import {set} from "lodash-es";
 import {getAllowedLogins, getFaucet} from "../../branding";
+import {Input, Form} from "bitshares-ui-style-guide";
 
 class Settings extends React.Component {
     constructor(props) {
@@ -33,7 +34,8 @@ class Settings extends React.Component {
             "showSettles",
             "walletLockTimeout",
             "themes",
-            "showAssetPercent"
+            "showAssetPercent",
+            "viewOnlyMode"
         ];
         // disable that the user can change login method if only one is allowed
         if (getAllowedLogins().length > 1) general.push("passwordLogin");
@@ -175,8 +177,16 @@ class Settings extends React.Component {
         });
     }
 
+    _handleSettingsEntryChange(setting, input) {
+        if (!input.target) {
+            this._onChangeSetting(setting, {target: {value: input}});
+        } else {
+            this._onChangeSetting(setting, input);
+        }
+    }
+
     _onChangeSetting(setting, e) {
-        e.preventDefault();
+        if (e.preventDefault) e.preventDefault();
 
         let {defaults} = this.props;
         let value = null;
@@ -249,6 +259,7 @@ class Settings extends React.Component {
             case "showSettles":
             case "showAssetPercent":
             case "passwordLogin":
+            case "viewOnlyMode":
                 let reference = defaults[setting][0];
                 if (reference.translate) reference = reference.translate;
                 SettingsActions.changeSetting({
@@ -336,10 +347,9 @@ class Settings extends React.Component {
                 break;
             case "faucet_address":
                 entries = (
-                    <input
+                    <Input
                         disabled={!getFaucet().editable}
                         type="text"
-                        className="settings-input"
                         defaultValue={settings.get("faucet_address")}
                         onChange={
                             getFaucet().editable
@@ -365,7 +375,9 @@ class Settings extends React.Component {
                             setting={setting}
                             settings={settings}
                             defaults={defaults[setting]}
-                            onChange={this._onChangeSetting.bind(this)}
+                            onChange={this._handleSettingsEntryChange.bind(
+                                this
+                            )}
                             onNotificationChange={
                                 this._handleNotificationChange
                             }
@@ -378,96 +390,107 @@ class Settings extends React.Component {
         }
 
         return (
-            <div className={this.props.deprecated ? "" : "grid-block"}>
-                <div className="grid-block main-content margin-block wrap">
-                    <div
-                        className="grid-content shrink settings-menu"
-                        style={{paddingRight: "2rem"}}
-                    >
-                        <Translate
-                            style={{paddingBottom: 10, paddingLeft: 10}}
-                            component="h3"
-                            content="header.settings"
-                            className={"panel-bg-color"}
-                        />
-
-                        <ul>
-                            {menuEntries.map((entry, index) => {
-                                return (
-                                    <li
-                                        className={
-                                            index === activeSetting
-                                                ? "active"
-                                                : ""
-                                        }
-                                        onClick={this._redirectToEntry.bind(
-                                            this,
-                                            entry
-                                        )}
-                                        key={entry}
-                                    >
-                                        <Translate
-                                            content={"settings." + entry}
-                                        />
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-
-                    <div
-                        className="grid-content"
-                        style={{
-                            height: "100%"
-                        }}
-                    >
+            <Form layout={"vertical"}>
+                <div
+                    className={
+                        this.props.deprecated
+                            ? ""
+                            : "grid-block settings-container"
+                    }
+                >
+                    <div className="grid-block main-content margin-block wrap">
                         <div
-                            className="grid-block small-12 no-margin vertical"
-                            style={{
-                                maxWidth: 1000
-                            }}
+                            className="grid-content shrink settings-menu"
+                            style={{paddingRight: "2rem"}}
                         >
                             <Translate
+                                style={{paddingBottom: 10, paddingLeft: 10}}
                                 component="h3"
-                                content={
-                                    "settings." + menuEntries[activeSetting]
-                                }
+                                content="header.settings"
+                                className={"panel-bg-color"}
                             />
-                            {activeEntry != "access" && (
+
+                            <ul>
+                                {menuEntries.map((entry, index) => {
+                                    return (
+                                        <li
+                                            className={
+                                                index === activeSetting
+                                                    ? "active"
+                                                    : ""
+                                            }
+                                            onClick={this._redirectToEntry.bind(
+                                                this,
+                                                entry
+                                            )}
+                                            key={entry}
+                                        >
+                                            <Translate
+                                                content={"settings." + entry}
+                                            />
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+
+                        <div
+                            className="grid-content"
+                            style={{
+                                height: "100%"
+                            }}
+                        >
+                            <div
+                                className="grid-block small-12 no-margin vertical"
+                                style={{
+                                    maxWidth: 1000
+                                }}
+                            >
                                 <Translate
-                                    unsafe
-                                    style={{paddingTop: 5, marginBottom: 30}}
-                                    content={`settings.${
-                                        menuEntries[activeSetting]
-                                    }_text`}
-                                    className="panel-bg-color"
+                                    component="h3"
+                                    content={
+                                        "settings." + menuEntries[activeSetting]
+                                    }
                                 />
-                            )}
-                            {entries}
+                                {activeEntry != "access" && (
+                                    <Translate
+                                        unsafe
+                                        style={{
+                                            paddingTop: 5,
+                                            marginBottom: 30
+                                        }}
+                                        content={`settings.${
+                                            menuEntries[activeSetting]
+                                        }_text`}
+                                        className="panel-bg-color"
+                                    />
+                                )}
+                                {entries}
+                            </div>
                         </div>
                     </div>
+                    <WebsocketAddModal
+                        removeNode={this.state.removeNode}
+                        isAddNodeModalVisible={this.state.isAddNodeModalVisible}
+                        isRemoveNodeModalVisible={
+                            this.state.isRemoveNodeModalVisible
+                        }
+                        onAddNodeClose={this.hideAddNodeModal}
+                        onRemoveNodeClose={this.hideRemoveNodeModal}
+                        apis={defaults["apiServer"]}
+                        api={defaults["apiServer"]
+                            .filter(a => {
+                                return a.url === this.state.apiServer;
+                            })
+                            .reduce((a, b) => {
+                                return b && b.url;
+                            }, null)}
+                        changeConnection={apiServer => {
+                            this.setState({apiServer});
+                        }}
+                    />
                 </div>
-                <WebsocketAddModal
-                    removeNode={this.state.removeNode}
-                    isAddNodeModalVisible={this.state.isAddNodeModalVisible}
-                    isRemoveNodeModalVisible={
-                        this.state.isRemoveNodeModalVisible
-                    }
-                    onAddNodeClose={this.hideAddNodeModal}
-                    onRemoveNodeClose={this.hideRemoveNodeModal}
-                    apis={defaults["apiServer"]}
-                    api={defaults["apiServer"]
-                        .filter(a => {
-                            return a.url === this.state.apiServer;
-                        })
-                        .reduce((a, b) => {
-                            return b && b.url;
-                        }, null)}
-                    changeConnection={apiServer => {
-                        this.setState({apiServer});
-                    }}
-                />
-            </div>
+            </Form>
         );
     }
 }

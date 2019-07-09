@@ -164,11 +164,11 @@ function checkFeeStatusAsync({
                         }
                     }
 
-                    console.log(
-                        "fee.getAmount",
-                        fee.getAmount(),
-                        operationsCount
-                    );
+                    // console.log(
+                    //     "fee.getAmount",
+                    //     fee.getAmount(),
+                    //     operationsCount
+                    // );
 
                     if (
                         feeBalance &&

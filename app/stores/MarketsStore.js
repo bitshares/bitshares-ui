@@ -16,6 +16,7 @@ import {
     GroupedOrder,
     FillOrder
 } from "common/MarketClasses";
+import asset_utils from "../lib/common/asset_utils";
 
 // import {
 //     SettleOrder
@@ -293,10 +294,10 @@ class MarketsStore {
             this.activeMarket = result.market;
             newMarket = true;
             /*
-            * To prevent the callback from DataFeed to be called with new data
-            * before subscribeBars in DataFeed has been updated, we clear the
-            * callback subscription here
-            */
+             * To prevent the callback from DataFeed to be called with new data
+             * before subscribeBars in DataFeed has been updated, we clear the
+             * callback subscription here
+             */
             this.unsubscribe("subscribeBars");
         }
 
@@ -373,17 +374,27 @@ class MarketsStore {
             result.calls.forEach(call => {
                 // ChainStore._updateObject(call, false, false);
                 try {
+                    let mcr = this[
+                        this.invertedCalls ? "baseAsset" : "quoteAsset"
+                    ].getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     let callOrder = new CallOrder(
                         call,
                         assets,
                         this.quoteAsset.get("id"),
                         this.feedPrice,
+                        mcr,
                         this.is_prediction_market
                     );
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call.id,
-                            callOrder
+                            callOrder,
+                            mcr
                         );
                     }
                 } catch (err) {
@@ -573,18 +584,28 @@ class MarketsStore {
                     }
                 };
                 try {
+                    let mcr = this[
+                        this.invertedCalls ? "baseAsset" : "quoteAsset"
+                    ].getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     let callOrder = new CallOrder(
                         call_order,
                         assets,
                         this.quoteAsset.get("id"),
-                        this.feedPrice
+                        this.feedPrice,
+                        mcr
                     );
                     // console.log("**** onCallOrderUpdate **", call_order, "isMarginCalled:", callOrder.isMarginCalled());
 
                     if (callOrder.isMarginCalled()) {
                         this.marketCallOrders = this.marketCallOrders.set(
                             call_order.id,
-                            callOrder
+                            callOrder,
+                            mcr
                         );
 
                         // Update orderbook
@@ -641,20 +662,29 @@ class MarketsStore {
             };
 
             /*
-            * If the feed price changed, we need to check whether the orders
-            * being margin called have changed and filter accordingly. To do so
-            * we recreate the marketCallOrders map from scratch using the
-            * previously fetched data and the new feed price.
-            */
+             * If the feed price changed, we need to check whether the orders
+             * being margin called have changed and filter accordingly. To do so
+             * we recreate the marketCallOrders map from scratch using the
+             * previously fetched data and the new feed price.
+             */
             this.marketCallOrders = this.marketCallOrders.clear();
             this.allCallOrders.forEach(call => {
                 // ChainStore._updateObject(call, false, false);
                 try {
+                    let mcr = this[
+                        this.invertedCalls ? "baseAsset" : "quoteAsset"
+                    ].getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maintenance_collateral_ratio"
+                    ]);
+
                     let callOrder = new CallOrder(
                         call,
                         assets,
                         this.quoteAsset.get("id"),
                         this.feedPrice,
+                        mcr,
                         this.is_prediction_market
                     );
                     if (callOrder.isMarginCalled()) {
@@ -664,7 +694,8 @@ class MarketsStore {
                                 call,
                                 assets,
                                 this.quoteAsset.get("id"),
-                                this.feedPrice
+                                this.feedPrice,
+                                mcr
                             )
                         );
                     }
@@ -712,9 +743,9 @@ class MarketsStore {
                 precision: this.baseAsset.get("precision")
             }
         };
-        let settlePrice = this[
-            this.invertedCalls ? "baseAsset" : "quoteAsset"
-        ].getIn(["bitasset", "current_feed", "settlement_price"]);
+        let feedPriceRaw = asset_utils.extractRawFeedPrice(
+            this[this.invertedCalls ? "baseAsset" : "quoteAsset"]
+        );
 
         try {
             let sqr = this[
@@ -736,28 +767,28 @@ class MarketsStore {
             /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
             if (
                 this.is_prediction_market &&
-                settlePrice.getIn(["base", "asset_id"]) ===
-                    settlePrice.getIn(["quote", "asset_id"])
+                feedPriceRaw.getIn(["base", "asset_id"]) ===
+                    feedPriceRaw.getIn(["quote", "asset_id"])
             ) {
                 const backingAsset = this.bitasset_options.short_backing_asset;
                 if (!assets[backingAsset])
                     assets[backingAsset] = {
                         precision: this.quoteAsset.get("precision")
                     };
-                settlePrice = settlePrice.setIn(["base", "amount"], 1);
-                settlePrice = settlePrice.setIn(
+                feedPriceRaw = feedPriceRaw.setIn(["base", "amount"], 1);
+                feedPriceRaw = feedPriceRaw.setIn(
                     ["base", "asset_id"],
                     backingAsset
                 );
-                settlePrice = settlePrice.setIn(["quote", "amount"], 1);
-                settlePrice = settlePrice.setIn(
+                feedPriceRaw = feedPriceRaw.setIn(["quote", "amount"], 1);
+                feedPriceRaw = feedPriceRaw.setIn(
                     ["quote", "asset_id"],
                     this.quoteAsset.get("id")
                 );
                 sqr = 1000;
             }
             const feedPrice = new FeedPrice({
-                priceObject: settlePrice,
+                priceObject: feedPriceRaw,
                 market_base: this.quoteAsset.get("id"),
                 sqr,
                 assets
@@ -1072,9 +1103,9 @@ class MarketsStore {
 
     _saveMarketStats() {
         /*
-        * Only save stats once every 30s to limit writes and
-        * allMarketStats JS conversions
-        */
+         * Only save stats once every 30s to limit writes and
+         * allMarketStats JS conversions
+         */
         if (!this.saveStatsTimeout) {
             this.saveStatsTimeout = setTimeout(() => {
                 marketStorage.set("allMarketStats", this.allMarketStats.toJS());

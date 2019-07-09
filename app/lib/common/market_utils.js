@@ -53,18 +53,18 @@ const MarketUtils = {
         return value;
     },
 
-    getFeedPrice(settlement_price, invert = false) {
+    getFeedPrice(some_raw_price, invert = false) {
         let quoteAsset = ChainStore.getAsset(
-            settlement_price.getIn(["quote", "asset_id"])
+            some_raw_price.getIn(["quote", "asset_id"])
         );
         let baseAsset = ChainStore.getAsset(
-            settlement_price.getIn(["base", "asset_id"])
+            some_raw_price.getIn(["base", "asset_id"])
         );
 
         let price = utils.get_asset_price(
-            settlement_price.getIn(["quote", "amount"]),
+            some_raw_price.getIn(["quote", "amount"]),
             quoteAsset,
-            settlement_price.getIn(["base", "amount"]),
+            some_raw_price.getIn(["base", "amount"]),
             baseAsset
         );
 
@@ -144,8 +144,7 @@ const MarketUtils = {
             finalPrice = fromPrice;
         }
         if (!finalPrice) return null;
-        const finalId =
-            finalPrice.base.asset_id + "_" + finalPrice.quote.asset_id;
+        const finalId = [finalPrice.base.asset_id, finalPrice.quote.asset_id];
         if (
             finalId.indexOf(toAsset.get("id")) === -1 ||
             finalId.indexOf(fromAsset.get("id")) === -1

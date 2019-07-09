@@ -88,7 +88,8 @@ export default class TranslateWithLinks extends React.Component {
                                     asset={key.value.asset_id}
                                     decimalOffset={key.decimalOffset}
                                     hide_asset
-                                />&nbsp;
+                                />
+                                &nbsp;
                                 {this.linkToAsset(key.value.asset_id)}
                             </span>
                         );
@@ -136,6 +137,228 @@ export default class TranslateWithLinks extends React.Component {
                                 title={title}
                             />
                         );
+                        break;
+
+                    case "change":
+                        if (key.value && Object.keys(key.value).length > 0) {
+                            const {votes, active, owner, memo} = key.value;
+                            const voteDiv = votes && (
+                                <div>
+                                    <Translate content={"proposal.votes"} />
+                                    {votes.minus.length ? (
+                                        <div>
+                                            {"- " +
+                                                counterpart.translate(
+                                                    "proposal.remove"
+                                                ) +
+                                                " "}{" "}
+                                            {votes.minus.join(", ")}
+                                        </div>
+                                    ) : null}
+                                    {votes.plus.length ? (
+                                        <div>
+                                            {"- " +
+                                                counterpart.translate(
+                                                    "proposal.add"
+                                                ) +
+                                                " "}{" "}
+                                            {votes.plus.join(", ")}
+                                        </div>
+                                    ) : null}
+                                </div>
+                            );
+                            const warning = (active || owner || memo) && (
+                                <div>
+                                    <Translate
+                                        content={"proposal.permission_changes"}
+                                    />
+                                    {", "}
+                                    <Translate
+                                        style={{color: "red"}}
+                                        content={"proposal.danger_operation"}
+                                    />
+                                    {"!"}
+                                </div>
+                            );
+                            const activeDiv = active && (
+                                <React.Fragment>
+                                    <Translate
+                                        content={"proposal.changes_to_active"}
+                                    />
+                                    <div style={{marginLeft: "0.5rem"}}>
+                                        {active.keys.plus.length > 0 ||
+                                            (active.accounts.plus.length >
+                                                0 && (
+                                                <div>
+                                                    {"- " +
+                                                        counterpart.translate(
+                                                            "proposal.add"
+                                                        ) +
+                                                        " "}
+                                                    {active.keys.plus.join(
+                                                        ", "
+                                                    )}{" "}
+                                                    {active.accounts.plus.map(
+                                                        _tmp => (
+                                                            <span key={_tmp}>
+                                                                {this.linkToAccount(
+                                                                    _tmp
+                                                                )}
+                                                            </span>
+                                                        )
+                                                    )}
+                                                </div>
+                                            ))}
+                                        {active.keys.minus.length > 0 ||
+                                            (active.accounts.minus.length >
+                                                0 && (
+                                                <div>
+                                                    {"- " +
+                                                        counterpart.translate(
+                                                            "proposal.remove"
+                                                        ) +
+                                                        " "}
+                                                    {active.keys.minus.join(
+                                                        ", "
+                                                    )}{" "}
+                                                    {active.accounts.minus.map(
+                                                        _tmp => (
+                                                            <span key={_tmp}>
+                                                                {this.linkToAccount(
+                                                                    _tmp
+                                                                )}
+                                                            </span>
+                                                        )
+                                                    )}
+                                                </div>
+                                            ))}
+                                        {active.weight_threshold && (
+                                            <div>
+                                                {"- " +
+                                                    counterpart.translate(
+                                                        "proposal.set_threshold",
+                                                        {
+                                                            threshold:
+                                                                active.weight_threshold
+                                                        }
+                                                    )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </React.Fragment>
+                            );
+                            const ownerDiv = owner && (
+                                <React.Fragment>
+                                    <Translate
+                                        content={"proposal.changes_to_owner"}
+                                    />
+                                    <div style={{marginLeft: "0.5rem"}}>
+                                        {owner.keys.plus.length > 0 ||
+                                            (owner.accounts.plus.length > 0 && (
+                                                <div>
+                                                    {"- " +
+                                                        counterpart.translate(
+                                                            "proposal.add"
+                                                        ) +
+                                                        " "}
+                                                    {owner.keys.plus.join(", ")}{" "}
+                                                    {owner.accounts.plus.map(
+                                                        _tmp => (
+                                                            <span key={_tmp}>
+                                                                {this.linkToAccount(
+                                                                    _tmp
+                                                                )}
+                                                            </span>
+                                                        )
+                                                    )}
+                                                </div>
+                                            ))}
+                                        {owner.keys.minus.length > 0 ||
+                                            (owner.accounts.minus.length >
+                                                0 && (
+                                                <div>
+                                                    {"- " +
+                                                        counterpart.translate(
+                                                            "proposal.remove"
+                                                        ) +
+                                                        " "}
+                                                    {owner.keys.minus.join(
+                                                        ", "
+                                                    )}{" "}
+                                                    {owner.accounts.minus.map(
+                                                        _tmp => (
+                                                            <span key={_tmp}>
+                                                                {this.linkToAccount(
+                                                                    _tmp
+                                                                )}
+                                                            </span>
+                                                        )
+                                                    )}
+                                                </div>
+                                            ))}
+                                        {owner.weight_threshold && (
+                                            <div>
+                                                {"- " +
+                                                    counterpart.translate(
+                                                        "proposal.set_threshold",
+                                                        {
+                                                            threshold:
+                                                                owner.weight_threshold
+                                                        }
+                                                    )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </React.Fragment>
+                            );
+                            const memoDiv = memo &&
+                                (memo.keys.plus.length > 0 ||
+                                    memo.keys.minus.length > 0) && (
+                                    <div>
+                                        <Translate
+                                            content={"proposal.changes_to_memo"}
+                                        />
+                                        {memo.keys.plus.length > 0 && (
+                                            <div>
+                                                {" "}
+                                                + {memo.keys.plus.join(", ")}
+                                            </div>
+                                        )}
+                                        {memo.keys.minus.length > 0 && (
+                                            <div>
+                                                {" "}
+                                                - {memo.keys.minus.join(", ")}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            value = (
+                                <div
+                                    style={{
+                                        marginLeft: "0.5rem",
+                                        marginTop: "0.5rem"
+                                    }}
+                                >
+                                    {warning}
+                                    {voteDiv}
+                                    {activeDiv}
+                                    {ownerDiv}
+                                    {memoDiv}
+                                </div>
+                            );
+                        } else {
+                            value = "";
+                        }
+                        break;
+                    case "date":
+                        if (key.value === null) {
+                            value = "-";
+                        } else {
+                            value = counterpart.localize(key.value, {
+                                type: "date",
+                                format: "full"
+                            });
+                        }
                         break;
 
                     default:

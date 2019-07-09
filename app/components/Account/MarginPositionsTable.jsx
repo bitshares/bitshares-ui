@@ -7,9 +7,10 @@ import {ChainStore} from "bitsharesjs";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import {List} from "immutable";
+
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import Immutable from "immutable";
+import {Popover} from "bitshares-ui-style-guide";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -213,17 +214,36 @@ const MarginPositionsTable = ({
                         <Translate content="transaction.collateral" />
                     </th>
                     <th>
-                        <div
-                            className="tooltip inline-block"
-                            data-place="top"
-                            data-tip={counterpart.translate(
+                        <Popover
+                            placement="top"
+                            title={counterpart.translate(
+                                "header.collateral_ratio"
+                            )}
+                            content={counterpart.translate(
                                 "tooltip.coll_ratio"
                             )}
                         >
                             <Translate content="borrow.coll_ratio" />
-                        </div>
+                        </Popover>
                     </th>
                     <th>
+                        <Popover
+                            placement="top"
+                            content={
+                                <div style={{width: "600px"}}>
+                                    {counterpart.translate(
+                                        "borrow.target_collateral_ratio_explanation"
+                                    )}
+                                </div>
+                            }
+                            title={counterpart.translate(
+                                "borrow.target_collateral_ratio"
+                            )}
+                        >
+                            <Translate content="borrow.target_collateral_ratio_short" />
+                        </Popover>
+                    </th>
+                    <th style={alignRight}>
                         <TranslateWithLinks
                             noLink
                             string="account.total"
@@ -237,18 +257,24 @@ const MarginPositionsTable = ({
                         />
                     </th>
                     <th style={alignRight} className="column-hide-small">
-                        <div
-                            className="tooltip inline-block"
-                            data-place="top"
-                            data-tip={counterpart.translate(
+                        <Popover
+                            placement="top"
+                            content={counterpart.translate(
                                 "tooltip.call_price"
                             )}
                         >
                             <Translate content="exchange.call" />
-                        </div>
+                        </Popover>
                     </th>
                     <th style={alignRight} className="column-hide-small">
-                        <Translate content="exchange.price" />
+                        <Popover
+                            placement="top"
+                            content={counterpart.translate(
+                                "tooltip.feed_price"
+                            )}
+                        >
+                            <Translate content="exchange.feed_price" />
+                        </Popover>
                     </th>
                     <th className="column-hide-small" style={alignLeft}>
                         <Translate content="explorer.assets.units" />

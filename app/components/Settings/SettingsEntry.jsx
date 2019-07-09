@@ -4,6 +4,11 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
 import Notify from "notifyjs";
+import {Checkbox, Select, Input, Form} from "bitshares-ui-style-guide";
+
+const FormItem = Form.Item;
+const Option = Select.Option;
+
 export default class SettingsEntry extends React.Component {
     constructor() {
         super();
@@ -56,9 +61,9 @@ export default class SettingsEntry extends React.Component {
                     let value = counterpart.translate(translationKey);
 
                     return (
-                        <option key={entry} value={entry}>
+                        <Option key={entry} value={entry}>
                             {value}
-                        </option>
+                        </Option>
                     );
                 });
 
@@ -71,9 +76,9 @@ export default class SettingsEntry extends React.Component {
                     let value = counterpart.translate(translationKey);
 
                     return (
-                        <option key={entry} value={entry}>
+                        <Option key={entry} value={entry}>
                             {value}
-                        </option>
+                        </Option>
                     );
                 });
 
@@ -86,24 +91,21 @@ export default class SettingsEntry extends React.Component {
                     <div className="settings--notifications">
                         <div className="settings--notifications--group">
                             <div className="settings--notifications--item">
-                                <input
-                                    type="checkbox"
+                                <Checkbox
                                     id="browser_notifications.allow"
                                     checked={!!value.allow}
                                     onChange={this.handleNotificationChange(
                                         "allow"
                                     )}
-                                />
-                                <label htmlFor="browser_notifications.allow">
+                                >
                                     {counterpart.translate(
                                         "settings.browser_notifications_allow"
                                     )}
-                                </label>
+                                </Checkbox>
                             </div>
                             <div className="settings--notifications--group">
                                 <div className="settings--notifications--item">
-                                    <input
-                                        type="checkbox"
+                                    <Checkbox
                                         id="browser_notifications.additional.transferToMe"
                                         disabled={!value.allow}
                                         checked={
@@ -112,12 +114,11 @@ export default class SettingsEntry extends React.Component {
                                         onChange={this.handleNotificationChange(
                                             "additional.transferToMe"
                                         )}
-                                    />
-                                    <label htmlFor="browser_notifications.allow">
+                                    >
                                         {counterpart.translate(
                                             "settings.browser_notifications_additional_transfer_to_me"
                                         )}
-                                    </label>
+                                    </Checkbox>
                                 </div>
                             </div>
                         </div>
@@ -127,6 +128,7 @@ export default class SettingsEntry extends React.Component {
                                     href="https://goo.gl/zZ7NHY"
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="external-link"
                                 >
                                     <Translate
                                         component="div"
@@ -148,9 +150,9 @@ export default class SettingsEntry extends React.Component {
             case "walletLockTimeout":
                 value = selected;
                 input = (
-                    <input
+                    <Input
                         type="text"
-                        className="settings-input"
+                        className="settings--input"
                         value={selected}
                         onChange={this.props.onChange.bind(this, setting)}
                     />
@@ -182,14 +184,14 @@ export default class SettingsEntry extends React.Component {
                         }
                         let key = entry.translate ? entry.translate : entry;
                         return (
-                            <option
+                            <Option
                                 value={
                                     entry.translate ? entry.translate : entry
                                 }
                                 key={key}
                             >
                                 {option}
-                            </option>
+                            </Option>
                         );
                     });
                 } else {
@@ -210,47 +212,49 @@ export default class SettingsEntry extends React.Component {
             value = value.translate;
         }
 
+        const EntryLayout = ({noHeader, setting, children}) => {
+            return (
+                <React.Fragment>
+                    {(noHeader && children) || (
+                        <FormItem
+                            label={counterpart.translate(`settings.${setting}`)}
+                        >
+                            {children}
+                        </FormItem>
+                    )}
+                </React.Fragment>
+            );
+        };
+
         return (
-            <section className="block-list no-border-bottom">
-                {noHeader ? null : (
-                    <header>
-                        <Translate
-                            component="span"
-                            style={{
-                                fontWeight: "normal",
-                                fontFamily: "Roboto-Medium, arial, sans-serif",
-                                fontStyle: "normal"
-                            }}
-                            content={`settings.${setting}`}
-                        />
-                    </header>
-                )}
-                {options ? (
-                    <ul>
-                        <li className="with-dropdown">
-                            {optional}
-                            <select
-                                value={value}
-                                className="settings-select"
-                                onChange={this.props.onChange.bind(
-                                    this,
-                                    setting
-                                )}
-                            >
-                                {options}
-                            </select>
-                            {confirmButton}
-                        </li>
-                    </ul>
-                ) : null}
-                {input ? (
-                    <ul>
-                        <li>{input}</li>
-                    </ul>
-                ) : null}
+            <section className="no-border-bottom">
+                <EntryLayout noHeader={noHeader} setting={setting}>
+                    {options ? (
+                        <ul className={"unstyled-list"}>
+                            <li className="with-dropdown">
+                                {optional}
+                                <Select
+                                    value={value}
+                                    className="settings--select"
+                                    onChange={this.props.onChange.bind(
+                                        this,
+                                        setting
+                                    )}
+                                >
+                                    {options}
+                                </Select>
+                                {confirmButton}
+                            </li>
+                        </ul>
+                    ) : null}
+                    {input ? (
+                        <ul className={"unstyled-list"}>
+                            <li>{input}</li>
+                        </ul>
+                    ) : null}
 
-                {component ? component : null}
-
+                    {component ? component : null}
+                </EntryLayout>
                 <div className="facolor-success">{this.state.message}</div>
             </section>
         );

@@ -2,15 +2,12 @@ import React from "react";
 import Translate from "react-translate-component";
 import PropTypes from "prop-types";
 import {Form, Select} from "bitshares-ui-style-guide";
+import utils from "common/utils";
+import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import {Map} from "immutable";
-import utils from "../../lib/common/utils";
-
-const replaceName = asset => {
-    let {name, prefix} = utils.replaceName(asset);
-    return prefix + "" + name;
-};
+import AssetName from "../Utility/AssetName";
 
 const AssetSelectView = ({
     label,
@@ -19,6 +16,7 @@ const AssetSelectView = ({
     formItemStyle,
     style,
     placeholder,
+    value,
     ...props
 }) => {
     const select = (
@@ -30,13 +28,27 @@ const AssetSelectView = ({
                     content={placeholder || "utility.asset_select_placeholder"}
                 />
             }
+            value={<AssetName noTip name={value} />}
             {...props}
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+                option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            disabled={assets.filter(Map.isMap).length <= 1}
+            notFoundContent={counterpart.translate("global.not_found")}
         >
-            {assets.filter(Map.isMap).map(asset => (
-                <Select.Option key={asset.get("symbol")}>
-                    {replaceName(asset)}
-                </Select.Option>
-            ))}
+            {assets.filter(Map.isMap).map(asset => {
+                const {name: replacedName, prefix} = utils.replaceName(asset);
+
+                return (
+                    <Select.Option
+                        key={`${prefix || ""}${replacedName}`}
+                        value={asset.get("id")}
+                    >
+                        <AssetName noTip name={asset.get("symbol")} />
+                    </Select.Option>
+                );
+            })}
         </Select>
     );
     return (

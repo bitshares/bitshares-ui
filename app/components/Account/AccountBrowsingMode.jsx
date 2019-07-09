@@ -1,7 +1,9 @@
 import React from "react";
 import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
+import SettingsStore from "stores/SettingsStore";
 import AccountActions from "actions/AccountActions";
+import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import {Button, Modal, Icon, Popover, Tooltip} from "bitshares-ui-style-guide";
@@ -30,7 +32,7 @@ class AccountBrowsingMode extends React.Component {
             this.isMyAccount(prevProps.currentAccount)
         ) {
             this.setState({
-                isModalVisible: !this.props.neverShowBrowsingModeNotice,
+                isModalVisible: this.props.viewOnlyMode !== false,
                 previousAccountName: prevProps.currentAccount
             });
         }
@@ -74,7 +76,10 @@ class AccountBrowsingMode extends React.Component {
     handleNeverShowAgain() {
         this.handleClose();
 
-        AccountActions.setNeverShowBrowsingModeNotice(true);
+        SettingsActions.changeSetting({
+            setting: "viewOnlyMode",
+            value: false
+        });
     }
 
     render() {
@@ -147,12 +152,13 @@ export default connect(
     AccountBrowsingMode,
     {
         listenTo() {
-            return [AccountStore];
+            return [AccountStore, SettingsStore];
         },
         getProps() {
             return {
-                neverShowBrowsingModeNotice: AccountStore.getState()
-                    .neverShowBrowsingModeNotice,
+                viewOnlyMode: SettingsStore.getState().settings.get(
+                    "viewOnlyMode"
+                ),
                 currentAccount: AccountStore.getState().currentAccount
             };
         }

@@ -256,11 +256,6 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
-        if (this.props.location.pathname.indexOf("/account/") !== -1) {
-            let currentPath = this.props.location.pathname.split("/");
-            currentPath[2] = account_name;
-            this.props.history.push(currentPath.join("/"));
-        }
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
             Notification.success({
@@ -812,6 +807,52 @@ class Header extends React.Component {
             );
         }
 
+        if (active.indexOf("/direct-debit") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/direct-debit") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="direct_debit"
+                        title="icons.direct_debit"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="showcases.direct_debit.title"
+                    />
+                </a>
+            );
+        }
+
+        if (active.indexOf("/htlc") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/htlc") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="htlc"
+                        title="icons.htlc"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="showcases.htlc.title_short"
+                    />
+                </a>
+            );
+        }
+
         const submenus = {
             [SUBMENUS.SETTINGS]: (
                 <ul
@@ -1177,7 +1218,7 @@ class Header extends React.Component {
                             </span>
                             <AccountBrowsingMode
                                 location={this.props.location}
-                                usernameViewIcon={true}
+                                usernameViewIcon
                             />
                         </div>
                         {walletBalance}

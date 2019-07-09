@@ -1,14 +1,14 @@
 import React from "react";
 import {Pagination} from "antd";
 import counterpart from "counterpart";
-import TransitionWrapper from "../Utility/TransitionWrapper";
+import {Table} from "bitshares-ui-style-guide";
+import "./paginated-list.scss";
 
 export default class PaginatedList extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            page: 1,
             pageSize: props.pageSize
         };
     }
@@ -22,73 +22,33 @@ export default class PaginatedList extends React.Component {
         style: {paddingBottom: "1rem"}
     };
 
-    onChange(page, pageSize) {
-        this.setState({page, pageSize});
-    }
-
     render() {
-        const {page, pageSize} = this.state;
+        const {pageSize} = this.state;
         const {header, rows, extraRow} = this.props;
-        const total = rows.length;
-
-        let currentRows = getRows(page, pageSize);
-
-        function getRows(page, pageSize) {
-            let r = [];
-            for (
-                var i = (page - 1) * pageSize;
-                i < Math.min(total, page * pageSize);
-                i++
-            ) {
-                r.push(rows[i]);
-            }
-            return r;
-        }
-
-        /* Paginated too far or filtered out options without changing the page */
-        if (!currentRows.length && total) {
-            currentRows = getRows(1, pageSize);
-        }
 
         return (
-            <div className="grid-content" style={this.props.style}>
-                <table className={this.props.className}>
-                    {header ? <thead>{header}</thead> : null}
-                    {this.props.withTransition && page === 1 ? (
-                        <TransitionWrapper
-                            component="tbody"
-                            transitionName="newrow"
-                        >
-                            {currentRows}
-                            {extraRow}
-                        </TransitionWrapper>
-                    ) : (
-                        <tbody>
-                            {currentRows}
-                            {extraRow}
-                        </tbody>
-                    )}
-                </table>
-
-                {total > pageSize ? (
-                    <Pagination
-                        style={{
-                            paddingTop: "1rem",
-                            paddingBottom: "1rem",
-                            paddingLeft: this.props.leftPadding || null
-                        }}
-                        total={total}
-                        showTotal={total =>
+            <div className="paginated-list" style={this.props.style}>
+                <Table
+                    dataSource={rows}
+                    uns
+                    columns={Array.isArray(header) ? header : []}
+                    footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
+                    onChange={this.props.toggleSortOrder}
+                    pagination={{
+                        hideOnSinglePage: true,
+                        pageSize: pageSize,
+                        showTotal: (total, range) =>
                             counterpart.translate(this.props.label, {
                                 count: total
                             })
-                        }
-                        pageSize={pageSize}
-                        current={page}
-                        onChange={this.onChange.bind(this)}
-                    />
-                ) : null}
-
+                    }}
+                    rowClassName={
+                        this.props.rowClassName == null
+                            ? undefined
+                            : (record, index) =>
+                                  this.props.rowClassName(record, index)
+                    }
+                />
                 {this.props.children}
             </div>
         );

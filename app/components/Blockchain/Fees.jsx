@@ -15,8 +15,8 @@ let ops = Object.keys(operations);
 
 // Define groups and their corresponding operation ids
 let fee_grouping = {
-    general: [0, 25, 26, 27, 28, 32, 33, 37, 39, 40, 41],
-    asset: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 38, 42, 43, 44, 47, 48],
+    general: [0, 25, 26, 27, 28, 32, 33, 37, 39, 41, 49, 50, 52],
+    asset: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 38, 43, 44, 47, 48],
     market: [1, 2, 3, 4, 45, 46],
     account: [5, 6, 7, 8, 9],
     business: [20, 21, 22, 23, 24, 29, 30, 31, 34, 35, 36]

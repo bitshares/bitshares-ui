@@ -86,10 +86,34 @@ class ShowcaseGrid extends Component {
             },
             {
                 title: "showcases.direct_debit.title",
-                target: () => {},
+                target: event => {
+                    thiz.props.history.push("/direct-debit");
+                },
                 description: "showcases.direct_debit.description",
                 icon: "direct_debit",
-                disabled: true,
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
+            },
+            {
+                title: "showcases.htlc.title",
+                target: event => {
+                    thiz.props.history.push("/htlc");
+                },
+                description: "showcases.htlc.description",
+                icon: "htlc",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
+            },
+            {
+                title: "showcases.prediction_market.title",
+                target: event => {
+                    thiz.props.history.push("/prediction");
+                },
+                description: "showcases.prediction_market.description",
+                icon: "prediction",
+                disabled: "Visit bitshares-ui issue #2717 to check progress",
                 comingSoon: true
             },
             {

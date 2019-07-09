@@ -12,13 +12,12 @@ import BackupActions, {
     decryptWalletBackup
 } from "actions/BackupActions";
 import {saveAs} from "file-saver";
-import cname from "classnames";
 import Translate from "react-translate-component";
 import {PrivateKey} from "bitsharesjs";
 import SettingsActions from "actions/SettingsActions";
 import {backupName} from "common/backupUtils";
 import {getWalletName} from "branding";
-import {Notification} from "bitshares-ui-style-guide";
+import {Button, Input, Notification} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 
 const connectObject = {
@@ -86,6 +85,16 @@ class BackupRestore extends Component {
         let new_wallet = this.props.wallet.new_wallet;
         let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet);
         let restored = has_new_wallet;
+        const wallet_types = (
+            <Link to="/help/introduction/wallets">
+                {counterpart.translate("wallet.wallet_types")}
+            </Link>
+        );
+        const backup_types = (
+            <Link to="/help/introduction/backups">
+                {counterpart.translate("wallet.backup_types")}
+            </Link>
+        );
 
         return (
             <div>
@@ -93,6 +102,13 @@ class BackupRestore extends Component {
                     style={{textAlign: "left", maxWidth: "30rem"}}
                     component="p"
                     content="wallet.import_backup_choose"
+                />
+                <Translate
+                    className="text-left"
+                    component="p"
+                    wallet={wallet_types}
+                    backup={backup_types}
+                    content="wallet.read_more"
                 />
                 {new FileReader().readAsBinaryString ? null : (
                     <p className="error">
@@ -112,9 +128,9 @@ class BackupRestore extends Component {
                 </Upload>
                 <br />
                 <Link to="/">
-                    <button className="blue">
+                    <Button>
                         <Translate content="wallet.back" />
-                    </button>
+                    </Button>
                 </Link>
             </div>
         );
@@ -152,12 +168,12 @@ class Restore extends Component {
                         />
                     </h5>
                     <Link to="/">
-                        <div className="button outline">
+                        <Button type="primary">
                             <Translate
                                 component="span"
                                 content="header.dashboard"
                             />
-                        </div>
+                        </Button>
                     </Link>
                     <div>{this.props.children}</div>
                 </span>
@@ -168,15 +184,12 @@ class Restore extends Component {
                 <h3>
                     <Translate content="wallet.ready_to_restore" />
                 </h3>
-                <div
-                    className="button outline"
-                    onClick={this.onRestore.bind(this)}
-                >
+                <Button type="primary" onClick={this.onRestore.bind(this)}>
                     <Translate
                         content="wallet.restore_wallet_of"
                         name={new_wallet}
                     />
-                </div>
+                </Button>
             </span>
         );
     }
@@ -243,7 +256,7 @@ class NewWalletName extends Component {
                 <h5>
                     <Translate content="wallet.new_wallet_name" />
                 </h5>
-                <input
+                <Input
                     type="text"
                     id="new_wallet"
                     onChange={this.formChange.bind(this)}
@@ -254,13 +267,13 @@ class NewWalletName extends Component {
                         <Translate content="wallet.wallet_exist" />
                     ) : null}
                 </p>
-                <div
+                <Button
                     onClick={this.onAccept.bind(this)}
-                    type="submit"
-                    className={cname("button outline", {disabled: !name_ready})}
+                    type="primary"
+                    disabled={!name_ready}
                 >
                     <Translate content="wallet.accept" />
-                </div>
+                </Button>
             </form>
         );
     }
@@ -329,16 +342,23 @@ class Download extends Component {
             isReady = this.props.checkboxActive;
         }
         return (
-            <div
-                className={`${
-                    !isReady ? "disabled" : ""
-                } button button-primary download-btn`}
+            <Button
+                type={"primary"}
+                disabled={!isReady}
                 onClick={() => {
                     this.onDownload();
                 }}
+                style={
+                    this.props.confirmation
+                        ? {height: "initial", padding: 0}
+                        : {}
+                }
             >
                 {this.props.confirmation ? (
-                    <div className="download-block">
+                    <div
+                        className="download-block"
+                        style={{padding: "1.25rem"}}
+                    >
                         <img
                             className="bin-img"
                             src="/bin-file/default.svg"
@@ -349,7 +369,7 @@ class Download extends Component {
                                 className="download-text"
                                 content="registration.downloadFile"
                             />
-                            <p className="file-name">
+                            <p className="file-name" style={{marginBottom: 0}}>
                                 {this.props.backup.name}
                             </p>
                         </span>
@@ -357,7 +377,7 @@ class Download extends Component {
                 ) : (
                     <Translate content="wallet.download" />
                 )}
-            </div>
+            </Button>
         );
     }
 
@@ -410,16 +430,17 @@ class Create extends Component {
                         />
                     </div>
                 )}
-                <div
+                <Button
+                    type="primary"
                     onClick={this.onCreateBackup.bind(this)}
-                    className={cname("button", {disabled: !ready})}
                     style={{marginBottom: 10}}
+                    disabled={!ready}
                 >
                     <Translate
                         content="wallet.create_backup_of"
                         name={this.props.wallet.current_wallet}
                     />
-                </div>
+                </Button>
                 <LastBackupDate />
             </div>
         );
@@ -490,14 +511,12 @@ class Upload extends Component {
     render() {
         let resetButton = (
             <div style={{paddingTop: 20}}>
-                <div
+                <Button
+                    disabled={!this.props.backup.contents}
                     onClick={this.reset.bind(this)}
-                    className={cname("button outline", {
-                        disabled: !this.props.backup.contents
-                    })}
                 >
                     <Translate content="wallet.reset" />
-                </div>
+                </Button>
             </div>
         );
 
@@ -588,20 +607,20 @@ class DecryptBackup extends Component {
                 <label>
                     <Translate content="wallet.enter_password" />
                 </label>
-                <input
+                <Input
                     type="password"
                     id="backup_password"
                     onChange={this.formChange.bind(this)}
                     value={this.state.backup_password}
                 />
                 <Sha1 />
-                <div
-                    type="submit"
-                    className="button outline"
+                <Button
+                    type="primary"
+                    htmlType="submit"
                     onClick={this.onPassword.bind(this)}
                 >
                     <Translate content="wallet.submit" />
-                </div>
+                </Button>
             </form>
         );
     }
@@ -650,8 +669,8 @@ DecryptBackup = connect(
 class Sha1 extends Component {
     render() {
         return (
-            <div>
-                <pre className="no-overflow">
+            <div className="padding no-overflow">
+                <pre className="no-overflow" style={{lineHeight: "1.2"}}>
                     {this.props.backup.sha1} * SHA1
                 </pre>
                 <br />

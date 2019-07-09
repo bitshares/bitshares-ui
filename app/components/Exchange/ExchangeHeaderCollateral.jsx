@@ -6,6 +6,7 @@ import cnames from "classnames";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import {Tooltip} from "bitshares-ui-style-guide";
+import asset_utils from "../../lib/common/asset_utils";
 
 class MarginPosition extends React.Component {
     static propTypes = {
@@ -21,21 +22,13 @@ class MarginPosition extends React.Component {
         return (
             1 /
             utils.get_asset_price(
-                this.props.debtAsset.getIn([
-                    "bitasset",
-                    "current_feed",
-                    "settlement_price",
-                    "quote",
-                    "amount"
-                ]),
+                asset_utils
+                    .extractRawFeedPrice(this.props.debtAsset)
+                    .getIn(["quote", "amount"]),
                 this.props.collateralAsset,
-                this.props.debtAsset.getIn([
-                    "bitasset",
-                    "current_feed",
-                    "settlement_price",
-                    "base",
-                    "amount"
-                ]),
+                asset_utils
+                    .extractRawFeedPrice(this.props.debtAsset)
+                    .getIn(["base", "amount"]),
                 this.props.debtAsset
             )
         );

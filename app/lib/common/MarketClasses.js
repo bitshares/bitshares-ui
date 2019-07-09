@@ -609,12 +609,14 @@ class CallOrder {
         assets,
         market_base,
         feed,
+        mcr,
         is_prediction_market = false
     ) {
-        if (!order || !assets || !market_base || !feed) {
+        if (!order || !assets || !market_base || !feed || !mcr) {
             throw new Error("CallOrder missing inputs");
         }
 
+        this.mcr = mcr;
         this.isSum = false;
         this.order = order;
         this.assets = assets;
@@ -635,30 +637,32 @@ class CallOrder {
         this.debt = parseInt(order.debt, 10);
         this.debt_id = order.call_price.quote.asset_id;
 
-        let base = new Asset({
-            asset_id: order.call_price.base.asset_id,
-            amount: parseInt(order.call_price.base.amount, 10),
-            precision: assets[order.call_price.base.asset_id].precision
-        });
-        let quote = new Asset({
-            asset_id: order.call_price.quote.asset_id,
-            amount: parseInt(order.call_price.quote.amount, 10),
-            precision: assets[order.call_price.quote.asset_id].precision
-        });
-
         this.precisionsRatio =
             precisionToRatio(assets[this.debt_id].precision) /
             precisionToRatio(assets[this.collateral_id].precision);
 
         /*
-         * The call price is DEBT * MCR / COLLATERAL. This calculation is already
-         * done by the witness_node before returning the orders so it is not necessary
-         * to deal with the MCR (maintenance collateral ratio) here.
+         * The call price is DEBT * MCR / COLLATERAL.
+         * Since bitshares-core 3.0.0 this is no longer done by the witness_node.
+         * Deal with the MCR (maintenance collateral ratio) here.
          */
-        this.call_price = new Price({
-            base: base,
-            quote: quote
+
+        let base = new Asset({
+            asset_id: this.collateral_id,
+            amount: order.collateral,
+            precision: assets[this.collateral_id].precision
         });
+        let quote = new Asset({
+            asset_id: this.debt_id,
+            amount: order.debt * (mcr / 1000),
+            precision: assets[this.debt_id].precision
+        });
+
+        this.call_price = new Price({
+            base,
+            quote
+        });
+
         if (this.inverted) this.call_price = this.call_price.invert();
 
         if (feed.base.asset_id !== this.call_price.base.asset_id) {
@@ -676,7 +680,13 @@ class CallOrder {
     }
 
     clone(f = this.feed_price) {
-        return new CallOrder(this.order, this.assets, this.market_base, f);
+        return new CallOrder(
+            this.order,
+            this.assets,
+            this.market_base,
+            f,
+            this.mcr
+        );
     }
 
     setFeed(f) {
@@ -889,25 +899,25 @@ class CallOrder {
         let orderDebt = order.iSum
             ? order.debt
             : orderUseCR
-            ? order.max_debt_to_cover.getAmount()
-            : order.amountToReceive().getAmount();
+                ? order.max_debt_to_cover.getAmount()
+                : order.amountToReceive().getAmount();
         let newOrderDebt = newOrder.iSum
             ? newOrder.debt
             : newOrderUseCR
-            ? newOrder.max_debt_to_cover.getAmount()
-            : newOrder.amountToReceive().getAmount();
+                ? newOrder.max_debt_to_cover.getAmount()
+                : newOrder.amountToReceive().getAmount();
 
         /* Determine which collateral values to use */
         let orderCollateral = order.iSum
             ? order.collateral
             : orderUseCR
-            ? order.max_collateral_to_sell.getAmount()
-            : order.amountForSale().getAmount();
+                ? order.max_collateral_to_sell.getAmount()
+                : order.amountForSale().getAmount();
         let newOrderCollateral = newOrder.iSum
             ? newOrder.collateral
             : newOrderUseCR
-            ? newOrder.max_collateral_to_sell.getAmount()
-            : newOrder.amountForSale().getAmount();
+                ? newOrder.max_collateral_to_sell.getAmount()
+                : newOrder.amountForSale().getAmount();
 
         newOrder.debt = newOrderDebt + orderDebt;
         newOrder.collateral = newOrderCollateral + orderCollateral;
@@ -1222,8 +1232,8 @@ class FillOrder {
         this.className = this.isCall
             ? "orderHistoryCall"
             : this.isBid
-            ? "orderHistoryBid"
-            : "orderHistoryAsk";
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
         this.time = fill.time && new Date(utils.makeISODateString(fill.time));
         this.block = fill.block;
         this.account = fill.op.account || fill.op.account_id;

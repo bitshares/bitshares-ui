@@ -1,19 +1,20 @@
 import React from "react";
 import Icon from "../Icon/Icon";
-import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import {Tooltip as AntTooltip} from "bitshares-ui-style-guide";
 
 export class Tooltip extends React.Component {
-    componentDidMount() {
-        ReactTooltip.rebuild();
-    }
     render() {
         const {className, children, dataTip, content} = this.props;
         return (
-            <AntTooltip title={dataTip || counterpart.translate(content)}>
+            <AntTooltip
+                title={
+                    (dataTip && dataTip.trim()) ||
+                    counterpart.translate(content)
+                }
+            >
                 <span className={"tooltip " + className}>{children}</span>
             </AntTooltip>
         );
@@ -50,8 +51,12 @@ export const Review = () => (
     </Tooltip>
 );
 
-export const Failed = () => (
-    <Tooltip className="error" content="explorer.proposals.failed_execute">
+export const Failed = ({reason}) => (
+    <Tooltip
+        className="error"
+        dataTip={reason}
+        content="explorer.proposals.no_reason_available_switch_node"
+    >
         <Translate content="explorer.proposals.failed" />
     </Tooltip>
 );
