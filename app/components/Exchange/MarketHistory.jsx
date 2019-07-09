@@ -223,13 +223,14 @@ class MarketHistory extends React.Component {
                                         style={{whiteSpace: "nowrap"}}
                                     >
                                         {counterpart.localize(fill.time, {
-                                            type: "date",
+                                            type: "time",
                                             format:
+                                                "short" /*
                                                 getLocale()
                                                     .toLowerCase()
                                                     .indexOf("en-us") !== -1
                                                     ? "market_history_us"
-                                                    : "market_history"
+                                                    : "market_history"*/
                                         })}
                                     </div>
                                 </Tooltip>
