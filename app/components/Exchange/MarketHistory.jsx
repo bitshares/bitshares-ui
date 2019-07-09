@@ -222,16 +222,18 @@ class MarketHistory extends React.Component {
                                         className="tooltip"
                                         style={{whiteSpace: "nowrap"}}
                                     >
-                                        {counterpart.localize(fill.time, {
-                                            type: "time",
-                                            format:
-                                                "short" /*
+                                        {counterpart
+                                            .localize(fill.time, {
+                                                type: "time",
+                                                format:
+                                                    "long" /*
                                                 getLocale()
                                                     .toLowerCase()
                                                     .indexOf("en-us") !== -1
                                                     ? "market_history_us"
                                                     : "market_history"*/
-                                        })}
+                                            })
+                                            .slice(0, 8)}
                                     </div>
                                 </Tooltip>
                             </td>
