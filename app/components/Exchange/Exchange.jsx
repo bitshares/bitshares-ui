@@ -3436,8 +3436,45 @@ class Exchange extends React.Component {
                                             {deptHighChart}
                                         </div>
                                     ) : null}
-                                    {/* Order book */}
+                                    {/* Trade history */}
                                     <div
+                                        className={cnames(
+                                            centerContainerWidth > 1200
+                                                ? groupTabsCount == 1
+                                                    ? "medium-12 xlarge-4"
+                                                    : "medium-6 xlarge-4 "
+                                                : centerContainerWidth > 800
+                                                    ? groupTabsCount == 1
+                                                        ? "medium-12"
+                                                        : "medium-6"
+                                                    : "",
+                                            "small-12 order-5",
+                                            verticalOrderBook
+                                                ? "xlarge-order-5"
+                                                : "",
+                                            !verticalOrderBook &&
+                                            !verticalOrderForm
+                                                ? "xlarge-order-2"
+                                                : ""
+                                        )}
+                                        style={{
+                                            width: "18%",
+                                            display: "inline-block",
+                                            position: "absolute"
+                                        }}
+                                    >
+                                        <Tabs
+                                            activeKey={panelTabsActive[1]}
+                                            onChange={this._setPanelTabInGroup.bind(
+                                                this,
+                                                1
+                                            )}
+                                        >
+                                            {groupTabs[1]}
+                                        </Tabs>
+                                    </div>
+                                    {/* Order book */}
+                                    {/*<div
                                         className="grid-block shrink no-overflow"
                                         style={{
                                             width: "30%",
@@ -3446,7 +3483,7 @@ class Exchange extends React.Component {
                                         }}
                                     >
                                         {orderBook}
-                                    </div>
+                                    </div>*/}
                                 </div>
                             ) : null}
 

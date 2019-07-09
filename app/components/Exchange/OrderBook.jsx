@@ -923,14 +923,11 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 260,
-                                    lineHeight: "13px"
+                                    maxHeight: 185,
+                                    lineHeight: "15px"
                                 }}
                             >
-                                <table
-                                    style={{paddingBottom: 5}}
-                                    className="table order-table no-stripes table-hover fixed-table text-right no-overflow"
-                                >
+                                <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
                                     <TransitionWrapper
                                         ref="askTransition"
                                         className="orderbook clickable"

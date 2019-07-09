@@ -1363,5 +1363,19 @@
     },
     "theme": "vs-dark",
     "themeBackground": "#1e1e1e",
-    "pickerWorkingDir": "/home/dmitriy"
+    "pickerWorkingDir": "/home/dmitriy",
+    "windowsState": {
+        "lastActiveWindow": {
+            "folder": "file:///home/dmitriy/bitshares-ui-2",
+            "backupPath": "/home/dmitriy/bitshares-ui-2/~/.vscode-root/Backups/0625383a0ff378e5b9766a52072a0875",
+            "uiState": {
+                "mode": 0,
+                "x": 67,
+                "y": 55,
+                "width": 1853,
+                "height": 1025
+            }
+        },
+        "openedWindows": []
+    }
 }
