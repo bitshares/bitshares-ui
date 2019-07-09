@@ -83,6 +83,12 @@ export const xbtsxAPIs = {
     COINS_LIST: "/coin"
 };
 
+export const beosAPIs = {
+    BASE: "https://gateway.beos.world/api/v2",
+    COINS_LIST: "/coins",
+    TRADING_PAIRS: "/trading-pairs"
+};
+
 export const nodeRegions = [
     // region of the node follows roughly https://en.wikipedia.org/wiki/Subregion#/media/File:United_Nations_geographical_subregions.png
     "Northern Europe",

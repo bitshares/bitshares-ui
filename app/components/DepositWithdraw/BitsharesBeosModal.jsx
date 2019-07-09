@@ -34,7 +34,8 @@ class BitsharesBeosModal extends React.Component {
         balance: ChainTypes.ChainObject,
         balances: ChainTypes.ChainObjectsList,
         beosApiUrl: PropTypes.string.isRequired,
-        beosFee: PropTypes.string.isRequired
+        beosFee: PropTypes.string.isRequired,
+        coinsList: PropTypes.array.isRequired
     };
 
     constructor(props) {
