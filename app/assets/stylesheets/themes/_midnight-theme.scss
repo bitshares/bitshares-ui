@@ -26,15 +26,15 @@ $input-background: lighten($bg-color, 1%);
 
 $alert-color: $error-text-color;
 $info-color: #4a90e2;
-$success-color: #66cc7b;
+$success-color: rgb(112, 168, 0);
 $warning-color: #fcab53;
 $fee-color: $secondary-text-color;
 
 // Exchange colors
-$bid-color: #50d2c2;
+$bid-color: rgb(112, 168, 0);
 $ask-color: #e6416e;
 $call-color: #bbbf2b;
-$positive-color: #66cc7b;
+$positive-color: rgb(112, 168, 0);
 $negative-color: #e1424a;
 $row-accent-color: #3c3c3c;
 $header-color: #484848;
@@ -42,7 +42,7 @@ $header-color: #484848;
 // Account table view colors
 $account-header: #1a242f;
 $account-cells: #27384b;
-$account-green: #66cc7b;
+$account-green: rgb(112, 168, 0);
 $account-primarytext: white;
 $account-dimmed: #606060;
 $account-border: #323131;
@@ -50,7 +50,7 @@ $account-background: black;
 $account-tabs-background: inherit;
 
 $pulsate-green-start: $account-green;
-$pulsate-green-end: #66cc7b;
+$pulsate-green-end: rgb(112, 168, 0);
 $pulsate-red-start: $negative-color;
 $pulsate-red-end: #ef7c82;
 

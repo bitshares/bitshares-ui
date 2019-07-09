@@ -59,7 +59,7 @@ class TransactionChart extends React.Component {
         let colors = trxData.map(entry => {
             // console.log("entry:", entry);
             if (entry[1] <= 5) {
-                return "#50D2C2";
+                return "rgb(112, 168, 0)";
             } else if (entry[1] <= 10) {
                 return "#A0D3E8";
             } else if (entry[1] <= 20) {
@@ -118,7 +118,7 @@ class TransactionChart extends React.Component {
                 {
                     name: "Transactions",
                     data: trxData,
-                    color: "#50D2C2"
+                    color: "rgb(112, 168, 0)"
                 }
             ],
             xAxis: {
