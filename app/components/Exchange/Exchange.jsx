@@ -2097,14 +2097,8 @@ class Exchange extends React.Component {
                 defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    verticalOrderForm && !smallScreen
-                        ? ""
-                        : centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4"
-                            : centerContainerWidth > 800
-                                ? "medium-6"
-                                : "",
-                    "small-12 exchange-padded middle-content",
+                    "small-3",
+                    "exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 2 : 3} large-order-${
                               buySellTop ? 2 : 5
@@ -2263,14 +2257,7 @@ class Exchange extends React.Component {
                 defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    verticalOrderForm && !smallScreen
-                        ? ""
-                        : centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4"
-                            : centerContainerWidth > 800
-                                ? "medium-6"
-                                : "",
-                    "small-12 exchange-padded middle-content",
+                    "small-3 exchange-padded middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 1 : 2} large-order-${
                               buySellTop ? 1 : 4
