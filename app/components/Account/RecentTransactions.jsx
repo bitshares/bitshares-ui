@@ -26,6 +26,8 @@ import BlockTime from "../Blockchain/BlockTime";
 import OperationAnt from "../Blockchain/OperationAnt";
 import SettingsStore from "stores/SettingsStore";
 import {connect} from "alt-react";
+import PendingBlock from "../Utility/PendingBlock";
+
 const operation = new OperationAnt();
 
 const Option = Select.Option;
@@ -296,22 +298,9 @@ class RecentTransactions extends React.Component {
         );
         fee.amount = parseInt(fee.amount, 10);
         const dynGlobalObject = ChainStore.getObject("2.1.0");
-        let last_irreversible_block_num = dynGlobalObject.get(
+        const lastIrreversibleBlockNum = dynGlobalObject.get(
             "last_irreversible_block_num"
         );
-        let pending = null;
-        if (o.block_num > last_irreversible_block_num) {
-            pending = (
-                <span>
-                    (
-                    <Translate
-                        content="operation.pending"
-                        blocks={o.block_num - last_irreversible_block_num}
-                    />
-                    )
-                </span>
-            );
-        }
         return {
             key: o.id,
             id: o.id,
@@ -335,7 +324,8 @@ class RecentTransactions extends React.Component {
                         <span>{info.column}</span>
                     </div>
                     <div style={{fontSize: 14, paddingTop: 5}}>
-                        {pending ? <span> - {pending}</span> : null}
+                        {o.block_num > lastIrreversibleBlockNum ?
+                            <PendingBlock blockNumber={o.block_num} /> : null}
                     </div>
                 </div>
             ),
