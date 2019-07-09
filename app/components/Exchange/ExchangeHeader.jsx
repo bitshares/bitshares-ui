@@ -215,7 +215,7 @@ export default class ExchangeHeader extends React.Component {
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
                     <div className="grid-block shrink">
-                        <AntIcon
+                        {/* <AntIcon
                             onClick={this.props.showPriceAlertModal}
                             type={"bell"}
                             className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
@@ -239,8 +239,15 @@ export default class ExchangeHeader extends React.Component {
                                 name="fi-star"
                                 title="icons.fi_star.market"
                             />
-                        </a>
-                        <div style={{padding: "5px"}}>
+                        </a> */}
+
+                        <div
+                            style={{
+                                padding: "10px",
+                                borderRight: "1px solid black",
+                                height: "100%"
+                            }}
+                        >
                             {!hasPrediction ? (
                                 <div
                                     style={{

@@ -3326,6 +3326,7 @@ class Exchange extends React.Component {
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
+
                 <ExchangeHeader
                     hasAnyPriceAlert={this.props.hasAnyPriceAlert}
                     showPriceAlertModal={this.showPriceAlertModal}
@@ -3451,7 +3452,7 @@ class Exchange extends React.Component {
                         >
                             {!tinyScreen ? (
                                 <div>
-                                    {tradingChartHeader}
+                                    {/* {tradingChartHeader} */}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div
