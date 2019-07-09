@@ -49,7 +49,7 @@ class BitsharesBeosModalContainer extends React.Component {
         const {params} = this.props;
         return {
             beosFee: "500",
-            beosApiUrl: "https://gateway.beos.world/api/v2",
+            beosApiUrl: beosAPIs.BASE,
             beosIssuer: "beos.gateway",
             ...QueryString.parse(params.search)
         };

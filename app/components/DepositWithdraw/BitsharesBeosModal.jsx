@@ -145,7 +145,7 @@ class BitsharesBeosModal extends React.Component {
         const pxasset = this.getProxyAsset(asset.get("symbol"));
         let memo;
 
-        if (pxasset === "pxbts" && this.state.is_account_creation) {
+        if (asset.get("symbol") === "BTS" && this.state.is_account_creation) {
             memo = this.createMemoForAsset(pxasset, true);
         } else {
             memo = this.createMemoForAsset(pxasset);
@@ -756,7 +756,10 @@ class BitsharesBeosModal extends React.Component {
                 const pxasset = this.getProxyAsset(asset.get("symbol"));
                 let memo;
 
-                if (pxasset === "pxbts" && this.state.is_account_creation) {
+                if (
+                    asset.get("symbol") === "BTS" &&
+                    this.state.is_account_creation
+                ) {
                     memo = this.createMemoForAsset(pxasset, true);
                     newAmountToSend =
                         newAmountToSend + this.state.fee_amount_creation;
