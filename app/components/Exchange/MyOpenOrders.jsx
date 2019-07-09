@@ -169,27 +169,6 @@ class MyOpenOrders extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.activeTab !== this.state.activeTab) {
-            this._changeTab(nextProps.activeTab);
-        }
-
-        if (
-            this.props.hideScrollbars &&
-            nextState.showAll != this.state.showAll
-        ) {
-            let contentContainer = this.refs.container;
-            if (!nextState.showAll) {
-                Ps.destroy(contentContainer);
-            } else {
-                Ps.initialize(contentContainer);
-                Ps.update(contentContainer);
-            }
-            if (this.refs.contentTransition) {
-                this.refs.contentTransition.resetAnimation();
-            }
-            if (contentContainer) contentContainer.scrollTop = 0;
-        }
-
         return (
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
@@ -204,40 +183,71 @@ class MyOpenOrders extends React.Component {
 
     componentDidMount() {
         if (!this.props.hideScrollbars) {
-            let contentContainer = this.refs.container;
-            if (contentContainer) Ps.initialize(contentContainer);
+            this._updateContainer(1);
         }
     }
 
-    componentDidUpdate() {
-        if (
-            !this.props.hideScrollbars ||
-            (this.props.hideScrollbars && this.state.showAll)
-        ) {
-            let contentContainer = this.refs.container;
-            if (contentContainer) Ps.update(contentContainer);
+    componentDidUpdate(prevState) {
+        if (prevState.showAll != this.state.showAll) {
+            if (this.state.showAll && !this.state.hideScrollbars) {
+                this._updateContainer(2);
+            } else if (this.state.showAll && this.state.hideScrollbar) {
+                this._updateContainer(1);
+            } else if (!this.state.showAll && !this.state.hideScrollbar) {
+                this._updateContainer(3);
+            } else {
+                this._updateContainer(0);
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let contentContainer = this.refs.container;
+        if (nextProps.activeTab !== this.state.activeTab) {
+            this._changeTab(nextProps.activeTab);
+        }
 
+        // Reset showAll on Marhet Switch
         if (
-            nextProps.hideScrollbars !== this.props.hideScrollbars &&
-            nextProps.hideScrollbars
+            nextProps.baseSymbol !== this.props.baseSymbol ||
+            nextProps.quoteSymbol !== this.props.quoteSymbol
         ) {
-            Ps.destroy(contentContainer);
+            this.setState({showAll: false});
         }
 
         if (
-            nextProps.hideScrollbars !== this.props.hideScrollbars &&
-            !nextProps.hideScrollbars
+            nextProps.baseSymbol !== this.props.baseSymbol ||
+            nextProps.quoteSymbol !== this.props.quoteSymbol ||
+            nextProps.hideScrollbars !== this.props.hideScrollbars
         ) {
-            Ps.initialize(contentContainer);
-            this.refs.contentTransition.resetAnimation();
-            if (contentContainer) contentContainer.scrollTop = 0;
-            Ps.update(contentContainer);
+            if (nextProps.hideScrollbars) {
+                this._updateContainer(0);
+            } else {
+                this._updateContainer(3);
+            }
         }
+    }
+
+    /***
+     * Update PS Container
+     * type:int [0:destroy, 1:init, 2:update, 3:update w/ scrollTop] (default: 2)
+     */
+    _updateContainer(type = 2) {
+        let containerNode = this.refs.container;
+
+        if (!containerNode) return;
+
+        if (type == 0) {
+            Ps.destroy(containerNode);
+        } else if (type == 1) {
+            Ps.initialize(containerNode);
+            this._updateContainer(3);
+        } else if (type == 2) {
+            Ps.update(containerNode);
+        } else if (type == 3) {
+            containerNode.scrollTop = 0;
+            Ps.update(containerNode);
+        }
+        this.refs.contentTransition.resetAnimation();
     }
 
     onCheckCancel(orderId, evt) {
@@ -299,10 +309,6 @@ class MyOpenOrders extends React.Component {
         this.setState({
             showAll: !this.state.showAll
         });
-
-        if (this.state.showAll) {
-            this.refs.container.scrollTop = 0;
-        }
     }
 
     _getOrders() {
@@ -380,9 +386,7 @@ class MyOpenOrders extends React.Component {
         });
 
         // Ensure that focus goes back to top of scrollable container when tab is changed
-        let contentContainer = this.refs.container;
-        contentContainer.scrollTop = 0;
-        Ps.update(contentContainer);
+        this._updateContainer(3);
 
         setTimeout(ReactTooltip.rebuild, 1000);
     }
