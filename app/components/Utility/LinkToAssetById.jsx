@@ -10,7 +10,7 @@ class LinkToAssetById extends React.Component {
         return this.props.noLink ? (
             assetName
         ) : (
-            <Link to={`/asset/${symbol}/`}>{assetName}</Link>
+            <Link to={`/exchange/asset/${symbol}/`}>{assetName}</Link>
         );
     }
 }

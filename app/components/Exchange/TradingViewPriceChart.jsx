@@ -1,5 +1,5 @@
 import React from "react";
-const TradingView = require("../../../charting_library/charting_library.min.js");
+const TradingView = require("../../../exchange/charting_library/charting_library.min.js");
 import colors from "assets/colors";
 import {getResolutionsFromBuckets, getTVTimezone} from "./tradingViewClasses";
 
@@ -81,7 +81,7 @@ export default class TradingViewPriceChart extends React.Component {
             interval: getResolutionsFromBuckets([props.bucketSize])[0],
             library_path: `${
                 __ELECTRON__ ? __BASE_URL__ : ""
-            }/charting_library/`,
+            }/exchange/charting_library/`,
             datafeed: dataFeed,
             container_id: "tv_chart",
             charts_storage_url: "https://saveload.tradingview.com",

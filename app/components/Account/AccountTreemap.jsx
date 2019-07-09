@@ -168,7 +168,7 @@ class AccountTreemap extends React.Component {
                     point: {
                         events: {
                             click: function() {
-                                const link = `/asset/${this.symbol}`;
+                                const link = `/exchange/asset/${this.symbol}`;
                                 history.push(link);
                             }
                         }
@@ -202,7 +202,7 @@ class AccountTreemap extends React.Component {
                 <div className="account-treemap--legend">
                     {accountBalances.map(({name, symbol, color}, key) => {
                         return (
-                            <Link key={key} to={`/asset/${symbol}`}>
+                            <Link key={key} to={`/exchange/asset/${symbol}`}>
                                 <div className="legend-item">
                                     <div
                                         className="legend-square"

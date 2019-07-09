@@ -26,7 +26,7 @@ class MarketLink extends React.Component {
                 <AssetName name={base.get("symbol")} />
             </span>
         );
-        return <Link to={`/market/${marketID}`}>{marketName}</Link>;
+        return <Link to={`/exchange/market/${marketID}`}>{marketName}</Link>;
     }
 }
 

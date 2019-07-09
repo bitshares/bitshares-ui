@@ -5,7 +5,7 @@ export const DefaultOperation = ({op, block}) => {
     console.log("unimplemented op:", op);
     return (
         <span>
-            <Link to={`/block/${block}`}>#{block}</Link>
+            <Link to={`/exchange/block/${block}`}>#{block}</Link>
         </span>
     );
 };

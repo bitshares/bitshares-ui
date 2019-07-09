@@ -85,14 +85,14 @@ class DashboardList extends React.Component {
     }
 
     _goAccount(name, tab) {
-        this.props.history.push(`/account/${name}`);
+        this.props.history.push(`/exchange/account/${name}`);
         SettingsActions.changeViewSetting({
             overviewTab: tab
         });
     }
 
     _createAccount() {
-        this.props.history.push("/create-account/wallet");
+        this.props.history.push("/exchange/create-account/wallet");
     }
 
     _onFilter(e) {

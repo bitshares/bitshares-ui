@@ -322,7 +322,7 @@ class RecentTransactions extends React.Component {
                     data-tip={counterpart.translate("tooltip.show_block", {
                         block: utils.format_number(o.block_num, 0)
                     })}
-                    to={`/block/${o.block_num}/${o.trx_in_block}`}
+                    to={`/exchange/block/${o.block_num}/${o.trx_in_block}`}
                 >
                     <span className={cnames("label", info.color || "info")}>
                         {trxTypes[ops[o.op[0]]]}

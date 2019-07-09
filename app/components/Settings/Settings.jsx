@@ -291,7 +291,7 @@ class Settings extends React.Component {
     }
 
     _redirectToEntry(entry) {
-        this.props.history.push("/settings/" + entry);
+        this.props.history.push("/exchange/settings/" + entry);
     }
 
     _onChangeMenu(entry) {

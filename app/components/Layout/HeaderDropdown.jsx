@@ -70,14 +70,14 @@ export default class DropDownMenu extends React.Component {
                         className={cnames({
                             active:
                                 active.indexOf(
-                                    `/create-account/${
+                                    `/exchange/create-account/${
                                         !passwordLogin ? "wallet" : "password"
                                     }`
                                 ) !== -1
                         })}
                         onClick={this.props.onNavigate.bind(
                             this,
-                            `/create-account/${
+                            `/exchange/create-account/${
                                 !passwordLogin ? "wallet" : "password"
                             }`
                         )}
@@ -102,7 +102,7 @@ export default class DropDownMenu extends React.Component {
                         })}
                         onClick={this.props.onNavigate.bind(
                             this,
-                            `/account/${currentAccount}`
+                            `/exchange/account/${currentAccount}`
                         )}
                     >
                         <div className="table-cell">
@@ -149,7 +149,7 @@ export default class DropDownMenu extends React.Component {
                 <li
                     className={cnames(
                         {
-                            active: active.indexOf("/market/") !== -1
+                            active: active.indexOf("/exchange/market/") !== -1
                         },
                         "column-show-small"
                     )}
@@ -176,7 +176,7 @@ export default class DropDownMenu extends React.Component {
                     )}
                     onClick={this.props.onNavigate.bind(
                         this,
-                        "/explorer/blocks"
+                        "/exchange/explorer/blocks"
                     )}
                 >
                     <div className="table-cell">
@@ -197,7 +197,7 @@ export default class DropDownMenu extends React.Component {
                         mainText: "header.payments",
                         mainCallback: this.props.showSend,
                         subText: "header.payments_legacy",
-                        subURL: "/transfer"
+                        subURL: "/exchange/transfer"
                     },
                     {
                         icon: {
@@ -208,7 +208,7 @@ export default class DropDownMenu extends React.Component {
                         mainText: "modal.deposit.submit",
                         mainCallback: this.props.showDeposit,
                         subText: "header.deposit_legacy",
-                        subURL: "/deposit-withdraw"
+                        subURL: "/exchange/deposit-withdraw"
                     },
                     {
                         icon: {
@@ -219,7 +219,7 @@ export default class DropDownMenu extends React.Component {
                         mainText: "modal.withdraw.submit",
                         mainCallback: this.props.showWithdraw,
                         subText: "header.withdraw_legacy",
-                        subURL: "/deposit-withdraw"
+                        subURL: "/exchange/deposit-withdraw"
                     }
                 ].map(
                     (
@@ -279,12 +279,15 @@ export default class DropDownMenu extends React.Component {
                 <li
                     className={cnames(
                         {
-                            active: active.indexOf("/settings") !== -1
+                            active: active.indexOf("/exchange/settings") !== -1
                         },
                         "divider",
                         "desktop-only"
                     )}
-                    onClick={this.props.onNavigate.bind(this, "/settings")}
+                    onClick={this.props.onNavigate.bind(
+                        this,
+                        "/exchange/settings"
+                    )}
                 >
                     <div className="table-cell">
                         <Icon size="2x" name="cogs" title="icons.cogs" />
@@ -297,11 +300,14 @@ export default class DropDownMenu extends React.Component {
                 <li
                     className={cnames(
                         {
-                            active: active.indexOf("/spotlight") !== -1
+                            active: active.indexOf("/exchange/spotlight") !== -1
                         },
                         "divider"
                     )}
-                    onClick={this.props.onNavigate.bind(this, "/spotlight")}
+                    onClick={this.props.onNavigate.bind(
+                        this,
+                        "/exchange/spotlight"
+                    )}
                 >
                     <div className="table-cell">
                         <Icon
@@ -318,7 +324,7 @@ export default class DropDownMenu extends React.Component {
                 <li
                     className={cnames(
                         {
-                            active: active.indexOf("/settings") !== -1
+                            active: active.indexOf("/exchange/settings") !== -1
                         },
                         "divider",
                         "mobile-only",
@@ -336,9 +342,9 @@ export default class DropDownMenu extends React.Component {
 
                 <li
                     className={cnames({
-                        active: active.indexOf("/news") !== -1
+                        active: active.indexOf("/exchange/news") !== -1
                     })}
-                    onClick={this.props.onNavigate.bind(this, "/news")}
+                    onClick={this.props.onNavigate.bind(this, "/exchange/news")}
                 >
                     <div className="table-cell">
                         <Icon size="2x" name="news" title="icons.news" />
@@ -355,7 +361,7 @@ export default class DropDownMenu extends React.Component {
                     })}
                     onClick={this.props.onNavigate.bind(
                         this,
-                        `/account/${currentAccount}/voting`
+                        `/exchange/account/${currentAccount}/voting`
                     )}
                 >
                     <div className="table-cell">
@@ -379,7 +385,7 @@ export default class DropDownMenu extends React.Component {
                     })}
                     onClick={this.props.onNavigate.bind(
                         this,
-                        `/account/${currentAccount}/assets`
+                        `/exchange/account/${currentAccount}/assets`
                     )}
                 >
                     <div className="table-cell">
@@ -397,7 +403,7 @@ export default class DropDownMenu extends React.Component {
                     })}
                     onClick={this.props.onNavigate.bind(
                         this,
-                        `/account/${currentAccount}/signedmessages`
+                        `/exchange/account/${currentAccount}/signedmessages`
                     )}
                 >
                     <div className="table-cell">
@@ -419,7 +425,7 @@ export default class DropDownMenu extends React.Component {
                     })}
                     onClick={this.props.onNavigate.bind(
                         this,
-                        `/account/${currentAccount}/member-stats`
+                        `/exchange/account/${currentAccount}/member-stats`
                     )}
                 >
                     <div className="table-cell">
@@ -441,7 +447,7 @@ export default class DropDownMenu extends React.Component {
                         })}
                         onClick={this.props.onNavigate.bind(
                             this,
-                            `/account/${currentAccount}/vesting`
+                            `/exchange/account/${currentAccount}/vesting`
                         )}
                     >
                         <div className="table-cell">
@@ -464,7 +470,7 @@ export default class DropDownMenu extends React.Component {
                     })}
                     onClick={this.props.onNavigate.bind(
                         this,
-                        `/account/${currentAccount}/whitelist`
+                        `/exchange/account/${currentAccount}/whitelist`
                     )}
                 >
                     <div className="table-cell">
@@ -482,7 +488,7 @@ export default class DropDownMenu extends React.Component {
                     })}
                     onClick={this.props.onNavigate.bind(
                         this,
-                        `/account/${currentAccount}/permissions`
+                        `/exchange/account/${currentAccount}/permissions`
                     )}
                 >
                     <div className="table-cell">
@@ -497,11 +503,15 @@ export default class DropDownMenu extends React.Component {
                     <li
                         className={cnames(
                             {
-                                active: active.indexOf("/accounts") !== -1
+                                active:
+                                    active.indexOf("/exchange/accounts") !== -1
                             },
                             "divider"
                         )}
-                        onClick={this.props.onNavigate.bind(this, "/accounts")}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            "/exchange/accounts"
+                        )}
                     >
                         <div className="table-cell">
                             <Icon

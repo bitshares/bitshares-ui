@@ -195,7 +195,8 @@ class LoginSelector extends React.Component {
                                     keys={[
                                         {
                                             type: "link",
-                                            value: "/wallet/backup/restore",
+                                            value:
+                                                "/exchange/wallet/backup/restore",
                                             translation:
                                                 "account.optional.restore_link",
                                             dataIntro: translator.translate(
@@ -205,7 +206,8 @@ class LoginSelector extends React.Component {
                                         },
                                         {
                                             type: "link",
-                                            value: "/create-account/wallet",
+                                            value:
+                                                "/exchange/create-account/wallet",
                                             translation:
                                                 "account.optional.restore_form",
                                             dataIntro: translator.translate(
@@ -219,12 +221,12 @@ class LoginSelector extends React.Component {
                         </div>
 
                         <Route
-                            path="/create-account/wallet"
+                            path="/exchange/create-account/wallet"
                             exact
                             component={CreateAccount}
                         />
                         <Route
-                            path="/create-account/password"
+                            path="/exchange/create-account/password"
                             exact
                             component={CreateAccountPassword}
                         />

@@ -23,7 +23,7 @@ class AccountCard extends React.Component {
     onCardClick(e) {
         e.preventDefault();
         let name = this.props.account.get("name");
-        this.props.history.push(`/account/${name}`);
+        this.props.history.push(`/exchange/account/${name}`);
     }
 
     render() {

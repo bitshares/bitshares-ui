@@ -17,43 +17,43 @@ class Explorer extends React.Component {
             tabs: [
                 {
                     name: "blocks",
-                    link: "/explorer/blocks",
+                    link: "/exchange/explorer/blocks",
                     translate: "explorer.blocks.title",
                     content: BlocksContainer
                 },
                 {
                     name: "assets",
-                    link: "/explorer/assets",
+                    link: "/exchange/explorer/assets",
                     translate: "explorer.assets.title",
                     content: AssetsContainer
                 },
                 {
                     name: "accounts",
-                    link: "/explorer/accounts",
+                    link: "/exchange/explorer/accounts",
                     translate: "explorer.accounts.title",
                     content: AccountsContainer
                 },
                 {
                     name: "witnesses",
-                    link: "/explorer/witnesses",
+                    link: "/exchange/explorer/witnesses",
                     translate: "explorer.witnesses.title",
                     content: Witnesses
                 },
                 {
                     name: "committee_members",
-                    link: "/explorer/committee-members",
+                    link: "/exchange/explorer/committee-members",
                     translate: "explorer.committee_members.title",
                     content: CommitteeMembers
                 },
                 {
                     name: "markets",
-                    link: "/explorer/markets",
+                    link: "/exchange/explorer/markets",
                     translate: "markets.title",
                     content: MarketsContainer
                 },
                 {
                     name: "fees",
-                    link: "/explorer/fees",
+                    link: "/exchange/explorer/fees",
                     translate: "fees.title",
                     content: FeesContainer
                 }

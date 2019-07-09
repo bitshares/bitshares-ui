@@ -32,31 +32,31 @@ const connectObject = {
 class WalletManager extends Component {
     getTitle() {
         switch (this.props.location.pathname) {
-            case "/wallet/create":
+            case "/exchange/wallet/create":
                 return "wallet.create_wallet";
                 break;
 
-            case "/wallet/backup/create":
+            case "/exchange/wallet/backup/create":
                 return "wallet.create_backup";
                 break;
 
-            case "/wallet/backup/restore":
+            case "/exchange/wallet/backup/restore":
                 return "wallet.restore_backup";
                 break;
 
-            case "/wallet/backup/brainkey":
+            case "/exchange/wallet/backup/brainkey":
                 return "wallet.backup_brainkey";
                 break;
 
-            case "/wallet/delete":
+            case "/exchange/wallet/delete":
                 return "wallet.delete_wallet";
                 break;
 
-            case "/wallet/change-password":
+            case "/exchange/wallet/change-password":
                 return "wallet.change_password";
                 break;
 
-            case "/wallet/import-keys":
+            case "/exchange/wallet/import-keys":
                 return "wallet.import_keys";
                 break;
 
@@ -81,57 +81,57 @@ class WalletManager extends Component {
                             <Switch>
                                 <Route
                                     exact
-                                    path="/wallet"
+                                    path="/exchange/wallet"
                                     component={WalletOptions}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/change"
+                                    path="/exchange/wallet/change"
                                     component={ChangeActiveWallet}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/change-password"
+                                    path="/exchange/wallet/change-password"
                                     component={WalletChangePassword}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/import-keys"
+                                    path="/exchange/wallet/import-keys"
                                     component={ImportKeys}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/brainkey"
+                                    path="/exchange/wallet/brainkey"
                                     component={ExistingAccountOptions}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/create"
+                                    path="/exchange/wallet/create"
                                     component={WalletCreate}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/delete"
+                                    path="/exchange/wallet/delete"
                                     component={WalletDelete}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/backup/restore"
+                                    path="/exchange/wallet/backup/restore"
                                     component={BackupRestore}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/backup/create"
+                                    path="/exchange/wallet/backup/create"
                                     component={BackupCreate}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/backup/brainkey"
+                                    path="/exchange/wallet/backup/brainkey"
                                     component={BackupBrainkey}
                                 />
                                 <Route
                                     exact
-                                    path="/wallet/balance-claims"
+                                    path="/exchange/wallet/balance-claims"
                                     component={BalanceClaimActive}
                                 />
                             </Switch>
@@ -165,7 +165,7 @@ class WalletOptions extends Component {
                             <div>{current_wallet}</div>
                             <br />
                             {has_wallets ? (
-                                <Link to="/wallet/change">
+                                <Link to="/exchange/wallet/change">
                                     <div className="button outline success">
                                         <Translate content="wallet.change_wallet" />
                                     </div>
@@ -182,7 +182,7 @@ class WalletOptions extends Component {
                             <div style={{visibility: "hidden"}}>Dummy</div>
                             <br />
                             {has_wallet ? (
-                                <Link to="/wallet/import-keys">
+                                <Link to="/exchange/wallet/import-keys">
                                     <div className="button outline success">
                                         <Translate content="wallet.import_keys" />
                                     </div>
@@ -199,7 +199,7 @@ class WalletOptions extends Component {
                                 </label>
                                 <div style={{visibility: "hidden"}}>Dummy</div>
                                 <br />
-                                <Link to="/wallet/balance-claims">
+                                <Link to="/exchange/wallet/balance-claims">
                                     <div className="button outline success">
                                         <Translate content="wallet.balance_claim_lookup" />
                                     </div>
@@ -216,7 +216,7 @@ class WalletOptions extends Component {
                 </div>
 
                 {has_wallet ? (
-                    <Link to="/wallet/backup/create">
+                    <Link to="/exchange/wallet/backup/create">
                         <div className="button outline success">
                             <Translate content="wallet.create_backup" />
                         </div>
@@ -224,14 +224,14 @@ class WalletOptions extends Component {
                 ) : null}
 
                 {has_wallet ? (
-                    <Link to="/wallet/backup/brainkey">
+                    <Link to="/exchange/wallet/backup/brainkey">
                         <div className="button outline success">
                             <Translate content="wallet.backup_brainkey" />
                         </div>
                     </Link>
                 ) : null}
 
-                <Link to="/wallet/backup/restore">
+                <Link to="/exchange/wallet/backup/restore">
                     <div className="button outline success">
                         <Translate content="wallet.restore_backup" />
                     </div>
@@ -241,14 +241,14 @@ class WalletOptions extends Component {
 
                 {has_wallet ? <br /> : null}
 
-                <Link to="/wallet/create">
+                <Link to="/exchange/wallet/create">
                     <div className="button outline success">
                         <Translate content="wallet.new_wallet" />
                     </div>
                 </Link>
 
                 {has_wallet ? (
-                    <Link to="/wallet/delete">
+                    <Link to="/exchange/wallet/delete">
                         <div className="button outline success">
                             <Translate content="wallet.delete_wallet" />
                         </div>
@@ -256,7 +256,7 @@ class WalletOptions extends Component {
                 ) : null}
 
                 {has_wallet ? (
-                    <Link to="/wallet/change-password">
+                    <Link to="/exchange/wallet/change-password">
                         <div className="button outline success">
                             <Translate content="wallet.change_password" />
                         </div>
@@ -333,7 +333,7 @@ class ChangeActiveWallet extends Component {
                         </ul>
                     </FormItem>
                 </section>
-                <Link to="/wallet/create">
+                <Link to="/exchange/wallet/create">
                     <Button style={{marginRight: "16px"}}>
                         <Translate content="wallet.new_wallet" />
                     </Button>
