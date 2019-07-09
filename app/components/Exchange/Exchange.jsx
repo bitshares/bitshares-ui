@@ -2490,7 +2490,7 @@ class Exchange extends React.Component {
                     flipOrderBook={flipOrderBook}
                     orderBookReversed={orderBookReversed}
                     marketReady={marketReady}
-                    innerClass={cnames(
+                    /*innerClass={cnames(
                         centerContainerWidth > 1200
                             ? "medium-6"
                             : centerContainerWidth > 800
@@ -2498,7 +2498,7 @@ class Exchange extends React.Component {
                                 : "",
                         "small-12 middle-content",
                         !tinyScreen ? "exchange-padded" : ""
-                    )}
+                    )}*/
                     currentAccount={this.props.currentAccount.get("id")}
                     handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
                         this
@@ -3014,10 +3014,6 @@ class Exchange extends React.Component {
                 actionCards.push(sellForm);
             }
 
-            if (!verticalOrderBook) {
-                //actionCards.push(orderBook);
-            }
-
             if (verticalOrderBook || verticalOrderForm) {
                 actionCards.push(emptyDiv);
             }
@@ -3028,7 +3024,6 @@ class Exchange extends React.Component {
         } else if (!tinyScreen) {
             actionCards.push(buyForm);
             actionCards.push(sellForm);
-            //actionCards.push(orderBook);
             actionCards.push(groupStandalone);
             actionCards.push(groupTabbed2);
             actionCards.push(
@@ -3437,30 +3432,22 @@ class Exchange extends React.Component {
                                         </div>
                                     ) : null}
 
+                                    {/* Order book */}
+                                    <div
+                                        className="grid-block shrink no-overflow small-2"
+                                        style={{
+                                            //width: "20%",
+                                            display: "inline-block"
+                                            //position: "absolute"
+                                        }}
+                                    >
+                                        {orderBook}
+                                    </div>
                                     {/* Trade history */}
                                     <div
-                                        className="small-2"
-                                        /*{cnames(
-                                            centerContainerWidth > 1200
-                                                ? groupTabsCount == 1
-                                                    ? "medium-12 xlarge-4"
-                                                    : "medium-6 xlarge-4 "
-                                                : centerContainerWidth > 800
-                                                    ? groupTabsCount == 1
-                                                        ? "medium-12"
-                                                        : "medium-6"
-                                                    : "",
-                                            "small-12 order-5",
-                                            verticalOrderBook
-                                                ? "xlarge-order-5"
-                                                : "",
-                                            !verticalOrderBook &&
-                                            !verticalOrderForm
-                                                ? "xlarge-order-2"
-                                                : ""
-                                        )}*/
+                                        className="small-2 "
                                         style={{
-                                            width: "20%",
+                                            //width: "20%",
                                             display: "inline-block",
                                             position: "relative"
                                         }}
@@ -3474,17 +3461,6 @@ class Exchange extends React.Component {
                                         >
                                             {groupTabs[1]}
                                         </Tabs>
-                                    </div>
-                                    {/* Order book */}
-                                    <div
-                                        className="grid-block shrink no-overflow"
-                                        style={{
-                                            width: "35%",
-                                            display: "inline-block"
-                                            //position: "absolute"
-                                        }}
-                                    >
-                                        {orderBook}
                                     </div>
                                 </div>
                             ) : null}
