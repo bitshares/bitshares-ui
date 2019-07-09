@@ -910,95 +910,8 @@ class OrderBook extends React.Component {
                             flipOrderBook ? "order-1" : "order-2"
                         )}
                     >
+                        {/*ask div */}
                         <div>
-                            <div
-                                className="exchange-content-header ask"
-                                //data-intro={translator.translate(
-                                //    "walkthrough.sell_orders"
-                                //)}
-                            >
-                                <Translate content="exchange.asks" />
-                                {flipOrderBook &&
-                                !this.props.hideFunctionButtons ? (
-                                    <div style={{display: "inline-block"}}>
-                                        <span
-                                            onClick={this.props.onFlipOrderBook.bind(
-                                                this
-                                            )}
-                                            style={{
-                                                cursor: "pointer",
-                                                fontSize: "1rem",
-                                                marginLeft: "4px",
-                                                position: "relative",
-                                                top: "-2px"
-                                            }}
-                                            className="flip-arrow"
-                                        >
-                                            {" "}
-                                            &#8646;
-                                        </span>
-                                    </div>
-                                ) : null}
-                                {flipOrderBook &&
-                                !this.props.hideFunctionButtons ? (
-                                    <div className="float-right header-sub-title grouped_order">
-                                        {trackedGroupsConfig ? (
-                                            <GroupOrderLimitSelector
-                                                trackedGroupsConfig={
-                                                    trackedGroupsConfig
-                                                }
-                                                handleGroupOrderLimitChange={
-                                                    handleGroupOrderLimitChange
-                                                }
-                                                currentGroupOrderLimit={
-                                                    currentGroupOrderLimit
-                                                }
-                                            />
-                                        ) : null}
-                                    </div>
-                                ) : null}
-                                {this.props.onTogglePosition &&
-                                !this.props.hideFunctionButtons ? (
-                                    <span
-                                        onClick={this.props.onTogglePosition}
-                                        style={{
-                                            cursor: "pointer",
-                                            fontSize: "1rem"
-                                        }}
-                                        className="flip-arrow"
-                                    >
-                                        {" "}
-                                        &#8645;
-                                    </span>
-                                ) : null}
-                                {flipOrderBook &&
-                                !this.props.hideFunctionButtons ? (
-                                    <span
-                                        className="order-book-button-v"
-                                        onClick={this.props.moveOrderBook}
-                                    >
-                                        <Icon
-                                            name="thumb-tack"
-                                            className="icon-14px icon-fill"
-                                        />
-                                    </span>
-                                ) : null}
-                                <div
-                                    style={{lineHeight: "16px"}}
-                                    className="header-sub-title float-right"
-                                >
-                                    <Translate content="exchange.market_depth" />
-                                    <span>: </span>
-                                    {utils.format_number(
-                                        totalAsks,
-                                        quote.get("precision")
-                                    )}
-                                    <span>
-                                        {" "}
-                                        (<AssetName name={quoteSymbol} />)
-                                    </span>
-                                </div>
-                            </div>
                             <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {!flipOrderBook ? rightHeader : leftHeader}
@@ -1029,25 +942,6 @@ class OrderBook extends React.Component {
                                     </TransitionWrapper>
                                 </table>
                             </div>
-                            {totalAsksLength > 11 ? (
-                                <div className="orderbook-showall">
-                                    <a
-                                        onClick={this._onSetShowAll.bind(
-                                            this,
-                                            "asks"
-                                        )}
-                                    >
-                                        <Translate
-                                            content={
-                                                showAllAsks
-                                                    ? "exchange.hide"
-                                                    : "exchange.show_asks"
-                                            }
-                                            ordercount={totalAsksLength}
-                                        />
-                                    </a>
-                                </div>
-                            ) : null}
                         </div>
                     </div>
 
@@ -1058,107 +952,6 @@ class OrderBook extends React.Component {
                         )}
                     >
                         <div>
-                            <div
-                                className="exchange-content-header bid"
-                                //data-intro={translator.translate(
-                                //    "walkthrough.buy_orders"
-                                //)}
-                            >
-                                <Translate content="exchange.bids" />
-                                {!flipOrderBook &&
-                                !this.props.hideFunctionButtons ? (
-                                    <div style={{display: "inline-block"}}>
-                                        <span
-                                            onClick={this.props.onFlipOrderBook.bind(
-                                                this
-                                            )}
-                                            style={{
-                                                cursor: "pointer",
-                                                fontSize: "1rem",
-                                                marginLeft: "4px",
-                                                position: "relative",
-                                                top: "-2px"
-                                            }}
-                                            className="flip-arrow"
-                                        >
-                                            {" "}
-                                            &#8646;
-                                        </span>
-                                    </div>
-                                ) : null}
-                                {!flipOrderBook &&
-                                !this.props.hideFunctionButtons ? (
-                                    <div className="float-right header-sub-title grouped_order">
-                                        {trackedGroupsConfig ? (
-                                            <GroupOrderLimitSelector
-                                                trackedGroupsConfig={
-                                                    trackedGroupsConfig
-                                                }
-                                                handleGroupOrderLimitChange={
-                                                    handleGroupOrderLimitChange
-                                                }
-                                                currentGroupOrderLimit={
-                                                    currentGroupOrderLimit
-                                                }
-                                            />
-                                        ) : null}
-                                    </div>
-                                ) : null}
-                                {currentGroupOrderLimit !== 0 &&
-                                    this.props.hideFunctionButtons && (
-                                        <Icon
-                                            name="grouping"
-                                            className="float-right icon-14px"
-                                            title={translator.translate(
-                                                "icons.order_grouping"
-                                            )}
-                                            style={{
-                                                marginLeft: "0.5rem"
-                                            }}
-                                        />
-                                    )}
-                                {this.props.onTogglePosition &&
-                                !this.props.hideFunctionButtons ? (
-                                    <span
-                                        onClick={this.props.onTogglePosition}
-                                        style={{
-                                            cursor: "pointer",
-                                            fontSize: "1rem"
-                                        }}
-                                        className="flip-arrow"
-                                    >
-                                        {" "}
-                                        &#8645;
-                                    </span>
-                                ) : null}
-                                {!flipOrderBook &&
-                                !this.props.hideFunctionButtons ? (
-                                    <span
-                                        className="order-book-button-v"
-                                        onClick={this.props.moveOrderBook}
-                                    >
-                                        <Icon
-                                            name="thumb-tack"
-                                            className="icon-14px"
-                                        />
-                                    </span>
-                                ) : null}
-                                <div
-                                    style={{lineHeight: "16px"}}
-                                    className="float-right header-sub-title"
-                                >
-                                    <Translate content="exchange.market_depth" />
-                                    <span>: </span>
-                                    {utils.format_number(
-                                        totalBids,
-                                        base.get("precision")
-                                    )}
-                                    <span>
-                                        {" "}
-                                        (<AssetName name={baseSymbol} />)
-                                    </span>
-                                </div>
-                            </div>
                             <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {flipOrderBook ? rightHeader : leftHeader}
@@ -1188,25 +981,6 @@ class OrderBook extends React.Component {
                                     </TransitionWrapper>
                                 </table>
                             </div>
-                            {totalBidsLength > rowCount ? (
-                                <div className="orderbook-showall">
-                                    <a
-                                        onClick={this._onSetShowAll.bind(
-                                            this,
-                                            "bids"
-                                        )}
-                                    >
-                                        <Translate
-                                            content={
-                                                showAllBids
-                                                    ? "exchange.hide"
-                                                    : "exchange.show_bids"
-                                            }
-                                            ordercount={totalBidsLength}
-                                        />
-                                    </a>
-                                </div>
-                            ) : null}
                         </div>
                     </div>
                 </div>

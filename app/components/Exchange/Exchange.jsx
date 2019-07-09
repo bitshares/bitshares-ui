@@ -2490,18 +2490,6 @@ class Exchange extends React.Component {
                     flipOrderBook={flipOrderBook}
                     orderBookReversed={orderBookReversed}
                     marketReady={marketReady}
-                    wrapperClass={cnames(
-                        centerContainerWidth > 1200
-                            ? "xlarge-8"
-                            : centerContainerWidth > 800
-                                ? ""
-                                : "",
-                        "medium-12 large-12",
-                        "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap shrink",
-                        `order-${buySellTop ? 3 : 1} xlarge-order-${
-                            buySellTop ? 4 : 1
-                        }`
-                    )}
                     innerClass={cnames(
                         centerContainerWidth > 1200
                             ? "medium-6"
@@ -2972,37 +2960,6 @@ class Exchange extends React.Component {
                 groupTabsCount++;
             }
         });
-        //trade history
-        let groupTabbed1 =
-            groupTabs[1].length > 0 ? (
-                <div
-                    key={`actionCard_${actionCardIndex++}`}
-                    className={cnames(
-                        centerContainerWidth > 1200
-                            ? groupTabsCount == 1
-                                ? "medium-12 xlarge-4"
-                                : "medium-6 xlarge-4 "
-                            : centerContainerWidth > 800
-                                ? groupTabsCount == 1
-                                    ? "medium-12"
-                                    : "medium-6"
-                                : "",
-                        "small-12 order-5",
-                        verticalOrderBook ? "xlarge-order-5" : "",
-                        !verticalOrderBook && !verticalOrderForm
-                            ? "xlarge-order-2"
-                            : ""
-                    )}
-                    style={{paddingRight: 5}}
-                >
-                    <Tabs
-                        activeKey={panelTabsActive[1]}
-                        onChange={this._setPanelTabInGroup.bind(this, 1)}
-                    >
-                        {groupTabs[1]}
-                    </Tabs>
-                </div>
-            ) : null;
 
         let groupTabbed2 =
             groupTabs[2].length > 0 ? (
@@ -3058,7 +3015,7 @@ class Exchange extends React.Component {
             }
 
             if (!verticalOrderBook) {
-                actionCards.push(orderBook);
+                //actionCards.push(orderBook);
             }
 
             if (verticalOrderBook || verticalOrderForm) {
@@ -3066,14 +3023,13 @@ class Exchange extends React.Component {
             }
 
             actionCards.push(groupStandalone);
-            //actionCards.push(groupTabbed1);
+
             actionCards.push(groupTabbed2);
         } else if (!tinyScreen) {
             actionCards.push(buyForm);
             actionCards.push(sellForm);
-            actionCards.push(orderBook);
+            //actionCards.push(orderBook);
             actionCards.push(groupStandalone);
-            //actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
             actionCards.push(
                 <div
@@ -3472,49 +3428,23 @@ class Exchange extends React.Component {
                                         <div
                                             className="grid-block vertical no-padding shrink"
                                             style={{
-                                                width: "60%",
+                                                width: "55%",
                                                 display: "inline-block"
                                             }}
                                         >
                                             {deptHighChart}
                                         </div>
                                     ) : null}
-                                    {/* Trade history */}
+                                    {/* Order book */}
                                     <div
-                                        className={cnames(
-                                            centerContainerWidth > 1200
-                                                ? groupTabsCount == 1
-                                                    ? "medium-12 xlarge-4"
-                                                    : "medium-6 xlarge-4 "
-                                                : centerContainerWidth > 800
-                                                    ? groupTabsCount == 1
-                                                        ? "medium-12"
-                                                        : "medium-6"
-                                                    : "",
-                                            "small-12 order-5",
-                                            verticalOrderBook
-                                                ? "xlarge-order-5"
-                                                : "",
-                                            !verticalOrderBook &&
-                                            !verticalOrderForm
-                                                ? "xlarge-order-2"
-                                                : ""
-                                        )}
+                                        className="grid-block shrink no-overflow"
                                         style={{
-                                            width: "20%",
+                                            width: "30%",
                                             display: "inline-block",
                                             position: "absolute"
                                         }}
                                     >
-                                        <Tabs
-                                            activeKey={panelTabsActive[1]}
-                                            onChange={this._setPanelTabInGroup.bind(
-                                                this,
-                                                1
-                                            )}
-                                        >
-                                            {groupTabs[1]}
-                                        </Tabs>
+                                        {orderBook}
                                     </div>
                                 </div>
                             ) : null}
