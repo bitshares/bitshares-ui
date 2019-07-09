@@ -4,11 +4,11 @@
 
 .table > thead > tr > th {
     border-bottom: 1px solid #ddd;
-    padding: 12px 5px;
+    padding: 4px 5px;
     //padding-right: 8px;
     text-transform: uppercase;
     font-weight: normal;
-    font-size: 0.875rem;
+    font-size: 12px;
     color: #777;
     text-align: left;
 }
@@ -16,6 +16,7 @@
 .table > tbody > tr > td {
     // border-bottom: 1px solid #ddd;
     padding: 5px;
+    font-size: 11px !important;
 }
 
 .table > tbody > tr:last-of-type > td {

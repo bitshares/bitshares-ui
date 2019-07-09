@@ -228,6 +228,7 @@ form.order-form {
         float: left !important;
         padding: 0 15px;
         margin-right: 12px;
+        width: 300px;
     }
 }
 
@@ -636,6 +637,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .exchange-padded {
     padding-right: 15px !important;
+    //color: yellow;
 }
 
 .mymarkets-base-select {
