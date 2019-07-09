@@ -45,7 +45,7 @@ class AccountPermissionRow extends React.Component {
             name = this.props.account.get("name");
             item_id = this.props.account.get("id");
             name_or_key = (
-                <Link to={`/account/${name}/permissions`}>{name}</Link>
+                <Link to={`/exchange/account/${name}/permissions`}>{name}</Link>
             );
         } else if (pubKey) {
             name = item_id = pubKey;

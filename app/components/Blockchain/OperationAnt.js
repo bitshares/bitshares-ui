@@ -30,7 +30,7 @@ class Operation {
         return utils.is_object_id(name_or_id) ? (
             <LinkToAccountById account={name_or_id} />
         ) : (
-            <Link to={`/account/${name_or_id}`}>{name_or_id}</Link>
+            <Link to={`/exchange/account/${name_or_id}`}>{name_or_id}</Link>
         );
     }
 
@@ -39,7 +39,7 @@ class Operation {
         return utils.is_object_id(symbol_or_id) ? (
             <LinkToAssetById asset={symbol_or_id} />
         ) : (
-            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>
+            <Link to={`/exchange/asset/${symbol_or_id}`}>{symbol_or_id}</Link>
         );
     }
 
@@ -1553,7 +1553,7 @@ class Operation {
                 console.log("unimplemented op '" + ops[op[0]] + "':", op);
                 column = (
                     <span>
-                        <Link to={`/block/${block}`}>#{block}</Link>
+                        <Link to={`/exchange/block/${block}`}>#{block}</Link>
                     </span>
                 );
         }

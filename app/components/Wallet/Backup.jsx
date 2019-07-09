@@ -86,12 +86,12 @@ class BackupRestore extends Component {
         let has_new_wallet = this.props.wallet.wallet_names.has(new_wallet);
         let restored = has_new_wallet;
         const wallet_types = (
-            <Link to="/help/introduction/wallets">
+            <Link to="/exchange/help/introduction/wallets">
                 {counterpart.translate("wallet.wallet_types")}
             </Link>
         );
         const backup_types = (
-            <Link to="/help/introduction/backups">
+            <Link to="/exchange/help/introduction/backups">
                 {counterpart.translate("wallet.backup_types")}
             </Link>
         );
@@ -127,7 +127,7 @@ class BackupRestore extends Component {
                     </DecryptBackup>
                 </Upload>
                 <br />
-                <Link to="/">
+                <Link to="/exchange/">
                     <Button>
                         <Translate content="wallet.back" />
                     </Button>
@@ -167,7 +167,7 @@ class Restore extends Component {
                             name={new_wallet.toUpperCase()}
                         />
                     </h5>
-                    <Link to="/">
+                    <Link to="/exchange/">
                         <Button type="primary">
                             <Translate
                                 component="span"

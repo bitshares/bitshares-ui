@@ -67,7 +67,7 @@ export default class WalletChangePassword extends Component {
                 <div>
                     <Translate component="p" content="wallet.change_success" />
                     <Translate component="p" content="wallet.change_backup" />
-                    <Link to="/wallet/backup/create">
+                    <Link to="/exchange/wallet/backup/create">
                         <Button>
                             <Translate content="wallet.create_backup" />
                         </Button>

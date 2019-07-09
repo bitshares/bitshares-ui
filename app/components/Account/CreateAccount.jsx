@@ -325,13 +325,13 @@ class CreateAccount extends React.Component {
                 {/* Backup restore option */}
                 <div style={{paddingTop: 40}}>
                     <label>
-                        <Link to="/existing-account">
+                        <Link to="/exchange/existing-account">
                             <Translate content="wallet.restore" />
                         </Link>
                     </label>
 
                     <label>
-                        <Link to="/create-wallet-brainkey">
+                        <Link to="/exchange/create-wallet-brainkey">
                             <Translate content="settings.backup_brainkey" />
                         </Link>
                     </label>
@@ -463,7 +463,7 @@ class CreateAccount extends React.Component {
                                 <Translate content="wallet.tips_dashboard" />:
                             </td>
                             <td>
-                                <Link to="/">
+                                <Link to="/exchange/">
                                     <Translate content="header.dashboard" />
                                 </Link>
                             </td>
@@ -475,7 +475,7 @@ class CreateAccount extends React.Component {
                             </td>
                             <td>
                                 <Link
-                                    to={`/account/${
+                                    to={`/exchange/account/${
                                         this.state.accountName
                                     }/overview`}
                                 >
@@ -489,7 +489,7 @@ class CreateAccount extends React.Component {
                                 <Translate content="wallet.tips_deposit" />:
                             </td>
                             <td>
-                                <Link to="/deposit-withdraw">
+                                <Link to="/exchange/deposit-withdraw">
                                     <Translate content="wallet.link_deposit" />
                                 </Link>
                             </td>
@@ -500,7 +500,7 @@ class CreateAccount extends React.Component {
                                 <Translate content="wallet.tips_transfer" />:
                             </td>
                             <td>
-                                <Link to="/transfer">
+                                <Link to="/exchange/transfer">
                                     <Translate content="wallet.link_transfer" />
                                 </Link>
                             </td>
@@ -511,7 +511,7 @@ class CreateAccount extends React.Component {
                                 <Translate content="wallet.tips_settings" />:
                             </td>
                             <td>
-                                <Link to="/settings">
+                                <Link to="/exchange/settings">
                                     <Translate content="header.settings" />
                                 </Link>
                             </td>
@@ -586,7 +586,7 @@ class CreateAccount extends React.Component {
                             ? this._renderBackupText()
                             : this._renderGetStartedText()}
                 </div>
-                <Link to="/">
+                <Link to="/exchange/">
                     <button className="button primary hollow">
                         <Translate content="wallet.back" />
                     </button>

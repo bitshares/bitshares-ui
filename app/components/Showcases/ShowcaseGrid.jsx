@@ -48,7 +48,7 @@ class ShowcaseGrid extends Component {
                 target: event => {
                     if (hasAccount) {
                         thiz.props.history.push(
-                            "/account/" +
+                            "/exchange/account/" +
                                 this.state.currentAccount.get("name") +
                                 "/voting"
                         );
@@ -63,7 +63,7 @@ class ShowcaseGrid extends Component {
             {
                 title: "showcases.barter.title",
                 target: event => {
-                    thiz.props.history.push("/barter");
+                    thiz.props.history.push("/exchange/barter");
                 },
                 description: "showcases.barter.description",
                 icon: "barter",
@@ -75,7 +75,7 @@ class ShowcaseGrid extends Component {
                 title: "showcases.borrow.title",
                 target: () => {
                     if (hasAccount) {
-                        thiz.props.history.push("/borrow");
+                        thiz.props.history.push("/exchange/borrow");
                     }
                 },
                 description: "showcases.borrow.description",
@@ -87,7 +87,7 @@ class ShowcaseGrid extends Component {
             {
                 title: "showcases.direct_debit.title",
                 target: event => {
-                    thiz.props.history.push("/direct-debit");
+                    thiz.props.history.push("/exchange/direct-debit");
                 },
                 description: "showcases.direct_debit.description",
                 icon: "direct_debit",
@@ -98,7 +98,7 @@ class ShowcaseGrid extends Component {
             {
                 title: "showcases.htlc.title",
                 target: event => {
-                    thiz.props.history.push("/htlc");
+                    thiz.props.history.push("/exchange/htlc");
                 },
                 description: "showcases.htlc.description",
                 icon: "htlc",
@@ -109,7 +109,7 @@ class ShowcaseGrid extends Component {
             {
                 title: "showcases.prediction_market.title",
                 target: event => {
-                    thiz.props.history.push("/prediction");
+                    thiz.props.history.push("/exchange/prediction");
                 },
                 description: "showcases.prediction_market.description",
                 icon: "prediction",

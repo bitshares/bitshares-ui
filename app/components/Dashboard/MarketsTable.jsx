@@ -335,7 +335,7 @@ class MarketsTable extends React.Component {
                 </div>
             ),
             asset: (
-                <Link to={`/market/${quote}_${base}`}>
+                <Link to={`/exchange/market/${quote}_${base}`}>
                     <img
                         ref={imgName.toLowerCase()}
                         className="column-hide-small"

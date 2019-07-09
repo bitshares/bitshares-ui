@@ -240,7 +240,7 @@ class Blocks extends React.Component {
                     return (
                         <tr key={block.id}>
                             <td>
-                                <Link to={`/block/${block.id}`}>
+                                <Link to={`/exchange/block/${block.id}`}>
                                     #{utils.format_number(block.id, 0)}
                                 </Link>
                             </td>
@@ -315,7 +315,8 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h2>
-                                #{utils.format_number(
+                                #
+                                {utils.format_number(
                                     dynGlobalObject.get("head_block_number"),
                                     0
                                 )}

@@ -22,14 +22,14 @@ The local wallet creates a database within your browser. This means that access
 to your funds it tied to **that browser only**. If you attempt to access your
 local wallet from any other computer, or any other browser, it will fail unless
 you actively import your backup file from the original browser backup file. The
-process actually easy. See managing [backups](/help/introduction/backups).
+process actually easy. See managing [backups](/exchange/help/introduction/backups).
 
 ## Security
 
 Rest assured that our servers do not have access to your funds because none of
 your private keys ever leave your browser. Instead, they are encrypted with your
 passphrase and are stored in your local browser's database. As such, you should
-make sure to have a proper [Backup](/help/introduction/backups) in the event
+make sure to have a proper [Backup](/exchange/help/introduction/backups) in the event
 something happens to your computer or browser.
 
 ## Management

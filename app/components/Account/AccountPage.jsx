@@ -93,64 +93,64 @@ class AccountPage extends React.Component {
                 <div className="grid-block no-padding">
                     <Switch>
                         <Route
-                            path={`/account/${account_name}`}
+                            path={`/exchange/account/${account_name}`}
                             exact
                             render={() => <AccountOverview {...passOnProps} />}
                         />
                         <Redirect
-                            from={`/account/${account_name}/overview`}
-                            to={`/account/${account_name}`}
+                            from={`/exchange/account/${account_name}/overview`}
+                            to={`/exchange/account/${account_name}`}
                         />
                         <Route
-                            path={`/account/${account_name}/assets`}
+                            path={`/exchange/account/${account_name}/assets`}
                             exact
                             render={() => <AccountAssets {...passOnProps} />}
                         />
                         <Route
-                            path={`/account/${account_name}/create-asset`}
+                            path={`/exchange/account/${account_name}/create-asset`}
                             exact
                             render={() => (
                                 <AccountAssetCreate {...passOnProps} />
                             )}
                         />
                         <Route
-                            path={`/account/${account_name}/update-asset/:asset`}
+                            path={`/exchange/account/${account_name}/update-asset/:asset`}
                             exact
                             render={() => (
                                 <AccountAssetUpdate {...passOnProps} />
                             )}
                         />
                         <Route
-                            path={`/account/${account_name}/member-stats`}
+                            path={`/exchange/account/${account_name}/member-stats`}
                             exact
                             render={() => (
                                 <AccountMembership {...passOnProps} />
                             )}
                         />
                         <Route
-                            path={`/account/${account_name}/vesting`}
+                            path={`/exchange/account/${account_name}/vesting`}
                             exact
                             render={() => <AccountVesting {...passOnProps} />}
                         />
                         <Route
-                            path={`/account/${account_name}/permissions`}
+                            path={`/exchange/account/${account_name}/permissions`}
                             exact
                             render={() => (
                                 <AccountPermissions {...passOnProps} />
                             )}
                         />
                         <Route
-                            path={`/account/${account_name}/voting`}
+                            path={`/exchange/account/${account_name}/voting`}
                             exact
                             render={() => <AccountVoting {...passOnProps} />}
                         />
                         <Route
-                            path={`/account/${account_name}/whitelist`}
+                            path={`/exchange/account/${account_name}/whitelist`}
                             exact
                             render={() => <AccountWhitelist {...passOnProps} />}
                         />
                         <Route
-                            path={`/account/${account_name}/signedmessages`}
+                            path={`/exchange/account/${account_name}/signedmessages`}
                             exact
                             render={() => (
                                 <AccountSignedMessages {...passOnProps} />

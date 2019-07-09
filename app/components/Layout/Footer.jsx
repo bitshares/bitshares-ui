@@ -148,7 +148,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            this.props.history.push("/help");
+            this.props.history.push("/exchange/help");
         } else {
             guide
                 .introJs()
@@ -772,7 +772,7 @@ class Footer extends React.Component {
 
     onAccess() {
         SettingsActions.changeViewSetting({activeSetting: 6});
-        this.props.history.push("/settings/access");
+        this.props.history.push("/exchange/settings/access");
     }
 }
 Footer = BindToChainState(Footer);

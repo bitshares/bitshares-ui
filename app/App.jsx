@@ -391,136 +391,159 @@ class App extends React.Component {
                         <div className="grid-block vertical">
                             <Switch>
                                 <Route
-                                    path="/"
+                                    path="/exchange/"
                                     exact
                                     component={DashboardPage}
                                 />
                                 <Route
-                                    path="/account/:account_name"
+                                    path="/exchange/account/:account_name"
                                     component={AccountPage}
                                 />
                                 <Route
-                                    path="/accounts"
+                                    path="/exchange/accounts"
                                     component={DashboardAccountsOnly}
                                 />
                                 <Route
-                                    path="/market/:marketID"
+                                    path="/exchange/market/:marketID"
                                     component={Exchange}
                                 />
                                 <Route
-                                    path="/settings/:tab"
+                                    path="/exchange/settings/:tab"
                                     component={Settings}
                                 />
-                                <Route path="/settings" component={Settings} />
+                                <Route
+                                    path="/exchange/settings"
+                                    component={Settings}
+                                />
 
                                 <Route
-                                    path="/transfer"
+                                    path="/exchange/transfer"
                                     exact
                                     component={Transfer}
                                 />
                                 <Route
-                                    path="/deposit-withdraw"
+                                    path="/exchange/deposit-withdraw"
                                     exact
                                     component={AccountDepositWithdraw}
                                 />
                                 <Route
-                                    path="/create-account"
+                                    path="/exchange/create-account"
                                     component={LoginSelector}
                                 />
-                                <Route path="/login" component={Login} />
                                 <Route
-                                    path="/registration"
+                                    path="/exchange/login"
+                                    component={Login}
+                                />
+                                <Route
+                                    path="/exchange/registration"
                                     exact
                                     component={RegistrationSelector}
                                 />
                                 <Route
-                                    path="/registration/local"
+                                    path="/exchange/registration/local"
                                     exact
                                     component={WalletRegistration}
                                 />
                                 <Route
-                                    path="/registration/cloud"
+                                    path="/exchange/registration/cloud"
                                     exact
                                     component={AccountRegistration}
                                 />
-                                <Route path="/news" exact component={News} />
+                                <Route
+                                    path="/exchange/news"
+                                    exact
+                                    component={News}
+                                />
                                 <Redirect
-                                    path={"/voting"}
+                                    path={"/exchange/voting"}
                                     to={{
-                                        pathname: `/account/${accountName}/voting`
+                                        pathname: `/exchange/account/${accountName}/voting`
                                     }}
                                 />
                                 {/* Explorer routes */}
                                 <Route
-                                    path="/explorer/:tab"
+                                    path="/exchange/explorer/:tab"
                                     component={Explorer}
                                 />
-                                <Route path="/explorer" component={Explorer} />
                                 <Route
-                                    path="/asset/:symbol"
+                                    path="/exchange/explorer"
+                                    component={Explorer}
+                                />
+                                <Route
+                                    path="/exchange/asset/:symbol"
                                     component={Asset}
                                 />
                                 <Route
                                     exact
-                                    path="/block/:height"
+                                    path="/exchange/block/:height"
                                     component={Block}
                                 />
                                 <Route
                                     exact
-                                    path="/block/:height/:txIndex"
+                                    path="/exchange/block/:height/:txIndex"
                                     component={Block}
                                 />
-                                <Route path="/borrow" component={Borrow} />
-
-                                <Route path="/barter" component={Barter} />
                                 <Route
-                                    path="/direct-debit"
+                                    path="/exchange/borrow"
+                                    component={Borrow}
+                                />
+
+                                <Route
+                                    path="/exchange/barter"
+                                    component={Barter}
+                                />
+                                <Route
+                                    path="/exchange/direct-debit"
                                     component={DirectDebit}
                                 />
 
                                 <Route
-                                    path="/spotlight"
+                                    path="/exchange/spotlight"
                                     component={ShowcaseGrid}
                                 />
 
                                 {/* Wallet backup/restore routes */}
                                 <Route
-                                    path="/wallet"
+                                    path="/exchange/wallet"
                                     component={WalletManager}
                                 />
                                 <Route
-                                    path="/create-wallet-brainkey"
+                                    path="/exchange/create-wallet-brainkey"
                                     component={CreateWalletFromBrainkey}
                                 />
                                 <Route
-                                    path="/existing-account"
+                                    path="/exchange/existing-account"
                                     component={ExistingAccount}
                                 />
 
                                 <Route
-                                    path="/create-worker"
+                                    path="/exchange/create-worker"
                                     component={CreateWorker}
                                 />
 
                                 {/* Help routes */}
-                                <Route exact path="/help" component={Help} />
                                 <Route
                                     exact
-                                    path="/help/:path1"
+                                    path="/exchange/help"
                                     component={Help}
                                 />
                                 <Route
                                     exact
-                                    path="/help/:path1/:path2"
+                                    path="/exchange/help/:path1"
                                     component={Help}
                                 />
                                 <Route
                                     exact
-                                    path="/help/:path1/:path2/:path3"
+                                    path="/exchange/help/:path1/:path2"
                                     component={Help}
                                 />
-                                <Route path="/htlc" component={Htlc} />
-                                <Route path="*" component={Page404} />
+                                <Route
+                                    exact
+                                    path="/exchange/help/:path1/:path2/:path3"
+                                    component={Help}
+                                />
+                                <Route path="/exchange/htlc" component={Htlc} />
+                                <Route path="/exchange/*" component={Page404} />
                             </Switch>
                         </div>
                     </div>

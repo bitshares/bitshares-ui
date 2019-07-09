@@ -127,7 +127,7 @@ class CreateNewWallet extends Component {
                     <h4>
                         <Translate content="wallet.wallet_created" />
                     </h4>
-                    <Link to="/">
+                    <Link to="/exchange/">
                         <div className="button success">
                             <Translate content="wallet.done" />
                         </div>
@@ -259,12 +259,12 @@ class WalletCreate extends Component {
 
 const CreateWalletFromBrainkey = props => {
     const wallet_types = (
-        <Link to="/help/introduction/wallets">
+        <Link to="/exchange/help/introduction/wallets">
             {counterpart.translate("wallet.wallet_types")}
         </Link>
     );
     const backup_types = (
-        <Link to="/help/introduction/backups">
+        <Link to="/exchange/help/introduction/backups">
             {counterpart.translate("wallet.backup_types")}
         </Link>
     );

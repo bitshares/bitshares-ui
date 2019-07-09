@@ -3,7 +3,7 @@ import {Apis} from "bitsharesjs-ws";
 /** This file centralized customization and branding efforts throughout the whole wallet and is meant to facilitate
  *  the process.
  *
- *  @author Stefan Schiessl <stefan.schiessl@blockchainprojectsbv.com>
+ *  @author Rostislav Gogolauri <go.go.gg.rostislav@gmail.com>
  */
 
 /**
@@ -62,8 +62,8 @@ export function getLogo() {
  * @returns {string}
  */
 export function getDefaultTheme() {
-    // possible ["darkTheme", "lightTheme", "midnightTheme"]
-    return "darkTheme";
+    // possible ["midnightTheme", "lightTheme"]
+    return "midnightTheme";
 }
 
 /**

@@ -48,27 +48,27 @@ class ExistingAccount extends Component {
                             <Switch>
                                 <Route
                                     exact
-                                    path="/existing-account"
+                                    path="/exchange/existing-account"
                                     component={BackupRestore}
                                 />
                                 <Route
                                     exact
-                                    path="/existing-account/import-backup"
+                                    path="/exchange/existing-account/import-backup"
                                     component={ExistingAccountOptions}
                                 />
                                 <Route
                                     exact
-                                    path="/existing-account/import-keys"
+                                    path="/exchange/existing-account/import-keys"
                                     component={ImportKeys}
                                 />
                                 <Route
                                     exact
-                                    path="/existing-account/brainkey"
+                                    path="/exchange/existing-account/brainkey"
                                     component={Brainkey}
                                 />
                                 <Route
                                     exact
-                                    path="/existing-account/balance-claim"
+                                    path="/exchange/existing-account/balance-claim"
                                     component={BalanceClaimActive}
                                 />
                             </Switch>
@@ -80,7 +80,10 @@ class ExistingAccount extends Component {
         );
     }
 }
-ExistingAccount = connect(ExistingAccount, connectObject);
+ExistingAccount = connect(
+    ExistingAccount,
+    connectObject
+);
 
 class ExistingAccountOptions extends Component {
     render() {
@@ -89,7 +92,7 @@ class ExistingAccountOptions extends Component {
             <span>
                 {!has_wallet ? (
                     <div>
-                        <Link to="existing-account/import-backup">
+                        <Link to="/exchange/existing-account/import-backup">
                             <Translate
                                 content="wallet.import_backup"
                                 wallet_name={getWalletName()}
@@ -97,12 +100,12 @@ class ExistingAccountOptions extends Component {
                         </Link>
                         <br />
                         <br />
-                        <Link to="existing-account/import-keys">
+                        <Link to="/exchange/existing-account/import-keys">
                             <Translate content="wallet.import_bts1" />
                         </Link>
                         <br />
                         <br />
-                        <Link to="existing-account/import-keys">
+                        <Link to="/exchange/existing-account/import-keys">
                             <Translate content="wallet.create_wallet" />
                         </Link>
                         <br />
@@ -114,7 +117,7 @@ class ExistingAccountOptions extends Component {
 
                 {has_wallet ? (
                     <span>
-                        <Link to="dashboard">
+                        <Link to="/exchange/dashboard">
                             <div className="button outline">
                                 <Translate
                                     component="span"
@@ -122,7 +125,7 @@ class ExistingAccountOptions extends Component {
                                 />
                             </div>
                         </Link>
-                        <Link to="wallet">
+                        <Link to="/exchange/wallet">
                             <div className="button outline">
                                 <Translate content="settings.wallets" />
                             </div>
@@ -133,7 +136,10 @@ class ExistingAccountOptions extends Component {
         );
     }
 }
-ExistingAccountOptions = connect(ExistingAccountOptions, connectObject);
+ExistingAccountOptions = connect(
+    ExistingAccountOptions,
+    connectObject
+);
 
 export default ExistingAccount;
 export {ExistingAccountOptions};

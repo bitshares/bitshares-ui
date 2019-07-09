@@ -308,9 +308,10 @@ class WalletUnlockModal extends React.Component {
         this.props.history.push(path);
     };
 
-    handleCreateWallet = () => this.closeRedirect("/create-account/wallet");
+    handleCreateWallet = () =>
+        this.closeRedirect("/exchange/create-account/wallet");
 
-    handleRestoreOther = () => this.closeRedirect("/settings/restore");
+    handleRestoreOther = () => this.closeRedirect("/exchange/settings/restore");
 
     loadBackup = e => {
         const fullPath = e.target.value;

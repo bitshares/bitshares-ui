@@ -109,7 +109,7 @@ class Row extends React.Component {
                         >
                             <Link
                                 className="inline-block"
-                                to={`/block/${this.props.block}/${
+                                to={`/exchange/block/${this.props.block}/${
                                     this.props.txIndex
                                 }`}
                             >
@@ -203,7 +203,7 @@ class Operation extends React.Component {
         return utils.is_object_id(name_or_id) ? (
             <LinkToAccountById account={name_or_id} />
         ) : (
-            <Link to={`/account/${name_or_id}`}>{name_or_id}</Link>
+            <Link to={`/exchange/account/${name_or_id}`}>{name_or_id}</Link>
         );
     }
 
@@ -212,7 +212,7 @@ class Operation extends React.Component {
         return utils.is_object_id(symbol_or_id) ? (
             <LinkToAssetById asset={symbol_or_id} />
         ) : (
-            <Link to={`/asset/${symbol_or_id}`}>{symbol_or_id}</Link>
+            <Link to={`/exchange/asset/${symbol_or_id}`}>{symbol_or_id}</Link>
         );
     }
 

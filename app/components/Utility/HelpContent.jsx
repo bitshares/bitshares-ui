@@ -44,7 +44,7 @@ function adjust_links(str) {
             : text;
         let res = `<a href="${
             __HASH_HISTORY__ ? "#" : ""
-        }/help/${page}" onclick="_onClickLink(event)"`;
+        }/exchange/help/${page}" onclick="_onClickLink(event)"`;
         return res;
     });
 }

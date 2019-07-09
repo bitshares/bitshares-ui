@@ -21,10 +21,10 @@ class MarketRow extends React.Component {
     }
 
     _onClick(marketID) {
-        const newPath = `/market/${marketID}`;
+        const newPath = `/exchange/market/${marketID}`;
         if (newPath !== this.props.location.pathname) {
             MarketsActions.switchMarket();
-            this.props.history.push(`/market/${marketID}`);
+            this.props.history.push(`/exchange/market/${marketID}`);
         }
     }
 

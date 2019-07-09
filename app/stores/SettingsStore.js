@@ -145,7 +145,7 @@ class SettingsStore {
             unit: getUnits(),
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
-            themes: ["darkTheme", "lightTheme", "midnightTheme"],
+            themes: ["midnightTheme", "lightTheme", "darkTheme"],
             passwordLogin: [
                 {translate: "cloud_login"},
                 {translate: "local_wallet"}

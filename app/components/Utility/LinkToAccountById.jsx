@@ -43,7 +43,7 @@ class LinkToAccountById extends React.Component {
         ) : (
             <Link
                 onClick={this.props.onClick ? this.props.onClick : () => {}}
-                to={`/account/${account_name}/${this.props.subpage}/`}
+                to={`/exchange/account/${account_name}/${this.props.subpage}/`}
             >
                 {account_name.substr(0, maxDisplayAccountNameLength)}
                 {account_name.length > maxDisplayAccountNameLength

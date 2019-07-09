@@ -203,7 +203,7 @@ class Header extends React.Component {
         e.preventDefault();
 
         // Set Accounts Tab as active tab
-        if (route == "/accounts") {
+        if (route == "/exchange/accounts") {
             SettingsActions.changeViewSetting({
                 dashboardEntry: "accounts"
             });
@@ -256,7 +256,7 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
-        if (this.props.location.pathname.indexOf("/account/") !== -1) {
+        if (this.props.location.pathname.indexOf("/exchange/account/") !== -1) {
             let currentPath = this.props.location.pathname.split("/");
             currentPath[2] = account_name;
             this.props.history.push(currentPath.join("/"));
@@ -389,13 +389,13 @@ class Header extends React.Component {
             <a
                 className={cnames("logo", {
                     active:
-                        active === "/" ||
+                        active === "/exchange" ||
                         (active.indexOf("dashboard") !== -1 &&
                             active.indexOf("account") === -1)
                 })}
-                onClick={this._onNavigate.bind(this, "/")}
+                onClick={this._onNavigate.bind(this, "/exchange")}
             >
-                <img style={{margin: 0, height: 40}} src={logo} />
+                <img style={{marginTop: -11, height: 35}} src={logo} />
             </a>
         );
 
@@ -410,8 +410,8 @@ class Header extends React.Component {
         // ) : null;
 
         let tradeUrl = this.props.lastMarket
-            ? `/market/${this.props.lastMarket}`
-            : "/market/USD_BTS";
+            ? `/exchange/market/${this.props.lastMarket}`
+            : "/exchange/market/USD_BTS";
 
         // Account selector: Only active inside the exchange
         let account_display_name, accountsList;
@@ -434,7 +434,7 @@ class Header extends React.Component {
                                 className={cnames({
                                     active:
                                         active
-                                            .replace("/account/", "")
+                                            .replace("/exchange/account/", "")
                                             .indexOf(name) === 0
                                 })}
                                 onClick={this._accountClickHandler.bind(
@@ -631,14 +631,14 @@ class Header extends React.Component {
             );
         }
         if (
-            active.indexOf("/assets") !== -1 &&
+            active.indexOf("/exchange/assets") !== -1 &&
             active.indexOf("explorer") === -1
         ) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/assets") !== -1
+                        active: active.indexOf("/exchange/assets") !== -1
                     })}
                 >
                     <Icon
@@ -655,12 +655,13 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("/signedmessages") !== -1) {
+        if (active.indexOf("/exchange/signedmessages") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/signedmessages") !== -1
+                        active:
+                            active.indexOf("/exchange/signedmessages") !== -1
                     })}
                 >
                     <Icon
@@ -677,12 +678,12 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("/member-stats") !== -1) {
+        if (active.indexOf("/exchange/member-stats") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/member-stats") !== -1
+                        active: active.indexOf("/exchange/member-stats") !== -1
                     })}
                 >
                     <Icon
@@ -699,12 +700,12 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("/vesting") !== -1) {
+        if (active.indexOf("/exchange/vesting") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/vesting") !== -1
+                        active: active.indexOf("/exchange/vesting") !== -1
                     })}
                 >
                     <Icon
@@ -721,12 +722,12 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("/whitelist") !== -1) {
+        if (active.indexOf("/exchange/whitelist") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/whitelist") !== -1
+                        active: active.indexOf("/exchange/whitelist") !== -1
                     })}
                 >
                     <Icon
@@ -743,12 +744,12 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("/permissions") !== -1) {
+        if (active.indexOf("/exchange/permissions") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/permissions") !== -1
+                        active: active.indexOf("/exchange/permissions") !== -1
                     })}
                 >
                     <Icon
@@ -766,12 +767,12 @@ class Header extends React.Component {
             );
         }
 
-        if (active.indexOf("/borrow") !== -1) {
+        if (active.indexOf("/exchange/borrow") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/borrow") !== -1
+                        active: active.indexOf("/exchange/borrow") !== -1
                     })}
                 >
                     <Icon
@@ -794,7 +795,7 @@ class Header extends React.Component {
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/barter") !== -1
+                        active: active.indexOf("/exchange/barter") !== -1
                     })}
                 >
                     <Icon
@@ -812,12 +813,12 @@ class Header extends React.Component {
             );
         }
 
-        if (active.indexOf("/direct-debit") !== -1) {
+        if (active.indexOf("/exchange/direct-debit") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/direct-debit") !== -1
+                        active: active.indexOf("/exchange/direct-debit") !== -1
                     })}
                 >
                     <Icon
@@ -865,7 +866,7 @@ class Header extends React.Component {
                     <li
                         onClick={this._onNavigate.bind(
                             this,
-                            "/settings/general"
+                            "/exchange/settings/general"
                         )}
                     >
                         <Translate
@@ -878,7 +879,7 @@ class Header extends React.Component {
                         <li
                             onClick={this._onNavigate.bind(
                                 this,
-                                "/settings/wallet"
+                                "/exchange/settings/wallet"
                             )}
                         >
                             <Translate
@@ -891,7 +892,7 @@ class Header extends React.Component {
                     <li
                         onClick={this._onNavigate.bind(
                             this,
-                            "/settings/accounts"
+                            "/exchange/settings/accounts"
                         )}
                     >
                         <Translate
@@ -906,7 +907,7 @@ class Header extends React.Component {
                             key={"settings.password"}
                             onClick={this._onNavigate.bind(
                                 this,
-                                "/settings/password"
+                                "/exchange/settings/password"
                             )}
                         >
                             <Translate
@@ -919,7 +920,7 @@ class Header extends React.Component {
                             key={"settings.backup"}
                             onClick={this._onNavigate.bind(
                                 this,
-                                "/settings/backup"
+                                "/exchange/settings/backup"
                             )}
                         >
                             <Translate
@@ -932,7 +933,7 @@ class Header extends React.Component {
                     <li
                         onClick={this._onNavigate.bind(
                             this,
-                            "/settings/restore"
+                            "/exchange/settings/restore"
                         )}
                     >
                         <Translate
@@ -944,7 +945,7 @@ class Header extends React.Component {
                     <li
                         onClick={this._onNavigate.bind(
                             this,
-                            "/settings/access"
+                            "/exchange/settings/access"
                         )}
                     >
                         <Translate
@@ -956,7 +957,7 @@ class Header extends React.Component {
                     <li
                         onClick={this._onNavigate.bind(
                             this,
-                            "/settings/faucet_address"
+                            "/exchange/settings/faucet_address"
                         )}
                     >
                         <Translate
@@ -966,7 +967,10 @@ class Header extends React.Component {
                         />
                     </li>
                     <li
-                        onClick={this._onNavigate.bind(this, "/settings/reset")}
+                        onClick={this._onNavigate.bind(
+                            this,
+                            "/exchange/settings/reset"
+                        )}
                     >
                         <Translate
                             content="settings.reset"
@@ -979,7 +983,7 @@ class Header extends React.Component {
         };
 
         return (
-            <div className="header-container" style={{minHeight: "64px"}}>
+            <div className="header-container" style={{minHeight: "38px"}}>
                 <div>
                     <div
                         className="header menu-group primary"
@@ -1035,42 +1039,38 @@ class Header extends React.Component {
                                 <li>
                                     <Link
                                         style={{flexFlow: "row"}}
-                                        to={`/account/${currentAccount}`}
+                                        to={`/exchange/account/${currentAccount}`}
                                         className={cnames({
                                             active:
-                                                active.indexOf("account/") !==
-                                                    -1 &&
-                                                active.indexOf("/account/") !==
-                                                    -1 &&
-                                                active.indexOf("/assets") ===
-                                                    -1 &&
-                                                active.indexOf("/voting") ===
-                                                    -1 &&
                                                 active.indexOf(
-                                                    "/signedmessages"
+                                                    "/exchange/account/"
+                                                ) !== -1 &&
+                                                active.indexOf(
+                                                    "/exchange/account/"
+                                                ) !== -1 &&
+                                                active.indexOf(
+                                                    "/exchange/assets"
                                                 ) === -1 &&
                                                 active.indexOf(
-                                                    "/member-stats"
+                                                    "/exchange/voting"
                                                 ) === -1 &&
-                                                active.indexOf("/vesting") ===
-                                                    -1 &&
-                                                active.indexOf("/whitelist") ===
-                                                    -1 &&
                                                 active.indexOf(
-                                                    "/permissions"
+                                                    "/exchange/signedmessages"
+                                                ) === -1 &&
+                                                active.indexOf(
+                                                    "/exchange/member-stats"
+                                                ) === -1 &&
+                                                active.indexOf(
+                                                    "/exchange/vesting"
+                                                ) === -1 &&
+                                                active.indexOf(
+                                                    "/exchange/whitelist"
+                                                ) === -1 &&
+                                                active.indexOf(
+                                                    "/exchange/permissions"
                                                 ) === -1
                                         })}
                                     >
-                                        <Icon
-                                            size="1_5x"
-                                            style={{
-                                                position: "relative",
-                                                top: -2,
-                                                left: -8
-                                            }}
-                                            name="dashboard"
-                                            title="icons.dashboard"
-                                        />
                                         <Translate
                                             className="column-hide-small"
                                             content="header.dashboard"
@@ -1095,16 +1095,6 @@ class Header extends React.Component {
                                         tradeUrl
                                     )}
                                 >
-                                    <Icon
-                                        size="1_5x"
-                                        style={{
-                                            position: "relative",
-                                            top: -2,
-                                            left: -8
-                                        }}
-                                        name="trade"
-                                        title="icons.trade.exchange"
-                                    />
                                     <Translate
                                         className="column-hide-small"
                                         component="span"
@@ -1127,19 +1117,9 @@ class Header extends React.Component {
                                     )}
                                     onClick={this._onNavigate.bind(
                                         this,
-                                        "/explorer/blocks"
+                                        "/exchange/explorer/blocks"
                                     )}
                                 >
-                                    <Icon
-                                        size="2x"
-                                        style={{
-                                            position: "relative",
-                                            top: 0,
-                                            left: -8
-                                        }}
-                                        name="server"
-                                        title="icons.server"
-                                    />
                                     <Translate
                                         className="column-hide-small"
                                         component="span"
@@ -1228,13 +1208,15 @@ class Header extends React.Component {
                                 className={cnames(
                                     {
                                         active:
-                                            active.indexOf("/accounts") !== -1
+                                            active.indexOf(
+                                                "/exchange/accounts"
+                                            ) !== -1
                                     },
                                     "divider"
                                 )}
                                 onClick={this._onNavigate.bind(
                                     this,
-                                    "/accounts"
+                                    "/exchange/accounts"
                                 )}
                             >
                                 <div className="table-cell">
