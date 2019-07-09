@@ -1,8 +1,13 @@
 import React from "react";
-import {Modal, Input, Form, Switch} from "bitshares-ui-style-guide";
+import {Modal, Input, Form, Switch, Button} from "bitshares-ui-style-guide";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
+import counterpart from "counterpart";
+import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
+import MarketsActions from "actions/MarketsActions";
+import {Notification} from "bitshares-ui-style-guide";
+import {ChainStore} from "bitsharesjs";
 
 export default class AddOpinionModal extends Modal {
     constructor(props) {
@@ -11,9 +16,11 @@ export default class AddOpinionModal extends Modal {
             newOpinionParameters: {
                 opinionator: null,
                 opinion: this.props.preselectedOpinion,
-                amount: this.props.preselectedAmount,
+                amount: this.props.preselectedAmount || " ",
                 fee: null
             },
+            showWarning: false,
+            inProgress: false,
             bool_opinion:
                 this.props.preselectedOpinion === "yes" ? true : false,
             showWarning: true,
@@ -22,6 +29,82 @@ export default class AddOpinionModal extends Modal {
 
         this.handleOpinionChange = this.handleOpinionChange.bind(this);
         this.handleAmountChange = this.handleAmountChange.bind(this);
+        this.onOk = this.onOk.bind(this);
+    }
+
+    _createOrder(type, feeID) {
+        if (type === "ask") this._borrow();
+
+        let {description} = this.props.market.options;
+        const parsedDescription = JSON.parse(description);
+        let expiry = parsedDescription.expiry
+            ? new Date(parsedDescription.expiry)
+            : new Date();
+
+        let bid = {
+            for_sale: new Asset({
+                asset_id: this.props.baseAsset.get("id"),
+                precision: this.props.baseAsset.get("precision"),
+                amount: 100000 //TODO
+            }),
+            to_receive: new Asset({
+                asset_id: this.props.quoteAsset.get("id"),
+                precision: this.props.quoteAsset.get("precision"),
+                amount: 100000 //TODO
+            })
+        };
+        bid.price = new Price({base: bid.for_sale, quote: bid.to_receive});
+        let ask = {
+            for_sale: new Asset({
+                asset_id: this.props.quoteAsset.get("id"),
+                precision: this.props.quoteAsset.get("precision"),
+                amount: 100000 //TODO
+            }),
+            to_receive: new Asset({
+                asset_id: this.props.baseAsset.get("id"),
+                precision: this.props.baseAsset.get("precision"),
+                amount: 100000 //TODO
+            })
+        };
+        ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
+
+        let current = type === "ask" ? ask : bid;
+
+        const order = new LimitOrderCreate({
+            for_sale: current.for_sale,
+            expiration: expiry,
+            to_receive: current.to_receive,
+            seller: ChainStore.getAccount(this.props.currentAccount).get("id"),
+            fee: {
+                asset_id: feeID,
+                amount: 0
+            }
+        });
+
+        return MarketsActions.createLimitOrder2(order)
+            .then(result => {
+                if (result.error) {
+                    if (result.error.message !== "wallet locked")
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_order",
+                                {
+                                    amount: current.to_receive.getAmount({
+                                        real: true
+                                    }),
+                                    symbol: current.to_receive.asset_id
+                                }
+                            )
+                        });
+                }
+            })
+            .catch(e => {
+                console.error("order failed:", e);
+            });
+    }
+
+    _borrow() {
+        console.log("borrow");
     }
 
     handleOpinionChange() {
@@ -35,42 +118,51 @@ export default class AddOpinionModal extends Modal {
     }
 
     handleAmountChange({amount, asset}) {
-        function handleWarning() {
-            if (this.checkFullBlank()) {
-                this.setState({showWarning: false});
-            } else {
-                this.setState({showWarning: true});
-            }
-        }
-
-        if (amount) {
-            let newOpinion = this.state.newOpinionParameters;
-            newOpinion.amount = amount;
-            newOpinion.opinionator = this.props.currentAccountId;
-            this.setState({newOpinionParameter: newOpinion}, handleWarning);
-        }
+        let newOpinion = this.state.newOpinionParameters;
+        newOpinion.amount = amount;
+        newOpinion.opinionator = this.props.currentAccountId;
+        this.setState({newOpinionParameter: newOpinion});
 
         if (typeof asset === "string") {
-            this.setState({selectedAsset: asset}, handleWarning);
+            this.setState({selectedAsset: asset});
         }
     }
 
-    checkFullBlank() {
-        return this.state.newOpinionParameters.amount &&
-            this.state.selectedAsset
-            ? true
-            : false;
+    _isFormValid() {
+        return this.state.newOpinionParameters.amount;
+    }
+
+    onOk() {
+        const type =
+            this.state.newOpinionParameters.opinion === "no" ? "bid" : "ask";
+        const feeID = "1.3.0"; //TODO
+        if (this._isFormValid()) {
+            this._createOrder.call(this, type, feeID);
+        } else {
+            this.setState({showWarning: true});
+        }
     }
 
     render() {
-        let onOkFunction;
+        const {showWarning, newOpinionParameters} = this.state;
 
-        if (this.checkFullBlank()) {
-            onOkFunction = () =>
-                this.props.submitNewOpinion(this.state.newOpinionParameters);
-        } else {
-            onOkFunction = () => {};
-        }
+        const footer = [
+            <Button
+                type="primary"
+                key="submit"
+                onClick={this.onOk.bind(this)}
+                disabled={this.state.inProgress}
+            >
+                {counterpart.translate("global.confirm")}
+            </Button>,
+            <Button
+                key="cancel"
+                onClick={this.props.onClose}
+                disabled={this.state.inProgress}
+            >
+                {counterpart.translate("global.cancel")}
+            </Button>
+        ];
 
         return (
             <Modal
@@ -78,11 +170,10 @@ export default class AddOpinionModal extends Modal {
                     <Translate content="prediction.add_opinion_modal.title" />
                 }
                 visible={this.props.show}
-                onOk={() => {
-                    onOkFunction();
-                }}
                 onCancel={this.props.onClose}
                 overlay={true}
+                closable={!this.state.inProgress}
+                footer={footer}
             >
                 <div>
                     <Form className="full-width" layout="vertical">
@@ -126,28 +217,40 @@ export default class AddOpinionModal extends Modal {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <label className="left-label">
-                                <Translate content="prediction.add_opinion_modal.amount" />
-                                <AmountSelector
-                                    onChange={this.handleAmountChange}
-                                    placeholder="0.0"
-                                    tabIndex={6}
-                                    amount={
-                                        this.state.newOpinionParameters.amount
-                                    }
-                                    assets={[
-                                        "1.3.113",
-                                        "1.3.120",
-                                        "1.3.121",
-                                        "1.3.1325",
-                                        "1.3.105",
-                                        "1.3.106",
-                                        "1.3.103"
-                                    ]}
-                                    asset={this.state.selectedAsset}
-                                />
-                            </label>
+                            <span
+                                className={
+                                    !newOpinionParameters.amount && showWarning
+                                        ? "has-error"
+                                        : ""
+                                }
+                            >
+                                <label className="left-label">
+                                    <Translate content="prediction.add_opinion_modal.amount" />
+                                    <AmountSelector
+                                        onChange={this.handleAmountChange}
+                                        placeholder="0.0"
+                                        tabIndex={6}
+                                        amount={
+                                            this.state.newOpinionParameters
+                                                .amount
+                                        }
+                                        assets={[
+                                            "1.3.113",
+                                            "1.3.120",
+                                            "1.3.121",
+                                            "1.3.1325",
+                                            "1.3.105",
+                                            "1.3.106",
+                                            "1.3.103"
+                                        ]}
+                                        asset={this.state.selectedAsset}
+                                    />
+                                </label>
+                            </span>
                         </Form.Item>
+                        {this.state.inProgress ? (
+                            <Translate content="footer.loading" />
+                        ) : null}
                     </Form>
                 </div>
             </Modal>

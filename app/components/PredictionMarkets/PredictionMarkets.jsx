@@ -77,14 +77,14 @@ export default class PredictionMarkets extends Component {
         const asks = this.props.markets.asks.map(element => ({
             order_id: element.id,
             opinionator: element.seller,
-            opinion: "yes",
+            opinion: "no",
             amount: element.for_sale,
             fee: element.fee
         }));
         const bids = this.props.markets.bids.map(element => ({
             order_id: element.id,
             opinionator: element.seller,
-            opinion: "no",
+            opinion: "yes",
             amount: element.for_sale,
             fee: element.fee
         }));
@@ -328,7 +328,7 @@ export default class PredictionMarkets extends Component {
                             market: this.state.selectedMarket,
                             opinions: this.state.opinions
                         }}
-                        currentAccountId={this.state.currentAccountId}
+                        currentAccount={this.props.currentAccount}
                         onOppose={this.onOppose}
                         onCancel={this.onCancelOpinion}
                         detailsSearchTerm={this.state.detailsSearchTerm}
@@ -358,10 +358,12 @@ export default class PredictionMarkets extends Component {
                         onClose={this.onAddOpinionModalClose.bind(this)}
                         market={this.state.selectedMarket}
                         opinion={this.state.initialOpinion}
-                        currentAccountId={this.state.currentAccountId}
+                        currentAccount={this.props.currentAccount}
                         submitNewOpinion={this.onSubmitNewOpinion}
                         preselectedOpinion={this.state.preselectedOpinion}
                         preselectedAmount={this.state.preselectedAmount}
+                        baseAsset={this.state.subscribedMarket.base}
+                        quoteAsset={this.state.subscribedMarket.quote}
                     />
                 ) : null}
                 {this.state.isCreateMarketModalOpen ? (
