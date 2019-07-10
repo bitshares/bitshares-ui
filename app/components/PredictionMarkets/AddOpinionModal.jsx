@@ -16,14 +16,16 @@ export default class AddOpinionModal extends Modal {
             newOpinionParameters: {
                 opinionator: null,
                 opinion: this.props.preselectedOpinion,
-                amount: this.props.preselectedAmount || " ",
+                amount:
+                    this.props.preselectedAmount /
+                        Math.pow(10, this.props.baseAsset.get("precision")) ||
+                    " ",
                 fee: null
             },
             showWarning: false,
             inProgress: false,
             bool_opinion:
                 this.props.preselectedOpinion === "yes" ? true : false,
-            showWarning: true,
             selectedAsset: null
         };
 
@@ -33,8 +35,10 @@ export default class AddOpinionModal extends Modal {
     }
 
     _createOrder(type, feeID) {
+        this.setState({inProgress: true});
         if (type === "ask") this._borrow();
 
+        //setting resolution date of the market as expiration date of the order
         let {description} = this.props.market.options;
         const parsedDescription = JSON.parse(description);
         let expiry = parsedDescription.expiry
@@ -45,12 +49,16 @@ export default class AddOpinionModal extends Modal {
             for_sale: new Asset({
                 asset_id: this.props.baseAsset.get("id"),
                 precision: this.props.baseAsset.get("precision"),
-                amount: 100000 //TODO
+                amount:
+                    this.state.newOpinionParameters.amount *
+                    Math.pow(10, this.props.baseAsset.get("precision")) //TODO
             }),
             to_receive: new Asset({
                 asset_id: this.props.quoteAsset.get("id"),
                 precision: this.props.quoteAsset.get("precision"),
-                amount: 100000 //TODO
+                amount:
+                    this.state.newOpinionParameters.amount *
+                    Math.pow(10, this.props.quoteAsset.get("precision")) //TODO
             })
         };
         bid.price = new Price({base: bid.for_sale, quote: bid.to_receive});
@@ -58,12 +66,16 @@ export default class AddOpinionModal extends Modal {
             for_sale: new Asset({
                 asset_id: this.props.quoteAsset.get("id"),
                 precision: this.props.quoteAsset.get("precision"),
-                amount: 100000 //TODO
+                amount:
+                    this.state.newOpinionParameters.amount *
+                    Math.pow(10, this.props.quoteAsset.get("precision")) //TODO
             }),
             to_receive: new Asset({
                 asset_id: this.props.baseAsset.get("id"),
                 precision: this.props.baseAsset.get("precision"),
-                amount: 100000 //TODO
+                amount:
+                    this.state.newOpinionParameters.amount *
+                    Math.pow(10, this.props.baseAsset.get("precision")) //TODO
             })
         };
         ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
@@ -77,12 +89,13 @@ export default class AddOpinionModal extends Modal {
             seller: ChainStore.getAccount(this.props.currentAccount).get("id"),
             fee: {
                 asset_id: feeID,
-                amount: 0
+                amount: 0 //TODO
             }
         });
 
         return MarketsActions.createLimitOrder2(order)
             .then(result => {
+                this.setState({inProgress: false});
                 if (result.error) {
                     if (result.error.message !== "wallet locked")
                         Notification.error({
@@ -129,7 +142,7 @@ export default class AddOpinionModal extends Modal {
     }
 
     _isFormValid() {
-        return this.state.newOpinionParameters.amount;
+        return parseFloat(this.state.newOpinionParameters.amount);
     }
 
     onOk() {
@@ -219,7 +232,9 @@ export default class AddOpinionModal extends Modal {
                         <Form.Item>
                             <span
                                 className={
-                                    !newOpinionParameters.amount && showWarning
+                                    (!newOpinionParameters.amount &&
+                                        showWarning) ||
+                                    showWarning
                                         ? "has-error"
                                         : ""
                                 }
@@ -234,16 +249,7 @@ export default class AddOpinionModal extends Modal {
                                             this.state.newOpinionParameters
                                                 .amount
                                         }
-                                        assets={[
-                                            "1.3.113",
-                                            "1.3.120",
-                                            "1.3.121",
-                                            "1.3.1325",
-                                            "1.3.105",
-                                            "1.3.106",
-                                            "1.3.103"
-                                        ]}
-                                        asset={this.state.selectedAsset}
+                                        asset={this.props.baseAsset.get("id")}
                                     />
                                 </label>
                             </span>

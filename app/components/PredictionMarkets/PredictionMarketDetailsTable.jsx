@@ -8,6 +8,15 @@ import {ChainStore} from "bitsharesjs";
 export default class PredictionMarketDetailsTable extends Component {
     _getColumns() {
         const onCell = this.onRowAction;
+        const precision = Math.pow(
+            10,
+            ChainStore.getAsset(this.props.marketData.market.asset_id).get(
+                "precision"
+            )
+        );
+        const currentAccountId = ChainStore.getAccount(
+            this.props.currentAccount
+        ).get("id");
         return [
             {
                 key: "order_id",
@@ -42,7 +51,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 align: "left",
                 onCell,
                 render: dataItem => {
-                    return <span>{dataItem.amount}</span>;
+                    return <span>{dataItem.amount / precision}</span>;
                 }
             },
             {
@@ -51,7 +60,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 align: "left",
                 onCell,
                 render: dataItem => {
-                    return <span>{dataItem.fee}</span>;
+                    return <span>{dataItem.fee / precision}</span>;
                 }
             },
             {
@@ -68,9 +77,8 @@ export default class PredictionMarketDetailsTable extends Component {
                                 alignItems: "center"
                             }}
                         >
-                            {this.props.currentAccountId &&
-                            dataItem.opinionator ===
-                                this.props.currentAccountId ? (
+                            {currentAccountId &&
+                            dataItem.opinionator === currentAccountId ? (
                                 <Button
                                     onClick={() => {
                                         this.props.onCancel(dataItem);

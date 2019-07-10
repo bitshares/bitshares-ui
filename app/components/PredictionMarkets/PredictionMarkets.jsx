@@ -77,14 +77,14 @@ export default class PredictionMarkets extends Component {
         const asks = this.props.markets.asks.map(element => ({
             order_id: element.id,
             opinionator: element.seller,
-            opinion: "no",
+            opinion: "yes",
             amount: element.for_sale,
             fee: element.fee
         }));
         const bids = this.props.markets.bids.map(element => ({
             order_id: element.id,
             opinionator: element.seller,
-            opinion: "yes",
+            opinion: "no",
             amount: element.for_sale,
             fee: element.fee
         }));
@@ -210,7 +210,9 @@ export default class PredictionMarkets extends Component {
 
     onAddOpinionModalClose() {
         this.setState({
-            isAddOpinionModalOpen: false
+            isAddOpinionModalOpen: false,
+            preselectedOpinion: "no",
+            preselectedAmount: 0
         });
     }
 
@@ -235,9 +237,17 @@ export default class PredictionMarkets extends Component {
     };
 
     onCancelOpinion = opinion => {
-        // TODO implement required logic for opinion cancelation
-        console.log("Cancel", opinion);
+        this._cancelLimitOrders([opinion.order_id]);
     };
+
+    _cancelLimitOrders(orderid) {
+        MarketsActions.cancelLimitOrders(
+            ChainStore.getAccount(this.props.currentAccount).get("id"),
+            orderid
+        ).catch(err => {
+            console.log("cancel orders error:", err);
+        });
+    }
 
     onSubmitNewOpinion = value => {
         // TODO implement handling of new opinion
@@ -290,7 +300,7 @@ export default class PredictionMarkets extends Component {
                 </div>
                 <PredictionMarketsOverviewTable
                     markets={this.state.markets}
-                    currentAccountId={this.state.currentAccountId}
+                    currentAccount={this.props.currentAccount}
                     onMarketAction={this.onMarketAction.bind(this)}
                     searchTerm={this.state.searchTerm}
                 />
@@ -380,7 +390,7 @@ export default class PredictionMarkets extends Component {
                         show={this.state.isResolveModalOpen}
                         onClose={this.onResolveModalClose.bind(this)}
                         market={this.state.selectedMarket}
-                        currentAccountId={this.state.currentAccountId}
+                        currentAccount={this.props.currentAccount}
                         onResolveMarket={this.onResolveMarket}
                     />
                 ) : null}

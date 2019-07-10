@@ -22,6 +22,9 @@ export default class PredictionMarketsOverviewTable extends Component {
 
     _getColumns() {
         const onCell = this.onRowAction;
+        const currentAccountId = ChainStore.getAccount(
+            this.props.currentAccount
+        ).get("id");
         return [
             {
                 key: "asset_id",
@@ -72,7 +75,6 @@ export default class PredictionMarketsOverviewTable extends Component {
                 key: "action",
                 title: counterpart.translate("prediction.overview.action"),
                 align: "left",
-                //              onCell,
                 render: dataItem => {
                     return (
                         <div
@@ -82,8 +84,8 @@ export default class PredictionMarketsOverviewTable extends Component {
                                 alignItems: "center"
                             }}
                         >
-                            {this.props.currentAccountId &&
-                            this.props.currentAccountId === dataItem.issuer ? (
+                            {currentAccountId &&
+                            currentAccountId === dataItem.issuer ? (
                                 <Button
                                     style={{marginTop: "10px", width: "170px"}}
                                     type="primary"

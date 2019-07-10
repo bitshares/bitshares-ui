@@ -98,9 +98,6 @@ export default class CreateMarketModal extends Modal {
             bitasset_opts,
             description
         );
-        // const creationPromise = new Promise(resolve => {
-        //     setTimeout(resolve, 5000);
-        // });
         creationPromise
             .then(result => {
                 this.setState({inProgress: false});
