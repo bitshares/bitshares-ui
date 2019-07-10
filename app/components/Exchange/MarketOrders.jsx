@@ -71,13 +71,16 @@ class MarketOrders extends React.Component {
     }
 
     componentDidUpdate(prevState) {
-        if (prevState.showAll != this.state.showAll) {
-            if (this.state.showAll && !this.state.hideScrollbars) {
+        let {hideScrollbars} = this.props;
+        let {showAll} = this.state;
+
+        if (prevState.showAll != showAll) {
+            if (showAll && !hideScrollbars) {
                 this.updateContainer(2);
-            } else if (this.state.showAll && this.state.hideScrollbar) {
-                this.updateContainer(1);
-            } else if (!this.state.showAll && !this.state.hideScrollbar) {
+            } else if (!showAll && !hideScrollbars) {
                 this.updateContainer(3);
+            } else if (showAll && hideScrollbars) {
+                this.updateContainer(1);
             } else {
                 this.updateContainer(0);
             }
@@ -89,23 +92,25 @@ class MarketOrders extends React.Component {
             this.changeTab(nextProps.activeTab);
         }
 
-        // Reset showAll on Marhet Switch
+        // Reset on Market Switch
         if (
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol
         ) {
             this.setState({showAll: false});
+            this.updateContainer(0);
+
+            if (!this.props.hideScrollbars) {
+                this.updateContainer(1);
+            }
         }
 
-        if (
-            nextProps.baseSymbol !== this.props.baseSymbol ||
-            nextProps.quoteSymbol !== this.props.quoteSymbol ||
-            nextProps.hideScrollbars !== this.props.hideScrollbars
-        ) {
-            if (nextProps.hideScrollbars) {
-                this.updateContainer(0);
-            } else {
-                this.updateContainer(3);
+        // Reset on hideScrollbars switch
+        if (nextProps.hideScrollbars !== this.props.hideScrollbars) {
+            this.updateContainer(0);
+
+            if (!nextProps.hideScrollbars) {
+                this.updateContainer(1);
             }
         }
     }
@@ -115,11 +120,13 @@ class MarketOrders extends React.Component {
      * type:int [0:destroy, 1:init, 2:update, 3:update w/ scrollTop] (default: 2)
      */
     updateContainer(type = 2) {
-        let containerNode = this.refs.container;
+        let containerNode = this.refs.view.refs.container;
+        let containerTransition = this.refs.contentTransition;
 
         if (!containerNode) return;
 
         if (type == 0) {
+            containerNode.scrollTop = 0;
             Ps.destroy(containerNode);
         } else if (type == 1) {
             Ps.initialize(containerNode);
@@ -130,7 +137,30 @@ class MarketOrders extends React.Component {
             containerNode.scrollTop = 0;
             Ps.update(containerNode);
         }
-        this.refs.contentTransition.resetAnimation();
+
+        if (containerTransition) {
+            containerTransition.resetAnimation();
+        }
+    }
+
+    onSetShowAll() {
+        this.setState({
+            showAll: !this.state.showAll
+        });
+    }
+
+    changeTab(tab) {
+        SettingsActions.changeViewSetting({
+            ordersTab: tab
+        });
+        this.setState({
+            activeTab: tab
+        });
+
+        // Ensure that focus goes back to top of scrollable container when tab is changed
+        this.updateContainer(3);
+
+        setTimeout(ReactTooltip.rebuild, 1000);
     }
 
     onCheckCancel(orderId, evt) {
@@ -186,12 +216,6 @@ class MarketOrders extends React.Component {
             .catch(err => {
                 console.log("cancel orders error:", err);
             });
-    }
-
-    onSetShowAll() {
-        this.setState({
-            showAll: !this.state.showAll
-        });
     }
 
     getOrders() {
@@ -258,20 +282,6 @@ class MarketOrders extends React.Component {
                 }
             });
         return limitOrders.concat(callOrders);
-    }
-
-    changeTab(tab) {
-        SettingsActions.changeViewSetting({
-            ordersTab: tab
-        });
-        this.setState({
-            activeTab: tab
-        });
-
-        // Ensure that focus goes back to top of scrollable container when tab is changed
-        this.updateContainer(3);
-
-        setTimeout(ReactTooltip.rebuild, 1000);
     }
 
     render() {
@@ -464,6 +474,7 @@ class MarketOrders extends React.Component {
 
         return (
             <MarketsOrderView
+                ref="view"
                 // Styles and Classes
                 style={this.props.style}
                 className={this.props.className}
