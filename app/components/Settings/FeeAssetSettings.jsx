@@ -43,7 +43,7 @@ class FeeAssetSettings extends React.Component {
                 <Button
                     style={{margin: "15px"}}
                     key="open_change_fee_asset"
-                    type="primary"
+                    type="secondary"
                     onClick={() => {
                         this.setState({showModal: true});
                     }}

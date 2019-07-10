@@ -212,6 +212,7 @@ class FeeAssetSelector extends React.Component {
                 title={counterpart.translate(
                     "settings.change_default_fee_asset_tooltip"
                 )}
+                mouseEnterDelay={0.5}
             >
                 <Button
                     type="secondary"
