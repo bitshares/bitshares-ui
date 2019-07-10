@@ -11,8 +11,7 @@ import ReactTooltip from "react-tooltip";
 import {FillOrder} from "common/MarketClasses";
 import {
     MarketHistoryView,
-    MarketHistoryViewMyHistoryRow,
-    MarketHistoryViewMarketHistoryRow
+    MarketHistoryViewRow
 } from "./View/MarketHistoryView";
 
 class MarketHistory extends React.Component {
@@ -157,16 +156,18 @@ class MarketHistory extends React.Component {
             activeTab = "history";
         }
 
-        const assets = {
-            [quote.get("id")]: {
-                precision: quote.get("precision")
-            },
-            [base.get("id")]: {
-                precision: base.get("precision")
-            }
-        };
-
         if (activeTab === "my_history" && (myHistory && myHistory.size)) {
+            // User History
+
+            const assets = {
+                [quote.get("id")]: {
+                    precision: quote.get("precision")
+                },
+                [base.get("id")]: {
+                    precision: base.get("precision")
+                }
+            };
+
             historyRows = myHistory
                 .filter(a => {
                     let opType = a.getIn(["op", 0]);
@@ -192,7 +193,7 @@ class MarketHistory extends React.Component {
                     );
 
                     return (
-                        <MarketHistoryViewMyHistoryRow
+                        <MarketHistoryViewRow
                             fill={fill}
                             base={base}
                             quote={quote}
@@ -201,11 +202,12 @@ class MarketHistory extends React.Component {
                 })
                 .toArray();
         } else if (history && history.size) {
+            // Market History
             historyRows = this.props.history
                 .take(100)
                 .map(fill => {
                     return (
-                        <MarketHistoryViewMarketHistoryRow
+                        <MarketHistoryViewRow
                             fill={fill}
                             base={base}
                             quote={quote}

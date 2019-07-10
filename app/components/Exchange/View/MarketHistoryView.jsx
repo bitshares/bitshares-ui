@@ -9,34 +9,28 @@ import PriceText from "../../Utility/PriceText";
 import {Tooltip} from "bitshares-ui-style-guide";
 import getLocale from "browser-locale";
 
-function MarketHistoryViewMarketHistoryRow({fill, base, quote}) {
-    return (
-        <tr key={"history_" + fill.id}>
-            <td className={fill.className}>
-                <PriceText price={fill.getPrice()} base={base} quote={quote} />
-            </td>
-            <td>{fill.amountToReceive()}</td>
-            <td>{fill.amountToPay()}</td>
-            <td>
-                <Tooltip title={fill.time.toString()}>
-                    <div className="tooltip" style={{whiteSpace: "nowrap"}}>
-                        {counterpart.localize(fill.time, {
-                            type: "date",
-                            format:
-                                getLocale()
-                                    .toLowerCase()
-                                    .indexOf("en-us") !== -1
-                                    ? "market_history_us"
-                                    : "market_history"
-                        })}
-                    </div>
-                </Tooltip>
-            </td>
-        </tr>
+function MarketHistoryViewRow({fill, base, quote}) {
+    const isMarket = fill.id.indexOf("5.0") !== -1 ? true : false;
+    const timestamp = isMarket ? (
+        <td>
+            <Tooltip title={fill.time.toString()} placement="left">
+                <div className="tooltip" style={{whiteSpace: "nowrap"}}>
+                    {counterpart.localize(fill.time, {
+                        type: "date",
+                        format:
+                            getLocale()
+                                .toLowerCase()
+                                .indexOf("en-us") !== -1
+                                ? "market_history_us"
+                                : "market_history"
+                    })}
+                </div>
+            </Tooltip>
+        </td>
+    ) : (
+        <BlockDate component="td" block_number={fill.block} tooltip />
     );
-}
 
-function MarketHistoryViewMyHistoryRow({fill, base, quote}) {
     return (
         <tr key={fill.id}>
             <td className={fill.className}>
@@ -44,7 +38,7 @@ function MarketHistoryViewMyHistoryRow({fill, base, quote}) {
             </td>
             <td>{fill.amountToReceive()}</td>
             <td>{fill.amountToPay()}</td>
-            <BlockDate component="td" block_number={fill.block} />
+            {timestamp}
         </tr>
     );
 }
@@ -173,8 +167,4 @@ function MarketHistoryView({
     );
 }
 
-export {
-    MarketHistoryView,
-    MarketHistoryViewMyHistoryRow,
-    MarketHistoryViewMarketHistoryRow
-};
+export {MarketHistoryView, MarketHistoryViewRow};
