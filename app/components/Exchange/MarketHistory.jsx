@@ -25,27 +25,6 @@ class MarketHistory extends React.Component {
         };
     }
 
-    /***
-     * Update PS Container
-     * type:int [0:destroy, 1:init, 2:update] (default: 2)
-     */
-    _updateContainer(type = 2) {
-        let containerNode = this.refs.view.refs.history;
-
-        if (!containerNode) return;
-
-        if (type == 0) {
-            Ps.destroy(containerNode);
-        } else if (type == 1) {
-            Ps.initialize(containerNode);
-            this._updateContainer(2);
-        } else if (type == 2) {
-            containerNode.scrollTop = 0;
-            Ps.update(containerNode);
-        }
-        this.refs.view.refs.historyTransition.resetAnimation();
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !Immutable.is(nextProps.history, this.props.history) ||
@@ -63,52 +42,90 @@ class MarketHistory extends React.Component {
 
     componentDidMount() {
         if (!this.props.hideScrollbars) {
-            this._updateContainer(1);
+            this.updateContainer(1);
         }
     }
 
     componentDidUpdate(prevState) {
-        if (prevState.showAll != this.state.showAll) {
-            if (this.state.hideScrollbars && prevState.showAll) {
-                this._updateContainer(0);
-            } else if (this.state.hideScrollbars && !prevState.showAll) {
-                this._updateContainer(1);
-            } else {
-                this._updateContainer(2);
-            }
-        }
+        let {hideScrollbars} = this.props;
+        let {showAll} = this.state;
 
-        if (
-            !this.props.hideScrollbars ||
-            (this.props.hideScrollbars && this.state.showAll)
-        ) {
-            this._updateContainer(2);
+        if (prevState.showAll != showAll) {
+            if (showAll && !hideScrollbars) {
+                this.updateContainer(2);
+            } else if (!showAll && !hideScrollbars) {
+                this.updateContainer(3);
+            } else if (showAll && hideScrollbars) {
+                this.updateContainer(1);
+            } else {
+                this.updateContainer(0);
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.activeTab !== this.props.activeTab) {
-            this._changeTab(nextProps.activeTab);
+            this.changeTab(nextProps.activeTab);
         }
 
+        // Reset on Market Switch
         if (
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol
         ) {
-            this._updateContainer(0);
+            this.setState({showAll: false});
+            this.updateContainer(0);
+
+            if (!this.props.hideScrollbars) {
+                this.updateContainer(1);
+            }
         }
 
+        // Reset on hideScrollbars switch
         if (nextProps.hideScrollbars !== this.props.hideScrollbars) {
-            this._updateContainer(0);
+            this.updateContainer(0);
 
             if (!nextProps.hideScrollbars) {
-                this._updateContainer(1);
-                this._updateContainer(2);
+                this.updateContainer(1);
             }
         }
     }
 
-    _changeTab(tab) {
+    /***
+     * Update PS Container
+     * type:int [0:destroy, 1:init, 2:update, 3:update w/ scrollTop] (default: 2)
+     */
+    updateContainer(type = 2) {
+        let containerNode = this.refs.view.refs.history;
+        let containerTransition = this.refs.view.refs.historyTransition;
+
+        if (!containerNode) return;
+
+        if (type == 0) {
+            containerNode.scrollTop = 0;
+            Ps.destroy(containerNode);
+        } else if (type == 1) {
+            Ps.initialize(containerNode);
+            this.updateContainer(3);
+        } else if (type == 2) {
+            Ps.update(containerNode);
+        } else if (type == 3) {
+            containerNode.scrollTop = 0;
+            Ps.update(containerNode);
+        }
+
+        if (containerTransition) {
+            containerTransition.resetAnimation();
+        }
+    }
+
+    onSetShowAll() {
+        this.setState({
+            showAll: !this.state.showAll
+        });
+    }
+
+    changeTab(tab) {
         SettingsActions.changeViewSetting({
             historyTab: tab
         });
@@ -117,18 +134,9 @@ class MarketHistory extends React.Component {
         });
 
         // Ensure that focus goes back to top of scrollable container when tab is changed
-        this._updateContainer(2);
+        this.updateContainer(3);
+
         setTimeout(ReactTooltip.rebuild, 1000);
-    }
-
-    _onSetShowAll() {
-        this.setState({
-            showAll: !this.state.showAll
-        });
-
-        if (this.state.showAll) {
-            this.refs.view.refs.history.scrollTop = 0;
-        }
     }
 
     render() {
@@ -227,7 +235,7 @@ class MarketHistory extends React.Component {
                 historyRows={historyRows}
                 totalRows={totalRows}
                 showAll={showAll}
-                onSetShowAll={this._onSetShowAll.bind(this)}
+                onSetShowAll={this.onSetShowAll.bind(this)}
             />
         );
     }
