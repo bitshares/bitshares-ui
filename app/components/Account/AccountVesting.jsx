@@ -9,6 +9,27 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import LoadingIndicator from "components/LoadingIndicator";
 
 class VestingBalance extends React.Component {
+    constructor() {
+        super();
+
+        this._updateState = this._updateState.bind(this);
+    }
+
+    componentWillMount() {
+        this._updateState();
+
+        ChainStore.subscribe(this._updateState);
+    }
+
+    componentWillUnmount() {
+        ChainStore.unsubscribe(this._updateState);
+    }
+
+    _updateState() {
+        let {vb} = this.props;
+        const cvbAsset = ChainStore.getAsset(vb.balance.asset_id);
+        this.setState({cvbAsset});
+    }
     _onClaim(claimAll, e) {
         e.preventDefault();
         WalletActions.claimVestingBalance(
@@ -23,19 +44,18 @@ class VestingBalance extends React.Component {
 
     render() {
         let {vb} = this.props;
+        const {cvbAsset} = this.state;
         if (!this.props.vb) {
             return null;
         }
 
-        let cvbAsset,
-            secondsPerDay = 60 * 60 * 24,
+        let secondsPerDay = 60 * 60 * 24,
             balance;
         let vestingPeriod = null;
         let earned = null;
         let availablePercent = null;
         if (vb) {
             balance = vb.balance.amount;
-            cvbAsset = ChainStore.getAsset(vb.balance.asset_id);
 
             if (vb.policy && vb.policy[0] !== 2) {
                 earned = vb.policy[1].coin_seconds_earned;
@@ -59,122 +79,129 @@ class VestingBalance extends React.Component {
                     id={vb.id}
                 />
 
-                <table className="table key-value-table">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <Translate content="account.member.balance_type" />
-                            </td>
-                            <td>
-                                <span>{vb.balance_type}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="account.member.cashback" />
-                            </td>
-                            <td>
-                                <FormattedAsset
-                                    amount={vb.balance.amount}
-                                    asset={vb.balance.asset_id}
-                                />
-                            </td>
-                        </tr>
-                        {earned && (
+                {cvbAsset ? (
+                    <table className="table key-value-table">
+                        <tbody>
                             <tr>
                                 <td>
-                                    <Translate content="account.member.earned" />
+                                    <Translate content="account.member.balance_type" />
                                 </td>
                                 <td>
-                                    {cvbAsset
-                                        ? utils.format_number(
-                                              utils.get_asset_amount(
-                                                  earned / secondsPerDay,
-                                                  cvbAsset
-                                              ),
-                                              0
-                                          )
-                                        : null}
-                                    &nbsp;
-                                    <Translate content="account.member.coindays" />
+                                    <span>{vb.balance_type}</span>
                                 </td>
                             </tr>
-                        )}
-                        {earned && (
                             <tr>
                                 <td>
-                                    <Translate content="account.member.required" />
+                                    <Translate content="account.member.cashback" />
                                 </td>
                                 <td>
-                                    {cvbAsset
-                                        ? utils.format_number(
-                                              utils.get_asset_amount(
-                                                  (vb.balance.amount *
-                                                      vestingPeriod) /
-                                                      secondsPerDay,
-                                                  cvbAsset
-                                              ),
-                                              0
-                                          )
-                                        : null}
-                                    &nbsp;
-                                    <Translate content="account.member.coindays" />
+                                    <FormattedAsset
+                                        amount={vb.balance.amount}
+                                        asset={vb.balance.asset_id}
+                                    />
                                 </td>
                             </tr>
-                        )}
-                        {earned && (
-                            <tr>
-                                <td>
-                                    <Translate content="account.member.remaining" />
-                                </td>
-                                <td>
-                                    {utils.format_number(
-                                        (vestingPeriod *
-                                            (1 - availablePercent)) /
-                                            secondsPerDay || 0,
-                                        2
-                                    )}
-                                    &nbsp;days
-                                </td>
-                            </tr>
-                        )}
-                        <tr>
-                            <td>
-                                <Translate content="account.member.available" />
-                            </td>
-                            {earned ? (
-                                <td>
-                                    {utils.format_number(
-                                        availablePercent * 100,
-                                        2
-                                    )}
-                                    % /{" "}
-                                    {cvbAsset ? (
-                                        <FormattedAsset
-                                            amount={
-                                                availablePercent *
-                                                vb.balance.amount
-                                            }
-                                            asset={cvbAsset.get("id")}
-                                        />
-                                    ) : null}
-                                </td>
-                            ) : (
-                                <td>{utils.format_number(100, 2)}%</td>
+                            {earned && (
+                                <tr>
+                                    <td>
+                                        <Translate content="account.member.earned" />
+                                    </td>
+                                    <td>
+                                        {cvbAsset
+                                            ? utils.format_number(
+                                                  utils.get_asset_amount(
+                                                      earned / secondsPerDay,
+                                                      cvbAsset
+                                                  ),
+                                                  0
+                                              )
+                                            : null}
+                                        &nbsp;
+                                        <Translate content="account.member.coindays" />
+                                    </td>
+                                </tr>
                             )}
-                        </tr>
-                        <tr>
-                            <td colSpan="2" style={{textAlign: "right"}}>
-                                <button
-                                    onClick={this._onClaim.bind(this, false)}
-                                    className="button"
-                                >
-                                    <Translate content="account.member.claim" />
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            {earned && (
+                                <tr>
+                                    <td>
+                                        <Translate content="account.member.required" />
+                                    </td>
+                                    <td>
+                                        {cvbAsset
+                                            ? utils.format_number(
+                                                  utils.get_asset_amount(
+                                                      (vb.balance.amount *
+                                                          vestingPeriod) /
+                                                          secondsPerDay,
+                                                      cvbAsset
+                                                  ),
+                                                  0
+                                              )
+                                            : null}
+                                        &nbsp;
+                                        <Translate content="account.member.coindays" />
+                                    </td>
+                                </tr>
+                            )}
+                            {earned && (
+                                <tr>
+                                    <td>
+                                        <Translate content="account.member.remaining" />
+                                    </td>
+                                    <td>
+                                        {utils.format_number(
+                                            (vestingPeriod *
+                                                (1 - availablePercent)) /
+                                                secondsPerDay || 0,
+                                            2
+                                        )}
+                                        &nbsp;days
+                                    </td>
+                                </tr>
+                            )}
+                            <tr>
+                                <td>
+                                    <Translate content="account.member.available" />
+                                </td>
+                                {earned ? (
+                                    <td>
+                                        {utils.format_number(
+                                            availablePercent * 100,
+                                            2
+                                        )}
+                                        % /{" "}
+                                        {cvbAsset ? (
+                                            <FormattedAsset
+                                                amount={
+                                                    availablePercent *
+                                                    vb.balance.amount
+                                                }
+                                                asset={cvbAsset.get("id")}
+                                            />
+                                        ) : null}
+                                    </td>
+                                ) : (
+                                    <td>{utils.format_number(100, 2)}%</td>
+                                )}
+                            </tr>
+                            <tr>
+                                <td colSpan="2" style={{textAlign: "right"}}>
+                                    <button
+                                        onClick={this._onClaim.bind(
+                                            this,
+                                            false
+                                        )}
+                                        className="button"
+                                    >
+                                        <Translate content="account.member.claim" />
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                ) : (
+                    <LoadingIndicator type="circle" />
+                )}
             </div>
         );
     }
