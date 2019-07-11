@@ -69,7 +69,13 @@ class VestingBalance extends React.Component {
                                 <Translate content="account.member.balance_type" />
                             </td>
                             <td>
-                                <span>{vb.balance_type}</span>
+                                <Translate
+                                    component="span"
+                                    content={
+                                        "account.vesting.type." +
+                                        vb.balance_type
+                                    }
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -133,7 +139,8 @@ class VestingBalance extends React.Component {
                                             secondsPerDay || 0,
                                         2
                                     )}
-                                    &nbsp;days
+                                    &nbsp;
+                                    <Translate content="account.member.coindays" />
                                 </td>
                             </tr>
                         )}
@@ -213,6 +220,9 @@ class AccountVesting extends React.Component {
 
     render() {
         let {vbs} = this.state;
+
+        console.log(vbs);
+
         if (
             !vbs ||
             !this.props.account ||
