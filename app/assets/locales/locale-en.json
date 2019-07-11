@@ -693,6 +693,7 @@
         "settle_better_settleprice": "Settlement price is in favour",
         "settlement_date": "Settlement date",
         "settlement_description": "Settlement of %(quoteAsset)s %(quoteName)s",
+        "settlement_of": "Settlement of",
         "settle_delay": "This asset will settle in %(hours)s hours",
         "settle_delay_globally_settled": "This asset will settle instantly",
         "settle_globally_settled": "Settle instantly",
