@@ -335,8 +335,8 @@ class AccountPortfolioList extends React.Component {
                 [action === "bridge_modal"
                     ? "bridgeAsset"
                     : action === "deposit_modal"
-                    ? "depositAsset"
-                    : "withdrawAsset"]: asset,
+                        ? "depositAsset"
+                        : "withdrawAsset"]: asset,
                 fiatModal
             },
             () => {

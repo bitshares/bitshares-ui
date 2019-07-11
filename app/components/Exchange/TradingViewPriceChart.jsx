@@ -104,7 +104,7 @@ export default class TradingViewPriceChart extends React.Component {
             custom_css_url: props.theme + ".css",
             enabled_features: enabled_features,
             disabled_features: disabled_features,
-            debug: true,
+            debug: false,
             preset: this.props.mobile ? "mobile" : ""
         });
 
