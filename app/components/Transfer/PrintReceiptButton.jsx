@@ -28,13 +28,18 @@ const printReceipt = ({data, parsePrice}) => {
 
     let height = 0;
     let body = [];
-    let transactionId = null;
-    from.get("history").forEach(op => {
-        if (op.get("block_num") === blockNum) {
-            transactionId = op.get("id");
-            return;
-        }
-    });
+    let transactionId = "";
+    let fromName = "";
+
+    if (from) {
+        from.get("history").forEach(op => {
+            if (op.get("block_num") === blockNum) {
+                transactionId = op.get("id");
+                return;
+            }
+        });
+        fromName = from.get("name");
+    }
 
     const date = BlockchainStore.getState().blockHeaders.get(blockNum);
 
@@ -50,7 +55,7 @@ const printReceipt = ({data, parsePrice}) => {
     pdf.setFontStyle("bold");
     pdf.setFontSize(fontSize);
     pdf.text("FROM", marginLeft, (height += marginUp));
-    pdf.text(from.get("name"), marginLeft, (height += rowHeight));
+    pdf.text(fromName, marginLeft, (height += rowHeight));
 
     pdf.autoTable({
         body: [
@@ -129,7 +134,6 @@ const PrintReceiptButton = ({data, parsePrice}) => {
                 type="primary"
                 icon="download"
                 style={{float: "right", margin: "20px"}}
-                disabled={!data.from}
                 onClick={() => printReceipt({data, parsePrice})}
             >
                 {buttonText}
