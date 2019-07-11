@@ -140,7 +140,7 @@ class VestingBalance extends React.Component {
                                         2
                                     )}
                                     &nbsp;
-                                    <Translate content="account.member.coindays" />
+                                    <Translate content="account.member.days" />
                                 </td>
                             </tr>
                         )}
@@ -220,8 +220,6 @@ class AccountVesting extends React.Component {
 
     render() {
         let {vbs} = this.state;
-
-        console.log(vbs);
 
         if (
             !vbs ||

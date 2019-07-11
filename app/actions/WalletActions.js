@@ -294,8 +294,6 @@ class WalletActions {
             }
         });
 
-        console.log(tr);
-
         return WalletDb.process_transaction(tr, null, true)
             .then(result => {})
             .catch(err => {
