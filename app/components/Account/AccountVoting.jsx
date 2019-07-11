@@ -49,15 +49,9 @@ class AccountVoting extends React.Component {
             vote_ids: Immutable.Set(),
             proxy_vote_ids: Immutable.Set(),
             lastBudgetObject: props.initialBudget.get("id"),
-            workerTableIndex: props.viewSettings.get("workerTableIndex", 1),
             all_witnesses: Immutable.List(),
             all_committee: Immutable.List(),
             hideLegacyProposals: true,
-            newWorkersLength: null,
-            activeWorkersLength: null,
-            pollsLength: null,
-            expiredWorkersLength: null,
-            voteThreshold: null,
             filterSearch: "",
             tabs: [
                 {
@@ -102,13 +96,7 @@ class AccountVoting extends React.Component {
     shouldComponentUpdate(np, ns) {
         return (
             np.location.pathname !== this.props.location.pathname ||
-            ns.workerTableIndex !== this.state.workerTableIndex ||
             ns.prev_proxy_account_id !== this.state.prev_proxy_account_id ||
-            ns.newWorkersLength !== this.state.newWorkersLength ||
-            ns.activeWorkersLength !== this.state.activeWorkersLength ||
-            ns.pollsLength !== this.state.pollsLength ||
-            ns.expiredWorkersLength !== this.state.expiredWorkersLength ||
-            ns.voteThreshold !== this.state.voteThreshold ||
             ns.hideLegacyProposals !== this.state.hideLegacyProposals ||
             ns.vote_ids.size !== this.state.vote_ids.size ||
             ns.current_proxy_input !== this.state.current_proxy_input ||
@@ -551,22 +539,6 @@ class AccountVoting extends React.Component {
         }
     }
 
-    setWorkersLength(
-        newWorkersLength,
-        activeWorkersLength,
-        pollsLength,
-        expiredWorkersLength,
-        voteThreshold
-    ) {
-        this.setState({
-            newWorkersLength,
-            activeWorkersLength,
-            pollsLength,
-            expiredWorkersLength,
-            voteThreshold
-        });
-    }
-
     handleFilterChange(e) {
         this.setState({
             filterSearch: e.target.value || ""
@@ -575,13 +547,7 @@ class AccountVoting extends React.Component {
 
     render() {
         const {
-            workerTableIndex,
             prev_proxy_account_id,
-            newWorkersLength,
-            activeWorkersLength,
-            pollsLength,
-            expiredWorkersLength,
-            voteThreshold,
             hideLegacyProposals,
             filterSearch,
             all_witnesses,
@@ -616,7 +582,6 @@ class AccountVoting extends React.Component {
             this,
             WITNESSES_KEY
         );
-        const setWorkersLength = this.setWorkersLength.bind(this);
         const onChangeVotes = this.onChangeVotes.bind(this);
         const getWorkerArray = this._getWorkerArray.bind(this);
         const addCommitteeHandler = this.onAddItem.bind(this, COMMITTEE_KEY);
@@ -695,17 +660,8 @@ class AccountVoting extends React.Component {
                                             }
                                             vote_ids={vote_ids}
                                             proxy_vote_ids={proxy_vote_ids}
-                                            newWorkersLength={newWorkersLength}
-                                            activeWorkersLength={
-                                                activeWorkersLength
-                                            }
-                                            pollsLength={pollsLength}
-                                            expiredWorkersLength={
-                                                expiredWorkersLength
-                                            }
                                             hideLegacy={hideLegacy}
                                             preferredUnit={preferredUnit}
-                                            voteThreshold={voteThreshold}
                                             totalBudget={totalBudget}
                                             workerBudget={workerBudget}
                                             hideLegacyProposals={
@@ -713,8 +669,9 @@ class AccountVoting extends React.Component {
                                             }
                                             onChangeVotes={onChangeVotes}
                                             getWorkerArray={getWorkerArray}
-                                            setWorkersLength={setWorkersLength}
-                                            workerTableIndex={workerTableIndex}
+                                            viewSettings={
+                                                this.props.viewSettings
+                                            }
                                         />
                                     </div>
                                 </Tabs.TabPane>

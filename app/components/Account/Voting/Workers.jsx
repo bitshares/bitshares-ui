@@ -18,21 +18,32 @@ export default class Workers extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            workerTableIndex: props.workerTableIndex
+            newWorkersLength: null,
+            activeWorkersLength: null,
+            pollsLength: null,
+            expiredWorkersLength: null,
+            voteThreshold: null,
+            workerTableIndex: props.viewSettings.get("workerTableIndex", 1)
         };
+    }
+
+    shouldComponentUpdate(np, ns) {
+        return (
+            ns.newWorkersLength !== this.state.newWorkersLength ||
+            ns.activeWorkersLength !== this.state.activeWorkersLength ||
+            ns.pollsLength !== this.state.pollsLength ||
+            ns.expiredWorkersLength !== this.state.expiredWorkersLength ||
+            ns.voteThreshold !== this.state.voteThreshold ||
+            np.workerTableIndex !== this.state.workerTableIndex
+        );
     }
 
     render() {
         const {
             vote_ids,
             proxy_vote_ids,
-            newWorkersLength,
-            activeWorkersLength,
-            pollsLength,
-            expiredWorkersLength,
             hideLegacy,
             preferredUnit,
-            voteThreshold,
             globalObject,
             totalBudget,
             workerBudget,
@@ -41,11 +52,17 @@ export default class Workers extends React.Component {
             filterSearch,
             onFilterChange,
             onChangeVotes,
-            getWorkerArray,
-            setWorkersLength
+            getWorkerArray
         } = this.props;
 
-        const {workerTableIndex} = this.state;
+        const {
+            workerTableIndex,
+            newWorkersLength,
+            activeWorkersLength,
+            pollsLength,
+            expiredWorkersLength,
+            voteThreshold
+        } = this.state;
 
         const setWorkerTableIndex = e => {
             this.setState({
@@ -152,7 +169,21 @@ export default class Workers extends React.Component {
                 <WorkersList
                     workerTableIndex={workerTableIndex}
                     preferredUnit={preferredUnit}
-                    setWorkersLength={setWorkersLength}
+                    setWorkersLength={(
+                        _newWorkersLength,
+                        _activeWorkersLength,
+                        _pollsLength,
+                        _expiredWorkersLength,
+                        _voteThreshold
+                    ) => {
+                        this.setState({
+                            newWorkersLength: _newWorkersLength,
+                            activeWorkersLength: _activeWorkersLength,
+                            pollsLength: _pollsLength,
+                            expiredWorkersLength: _expiredWorkersLength,
+                            voteThreshold: _voteThreshold
+                        });
+                    }}
                     workerBudget={workerBudget}
                     hideLegacyProposals={hideLegacyProposals}
                     hasProxy={hasProxy}
