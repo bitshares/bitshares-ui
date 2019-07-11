@@ -311,7 +311,14 @@
             "balance_number": "Saldo #%(id)s",
             "explain": "Los saldos de consolidación no contienen los honorarios obtenidos a través del programa de referencia o desde trabajador, por ejemplo. Tienen un cierto período de consolidación y se desbloquean continuamente durante ese período hasta que todos los saldos estén disponibles.",
             "no_balances": "Esta cuenta no tiene saldos de consolidación",
-            "title": "Saldos de consolidación"
+            "title": "Saldos de consolidación",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "De",

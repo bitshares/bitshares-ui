@@ -311,7 +311,14 @@
             "balance_number": "残高 #%(id)s",
             "explain": "権利確定残高には紹介プログラムやワーカーへの支払いなどから得た手数料が含まれます。それらは一定の権利付与期間を有し、すべての資金が利用可能になるまでの間、段階的にアンロックされていきます。",
             "no_balances": "このアカウントには権利確定残高はありません",
-            "title": "権利確定残高"
+            "title": "権利確定残高",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",

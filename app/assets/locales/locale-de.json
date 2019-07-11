@@ -311,7 +311,14 @@
             "balance_number": "Guthaben #%(id)s",
             "explain": "Sperrfristguthaben beinhaltet alle Gebühren durch Empfehlungen oder Arbeitsbezahlungen. Dieses Guthaben hat eine bestimmte Zeitspanne, bis es verfügbar ist.",
             "no_balances": "Dieses Konto hat kein zugesichertes Guthaben.",
-            "title": "Zusicherungen"
+            "title": "Zusicherungen",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "Über",
