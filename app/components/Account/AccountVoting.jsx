@@ -4,7 +4,6 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import accountUtils from "common/account_utils";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
-import {Tab} from "../Utility/Tabs";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import {Link} from "react-router-dom";
@@ -37,6 +36,10 @@ class AccountVoting extends React.Component {
         super(props);
         const proxyId = props.proxy.get("id");
         const proxyName = props.proxy.get("name");
+        const accountName =
+            typeof props.account === "string"
+                ? props.account
+                : props.account.get("name");
         this.state = {
             proxy_account_id: proxyId === "1.2.5" ? "" : proxyId, //"1.2.16",
             prev_proxy_account_id: proxyId === "1.2.5" ? "" : proxyId,
@@ -59,19 +62,19 @@ class AccountVoting extends React.Component {
             tabs: [
                 {
                     name: "witnesses",
-                    link: "/account/twat123/voting/witnesses",
+                    link: "/account/" + accountName + "/voting/witnesses",
                     translate: "explorer.witnesses.title",
                     content: Witnesses
                 },
                 {
                     name: "committee",
-                    link: "/account/twat123/voting/committee",
+                    link: "/account/" + accountName + "/voting/committee",
                     translate: "explorer.committee_members.title",
                     content: Committee
                 },
                 {
                     name: "workers",
-                    link: "/account/twat123/voting/workers",
+                    link: "/account/" + accountName + "/voting/workers",
                     translate: "account.votes.workers_short",
                     content: Workers
                 }
