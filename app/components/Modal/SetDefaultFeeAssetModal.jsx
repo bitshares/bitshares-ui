@@ -87,6 +87,17 @@ class SetDefaultFeeAssetModal extends React.Component {
     }
 
     _getColumns() {
+        const symbolSorter = (a, b) => {
+            if (a.asset == "BTS" || b.asset == "BTS") {
+                return a.asset == "BTS" ? 1 : -1;
+            } else if (
+                ["USD", "CNY", "EUR"].includes(a.asset) !==
+                ["USD", "CNY", "EUR"].includes(b.asset)
+            ) {
+                return ["USD", "CNY", "EUR"].includes(a.asset) ? 1 : -1;
+            }
+            return a.asset < b.asset;
+        };
         const columns = [
             {
                 key: "id",
@@ -103,6 +114,8 @@ class SetDefaultFeeAssetModal extends React.Component {
                 key: "asset",
                 title: counterpart.translate("account.asset"),
                 align: "left",
+                sorter: symbolSorter,
+                defaultSortOrder: "descend",
                 render: asset => <Link to={asset.link}>{asset.asset}</Link>
             },
             {
