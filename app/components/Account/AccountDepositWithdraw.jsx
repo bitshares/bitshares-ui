@@ -83,7 +83,7 @@ class AccountDepositWithdraw extends React.Component {
         );
     }
 
-    componentDidMount() {
+    componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
     }
 

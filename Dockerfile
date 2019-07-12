@@ -1,40 +1,27 @@
-FROM node:latest
+FROM node:6
 
-WORKDIR /usr/src/app
+# Install nginx
+RUN apt-get update \
+  && apt-get install -y nginx --no-install-recommends \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY package*.json ./
-COPY . /usr/src/app/
+RUN npm install -g cross-env
 
-RUN npm install
-RUN npm run build
-RUN npm install -g serve
-CMD serve -s build/dist -p 3500
+# We copy the code from the docker-compose-yml
+# RUN git clone https://github.com/bitshares/bitshares-ui.git /bitshares-ui
+CMD mkdir /bitshares-ui
+WORKDIR /bitshares-ui
 
+ADD package.json .
+RUN cross-env npm install --env.prod
 
-# FROM node:6
+EXPOSE 80
 
-# # Install nginx
-# RUN apt-get update \
-#   && apt-get install -y nginx --no-install-recommends \
-#   && apt-get clean \
-#   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+## Copying default configuration
+ADD conf/nginx.conf /etc/nginx/nginx.conf
+ADD conf/start.sh /start.sh
+RUN chmod a+x /start.sh
 
-# RUN npm install -g cross-env
-
-# # We copy the code from the docker-compose-yml
-# # RUN git clone https://github.com/bitshares/bitshares-ui.git /bitshares-ui
-# CMD mkdir /bitshares-ui
-# WORKDIR /bitshares-ui
-
-# ADD package.json .
-# RUN cross-env npm install --env.prod
-
-# EXPOSE 80
-
-# ## Copying default configuration
-# ADD conf/nginx.conf /etc/nginx/nginx.conf
-# ADD conf/start.sh /start.sh
-# RUN chmod a+x /start.sh
-
-# ## Entry point
-# ENTRYPOINT ["/start.sh"]
+## Entry point
+ENTRYPOINT ["/start.sh"]
