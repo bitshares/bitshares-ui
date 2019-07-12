@@ -56,7 +56,9 @@ class SettingsStore {
             onUpdateLatencies: SettingsActions.updateLatencies,
             onModifyPreferedBases: SettingsActions.modifyPreferedBases,
             onUpdateUnits: SettingsActions.updateUnits,
-            onHideNewsHeadline: SettingsActions.hideNewsHeadline
+            onHideNewsHeadline: SettingsActions.hideNewsHeadline,
+            onAddChartLayout: SettingsActions.addChartLayout,
+            onDeleteChartLayout: SettingsActions.deleteChartLayout
         });
 
         this.initDone = false;
@@ -93,6 +95,8 @@ class SettingsStore {
         this.hiddenNewsHeadline = Immutable.List(
             ss.get("hiddenNewsHeadline", [])
         );
+
+        this.chartLayouts = Immutable.List(ss.get("chartLayouts", []));
     }
 
     /**
@@ -770,6 +774,36 @@ class SettingsStore {
         if (payload && this.hiddenNewsHeadline.indexOf(payload)) {
             this.hiddenNewsHeadline = this.hiddenNewsHeadline.push(payload);
             ss.set("hiddenNewsHeadline", this.hiddenNewsHeadline.toJS());
+        }
+    }
+
+    onAddChartLayout(value) {
+        if (value.name) {
+            value.enabled = true;
+            const index = this.chartLayouts.findIndex(
+                item => item.name === value.name && item.symbol === value.symbol
+            );
+            if (index !== -1) {
+                this.chartLayouts = this.chartLayouts.delete(index);
+            }
+            this.chartLayouts = this.chartLayouts.map(item => {
+                if (item.symbol === value.symbol) item.enabled = false;
+                return item;
+            });
+            this.chartLayouts = this.chartLayouts.push(value);
+            ss.set("chartLayouts", this.chartLayouts.toJS());
+        }
+    }
+
+    onDeleteChartLayout(name) {
+        if (name) {
+            const index = this.chartLayouts.findIndex(
+                item => item.name === name
+            );
+            if (index !== -1) {
+                this.chartLayouts = this.chartLayouts.delete(index);
+            }
+            ss.set("chartLayouts", this.chartLayouts.toJS());
         }
     }
 }

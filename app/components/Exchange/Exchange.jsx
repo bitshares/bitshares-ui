@@ -2750,7 +2750,7 @@ class Exchange extends React.Component {
                 className={"exchange--chart-control"}
                 style={{
                     height: 33,
-                    right: "13rem",
+                    right: chartType == "price_chart" ? "5rem" : "15rem",
                     top: "1px",
                     position: "absolute",
                     zIndex: 1,
