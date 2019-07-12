@@ -769,7 +769,7 @@
             "info": "Anlagen Info",
             "invalid": "Der Anlagenname %(name)s ist ungültig",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Sicherheiten Positionen"

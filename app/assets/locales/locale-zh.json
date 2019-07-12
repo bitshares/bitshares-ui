@@ -769,7 +769,7 @@
             "info": "资产信息",
             "invalid": "资产名 %(name)s 无效",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "点击切换以累计列之和",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "债仓低于MCR，将被强平",
                 "ratio_warning": "债仓接近于MCR，有强平危险",
                 "title": "抵押债仓"
