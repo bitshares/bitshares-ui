@@ -7,7 +7,7 @@ import counterpart from "counterpart";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import MarketsActions from "actions/MarketsActions";
 import {Notification} from "bitshares-ui-style-guide";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 
 export default class AddOpinionModal extends Modal {
     constructor(props) {
@@ -34,16 +34,19 @@ export default class AddOpinionModal extends Modal {
         this.onOk = this.onOk.bind(this);
     }
 
-    _createOrder(type, feeID) {
+    _createOrder() {
         this.setState({inProgress: true});
-        if (type === "ask") this._borrow();
+        const type =
+            this.state.newOpinionParameters.opinion === "no" ? "bid" : "ask";
+        const feeID = this.props.baseAsset.get("id");
 
-        //setting resolution date of the market as expiration date of the order
         let {description} = this.props.market.options;
         const parsedDescription = JSON.parse(description);
+        let date = new Date();
+        date.setFullYear(date.getFullYear() + 1);
         let expiry = parsedDescription.expiry
             ? new Date(parsedDescription.expiry)
-            : new Date();
+            : date;
 
         let bid = {
             for_sale: new Asset({
@@ -51,14 +54,14 @@ export default class AddOpinionModal extends Modal {
                 precision: this.props.baseAsset.get("precision"),
                 amount:
                     this.state.newOpinionParameters.amount *
-                    Math.pow(10, this.props.baseAsset.get("precision")) //TODO
+                    Math.pow(10, this.props.baseAsset.get("precision"))
             }),
             to_receive: new Asset({
                 asset_id: this.props.quoteAsset.get("id"),
                 precision: this.props.quoteAsset.get("precision"),
                 amount:
                     this.state.newOpinionParameters.amount *
-                    Math.pow(10, this.props.quoteAsset.get("precision")) //TODO
+                    Math.pow(10, this.props.quoteAsset.get("precision"))
             })
         };
         bid.price = new Price({base: bid.for_sale, quote: bid.to_receive});
@@ -68,14 +71,14 @@ export default class AddOpinionModal extends Modal {
                 precision: this.props.quoteAsset.get("precision"),
                 amount:
                     this.state.newOpinionParameters.amount *
-                    Math.pow(10, this.props.quoteAsset.get("precision")) //TODO
+                    Math.pow(10, this.props.quoteAsset.get("precision"))
             }),
             to_receive: new Asset({
                 asset_id: this.props.baseAsset.get("id"),
                 precision: this.props.baseAsset.get("precision"),
                 amount:
                     this.state.newOpinionParameters.amount *
-                    Math.pow(10, this.props.baseAsset.get("precision")) //TODO
+                    Math.pow(10, this.props.baseAsset.get("precision"))
             })
         };
         ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
@@ -89,35 +92,70 @@ export default class AddOpinionModal extends Modal {
             seller: ChainStore.getAccount(this.props.currentAccount).get("id"),
             fee: {
                 asset_id: feeID,
-                amount: 0 //TODO
+                amount: 0
             }
         });
 
-        return MarketsActions.createLimitOrder2(order)
-            .then(result => {
-                this.setState({inProgress: false});
-                if (result.error) {
-                    if (result.error.message !== "wallet locked")
-                        Notification.error({
-                            message: counterpart.translate(
-                                "notifications.exchange_unknown_error_place_order",
-                                {
-                                    amount: current.to_receive.getAmount({
-                                        real: true
-                                    }),
-                                    symbol: current.to_receive.asset_id
-                                }
-                            )
-                        });
-                }
-            })
-            .catch(e => {
-                console.error("order failed:", e);
-            });
-    }
+        if (type === "bid") {
+            return MarketsActions.createLimitOrder2(order)
+                .then(result => {
+                    this.setState({inProgress: false});
+                    if (result.error) {
+                        if (result.error.message !== "wallet locked")
+                            Notification.error({
+                                message: counterpart.translate(
+                                    "notifications.exchange_unknown_error_place_order",
+                                    {
+                                        amount: current.to_receive.getAmount({
+                                            real: true
+                                        }),
+                                        symbol: current.to_receive.asset_id
+                                    }
+                                )
+                            });
+                    }
+                })
+                .catch(e => {
+                    console.error("order failed:", e);
+                });
+        }
 
-    _borrow() {
-        console.log("borrow");
+        if (type === "ask") {
+            Promise.all([
+                FetchChain(
+                    "getAsset",
+                    this.props.quoteAsset.getIn([
+                        "bitasset",
+                        "options",
+                        "short_backing_asset"
+                    ])
+                )
+            ]).then(assets => {
+                let [backingAsset] = assets;
+                let collateral = new Asset({
+                    amount: order.amount_for_sale.getAmount(),
+                    asset_id: backingAsset.get("id"),
+                    precision: backingAsset.get("precision")
+                });
+                MarketsActions.createPredictionShort(order, collateral).then(
+                    result => {
+                        this.setState({inProgress: false});
+                        if (result.error) {
+                            if (result.error.message !== "wallet locked")
+                                Notification.error({
+                                    message: counterpart.translate(
+                                        "notifications.exchange_unknown_error_place_order",
+                                        {
+                                            amount: buyAssetAmount,
+                                            symbol: buyAsset.symbol
+                                        }
+                                    )
+                                });
+                        }
+                    }
+                );
+            });
+        }
     }
 
     handleOpinionChange() {
@@ -146,11 +184,8 @@ export default class AddOpinionModal extends Modal {
     }
 
     onOk() {
-        const type =
-            this.state.newOpinionParameters.opinion === "no" ? "bid" : "ask";
-        const feeID = "1.3.0"; //TODO
         if (this._isFormValid()) {
-            this._createOrder.call(this, type, feeID);
+            this._createOrder.call(this);
         } else {
             this.setState({showWarning: true});
         }

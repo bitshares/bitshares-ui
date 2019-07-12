@@ -32,7 +32,7 @@ export default class CreateMarketModal extends Modal {
                     amount: 1
                 },
                 base: {
-                    asset_id: "1.3.0",
+                    asset_id: "1.3.0", //TODO
                     amount: 1
                 }
             },
@@ -134,12 +134,15 @@ export default class CreateMarketModal extends Modal {
         if (asset) {
             let newBitassetOpts = this.state.bitasset_opts;
             let newMarketOptions = this.state.marketOptions;
+            let newCoreExchangeRate = this.state.core_exchange_rate;
             newBitassetOpts.short_backing_asset = asset;
             newMarketOptions.precision = ChainStore.getAsset(asset).get(
                 "precision"
             );
+            newCoreExchangeRate.base.asset_id = asset;
             this.setState({
                 bitasset_opts: newBitassetOpts,
+                core_exchange_rate: newCoreExchangeRate,
                 marketOptions: newMarketOptions
             });
         }

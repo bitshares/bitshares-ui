@@ -158,6 +158,7 @@ export default class PredictionMarkets extends Component {
                     preselectedAmount: 0,
                     preselectedOpinion: "yes"
                 });
+                this.onAddOpinionModalOpen();
                 break;
             }
             case "no": {
@@ -166,6 +167,7 @@ export default class PredictionMarkets extends Component {
                     preselectedAmount: 0,
                     preselectedOpinion: "no"
                 });
+                this.onAddOpinionModalOpen();
                 break;
             }
             default: {
@@ -250,7 +252,6 @@ export default class PredictionMarkets extends Component {
     }
 
     onSubmitNewOpinion = value => {
-        // TODO implement handling of new opinion
         if (this.state.opinions) {
             this.setState({
                 opinions: [...this.state.opinions, value],
