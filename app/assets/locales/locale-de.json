@@ -114,6 +114,7 @@
         },
         "new_user": "Neuer Benutzer?",
         "no_orders": "Keine offenen Aufträge",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Offene Aufträge",
         "optional": {

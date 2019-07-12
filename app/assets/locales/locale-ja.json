@@ -114,6 +114,7 @@
         },
         "new_user": "はじめてですか？",
         "no_orders": "未処理の注文はありません",
+        "no_order_history": "No order history",
         "no_price": "不明な値",
         "open_orders": "注文中",
         "optional": {

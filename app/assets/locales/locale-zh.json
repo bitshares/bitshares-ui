@@ -114,6 +114,7 @@
         },
         "new_user": "新用户？",
         "no_orders": "暂无挂单",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "我的挂单",
         "optional": {

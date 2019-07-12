@@ -114,6 +114,7 @@
         },
         "new_user": "New user?",
         "no_orders": "Açık emir yok",
+        "no_order_history": "No order history",
         "no_price": "Fiyat mevcut değil",
         "open_orders": "Açık Emirler",
         "optional": {

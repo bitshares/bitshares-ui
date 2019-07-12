@@ -114,6 +114,7 @@
         },
         "new_user": "Nuevo usuario?",
         "no_orders": "No hay pedidos abiertos",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Ordenes abiertas",
         "optional": {
