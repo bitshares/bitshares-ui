@@ -2,14 +2,32 @@ import React from "react";
 const TradingView = require("../../../charting_library/charting_library.min.js");
 import colors from "assets/colors";
 import {getResolutionsFromBuckets, getTVTimezone} from "./tradingViewClasses";
+import {Modal, Input, Table, Button, Icon} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
+import SettingsStore from "stores/SettingsStore";
+import SettingsActions from "actions/SettingsActions";
+import {connect} from "alt-react";
+import Translate from "react-translate-component";
 
-// import {connect} from "alt-react";
 // import MarketsStore from "stores/MarketsStore";
 
-export default class TradingViewPriceChart extends React.Component {
+class TradingViewPriceChart extends React.Component {
+    constructor(props) {
+        super();
+        this.state = {
+            showSaveModal: false,
+            showLoadModal: false,
+            error: false
+        };
+        this.layoutName = React.createRef();
+        this.hideModal = this.hideModal.bind(this);
+        this.resetError = this.resetError.bind(this);
+        this.loadLastChart = this.loadLastChart.bind(this);
+    }
     loadTradingView(props) {
         const {dataFeed} = props;
         let themeColors = colors[props.theme];
+        const that = this;
 
         if (!dataFeed) return;
         if (!!this.tvWidget) return;
@@ -31,12 +49,12 @@ export default class TradingViewPriceChart extends React.Component {
         });
 
         let disabled_features = [
-            "header_saveload",
             "symbol_info",
             "symbol_search_hot_key",
             "border_around_the_chart",
             "header_symbol_search",
-            "header_compare"
+            "header_compare",
+            "header_saveload"
         ];
 
         let enabled_features = [];
@@ -111,9 +129,41 @@ export default class TradingViewPriceChart extends React.Component {
         this.tvWidget.onChartReady(() => {
             if (__DEV__) console.log("*** Chart Ready ***");
             if (__DEV__) console.timeEnd("*** Chart load time: ");
+            this.tvWidget
+                .createButton()
+                .attr(
+                    "title",
+                    counterpart.translate("exchange.load_custom_charts")
+                )
+                .addClass("apply-common-tooltip")
+                .on("click", () => {
+                    that.setState({showLoadModal: true});
+                })
+                .append(
+                    `<span>${counterpart.translate(
+                        "exchange.chart_load"
+                    )}</span>`
+                );
+            this.tvWidget
+                .createButton()
+                .attr(
+                    "title",
+                    counterpart.translate("exchange.save_custom_charts")
+                )
+                .addClass("apply-common-tooltip")
+                .on("click", () => {
+                    that.setState({showSaveModal: true});
+                })
+                .append(
+                    `<span>${counterpart.translate(
+                        "exchange.chart_save"
+                    )}</span>`
+                );
+
             dataFeed.update({
                 onMarketChange: this._setSymbol.bind(this)
             });
+            this.loadLastChart();
         });
 
         this._onWheel = this._onWheel.bind(this);
@@ -128,6 +178,8 @@ export default class TradingViewPriceChart extends React.Component {
 
     _setSymbol(ticker) {
         if (this.tvWidget) {
+            this.tvWidget.chart().removeAllShapes();
+            this.loadLastChart();
             this.tvWidget.setSymbol(
                 ticker,
                 getResolutionsFromBuckets([this.props.bucketSize])[0]
@@ -147,18 +199,127 @@ export default class TradingViewPriceChart extends React.Component {
         this.props.dataFeed.clearSubs();
     }
 
-    shouldComponentUpdate(np) {
-        if (np.chartHeight !== this.props.chartHeight) return true;
-        if (!!this.tvWidget) return false;
-        if (!np.marketReady) return false;
-        return true;
+    shouldComponentUpdate(np, state) {
+        return (
+            state.showLoadModal !== this.state.showLoadModal ||
+            state.showSaveModal !== this.state.showSaveModal ||
+            np.chartHeight !== this.props.chartHeight ||
+            this.props.charts.size !== np.charts.size ||
+            !this.tvWidget ||
+            np.marketReady
+        );
     }
 
     _onWheel(e) {
         console.log("Test wheel interception");
     }
 
+    onSubmitConfirmation(e) {
+        const {layoutName} = this;
+        const error = this.props.charts.some(
+            chart =>
+                chart.key === layoutName.current.state.value &&
+                chart.symbol ===
+                    this.props.quoteSymbol + "_" + this.props.baseSymbol
+        );
+        const that = this;
+        if (!error) {
+            this.resetError();
+            this.tvWidget.save(function(object) {
+                let chart = {};
+                chart.key = layoutName.current.state.value || "";
+                chart.object = object;
+                chart.name = layoutName.current.state.value || "";
+                chart.symbol =
+                    that.props.quoteSymbol + "_" + that.props.baseSymbol;
+                chart.modified = new Date().toLocaleDateString("en-US");
+                SettingsActions.addChartLayout(chart);
+                that.setState({showSaveModal: false}, () => {
+                    if (that.layoutName.current.state) {
+                        that.layoutName.current.state.value = null;
+                    }
+                });
+            });
+        } else {
+            this.setState({error});
+        }
+    }
+    hideModal() {
+        this.resetError();
+        this.setState({showSaveModal: false, showLoadModal: false});
+    }
+
+    handleDelete(name) {
+        SettingsActions.deleteChartLayout(name);
+    }
+
+    resetError() {
+        this.setState({error: false});
+    }
+
+    loadLastChart() {
+        const {charts, quoteSymbol, baseSymbol} = this.props;
+
+        const chart = charts
+            .toArray()
+            .filter(
+                chart =>
+                    chart.symbol === quoteSymbol + "_" + baseSymbol &&
+                    chart.enabled
+            );
+        chart[0] && this.tvWidget.load(chart[0].object);
+    }
+
     render() {
+        const {charts, quoteSymbol, baseSymbol} = this.props;
+        const {error} = this.state;
+        let _error = error ? "has-error" : "";
+        let dataSource = charts
+            .toArray()
+            .filter(chart => chart.symbol === quoteSymbol + "_" + baseSymbol);
+        const columns = [
+            {
+                title: counterpart.translate("exchange.layout_name"),
+                dataIndex: "name",
+                key: "name"
+            },
+            {
+                title: counterpart.translate("exchange.modified"),
+                dataIndex: "modified",
+                key: "modified"
+            },
+            {
+                title: counterpart.translate("exchange.actions"),
+                dataIndex: "actions",
+                key: "actions",
+                render: (text, record) => {
+                    return (
+                        <Icon
+                            style={{width: "32px"}}
+                            onClick={this.handleDelete.bind(this, record.name)}
+                            type="delete"
+                        />
+                    );
+                }
+            }
+        ];
+
+        const onRow = record => {
+            return {
+                onClick: event => {
+                    if (event.target.localName === "td") {
+                        this.hideModal();
+                        SettingsActions.addChartLayout(record);
+                        this.tvWidget.load(record.object);
+                    } else if (
+                        event.currentTarget.parentElement.childElementCount ===
+                        1
+                    )
+                        this.hideModal();
+                }
+            };
+        };
+
         return (
             <div className="small-12">
                 <div
@@ -166,7 +327,81 @@ export default class TradingViewPriceChart extends React.Component {
                     style={{height: this.props.chartHeight + "px"}}
                     id="tv_chart"
                 />
+                <Modal
+                    title={counterpart.translate("exchange.load_chart_layout")}
+                    closable={false}
+                    visible={this.state.showLoadModal}
+                    footer={[
+                        <Button key="cancel" onClick={this.hideModal}>
+                            {counterpart.translate("modal.close")}
+                        </Button>
+                    ]}
+                >
+                    <Table
+                        dataSource={dataSource || []}
+                        columns={columns}
+                        onRow={onRow}
+                    />
+                </Modal>
+                <Modal
+                    title={counterpart.translate(
+                        "exchange.save_new_chart_layout"
+                    )}
+                    closable={false}
+                    visible={this.state.showSaveModal}
+                    footer={[
+                        <Button
+                            key="submit"
+                            type="primary"
+                            onClick={this.onSubmitConfirmation.bind(this)}
+                        >
+                            {counterpart.translate("modal.save")}
+                        </Button>,
+                        <Button key="cancel" onClick={this.hideModal}>
+                            {counterpart.translate("modal.close")}
+                        </Button>
+                    ]}
+                >
+                    <div>
+                        {error ? (
+                            <span className={_error}>
+                                <Translate content="exchange.chart_error" />
+                            </span>
+                        ) : null}
+                        <span
+                            className={_error}
+                            style={{
+                                borderBottom: "#A09F9F 1px dotted"
+                            }}
+                        >
+                            <Input
+                                placeholder={counterpart.translate(
+                                    "exchange.enter_chart_layout_name"
+                                )}
+                                ref={this.layoutName}
+                                onChange={this.resetError}
+                                onPressEnter={this.onSubmitConfirmation.bind(
+                                    this
+                                )}
+                            />
+                        </span>
+                    </div>
+                </Modal>
             </div>
         );
     }
 }
+
+export default connect(
+    TradingViewPriceChart,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                charts: SettingsStore.getState().chartLayouts
+            };
+        }
+    }
+);

@@ -248,6 +248,9 @@ class Asset extends React.Component {
         factor = 0,
         negative_invert = false
     ) {
+        if (typeof price == "number" && isNaN(price)) {
+            return "-";
+        }
         var base = price.base;
         var quote = price.quote;
         return (
@@ -1643,7 +1646,7 @@ class Asset extends React.Component {
                             )}
                             mouseEnterDelay={0.5}
                         >
-                            <span
+                            <div
                                 onClick={this._toggleCumulativeGrouping.bind(
                                     this
                                 )}
@@ -1654,7 +1657,7 @@ class Asset extends React.Component {
                                     asset={item.asset}
                                     hide_asset={true}
                                 />
-                            </span>
+                            </div>
                         </Tooltip>
                     );
                 }
@@ -1682,7 +1685,7 @@ class Asset extends React.Component {
                             )}
                             mouseEnterDelay={0.5}
                         >
-                            <span
+                            <div
                                 onClick={this._toggleCumulativeGrouping.bind(
                                     this
                                 )}
@@ -1693,7 +1696,7 @@ class Asset extends React.Component {
                                     asset={item.asset}
                                     hide_asset={true}
                                 />
-                            </span>
+                            </div>
                         </Tooltip>
                     );
                 }
@@ -2066,12 +2069,15 @@ class Asset extends React.Component {
                                     {this.renderFeesClaiming(asset)}
                                     {this.renderAssetOwnerUpdate(asset)}
                                     {"bitasset" in asset &&
-                                    !asset.bitasset.is_prediction_market
-                                        ? this.renderFeedPublish(asset)
-                                        : null}
+                                        !asset.bitasset.is_prediction_market &&
+                                        this.renderFeedPublish(asset)}
                                     {this.state.collateralBids.length > 0 &&
                                         this.renderCollateralBid(asset)}
-                                    {this.renderAssetResolvePrediction(asset)}
+                                    {"bitasset" in asset &&
+                                        asset.bitasset.is_prediction_market &&
+                                        this.renderAssetResolvePrediction(
+                                            asset
+                                        )}
                                 </div>
                             </Tab>
                         </Tabs>

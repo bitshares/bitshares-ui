@@ -250,7 +250,7 @@ class MarketHistory extends React.Component {
                     }}
                     colSpan="5"
                 >
-                    <Translate content="account.no_orders" />
+                    <Translate content={"account.no_order_history"} />
                 </td>
             </tr>
         );
