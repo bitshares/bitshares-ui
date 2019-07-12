@@ -1702,8 +1702,7 @@
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
     li.stat.clickable {
-        color: $secondary-text-color; // &:hover{ // @include button-focus($primary-text-color, $panel-bg-color, 10);
-        // }
+        color: $secondary-text-color; // &:hover{ // @include button-focus($primary-text-color, $panel-bg-color, 10); // }
     }
     .mymarkets-tabs {
         > li {
@@ -1904,7 +1903,6 @@
             background-color: lighten($positive-color, 5%);
         }
     }
-
     div.ok-indicator {
         color: $secondary-text-color;
         &.success {

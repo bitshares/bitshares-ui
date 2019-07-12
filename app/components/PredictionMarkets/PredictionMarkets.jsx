@@ -74,21 +74,21 @@ export default class PredictionMarkets extends Component {
             });
         }
 
-        const asks = this.props.markets.asks.map(element => ({
-            order_id: element.id,
-            opinionator: element.seller,
-            opinion: "yes",
-            amount: element.for_sale,
-            fee: element.fee
-        }));
-        const bids = this.props.markets.bids.map(element => ({
-            order_id: element.id,
-            opinionator: element.seller,
-            opinion: "no",
-            amount: element.for_sale,
-            fee: element.fee
-        }));
-        this.setState({opinions: [...asks, ...bids]});
+        let orders = [];
+        np.marketLimitOrders.forEach((order, order_id) => {
+            const opinion =
+                order.market_base === order.sell_price.base.asset_id
+                    ? "yes"
+                    : "no";
+            orders.push({
+                order_id,
+                opinionator: order.seller,
+                opinion,
+                amount: order.for_sale,
+                fee: order.fee
+            });
+        });
+        this.setState({opinions: [...orders]});
     }
 
     async _updateAssetsList(lastAsset) {
