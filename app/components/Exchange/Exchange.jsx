@@ -2924,70 +2924,76 @@ class Exchange extends React.Component {
         let groupTabs = {1: [], 2: []};
         let groupStandalone = [];
 
-        Object.keys(panelTabs).map(a => {
-            if (panelTabs[a] == 0) {
-                // Handle Standalone Settings
-                if (a == "my_history") {
-                    groupStandalone.push(myMarketHistory);
-                }
+        Object.keys(panelTabs)
+            .sort()
+            .map(a => {
+                if (panelTabs[a] == 0) {
+                    // Handle Standalone Settings
+                    if (a == "my_history") {
+                        groupStandalone.push(myMarketHistory);
+                    }
 
-                if (a == "history") {
-                    groupStandalone.push(marketHistory);
-                }
+                    if (a == "history") {
+                        groupStandalone.push(marketHistory);
+                    }
 
-                if (a == "my_orders") {
-                    groupStandalone.push(myOpenOrders);
-                }
+                    if (a == "my_orders") {
+                        groupStandalone.push(myOpenOrders);
+                    }
 
-                if (a == "open_settlement" && settlementOrders !== null) {
-                    groupStandalone.push(settlementOrders);
-                }
-            } else {
-                if (a == "my_history") {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.my_history")}
-                            key="my_history"
-                        >
-                            {myMarketHistory}
-                        </Tabs.TabPane>
-                    );
-                }
+                    if (a == "open_settlement" && settlementOrders !== null) {
+                        groupStandalone.push(settlementOrders);
+                    }
+                } else {
+                    if (a == "my_history") {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate(
+                                    "exchange.my_history"
+                                )}
+                                key="my_history"
+                            >
+                                {myMarketHistory}
+                            </Tabs.TabPane>
+                        );
+                    }
 
-                if (a == "history") {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.history")}
-                            key="history"
-                        >
-                            {marketHistory}
-                        </Tabs.TabPane>
-                    );
-                }
+                    if (a == "history") {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate("exchange.history")}
+                                key="history"
+                            >
+                                {marketHistory}
+                            </Tabs.TabPane>
+                        );
+                    }
 
-                if (a == "my_orders") {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.my_orders")}
-                            key="my_orders"
-                        >
-                            {myOpenOrders}
-                        </Tabs.TabPane>
-                    );
-                }
+                    if (a == "my_orders") {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate("exchange.my_orders")}
+                                key="my_orders"
+                            >
+                                {myOpenOrders}
+                            </Tabs.TabPane>
+                        );
+                    }
 
-                if (a == "open_settlement" && settlementOrders !== null) {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.settle_orders")}
-                            key="open_settlement"
-                        >
-                            {settlementOrders}
-                        </Tabs.TabPane>
-                    );
+                    if (a == "open_settlement" && settlementOrders !== null) {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate(
+                                    "exchange.settle_orders"
+                                )}
+                                key="open_settlement"
+                            >
+                                {settlementOrders}
+                            </Tabs.TabPane>
+                        );
+                    }
                 }
-            }
-        });
+            });
 
         Object.keys(panelTabsActive).map(thisTabsId => {
             Object.keys(panelTabs).map(thisPanelName => {
