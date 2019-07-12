@@ -248,6 +248,9 @@ class Asset extends React.Component {
         factor = 0,
         negative_invert = false
     ) {
+        if (typeof price == "number" && isNaN(price)) {
+            return "-";
+        }
         var base = price.base;
         var quote = price.quote;
         return (

@@ -110,6 +110,7 @@ class SettingsStore {
             apiServer: settingsAPIs.DEFAULT_WS_NODE,
             faucet_address: settingsAPIs.DEFAULT_FAUCET,
             unit: CORE_ASSET,
+            fee_asset: CORE_ASSET,
             showSettles: false,
             showAssetPercent: false,
             walletLockTimeout: 60 * 10,
@@ -147,6 +148,7 @@ class SettingsStore {
             ],
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
             unit: getUnits(),
+            fee_asset: getUnits(),
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
             themes: ["darkTheme", "lightTheme", "midnightTheme"],
@@ -767,6 +769,10 @@ class SettingsStore {
         this.defaults.unit = getUnits();
         if (this.defaults.unit.indexOf(this.settings.get("unit")) === -1) {
             this.settings = this.settings.set("unit", this.defaults.unit[0]);
+            this.settings = this.settings.set(
+                "fee_asset",
+                this.defaults.unit[0]
+            );
         }
     }
 
