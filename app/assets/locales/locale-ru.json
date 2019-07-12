@@ -114,6 +114,7 @@
         },
         "new_user": "Новый пользователь?",
         "no_orders": "Нет открытых ордеров",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Открытые ордера",
         "optional": {
@@ -768,7 +769,7 @@
             "info": "Информация об активе",
             "invalid": "%(name)s – недопустимое имя актива",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Нажмите, чтобы переключиться на кумулятивную сумму столбцов.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Позиция находится ниже поддерживающего коэффициента обеспечения (MCR) и попадёт под маржин колл",
                 "ratio_warning": "Позиция находится близко к поддерживающему коэффициенту обеспечения (MCR) и рискует попасть под маржин колл",
                 "title": "Маржинальные позиции"

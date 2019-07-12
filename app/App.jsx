@@ -46,12 +46,6 @@ const AccountPage = Loadable({
     loading: LoadingIndicator
 });
 
-const Transfer = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"),
-    loading: LoadingIndicator
-});
-
 const AccountDepositWithdraw = Loadable({
     loader: () =>
         import(/* webpackChunkName: "deposit-withdraw" */ "./components/Account/AccountDepositWithdraw"),
@@ -413,11 +407,6 @@ class App extends React.Component {
                                 />
                                 <Route path="/settings" component={Settings} />
 
-                                <Route
-                                    path="/transfer"
-                                    exact
-                                    component={Transfer}
-                                />
                                 <Route
                                     path="/deposit-withdraw"
                                     exact

@@ -198,9 +198,20 @@ class AccountTreemap extends React.Component {
         };
 
         return (
-            <div className="account-treemap">
-                <div className="account-treemap--legend">
-                    {accountBalances.map(({name, symbol, color}, key) => {
+            <AccountTreemapView
+                accountBalances={accountBalances}
+                config={config}
+            />
+        );
+    }
+}
+
+function AccountTreemapView({accountBalances, config}) {
+    return (
+        <div className="account-treemap">
+            <div className="account-treemap--legend">
+                {accountBalances &&
+                    accountBalances.map(({name, symbol, color}, key) => {
                         return (
                             <Link key={key} to={`/asset/${symbol}`}>
                                 <div className="legend-item">
@@ -213,11 +224,10 @@ class AccountTreemap extends React.Component {
                             </Link>
                         );
                     })}
-                </div>
-                <ReactHighcharts config={config} />
             </div>
-        );
-    }
+            <ReactHighcharts config={config} />
+        </div>
+    );
 }
 
 AccountTreemap = BindToChainState(AccountTreemap);

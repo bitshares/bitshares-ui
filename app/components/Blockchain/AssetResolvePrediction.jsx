@@ -2,7 +2,6 @@ import React from "react";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
 import counterpart from "counterpart";
 import {Radio, Tooltip, Button, Form} from "bitshares-ui-style-guide";

@@ -1,6 +1,5 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "../Modal/BaseModal";
 import Translate from "react-translate-component";
 import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
@@ -20,12 +19,14 @@ import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
-import {ChainStore} from "bitsharesjs";
+import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
 import {debounce} from "lodash-es";
 import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
 import {Modal, Tooltip} from "bitshares-ui-style-guide";
+import {ChainStore} from "bitsharesjs";
 
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
@@ -52,7 +53,9 @@ class DepositWithdrawContent extends DecimalChecker {
                 asset_id: props.asset.get("id"),
                 precision: props.asset.get("precision")
             }),
-            fee_asset_id: "1.3.0",
+            fee_asset_id:
+                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                "1.3.0",
             feeStatus: {},
             loading: false,
             emptyAddressDeposit: false
@@ -330,7 +333,7 @@ class DepositWithdrawContent extends DecimalChecker {
 
         if (!this.state.feeStatus || !this.state.feeAmount) return defaultFee;
 
-        const coreStatus = this.state.feeStatus["1.3.0"];
+        const coreStatus = this.state.feeStatus[this.state.fee_asset_id];
         const withdrawAssetStatus = this.state.feeStatus[
             this.state.to_withdraw.asset_id
         ];
@@ -878,6 +881,23 @@ class DepositWithdrawContent extends DecimalChecker {
         );
     }
 }
+
+DepositWithdrawContent = connect(
+    DepositWithdrawContent,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps(props) {
+            return {
+                fee_asset_symbol: SettingsStore.getState().settings.get(
+                    "fee_asset"
+                )
+            };
+        }
+    }
+);
+
 DepositWithdrawContent = BindToChainState(DepositWithdrawContent);
 
 export default class SimpleDepositWithdrawModal extends React.Component {

@@ -496,17 +496,17 @@ class AccountSelector extends React.Component {
                                         "account.search"
                                     )}
                                     value={account ? accountName : null}
-                                    disabled={
-                                        !!disabledInput
-                                            ? disabledInput
-                                            : undefined
-                                    }
+                                    disabled={disabledInput ? true : undefined}
                                 >
                                     {typeAheadAccounts.map(account => (
                                         <Select.Option
                                             key={account.id}
                                             value={account.label}
-                                            disabled={account.disabled}
+                                            disabled={
+                                                account.disabled
+                                                    ? true
+                                                    : undefined
+                                            }
                                         >
                                             {account.isOwn ? (
                                                 <AntIcon type="user" />
@@ -548,7 +548,9 @@ class AccountSelector extends React.Component {
                                         this.props.placeholder ||
                                         counterpart.translate("account.name")
                                     }
-                                    disabled={this.props.disabled}
+                                    disabled={
+                                        this.props.disabled ? true : undefined
+                                    }
                                     ref="user_input"
                                     onChange={this.onInputChanged.bind(this)}
                                     onKeyDown={this.onKeyDown.bind(this)}
@@ -566,11 +568,6 @@ class AccountSelector extends React.Component {
                                     readOnly={
                                         !!editableInput
                                             ? (!editableInput).toString()
-                                            : undefined
-                                    }
-                                    disabled={
-                                        !!disabledInput
-                                            ? disabledInput.toString()
                                             : undefined
                                     }
                                 />
