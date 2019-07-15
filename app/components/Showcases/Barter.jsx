@@ -651,7 +651,7 @@ export default class Barter extends Component {
 
     handleMemoOpen = (type, index) => e => {
         const memos = Object.assign({}, this.state.memo);
-        memos[type][index] = {shown: true};
+        memos[type][index] = {message: "", shown: true};
         this.setState({memo: memos});
     };
 
