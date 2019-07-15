@@ -769,6 +769,9 @@ class Asset extends React.Component {
              * Non Global Settlement Assets
              */
             var globalSettlementPrice = this.getGlobalSettlementPrice();
+            var globalSettlementTriggerPrice = this.getGlobalSettlementPrice(
+                currentFeed.maximum_short_squeeze_ratio / 1000
+            );
             var currentSettled = bitAsset.force_settled_volume;
             var settlementOffset =
                 bitAsset.options.force_settlement_offset_percent;
@@ -905,6 +908,16 @@ class Asset extends React.Component {
                                     <Translate content="explorer.asset.price_feed.maximum_short_squeeze_price" />
                                 </td>
                                 <td>{msspPrice}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.price_feed.global_settlement_trigger" />
+                                </td>
+                                <td>
+                                    {globalSettlementTriggerPrice
+                                        ? globalSettlementTriggerPrice
+                                        : "-"}
+                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -1356,7 +1369,7 @@ class Asset extends React.Component {
     // the price at which the least collateralize short's
     // collateral no longer enough to back the debt
     // he/she owes.
-    getGlobalSettlementPrice() {
+    getGlobalSettlementPrice(mssr = 1) {
         if (!this.state.callOrders) {
             return null;
         }
@@ -1386,7 +1399,12 @@ class Asset extends React.Component {
         // The CR is 1 if collateral / (debt x feed_ price) == 1
         // Rearranging, this means that the CR is 1 if
         // feed_price == collateral / debt
-        let debt = leastColShort.debt;
+        //
+        // Default is to return the global settlement price
+        // Use mssr to calculate in when an event happens
+        // based on an assets MSSR
+
+        let debt = leastColShort.debt * mssr;
         let collateral = leastColShort.collateral;
 
         return (
