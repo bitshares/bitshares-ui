@@ -83,11 +83,19 @@ class OperationTable extends React.Component {
                 </td>
                 <td>
                     {this.props.fee.amount > 0 ? (
-                        <FormattedAsset
-                            color="fee"
-                            amount={this.props.fee.amount}
-                            asset={this.props.fee.asset_id}
-                        />
+                        <span>
+                            <FormattedAsset
+                                color="fee"
+                                amount={this.props.fee.amount}
+                                asset={this.props.fee.asset_id}
+                                style={{marginRight: "10px"}}
+                            />
+                            &nbsp;&nbsp;
+                            <Icon
+                                name="question-circle"
+                                title="settings.can_change_default_fee_asset_tooltip"
+                            />
+                        </span>
                     ) : (
                         <label>
                             <Translate content="transfer.free" />
@@ -118,6 +126,11 @@ class OperationTable extends React.Component {
 }
 
 class Transaction extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
     componentDidMount() {
         ReactTooltip.rebuild();
     }

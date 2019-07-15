@@ -8,6 +8,8 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
+import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
 import {ChainStore} from "bitsharesjs";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {debounce} from "lodash-es";
@@ -51,7 +53,9 @@ class BitsparkWithdrawModal extends React.Component {
             withdraw_address_first: true,
             empty_withdraw_value: false,
             from_account: props.account,
-            fee_asset_id: "1.3.0",
+            fee_asset_id:
+                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                "1.3.0",
             feeStatus: {}
         };
 
@@ -863,4 +867,20 @@ class BitsparkWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(BitsparkWithdrawModal);
+export default BindToChainState(
+    connect(
+        BitsparkWithdrawModal,
+        {
+            listenTo() {
+                return [SettingsStore];
+            },
+            getProps(props) {
+                return {
+                    fee_asset_symbol: SettingsStore.getState().settings.get(
+                        "fee_asset"
+                    )
+                };
+            }
+        }
+    )
+);

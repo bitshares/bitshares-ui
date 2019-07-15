@@ -248,6 +248,9 @@ class Asset extends React.Component {
         factor = 0,
         negative_invert = false
     ) {
+        if (typeof price == "number" && isNaN(price)) {
+            return "-";
+        }
         var base = price.base;
         var quote = price.quote;
         return (
@@ -1678,28 +1681,29 @@ class Asset extends React.Component {
                     },
                     render: item => {
                         return (
-                            <Tooltip
-                                title={counterpart.translate(
-                                    "explorer.asset.margin_positions.click_to_switch_to_cumulative"
+                            <div
+                                onClick={this._toggleCumulativeGrouping.bind(
+                                    this
                                 )}
-                                mouseEnterDelay={0.5}
+                                style={{cursor: "pointer"}}
                             >
-                                <span
-                                    onClick={this._toggleCumulativeGrouping.bind(
-                                        this
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "explorer.asset.margin_positions.click_to_switch_to_cumulative"
                                     )}
-                                    style={{cursor: "pointer"}}
+                                    mouseEnterDelay={0.5}
                                 >
                                     <FormattedAsset
                                         amount={item.amount}
                                         asset={item.asset}
                                         hide_asset={true}
                                     />
-                                </span>
-                            </Tooltip>
+                                </Tooltip>
+                            </div>
                         );
                     }
                 },
+
                 {
                     key: "call",
                     title: (
@@ -2069,12 +2073,15 @@ class Asset extends React.Component {
                                     {this.renderFeesClaiming(asset)}
                                     {this.renderAssetOwnerUpdate(asset)}
                                     {"bitasset" in asset &&
-                                    !asset.bitasset.is_prediction_market
-                                        ? this.renderFeedPublish(asset)
-                                        : null}
+                                        !asset.bitasset.is_prediction_market &&
+                                        this.renderFeedPublish(asset)}
                                     {this.state.collateralBids.length > 0 &&
                                         this.renderCollateralBid(asset)}
-                                    {this.renderAssetResolvePrediction(asset)}
+                                    {"bitasset" in asset &&
+                                        asset.bitasset.is_prediction_market &&
+                                        this.renderAssetResolvePrediction(
+                                            asset
+                                        )}
                                 </div>
                             </Tab>
                         </Tabs>
