@@ -1,7 +1,8 @@
 import React from "react";
-import {Modal, Input, Form, Switch} from "bitshares-ui-style-guide";
+import {Modal, Input, Form, Switch, Button} from "bitshares-ui-style-guide";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 
 export default class ResolveModal extends Modal {
     constructor(props) {
@@ -19,25 +20,46 @@ export default class ResolveModal extends Modal {
 
     handleResultChange() {
         const isChecked = !this.state.isChecked;
+        const result =
+            this.state.resolveParameters.result === "no" ? "yes" : "no";
         this.setState({
             resolveParameters: {
                 ...this.state.resolveParameters,
-                result: this.state.isChecked ? "yes" : "no"
+                result
             },
             isChecked
         });
     }
 
     render() {
+        const footer = [
+            <Button
+                type="primary"
+                key="submit"
+                onClick={() =>
+                    this.props.onResolveMarket(this.state.resolveParameters)
+                }
+                disabled={this.state.inProgress}
+            >
+                {counterpart.translate("global.confirm")}
+            </Button>,
+            <Button
+                key="cancel"
+                onClick={this.props.onClose}
+                disabled={this.state.inProgress}
+            >
+                {counterpart.translate("global.cancel")}
+            </Button>
+        ];
+
         return (
             <Modal
                 title={<Translate content="prediction.resolve_modal.title" />}
                 visible={this.props.show}
-                onOk={() => {
-                    this.props.onResolveMarket(this.state.resolveParameters);
-                }}
                 onCancel={this.props.onClose}
                 overlay={true}
+                closable={!this.state.inProgress}
+                footer={footer}
             >
                 <div>
                     <Form className="full-width" layout="vertical">
@@ -90,7 +112,6 @@ export default class ResolveModal extends Modal {
 ResolveModal.propTypes = {
     market: PropTypes.any.isRequired,
     onResolveMarket: PropTypes.func.isRequired,
-    currentAccountId: PropTypes.string.isRequired,
     show: PropTypes.bool,
     onClose: PropTypes.func
 };

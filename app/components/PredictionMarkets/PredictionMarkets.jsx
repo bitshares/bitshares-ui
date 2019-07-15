@@ -12,6 +12,7 @@ import CreateMarketModal from "./CreateMarketModal";
 import ResolveModal from "./ResolveModal";
 import {ChainStore} from "bitsharesjs";
 import {Button} from "bitshares-ui-style-guide";
+import {Asset, Price} from "../../lib/common/MarketClasses";
 
 export default class PredictionMarkets extends Component {
     constructor(props) {
@@ -266,8 +267,37 @@ export default class PredictionMarkets extends Component {
     };
 
     onResolveMarket = market => {
-        // TODO implement handling of market resolvement
-        console.log(`Resolved ${market.asset_id}:${market.result}`);
+        const account = ChainStore.getAccount(this.props.currentAccount).get(
+            "id"
+        );
+        const globalSettlementPrice = market.result === "yes" ? 1 : 0;
+        const asset = ChainStore.getAsset(market.asset_id).toJS();
+        console.log(globalSettlementPrice);
+        let base = new Asset({
+            real: globalSettlementPrice,
+            asset_id: asset.id,
+            precision: asset.precision
+        });
+
+        let quoteAsset = ChainStore.getAsset(
+            asset.bitasset.options.short_backing_asset
+        );
+
+        let quote = new Asset({
+            real: 1,
+            asset_id: asset.bitasset.options.short_backing_asset,
+            precision: quoteAsset.get("precision")
+        });
+
+        let price = new Price({
+            quote,
+            base
+        });
+
+        AssetActions.assetGlobalSettle(asset, account, price).then(() => {
+            console.log(`Resolved ${asset}`);
+        });
+
         this.setState({
             isResolveModalOpen: false
         });
@@ -391,7 +421,6 @@ export default class PredictionMarkets extends Component {
                         show={this.state.isResolveModalOpen}
                         onClose={this.onResolveModalClose.bind(this)}
                         market={this.state.selectedMarket}
-                        currentAccount={this.props.currentAccount}
                         onResolveMarket={this.onResolveMarket}
                     />
                 ) : null}
