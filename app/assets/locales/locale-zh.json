@@ -77,6 +77,7 @@
             "cashback": "返现",
             "claim": "立即申领",
             "coindays": "币天",
+            "days": "days",
             "earned": "已获得币天",
             "expires": "到期时间",
             "fee_allocation": "手续费分配",
@@ -312,7 +313,14 @@
             "balance_number": "余额 #%(id)s",
             "explain": "待解冻金额包含来自推荐计划的返现收入、工人提案拨付的报酬等。待解冻金额在解冻期间逐渐释放，直到全部释放为止。",
             "no_balances": "该账户无待解冻余额",
-            "title": "解冻余额"
+            "title": "解冻余额",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "关于",

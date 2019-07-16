@@ -16,22 +16,26 @@ class PendingBlock extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        return !Immutable.is(this.props.dynGlobalObject, nextProps.dynGlobalObject);
+        return !Immutable.is(
+            this.props.dynGlobalObject,
+            nextProps.dynGlobalObject
+        );
     }
 
     render() {
-        const { blockNumber, dynGlobalObject } = this.props;
+        const {blockNumber, dynGlobalObject} = this.props;
         const lastIrreversibleBlockNum = dynGlobalObject.get(
             "last_irreversible_block_num"
         );
 
         return blockNumber > lastIrreversibleBlockNum ? (
             <span>
-                {" - "}
-                (<Translate
+                {" - "}(
+                <Translate
                     content="operation.pending"
                     blocks={blockNumber - lastIrreversibleBlockNum}
-                />)
+                />
+                )
             </span>
         ) : null;
     }

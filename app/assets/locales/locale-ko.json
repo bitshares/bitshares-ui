@@ -77,6 +77,7 @@
             "cashback": "캐쉬백",
             "claim": "Claim now",
             "coindays": "coin days",
+            "days": "days",
             "earned": "Coin days earned",
             "expires": "만료됨",
             "fee_allocation": "수수료 분배",
@@ -312,7 +313,14 @@
             "balance_number": "Balance #%(id)s",
             "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available",
             "no_balances": "This account has no vesting balances",
-            "title": "Vesting balances"
+            "title": "Vesting balances",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",

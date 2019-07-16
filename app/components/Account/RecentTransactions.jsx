@@ -324,8 +324,9 @@ class RecentTransactions extends React.Component {
                         <span>{info.column}</span>
                     </div>
                     <div style={{fontSize: 14, paddingTop: 5}}>
-                        {o.block_num > lastIrreversibleBlockNum ?
-                            <PendingBlock blockNumber={o.block_num} /> : null}
+                        {o.block_num > lastIrreversibleBlockNum ? (
+                            <PendingBlock blockNumber={o.block_num} />
+                        ) : null}
                     </div>
                 </div>
             ),

@@ -273,8 +273,9 @@ class AccountSelector extends React.Component {
                         return null;
                     let account = ChainStore.getAccount(accountName);
                     if (account) {
-                        let account_status =
-                            ChainStore.getAccountMemberStatus(account);
+                        let account_status = ChainStore.getAccountMemberStatus(
+                            account
+                        );
                         let account_status_text = !accountUtils.isKnownScammer(
                             accountName
                         )
@@ -309,11 +310,17 @@ class AccountSelector extends React.Component {
         if (!!accountName && !typeaheadHasAccount && this.state.inputChanged) {
             let _account = ChainStore.getAccount(accountName);
             if (_account) {
-                let _account_status = ChainStore.getAccountMemberStatus(_account);
+                let _account_status = ChainStore.getAccountMemberStatus(
+                    _account
+                );
                 let _account_status_text = _account
                     ? !accountUtils.isKnownScammer(_account.get("name"))
-                        ? counterpart.translate("account.member." + _account_status)
-                        : counterpart.translate("account.member.suspected_scammer")
+                        ? counterpart.translate(
+                              "account.member." + _account_status
+                          )
+                        : counterpart.translate(
+                              "account.member.suspected_scammer"
+                          )
                     : counterpart.translate("account.errors.unknown");
 
                 typeAheadAccounts.push({
@@ -330,7 +337,6 @@ class AccountSelector extends React.Component {
                     disabled: !_account ? true : false
                 });
             }
-
         }
 
         typeAheadAccounts.sort((a, b) => {
