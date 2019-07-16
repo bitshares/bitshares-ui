@@ -32,21 +32,6 @@ class PMAssetsContainer extends React.Component {
                     },
                     marketLimitOrders: () => {
                         return MarketsStore.getState().marketLimitOrders;
-                    },
-                    marketCallOrders: () => {
-                        return MarketsStore.getState().marketCallOrders;
-                    },
-                    invertedCalls: () => {
-                        return MarketsStore.getState().invertedCalls;
-                    },
-                    marketSettleOrders: () => {
-                        return MarketsStore.getState().marketSettleOrders;
-                    },
-                    totals: () => {
-                        return MarketsStore.getState().totals;
-                    },
-                    activeMarketHistory: () => {
-                        return MarketsStore.getState().activeMarketHistory;
                     }
                 }}
             >

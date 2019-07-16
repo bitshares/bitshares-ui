@@ -4,70 +4,136 @@ import counterpart from "counterpart";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import {Table, Button} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
+import PaginatedList from "components/Utility/PaginatedList";
 
 export default class PredictionMarketDetailsTable extends Component {
-    _getColumns() {
-        const onCell = this.onRowAction;
+    getHeader() {
         const precision = Math.pow(
             10,
-            ChainStore.getAsset(this.props.marketData.market.asset_id).get(
-                "precision"
-            )
+            ChainStore.getAsset(
+                this.props.predictionMarketData.predictionMarket.asset_id
+            ).get("precision")
         );
         const currentAccountId = ChainStore.getAccount(
             this.props.currentAccount
         ).get("id");
         return [
             {
-                key: "order_id",
                 title: "#",
+                dataIndex: "order_id",
                 align: "left",
-                onCell,
-                render: dataItem => {
-                    return <span>{dataItem.order_id}</span>;
+                sorter: (a, b) => {
+                    return a.order_id > b.order_id
+                        ? 1
+                        : a.order_id < b.order_id
+                            ? -1
+                            : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <span>{item}</span>
+                        </div>
+                    );
                 }
             },
             {
-                key: "opinionator",
                 title: counterpart.translate("prediction.details.opinionator"),
+                dataIndex: "opinionator",
                 align: "left",
-                onCell,
-                render: dataItem => {
-                    return <LinkToAccountById account={dataItem.opinionator} />;
+                sorter: (a, b) => {
+                    let a_name = ChainStore.getAccount(a.opinionator).get(
+                        "name"
+                    );
+                    let b_name = ChainStore.getAccount(b.opinionator).get(
+                        "name"
+                    );
+                    return a_name > b_name ? 1 : a_name < b_name ? -1 : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <LinkToAccountById account={item} />
+                        </div>
+                    );
                 }
             },
             {
-                key: "opinion",
                 title: counterpart.translate("prediction.details.opinion"),
+                dataIndex: "opinion",
                 align: "left",
-                onCell,
-                render: dataItem => {
-                    return <span>{dataItem.opinion}</span>;
+                sorter: (a, b) => {
+                    return a.opinion > b.opinion
+                        ? 1
+                        : a.opinion < b.opinion
+                            ? -1
+                            : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <span>{item}</span>
+                        </div>
+                    );
                 }
             },
             {
-                key: "amount",
                 title: counterpart.translate("prediction.details.amount"),
+                dataIndex: "amount",
                 align: "left",
-                onCell,
-                render: dataItem => {
-                    return <span>{dataItem.amount / precision}</span>;
+                sorter: (a, b) => {
+                    return a.amount > b.amount
+                        ? 1
+                        : a.amount < b.amount
+                            ? -1
+                            : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <span>{item / precision}</span>
+                        </div>
+                    );
                 }
             },
             {
-                key: "fee",
                 title: counterpart.translate("prediction.details.fee"),
+                dataIndex: "fee",
                 align: "left",
-                onCell,
-                render: dataItem => {
-                    return <span>{dataItem.fee / precision}</span>;
+                sorter: (a, b) => {
+                    return a.fee > b.fee ? 1 : a.fee < b.fee ? -1 : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <span>{item / precision}</span>
+                        </div>
+                    );
                 }
             },
             {
-                key: "actions",
                 title: counterpart.translate("prediction.overview.action"),
                 align: "left",
-                onCell,
                 render: dataItem => {
                     return (
                         <div
@@ -107,25 +173,20 @@ export default class PredictionMarketDetailsTable extends Component {
     }
 
     render() {
-        let pagination = {
-            hideOnSinglePage: true,
-            pageSize: 20,
-            showTotal: total =>
-                counterpart.translate("utility.total_x_items", {
-                    count: total
-                })
-        };
+        const header = this.getHeader();
 
-        let filteredOpinions = this.props.marketData.opinions.filter(item => {
-            let accountName = ChainStore.getAccount(item.opinionator)
-                ? ChainStore.getAccount(item.opinionator).get("name")
-                : null;
-            return (
-                (accountName + "\0" + item.opinion)
-                    .toUpperCase()
-                    .indexOf(this.props.detailsSearchTerm) !== -1
-            );
-        });
+        let filteredOpinions = this.props.predictionMarketData.opinions.filter(
+            item => {
+                let accountName = ChainStore.getAccount(item.opinionator)
+                    ? ChainStore.getAccount(item.opinionator).get("name")
+                    : null;
+                return (
+                    (accountName + "\0" + item.opinion)
+                        .toUpperCase()
+                        .indexOf(this.props.detailsSearchTerm) !== -1
+                );
+            }
+        );
 
         let i = 0;
         filteredOpinions = filteredOpinions.map(item => ({
@@ -134,12 +195,11 @@ export default class PredictionMarketDetailsTable extends Component {
         }));
 
         return (
-            <div style={{paddingTop: "50px"}} key="overview-table">
-                <Table
-                    columns={this._getColumns()}
-                    dataSource={filteredOpinions}
-                    pagination={pagination}
-                    footer={null}
+            <div style={{paddingTop: "50px"}}>
+                <PaginatedList
+                    rows={filteredOpinions}
+                    header={header}
+                    pageSize={10}
                 />
             </div>
         );
@@ -147,7 +207,7 @@ export default class PredictionMarketDetailsTable extends Component {
 }
 
 PredictionMarketDetailsTable.propTypes = {
-    marketData: PropTypes.any.isRequired,
+    predictionMarketData: PropTypes.any.isRequired,
     onOppose: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     currentAccountId: PropTypes.string,
@@ -155,5 +215,5 @@ PredictionMarketDetailsTable.propTypes = {
 };
 
 PredictionMarketDetailsTable.defaultProps = {
-    marketData: {}
+    predictionMarketData: {}
 };

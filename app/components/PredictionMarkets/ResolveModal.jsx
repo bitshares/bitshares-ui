@@ -9,7 +9,7 @@ export default class ResolveModal extends Modal {
         super(props);
         this.state = {
             resolveParameters: {
-                asset_id: this.props.market.asset_id,
+                asset_id: this.props.predictionMarket.asset_id,
                 result: "no"
             },
             isChecked: false
@@ -55,7 +55,7 @@ export default class ResolveModal extends Modal {
         return (
             <Modal
                 title={<Translate content="prediction.resolve_modal.title" />}
-                visible={this.props.show}
+                visible={this.props.visible}
                 onCancel={this.props.onClose}
                 overlay={true}
                 closable={!this.state.inProgress}
@@ -70,7 +70,7 @@ export default class ResolveModal extends Modal {
                                     type="text"
                                     disabled={true}
                                     tabIndex={1}
-                                    value={this.props.market.symbol}
+                                    value={this.props.predictionMarket.symbol}
                                 />
                             </label>
                         </Form.Item>
@@ -81,7 +81,9 @@ export default class ResolveModal extends Modal {
                                     type="text"
                                     disabled={true}
                                     tabIndex={2}
-                                    value={this.props.market.condition}
+                                    value={
+                                        this.props.predictionMarket.condition
+                                    }
                                 />
                             </label>
                         </Form.Item>
@@ -110,13 +112,13 @@ export default class ResolveModal extends Modal {
 }
 
 ResolveModal.propTypes = {
-    market: PropTypes.any.isRequired,
+    predictionMarket: PropTypes.any.isRequired,
     onResolveMarket: PropTypes.func.isRequired,
-    show: PropTypes.bool,
+    visible: PropTypes.bool,
     onClose: PropTypes.func
 };
 
 ResolveModal.defaultProps = {
-    show: false,
-    market: null
+    visible: false,
+    predictionMarket: null
 };

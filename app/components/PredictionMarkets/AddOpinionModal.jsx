@@ -31,7 +31,7 @@ export default class AddOpinionModal extends Modal {
 
         this.handleOpinionChange = this.handleOpinionChange.bind(this);
         this.handleAmountChange = this.handleAmountChange.bind(this);
-        this.onOk = this.onOk.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     _createOrder() {
@@ -40,7 +40,7 @@ export default class AddOpinionModal extends Modal {
             this.state.newOpinionParameters.opinion === "no" ? "bid" : "ask";
         const feeID = this.props.baseAsset.get("id");
 
-        let {description} = this.props.market.options;
+        let {description} = this.props.predictionMarket.options;
         const parsedDescription = JSON.parse(description);
         let date = new Date();
         date.setFullYear(date.getFullYear() + 1);
@@ -183,7 +183,7 @@ export default class AddOpinionModal extends Modal {
         return parseFloat(this.state.newOpinionParameters.amount);
     }
 
-    onOk() {
+    onSubmit() {
         if (this._isFormValid()) {
             this._createOrder.call(this);
         } else {
@@ -198,7 +198,7 @@ export default class AddOpinionModal extends Modal {
             <Button
                 type="primary"
                 key="submit"
-                onClick={this.onOk.bind(this)}
+                onClick={this.onSubmit}
                 disabled={this.state.inProgress}
             >
                 {counterpart.translate("global.confirm")}
@@ -217,7 +217,7 @@ export default class AddOpinionModal extends Modal {
                 title={
                     <Translate content="prediction.add_opinion_modal.title" />
                 }
-                visible={this.props.show}
+                visible={this.props.visible}
                 onCancel={this.props.onClose}
                 overlay={true}
                 closable={!this.state.inProgress}
@@ -232,7 +232,7 @@ export default class AddOpinionModal extends Modal {
                                     type="text"
                                     disabled={true}
                                     tabIndex={1}
-                                    value={this.props.market.symbol}
+                                    value={this.props.predictionMarket.symbol}
                                 />
                             </label>
                         </Form.Item>
@@ -243,7 +243,9 @@ export default class AddOpinionModal extends Modal {
                                     type="text"
                                     disabled={true}
                                     tabIndex={2}
-                                    value={this.props.market.condition}
+                                    value={
+                                        this.props.predictionMarket.condition
+                                    }
                                 />
                             </label>
                         </Form.Item>
@@ -300,9 +302,9 @@ export default class AddOpinionModal extends Modal {
 }
 
 AddOpinionModal.propTypes = {
-    show: PropTypes.bool,
+    visible: PropTypes.bool,
     onClose: PropTypes.func,
-    market: PropTypes.any.isRequired,
+    predictionMarket: PropTypes.any.isRequired,
     opinion: PropTypes.any,
     currentAccountId: PropTypes.string,
     submitNewOpinion: PropTypes.func,
@@ -311,7 +313,7 @@ AddOpinionModal.propTypes = {
 };
 
 AddOpinionModal.defaultProps = {
-    show: false,
-    market: null,
+    visible: false,
+    predictionMarket: null,
     opinion: {}
 };

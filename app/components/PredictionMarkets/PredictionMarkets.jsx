@@ -20,7 +20,7 @@ export default class PredictionMarkets extends Component {
         this.state = {
             assets: [],
             lastAssetSymbol: null,
-            markets: [],
+            predictionMarkets: [],
             currentAccountId: null,
             searchTerm: "",
             detailsSearchTerm: "",
@@ -32,7 +32,24 @@ export default class PredictionMarkets extends Component {
             isAddOpinionModalOpen: false,
             isResolveModalOpen: false
         };
-        this._updateAssetsList("A");
+
+        this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
+            this
+        );
+        this.onCreatePredictionMarketModalClose = this.onCreatePredictionMarketModalClose.bind(
+            this
+        );
+        this.onAddOpinionModalOpen = this.onAddOpinionModalOpen.bind(this);
+        this.onAddOpinionModalClose = this.onAddOpinionModalClose.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+        this.onSearchDetails = this.onSearchDetails.bind(this);
+        this.onMarketAction = this.onMarketAction.bind(this);
+        this.onResolveModalOpen = this.onResolveModalOpen.bind(this);
+        this.onResolveModalClose = this.onResolveModalClose.bind(this);
+    }
+
+    componentWillMount() {
+        this._checkAssets(this.props.assets);
     }
 
     componentWillReceiveProps(np) {
@@ -43,9 +60,22 @@ export default class PredictionMarkets extends Component {
                 )
             });
         }
-        let searchAsset = this.state.lastAssetSymbol;
-        if (np.assets) {
-            const lastAsset = np.assets
+
+        if (np.assets !== this.props.assets) {
+            this._checkAssets(np.assets);
+        }
+
+        if (np.marketLimitOrders !== this.props.marketLimitOrders) {
+            this._updateOpinionsList(np.marketLimitOrders);
+        }
+    }
+
+    _checkAssets(fetchedAssets) {
+        let searchAsset = this.state.lastAssetSymbol
+            ? this.state.lastAssetSymbol
+            : "A";
+        if (fetchedAssets) {
+            const lastAsset = fetchedAssets
                 .sort((a, b) => {
                     if (a.symbol > b.symbol) {
                         return 1;
@@ -57,26 +87,49 @@ export default class PredictionMarkets extends Component {
                 })
                 .last();
             searchAsset = lastAsset ? lastAsset.symbol : "A";
-            const assets = np.assets.filter(
+            const assets = fetchedAssets.filter(
                 a => a.bitasset_data && a.bitasset_data.is_prediction_market
             );
             this.setState({
                 assets: [...assets]
             });
-            this.updateMarketsList();
+            this._updatePredictionMarketsList();
         }
         if (
             !this.state.lastAssetSymbol ||
             this.state.lastAssetSymbol !== searchAsset
         ) {
-            this._updateAssetsList(searchAsset);
+            AssetActions.getAssetList.defer(searchAsset, 100);
             this.setState({
                 lastAssetSymbol: searchAsset
             });
         }
+    }
 
+    _updatePredictionMarketsList() {
+        const predictionMarkets = this.state.assets.map(item => ({
+            asset_id: item[1].id,
+            issuer: item[1].issuer,
+            description: assetUtils.parseDescription(
+                item[1].options.description
+            ).main,
+            symbol: item[1].symbol,
+            condition: assetUtils.parseDescription(item[1].options.description)
+                .condition,
+            options: item[1].options
+        }));
+        const predictionMarkets2 = this.state.assets.map(item => ({
+            backing_asset: item[1].bitasset_data.options.short_backing_asset
+        }));
+        console.log(predictionMarkets2);
+        this.setState({
+            predictionMarkets
+        });
+    }
+
+    _updateOpinionsList(fetchedOpinions) {
         let orders = [];
-        np.marketLimitOrders.forEach((order, order_id) => {
+        fetchedOpinions.forEach((order, order_id) => {
             const opinion =
                 order.market_base === order.sell_price.base.asset_id
                     ? "yes"
@@ -90,27 +143,6 @@ export default class PredictionMarkets extends Component {
             });
         });
         this.setState({opinions: [...orders]});
-    }
-
-    async _updateAssetsList(lastAsset) {
-        AssetActions.getAssetList.defer(lastAsset, 100);
-    }
-
-    updateMarketsList() {
-        const markets = this.state.assets.map(item => ({
-            asset_id: item[1].id,
-            issuer: item[1].issuer,
-            description: assetUtils.parseDescription(
-                item[1].options.description
-            ).main,
-            symbol: item[1].symbol,
-            condition: assetUtils.parseDescription(item[1].options.description)
-                .condition,
-            options: item[1].options
-        }));
-        this.setState({
-            markets
-        });
     }
 
     async getMarketOpinions(market) {
@@ -147,7 +179,7 @@ export default class PredictionMarkets extends Component {
         switch (action) {
             case "resolve": {
                 this.setState({
-                    selectedMarket: market,
+                    selectedPredictionMarket: market,
                     preselectedAmount: 0
                 });
                 this.onResolveModalOpen();
@@ -155,7 +187,7 @@ export default class PredictionMarkets extends Component {
             }
             case "yes": {
                 this.setState({
-                    selectedMarket: market,
+                    selectedPredictionMarket: market,
                     preselectedAmount: 0,
                     preselectedOpinion: "yes"
                 });
@@ -164,7 +196,7 @@ export default class PredictionMarkets extends Component {
             }
             case "no": {
                 this.setState({
-                    selectedMarket: market,
+                    selectedPredictionMarket: market,
                     preselectedAmount: 0,
                     preselectedOpinion: "no"
                 });
@@ -173,7 +205,7 @@ export default class PredictionMarkets extends Component {
             }
             default: {
                 this.setState({
-                    selectedMarket: market,
+                    selectedPredictionMarket: market,
                     preselectedAmount: 0
                 });
             }
@@ -309,7 +341,7 @@ export default class PredictionMarkets extends Component {
                 <div style={{paddingTop: "20px"}}>
                     <SearchInput
                         style={{width: "60%", float: "left"}}
-                        onChange={this.onSearch.bind(this)}
+                        onChange={this.onSearch}
                         onClear={() => {
                             this.setState({searchTerm: ""});
                         }}
@@ -320,9 +352,7 @@ export default class PredictionMarkets extends Component {
                     />
                     <Button
                         style={{float: "right"}}
-                        onClick={this.onCreatePredictionMarketModalOpen.bind(
-                            this
-                        )}
+                        onClick={this.onCreatePredictionMarketModalOpen}
                     >
                         {counterpart.translate(
                             "prediction.overview.create_market"
@@ -330,9 +360,9 @@ export default class PredictionMarkets extends Component {
                     </Button>
                 </div>
                 <PredictionMarketsOverviewTable
-                    markets={this.state.markets}
+                    predictionMarkets={this.state.predictionMarkets}
                     currentAccount={this.props.currentAccount}
-                    onMarketAction={this.onMarketAction.bind(this)}
+                    onMarketAction={this.onMarketAction}
                     searchTerm={this.state.searchTerm}
                 />
             </div>
@@ -345,7 +375,7 @@ export default class PredictionMarkets extends Component {
                 <div style={{paddingTop: "20px"}}>
                     <SearchInput
                         style={{width: "60%", float: "left"}}
-                        onChange={this.onSearchDetails.bind(this)}
+                        onChange={this.onSearchDetails}
                         onClear={() => {
                             this.setState({detailsSearchTerm: ""});
                         }}
@@ -356,7 +386,7 @@ export default class PredictionMarkets extends Component {
                     />
                     <Button
                         style={{float: "right"}}
-                        onClick={this.onAddOpinionModalOpen.bind(this)}
+                        onClick={this.onAddOpinionModalOpen}
                     >
                         {counterpart.translate(
                             "prediction.details.add_opinion"
@@ -365,8 +395,9 @@ export default class PredictionMarkets extends Component {
                 </div>
                 {this.state.opinions ? (
                     <PredictionMarketDetailsTable
-                        marketData={{
-                            market: this.state.selectedMarket,
+                        predictionMarketData={{
+                            predictionMarket: this.state
+                                .selectedPredictionMarket,
                             opinions: this.state.opinions
                         }}
                         currentAccount={this.props.currentAccount}
@@ -392,12 +423,21 @@ export default class PredictionMarkets extends Component {
                     <HelpContent path={"components/PredictionMarkets"} />
                 </div>
                 {this.getOverviewSection()}
-                {this.state.selectedMarket ? this.getDetailsSection() : null}
+                {this.state.selectedPredictionMarket
+                    ? this.getDetailsSection()
+                    : null}
+                {this.state.isCreateMarketModalOpen ? (
+                    <CreateMarketModal
+                        visible={this.state.isCreateMarketModalOpen}
+                        onClose={this.onCreatePredictionMarketModalClose}
+                        currentAccount={this.props.currentAccount}
+                    />
+                ) : null}
                 {this.state.isAddOpinionModalOpen ? (
                     <AddOpinionModal
-                        show={this.state.isAddOpinionModalOpen}
-                        onClose={this.onAddOpinionModalClose.bind(this)}
-                        market={this.state.selectedMarket}
+                        visible={this.state.isAddOpinionModalOpen}
+                        onClose={this.onAddOpinionModalClose}
+                        predictionMarket={this.state.selectedPredictionMarket}
                         opinion={this.state.initialOpinion}
                         currentAccount={this.props.currentAccount}
                         submitNewOpinion={this.onSubmitNewOpinion}
@@ -407,20 +447,11 @@ export default class PredictionMarkets extends Component {
                         quoteAsset={this.state.subscribedMarket.quote}
                     />
                 ) : null}
-                {this.state.isCreateMarketModalOpen ? (
-                    <CreateMarketModal
-                        show={this.state.isCreateMarketModalOpen}
-                        onClose={this.onCreatePredictionMarketModalClose.bind(
-                            this
-                        )}
-                        currentAccount={this.props.currentAccount}
-                    />
-                ) : null}
                 {this.state.isResolveModalOpen ? (
                     <ResolveModal
-                        show={this.state.isResolveModalOpen}
-                        onClose={this.onResolveModalClose.bind(this)}
-                        market={this.state.selectedMarket}
+                        visible={this.state.isResolveModalOpen}
+                        onClose={this.onResolveModalClose}
+                        predictionMarket={this.state.selectedPredictionMarket}
                         onResolveMarket={this.onResolveMarket}
                     />
                 ) : null}

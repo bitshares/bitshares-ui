@@ -52,7 +52,7 @@ export default class CreateMarketModal extends Modal {
         this.handleChange = this.handleChange.bind(this);
         this.handleAssetChange = this.handleAssetChange.bind(this);
         this.handleFeeChange = this.handleFeeChange.bind(this);
-        this.onOk = this.onOk.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     _getPermissions() {
@@ -165,7 +165,7 @@ export default class CreateMarketModal extends Modal {
         );
     }
 
-    onOk(e) {
+    onSubmit(e) {
         if (this._isFormValid()) {
             this._createAsset.call(this, e);
         } else {
@@ -180,7 +180,7 @@ export default class CreateMarketModal extends Modal {
             <Button
                 type="primary"
                 key="submit"
-                onClick={this.onOk}
+                onClick={this.onSubmit}
                 disabled={this.state.inProgress}
             >
                 {counterpart.translate("global.confirm")}
@@ -199,7 +199,7 @@ export default class CreateMarketModal extends Modal {
                 title={
                     <Translate content="prediction.create_market_modal.title" />
                 }
-                visible={this.props.show}
+                visible={this.props.visible}
                 onCancel={this.props.onClose}
                 overlay={true}
                 closable={!this.state.inProgress}
@@ -336,12 +336,12 @@ export default class CreateMarketModal extends Modal {
 }
 
 CreateMarketModal.propTypes = {
-    show: PropTypes.bool,
+    visible: PropTypes.bool,
     onClose: PropTypes.func,
     currentAccount: PropTypes.string,
     newMarketId: PropTypes.string
 };
 
 CreateMarketModal.defaultProps = {
-    show: false
+    visible: false
 };
