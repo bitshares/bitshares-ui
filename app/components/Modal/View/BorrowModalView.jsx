@@ -364,7 +364,7 @@ export function BorrowModalView({
                             <Slider
                                 step={0.01}
                                 min={0}
-                                max={maintenanceRatio * 6}
+                                max={maintenanceRatio * 12}
                                 value={collateral_ratio}
                                 onChange={onRatioChange.bind(this)}
                             />

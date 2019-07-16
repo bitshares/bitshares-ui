@@ -654,7 +654,26 @@ class BorrowModalContent extends React.Component {
             collateral_ratio.toString().indexOf(".") != -1 &&
             collateral_ratio.toString().split(".")[1].length > 2
         ) {
-            collateral_ratio = collateral_ratio.toFixed(2);
+            collateral_ratio =
+                collateral_ratio.toString().split(".")[0] +
+                "." +
+                collateral_ratio
+                    .toString()
+                    .split(".")[1]
+                    .substr(0, 2);
+        }
+
+        if (
+            target_collateral_ratio.toString().indexOf(".") != -1 &&
+            target_collateral_ratio.toString().split(".")[1].length > 2
+        ) {
+            target_collateral_ratio =
+                target_collateral_ratio.toString().split(".")[0] +
+                "." +
+                target_collateral_ratio
+                    .toString()
+                    .split(".")[1]
+                    .substr(0, 2);
         }
 
         debtBalanceObj = !debtBalanceObj

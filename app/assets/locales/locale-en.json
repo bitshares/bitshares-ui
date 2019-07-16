@@ -450,7 +450,7 @@
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Your collateral ratio is below %(mr)s which is not allowed.",
-            "below_mcr_tcr": "Your target collateral ratio is below  %(mr)s which is not allowed.",
+            "below_mcr_tcr": "Any ratio below %(mr)s will be treated as %(mr)s by chain.",
             "below_info": "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
             "below_ratio_mcr_update": "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
