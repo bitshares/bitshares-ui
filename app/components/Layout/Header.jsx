@@ -68,6 +68,9 @@ class Header extends React.Component {
         this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(
             this
         );
+        this._closeAccountNotifications = this._closeAccountNotifications.bind(
+            this
+        );
 
         this.showDepositModal = this.showDepositModal.bind(this);
         this.hideDepositModal = this.hideDepositModal.bind(this);
@@ -198,6 +201,7 @@ class Header extends React.Component {
             }
         }
         this._closeDropdown();
+        this._closeAccountNotifications();
     }
 
     _onNavigate(route, e) {
@@ -289,7 +293,7 @@ class Header extends React.Component {
         const hasLocalWallet = !!WalletDb.getWallet();
 
         if (!hasLocalWallet) return false;
-
+        this._closeAccountNotifications();
         this.setState({
             accountsListDropdownActive: !this.state.accountsListDropdownActive
         });
@@ -308,6 +312,14 @@ class Header extends React.Component {
         this.setState({
             dropdownActive: !this.state.dropdownActive
         });
+        this._closeAccountNotifications();
+    }
+
+    _closeAccountNotifications() {
+        this.state.accountNotificationActiveKeys.map(key =>
+            Notification.close(key)
+        );
+        this.setState({accountNotificationActiveKeys: []});
     }
 
     onBodyClick(e) {
