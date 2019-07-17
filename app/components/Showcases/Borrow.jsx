@@ -356,13 +356,13 @@ class Borrow extends Component {
                         <BorrowModal
                             visible={this.state.isBorrowBaseModalVisible}
                             hideModal={this.hideBorrowModal}
-                            quote_asset={selectedAssetObject.get("id")}
-                            backing_asset={selectedAssetObject.getIn([
+                            quoteAssetObj={selectedAssetObject.get("id")}
+                            backingAssetObj={selectedAssetObject.getIn([
                                 "bitasset",
                                 "options",
                                 "short_backing_asset"
                             ])}
-                            account={currentAccount}
+                            accountObj={currentAccount}
                         />
                     )}
             </div>

@@ -77,6 +77,7 @@
             "cashback": "Saldo del bilancio vesting",
             "claim": "Riscuoti ora",
             "coindays": "coin days",
+            "days": "days",
             "earned": "Coin days raggiunti",
             "expires": "scade",
             "fee_allocation": "Allocazione commissioni",
@@ -312,7 +313,14 @@
             "balance_number": "Saldo #%(id)s",
             "explain": "I saldi vesting contengono tutte le commissioni (fee) guadagnate tramite il programma di affiliazione (referral program) o, per esempio, il pagamento dei worker. Essi hanno un certo periodo di vesting, durante il quale vengono man mano sbloccati finché tutti i fondi sono disponibili.",
             "no_balances": "Questo account non ha saldi vesting",
-            "title": "Saldi vesting"
+            "title": "Saldi vesting",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "Informazioni",
