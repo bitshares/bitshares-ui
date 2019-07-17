@@ -296,10 +296,18 @@
         }
         .amount-selector-field--balance {
             float: right;
-            cursor: pointer;
-            &:hover {
-                color: $link-text-color;
+            .amount-selector-field--link {
+                cursor: pointer;
+                &:hover {
+                    color: $link-text-color;
+                }
             }
+        }
+    }
+    .input-group-unbordered-before {
+        > span > span:first-of-type {
+            background: none !important;
+            border: none !important;
         }
     }
     .form-input-header {
