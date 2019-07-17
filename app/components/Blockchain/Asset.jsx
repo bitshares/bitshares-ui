@@ -1427,6 +1427,10 @@ class Asset extends React.Component {
                 return new Date(feed2[1][0]) - new Date(feed1[1][0]);
             });
 
+        let currentFeed = assetUtils.extractRawFeedPrice(asset);
+        let currentFeedPrice =
+            currentFeed.base.amount / currentFeed.quote.amount;
+
         let dataSource = [];
         let columns = [];
 
@@ -1439,6 +1443,15 @@ class Asset extends React.Component {
                     <Translate content="explorer.asset.price_feed_data.publisher" />
                 ),
                 dataIndex: "publisher",
+                sorter: (a, b) => {
+                    let nameA = ChainStore.getAccount(a.publisher, false);
+                    if (nameA) nameA = nameA.get("name");
+                    let nameB = ChainStore.getAccount(b.publisher, false);
+                    if (nameB) nameB = nameB.get("name");
+                    if (nameA > nameB) return 1;
+                    if (nameA < nameB) return -1;
+                    return 0;
+                },
                 render: item => {
                     return <LinkToAccountById account={item} />;
                 }
@@ -1452,8 +1465,43 @@ class Asset extends React.Component {
                     </React.Fragment>
                 ),
                 dataIndex: "feed_price",
+                sorter: (a, b) => {
+                    let a_price = parseFloat(
+                        a.feed_price.base.amount / a.feed_price.quote.amount
+                    );
+                    let b_price = parseFloat(
+                        b.feed_price.base.amount / b.feed_price.quote.amount
+                    );
+
+                    if (a_price > b_price) return 1;
+                    if (a_price < b_price) return -1;
+                    return 0;
+                },
                 render: item => {
-                    return this.formattedPrice(item, true);
+                    let price = parseFloat(
+                        item.base.amount / item.quote.amount
+                    );
+                    let median_offset = (
+                        (price / currentFeedPrice) * 100 -
+                        100
+                    ).toFixed(2);
+                    return (
+                        <React.Fragment>
+                            {this.formattedPrice(item, true)}(
+                            <span
+                                className={
+                                    Math.abs(median_offset) > 10
+                                        ? "txtlabel alert"
+                                        : Math.abs(median_offset) > 5
+                                            ? "txtlabel warning"
+                                            : "txtlabel success"
+                                }
+                            >
+                                {median_offset}%
+                            </span>
+                            )
+                        </React.Fragment>
+                    );
                 }
             },
             {
@@ -1503,6 +1551,13 @@ class Asset extends React.Component {
                     <Translate content="explorer.asset.price_feed_data.published" />
                 ),
                 dataIndex: "publishDate",
+                sorter: (a, b) => {
+                    if (a.publishDate.getTime() > b.publishDate.getTime())
+                        return 1;
+                    if (a.publishDate.getTime() < b.publishDate.getTime())
+                        return -1;
+                    return 0;
+                },
                 render: item => {
                     return <TimeAgo time={item} />;
                 }
