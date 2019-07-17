@@ -470,7 +470,7 @@ class MarketOrders extends React.Component {
 
         let isSelected =
             this.state.selectedOrders.length > 0 &&
-            this.state.selectedOrders.length == totalMyOrders;
+            this.state.selectedOrders.length == totalRows;
 
         return (
             <MarketsOrderView
