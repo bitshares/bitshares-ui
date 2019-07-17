@@ -26,6 +26,8 @@ export default class CreateMarketModal extends Modal {
                 symbol: ""
             },
             showWarning: false,
+            wrongSymbol: false,
+            wrongDate: false,
             core_exchange_rate: {
                 quote: {
                     asset_id: null,
@@ -157,6 +159,22 @@ export default class CreateMarketModal extends Modal {
     }
 
     _isFormValid() {
+        if (this.props.symbols.includes(this.state.marketOptions.symbol)) {
+            this.setState({wrongSymbol: true});
+            return false;
+        } else {
+            this.setState({wrongSymbol: false});
+        }
+
+        let now = new Date();
+        let expiry = new Date(this.state.marketOptions.description.expiry);
+        if (now > expiry) {
+            this.setState({wrongDate: true});
+            return false;
+        } else {
+            this.setState({wrongDate: false});
+        }
+
         return (
             this.state.marketOptions.symbol &&
             this.state.marketOptions.description.main &&
@@ -174,7 +192,7 @@ export default class CreateMarketModal extends Modal {
     }
 
     render() {
-        const {showWarning, marketOptions} = this.state;
+        const {showWarning, marketOptions, wrongSymbol, wrongDate} = this.state;
 
         const footer = [
             <Button
@@ -210,7 +228,8 @@ export default class CreateMarketModal extends Modal {
                         <Form.Item>
                             <span
                                 className={
-                                    !marketOptions.symbol && showWarning
+                                    (!marketOptions.symbol && showWarning) ||
+                                    wrongSymbol
                                         ? "has-error"
                                         : ""
                                 }
@@ -268,8 +287,9 @@ export default class CreateMarketModal extends Modal {
                         <Form.Item>
                             <span
                                 className={
-                                    !marketOptions.description.expiry &&
-                                    showWarning
+                                    (!marketOptions.description.expiry &&
+                                        showWarning) ||
+                                    wrongDate
                                         ? "has-error"
                                         : ""
                                 }
@@ -291,10 +311,9 @@ export default class CreateMarketModal extends Modal {
                                 <AssetSelect
                                     assets={[
                                         "1.3.0",
-                                        "1.3.1",
-                                        "1.3.2",
-                                        "1.3.3",
-                                        "1.3.4"
+                                        "1.3.113",
+                                        "1.3.120",
+                                        "1.3.121"
                                     ]}
                                     value={
                                         this.state.bitasset_opts
@@ -312,13 +331,10 @@ export default class CreateMarketModal extends Modal {
                                     tabIndex={6}
                                     disabled={true}
                                     assets={[
+                                        "1.3.0",
                                         "1.3.113",
                                         "1.3.120",
-                                        "1.3.121",
-                                        "1.3.1325",
-                                        "1.3.105",
-                                        "1.3.106",
-                                        "1.3.103"
+                                        "1.3.121"
                                     ]}
                                     asset={this.state.marketOptions.feeAsset}
                                     onChange={this.handleFeeChange}

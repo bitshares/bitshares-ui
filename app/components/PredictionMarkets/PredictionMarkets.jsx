@@ -30,7 +30,8 @@ export default class PredictionMarkets extends Component {
             preselectedAmount: 0,
             isCreateMarketModalOpen: false,
             isAddOpinionModalOpen: false,
-            isResolveModalOpen: false
+            isResolveModalOpen: false,
+            symbols: []
         };
 
         this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
@@ -63,6 +64,7 @@ export default class PredictionMarkets extends Component {
 
         if (np.assets !== this.props.assets) {
             this._checkAssets(np.assets);
+            this._updateSymbolsList();
         }
 
         if (np.marketLimitOrders !== this.props.marketLimitOrders) {
@@ -118,10 +120,6 @@ export default class PredictionMarkets extends Component {
                 .condition,
             options: item[1].options
         }));
-        const predictionMarkets2 = this.state.assets.map(item => ({
-            backing_asset: item[1].bitasset_data.options.short_backing_asset
-        }));
-        console.log(predictionMarkets2);
         this.setState({
             predictionMarkets
         });
@@ -143,6 +141,15 @@ export default class PredictionMarkets extends Component {
             });
         });
         this.setState({opinions: [...orders]});
+    }
+
+    _updateSymbolsList() {
+        let assets = this.props.assets.toJS();
+        let symbols = [];
+        for (let item in assets) {
+            symbols.push(assets[item].symbol);
+        }
+        this.setState({symbols});
     }
 
     async getMarketOpinions(market) {
@@ -304,7 +311,6 @@ export default class PredictionMarkets extends Component {
         );
         const globalSettlementPrice = market.result === "yes" ? 1 : 0;
         const asset = ChainStore.getAsset(market.asset_id).toJS();
-        console.log(globalSettlementPrice);
         let base = new Asset({
             real: globalSettlementPrice,
             asset_id: asset.id,
@@ -431,6 +437,7 @@ export default class PredictionMarkets extends Component {
                         visible={this.state.isCreateMarketModalOpen}
                         onClose={this.onCreatePredictionMarketModalClose}
                         currentAccount={this.props.currentAccount}
+                        symbols={this.state.symbols}
                     />
                 ) : null}
                 {this.state.isAddOpinionModalOpen ? (
