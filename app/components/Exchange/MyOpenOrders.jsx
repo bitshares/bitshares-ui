@@ -206,7 +206,7 @@ class MarketOrders extends React.Component {
     }
 
     _cancelLimitOrders() {
-        MarketsActions._cancelLimitOrders(
+        MarketsActions.cancelLimitOrders(
             this.props.currentAccount.get("id"),
             this.state.selectedOrders
         )
