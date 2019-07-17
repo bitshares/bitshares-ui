@@ -48,7 +48,7 @@ class MarketOrders extends React.Component {
             showAll: false,
             selectedOrders: []
         };
-        this.getOrders = this.getOrders.bind(this);
+        this._getOrders = this._getOrders.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -143,7 +143,7 @@ class MarketOrders extends React.Component {
         }
     }
 
-    onSetShowAll() {
+    _onSetShowAll() {
         this.setState({
             showAll: !this.state.showAll
         });
@@ -183,7 +183,7 @@ class MarketOrders extends React.Component {
     }
 
     cancelSelected() {
-        this.cancelLimitOrders.call(this);
+        this._cancelLimitOrders.call(this);
     }
 
     resetSelected() {
@@ -191,7 +191,7 @@ class MarketOrders extends React.Component {
     }
 
     onCancelToggle(evt) {
-        const orders = this.getOrders();
+        const orders = this._getOrders();
         let selectedOrders = [];
 
         orders.forEach(order => {
@@ -205,8 +205,8 @@ class MarketOrders extends React.Component {
         }
     }
 
-    cancelLimitOrders() {
-        MarketsActions.cancelLimitOrders(
+    _cancelLimitOrders() {
+        MarketsActions._cancelLimitOrders(
             this.props.currentAccount.get("id"),
             this.state.selectedOrders
         )
@@ -218,7 +218,7 @@ class MarketOrders extends React.Component {
             });
     }
 
-    getOrders() {
+    _getOrders() {
         const {currentAccount, base, quote, feedPrice} = this.props;
         const orders = currentAccount.get("orders"),
             call_orders = currentAccount.get("call_orders");
@@ -298,7 +298,7 @@ class MarketOrders extends React.Component {
 
         // User Orders
         if (!activeTab || activeTab == "my_orders") {
-            const orders = this.getOrders();
+            const orders = this._getOrders();
 
             let bids = orders
                 .filter(a => {
@@ -415,7 +415,7 @@ class MarketOrders extends React.Component {
                 totalRows > 11 ? (
                     <React.Fragment>
                         <div className="orderbook-showall">
-                            <a onClick={this.onSetShowAll.bind(this)}>
+                            <a onClick={this._onSetShowAll.bind(this)}>
                                 <Translate
                                     content={
                                         showAll
@@ -454,7 +454,7 @@ class MarketOrders extends React.Component {
 
             footerContainer = totalRows > 11 && (
                 <div className="orderbook-showall">
-                    <a onClick={this.onSetShowAll.bind(this)}>
+                    <a onClick={this._onSetShowAll.bind(this)}>
                         <Translate
                             content={
                                 showAll
