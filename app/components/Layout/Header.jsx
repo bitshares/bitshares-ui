@@ -52,7 +52,8 @@ class Header extends React.Component {
             isDepositModalVisible: false,
             hasDepositModalBeenShown: false,
             isWithdrawModalVisible: false,
-            hasWithdrawalModalBeenShown: false
+            hasWithdrawalModalBeenShown: false,
+            accountNotificationActiveKeys: []
         };
 
         this.unlisten = null;
@@ -258,10 +259,25 @@ class Header extends React.Component {
         ZfApi.publish("account_drop_down", "close");
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
+            const key = `account-notification-${Date.now()}`;
             Notification.success({
                 message: counterpart.translate("header.account_notify", {
                     account: account_name
-                })
+                }),
+                key,
+                onClose: () => {
+                    this.setState({
+                        accountNotificationActiveKeys: this.state.accountNotificationActiveKeys.filter(
+                            el => el !== key
+                        )
+                    });
+                }
+            });
+            this.setState({
+                accountNotificationActiveKeys: [
+                    ...this.state.accountNotificationActiveKeys,
+                    key
+                ]
             });
             this._closeDropdown();
         }
