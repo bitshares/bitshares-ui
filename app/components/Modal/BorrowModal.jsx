@@ -13,6 +13,7 @@ import {List} from "immutable";
 import {Modal, Button} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
 import {BorrowModalView} from "./View/BorrowModalView";
+import debounceRender from "react-debounce-render";
 
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset
@@ -101,6 +102,8 @@ class BorrowModalContent extends React.Component {
 
         this.setState(newState);
         this._setUpdatedPosition(newState);
+        // set max on mount todo: discuss if feasible default
+        // this._maximizeCollateral();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -809,6 +812,10 @@ class BorrowModalContent extends React.Component {
     }
 }
 BorrowModalContent = BindToChainState(BorrowModalContent);
+
+BorrowModalContent = debounceRender(BorrowModalContent, 50, {
+    leading: false
+});
 
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
 export default class ModalWrapper extends React.Component {
