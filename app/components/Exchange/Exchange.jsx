@@ -25,7 +25,7 @@ import utils from "common/utils";
 import BuySell from "./BuySell";
 import ScaledOrderTab from "./ScaledOrderTab";
 import ExchangeHeader from "./ExchangeHeader";
-import {MarketOrders} from "./MarketOrders";
+import {MarketOrders} from "./MyOpenOrders";
 import {OrderBook} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
