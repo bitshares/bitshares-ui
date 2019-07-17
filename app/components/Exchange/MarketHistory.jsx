@@ -26,7 +26,7 @@ class MarketHistory extends React.Component {
         super();
         this.state = {
             activeTab: props.viewSettings.get("historyTab", "history"),
-            rowCount: 20,
+            rowCount: 60,
             showAll: false
         };
     }
@@ -215,7 +215,6 @@ class MarketHistory extends React.Component {
                                 />
                             </td>
                             <td>{fill.amountToReceive()}</td>
-                            <td>{fill.amountToPay()}</td>
                             <td>
                                 <Tooltip title={fill.time.toString()}>
                                     <div
@@ -285,13 +284,13 @@ class MarketHistory extends React.Component {
                         <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
                             <thead>
                                 <tr>
-                                    <th style={{textAlign: "right"}}>
+                                    <th style={{textAlign: "center"}}>
                                         <Translate
                                             className="header-sub-title"
                                             content="exchange.price"
                                         />
                                     </th>
-                                    <th style={{textAlign: "right"}}>
+                                    <th style={{textAlign: "center"}}>
                                         <span className="header-sub-title">
                                             <AssetName
                                                 dataPlace="top"
@@ -299,15 +298,7 @@ class MarketHistory extends React.Component {
                                             />
                                         </span>
                                     </th>
-                                    <th style={{textAlign: "right"}}>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={baseSymbol}
-                                            />
-                                        </span>
-                                    </th>
-                                    <th style={{textAlign: "right"}}>
+                                    <th style={{textAlign: "center"}}>
                                         <Translate
                                             className="header-sub-title"
                                             content="explorer.block.date"

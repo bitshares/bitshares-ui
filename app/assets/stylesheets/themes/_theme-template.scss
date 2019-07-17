@@ -526,6 +526,7 @@
         .table {
             > thead > tr > th,
             > tbody > tr > td {
+                text-align: center;
                 border-bottom-color: darken($secondary-text-color, 10%);
             }
         }
@@ -856,6 +857,7 @@
             color: $secondary-text-color;
         }
         > tbody > tr > td {
+            text-align: center;
             border-bottom-color: $dark-text-color;
             font-size: 0.875rem;
         }

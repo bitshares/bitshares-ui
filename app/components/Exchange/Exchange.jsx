@@ -2097,14 +2097,14 @@ class Exchange extends React.Component {
                 defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    "small-3",
-                    "exchange-padded middle-content",
+                    "small-2",
+                    "middle-content",
                     flipBuySell
-                        ? `order-${buySellTop ? 2 : 3} large-order-${
-                              buySellTop ? 2 : 5
+                        ? `order-${buySellTop ? 3 : 3} large-order-${
+                              buySellTop ? 3 : 5
                           } sell-form`
-                        : `order-${buySellTop ? 1 : 2} large-order-${
-                              buySellTop ? 1 : 4
+                        : `order-${buySellTop ? 2 : 2} large-order-${
+                              buySellTop ? 2 : 4
                           } buy-form`
                 )}
             >
@@ -2216,6 +2216,7 @@ class Exchange extends React.Component {
                     />
                 </Tabs.TabPane>
                 <Tabs.TabPane
+                    style={{fontSize: "10px"}}
                     tab={counterpart.translate("exchange.scaled")}
                     key={"scaled"}
                 >
@@ -2257,10 +2258,10 @@ class Exchange extends React.Component {
                 defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    "small-3 exchange-padded middle-content",
+                    "small-2 middle-content",
                     flipBuySell
-                        ? `order-${buySellTop ? 1 : 2} large-order-${
-                              buySellTop ? 1 : 4
+                        ? `order-${buySellTop ? 6 : 2} large-order-${
+                              buySellTop ? 6 : 4
                           } buy-form`
                         : `order-${buySellTop ? 2 : 3} large-order-${
                               buySellTop ? 2 : 5
@@ -2532,10 +2533,9 @@ class Exchange extends React.Component {
                                     ? "medium-6"
                                     : ""
                             : "medium-12",
-                        "no-padding no-overflow middle-content small-12 order-6"
+                        "no-padding no-overflow small-12 order-6"
                     )}
-                    innerClass={!tinyScreen ? "exchange-padded" : ""}
-                    innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
+                    innerStyle={{paddingBottom: !tinyScreen ? "0" : "0"}}
                     noHeader={panelTabs["history"] == 0 ? false : true}
                     history={activeMarketHistory}
                     currentAccount={currentAccount}
@@ -2564,13 +2564,12 @@ class Exchange extends React.Component {
                                     ? "medium-6"
                                     : ""
                             : "medium-12",
-                        "no-padding no-overflow middle-content small-12",
+                        "no-padding no-overflow small-12",
                         verticalOrderBook || verticalOrderForm
                             ? "order-4"
                             : "order-3"
                     )}
-                    innerClass={!tinyScreen ? "exchange-padded" : ""}
-                    innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
+                    innerStyle={{paddingBottom: !tinyScreen ? "0" : "0"}}
                     noHeader={panelTabs["my_history"] == 0 ? false : true}
                     history={activeMarketHistory}
                     currentAccount={currentAccount}
@@ -2600,10 +2599,9 @@ class Exchange extends React.Component {
                                     ? "medium-6"
                                     : ""
                             : "medium-12",
-                        "no-padding no-overflow middle-content small-12 order-7"
+                        "no-padding no-overflow small-12 order-7"
                     )}
-                    innerClass={!tinyScreen ? "exchange-padded" : ""}
-                    innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
+                    innerStyle={{paddingBottom: !tinyScreen ? "0" : "0"}}
                     noHeader={panelTabs["my_orders"] == 0 ? false : true}
                     orders={marketLimitOrders}
                     settleOrders={marketSettleOrders}
@@ -2639,10 +2637,9 @@ class Exchange extends React.Component {
                                     ? "medium-6"
                                     : ""
                             : "medium-12",
-                        "no-padding no-overflow middle-content small-12 order-8"
+                        "no-padding no-overflow small-12 order-8"
                     )}
-                    innerClass={!tinyScreen ? "exchange-padded" : ""}
-                    innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
+                    innerStyle={{paddingBottom: !tinyScreen ? "0" : "0"}}
                     noHeader={panelTabs["open_settlement"] == 0 ? false : true}
                     orders={marketLimitOrders}
                     settleOrders={marketSettleOrders}
@@ -2947,7 +2944,7 @@ class Exchange extends React.Component {
                 groupTabsCount++;
             }
         });
-
+        console.log(groupTabs);
         let groupTabbed2 =
             groupTabs[2].length > 0 ? (
                 <div
@@ -2962,9 +2959,9 @@ class Exchange extends React.Component {
                                     ? "medium-12"
                                     : "medium-6"
                                 : "",
-                        "small-12 order-6"
+                        "small-12 order-1"
                     )}
-                    style={{paddingRight: 5}}
+                    style={{paddingRight: 0}}
                 >
                     <Tabs
                         activeKey={panelTabsActive[2]}
@@ -3397,7 +3394,7 @@ class Exchange extends React.Component {
                                             className="grid-block shrink no-overflow"
                                             id="market-charts"
                                             style={{
-                                                width: "65%",
+                                                minWidth: "60%",
                                                 display: "inline-block"
                                             }}
                                         >
@@ -3411,7 +3408,7 @@ class Exchange extends React.Component {
                                         <div
                                             className="grid-block vertical no-padding shrink"
                                             style={{
-                                                width: "65%",
+                                                width: "60%",
                                                 display: "inline-block"
                                             }}
                                         >
@@ -3423,7 +3420,7 @@ class Exchange extends React.Component {
                                     <div
                                         className="grid-block shrink no-overflow small-2"
                                         style={{
-                                            //width: "20%",
+                                            minWidth: "20%",
                                             display: "inline-block"
                                             //position: "absolute"
                                         }}
@@ -3434,7 +3431,7 @@ class Exchange extends React.Component {
                                     <div
                                         className="small-2 "
                                         style={{
-                                            //width: "20%",
+                                            minWidth: "20%",
                                             display: "inline-block",
                                             position: "relative"
                                         }}

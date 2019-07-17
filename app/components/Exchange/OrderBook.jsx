@@ -170,22 +170,11 @@ class OrderBookRowHorizontal extends React.Component {
                     order.isMine(this.props.currentAccount) ? "my-order" : ""
                 }
             >
-                {position === "left" ? (
-                    <td className="column-hide-xs">{total}</td>
-                ) : (
-                    <td style={{width: "25%"}} className={integerClass}>
-                        {price}
-                    </td>
-                )}
-                <td>{position === "left" ? value : amount}</td>
-                <td>{position === "left" ? amount : value}</td>
-                {position === "right" ? (
-                    <td className="column-hide-xs">{total}</td>
-                ) : (
-                    <td style={{width: "25%"}} className={integerClass}>
-                        {price}
-                    </td>
-                )}
+                <td style={{width: "25%"}} className={integerClass}>
+                    {price}
+                </td>
+                <td> {amount}</td>
+                <td className="column-hide-xs">{total}</td>
             </tr>
         );
     }
@@ -673,7 +662,6 @@ class OrderBook extends React.Component {
                 return a.getPrice() - b.getPrice();
             });
         }
-
         if (base && quote) {
             // limit orders or grouped orders
             if (this.props.currentGroupOrderLimit !== 0) {
@@ -806,7 +794,6 @@ class OrderBook extends React.Component {
                 });
             }
         }
-
         if (this.props.horizontal) {
             let totalBidsLength = bidRows.length;
             let totalAsksLength = askRows.length;
@@ -822,6 +809,22 @@ class OrderBook extends React.Component {
             let leftHeader = (
                 <thead>
                     <tr key="top-header" className="top-header">
+                        <th>
+                            <Translate
+                                className={
+                                    (flipOrderBook
+                                        ? "ask-total"
+                                        : "bid-total") + " header-sub-title"
+                                }
+                                content="exchange.price"
+                            />
+                        </th>
+
+                        <th>
+                            <span className="header-sub-title">
+                                <AssetName dataPlace="top" name={quoteSymbol} />
+                            </span>
+                        </th>
                         <th className="column-hide-xs">
                             <Translate
                                 className="header-sub-title"
@@ -832,26 +835,6 @@ class OrderBook extends React.Component {
                                 (<AssetName dataPlace="top" name={baseSymbol} />
                                 )
                             </span>
-                        </th>
-                        <th>
-                            <span className="header-sub-title">
-                                <AssetName dataPlace="top" name={baseSymbol} />
-                            </span>
-                        </th>
-                        <th>
-                            <span className="header-sub-title">
-                                <AssetName dataPlace="top" name={quoteSymbol} />
-                            </span>
-                        </th>
-                        <th>
-                            <Translate
-                                className={
-                                    (flipOrderBook
-                                        ? "ask-total"
-                                        : "bid-total") + " header-sub-title"
-                                }
-                                content="exchange.price"
-                            />
                         </th>
                     </tr>
                 </thead>
@@ -873,11 +856,6 @@ class OrderBook extends React.Component {
                         <th>
                             <span className="header-sub-title">
                                 <AssetName dataPlace="top" name={quoteSymbol} />
-                            </span>
-                        </th>
-                        <th>
-                            <span className="header-sub-title">
-                                <AssetName dataPlace="top" name={baseSymbol} />
                             </span>
                         </th>
                         <th className="column-hide-xs">
@@ -923,7 +901,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 185,
+                                    maxHeight: 223,
                                     lineHeight: "15px"
                                 }}
                             >
@@ -960,7 +938,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 260,
+                                    maxHeight: 223,
                                     lineHeight: "13px"
                                 }}
                             >

@@ -99,8 +99,8 @@ module.exports = function(env) {
         ),
         new CopyWebpackPlugin([
             {
-                from: path.join(root_dir, "exchange/charting_library"),
-                to: "exchange/charting_library"
+                from: path.join(root_dir, "charting_library"),
+                to: "charting_library"
             }
         ])
     ];
