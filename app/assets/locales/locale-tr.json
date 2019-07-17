@@ -77,6 +77,7 @@
             "cashback": "Tutulan bakiye miktarı",
             "claim": "Şimdi iste",
             "coindays": "koin günler",
+            "days": "days",
             "earned": "Kazanılmış koin günü",
             "expires": "bitiş tarihi",
             "fee_allocation": "Ücret Tahsisi",
@@ -312,7 +313,14 @@
             "balance_number": "Bakiye #%(id)s",
             "explain": "Bekletilen bakiyeler tavsiye programlarından yada geliştirici ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı serbest bırakılır.",
             "no_balances": "Bu hesaba ait bekletilen bakiye bulunmamaktadır.",
-            "title": "Tutulan Bakiyeler"
+            "title": "Tutulan Bakiyeler",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",

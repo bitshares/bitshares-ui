@@ -3534,13 +3534,13 @@ class Exchange extends React.Component {
                     <BorrowModal
                         visible={this.state.isBorrowQuoteModalVisible}
                         hideModal={this.hideBorrowQuoteModal}
-                        quote_asset={quoteAsset.get("id")}
-                        backing_asset={quoteAsset.getIn([
+                        quoteAssetObj={quoteAsset.get("id")}
+                        backingAssetObj={quoteAsset.getIn([
                             "bitasset",
                             "options",
                             "short_backing_asset"
                         ])}
-                        account={currentAccount}
+                        accountObj={currentAccount}
                     />
                 ) : null}
                 {baseIsBitAsset &&
@@ -3549,13 +3549,13 @@ class Exchange extends React.Component {
                     <BorrowModal
                         visible={this.state.isBorrowBaseModalVisible}
                         hideModal={this.hideBorrowBaseModal}
-                        quote_asset={baseAsset.get("id")}
-                        backing_asset={baseAsset.getIn([
+                        quoteAssetObj={baseAsset.get("id")}
+                        backingAssetObj={baseAsset.getIn([
                             "bitasset",
                             "options",
                             "short_backing_asset"
                         ])}
-                        account={currentAccount}
+                        accountObj={currentAccount}
                     />
                 ) : null}
 
