@@ -1,5 +1,4 @@
 import React from "react";
-import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs";
@@ -73,14 +72,11 @@ class VotingAccountsList extends React.Component {
         label: PropTypes.string.isRequired, // a translation key for the label,
         placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
-        action: PropTypes.string,
-        withSelector: PropTypes.bool
+        action: PropTypes.string
     };
 
     static defaultProps = {
-        action: "remove",
-        withSelector: true,
-        autosubscribe: false
+        action: "remove"
     };
 
     constructor(props) {
@@ -365,24 +361,6 @@ class VotingAccountsList extends React.Component {
 
         return (
             <div>
-                {this.props.withSelector ? (
-                    <AccountSelector
-                        style={{maxWidth: "600px"}}
-                        label={this.props.label}
-                        error={error}
-                        placeholder={this.props.placeholder}
-                        account={this.state.item_name_input}
-                        accountName={this.state.item_name_input}
-                        onChange={this.onItemChange}
-                        onAccountChanged={this.onItemAccountChange}
-                        onAction={this.onAddItem}
-                        action_label="account.votes.add_witness"
-                        tabIndex={this.props.tabIndex}
-                    />
-                ) : null}
-                {this.props.title && item_rows.length ? (
-                    <h4>{this.props.title}</h4>
-                ) : null}
                 {item_rows.length ? (
                     <PaginatedList
                         className="table dashboard-table table-hover"

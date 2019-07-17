@@ -71,7 +71,6 @@ export default class Witnesses extends Component {
                         onRemoveItem={removeWitnessHandler}
                         tabIndex={hasProxy ? -1 : 2}
                         supported={hasProxy ? proxy_witnesses : witnesses}
-                        withSelector={false}
                         active={globalObject.get("active_witnesses")}
                         proxy={proxy_account_id}
                         filterSearch={filterSearch}

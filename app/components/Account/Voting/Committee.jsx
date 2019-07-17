@@ -72,7 +72,6 @@ export default class Committee extends Component {
                         onRemoveItem={removeCommitteeHandler}
                         tabIndex={hasProxy ? -1 : 3}
                         supported={hasProxy ? proxy_committee : committee}
-                        withSelector={false}
                         active={globalObject.get("active_committee_members")}
                         proxy={proxy_account_id}
                         filterSearch={filterSearch}
