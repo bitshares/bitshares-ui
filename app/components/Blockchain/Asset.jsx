@@ -1490,11 +1490,11 @@ class Asset extends React.Component {
                             {this.formattedPrice(item, true)}(
                             <span
                                 className={
-                                    Math.abs(median_offset) > 10
-                                        ? "txtlabel alert"
-                                        : Math.abs(median_offset) > 5
+                                    median_offset > 0
+                                        ? "txtlabel success"
+                                        : median_offset < 0
                                             ? "txtlabel warning"
-                                            : "txtlabel success"
+                                            : "txtlabel"
                                 }
                             >
                                 {median_offset}%
