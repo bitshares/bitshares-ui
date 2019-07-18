@@ -54,7 +54,7 @@ class Invoice extends React.Component {
         };
         this.onBroadcastAndConfirm = this.onBroadcastAndConfirm.bind(this);
         this.getTotal = this.getTotal.bind(this);
-        this._printExampleInvoice();
+        // this._printExampleInvoice();
     }
 
     _validateFormat(invoice) {
