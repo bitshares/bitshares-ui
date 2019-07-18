@@ -106,7 +106,7 @@ function VestingBalanceView({
                                 <Translate content="account.member.available" />
                             </td>
                             <td>
-                                {availablePercent * 100}% /{" "}
+                                {(availablePercent * 100).toFixed(2)}% /{" "}
                                 <FormattedAsset
                                     amount={availablePercent * vestingBalance}
                                     asset={vestingAsset}
@@ -117,7 +117,10 @@ function VestingBalanceView({
                     <tr>
                         <td colSpan="2" style={{textAlign: "right"}}>
                             {canClaim ? (
-                                <Button onClick={onClaim.bind(this, false)}>
+                                <Button
+                                    onClick={onClaim.bind(this, false)}
+                                    type="primary"
+                                >
                                     <Translate content="account.member.claim" />
                                 </Button>
                             ) : null}
@@ -166,6 +169,7 @@ class VestingBalance extends React.Component {
                 let start = Math.floor(
                     new Date(vb.policy[1].start_claim + "Z").getTime() / 1000
                 );
+                let now = Math.floor(new Date().getTime() / 1000);
 
                 if (start > 0) {
                     // Vesting has a specific start date.
@@ -174,11 +178,11 @@ class VestingBalance extends React.Component {
                     // Calculate days left before a claim is possible
                     // Example asset is BRIDGE.BCO - 1.3.1564
 
-                    let now = Math.floor(new Date().getTime() / 1000);
+                    isCoinDays = false;
+
                     let seconds_earned = now - start;
                     let seconds_period = vb.policy[1].vesting_seconds;
 
-                    isCoinDays = false;
                     if (seconds_earned < seconds_period) {
                         canClaim = false;
                         days_earned = parseFloat(
@@ -197,12 +201,27 @@ class VestingBalance extends React.Component {
                     // If period is 0 we expect a 100% claimable balance
                     // otherwise we expect to be allowed to claim the matured percentage.
 
-                    let seconds_earned = vb.policy[1].coin_seconds_earned;
+                    // Core is lazy calculating the vesting balance object, so we
+                    // need to account for the time passed since it was last updated
+                    let seconds_last_updated = Math.floor(
+                        new Date(
+                            vb.policy[1].coin_seconds_earned_last_update + "Z"
+                        ).getTime() / 1000
+                    );
+                    let seconds_earned =
+                        parseFloat(vb.policy[1].coin_seconds_earned) +
+                        balance * (now - seconds_last_updated);
                     let seconds_period = vb.policy[1].vesting_seconds;
+
                     available_percentage =
                         seconds_period === 0
                             ? 1
                             : seconds_earned / (seconds_period * balance);
+
+                    // Make sure we don't go over 1
+                    available_percentage =
+                        available_percentage > 1 ? 1 : available_percentage;
+
                     days_earned = utils.format_number(
                         utils.get_asset_amount(
                             seconds_earned / 86400,
