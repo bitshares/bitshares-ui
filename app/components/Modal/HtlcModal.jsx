@@ -480,7 +480,16 @@ class HtlcModal extends React.Component {
                     preimage_hash:
                         operation.payload.conditions.hash_lock.preimage_hash[1],
                     preimage_size:
-                        operation.payload.conditions.hash_lock.preimage_hash[0]
+                        operation.payload.conditions.hash_lock.preimage_hash[0],
+                    expirationDate: moment(
+                        new Date(
+                            utils.makeISODateString(
+                                operation.payload.conditions.time_lock
+                                    .expiration
+                            )
+                        )
+                    ),
+                    period: null
                 });
             } else {
                 this.setState({
@@ -488,7 +497,16 @@ class HtlcModal extends React.Component {
                     preimage_hash:
                         operation.payload.conditions.hash_lock.preimage_hash[1],
                     preimage_size:
-                        operation.payload.conditions.hash_lock.preimage_hash[0]
+                        operation.payload.conditions.hash_lock.preimage_hash[0],
+                    expirationDate: moment(
+                        new Date(
+                            utils.makeISODateString(
+                                operation.payload.conditions.time_lock
+                                    .expiration
+                            )
+                        )
+                    ),
+                    period: null
                 });
             }
         } else {
