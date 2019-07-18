@@ -480,7 +480,10 @@ class HtlcModal extends React.Component {
                         operation.payload.conditions.hash_lock.preimage_hash[0],
                     expirationDate: moment(
                         new Date(
-                            operation.payload.conditions.time_lock.expiration
+                            utils.makeISODateString(
+                                operation.payload.conditions.time_lock
+                                    .expiration
+                            )
                         )
                     ),
                     period: null
@@ -494,7 +497,10 @@ class HtlcModal extends React.Component {
                         operation.payload.conditions.hash_lock.preimage_hash[0],
                     expirationDate: moment(
                         new Date(
-                            operation.payload.conditions.time_lock.expiration
+                            utils.makeISODateString(
+                                operation.payload.conditions.time_lock
+                                    .expiration
+                            )
                         )
                     ),
                     period: null
