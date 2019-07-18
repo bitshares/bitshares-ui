@@ -570,7 +570,7 @@ class AccountOrders extends React.Component {
                                 type="primary"
                                 onClick={this.cancelSelected.bind(this)}
                             >
-                                <Translate content="account.submit_orders" />
+                                <Translate content="account.cancel_orders" />
                             </Button>
                             &nbsp;
                             <Button

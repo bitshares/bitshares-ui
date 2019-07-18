@@ -190,6 +190,7 @@
         "quote": "Quote",
         "recent": "Recent activity",
         "reset_orders": "Reset",
+        "cancel_orders": "Cancel orders",
         "restore": "Restore",
         "search": "Search for an account",
         "see_open": "See open orders",
