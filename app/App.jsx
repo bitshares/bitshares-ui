@@ -22,12 +22,17 @@ import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
 import NewsHeadline from "components/Layout/NewsHeadline";
-import Invoice from "./components/Transfer/Invoice";
 
 import {Route, Switch, Redirect} from "react-router-dom";
 
 // Nested route components
 import Page404 from "./components/Page404/Page404";
+
+const Invoice = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "exchange" */ "./components/Transfer/Invoice"),
+    loading: LoadingIndicator
+});
 
 const Exchange = Loadable({
     loader: () =>
