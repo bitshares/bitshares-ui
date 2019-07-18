@@ -77,6 +77,7 @@
             "cashback": "캐쉬백",
             "claim": "Claim now",
             "coindays": "coin days",
+            "days": "days",
             "earned": "Coin days earned",
             "expires": "만료됨",
             "fee_allocation": "수수료 분배",
@@ -114,6 +115,7 @@
         },
         "new_user": "New user?",
         "no_orders": "No open orders",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
@@ -311,7 +313,14 @@
             "balance_number": "Balance #%(id)s",
             "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available",
             "no_balances": "This account has no vesting balances",
-            "title": "Vesting balances"
+            "title": "Vesting balances",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",
@@ -762,7 +771,7 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Margin positions"
@@ -782,7 +791,8 @@
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Global settlement happens at price",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio",
@@ -858,13 +868,14 @@
             "asset_issue": "발행량",
             "asset_update": "업데이트할 자산",
             "authorizing_account": "계정 인증",
-            "call_limit": "콜 한도",
+            "call_limit": "콜 한도, %(price)s",
             "common_options": "일반 옵션",
             "count": "거래 수",
             "date": "날짜",
             "fee_payer": "수수료 지불 계정",
-            "feed_price": "Feed price",
+            "feed_price": "Feed price, %(price)s",
             "go_to": "Go to block",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "블록 ID",
             "key": "공개키",
             "lifetime": "평생회원으로 업그레이드",

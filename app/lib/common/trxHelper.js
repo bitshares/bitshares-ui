@@ -340,7 +340,7 @@ function shouldPayFeeWithAssetAsync(fromAccount, feeAmount) {
         const balanceID = fromAccount.getIn(["balances", feeAmount.asset_id]);
         return FetchChain("getObject", balanceID).then(balanceObject => {
             const balance = balanceObject.get("balance");
-            if (balance <= feeAmount.amount) return true;
+            return balance <= feeAmount.amount;
         });
     }
     return new Promise(resolve => resolve(false));

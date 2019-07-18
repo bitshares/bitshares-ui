@@ -77,6 +77,7 @@
             "cashback": "Tutulan bakiye miktarı",
             "claim": "Şimdi iste",
             "coindays": "koin günler",
+            "days": "days",
             "earned": "Kazanılmış koin günü",
             "expires": "bitiş tarihi",
             "fee_allocation": "Ücret Tahsisi",
@@ -114,6 +115,7 @@
         },
         "new_user": "New user?",
         "no_orders": "Açık emir yok",
+        "no_order_history": "No order history",
         "no_price": "Fiyat mevcut değil",
         "open_orders": "Açık Emirler",
         "optional": {
@@ -311,7 +313,14 @@
             "balance_number": "Bakiye #%(id)s",
             "explain": "Bekletilen bakiyeler tavsiye programlarından yada geliştirici ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı serbest bırakılır.",
             "no_balances": "Bu hesaba ait bekletilen bakiye bulunmamaktadır.",
-            "title": "Tutulan Bakiyeler"
+            "title": "Tutulan Bakiyeler",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",
@@ -762,7 +771,7 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Margin positions"
@@ -782,7 +791,8 @@
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Global settlement happens at price",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Sürdürme Teminat Oranı (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maksimum kısa pozisyon sıkıştırma oranı (MSSR)",
@@ -858,13 +868,14 @@
             "asset_issue": "Düzenlenecek miktar",
             "asset_update": "Güncellenecek Dijital Varlık",
             "authorizing_account": "Yetki veren hesap ",
-            "call_limit": "Çağrı Sınırı",
+            "call_limit": "Çağrı Sınırı, %(price)s",
             "common_options": "Yaygın seçenekler",
             "count": "İşlem Sayısı",
             "date": "Tarih",
             "fee_payer": "Ücret ödeyen hesap",
-            "feed_price": "Feed price",
+            "feed_price": "Feed price, %(price)s",
             "go_to": "Go to block",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "Blok Kimlik",
             "key": "Açık anahtar",
             "lifetime": "Asil üyeliğe yükselt",

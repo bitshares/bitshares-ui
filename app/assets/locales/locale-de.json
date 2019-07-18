@@ -77,6 +77,7 @@
             "cashback": "Skonto",
             "claim": "Guthaben einfordern",
             "coindays": "Münztage",
+            "days": "days",
             "earned": "Erworbene Münztage",
             "expires": "endet",
             "fee_allocation": "Gebührenverteilung",
@@ -114,6 +115,7 @@
         },
         "new_user": "Neuer Benutzer?",
         "no_orders": "Keine offenen Aufträge",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Offene Aufträge",
         "optional": {
@@ -311,7 +313,14 @@
             "balance_number": "Guthaben #%(id)s",
             "explain": "Sperrfristguthaben beinhaltet alle Gebühren durch Empfehlungen oder Arbeitsbezahlungen. Dieses Guthaben hat eine bestimmte Zeitspanne, bis es verfügbar ist.",
             "no_balances": "Dieses Konto hat kein zugesichertes Guthaben.",
-            "title": "Zusicherungen"
+            "title": "Zusicherungen",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "Über",
@@ -768,7 +777,7 @@
             "info": "Anlagen Info",
             "invalid": "Der Anlagenname %(name)s ist ungültig",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Sicherheiten Positionen"
@@ -788,7 +797,8 @@
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Globaler Verrechnungspreis",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Globaler Verrechnungspreis",
                 "maintenance_collateral_ratio": "Benötigte Sicherheiten-Ratio",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximales short squeeze Verhältnis",
@@ -864,13 +874,14 @@
             "asset_issue": "Zu emittierender Betrag",
             "asset_update": "zu aktualisierende Anlage",
             "authorizing_account": "Kontovollmacht",
-            "call_limit": "Kauf-Limit",
+            "call_limit": "Kauf-Limit, %(price)s",
             "common_options": "Allgemeine Optionen",
             "count": "Transaktionszähler",
             "date": "Datum",
             "fee_payer": "Gebührenkonto",
-            "feed_price": "Preisangabe",
+            "feed_price": "Preisangabe, %(price)s",
             "go_to": "Gehe zu Block",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "Block Identifikation",
             "key": "Öffentlicher Schlüssel",
             "lifetime": "Lebenslanges Mitglied werden",

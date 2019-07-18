@@ -16,7 +16,8 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import CopyButton from "../Utility/CopyButton";
-
+import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
 import {
     Form,
     Modal,
@@ -352,7 +353,9 @@ class HtlcModal extends React.Component {
             asset: null,
             error: null,
             feeAsset: null,
-            fee_asset_id: "1.3.0",
+            fee_asset_id:
+                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
             maxAmount: false,
@@ -542,7 +545,10 @@ class HtlcModal extends React.Component {
             ? ChainStore.getObject(feeBalanceID)
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
+            this.setState(
+                {fee_asset_id: this.state.fee_asset_id},
+                this._updateFee
+            );
         }
         if (!balanceObject || !feeAmount) return;
         if (!amount) return this.setState({balanceError: false});
@@ -748,7 +754,6 @@ class HtlcModal extends React.Component {
             confirm_store_state.included &&
             confirm_store_state.broadcasted_transaction
         ) {
-            // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
         } else if (confirm_store_state.closed) {
@@ -870,7 +875,7 @@ class HtlcModal extends React.Component {
                 asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
+                let feeID = feeAsset ? feeAsset.get("id") : fee_asset_id;
 
                 balance = (
                     <span>
@@ -1164,4 +1169,18 @@ class HtlcModal extends React.Component {
     }
 }
 
-export default HtlcModal;
+export default connect(
+    HtlcModal,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps(props) {
+            return {
+                fee_asset_symbol: SettingsStore.getState().settings.get(
+                    "fee_asset"
+                )
+            };
+        }
+    }
+);
