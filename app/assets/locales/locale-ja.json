@@ -77,6 +77,7 @@
             "cashback": "権利確定残高",
             "claim": "今すぐ請求",
             "coindays": "コイン・日",
+            "days": "days",
             "earned": "獲得したコイン・日",
             "expires": "期限切れ",
             "fee_allocation": "手数料割り当て",
@@ -114,6 +115,7 @@
         },
         "new_user": "はじめてですか？",
         "no_orders": "未処理の注文はありません",
+        "no_order_history": "No order history",
         "no_price": "不明な値",
         "open_orders": "注文中",
         "optional": {
@@ -311,7 +313,14 @@
             "balance_number": "残高 #%(id)s",
             "explain": "権利確定残高には紹介プログラムやワーカーへの支払いなどから得た手数料が含まれます。それらは一定の権利付与期間を有し、すべての資金が利用可能になるまでの間、段階的にアンロックされていきます。",
             "no_balances": "このアカウントには権利確定残高はありません",
-            "title": "権利確定残高"
+            "title": "権利確定残高",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",
@@ -762,7 +771,7 @@
             "info": "Asset info",
             "invalid": "アセット名%(name)sは無効です",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "マージンポジション"
@@ -782,7 +791,8 @@
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Global settlement happens at price",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "維持担保率 (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "最大ショート・スクイーズ比率 (MSSR)",
@@ -858,13 +868,14 @@
             "asset_issue": "発行する数量",
             "asset_update": "アップデートするアセット",
             "authorizing_account": "承認するアカウント",
-            "call_limit": "コール制限",
+            "call_limit": "コール制限, %(price)s",
             "common_options": "共通オプション",
             "count": "トランザクション数",
             "date": "日時",
             "fee_payer": "手数料支払いアカウント",
-            "feed_price": "フィード価格",
+            "feed_price": "フィード価格, %(price)s",
             "go_to": "Go to block",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "ブロック ID",
             "key": "公開キー",
             "lifetime": "終身会員にアップグレードする",
@@ -1051,7 +1062,7 @@
         "deposit_warning_memo": "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "fee": "ゲートウェイ手数料",
         "fiat": "法定通貨",
-        "fiat_text": "注意：法定通貨のゲートウェイは当面の間、利用不可となります。最新情報は<a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>から確認してください。",
+        "fiat_text": "注意：法定通貨のゲートウェイは当面の間、利用不可となります。最新情報は<a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>から確認してください。",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "ゲートウェイ",
         "gateway_text": "ここで入金または出金を選択してください",
