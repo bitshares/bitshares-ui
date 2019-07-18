@@ -194,6 +194,7 @@
         "select_placeholder": "Select Account...",
         "settle": "Settle",
         "settle_orders": "Settle orders",
+        "market_orders": "Market orders",
         "show_hidden": "Hidden",
         "show_ignored": "Show hidden accounts",
         "show_visual": "Visual",

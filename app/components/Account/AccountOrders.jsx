@@ -73,9 +73,11 @@ class AccountOrders extends React.Component {
                 base = ChainStore.getAsset(order.sell_price.base.asset_id);
                 quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
             } else {
-                order = orderID;
+                order = ChainStore.getObject(orderID).toJS();
                 base = ChainStore.getAsset(order.balance.asset_id);
-                quote = ChainStore.getAsset("1.3.0");
+                quote = ChainStore.getAsset(
+                    base.getIn(["bitasset", "options", "short_backing_asset"])
+                );
             }
 
             if (base && quote) {
@@ -520,7 +522,50 @@ class AccountOrders extends React.Component {
         ];
     }
 
-    _formatTables(dataSource, settleDatasource, areAssetsGrouped) {
+    _renderSettleOrdersTable() {
+        const {account} = this.props;
+        const {filterValue} = this.state;
+
+        let settleOrders = account.get("settle_orders");
+
+        if (filterValue) {
+            settleOrders = this._getFilteredOrders.call(this, "settle");
+        }
+        let dataSource = this._getDataSource(settleOrders, "settle");
+
+        let pagination = {
+            hideOnSinglePage: true,
+            pageSize: 20,
+            showTotal: (total, range) =>
+                counterpart.translate("utility.total_x_items", {
+                    count: total
+                })
+        };
+
+        let footer = () => <span>&nbsp;</span>;
+
+        let settleColumns = this._getColumns(false, dataSource, "settle");
+
+        return (
+            <Table
+                columns={settleColumns}
+                dataSource={dataSource}
+                pagination={pagination}
+                footer={footer}
+            />
+        );
+    }
+
+    _renderOrdersTable() {
+        const {account} = this.props;
+        const {filterValue, areAssetsGrouped} = this.state;
+        let orders = account.get("orders");
+
+        if (filterValue) {
+            orders = this._getFilteredOrders.call(this);
+        }
+        const dataSource = this._getDataSource(orders);
+
         let pagination = {
             hideOnSinglePage: true,
             pageSize: 20,
@@ -551,7 +596,7 @@ class AccountOrders extends React.Component {
             // And then group by base market ID - this will separate buy and sell records on the same market
             // Don't forget to count the direction - this allows to consider table as the same one when direction changes
             let grouped = groupBy(
-                [...dataSource, ...settleDatasource],
+                dataSource,
                 dataItem =>
                     dataItem.marketName +
                     "_" +
@@ -580,7 +625,7 @@ class AccountOrders extends React.Component {
             let columns = this._getColumns(areAssetsGrouped, dataSource);
 
             tables.push(
-                <div className="grid-wrapper" key="groupedTable">
+                <div className="grid-wrapper" key="ungroupedTable">
                     <Table
                         columns={columns}
                         dataSource={dataSource}
@@ -590,28 +635,6 @@ class AccountOrders extends React.Component {
                     />
                 </div>
             );
-
-            if (settleDatasource.length) {
-                let settleColumns = this._getColumns(
-                    areAssetsGrouped,
-                    settleDatasource,
-                    "settle"
-                );
-                tables.push(
-                    <div className="grid-wrapper" key="settleGroupedTable">
-                        <Table
-                            title={() => (
-                                <Translate content="account.settle_orders" />
-                            )}
-                            columns={settleColumns}
-                            dataSource={settleDatasource}
-                            rowSelection={rowSelection}
-                            pagination={pagination}
-                            footer={footer}
-                        />
-                    </div>
-                );
-            }
         }
 
         return tables;
@@ -649,33 +672,19 @@ class AccountOrders extends React.Component {
     }
 
     render() {
-        let {account, settleOrders = []} = this.props;
-        let {filterValue, selectedOrders} = this.state;
+        const {account} = this.props;
+        const {selectedOrders} = this.state;
 
-        if (!account.get("orders")) {
-            return null;
-        }
+        const ordersTable = this._renderOrdersTable();
+        const settleOrdersTable = this._renderSettleOrdersTable();
 
-        let orders = account.get("orders");
-
-        const ordersCount = orders.size || settleOrders.size;
-        if (filterValue) {
-            orders = this._getFilteredOrders.call(this);
-            settleOrders = this._getFilteredOrders.call(this, "settle");
-        }
-
-        let dataSource = this._getDataSource(orders);
-        let settleDatasource = this._getDataSource(settleOrders, "settle");
-
-        let tables = this._formatTables(
-            dataSource,
-            settleDatasource,
-            this.state.areAssetsGrouped
-        );
+        const tables = [ordersTable];
 
         let onGroupChange = (checked, evt) => {
             this.setState({areAssetsGrouped: checked});
         };
+
+        let settleOrdersCount = account.get("settle_orders").size;
 
         return (
             <div
@@ -683,18 +692,16 @@ class AccountOrders extends React.Component {
                 style={{paddingBottom: 15}}
             >
                 <div className="header-selector">
-                    {orders && ordersCount ? (
-                        <div className="filter inline-block">
-                            <Input
-                                type="text"
-                                placeholder={counterpart.translate(
-                                    "account.filter_orders"
-                                )}
-                                onChange={this.setFilterValue.bind(this)}
-                                addonAfter={<Icon type="search" />}
-                            />
-                        </div>
-                    ) : null}
+                    <div className="filter inline-block">
+                        <Input
+                            type="text"
+                            placeholder={counterpart.translate(
+                                "account.filter_orders"
+                            )}
+                            onChange={this.setFilterValue.bind(this)}
+                            addonAfter={<Icon type="search" />}
+                        />
+                    </div>
                     {selectedOrders.length ? (
                         <button
                             className="button"
@@ -711,16 +718,29 @@ class AccountOrders extends React.Component {
                             <Translate content="account.submit_orders" />
                         </button>
                     ) : null}
-                    {orders && ordersCount ? (
-                        <div className="group-by">
-                            <Translate content="account.group_by_asset" />
-                            <span className="text">:</span>
-                            <Switch onChange={onGroupChange} />
-                        </div>
-                    ) : null}
+                    <div className="group-by">
+                        <Translate content="account.group_by_asset" />
+                        <span className="text">:</span>
+                        <Switch onChange={onGroupChange} />
+                    </div>
                 </div>
 
-                {tables}
+                <div>
+                    {settleOrdersCount > 0 && (
+                        <div className="header-selector">
+                            <Translate content="account.market_orders" />
+                        </div>
+                    )}
+                    {tables}
+                </div>
+                {settleOrdersCount > 0 && (
+                    <div className="grid-wrapper" key="settleGroupedTable">
+                        <div className="header-selector">
+                            <Translate content="account.settle_orders" />
+                        </div>
+                        {settleOrdersTable}
+                    </div>
+                )}
             </div>
         );
     }

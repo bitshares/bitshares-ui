@@ -3,7 +3,6 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
-// import AccountLeftPanel from "./AccountLeftPanel";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import {connect} from "alt-react";
@@ -11,7 +10,6 @@ import accountUtils from "common/account_utils";
 import {List, Set} from "immutable";
 import Page404 from "../Page404/Page404";
 import {Route, Switch, Redirect} from "react-router-dom";
-import {Apis} from "bitsharesjs-ws";
 
 /* Nested routes */
 import AccountAssets from "./AccountAssets";
@@ -31,11 +29,7 @@ class AccountPage extends React.Component {
     };
 
     constructor(props) {
-        super();
-        this.state = {
-            settleOrders: []
-        };
-        this.getSettleOrders = this.getSettleOrders.bind(this);
+        super(props);
     }
 
     componentDidMount() {
@@ -43,7 +37,6 @@ class AccountPage extends React.Component {
             AccountActions.setCurrentAccount.defer(
                 this.props.account.get("name")
             );
-            this.getSettleOrders();
             // Fetch possible fee assets here to avoid async issues later (will resolve assets)
             accountUtils.getPossibleFees(this.props.account, "transfer");
         }
@@ -60,24 +53,10 @@ class AccountPage extends React.Component {
                 AccountActions.setCurrentAccount.defer(npName);
                 // Fetch possible fee assets here to avoid async issues later (will resolve assets)
                 accountUtils.getPossibleFees(np.account, "transfer");
-                this.getSettleOrders();
             }
         }
     }
 
-    getSettleOrders() {
-        const accountId = this.props.account.get("id");
-        Apis.instance()
-            .db_api()
-            .exec("get_full_accounts", [[accountId], true])
-            .then(account => {
-                const settleOrders = account[0][1].settle_orders;
-                this.setState({settleOrders});
-            })
-            .catch(err => {
-                console.log("error:", err);
-            });
-    }
     render() {
         let {
             myActiveAccounts,
@@ -86,14 +65,13 @@ class AccountPage extends React.Component {
             wallet_locked,
             account,
             hiddenAssets
-        } = this.props;        
+        } = this.props;
 
         if (!account) {
             return <Page404 />;
         }
         let account_name = this.props.account.get("name");
         let isMyAccount = AccountStore.isMyAccount(account);
-        let {settleOrders} = this.state;
 
         let passOnProps = {
             account_name,
@@ -107,7 +85,6 @@ class AccountPage extends React.Component {
             contained: true,
             balances: account.get("balances", List()).toList(),
             orders: account.get("orders", List()).toList(),
-            settleOrders: new Set(settleOrders),
             viewSettings: this.props.viewSettings,
             proxy: account.getIn(["options", "voting_account"]),
             history: this.props.history
