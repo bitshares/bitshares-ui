@@ -263,12 +263,22 @@ div.header-selector {
         border-right: 0px;
     }
     > .group-by {
-        float: right;
-        line-height: 32px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
 
-        .text {
+    > .filter-block {
+        float: left;
+        display: flex;
+        align-items: center;
+        > .filter {
             margin-right: 10px;
         }
+    }
+
+    > .action-buttons {
+        float: right;
     }
 
     margin-bottom: 14px;
