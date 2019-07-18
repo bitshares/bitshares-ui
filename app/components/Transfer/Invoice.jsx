@@ -6,12 +6,26 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
 import NotificationActions from "actions/NotificationActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
-import {decompress} from "lzma";
+import {decompress, compress} from "lzma";
 import bs58 from "common/base58";
 import utils from "common/utils";
 import PrintReceiptButton from "./PrintReceiptButton.jsx";
 import Translate from "react-translate-component";
-import {Form, Button, Row, Col, Divider} from "bitshares-ui-style-guide";
+import {
+    Form,
+    Button,
+    Row,
+    Col,
+    Divider,
+    Card,
+    Icon,
+    Tooltip
+} from "bitshares-ui-style-guide";
+import sanitize from "sanitize";
+import counterpart from "counterpart";
+import {bindToCurrentAccount, hasLoaded} from "../Utility/BindToCurrentAccount";
+import Operation from "../Blockchain/Operation";
+
 // invoice example:
 //{
 //    "to" : "merchant_account_name",
@@ -34,11 +48,35 @@ class Invoice extends React.Component {
             invoice: null,
             pay_from_name: null,
             pay_from_account: null,
+            pay_to_account: null,
             error: null,
             blockNum: null
         };
         this.onBroadcastAndConfirm = this.onBroadcastAndConfirm.bind(this);
         this.getTotal = this.getTotal.bind(this);
+        this._printExampleInvoice();
+    }
+
+    _validateFormat(invoice) {
+        return true;
+    }
+
+    _printExampleInvoice() {
+        let invoice = {
+            to: "sschiessl",
+            to_label: "Stefan S.",
+            currency: "BTS",
+            memo: "Invoice #1234",
+            line_items: [
+                {label: "Something to Buy", quantity: 1, price: "0.1"},
+                {label: "10 things to Buy", quantity: 10, price: "0.02"}
+            ],
+            note: "Something the merchant wants to say to the user"
+        };
+        compress(JSON.stringify(invoice), 9, (result, error) => {
+            let a = bs58;
+            console.log(bs58.encode(Buffer.from(result)));
+        });
     }
 
     componentDidMount() {
@@ -49,19 +87,41 @@ class Invoice extends React.Component {
 
         try {
             decompress(compressed_data, result => {
+                result = sanitize(result, {
+                    whiteList: [], // empty, means filter out all tags
+                    stripIgnoreTag: true // filter out all HTML not in the whilelist
+                });
                 let invoice = JSON.parse(result);
-                FetchChainObjects(ChainStore.getAsset, [invoice.currency]).then(
-                    assets_array => {
+                if (this._validateFormat(invoice)) {
+                    FetchChainObjects(ChainStore.getAsset, [
+                        invoice.currency
+                    ]).then(assets_array => {
                         this.setState(
                             {invoice, asset: assets_array[0]},
                             this.getTotal
                         );
-                    }
-                );
+                    });
+                } else {
+                    this.setState({
+                        error: counterpart.translate("invoice.invalid_format")
+                    });
+                }
             });
         } catch (error) {
-            console.dir(error);
+            console.error(error);
             this.setState({error: error.message});
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (this.state.pay_from_name == null && this.props.currentAccount) {
+            // check if current account has already paid
+            let paymentOperation = this._findPayment();
+
+            this.setState({
+                pay_from_name: this.props.currentAccount.get("name"),
+                paymentOperation
+            });
         }
     }
 
@@ -69,6 +129,50 @@ class Invoice extends React.Component {
         let m = price.match(/([\d\,\.\s]+)/);
         if (!m || m.length < 2) 0.0;
         return parseFloat(m[1].replace(/[\,\s]/g, ""));
+    }
+
+    _findPayment() {
+        if (hasLoaded(this.props.currentAccount) && this.state.total_amount) {
+            const find_to = this.state.pay_to_account.get("id");
+            const find_asset_id = this.state.asset.get("id");
+            const find_amount =
+                this.state.total_amount *
+                Math.pow(10, this.state.asset.get("precision"));
+
+            let transaction = null;
+            this.props.currentAccount
+                .get("history")
+                .toJS()
+                .forEach(_op => {
+                    const op = _op.op;
+                    if (op[0] == 0) {
+                        const from = op[1].from;
+                        const to = op[1].to;
+                        const amount = op[1].amount.amount;
+                        const asset_id = op[1].amount.asset_id;
+
+                        const invoice = this.state.invoice;
+
+                        console.log(
+                            find_to,
+                            to,
+                            find_asset_id,
+                            asset_id,
+                            find_amount,
+                            amount
+                        );
+
+                        if (
+                            find_to == to &&
+                            find_asset_id == asset_id &&
+                            find_amount == amount
+                        ) {
+                            transaction = _op;
+                        }
+                    }
+                });
+            return transaction;
+        }
     }
 
     getTotal() {
@@ -79,7 +183,16 @@ class Invoice extends React.Component {
             if (!price) return total;
             return total + item.quantity * price;
         }, 0.0);
-        this.setState({total_amount});
+
+        // check if current account has already paid
+        let paymentOperation = this._findPayment();
+
+        this.setState({
+            total_amount: parseFloat(
+                total_amount.toFixed(this.state.asset.get("precision"))
+            ),
+            paymentOperation
+        });
     }
 
     onBroadcastAndConfirm(confirm_store_state) {
@@ -136,6 +249,10 @@ class Invoice extends React.Component {
         this.setState({pay_from_account});
     }
 
+    onToAccountChanged(pay_to_account) {
+        this.setState({pay_to_account});
+    }
+
     render() {
         if (this.state.error)
             return (
@@ -162,9 +279,14 @@ class Invoice extends React.Component {
         let {invoice, total_amount} = this.state;
         const asset = invoice.currency;
         let balance = null;
+
+        if (invoice.to_label) {
+            invoice.to_name = invoice.to_label;
+        }
+
         const receiptData = {
             ...invoice,
-            total_amount,
+            total_amount: total_amount ? total_amount.toString() : 0,
             asset,
             from: this.state.pay_from_account,
             blockNum: this.state.blockNum
@@ -191,21 +313,20 @@ class Invoice extends React.Component {
             let price = this.parsePrice(i.price);
             let amount = i.quantity * price;
             return (
-                <Row>
-                    <Col span={12}>
+                <Row key={"invoice_item_" + index}>
+                    <Col span={10}>
                         <div className="item-name">{i.label}</div>
-                        <div className="item-description">
-                            {i.quantity} x{" "}
-                            {
-                                <FormattedAsset
-                                    amount={i.price}
-                                    asset={asset}
-                                    exact_amount={true}
-                                />
-                            }
-                        </div>
+                        <div className="item-description" />
                     </Col>
-                    <Col span={12}>
+                    <Col span={3}>{i.quantity} x</Col>
+                    <Col span={5}>
+                        <FormattedAsset
+                            amount={i.price}
+                            asset={asset}
+                            exact_amount={true}
+                        />
+                    </Col>
+                    <Col span={5}>
                         <FormattedAsset
                             amount={amount}
                             asset={asset}
@@ -216,100 +337,185 @@ class Invoice extends React.Component {
             );
         });
 
+        console.log(this.state.paymentOperation);
+
         return (
-            <div className="grid-block vertical">
-                <div className="grid-content">
-                    <div className="content-block invoice">
+            <div
+                className="center"
+                style={{
+                    padding: "10px",
+                    maxWidth: "60rem",
+                    minWidth: "40rem",
+                    width: "100%",
+                    margin: "0 auto"
+                }}
+            >
+                <Card>
+                    <div style={{float: "right"}}>
                         <PrintReceiptButton
                             data={receiptData}
                             parsePrice={this.parsePrice}
                         />
-                        <Form className="full-width" layout="vertical">
-                            <div className="grid-block">
-                                <div className="grid-content medium-4">
-                                    <Translate
-                                        component="h3"
-                                        content="transfer.pay_invoice"
-                                    />
-                                    <h4>{invoice.memo}</h4>
-
-                                    <AccountSelector
-                                        label="transfer.to"
-                                        accountName={invoice.to}
-                                        disabled={true}
-                                        account={invoice.to}
-                                        size={32}
-                                    />
-                                    <AccountSelector
-                                        label="transfer.pay_from"
-                                        accountName={this.state.pay_from_name}
-                                        onChange={this.fromChanged.bind(this)}
-                                        onAccountChanged={this.onFromAccountChanged.bind(
-                                            this
-                                        )}
-                                        account={this.state.pay_from_name}
-                                        typeahead={true}
-                                        size={32}
-                                    />
-
-                                    <Row>
-                                        <Col span={12}>
-                                            <Translate
-                                                component="span"
-                                                content="transfer.items"
-                                            />
-                                        </Col>
-                                        <Col span={12}>
-                                            <Translate
-                                                component="span"
-                                                content="transfer.amount"
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <div className="divider" />
-                                    {items}
-                                    <Row>
-                                        <Col span={12} offset={12}>
-                                            <div>
-                                                <Translate
-                                                    component="span"
-                                                    content="transfer.total"
-                                                />
-
-                                                <FormattedAsset
-                                                    amount={total_amount}
-                                                    asset={asset}
-                                                    exact_amount={true}
-                                                />
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                    <Button
-                                        type="primary"
-                                        style={{marginTop: "30px"}}
-                                        disabled={!this.state.pay_from_account}
-                                        onClick={this.onPayClick.bind(this)}
-                                    >
-                                        <Translate
-                                            content="transfer.pay_button"
-                                            asset={
-                                                <FormattedAsset
-                                                    amount={total_amount}
-                                                    asset={asset}
-                                                    exact_amount={true}
-                                                />
-                                            }
-                                            name={invoice.to}
-                                        />
-                                    </Button>
-                                </div>
-                            </div>
-                        </Form>
                     </div>
-                </div>
+                    <Translate
+                        component="h3"
+                        content="invoice.payment_request"
+                    />
+                    <br />
+                    <h4>{invoice.memo}</h4>
+
+                    <div
+                        style={{
+                            width: "30rem"
+                        }}
+                    >
+                        <AccountSelector
+                            label="invoice.paid_by"
+                            accountName={this.state.pay_from_name}
+                            onChange={this.fromChanged.bind(this)}
+                            onAccountChanged={this.onFromAccountChanged.bind(
+                                this
+                            )}
+                            account={this.state.pay_from_name}
+                            typeahead={true}
+                            size={32}
+                        />
+
+                        <AccountSelector
+                            label="invoice.pay_to"
+                            accountName={invoice.to}
+                            disabled={true}
+                            onAccountChanged={this.onToAccountChanged.bind(
+                                this
+                            )}
+                            account={this.state.pay_to_account}
+                            size={32}
+                        />
+                    </div>
+
+                    {invoice.to_name && (
+                        <div>
+                            <Translate content="invoice.recipient_name" />
+                            <p>{invoice.to_name}</p>
+                        </div>
+                    )}
+
+                    {invoice.note && (
+                        <div>
+                            <Translate content="invoice.note" />
+                            <p>{invoice.note}</p>
+                        </div>
+                    )}
+
+                    <Row>
+                        <Col span={10}>
+                            <Translate
+                                component="span"
+                                content="invoice.items"
+                            />
+                        </Col>
+                        <Col span={3}>
+                            <Translate
+                                component="span"
+                                content="invoice.amount"
+                            />
+                        </Col>
+                        <Col span={5}>
+                            <Translate
+                                component="span"
+                                content="invoice.unit"
+                            />
+                        </Col>
+                        <Col span={5}>
+                            <Translate
+                                component="span"
+                                content="invoice.total"
+                            />
+                        </Col>
+                    </Row>
+                    <div className="divider" />
+                    {items}
+                    <div className="divider" />
+                    <Row>
+                        <Col span={18}>
+                            <Translate
+                                component="span"
+                                content="invoice.total"
+                            />
+                        </Col>
+                        <Col span={5}>
+                            <FormattedAsset
+                                amount={total_amount}
+                                asset={asset}
+                                exact_amount={true}
+                            />
+                        </Col>
+                    </Row>
+
+                    {this.state.paymentOperation ? (
+                        <div>
+                            <h3>
+                                {counterpart.translate("invoice.payment_proof")}
+                                &nbsp;
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "invoice.tooltip_payment_proof"
+                                    )}
+                                    mouseEnterDelay={0.5}
+                                >
+                                    <Icon type="question-circle" />
+                                </Tooltip>
+                            </h3>
+
+                            <table className="table">
+                                <tbody>
+                                    <Operation
+                                        includeOperationId={true}
+                                        key={this.state.paymentOperation.id}
+                                        operationId={
+                                            this.state.paymentOperation.id
+                                        }
+                                        op={this.state.paymentOperation.op}
+                                        result={
+                                            this.state.paymentOperation.result
+                                        }
+                                        block={
+                                            this.state.paymentOperation
+                                                .block_num
+                                        }
+                                        current={this.props.currentAccount.get(
+                                            "id"
+                                        )}
+                                    />
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <Button
+                            type="primary"
+                            style={{marginTop: "30px"}}
+                            disabled={!this.state.pay_from_account}
+                            onClick={this.onPayClick.bind(this)}
+                        >
+                            <Translate
+                                content="invoice.pay_button"
+                                asset={
+                                    <FormattedAsset
+                                        amount={total_amount}
+                                        asset={asset}
+                                        exact_amount={true}
+                                    />
+                                }
+                                name={invoice.to}
+                            />
+                        </Button>
+                    )}
+                </Card>
             </div>
         );
     }
 }
+
+Invoice = bindToCurrentAccount(Invoice);
 
 export default Invoice;

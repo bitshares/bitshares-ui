@@ -15,7 +15,9 @@ const printReceipt = ({data, parsePrice}) => {
         total_amount,
         memo,
         currency,
-        blockNum
+        blockNum,
+        to_name,
+        note
     } = data;
     const marginUp = 25,
         lineMargin = 5,
@@ -54,18 +56,44 @@ const printReceipt = ({data, parsePrice}) => {
 
     pdf.setFontStyle("bold");
     pdf.setFontSize(fontSize);
-    pdf.text("FROM", marginLeft, (height += marginUp));
-    pdf.text(fromName, marginLeft, (height += rowHeight));
+    pdf.text(
+        counterpart.translate("invoice.pay_to").toUpperCase(),
+        marginLeft,
+        (height += marginUp)
+    );
+    pdf.setFontStyle("normal");
+    pdf.text(to_name, marginLeft, (height += rowHeight));
+    pdf.text(to, marginLeft, (height += rowHeight));
 
     pdf.autoTable({
         body: [
-            ["", "RECEIPT #", memo],
+            ["", counterpart.translate("invoice.memo"), memo],
             [
-                {content: "BILL TO", styles: {fontStyle: "bold"}},
-                "RECEIPT DATE",
+                {
+                    content: counterpart
+                        .translate("invoice.paid_by")
+                        .toUpperCase(),
+                    styles: {fontStyle: "bold"}
+                },
+                counterpart.translate("invoice.date"),
                 timestamp
             ],
-            [to, "TRANSACTION", transactionId]
+            [
+                fromName,
+                counterpart.translate("invoice.transaction"),
+                transactionId
+            ],
+            [
+                {
+                    content: counterpart
+                        .translate("invoice.note")
+                        .toUpperCase(),
+                    styles: {fontStyle: "bold"}
+                },
+                "",
+                ""
+            ],
+            [note, "", ""]
         ],
         bodyStyles: {valign: "top"},
         styles: {cellWidth: "wrap", rowPageBreak: "auto", halign: "justify"},
@@ -86,7 +114,11 @@ const printReceipt = ({data, parsePrice}) => {
     );
 
     pdf.setFontSize(totalFontSize);
-    pdf.text("Receipt Total", marginLeft, (height += rowHeight));
+    pdf.text(
+        counterpart.translate("invoice.receipt_total").toUpperCase(),
+        marginLeft,
+        (height += rowHeight)
+    );
     pdf.text(`${total_amount} ${currency}`, transactionDataright, height);
     pdf.line(lineMargin, (height += 5), width - lineMargin, height);
 
@@ -125,7 +157,7 @@ const printReceipt = ({data, parsePrice}) => {
 const PrintReceiptButton = ({data, parsePrice}) => {
     const tip = "tooltip.print_receipt",
         dataPlace = "left",
-        buttonText = "Print receipt";
+        buttonText = counterpart.translate("invoice.print_receipt");
     if (data.blockNum) BlockchainActions.getHeader.defer(data.blockNum);
 
     return (
@@ -133,7 +165,6 @@ const PrintReceiptButton = ({data, parsePrice}) => {
             <Button
                 type="primary"
                 icon="download"
-                style={{float: "right", margin: "20px"}}
                 onClick={() => printReceipt({data, parsePrice})}
             >
                 {buttonText}
