@@ -28,6 +28,12 @@ import {Route, Switch, Redirect} from "react-router-dom";
 // Nested route components
 import Page404 from "./components/Page404/Page404";
 
+const Invoice = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "exchange" */ "./components/Transfer/Invoice"),
+    loading: LoadingIndicator
+});
+
 const Exchange = Loadable({
     loader: () =>
         import(/* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"),
@@ -406,7 +412,10 @@ class App extends React.Component {
                                     component={Settings}
                                 />
                                 <Route path="/settings" component={Settings} />
-
+                                <Route
+                                    path="/invoice/:data"
+                                    component={Invoice}
+                                />
                                 <Route
                                     path="/deposit-withdraw"
                                     exact
