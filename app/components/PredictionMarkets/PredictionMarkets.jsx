@@ -153,12 +153,10 @@ export default class PredictionMarkets extends Component {
     }
 
     async getMarketOpinions(market) {
-        console.log("Fetching opinions");
         if (this.state.subscribedMarket) {
-            console.log("Unsubscribe");
             await MarketsActions.unSubscribeMarket(
-                this.state.subscribedMarket.base,
-                this.state.subscribedMarket.quote
+                this.state.subscribedMarket.quote.get("id"),
+                this.state.subscribedMarket.base.get("id")
             );
         }
         const base = ChainStore.getAsset(
@@ -167,7 +165,6 @@ export default class PredictionMarkets extends Component {
         const quote = ChainStore.getAsset(
             market.options.core_exchange_rate.quote.asset_id
         );
-        console.log("Subscribe");
         await MarketsActions.subscribeMarket(
             base,
             quote,
