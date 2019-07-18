@@ -194,6 +194,9 @@ class VestingBalance extends React.Component {
                         days_remaining = (days_required - days_earned).toFixed(
                             2
                         );
+                        available_percentage = 0;
+                    } else {
+                        available_percentage = 1;
                     }
                 } else {
                     // Vesting has no start time.
@@ -241,6 +244,10 @@ class VestingBalance extends React.Component {
                             0,
                         2
                     );
+                }
+            } else {
+                if (canClaim) {
+                    available_percentage = 1;
                 }
             }
         }
