@@ -117,12 +117,13 @@ class OrderBookRowHorizontal extends React.Component {
             np.order.ne(this.props.order) ||
             np.position !== this.props.position ||
             np.index !== this.props.index ||
-            np.currentAccount !== this.props.currentAccount
+            np.currentAccount !== this.props.currentAccount ||
+            np.quoteTotal !== this.props.quoteTotal
         );
     }
 
     render() {
-        let {order, quote, base, position} = this.props;
+        let {order, quote, base, position, quoteTotal} = this.props;
         const isBid = order.isBid();
         const isCall = order.isCall();
 
@@ -153,15 +154,20 @@ class OrderBookRowHorizontal extends React.Component {
                   order.amountToReceive().getAmount({real: true}),
                   base.get("precision")
               );
-        let total = isBid
+        const totalValueBids = quoteTotal ?
+            order.totalToReceive() : order.totalForSale();
+        const totalValueAsks = quoteTotal ?
+            order.totalForSale() : order.totalToReceive();
+        const totalAsset = quoteTotal ? quote : base;
+        const total = isBid
             ? utils.format_number(
-                  order.totalForSale().getAmount({real: true}),
-                  base.get("precision")
-              )
+                totalValueBids.getAmount({real: true}),
+                totalAsset.get("precision")
+            )
             : utils.format_number(
-                  order.totalToReceive().getAmount({real: true}),
-                  base.get("precision")
-              );
+                totalValueAsks.getAmount({real: true}),
+                totalAsset.get("precision")
+            );
 
         return (
             <tr
@@ -244,12 +250,13 @@ class GroupedOrderBookRowHorizontal extends React.Component {
             np.order.ne(this.props.order) ||
             np.position !== this.props.position ||
             np.index !== this.props.index ||
-            np.currentAccount !== this.props.currentAccount
+            np.currentAccount !== this.props.currentAccount ||
+            np.quoteTotal !== this.props.quoteTotal
         );
     }
 
     render() {
-        let {order, quote, base, position} = this.props;
+        let {order, quote, base, position, quoteTotal} = this.props;
         const isBid = order.isBid();
 
         let integerClass = isBid ? "orderHistoryBid" : "orderHistoryAsk";
@@ -275,15 +282,20 @@ class GroupedOrderBookRowHorizontal extends React.Component {
                   order.amountToReceive().getAmount({real: true}),
                   base.get("precision")
               );
-        let total = isBid
+        const totalValueBids = quoteTotal ?
+            order.totalToReceive() : order.totalForSale();
+        const totalValueAsks = quoteTotal ?
+            order.totalForSale() : order.totalToReceive();
+        const totalAsset = quoteTotal ? quote : base;
+        const total = isBid
             ? utils.format_number(
-                  order.totalForSale().getAmount({real: true}),
-                  base.get("precision")
-              )
+                totalValueBids.getAmount({real: true}),
+                totalAsset.get("precision")
+            )
             : utils.format_number(
-                  order.totalToReceive().getAmount({real: true}),
-                  base.get("precision")
-              );
+                totalValueAsks.getAmount({real: true}),
+                totalAsset.get("precision")
+            );
 
         return (
             <tr onClick={this.props.onClick}>
@@ -397,7 +409,9 @@ class OrderBook extends React.Component {
             showAllBids: false,
             showAllAsks: false,
             rowCount: 20,
-            autoScroll: props.autoScroll
+            autoScroll: props.autoScroll,
+            quoteTotalBids: false,
+            quoteTotalAsks: false
         };
         this.verticalStickyTable = React.createRef();
         this.centerText = React.createRef();
@@ -601,6 +615,11 @@ class OrderBook extends React.Component {
         this.setState({autoScroll: !this.state.autoScroll});
     };
 
+    toggleTotalAsset(isBid) {
+        const quoteTotal = isBid ? "quoteTotalBids" : "quoteTotalAsks";
+        this.setState({[quoteTotal]: !this.state[quoteTotal]});
+    }
+
     render() {
         let {
             combinedBids,
@@ -690,6 +709,7 @@ class OrderBook extends React.Component {
                             quote={quote}
                             position={!flipOrderBook ? "left" : "right"}
                             currentAccount={this.props.currentAccount}
+                            quoteTotal={this.state.quoteTotalBids}
                         />
                     ) : (
                         <GroupedOrderBookRowVertical
@@ -721,6 +741,7 @@ class OrderBook extends React.Component {
                             type={order.type}
                             position={!flipOrderBook ? "right" : "left"}
                             currentAccount={this.props.currentAccount}
+                            quoteTotal={this.state.quoteTotalAsks}
                         />
                     ) : (
                         <GroupedOrderBookRowVertical
@@ -753,6 +774,7 @@ class OrderBook extends React.Component {
                             quote={quote}
                             position={!flipOrderBook ? "left" : "right"}
                             currentAccount={this.props.currentAccount}
+                            quoteTotal={this.state.quoteTotalBids}
                         />
                     ) : (
                         <OrderBookRowVertical
@@ -786,6 +808,7 @@ class OrderBook extends React.Component {
                             type={order.type}
                             position={!flipOrderBook ? "right" : "left"}
                             currentAccount={this.props.currentAccount}
+                            quoteTotal={this.state.quoteTotalAsks}
                         />
                     ) : (
                         <OrderBookRowVertical
@@ -827,11 +850,21 @@ class OrderBook extends React.Component {
                                 className="header-sub-title"
                                 content="exchange.total"
                             />
-                            <span className="header-sub-title">
+                            <a
+                                onClick={() => this.toggleTotalAsset(true)}
+                                className="header-sub-title"
+                            >
                                 {" "}
-                                (<AssetName dataPlace="top" name={baseSymbol} />
+                                (<AssetName
+                                    dataPlace="top"
+                                    name={
+                                        !this.state.quoteTotalBids ?
+                                            baseSymbol :
+                                            quoteSymbol
+                                    }
+                                />
                                 )
-                            </span>
+                            </a>
                         </th>
                         <th>
                             <span className="header-sub-title">
@@ -885,11 +918,21 @@ class OrderBook extends React.Component {
                                 className="header-sub-title"
                                 content="exchange.total"
                             />
-                            <span className="header-sub-title">
+                            <a
+                                onClick={() => this.toggleTotalAsset()}
+                                className="header-sub-title"
+                            >
                                 {" "}
-                                (<AssetName dataPlace="top" name={baseSymbol} />
+                                (<AssetName
+                                    dataPlace="top"
+                                    name={
+                                        !this.state.quoteTotalAsks ?
+                                            baseSymbol :
+                                            quoteSymbol
+                                    }
+                                />
                                 )
-                            </span>
+                            </a>
                         </th>
                     </tr>
                 </thead>
