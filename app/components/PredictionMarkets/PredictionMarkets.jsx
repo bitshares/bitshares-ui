@@ -24,14 +24,13 @@ export default class PredictionMarkets extends Component {
             currentAccountId: null,
             searchTerm: "",
             detailsSearchTerm: "",
-            selectedMarket: null,
+            selectedPredictionMarket: null,
             opinions: [],
             preselectedOpinion: "no",
             preselectedAmount: 0,
             isCreateMarketModalOpen: false,
             isAddOpinionModalOpen: false,
-            isResolveModalOpen: false,
-            symbols: []
+            isResolveModalOpen: false
         };
 
         this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
@@ -64,7 +63,6 @@ export default class PredictionMarkets extends Component {
 
         if (np.assets !== this.props.assets) {
             this._checkAssets(np.assets);
-            this._updateSymbolsList();
         }
 
         if (np.marketLimitOrders !== this.props.marketLimitOrders) {
@@ -143,15 +141,6 @@ export default class PredictionMarkets extends Component {
         this.setState({opinions: [...orders]});
     }
 
-    _updateSymbolsList() {
-        let assets = this.props.assets.toJS();
-        let symbols = [];
-        for (let item in assets) {
-            symbols.push(assets[item].symbol);
-        }
-        this.setState({symbols});
-    }
-
     async getMarketOpinions(market) {
         if (this.state.subscribedMarket) {
             await MarketsActions.unSubscribeMarket(
@@ -180,37 +169,53 @@ export default class PredictionMarkets extends Component {
     }
 
     onMarketAction({market, action}) {
-        switch (action) {
-            case "resolve": {
+        if (typeof action === "string") {
+            //on buttons action
+            if (!this.state.selectedPredictionMarket) {
                 this.setState({
-                    selectedPredictionMarket: market,
-                    preselectedAmount: 0
+                    selectedPredictionMarket: market
                 });
-                this.onResolveModalOpen();
-                break;
             }
-            case "yes": {
+
+            switch (action) {
+                case "resolve": {
+                    this.setState({
+                        preselectedAmount: 0
+                    });
+                    this.onResolveModalOpen();
+                    break;
+                }
+                case "yes": {
+                    this.setState({
+                        preselectedAmount: 0,
+                        preselectedOpinion: "yes"
+                    });
+                    this.onAddOpinionModalOpen();
+                    break;
+                }
+                case "no": {
+                    this.setState({
+                        preselectedAmount: 0,
+                        preselectedOpinion: "no"
+                    });
+                    this.onAddOpinionModalOpen();
+                    break;
+                }
+                default: {
+                    this.setState({
+                        preselectedAmount: 0
+                    });
+                }
+            }
+        } else {
+            //on row action
+            if (this.state.selectedPredictionMarket) {
                 this.setState({
-                    selectedPredictionMarket: market,
-                    preselectedAmount: 0,
-                    preselectedOpinion: "yes"
+                    selectedPredictionMarket: null
                 });
-                this.onAddOpinionModalOpen();
-                break;
-            }
-            case "no": {
+            } else {
                 this.setState({
-                    selectedPredictionMarket: market,
-                    preselectedAmount: 0,
-                    preselectedOpinion: "no"
-                });
-                this.onAddOpinionModalOpen();
-                break;
-            }
-            default: {
-                this.setState({
-                    selectedPredictionMarket: market,
-                    preselectedAmount: 0
+                    selectedPredictionMarket: market
                 });
             }
         }
@@ -367,6 +372,9 @@ export default class PredictionMarkets extends Component {
                     currentAccount={this.props.currentAccount}
                     onMarketAction={this.onMarketAction}
                     searchTerm={this.state.searchTerm}
+                    selectedPredictionMarket={
+                        this.state.selectedPredictionMarket
+                    }
                 />
             </div>
         );
@@ -414,6 +422,10 @@ export default class PredictionMarkets extends Component {
     }
 
     render() {
+        const symbols = Object.values(this.props.assets.toJS()).map(
+            item => item.symbol
+        );
+
         return (
             <div
                 className="grid-block vertical"
@@ -434,7 +446,7 @@ export default class PredictionMarkets extends Component {
                         visible={this.state.isCreateMarketModalOpen}
                         onClose={this.onCreatePredictionMarketModalClose}
                         currentAccount={this.props.currentAccount}
-                        symbols={this.state.symbols}
+                        symbols={symbols}
                     />
                 ) : null}
                 {this.state.isAddOpinionModalOpen ? (

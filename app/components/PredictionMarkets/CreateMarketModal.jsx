@@ -120,6 +120,9 @@ export default class CreateMarketModal extends Modal {
     handleChange(event) {
         let newMarket = this.state.marketOptions;
         switch (event.target.name) {
+            case "symbol":
+                newMarket[event.target.name] = event.target.value.toUpperCase();
+                break;
             case "main":
             case "condition":
             case "expiry":
@@ -241,6 +244,7 @@ export default class CreateMarketModal extends Modal {
                                         type="text"
                                         onChange={this.handleChange}
                                         tabIndex={1}
+                                        value={this.state.marketOptions.symbol}
                                     />
                                 </label>
                             </span>

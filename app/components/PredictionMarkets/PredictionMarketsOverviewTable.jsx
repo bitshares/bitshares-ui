@@ -7,6 +7,8 @@ import {Table, Button} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 import PaginatedList from "components/Utility/PaginatedList";
 
+require("./prediction.scss");
+
 export default class PredictionMarketsOverviewTable extends Component {
     onMarketAction(dataItem, option = "yes") {
         this.props.onMarketAction({
@@ -202,25 +204,41 @@ export default class PredictionMarketsOverviewTable extends Component {
         ];
     }
 
+    _decideRowClassName(row, index) {
+        return this.props.selectedPredictionMarket ? "active-market" : "";
+    }
+
     render() {
         const header = this.getHeader();
 
-        let filteredMarkets = this.props.predictionMarkets.filter(item => {
-            let accountName = ChainStore.getAccount(item.issuer)
-                ? ChainStore.getAccount(item.issuer).get("name")
-                : null;
-            return (
-                (accountName + "\0" + item.condition + "\0" + item.description)
-                    .toUpperCase()
-                    .indexOf(this.props.searchTerm) !== -1
-            );
-        });
+        let filteredMarkets = [];
 
-        let i = 0;
-        filteredMarkets = filteredMarkets.map(item => ({
-            ...item,
-            key: `${item.asset_id}${i++}`
-        }));
+        if (this.props.selectedPredictionMarket) {
+            filteredMarkets = [this.props.selectedPredictionMarket];
+        } else {
+            filteredMarkets = this.props.predictionMarkets.filter(item => {
+                let accountName = ChainStore.getAccount(item.issuer)
+                    ? ChainStore.getAccount(item.issuer).get("name")
+                    : null;
+                return (
+                    (
+                        accountName +
+                        "\0" +
+                        item.condition +
+                        "\0" +
+                        item.description
+                    )
+                        .toUpperCase()
+                        .indexOf(this.props.searchTerm) !== -1
+                );
+            });
+
+            let i = 0;
+            filteredMarkets = filteredMarkets.map(item => ({
+                ...item,
+                key: `${item.asset_id}${i++}`
+            }));
+        }
 
         return (
             <div style={{paddingTop: "50px"}}>
@@ -228,6 +246,7 @@ export default class PredictionMarketsOverviewTable extends Component {
                     rows={filteredMarkets}
                     header={header}
                     pageSize={10}
+                    rowClassName={this._decideRowClassName.bind(this)}
                 />
             </div>
         );
