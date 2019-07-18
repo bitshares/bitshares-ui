@@ -14,6 +14,7 @@ import LimitToWithdraw from "../Utility/LimitToWithdraw";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
 import {Modal, Button, Tooltip, Icon} from "bitshares-ui-style-guide";
 import moment from "moment";
 import ApplicationApi from "../../api/ApplicationApi";
@@ -38,7 +39,9 @@ class DirectDebitClaimModal extends React.Component {
             memo: "",
             error: null,
             feeAsset: null,
-            fee_asset_id: "1.3.0",
+            fee_asset_id:
+                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
             maxAmount: false,
@@ -60,6 +63,7 @@ class DirectDebitClaimModal extends React.Component {
             from_account,
             to_account,
             feeAsset,
+            fee_asset_id,
             permissionId,
             amount,
             asset,
@@ -73,7 +77,7 @@ class DirectDebitClaimModal extends React.Component {
             asset_id,
             utils.convert_typed_to_satoshi(amount, asset),
             memo ? new Buffer(memo, "utf-8") : memo,
-            feeAsset ? feeAsset.get("id") : "1.3.0"
+            feeAsset ? feeAsset.get("id") : fee_asset_id
         )
             .then(result => {
                 this.props.hideModal();
@@ -409,7 +413,7 @@ class DirectDebitClaimModal extends React.Component {
                 asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
+                let feeID = feeAsset ? feeAsset.get("id") : fee_asset_id;
                 // const assetToWithdraw =
                 //     withdrawal_limit &&
                 //     ChainStore.getAsset(withdrawal_limit.asset_id);
@@ -672,12 +676,15 @@ export default connect(
     DirectDebitClaimModal,
     {
         listenTo() {
-            return [AccountStore];
+            return [AccountStore, SettingsStore];
         },
         getProps() {
             return {
                 currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount
+                passwordAccount: AccountStore.getState().passwordAccount,
+                fee_asset_symbol: SettingsStore.getState().settings.get(
+                    "fee_asset"
+                )
             };
         }
     }

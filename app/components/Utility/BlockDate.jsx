@@ -39,13 +39,17 @@ class BlockDate extends React.Component {
 
     render() {
         const {blockHeader, tooltip, component, format} = this.props;
+
         if (!blockHeader) return React.createElement(component);
         return React.createElement(
             component,
             {
                 className: tooltip ? "tooltip" : ""
             },
-            <Tooltip title={tooltip ? blockHeader.timestamp : ""}>
+            <Tooltip
+                title={tooltip ? blockHeader.timestamp.toString() : ""}
+                placement="left"
+            >
                 <span>
                     {counterpart.localize(blockHeader.timestamp, {
                         type: "date",

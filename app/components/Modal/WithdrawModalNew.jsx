@@ -22,7 +22,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
 import QRScanner from "../QRAddressScanner";
-import {Modal, Button, Select} from "bitshares-ui-style-guide";
+import {Modal, Button, Select, Input} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import {
     gatewaySelector,
@@ -186,11 +186,12 @@ class WithdrawModalNew extends React.Component {
             });
 
             if (fromAsset && toAsset) {
-                if (toAsset.get("precision") !== fromAsset.get("precision"))
-                    toAsset = toAsset.set(
-                        "precision",
-                        fromAsset.get("precision")
-                    );
+                // todo: when was this used and what is it good for?
+                // if (toAsset.get("precision") !== fromAsset.get("precision"))
+                //     toAsset = toAsset.set(
+                //         "precision",
+                //         fromAsset.get("precision")
+                //     );
 
                 MarketsActions.getMarketStats(toAsset, fromAsset, true);
             }
@@ -588,7 +589,8 @@ class WithdrawModalNew extends React.Component {
 
     onGatewayChanged(selectedGateway) {
         this.setState({selectedGateway}, () => {
-            this.setState(this._getAssetPairVariables(), this.updateFee);
+            this.setState(this._getAssetPairVariables());
+            this.updateGatewayFee();
         });
     }
 
@@ -654,6 +656,25 @@ class WithdrawModalNew extends React.Component {
 
                 return backingCoin === selectedAsset;
             });
+    }
+
+    updateGatewayFee() {
+        const {selectedGateway, selectedAsset} = this.state;
+        let gateFee = 0;
+
+        if (selectedGateway && selectedAsset) {
+            this.props.backedCoins.get(selectedGateway).forEach(item => {
+                if (
+                    item.symbol ===
+                        [selectedGateway, selectedAsset].join(".") ||
+                    item.backingCoinType === selectedAsset
+                ) {
+                    gateFee = item.gateFee || 0;
+                }
+            });
+        }
+
+        this.setState({gateFee});
     }
 
     validateAddress(address) {
@@ -1262,13 +1283,13 @@ class WithdrawModalNew extends React.Component {
                         ) : null}
 
                         {/*MEMO*/}
-                        {isBTS ? (
-                            <div>
+                        {isBTS ||
+                        (backingAsset && backingAsset.supportsMemos) ? (
+                            <div style={{marginBottom: "1em"}}>
                                 <label className="left-label">
                                     <Translate content="modal.withdraw.memo" />
                                 </label>
-                                <input
-                                    type="text"
+                                <Input.TextArea
                                     value={state.memo}
                                     onChange={this.onMemoChanged.bind(this)}
                                 />

@@ -1,5 +1,4 @@
 import {Apis} from "bitsharesjs-ws";
-
 /** This file centralized customization and branding efforts throughout the whole wallet and is meant to facilitate
  *  the process.
  *
@@ -392,10 +391,17 @@ export function getAllowedLogins() {
     return ["password", "wallet"];
 }
 
-export function getHeadFeedAsset() {
+export function getConfigurationAsset() {
+    let assetSymbol = null;
     if (_isTestnet()) {
-        return ["NOTIFICATIONS"];
+        assetSymbol = "NOTIFICATIONS";
     } else {
-        return ["TEST"];
+        assetSymbol = "TEST";
     }
+    // explanation will be parsed out of the asset description (via split)
+    return {
+        symbol: assetSymbol,
+        explanation:
+            "This asset is used for decentralized configuration of the BitShares UI placed under bitshares.org."
+    };
 }

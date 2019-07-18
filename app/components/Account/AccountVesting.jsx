@@ -27,18 +27,23 @@ class VestingBalance extends React.Component {
         }
 
         let cvbAsset,
-            vestingPeriod,
-            earned,
             secondsPerDay = 60 * 60 * 24,
-            availablePercent,
             balance;
+        let vestingPeriod = null;
+        let earned = null;
+        let availablePercent = null;
         if (vb) {
             balance = vb.balance.amount;
             cvbAsset = ChainStore.getAsset(vb.balance.asset_id);
-            earned = vb.policy[1].coin_seconds_earned;
-            vestingPeriod = vb.policy[1].vesting_seconds;
-            availablePercent =
-                vestingPeriod === 0 ? 1 : earned / (vestingPeriod * balance);
+
+            if (vb.policy && vb.policy[0] !== 2) {
+                earned = vb.policy[1].coin_seconds_earned;
+                vestingPeriod = vb.policy[1].vesting_seconds;
+                availablePercent =
+                    vestingPeriod === 0
+                        ? 1
+                        : earned / (vestingPeriod * balance);
+            }
         }
 
         if (!cvbAsset) {
@@ -64,7 +69,13 @@ class VestingBalance extends React.Component {
                                 <Translate content="account.member.balance_type" />
                             </td>
                             <td>
-                                <span>{vb.balance_type}</span>
+                                <Translate
+                                    component="span"
+                                    content={
+                                        "account.vesting.type." +
+                                        vb.balance_type
+                                    }
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -78,66 +89,82 @@ class VestingBalance extends React.Component {
                                 />
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <Translate content="account.member.earned" />
-                            </td>
-                            <td>
-                                {utils.format_number(
-                                    utils.get_asset_amount(
-                                        earned / secondsPerDay,
-                                        cvbAsset
-                                    ),
-                                    0
-                                )}
-                                &nbsp;
-                                <Translate content="account.member.coindays" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="account.member.required" />
-                            </td>
-                            <td>
-                                {utils.format_number(
-                                    utils.get_asset_amount(
-                                        (vb.balance.amount * vestingPeriod) /
-                                            secondsPerDay,
-                                        cvbAsset
-                                    ),
-                                    0
-                                )}
-                                &nbsp;
-                                <Translate content="account.member.coindays" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="account.member.remaining" />
-                            </td>
-                            <td>
-                                {utils.format_number(
-                                    (vestingPeriod * (1 - availablePercent)) /
-                                        secondsPerDay || 0,
-                                    2
-                                )}
-                                &nbsp;days
-                            </td>
-                        </tr>
+                        {earned && (
+                            <tr>
+                                <td>
+                                    <Translate content="account.member.earned" />
+                                </td>
+                                <td>
+                                    {utils.format_number(
+                                        utils.get_asset_amount(
+                                            earned / secondsPerDay,
+                                            cvbAsset
+                                        ),
+                                        0
+                                    )}
+                                    &nbsp;
+                                    <Translate content="account.member.coindays" />
+                                </td>
+                            </tr>
+                        )}
+                        {earned && (
+                            <tr>
+                                <td>
+                                    <Translate content="account.member.required" />
+                                </td>
+                                <td>
+                                    {utils.format_number(
+                                        utils.get_asset_amount(
+                                            (vb.balance.amount *
+                                                vestingPeriod) /
+                                                secondsPerDay,
+                                            cvbAsset
+                                        ),
+                                        0
+                                    )}
+                                    &nbsp;
+                                    <Translate content="account.member.coindays" />
+                                </td>
+                            </tr>
+                        )}
+                        {earned && (
+                            <tr>
+                                <td>
+                                    <Translate content="account.member.remaining" />
+                                </td>
+                                <td>
+                                    {utils.format_number(
+                                        (vestingPeriod *
+                                            (1 - availablePercent)) /
+                                            secondsPerDay || 0,
+                                        2
+                                    )}
+                                    &nbsp;
+                                    <Translate content="account.member.days" />
+                                </td>
+                            </tr>
+                        )}
                         <tr>
                             <td>
                                 <Translate content="account.member.available" />
                             </td>
-                            <td>
-                                {utils.format_number(availablePercent * 100, 2)}
-                                % /{" "}
-                                <FormattedAsset
-                                    amount={
-                                        availablePercent * vb.balance.amount
-                                    }
-                                    asset={cvbAsset.get("id")}
-                                />
-                            </td>
+                            {earned ? (
+                                <td>
+                                    {utils.format_number(
+                                        availablePercent * 100,
+                                        2
+                                    )}
+                                    % /{" "}
+                                    <FormattedAsset
+                                        amount={
+                                            availablePercent * vb.balance.amount
+                                        }
+                                        asset={cvbAsset.get("id")}
+                                    />
+                                </td>
+                            ) : (
+                                <td>{utils.format_number(100, 2)}%</td>
+                            )}
                         </tr>
                         <tr>
                             <td colSpan="2" style={{textAlign: "right"}}>
@@ -193,6 +220,7 @@ class AccountVesting extends React.Component {
 
     render() {
         let {vbs} = this.state;
+
         if (
             !vbs ||
             !this.props.account ||

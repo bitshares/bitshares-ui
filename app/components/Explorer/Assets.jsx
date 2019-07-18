@@ -442,15 +442,9 @@ class Assets extends React.Component {
                                     ) : null}
                                 </span>
                                 <SearchInput
-                                    placeholder={"Filter..."}
                                     value={this.state.filterSearch}
                                     style={{width: "200px"}}
                                     onChange={this.handleFilterChange}
-                                    onClear={() =>
-                                        this.handleFilterChange({
-                                            target: {value: ""}
-                                        })
-                                    }
                                 />
                                 <Radio.Group
                                     value={this.state.activeFilter}

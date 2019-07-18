@@ -28,6 +28,12 @@ import {Route, Switch, Redirect} from "react-router-dom";
 // Nested route components
 import Page404 from "./components/Page404/Page404";
 
+const Invoice = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "exchange" */ "./components/Transfer/Invoice"),
+    loading: LoadingIndicator
+});
+
 const Exchange = Loadable({
     loader: () =>
         import(/* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"),
@@ -43,12 +49,6 @@ const Explorer = Loadable({
 const AccountPage = Loadable({
     loader: () =>
         import(/* webpackChunkName: "account" */ "./components/Account/AccountPage"),
-    loading: LoadingIndicator
-});
-
-const Transfer = Loadable({
-    loader: () =>
-        import(/* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"),
     loading: LoadingIndicator
 });
 
@@ -412,11 +412,9 @@ class App extends React.Component {
                                     component={Settings}
                                 />
                                 <Route path="/settings" component={Settings} />
-
                                 <Route
-                                    path="/transfer"
-                                    exact
-                                    component={Transfer}
+                                    path="/invoice/:data"
+                                    component={Invoice}
                                 />
                                 <Route
                                     path="/deposit-withdraw"

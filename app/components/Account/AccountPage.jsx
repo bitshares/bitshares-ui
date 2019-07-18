@@ -3,12 +3,11 @@ import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
-// import AccountLeftPanel from "./AccountLeftPanel";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import {connect} from "alt-react";
 import accountUtils from "common/account_utils";
-import {List} from "immutable";
+import {List, Set} from "immutable";
 import Page404 from "../Page404/Page404";
 import {Route, Switch, Redirect} from "react-router-dom";
 
@@ -29,12 +28,15 @@ class AccountPage extends React.Component {
         account: ChainTypes.ChainAccount.isRequired
     };
 
+    constructor(props) {
+        super(props);
+    }
+
     componentDidMount() {
         if (this.props.account) {
             AccountActions.setCurrentAccount.defer(
                 this.props.account.get("name")
             );
-
             // Fetch possible fee assets here to avoid async issues later (will resolve assets)
             accountUtils.getPossibleFees(this.props.account, "transfer");
         }
@@ -52,6 +54,14 @@ class AccountPage extends React.Component {
                 // Fetch possible fee assets here to avoid async issues later (will resolve assets)
                 accountUtils.getPossibleFees(np.account, "transfer");
             }
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.currentAccount !== this.props.currentAccount) {
+            let currentPath = this.props.location.pathname.split("/");
+            currentPath[2] = this.props.currentAccount;
+            this.props.history.push(currentPath.join("/"));
         }
     }
 
@@ -207,6 +217,9 @@ export default connect(
             return {
                 myActiveAccounts: AccountStore.getState().myActiveAccounts,
                 searchAccounts: AccountStore.getState().searchAccounts,
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount,
                 settings: SettingsStore.getState().settings,
                 hiddenAssets: SettingsStore.getState().hiddenAssets,
                 wallet_locked: WalletUnlockStore.getState().locked,

@@ -279,7 +279,8 @@ class WalletActions {
             earned = cvb.policy[1].coin_seconds_earned,
             vestingPeriod = cvb.policy[1].vesting_seconds,
             availablePercent =
-                (forceAll || vestingPeriod) === 0
+                (forceAll || vestingPeriod) === 0 ||
+                cvb.balance_type == "market_fee_sharing"
                     ? 1
                     : earned / (vestingPeriod * balance);
 

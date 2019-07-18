@@ -2,13 +2,12 @@ import React from "react";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
 import {ChainStore} from "bitsharesjs";
-import {LimitOrder} from "common/MarketClasses";
+import {LimitOrder, SettleOrder, FeedPrice} from "common/MarketClasses";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
-import PaginatedList from "../Utility/PaginatedList";
 import {Input, Icon, Table, Switch} from "bitshares-ui-style-guide";
 import AccountOrderRowDescription from "./AccountOrderRowDescription";
 import CollapsibleTable from "../Utility/CollapsibleTable";
@@ -21,6 +20,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import utils from "common/utils";
+import asset_utils from "common/asset_utils";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -29,14 +29,19 @@ class AccountOrders extends React.Component {
         this.state = {
             selectedOrders: [],
             filterValue: "",
-            areAssetsGrouped: false
+            areAssetsGrouped: props.viewSettings.get(
+                "accountOrdersGrouppedByAsset"
+            )
         };
     }
 
-    _getFilteredOrders() {
+    _getFilteredOrders(type) {
         let {filterValue} = this.state;
 
-        let orders = this.props.account.get("orders") || [];
+        let orders =
+            (type !== "settle"
+                ? this.props.account.get("orders")
+                : this.props.settleOrders) || [];
 
         return orders.filter(item => {
             let order = ChainStore.getObject(item).toJS();
@@ -53,13 +58,29 @@ class AccountOrders extends React.Component {
         });
     }
 
-    _getDataSource(orders) {
+    _getDataSource(orders, type) {
         let dataSource = [];
+        const isSettle = type === "settle";
 
         orders.forEach(orderID => {
-            let order = ChainStore.getObject(orderID).toJS();
-            let base = ChainStore.getAsset(order.sell_price.base.asset_id);
-            let quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+            let order = null;
+            let base = null;
+            let quote = null;
+            let sqr = null;
+            let feed_price = null;
+            let bitasset_options = null;
+
+            if (!isSettle) {
+                order = ChainStore.getObject(orderID).toJS();
+                base = ChainStore.getAsset(order.sell_price.base.asset_id);
+                quote = ChainStore.getAsset(order.sell_price.quote.asset_id);
+            } else {
+                order = ChainStore.getObject(orderID).toJS();
+                base = ChainStore.getAsset(order.balance.asset_id);
+                quote = ChainStore.getAsset(
+                    base.getIn(["bitasset", "options", "short_backing_asset"])
+                );
+            }
 
             if (base && quote) {
                 let assets = {
@@ -74,8 +95,33 @@ class AccountOrders extends React.Component {
                     ? quote.get("id")
                     : base.get("id");
                 let marketBaseId = direction ? base.get("id") : quote.get("id");
+                if (isSettle) {
+                    const feedPriceRaw = asset_utils.extractRawFeedPrice(base);
+                    sqr = base.getIn([
+                        "bitasset",
+                        "current_feed",
+                        "maximum_short_squeeze_ratio"
+                    ]);
 
-                let limitOrder = new LimitOrder(order, assets, marketQuoteId);
+                    feed_price = new FeedPrice({
+                        priceObject: feedPriceRaw,
+                        market_base: marketBaseId,
+                        sqr,
+                        assets
+                    });
+
+                    bitasset_options = base.getIn(["bitasset", "options"]);
+                }
+
+                let limitOrder = !isSettle
+                    ? new LimitOrder(order, assets, marketQuoteId)
+                    : new SettleOrder(
+                          order,
+                          assets,
+                          marketBaseId,
+                          feed_price,
+                          bitasset_options
+                      );
 
                 let marketBase = ChainStore.getAsset(marketBaseId);
                 let marketQuote = ChainStore.getAsset(marketQuoteId);
@@ -95,6 +141,12 @@ class AccountOrders extends React.Component {
                     quoteColor: !isBid ? "value negative" : "value positive",
                     baseColor: isBid ? "value negative" : "value positive"
                 };
+                if (isSettle)
+                    dataItem = {
+                        ...dataItem,
+                        settlement_date: order.settlement_date,
+                        feed_price
+                    };
 
                 dataSource.push(dataItem);
             }
@@ -121,7 +173,7 @@ class AccountOrders extends React.Component {
         return dataSource;
     }
 
-    _getColumns(areAssetsGrouped, groupedDataItems) {
+    _getColumns(areAssetsGrouped, groupedDataItems, type) {
         let onCell = (dataItem, rowIndex) => {
             return {
                 onClick: this.onFlip.bind(this, dataItem.marketName)
@@ -138,6 +190,8 @@ class AccountOrders extends React.Component {
             averagePrice,
             marketPrice,
             value;
+
+        const isSettle = type === "settle";
 
         let getBaseAsset = dataItem =>
             dataItem.order[
@@ -176,8 +230,14 @@ class AccountOrders extends React.Component {
             firstDataItem = groupedDataItems[0];
 
             operation = counterpart.translate(
-                "exchange." + (firstDataItem.isBid ? "buy" : "sell")
+                "exchange." +
+                    (!isSettle
+                        ? firstDataItem.isBid
+                            ? "buy"
+                            : "sell"
+                        : "settlement_of")
             );
+
             forText = counterpart.translate("transaction.for");
 
             baseAsset = formatBaseAsset(sumBy(groupedDataItems, getBaseAsset));
@@ -279,51 +339,96 @@ class AccountOrders extends React.Component {
                           onCell: onCell,
                           className: "clickable groupColumn"
                       },
-                      {
-                          key: "baseAsset",
-                          title: baseAsset,
-                          render: dataItem =>
-                              formatBaseAsset(getBaseAsset(dataItem)),
-                          onCell: onCell,
-                          className: "clickable groupColumn"
-                      },
-                      {
-                          key: "baseName",
-                          title: baseName,
-                          render: dataItem => baseName,
-                          onCell: onCell,
-                          className: "clickable groupColumn"
-                      },
-                      {
-                          key: "for",
-                          title: forText,
-                          render: dataItem => forText,
-                          onCell: onCell,
-                          className: "clickable groupColumn"
-                      },
-                      {
-                          key: "quoteAsset",
-                          title: quoteAsset,
-                          render: dataItem =>
-                              formatQuoteAsset(getQuoteAsset(dataItem)),
-                          onCell: onCell,
-                          className: "clickable groupColumn"
-                      },
-                      {
-                          key: "quoteName",
-                          title: quoteName,
-                          render: dataItem => quoteName,
-                          onCell: onCell,
-                          className: "clickable groupColumn"
-                      }
+                      ...(!isSettle
+                          ? [
+                                {
+                                    key: "baseAsset",
+                                    title: baseAsset,
+                                    render: dataItem =>
+                                        formatBaseAsset(getBaseAsset(dataItem)),
+                                    onCell: onCell,
+                                    className: "clickable groupColumn"
+                                },
+                                {
+                                    key: "baseName",
+                                    title: baseName,
+                                    render: dataItem => baseName,
+                                    onCell: onCell,
+                                    className: "clickable groupColumn"
+                                },
+                                {
+                                    key: "for",
+                                    title: forText,
+                                    render: dataItem => forText,
+                                    onCell: onCell,
+                                    className: "clickable groupColumn"
+                                },
+                                {
+                                    key: "quoteAsset",
+                                    title: quoteAsset,
+                                    render: dataItem =>
+                                        formatQuoteAsset(
+                                            getQuoteAsset(dataItem)
+                                        ),
+                                    onCell: onCell,
+                                    className: "clickable groupColumn"
+                                },
+                                {
+                                    key: "quoteName",
+                                    title: quoteName,
+                                    render: dataItem => quoteName,
+                                    onCell: onCell,
+                                    className: "clickable groupColumn"
+                                }
+                            ]
+                          : [
+                                {
+                                    key: "quoteAsset",
+                                    title: quoteAsset,
+                                    render: dataItem =>
+                                        formatQuoteAsset(
+                                            getQuoteAsset(dataItem)
+                                        ),
+                                    className: "clickable groupColumn"
+                                },
+                                {
+                                    key: "baseName",
+                                    title: baseName,
+                                    render: dataItem => baseName,
+                                    className: "clickable groupColumn"
+                                }
+                            ])
                   ]
                 : [
                       {
                           key: "description",
                           title: counterpart.translate("exchange.description"),
-                          render: dataItem => (
-                              <AccountOrderRowDescription {...dataItem} />
-                          ),
+                          render: dataItem =>
+                              !isSettle ? (
+                                  <AccountOrderRowDescription {...dataItem} />
+                              ) : (
+                                  <Translate
+                                      content={
+                                          "exchange.settlement_description"
+                                      }
+                                      quoteAsset={utils.format_number(
+                                          dataItem.order.for_sale.getAmount({
+                                              real: true
+                                          }),
+                                          dataItem.quote.get("precision"),
+                                          false
+                                      )}
+                                      quoteName={
+                                          <AssetName
+                                              noTip
+                                              customClass={dataItem.quoteColor}
+                                              name={dataItem.quote.get(
+                                                  "symbol"
+                                              )}
+                                          />
+                                      }
+                                  />
+                              ),
                           onCell: onCell,
                           className: "clickable"
                       }
@@ -369,6 +474,26 @@ class AccountOrders extends React.Component {
                 onCell: onCell,
                 className: "clickable"
             },
+            isSettle && !areAssetsGrouped
+                ? {
+                      key: "settlement_date",
+                      title: areAssetsGrouped ? (
+                          <div>
+                              <Translate content="exchange.settlement_date" />
+                              <br />
+                              {marketPrice}
+                          </div>
+                      ) : (
+                          counterpart.translate("exchange.settlement_date")
+                      ),
+                      align: areAssetsGrouped ? "right" : "left",
+                      render: dataItem => (
+                          <span>{dataItem.settlement_date}</span>
+                      ),
+                      onCell: onCell,
+                      className: "clickable"
+                  }
+                : {},
             {
                 key: "value",
                 title: areAssetsGrouped ? (
@@ -399,7 +524,50 @@ class AccountOrders extends React.Component {
         ];
     }
 
-    _formatTables(dataSource, areAssetsGrouped) {
+    _renderSettleOrdersTable() {
+        const {account} = this.props;
+        const {filterValue} = this.state;
+
+        let settleOrders = account.get("settle_orders");
+
+        if (filterValue) {
+            settleOrders = this._getFilteredOrders.call(this, "settle");
+        }
+        let dataSource = this._getDataSource(settleOrders, "settle");
+
+        let pagination = {
+            hideOnSinglePage: true,
+            pageSize: 20,
+            showTotal: (total, range) =>
+                counterpart.translate("utility.total_x_items", {
+                    count: total
+                })
+        };
+
+        let footer = () => <span>&nbsp;</span>;
+
+        let settleColumns = this._getColumns(false, dataSource, "settle");
+
+        return (
+            <Table
+                columns={settleColumns}
+                dataSource={dataSource}
+                pagination={pagination}
+                footer={footer}
+            />
+        );
+    }
+
+    _renderOrdersTable() {
+        const {account} = this.props;
+        const {filterValue, areAssetsGrouped} = this.state;
+        let orders = account.get("orders");
+
+        if (filterValue) {
+            orders = this._getFilteredOrders.call(this);
+        }
+        const dataSource = this._getDataSource(orders);
+
         let pagination = {
             hideOnSinglePage: true,
             pageSize: 20,
@@ -440,7 +608,9 @@ class AccountOrders extends React.Component {
             );
 
             for (let [key, value] of Object.entries(grouped)) {
-                let columns = this._getColumns(areAssetsGrouped, value);
+                let type;
+                if (value[0].settlement_date) type = "settle";
+                let columns = this._getColumns(areAssetsGrouped, value, type);
                 tables.push(
                     <div className="grid-wrapper" key={key}>
                         <CollapsibleTable
@@ -457,7 +627,7 @@ class AccountOrders extends React.Component {
             let columns = this._getColumns(areAssetsGrouped, dataSource);
 
             tables.push(
-                <div className="grid-wrapper" key="groupedTable">
+                <div className="grid-wrapper" key="ungroupedTable">
                     <Table
                         columns={columns}
                         dataSource={dataSource}
@@ -504,29 +674,22 @@ class AccountOrders extends React.Component {
     }
 
     render() {
-        let {account} = this.props;
-        let {filterValue, selectedOrders} = this.state;
+        const {account} = this.props;
+        const {selectedOrders} = this.state;
 
-        if (!account.get("orders")) {
-            return null;
-        }
+        const ordersTable = this._renderOrdersTable();
+        const settleOrdersTable = this._renderSettleOrdersTable();
 
-        let orders = account.get("orders");
-        const ordersCount = orders.size;
-        if (filterValue) {
-            orders = this._getFilteredOrders.call(this);
-        }
-
-        let dataSource = this._getDataSource(orders);
-
-        let tables = this._formatTables(
-            dataSource,
-            this.state.areAssetsGrouped
-        );
+        const tables = [ordersTable];
 
         let onGroupChange = (checked, evt) => {
+            SettingsActions.changeViewSetting({
+                accountOrdersGrouppedByAsset: checked
+            });
             this.setState({areAssetsGrouped: checked});
         };
+
+        let settleOrdersCount = account.get("settle_orders").size;
 
         return (
             <div
@@ -534,18 +697,16 @@ class AccountOrders extends React.Component {
                 style={{paddingBottom: 15}}
             >
                 <div className="header-selector">
-                    {orders && ordersCount ? (
-                        <div className="filter inline-block">
-                            <Input
-                                type="text"
-                                placeholder={counterpart.translate(
-                                    "account.filter_orders"
-                                )}
-                                onChange={this.setFilterValue.bind(this)}
-                                addonAfter={<Icon type="search" />}
-                            />
-                        </div>
-                    ) : null}
+                    <div className="filter inline-block">
+                        <Input
+                            type="text"
+                            placeholder={counterpart.translate(
+                                "account.filter_orders"
+                            )}
+                            onChange={this.setFilterValue.bind(this)}
+                            addonAfter={<Icon type="search" />}
+                        />
+                    </div>
                     {selectedOrders.length ? (
                         <button
                             className="button"
@@ -562,16 +723,32 @@ class AccountOrders extends React.Component {
                             <Translate content="account.submit_orders" />
                         </button>
                     ) : null}
-                    {orders && ordersCount ? (
-                        <div className="group-by">
-                            <Translate content="account.group_by_asset" />
-                            <span className="text">:</span>
-                            <Switch onChange={onGroupChange} />
-                        </div>
-                    ) : null}
+                    <div className="group-by">
+                        <Translate content="account.group_by_asset" />
+                        <span className="text">:</span>
+                        <Switch
+                            onChange={onGroupChange}
+                            checked={this.state.areAssetsGrouped}
+                        />
+                    </div>
                 </div>
 
-                {tables}
+                <div>
+                    {settleOrdersCount > 0 && (
+                        <div className="header-selector">
+                            <Translate content="account.market_orders" />
+                        </div>
+                    )}
+                    {tables}
+                </div>
+                {settleOrdersCount > 0 && (
+                    <div className="grid-wrapper" key="settleGroupedTable">
+                        <div className="header-selector">
+                            <Translate content="account.settle_orders" />
+                        </div>
+                        {settleOrdersTable}
+                    </div>
+                )}
             </div>
         );
     }
@@ -585,7 +762,8 @@ AccountOrders = connect(
         },
         getProps() {
             return {
-                marketDirections: SettingsStore.getState().marketDirections
+                marketDirections: SettingsStore.getState().marketDirections,
+                viewSettings: SettingsStore.getState().viewSettings
             };
         }
     }

@@ -42,16 +42,20 @@ function adjust_links(str) {
         let page = endsWith(text, ".md")
             ? text.substr(0, text.length - 3)
             : text;
-        let res = `<a href="${
+        if (!page.startsWith("/help")) {
+            page = "/help/" + page;
+        } else if (page.startsWith("help")) {
+            page = "/" + page;
+        }
+        return `<a href="${
             __HASH_HISTORY__ ? "#" : ""
-        }/help/${page}" onclick="_onClickLink(event)"`;
-        return res;
+        }${page}" onclick="_onClickLink(event)"`;
     });
 }
 
 // console.log("-- HelpData -->", HelpData);
 
-class HelpContent extends React.Component {
+class HelpContent extends React.PureComponent {
     static propTypes = {
         path: PropTypes.string.isRequired,
         section: PropTypes.string
