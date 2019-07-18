@@ -77,6 +77,7 @@
             "cashback": "Gagné",
             "claim": "Claim now",
             "coindays": "coin days",
+            "days": "days",
             "earned": "Coin days earned",
             "expires": "expires",
             "fee_allocation": "Fee Allocation",
@@ -114,6 +115,7 @@
         },
         "new_user": "New user?",
         "no_orders": "No open orders",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
@@ -311,7 +313,14 @@
             "balance_number": "Balance #%(id)s",
             "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available",
             "no_balances": "This account has no vesting balances",
-            "title": "Vesting balances"
+            "title": "Vesting balances",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",
@@ -743,7 +752,7 @@
                 },
                 "title": "Collateral Bids"
             },
-            "cumulative": "Cumulative",
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -762,7 +771,7 @@
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Margin positions"
@@ -782,7 +791,8 @@
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Global settlement happens at price",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
@@ -858,13 +868,14 @@
             "asset_issue": "Montant à créer",
             "asset_update": "Actif à mettre à jour",
             "authorizing_account": "Compte donnant l'autorisation",
-            "call_limit": "Limite de couverture",
+            "call_limit": "Limite de couverture, %(price)s",
             "common_options": "Options",
             "count": "Nombre de transactions",
             "date": "Date",
             "fee_payer": "Compte payant le frai",
-            "feed_price": "Feed price",
+            "feed_price": "Feed price, %(price)s",
             "go_to": "Go to block",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "ID du bloc",
             "key": "Cléf public",
             "lifetime": "Devenir membre à vie",
@@ -1051,7 +1062,7 @@
         "deposit_warning_memo": "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "fee": "Gateway fee",
         "fiat": "Fiat",
-        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
+        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "Gateway",
         "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
@@ -1975,6 +1986,7 @@
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",
+            "title_short": "HTLC",
             "to": "To",
             "tooltip": {
                 "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
@@ -1989,6 +2001,10 @@
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
+        },
+        "prediction_market": {
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
+            "title": "Prediction Markets"
         },
         "timed_transfer": {
             "description": "Initiate a transfer that will execute at a specified time.",

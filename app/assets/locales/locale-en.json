@@ -77,6 +77,7 @@
             "cashback": "Vesting balance amount",
             "claim": "Claim now",
             "coindays": "coin days",
+            "days": "days",
             "earned": "Coin days earned",
             "expires": "expires",
             "fee_allocation": "Fee Allocation",
@@ -114,6 +115,7 @@
         },
         "new_user": "New user?",
         "no_orders": "No open orders",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
@@ -146,6 +148,7 @@
             "confirm_add": "Add",
             "create_paperwallet": "Create Paper Wallet",
             "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
+            "resolve_prediction_disabled_button": "The button will be enabled after resolution date has passed",
             "from": "Imported from account",
             "key": "Key/Name",
             "key_viewer": "Private key viewer",
@@ -162,6 +165,7 @@
             "private": "Private key (WIF - Wallet Import Format)",
             "public": "Public key",
             "publish": "Save",
+            "publish_prediction": "Publish",
             "remove_proxy": "Remove proxy",
             "remove_text": "Remove",
             "reset": "Reset",
@@ -297,6 +301,8 @@
             "quote_name": "Quote asset",
             "reward_percent": "Reward percent",
             "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
+            "resolve_prediction": "Resolve prediction",
+            "resolve_prediction_text": "The asset prediction can be resolved here.",
             "short": "Short name (max 32 characters)",
             "symbol": "Symbol",
             "to": "Issue to account",
@@ -313,7 +319,14 @@
             "balance_number": "Balance #%(id)s",
             "explain": "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available",
             "no_balances": "This account has no vesting balances",
-            "title": "Vesting balances"
+            "title": "Vesting balances",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "About",
@@ -452,12 +465,14 @@
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Your collateral ratio is below %(mr)s which is not allowed.",
+            "below_mcr_tcr": "Any ratio below %(mr)s will be treated as %(mr)s by chain.",
             "below_info": "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
             "below_ratio_mcr_update": "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
             "collateral": "Insufficient collateral balance",
             "increased_debt_on_margin_call": "You increased your debt, which is not allowed when updating a margin called position"
         },
+        "lockedCR": "Locking Collateral Ratio will override other locked fields",
         "maximize_debt_set_ratio_slider": "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "No valid feeds for %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
@@ -498,6 +513,7 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "actions": "Actions",
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -513,11 +529,20 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
         "cancel_selected_orders": "Cancel selected order(s)",
+        "cancel_order_select_all": "Select all orders",
         "change": "Change",
+        "chart_error": "Chart already exist",
         "chart_height": "Chart height (pixels)",
         "chart_hide": "Hide Charts",
+        "chart_load": "Load",
+        "layout_name": "Layout Name",
+        "load_custom_charts": "Load custom charts",
+        "load_chart_layout": "Load Chart Layout",
+        "save_new_chart_layout": "Save New Chart Layout ",
+        "save_custom_charts": "Save custom charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
+        "chart_save": "Save",
         "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
         "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
@@ -527,6 +552,7 @@
         "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
         "description": "Description",
+        "enter_chart_layout_name": "Enter Chart Layout Name",
         "ema": "Exponential Moving Average",
         "featured": "Top Markets",
         "feed_price": "Feed Price",
@@ -562,6 +588,7 @@
             "title": "Market Picker",
             "use": "Use"
         },
+        "modified": "Modified",
         "more": "Find markets",
         "move_down": "Move down",
         "move_up": "Move up",
@@ -747,6 +774,7 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "empty": "No collateral bids",
                 "included": {
                     "no": "No",
                     "partial": "Partially",
@@ -754,7 +782,7 @@
                 },
                 "title": "Collateral Bids"
             },
-            "cumulative": "Cumulative",
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -766,14 +794,18 @@
                 "pool_balance": "Pool balance",
                 "pool_text": "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Fee Pool",
-                "unclaimed_issuer_income": "Unclaimed issuer income"
+                "unclaimed_issuer_income": "Unclaimed issuer income",
+                "use_selected_asset": "Use selected asset",
+                "select_fee_asset": "Select asset to pay fee",
+                "use_asset_as_default_fee": "Make selected asset default for paying fees"
             },
             "feed_producer": "Feed producer",
             "feed_producer_text": "Approved feed producers may publish a new feed using the form below:",
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "empty": "No margin positions",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Margin positions"
@@ -789,11 +821,18 @@
                 "whitelist_authorities": "Whitelist authorities",
                 "whitelist_markets": "Whitelist markets"
             },
+            "prediction_market_asset": {
+                "prediction": "Prediction",
+                "tooltip_prediction": "The prediction is a statement defined by the asset owner. If the statement is true, this prediction market asset should be resolved to a settlement price of 1 by the asset owner.",
+                "resolution_date": "Resolution date",
+                "tooltip_resolution_date": "The resolution date is an informal statement when the asset owner intends to resolve this betting market."
+            },
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Global settlement happens at price",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
@@ -802,6 +841,7 @@
                 "title": "Price Feed"
             },
             "price_feed_data": {
+                "empty": "No valid feed producers",
                 "core_exchange_rate": "CER",
                 "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
@@ -869,13 +909,14 @@
             "asset_issue": "Amount to issue",
             "asset_update": "Asset to update",
             "authorizing_account": "Authorizing account",
-            "call_limit": "Call limit",
+            "call_limit": "Call limit, %(price)s",
             "common_options": "Common options",
             "count": "Transaction count",
             "date": "Date",
             "fee_payer": "Fee paying account",
-            "feed_price": "Feed Price",
+            "feed_price": "Feed Price, %(price)s",
             "go_to": "Go to block",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "Block ID",
             "key": "Public key",
             "lifetime": "Upgrade to lifetime member",
@@ -1062,7 +1103,7 @@
         "deposit_warning_memo": "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "fee": "Gateway fee",
         "fiat": "Fiat",
-        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
+        "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "Gateway",
         "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
@@ -1769,12 +1810,20 @@
         "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
         "confirm_yes": "Always",
         "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes. Error was: %(error)s",
+        "current_fee_asset": "Current fee asset is: ",
+        "custom": "Custom",
         "darkTheme": "Dark",
         "delete_select": "Select local wallet to delete",
         "disabled": "Disabled",
         "enable_wallet": "Enable local wallet",
         "faucet_address": "Faucet",
         "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
+        "fee_asset": "Default fee paying asset",
+        "can_change_default_fee_asset_tooltip": "The default asset used to pay transaction fees can be changed in the settings",
+        "change_default_fee_asset": "Change default fee asset",
+        "change_default_fee_asset_tooltip": "Change the default asset that is used to pay the transaction fee",
+        "change_default": "Change default",
+        "change": "Change",
         "general": "General",
         "general_text": "Adjust the basic settings.",
         "global_settings": "Default Global Settings",
@@ -1986,6 +2035,7 @@
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",
+            "title_short": "HTLC",
             "to": "To",
             "tooltip": {
                 "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
@@ -2002,7 +2052,7 @@
             "title": "Paper Wallet"
         },
         "prediction_market": {
-            "description": "State a prediction into the future that others can agree or disagree with leveraged with collateral.",
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
             "title": "Prediction Markets"
         },
         "timed_transfer": {
@@ -2110,7 +2160,7 @@
         "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
         "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
         "sync_yes": "The current node is in sync with the blockchain",
-        "target_collateral_ratio": "Setting a Target Collateral Ratio (TCR) will allow the blockchain to automatically sell the required amount of your collateral in order to keep your collateral ratio at or above your defined TCR when the value of your collateral decreases.<br /><br />To frequently sell small amounts, set a low target (eg. < 2)<br /><br />To sell larger amounts infrequently, set a high target (eg. > 3)",
+        "target_collateral_ratio": "Setting a Target Collateral Ratio (TCR) will allow the blockchain to automatically sell the required amount of your collateral in order to keep your collateral ratio at or above your defined TCR when the value of your collateral decreases. To frequently sell small amounts, set a low target (eg. < 2). To sell larger amounts infrequently, set a high target (eg. > 3)",
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "unlock_account_name": "Click to edit the account name, e.g. when your account is set as permission of another account.",
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",

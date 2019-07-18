@@ -30,6 +30,7 @@ class Settings extends React.Component {
         let general = [
             "locale",
             "unit",
+            "fee_asset",
             "browser_notifications",
             "showSettles",
             "walletLockTimeout",
@@ -268,11 +269,13 @@ class Settings extends React.Component {
                 });
                 break;
 
+            case "fee_asset":
             case "unit":
-                let index = findEntry(e.target.value, defaults[setting]);
+                const defaultSettings = defaults["unit"];
+                let index = findEntry(e.target.value, defaultSettings);
                 SettingsActions.changeSetting({
                     setting: setting,
-                    value: defaults[setting][index]
+                    value: defaultSettings[index]
                 });
                 break;
 
@@ -374,7 +377,11 @@ class Settings extends React.Component {
                             key={setting}
                             setting={setting}
                             settings={settings}
-                            defaults={defaults[setting]}
+                            defaults={
+                                defaults[
+                                    setting === "fee_asset" ? "unit" : setting
+                                ]
+                            }
                             onChange={this._handleSettingsEntryChange.bind(
                                 this
                             )}

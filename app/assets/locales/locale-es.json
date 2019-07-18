@@ -77,6 +77,7 @@
             "cashback": "Reembolso",
             "claim": "Reclama ahora",
             "coindays": "días de monedas",
+            "days": "days",
             "earned": "Días de monedas ganadas",
             "expires": "expira",
             "fee_allocation": "Asignación de Comisiones",
@@ -114,6 +115,7 @@
         },
         "new_user": "Nuevo usuario?",
         "no_orders": "No hay pedidos abiertos",
+        "no_order_history": "No order history",
         "no_price": "--",
         "open_orders": "Ordenes abiertas",
         "optional": {
@@ -311,7 +313,14 @@
             "balance_number": "Saldo #%(id)s",
             "explain": "Los saldos de consolidación no contienen los honorarios obtenidos a través del programa de referencia o desde trabajador, por ejemplo. Tienen un cierto período de consolidación y se desbloquean continuamente durante ese período hasta que todos los saldos estén disponibles.",
             "no_balances": "Esta cuenta no tiene saldos de consolidación",
-            "title": "Saldos de consolidación"
+            "title": "Saldos de consolidación",
+            "type": {
+                "unspecified": "Unspecified",
+                "cashback": "Cashback",
+                "worker": "Worker",
+                "witness": "Witness",
+                "market_fee_sharing": "Market fee sharing"
+            }
         },
         "votes": {
             "about": "De",
@@ -749,7 +758,7 @@
                 },
                 "title": "Ofertas Colaterales"
             },
-            "cumulative": "Cumulative",
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Balance de la cuota de la reclamación",
                 "claim_fees": "Reclamar tarifas",
@@ -768,7 +777,7 @@
             "info": "Información del activo",
             "invalid": "El nombre del activo %(name)s es invalido",
             "margin_positions": {
-                "click_to_switch_to_cumulative": "Click to switch to cumulative sum of the columns.",
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
                 "ratio_danger": "Position is below MCR and will be margin called",
                 "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "posiciòn a margen"
@@ -788,7 +797,8 @@
                 "external_feed_price": "Precio de Feed (Mediana de feeds de testigos)",
                 "feed_lifetime": "Vida de Feed (horas)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Liquidación global sucede a precio",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Liquidación global sucede a precio",
                 "maintenance_collateral_ratio": "Relación colateral de mantenimiento (MCR)",
                 "maximum_short_squeeze_price": "Precio máximo de compresión corta (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximo short de relaciòn squeeze (MSSR)",
@@ -864,13 +874,14 @@
             "asset_issue": "Monto a emitir",
             "asset_update": "Activo a actualizar",
             "authorizing_account": "Cuenta autorizante",
-            "call_limit": "Limite de llamada",
+            "call_limit": "Limite de llamada, %(price)s",
             "common_options": "Opciones comunes",
             "count": "Nro de transacciones",
             "date": "Fecha",
             "fee_payer": "Cuenta a cargo de las comisiones",
-            "feed_price": "Precio de feed",
+            "feed_price": "Precio de feed, %(price)s",
             "go_to": "Ir al bloque",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "ID de bloque",
             "key": "Llave pública",
             "lifetime": "Suscribir a membresía vitalicia",
@@ -1981,6 +1992,7 @@
             "sender": "Sender",
             "size": "Size",
             "title": "Hashed Time-Lock Contracts",
+            "title_short": "HTLC",
             "to": "To",
             "tooltip": {
                 "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
@@ -1995,6 +2007,10 @@
         "paper_wallet": {
             "description": "Cree un PDF con las claves de su cuenta impresas (texto plano y código de barras). Si la cartera está desbloqueada, también se agregan las claves privadas.",
             "title": "Billetera de papel"
+        },
+        "prediction_market": {
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
+            "title": "Prediction Markets"
         },
         "timed_transfer": {
             "description": "Iniciar una transferencia que se ejecutará a una hora especificada.",

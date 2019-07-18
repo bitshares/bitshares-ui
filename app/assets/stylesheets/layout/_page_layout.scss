@@ -143,3 +143,16 @@ div.bordered-header {
         color: black !important;
     }
 }
+
+.search-input {
+    .ant-input-suffix {
+        right: 0px !important;
+        .anticon {
+            width: 32px;
+            height: 32px;
+            svg {
+                margin: 9px;
+            }
+        }
+    }
+}

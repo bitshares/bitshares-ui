@@ -20,17 +20,10 @@ import {ChainTypes} from "bitsharesjs";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
-import {
-    Link,
-    DirectLink,
-    Element,
-    Events,
-    animateScroll as scroll,
-    scrollSpy,
-    scroller
-} from "react-scroll";
+import {Link, DirectLink} from "react-scroll";
 import {Tooltip} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
+import sanitize from "sanitize";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -90,11 +83,19 @@ class OperationTable extends React.Component {
                 </td>
                 <td>
                     {this.props.fee.amount > 0 ? (
-                        <FormattedAsset
-                            color="fee"
-                            amount={this.props.fee.amount}
-                            asset={this.props.fee.asset_id}
-                        />
+                        <span>
+                            <FormattedAsset
+                                color="fee"
+                                amount={this.props.fee.amount}
+                                asset={this.props.fee.asset_id}
+                                style={{marginRight: "10px"}}
+                            />
+                            &nbsp;&nbsp;
+                            <Icon
+                                name="question-circle"
+                                title="settings.can_change_default_fee_asset_tooltip"
+                            />
+                        </span>
                     ) : (
                         <label>
                             <Translate content="transfer.free" />
@@ -125,6 +126,11 @@ class OperationTable extends React.Component {
 }
 
 class Transaction extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
     componentDidMount() {
         ReactTooltip.rebuild();
     }
@@ -2000,7 +2006,12 @@ class Transaction extends React.Component {
                                     content="explorer.workers.website"
                                 />
                             </td>
-                            <td>{op[1].url}</td>
+                            <td>
+                                {sanitize(op[1].url, {
+                                    whiteList: [], // empty, means filter out all tags
+                                    stripIgnoreTag: true // filter out all HTML not in the whilelist
+                                })}
+                            </td>
                         </tr>
                     );
 

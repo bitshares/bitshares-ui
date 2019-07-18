@@ -29,7 +29,9 @@ class AccountOrders extends React.Component {
         this.state = {
             selectedOrders: [],
             filterValue: "",
-            areAssetsGrouped: false
+            areAssetsGrouped: props.viewSettings.get(
+                "accountOrdersGrouppedByAsset"
+            )
         };
     }
 
@@ -681,6 +683,9 @@ class AccountOrders extends React.Component {
         const tables = [ordersTable];
 
         let onGroupChange = (checked, evt) => {
+            SettingsActions.changeViewSetting({
+                accountOrdersGrouppedByAsset: checked
+            });
             this.setState({areAssetsGrouped: checked});
         };
 
@@ -721,7 +726,10 @@ class AccountOrders extends React.Component {
                     <div className="group-by">
                         <Translate content="account.group_by_asset" />
                         <span className="text">:</span>
-                        <Switch onChange={onGroupChange} />
+                        <Switch
+                            onChange={onGroupChange}
+                            checked={this.state.areAssetsGrouped}
+                        />
                     </div>
                 </div>
 
@@ -754,7 +762,8 @@ AccountOrders = connect(
         },
         getProps() {
             return {
-                marketDirections: SettingsStore.getState().marketDirections
+                marketDirections: SettingsStore.getState().marketDirections,
+                viewSettings: SettingsStore.getState().viewSettings
             };
         }
     }

@@ -439,13 +439,13 @@ class MarginPosition extends React.Component {
                             hideModal={this.hideBorrowModal.bind(this)}
                             ref={this.state.modalRef}
                             modalId={this.state.modalRef}
-                            quote_asset={balance_asset}
-                            backing_asset={debtAsset.getIn([
+                            quoteAssetObj={balance_asset}
+                            backingAssetObj={debtAsset.getIn([
                                 "bitasset",
                                 "options",
                                 "short_backing_asset"
                             ])}
-                            account={this.props.account}
+                            accountObj={this.props.account}
                         />
                     ) : null}
                 </td>
