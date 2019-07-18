@@ -155,6 +155,7 @@ class Borrow extends Component {
                                     "1.3.106",
                                     "1.3.103"
                                 ]}
+                                value={this.state.selectedAsset}
                                 onChange={this.onAssetChange.bind(this)}
                             />
                             <Tooltip
