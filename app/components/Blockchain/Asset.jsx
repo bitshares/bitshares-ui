@@ -26,6 +26,8 @@ import AssetResolvePrediction from "./AssetResolvePrediction";
 import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
 import {Tooltip, Icon, Table, Tabs as AntTabs} from "bitshares-ui-style-guide";
+import {Collapse} from "antd";
+const {Panel} = Collapse;
 // TODO: Replace remaining old style Tabs with new
 
 class AssetFlag extends React.Component {
@@ -505,20 +507,20 @@ class Asset extends React.Component {
             flagBooleans["charge_market_fee"] &&
             options.extensions &&
             options.extensions.reward_percent >= 0 ? (
-                <tr>
-                    <td>
-                        <Tooltip
-                            title={counterpart.translate(
-                                "account.user_issued_assets.reward_percent_tooltip"
-                            )}
-                        >
-                            <Translate content="explorer.asset.summary.market_fee_referral_reward_percent" />{" "}
-                            <Icon type="question-circle" theme="filled" />
-                        </Tooltip>
-                    </td>
-                    <td> {options.extensions.reward_percent / 100.0} % </td>
-                </tr>
-            ) : null;
+                    <tr>
+                        <td>
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "account.user_issued_assets.reward_percent_tooltip"
+                                )}
+                            >
+                                <Translate content="explorer.asset.summary.market_fee_referral_reward_percent" />{" "}
+                                <Icon type="question-circle" theme="filled" />
+                            </Tooltip>
+                        </td>
+                        <td> {options.extensions.reward_percent / 100.0} % </td>
+                    </tr>
+                ) : null;
 
         return (
             <div className="asset-card no-padding">
@@ -576,7 +578,6 @@ class Asset extends React.Component {
     }
 
     renderPriceFeed(asset) {
-        var title = <Translate content="explorer.asset.price_feed.title" />;
         var bitAsset = asset.bitasset;
         if (!("current_feed" in bitAsset)) return <div header={title} />;
         var currentFeed = bitAsset.current_feed;
@@ -585,10 +586,15 @@ class Asset extends React.Component {
             assetUtils.extractRawFeedPrice(asset)
         );
 
-        return (
-            <div className="asset-card no-padding">
-                <div className="card-divider">{title}</div>
+        var title = (
+            <div>
+                <Translate content="explorer.asset.price_feed.title" />
+                <span className="float-right">{feedPrice}</span>
+            </div>
+        );
 
+        return (
+            <Panel header={title}>
                 <table
                     className="table key-value-table table-hover"
                     style={{padding: "1.2rem"}}
@@ -634,7 +640,7 @@ class Asset extends React.Component {
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </Panel>
         );
     }
 
@@ -674,7 +680,6 @@ class Asset extends React.Component {
     }
 
     renderSettlement(asset) {
-        var title = <Translate content="explorer.asset.settlement.title" />;
         var bitAsset = asset.bitasset;
         if (!("current_feed" in bitAsset)) return <div header={title} />;
 
@@ -793,9 +798,17 @@ class Asset extends React.Component {
             );
         }
 
+        var title = (
+            <div>
+                <Translate content="explorer.asset.settlement.title" />
+                <span className="float-right">
+                    {isGlobalSettle ? settlementPrice : settlePrice}
+                </span>
+            </div>
+        );
+
         return (
-            <div className="asset-card no-padding">
-                <div className="card-divider">{title}</div>
+            <Panel header={title}>
                 {isGlobalSettle && (
                     <Translate
                         component="p"
@@ -856,8 +869,8 @@ class Asset extends React.Component {
                                 <td>
                                     {settlement_fund_collateral_ratio
                                         ? settlement_fund_collateral_ratio.toFixed(
-                                              6
-                                          )
+                                            6
+                                        )
                                         : "-"}
                                 </td>
                             </tr>
@@ -997,21 +1010,21 @@ class Asset extends React.Component {
                                     {currentSettled == 0
                                         ? 100
                                         : Math.round(
-                                              100 -
+                                            100 -
                                                   (currentSettled /
                                                       (currentSupply *
                                                           (maxSettlementVolume /
                                                               10000))) *
                                                       100,
-                                              2
-                                          )}
+                                            2
+                                        )}
                                     %
                                 </td>
                             </tr>
                         </tbody>
                     )}
                 </table>
-            </div>
+            </Panel>
         );
     }
 
@@ -1022,61 +1035,74 @@ class Asset extends React.Component {
         const core = ChainStore.getAsset("1.3.0");
 
         return (
-            <div className="asset-card no-padding">
-                <div className="card-divider">
-                    {<Translate content="explorer.asset.fee_pool.title" />}
+            <Panel
+                header={
+                    <div>
+                        <Translate content="explorer.asset.fee_pool.title" />
+                        {dynamic ? (
+                            <span className="float-right">
+                                <FormattedAsset
+                                    asset="1.3.0"
+                                    amount={dynamic.fee_pool}
+                                />
+                            </span>
+                        ) : null}
+                    </div>
+                }
+            >
+                <div>
+                    <Translate
+                        component="p"
+                        content="explorer.asset.fee_pool.pool_text"
+                        unsafe
+                        asset={asset.symbol}
+                        core={core.get("symbol")}
+                    />
+                    <table
+                        className="table key-value-table"
+                        style={{padding: "1.2rem"}}
+                    >
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.fee_pool.core_exchange_rate" />
+                                </td>
+                                <td>
+                                    {this.formattedPrice(
+                                        options.core_exchange_rate
+                                    )}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.fee_pool.pool_balance" />
+                                </td>
+                                <td>
+                                    {dynamic ? (
+                                        <FormattedAsset
+                                            asset="1.3.0"
+                                            amount={dynamic.fee_pool}
+                                        />
+                                    ) : null}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />
+                                </td>
+                                <td>
+                                    {dynamic ? (
+                                        <FormattedAsset
+                                            asset={asset.id}
+                                            amount={dynamic.accumulated_fees}
+                                        />
+                                    ) : null}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <Translate
-                    component="p"
-                    content="explorer.asset.fee_pool.pool_text"
-                    unsafe
-                    asset={asset.symbol}
-                    core={core.get("symbol")}
-                />
-                <table
-                    className="table key-value-table"
-                    style={{padding: "1.2rem"}}
-                >
-                    <tbody>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.fee_pool.core_exchange_rate" />
-                            </td>
-                            <td>
-                                {this.formattedPrice(
-                                    options.core_exchange_rate
-                                )}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.fee_pool.pool_balance" />
-                            </td>
-                            <td>
-                                {dynamic ? (
-                                    <FormattedAsset
-                                        asset="1.3.0"
-                                        amount={dynamic.fee_pool}
-                                    />
-                                ) : null}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />
-                            </td>
-                            <td>
-                                {dynamic ? (
-                                    <FormattedAsset
-                                        asset={asset.id}
-                                        amount={dynamic.accumulated_fees}
-                                    />
-                                ) : null}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            </Panel>
         );
     }
 
@@ -1131,36 +1157,33 @@ class Asset extends React.Component {
 
     renderCollateralBid(asset) {
         return (
-            <div className="grid-content small-no-padding">
-                <div className="asset-card no-padding">
-                    <div className="card-divider">
-                        <Translate content="explorer.asset.collateral.bid" />
-                    </div>
-                    <Translate
-                        component="p"
-                        content="explorer.asset.collateral.bid_text"
-                        asset={asset.symbol}
-                    />
+            <Panel
+                header={<Translate content="explorer.asset.collateral.bid" />}
+            >
+                <Translate
+                    component="p"
+                    content="explorer.asset.collateral.bid_text"
+                    asset={asset.symbol}
+                />
 
-                    <Translate
-                        component="p"
-                        content="explorer.asset.settlement.gs_included_on_revival"
-                    />
+                <Translate
+                    component="p"
+                    content="explorer.asset.settlement.gs_included_on_revival"
+                />
 
-                    <Translate
-                        component="p"
-                        content="explorer.asset.collateral.remove_bid"
-                    />
+                <Translate
+                    component="p"
+                    content="explorer.asset.collateral.remove_bid"
+                />
 
-                    <BidCollateralOperation
-                        asset={asset.symbol}
-                        core={asset.bitasset.options.short_backing_asset}
-                        funderAccountName={this.props.currentAccount}
-                        onUpdate={this.updateOnCollateralBid.bind(this)}
-                        hideBalance
-                    />
-                </div>
-            </div>
+                <BidCollateralOperation
+                    asset={asset.symbol}
+                    core={asset.bitasset.options.short_backing_asset}
+                    funderAccountName={this.props.currentAccount}
+                    onUpdate={this.updateOnCollateralBid.bind(this)}
+                    hideBalance
+                />
+            </Panel>
         );
     }
 
@@ -1282,49 +1305,49 @@ class Asset extends React.Component {
                 <br />
                 {!!options.blacklist_authorities &&
                     !!options.blacklist_authorities.length && (
-                        <React.Fragment>
-                            <Translate content="explorer.asset.permissions.blacklist_authorities" />
+                    <React.Fragment>
+                        <Translate content="explorer.asset.permissions.blacklist_authorities" />
                             : &nbsp;
-                            {this.renderAuthorityList(
-                                options.blacklist_authorities
-                            )}
-                        </React.Fragment>
-                    )}
+                        {this.renderAuthorityList(
+                            options.blacklist_authorities
+                        )}
+                    </React.Fragment>
+                )}
                 {!!options.blacklist_markets &&
                     !!options.blacklist_markets.length && (
-                        <React.Fragment>
-                            <br />
-                            <Translate content="explorer.asset.permissions.blacklist_markets" />
+                    <React.Fragment>
+                        <br />
+                        <Translate content="explorer.asset.permissions.blacklist_markets" />
                             : &nbsp;
-                            {this.renderMarketList(
-                                asset,
-                                options.blacklist_markets
-                            )}
-                        </React.Fragment>
-                    )}
+                        {this.renderMarketList(
+                            asset,
+                            options.blacklist_markets
+                        )}
+                    </React.Fragment>
+                )}
                 {!!options.whitelist_authorities &&
                     !!options.whitelist_authorities.length && (
-                        <React.Fragment>
-                            <br />
-                            <Translate content="explorer.asset.permissions.whitelist_authorities" />
+                    <React.Fragment>
+                        <br />
+                        <Translate content="explorer.asset.permissions.whitelist_authorities" />
                             : &nbsp;
-                            {this.renderAuthorityList(
-                                options.whitelist_authorities
-                            )}
-                        </React.Fragment>
-                    )}
+                        {this.renderAuthorityList(
+                            options.whitelist_authorities
+                        )}
+                    </React.Fragment>
+                )}
                 {!!options.whitelist_markets &&
                     !!options.whitelist_markets.length && (
-                        <React.Fragment>
-                            <br />
-                            <Translate content="explorer.asset.permissions.whitelist_markets" />
+                    <React.Fragment>
+                        <br />
+                        <Translate content="explorer.asset.permissions.whitelist_markets" />
                             : &nbsp;
-                            {this.renderMarketList(
-                                asset,
-                                options.whitelist_markets
-                            )}
-                        </React.Fragment>
-                    )}
+                        {this.renderMarketList(
+                            asset,
+                            options.whitelist_markets
+                        )}
+                    </React.Fragment>
+                )}
             </div>
         ) : null;
 
@@ -1341,27 +1364,30 @@ class Asset extends React.Component {
         );
 
         return (
-            <div className="asset-card no-padding">
-                <div className="card-divider">
-                    {<Translate content="explorer.asset.permissions.title" />}
+            <Panel
+                header={
+                    <Translate content="explorer.asset.permissions.title" />
+                }
+            >
+                <div>
+                    <table
+                        className="table key-value-table table-hover"
+                        style={{padding: "1.2rem"}}
+                    >
+                        <tbody>
+                            {maxMarketFee}
+                            {maxSupply}
+                        </tbody>
+                    </table>
+
+                    <br />
+                    {this.renderPermissionIndicators(permissionBooleans, bitNames)}
+                    <br />
+
+                    {whiteLists}
+                    {whitelist_market_fee_sharing}
                 </div>
-                <table
-                    className="table key-value-table table-hover"
-                    style={{padding: "1.2rem"}}
-                >
-                    <tbody>
-                        {maxMarketFee}
-                        {maxSupply}
-                    </tbody>
-                </table>
-
-                <br />
-                {this.renderPermissionIndicators(permissionBooleans, bitNames)}
-                <br />
-
-                {whiteLists}
-                {whitelist_market_fee_sharing}
-            </div>
+            </Panel>
         );
     }
 
@@ -2107,32 +2133,27 @@ class Asset extends React.Component {
                                     <div className="grid-content small-no-padding">
                                         {this.renderSummary(asset)}
                                     </div>
+                                    <div>
+                                        <Collapse className="asset-collapse">
+                                            {this.renderPermissions(asset)}
 
-                                    <div className="grid-content small-no-padding">
-                                        {this.renderPermissions(asset)}
+                                            {this.renderFeePool(asset)}
+
+                                            {priceFeed
+                                                ? this.renderPriceFeed(asset)
+                                                : null}
+
+                                            {priceFeed
+                                                ? this.renderSettlement(asset)
+                                                : null}
+
+                                            {this.state.showCollateralBidInInfo
+                                                ? this.renderCollateralBid(
+                                                    asset
+                                                )
+                                                : null}
+                                        </Collapse>
                                     </div>
-
-                                    <div className="grid-content small-no-padding">
-                                        {this.renderFeePool(asset)}
-                                    </div>
-
-                                    {priceFeed ? (
-                                        <div className="grid-content small-no-padding">
-                                            {this.renderPriceFeed(asset)}
-                                        </div>
-                                    ) : null}
-
-                                    {priceFeed ? (
-                                        <div className="grid-content small-no-padding">
-                                            {this.renderSettlement(asset)}
-                                        </div>
-                                    ) : null}
-
-                                    {this.state.showCollateralBidInInfo ? (
-                                        <div className="grid-content small-no-padding">
-                                            {this.renderCollateralBid(asset)}
-                                        </div>
-                                    ) : null}
                                 </div>
                                 {priceFeedData ? priceFeedData : null}
                             </Tab>
@@ -2192,10 +2213,10 @@ class AssetContainer extends React.Component {
         }
         let backingAsset = this.props.asset.has("bitasset")
             ? this.props.asset.getIn([
-                  "bitasset",
-                  "options",
-                  "short_backing_asset"
-              ])
+                "bitasset",
+                "options",
+                "short_backing_asset"
+            ])
             : "1.3.0";
         return <Asset {...this.props} backingAsset={backingAsset} />;
     }
