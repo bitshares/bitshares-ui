@@ -702,7 +702,7 @@ class ScaledOrderForm extends Component {
                     className="order-form"
                     layout="horizontal"
                     hideRequiredMark={true}
-                    style={{padding: "8px 15px"}}
+                    style={{padding: "0px 0px"}}
                 >
                     <Form.Item
                         {...formItemProps}
@@ -769,10 +769,7 @@ class ScaledOrderForm extends Component {
                         label={counterpart.translate("transaction.expiration")}
                         {...formItemProps}
                     >
-                        <div
-                            className="expiration-datetime-picker scaled-orders"
-                            style={{marginTop: "5px"}}
-                        >
+                        <div className="expiration-datetime-picker scaled-orders">
                             <DatePicker
                                 ref={this.getDatePickerRef}
                                 className="expiration-datetime-picker--hidden"
@@ -790,7 +787,6 @@ class ScaledOrderForm extends Component {
                             />
                             <select
                                 className="cursor-pointer"
-                                style={{marginTop: "5px"}}
                                 onChange={this.onExpirationSelectChange}
                                 onClick={this.onExpirationSelectClick}
                                 onBlur={this.onExpirationSelectBlur}

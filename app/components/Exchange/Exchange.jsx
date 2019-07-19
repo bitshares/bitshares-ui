@@ -125,6 +125,7 @@ class Exchange extends React.Component {
     }
 
     handleOrderTypeTabChange(type, value) {
+        console.log(value);
         SettingsActions.changeViewSetting({
             [`order-form-${type}`]: value
         });
