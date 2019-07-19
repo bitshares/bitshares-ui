@@ -122,6 +122,8 @@ export default class PredictionMarkets extends Component {
             symbol: item[1].symbol,
             condition: assetUtils.parseDescription(item[1].options.description)
                 .condition,
+            expiry: assetUtils.parseDescription(item[1].options.description)
+                .expiry,
             options: item[1].options
         }));
 

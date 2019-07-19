@@ -120,6 +120,28 @@ export default class PredictionMarketsOverviewTable extends Component {
                     );
                 }
             },
+            {
+                title: counterpart.translate("prediction.overview.expiry"),
+                dataIndex: "expiry",
+                align: "left",
+                onCell,
+                sorter: (a, b) => {
+                    if (!a.expiry || a.expiry === "") return -1;
+                    if (!b.expiry || b.expiry === "") return 1;
+                    return a.expiry.localeCompare(b.expiry);
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "normal"
+                            }}
+                        >
+                            <span>{item}</span>
+                        </div>
+                    );
+                }
+            },
             // {
             //     title: counterpart.translate("prediction.overview.odds"),
             //     dataIndex: "odds",
