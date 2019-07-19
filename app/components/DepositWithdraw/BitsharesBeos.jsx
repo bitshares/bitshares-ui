@@ -207,6 +207,7 @@ class BitsharesBeosModalContainer extends React.Component {
                         issuer={beosIssuer}
                         beosApiUrl={beosApiUrl}
                         beosFee={beosFee}
+                        beosCoins={this.props.beosCoins}
                         owner_key={
                             "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
                         }
@@ -234,13 +235,15 @@ class BitsharesBeos extends React.Component {
 
         this.state = {
             assetMemoCoinTypes: {},
-            beosAssets: []
+            beosAssets: [],
+            beosCoins: []
         };
     }
 
     componentWillMount() {
         let assetMemoCoinTypes = {};
         let beosAssets = [];
+        let beosCoins = [];
 
         let coinTypesPromisecheck = fetch(beosAPIs.BASE + beosAPIs.COINS_LIST, {
             method: "get",
@@ -258,7 +261,11 @@ class BitsharesBeos extends React.Component {
                 let [coinTypes, tradingPairs] = json_responses;
 
                 coinTypes.forEach(element => {
-                    if (element.walletType === "bitshares2") {
+                    if (element.walletType === "beos") {
+                        let memoCoinType = null;
+                        memoCoinType = element.coinType;
+                        assetMemoCoinTypes[element.walletSymbol] = memoCoinType;
+                    } else if (element.walletType === "bitshares2") {
                         let coinType = null;
                         let memoCoinType = null;
 
@@ -270,13 +277,37 @@ class BitsharesBeos extends React.Component {
                             }
                         });
 
-                        assetMemoCoinTypes[element.walletSymbol] = memoCoinType;
+                        if (element.walletSymbol !== "BEOS") {
+                            assetMemoCoinTypes[
+                                element.walletSymbol
+                            ] = memoCoinType;
+                        }
+
                         beosAssets.push(element.walletSymbol);
+
+                        if (element.walletSymbol === "BEOS") {
+                            tradingPairs.forEach(tradingPair => {
+                                if (
+                                    tradingPair.inputCoinType ===
+                                    element.coinType
+                                ) {
+                                    coinTypes.find(coinTypeObject => {
+                                        if (
+                                            coinTypeObject.coinType ===
+                                            tradingPair.outputCoinType
+                                        ) {
+                                            beosCoins.push(coinTypeObject);
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
                 });
                 this.setState({
                     assetMemoCoinTypes,
-                    beosAssets
+                    beosAssets,
+                    beosCoins
                 });
             }
         );
@@ -285,6 +316,7 @@ class BitsharesBeos extends React.Component {
     render() {
         let beosAssets = this.state.beosAssets;
         let assetMemoCoinTypes = this.state.assetMemoCoinTypes;
+        let beosCoins = this.state.beosCoins;
 
         return (
             <div>
@@ -295,6 +327,7 @@ class BitsharesBeos extends React.Component {
                     assetMemoCoinTypes={assetMemoCoinTypes}
                     assets={beosAssets}
                     params={this.props.params}
+                    beosCoins={beosCoins}
                 />
             </div>
         );

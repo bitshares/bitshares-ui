@@ -65,7 +65,8 @@ class BitsharesBeosModal extends React.Component {
             no_account_error: false,
             selectedAssetId: "1.3.0",
             no_account_error_without_creation: false,
-            multiSigError: false
+            multiSigError: false,
+            currentBeosCheckbox: ""
         };
 
         this.showConfirmationModal = this.showConfirmationModal.bind(this);
@@ -73,6 +74,12 @@ class BitsharesBeosModal extends React.Component {
     }
 
     componentWillMount() {
+        if (this.props.beosCoins && this.props.beosCoins.length) {
+            this.setState({
+                currentBeosCheckbox:
+                    this.props.beosCoins[0]["walletSymbol"] || "BEOS"
+            });
+        }
         this._updateFee();
         this._updateMultiSigError();
     }
@@ -140,7 +147,10 @@ class BitsharesBeosModal extends React.Component {
         let {from_account} = state;
 
         const asset = this.getAssetById(this.state.selectedAssetId);
-        const pxasset = this.getProxyAsset(asset.get("symbol"));
+        let pxasset = this.getProxyAsset(asset.get("symbol"));
+        if (asset.get("symbol") === "BEOS") {
+            pxasset = this.getProxyAsset(this.state.currentBeosCheckbox);
+        }
         let memo;
 
         if (asset.get("symbol") === "BTS" && this.state.is_account_creation) {
@@ -643,6 +653,10 @@ class BitsharesBeosModal extends React.Component {
         }
     }
 
+    onBeosCheckboxes(walletSymbol) {
+        this.setState({currentBeosCheckbox: walletSymbol});
+    }
+
     onMemoChanged(e) {
         this.setState(
             {memo: e.target.value.replace(/:/g, "")},
@@ -751,7 +765,12 @@ class BitsharesBeosModal extends React.Component {
                     10
                 );
 
-                const pxasset = this.getProxyAsset(asset.get("symbol"));
+                let pxasset = this.getProxyAsset(asset.get("symbol"));
+                if (asset.get("symbol") === "BEOS") {
+                    pxasset = this.getProxyAsset(
+                        this.state.currentBeosCheckbox
+                    );
+                }
                 let memo;
 
                 if (
@@ -805,6 +824,7 @@ class BitsharesBeosModal extends React.Component {
 
     render() {
         let account_creation_checkbox = null;
+        let beos_checkboxes = null;
         let balance = null;
         let account_balances = this.props.account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
@@ -812,7 +832,7 @@ class BitsharesBeosModal extends React.Component {
 
         if (asset_types.length > 0) {
             let current_asset_id = this.state.selectedAssetId;
-            if (current_asset_id) {
+            if (current_asset_id && this.getBalanceForAsset(current_asset_id)) {
                 let current = this.getBalanceForAsset(current_asset_id).get(
                     "id"
                 );
@@ -882,6 +902,62 @@ class BitsharesBeosModal extends React.Component {
                                 </div>
                             </td>
                         </tr>
+                    </tbody>
+                </table>
+            );
+        } else if (
+            this.getAssetById(this.state.selectedAssetId).get("symbol") ===
+            "BEOS"
+        ) {
+            beos_checkboxes = (
+                <table className="table" style={{width: "inherit"}}>
+                    <tbody>
+                        {this.props.beosCoins.map(element => {
+                            if (element) {
+                                let checked = false;
+                                if (
+                                    element.walletSymbol ===
+                                    this.state.currentBeosCheckbox
+                                ) {
+                                    checked = true;
+                                }
+                                return (
+                                    <tr key={element.coinType}>
+                                        <td style={{border: "none"}}>
+                                            <Translate
+                                                content={
+                                                    "gateway.bitshares_beos.beos_conversion"
+                                                }
+                                                name={element.name}
+                                            />
+                                            :
+                                        </td>
+                                        <td style={{border: "none"}}>
+                                            <div
+                                                className="switch"
+                                                style={{
+                                                    marginBottom: "10px"
+                                                }}
+                                                onClick={this.onBeosCheckboxes.bind(
+                                                    this,
+                                                    element.walletSymbol
+                                                )}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={checked}
+                                                    onChange={this.onBeosCheckboxes.bind(
+                                                        this,
+                                                        element.walletSymbol
+                                                    )}
+                                                />
+                                                <label />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            }
+                        })}
                     </tbody>
                 </table>
             );
@@ -1007,6 +1083,8 @@ class BitsharesBeosModal extends React.Component {
                         </div>
                         {/* Create account enabled/disabled */}
                         {account_creation_checkbox}
+                        {/* Beos trasnfer option */}
+                        {beos_checkboxes}
                         {this.state.no_account_error &&
                         !this.state.maintenance_error &&
                         this.state.account !== "" ? (
