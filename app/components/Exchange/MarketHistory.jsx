@@ -194,6 +194,7 @@ class MarketHistory extends React.Component {
 
                     return (
                         <MarketHistoryViewRow
+                            key={fill.id}
                             fill={fill}
                             base={base}
                             quote={quote}
@@ -208,6 +209,7 @@ class MarketHistory extends React.Component {
                 .map(fill => {
                     return (
                         <MarketHistoryViewRow
+                            key={fill.id}
                             fill={fill}
                             base={base}
                             quote={quote}
