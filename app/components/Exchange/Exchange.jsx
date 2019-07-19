@@ -2092,12 +2092,18 @@ class Exchange extends React.Component {
                 activeKey={
                     this.props.viewSettings.get("order-form-bid") || "limit"
                 }
+                style={{
+                    borderRight: "2px solid black",
+                    borderLeft: "2px solid black",
+                    borderTop: "2px solid black",
+                    borderBottom: "4px solid black"
+                }}
                 onChange={this.handleOrderTypeTabChange.bind(this, "bid")}
                 tabBarExtraContent={<div>{buySellTitle(true)}</div>}
                 defaultActiveKey={"limit"}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    "small-2",
+                    "small-3",
                     "middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 3 : 3} large-order-${
@@ -2256,9 +2262,14 @@ class Exchange extends React.Component {
                 animated={false}
                 tabBarExtraContent={<div>{buySellTitle(false)}</div>}
                 defaultActiveKey={"limit"}
+                style={{
+                    borderLeft: "2px solid black",
+                    borderTop: "2px solid black",
+                    borderBottom: "4px solid black"
+                }}
                 className={cnames(
                     "exchange--buy-sell-form",
-                    "small-2 middle-content",
+                    "small-3 middle-content",
                     flipBuySell
                         ? `order-${buySellTop ? 6 : 2} large-order-${
                               buySellTop ? 6 : 4
@@ -2590,7 +2601,7 @@ class Exchange extends React.Component {
             !this.state.mobileKey.includes("myOpenOrders") ? null : (
                 <MyOpenOrders
                     key={`actionCard_${actionCardIndex++}`}
-                    style={{marginBottom: !tinyScreen ? 15 : 0}}
+                    style={{marginBottom: !tinyScreen ? 0 : 0}}
                     className={cnames(
                         panelTabs["my_orders"] == 0
                             ? centerContainerWidth > 1200
@@ -2628,7 +2639,7 @@ class Exchange extends React.Component {
                 !this.state.mobileKey.includes("settlementOrders")) ? null : (
                 <MyOpenOrders
                     key={`actionCard_${actionCardIndex++}`}
-                    style={{marginBottom: !tinyScreen ? 15 : 0}}
+                    style={{marginBottom: !tinyScreen ? 0 : 0}}
                     className={cnames(
                         panelTabs["open_settlement"] == 0
                             ? centerContainerWidth > 1200
@@ -2722,8 +2733,10 @@ class Exchange extends React.Component {
             <div
                 className={"exchange--chart-control"}
                 style={{
-                    height: 20,
-                    position: "relative"
+                    height: 0,
+                    position: "absolute",
+                    top: "10px",
+                    left: "500px"
                 }}
             >
                 {chartType == "price_chart" && (
@@ -2944,7 +2957,6 @@ class Exchange extends React.Component {
                 groupTabsCount++;
             }
         });
-        console.log(groupTabs);
         let groupTabbed2 =
             groupTabs[2].length > 0 ? (
                 <div
@@ -2952,8 +2964,8 @@ class Exchange extends React.Component {
                     className={cnames(
                         centerContainerWidth > 1200
                             ? groupTabsCount == 1
-                                ? "medium-12 xlarge-4"
-                                : "medium-6 xlarge-4 "
+                                ? "medium-12 xlarge-6"
+                                : "medium-6 xlarge-6"
                             : centerContainerWidth > 800
                                 ? groupTabsCount == 1
                                     ? "medium-12"
@@ -2961,9 +2973,13 @@ class Exchange extends React.Component {
                                 : "",
                         "small-12 order-1"
                     )}
-                    style={{paddingRight: 0}}
                 >
                     <Tabs
+                        style={{
+                            borderRight: "2px solid black",
+                            borderBottom: "4px solid black",
+                            borderTop: "2px solid black"
+                        }}
                         activeKey={panelTabsActive[2]}
                         onChange={this._setPanelTabInGroup.bind(this, 2)}
                     >
@@ -3261,7 +3277,6 @@ class Exchange extends React.Component {
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
-
                 <ExchangeHeader
                     hasAnyPriceAlert={this.props.hasAnyPriceAlert}
                     showPriceAlertModal={this.showPriceAlertModal}
@@ -3283,7 +3298,7 @@ class Exchange extends React.Component {
                     onTogglePersonalize={this._togglePersonalize.bind(this)}
                     showVolumeChart={showVolumeChart}
                 />
-
+                {tradingChartHeader}
                 <div className="grid-block page-layout market-layout">
                     {this.state.isMarketPickerModalVisible ||
                     this.state.isMarketPickerModalLoaded ? (
@@ -3387,7 +3402,6 @@ class Exchange extends React.Component {
                         >
                             {!tinyScreen ? (
                                 <div style={{display: "flex"}}>
-                                    {/* {tradingChartHeader} */}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div
@@ -3395,7 +3409,8 @@ class Exchange extends React.Component {
                                             id="market-charts"
                                             style={{
                                                 minWidth: "60%",
-                                                display: "inline-block"
+                                                display: "inline-block",
+                                                borderBottom: "2px solid black"
                                             }}
                                         >
                                             {tradingViewChart}
@@ -3421,7 +3436,8 @@ class Exchange extends React.Component {
                                         className="grid-block shrink no-overflow small-2"
                                         style={{
                                             minWidth: "20%",
-                                            display: "inline-block"
+                                            display: "inline-block",
+                                            borderBottom: "2px solid black"
                                             //position: "absolute"
                                         }}
                                     >
@@ -3433,7 +3449,8 @@ class Exchange extends React.Component {
                                         style={{
                                             minWidth: "20%",
                                             display: "inline-block",
-                                            position: "relative"
+                                            position: "relative",
+                                            borderBottom: "2px solid black"
                                         }}
                                     >
                                         <Tabs

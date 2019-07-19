@@ -183,8 +183,6 @@ p.order-table-title {
 }
 
 form.order-form {
-    // padding: 10px; wtf is this?
-
     .ant-form-item {
         margin-bottom: 0;
     }
@@ -503,8 +501,7 @@ div.bucket-option {
 
 .buy-sell-label {
     font-size: 90%;
-    // line-height: 0rem; // wtf is this?
-    height: 1rem; // wtf is this?
+    height: 1rem;
     white-space: nowrap;
     z-index: 100; // Make sure unwrapped content isn't hidden under companion input
 }
@@ -754,7 +751,7 @@ table thead tr th.mymarkets-header {
 }
 
 .orderbook-showall {
-    text-align: center;
+    text-align: right;
     padding: 5px 0;
     border-top: 1px solid $border-color;
     font-size: 12px;

@@ -1133,7 +1133,7 @@ class MyMarkets extends React.Component {
                             style={{
                                 position: "absolute",
                                 paddingTop: "3rem",
-                                textAlign: "center",
+                                textAlign: "right",
                                 width: "100%"
                             }}
                         >

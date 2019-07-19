@@ -468,7 +468,7 @@ class BuySell extends React.Component {
                 style={{visibility: "hidden"}}
                 className="grid-block no-overflow wrap shrink"
             >
-                {/* wtf is this? <div className="small-3 buy-sell-label">
+                <div className="small-3 buy-sell-label">
                     <Translate content="explorer.asset.summary.market_fee" />
                 </div>
                 <div className="inputAddon small-9">
@@ -486,7 +486,7 @@ class BuySell extends React.Component {
                             </span>
                         }
                     />
-                </div> */}
+                </div>
             </div>
         ) : null;
 

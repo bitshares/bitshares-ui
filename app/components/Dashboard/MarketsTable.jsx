@@ -234,7 +234,7 @@ class MarketsTable extends React.Component {
                                 : "";
                     return (
                         <span
-                            style={{whiteSpace: "nowrap", textAlign: "right"}}
+                            style={{whiteSpace: "nowrap", textAlign: "center"}}
                             className={changeClass}
                         >
                             {record.hour_24}%
@@ -374,12 +374,15 @@ class MarketsTable extends React.Component {
                 </Link>
             ),
             quote_name: this.props.isFavorite ? null : (
-                <span style={{textAlign: "right"}}>
+                <span style={{textAlign: "center"}}>
                     <AssetName noTip name={base} />
                 </span>
             ),
             price: (
-                <div className="column-hide-small" style={{textAlign: "right"}}>
+                <div
+                    className="column-hide-small"
+                    style={{textAlign: "center"}}
+                >
                     {marketStats && marketStats.price
                         ? utils.price_text(
                               marketStats.price.toReal(true),

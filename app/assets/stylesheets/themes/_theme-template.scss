@@ -857,7 +857,7 @@
             color: $secondary-text-color;
         }
         > tbody > tr > td {
-            text-align: center;
+            text-align: right;
             border-bottom-color: $dark-text-color;
             font-size: 0.875rem;
         }
@@ -1525,8 +1525,8 @@
         }
         > span.price-decimal,
         > span > span.price-decimal {
-            color: $primary-text-color;
-            opacity: 0.6;
+            color: $bid-color;
+            opacity: 1;
         }
     }
     .orderHistoryAsk {
@@ -1538,8 +1538,8 @@
         }
         > span.price-decimal,
         > span > span.price-decimal {
-            color: $primary-text-color;
-            opacity: 0.6;
+            color: $ask-color;
+            opacity: 1;
         }
     }
     .orderHistoryCall {

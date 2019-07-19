@@ -24,7 +24,7 @@ class ExchangeTableHeader extends React.Component {
         return (
             <thead>
                 <tr>
-                    <th style={{width: "6%", textAlign: "center"}}>
+                    <th style={{width: "6%", textAlign: "right"}}>
                         <Tooltip
                             title={counterpart.translate(
                                 "exchange.cancel_order_select_all"
@@ -405,7 +405,7 @@ class MyOpenOrders extends React.Component {
                 <tr>
                     <td
                         style={{
-                            textAlign: "center",
+                            textAlign: "right",
                             lineHeight: 4,
                             fontStyle: "italic"
                         }}
@@ -655,12 +655,15 @@ class MyOpenOrders extends React.Component {
                         ref="container"
                         style={{
                             overflow: "hidden",
-                            minHeight: !this.props.tinyScreen ? 260 : 0,
-                            maxHeight: 260,
+                            minHeight: !this.props.tinyScreen ? 256 : 0,
+                            maxHeight: 256,
                             lineHeight: "13px"
                         }}
                     >
-                        <table className="table order-table table-highlight-hover table-hover no-stripes text-right fixed-table market-right-padding">
+                        <table
+                            style={{marginTop: "10px"}}
+                            className="table order-table table-highlight-hover table-hover no-stripes text-right fixed-table market-right-padding"
+                        >
                             {contentContainer}
                         </table>
                     </div>

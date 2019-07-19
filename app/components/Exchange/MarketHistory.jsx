@@ -284,13 +284,13 @@ class MarketHistory extends React.Component {
                         <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
                             <thead>
                                 <tr>
-                                    <th style={{textAlign: "center"}}>
+                                    <th style={{textAlign: "right"}}>
                                         <Translate
                                             className="header-sub-title"
                                             content="exchange.price"
                                         />
                                     </th>
-                                    <th style={{textAlign: "center"}}>
+                                    <th style={{textAlign: "right"}}>
                                         <span className="header-sub-title">
                                             <AssetName
                                                 dataPlace="top"
@@ -298,7 +298,7 @@ class MarketHistory extends React.Component {
                                             />
                                         </span>
                                     </th>
-                                    <th style={{textAlign: "center"}}>
+                                    <th style={{textAlign: "right"}}>
                                         <Translate
                                             className="header-sub-title"
                                             content="explorer.block.date"
