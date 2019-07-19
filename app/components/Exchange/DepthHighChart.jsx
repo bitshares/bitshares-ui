@@ -369,13 +369,7 @@ class DepthHighChart extends React.Component {
             });
         }
 
-        // Fix the height if defined, else use 400px;
-        if (this.props.height) {
-            config.chart.height = this.props.height;
-        } else {
-            config.chart.height = "400px";
-        }
-
+        config.chart.height = "479px";
         // Add onClick event listener if defined
         if (this.props.onClick) {
             config.chart.events = {

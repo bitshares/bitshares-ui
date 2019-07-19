@@ -901,7 +901,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 223,
+                                    maxHeight: 226,
                                     lineHeight: "15px"
                                 }}
                             >
@@ -938,7 +938,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 223,
+                                    maxHeight: 226,
                                     lineHeight: "13px"
                                 }}
                             >
