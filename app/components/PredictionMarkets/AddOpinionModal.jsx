@@ -306,10 +306,12 @@ AddOpinionModal.propTypes = {
     onClose: PropTypes.func,
     predictionMarket: PropTypes.any.isRequired,
     opinion: PropTypes.any,
-    currentAccountId: PropTypes.string,
+    currentAccount: PropTypes.string,
     submitNewOpinion: PropTypes.func,
     preselectedOpinion: PropTypes.string,
-    preselectedAmount: PropTypes.number
+    preselectedAmount: PropTypes.number,
+    baseAsset: PropTypes.object,
+    quoteAsset: PropTypes.object
 };
 
 AddOpinionModal.defaultProps = {

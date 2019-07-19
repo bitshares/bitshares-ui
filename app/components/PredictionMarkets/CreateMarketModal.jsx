@@ -360,7 +360,7 @@ CreateMarketModal.propTypes = {
     visible: PropTypes.bool,
     onClose: PropTypes.func,
     currentAccount: PropTypes.string,
-    newMarketId: PropTypes.string,
+    symbols: PropTypes.array,
     onMarketCreated: PropTypes.func
 };
 

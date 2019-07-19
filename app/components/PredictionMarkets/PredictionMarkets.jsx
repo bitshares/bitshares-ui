@@ -11,8 +11,10 @@ import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
 import ResolveModal from "./ResolveModal";
 import {ChainStore} from "bitsharesjs";
-import {Button} from "bitshares-ui-style-guide";
+import {Switch, Button} from "bitshares-ui-style-guide";
 import {Asset, Price} from "../../lib/common/MarketClasses";
+import Translate from "react-translate-component";
+import LoadingIndicator from "../LoadingIndicator";
 
 export default class PredictionMarkets extends Component {
     constructor(props) {
@@ -30,7 +32,8 @@ export default class PredictionMarkets extends Component {
             preselectedAmount: 0,
             isCreateMarketModalOpen: false,
             isAddOpinionModalOpen: false,
-            isResolveModalOpen: false
+            isResolveModalOpen: false,
+            isHideUnknownHousesChecked: true
         };
 
         this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
@@ -47,6 +50,9 @@ export default class PredictionMarkets extends Component {
         this.onResolveModalOpen = this.onResolveModalOpen.bind(this);
         this.onResolveModalClose = this.onResolveModalClose.bind(this);
         this.updateAsset = this.updateAsset.bind(this);
+        this.handleUnknownHousesToggleChange = this.handleUnknownHousesToggleChange.bind(
+            this
+        );
     }
 
     componentWillMount() {
@@ -291,6 +297,14 @@ export default class PredictionMarkets extends Component {
         });
     }
 
+    handleUnknownHousesToggleChange() {
+        const isHideUnknownHousesChecked = !this.state
+            .isHideUnknownHousesChecked;
+        this.setState({
+            isHideUnknownHousesChecked
+        });
+    }
+
     onOppose = opinion => {
         this.setState({
             preselectedOpinion: opinion.opinion === "no" ? "yes" : "no",
@@ -380,6 +394,17 @@ export default class PredictionMarkets extends Component {
                         autoComplete="off"
                         placeholder={counterpart.translate("exchange.filter")}
                     />
+                    <span>
+                        <Switch
+                            style={{float: "left", marginLeft: "20px"}}
+                            onChange={this.handleUnknownHousesToggleChange}
+                            checked={this.state.isHideUnknownHousesChecked}
+                        />
+                        <Translate
+                            content="prediction.overview.toggle_label"
+                            style={{float: "left", marginLeft: "10px"}}
+                        />
+                    </span>
                     <Button
                         style={{float: "right"}}
                         onClick={this.onCreatePredictionMarketModalOpen}
@@ -397,6 +422,7 @@ export default class PredictionMarkets extends Component {
                     selectedPredictionMarket={
                         this.state.selectedPredictionMarket
                     }
+                    hideUnknownHouses={this.state.isHideUnknownHousesChecked}
                 />
             </div>
         );
@@ -490,6 +516,13 @@ export default class PredictionMarkets extends Component {
                         onClose={this.onResolveModalClose}
                         predictionMarket={this.state.selectedPredictionMarket}
                         onResolveMarket={this.onResolveMarket}
+                    />
+                ) : null}
+                {!this.state.isFetchingFinished ? (
+                    <LoadingIndicator
+                        loadingText={counterpart.translate(
+                            "prediction.overview.loading"
+                        )}
                     />
                 ) : null}
             </div>

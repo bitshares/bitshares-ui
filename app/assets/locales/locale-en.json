@@ -1610,9 +1610,12 @@
     },
     "prediction": {
         "overview": {
+            "loading": "Loading...",
+            "toggle_label": "Hide unknown houses",
             "issuer": "House",
             "prediction": "Prediction",
             "description": "Description",
+            "expiry": "Resolution date",
             "odds": "Odds",
             "action": "Action",
             "create_market": "Create Prediction Market",

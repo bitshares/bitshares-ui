@@ -210,7 +210,7 @@ PredictionMarketDetailsTable.propTypes = {
     predictionMarketData: PropTypes.any.isRequired,
     onOppose: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    currentAccountId: PropTypes.string,
+    currentAccount: PropTypes.string,
     detailsSearchTerm: PropTypes.string
 };
 

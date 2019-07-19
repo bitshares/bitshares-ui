@@ -9,6 +9,8 @@ import PaginatedList from "components/Utility/PaginatedList";
 
 require("./prediction.scss");
 
+const ISSUERS_WHITELIST = ["iamredbar1", "sports-owner", "twat123"];
+
 export default class PredictionMarketsOverviewTable extends Component {
     onMarketAction(dataItem, option = "yes") {
         this.props.onMarketAction({
@@ -60,8 +62,14 @@ export default class PredictionMarketsOverviewTable extends Component {
                 align: "left",
                 onCell,
                 sorter: (a, b) => {
-                    let a_name = ChainStore.getAccount(a.issuer).get("name");
-                    let b_name = ChainStore.getAccount(b.issuer).get("name");
+                    let a_issuer = ChainStore.getAccount(a.issuer);
+                    let b_issuer = ChainStore.getAccount(b.issuer);
+                    let a_name = null,
+                        b_name = null;
+                    if (a_issuer && b_issuer) {
+                        a_name = a_issuer.get("name");
+                        b_name = b_issuer.get("name");
+                    }
                     return a_name > b_name ? 1 : a_name < b_name ? -1 : 0;
                 },
                 render: item => {
@@ -262,6 +270,15 @@ export default class PredictionMarketsOverviewTable extends Component {
             }));
         }
 
+        if (this.props.hideUnknownHouses) {
+            filteredMarkets = filteredMarkets.filter(item => {
+                let issuer = ChainStore.getAccount(item.issuer);
+                if (issuer) {
+                    return ISSUERS_WHITELIST.includes(issuer.get("name"));
+                }
+            });
+        }
+
         return (
             <div style={{paddingTop: "50px"}}>
                 <PaginatedList
@@ -279,7 +296,9 @@ PredictionMarketsOverviewTable.propTypes = {
     predictionMarkets: PropTypes.array.isRequired,
     onMarketAction: PropTypes.func.isRequired,
     currentAccountId: PropTypes.string,
-    searchTerm: PropTypes.string
+    searchTerm: PropTypes.string,
+    selectedPredictionMarket: PropTypes.object,
+    hideUnknownHouses: PropTypes.bool
 };
 
 PredictionMarketsOverviewTable.defaultProps = {
