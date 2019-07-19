@@ -110,6 +110,7 @@ export default class CreateMarketModal extends Modal {
                     flags,
                     permissions
                 );
+                this.props.onMarketCreated(marketOptions.symbol);
             })
             .catch(error => {
                 console.error(error);
@@ -359,7 +360,8 @@ CreateMarketModal.propTypes = {
     visible: PropTypes.bool,
     onClose: PropTypes.func,
     currentAccount: PropTypes.string,
-    newMarketId: PropTypes.string
+    newMarketId: PropTypes.string,
+    onMarketCreated: PropTypes.func
 };
 
 CreateMarketModal.defaultProps = {

@@ -18,9 +18,9 @@ export default class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            assets: [],
             lastAssetSymbol: null,
             predictionMarkets: [],
+            isFetchingFinished: false,
             currentAccountId: null,
             searchTerm: "",
             detailsSearchTerm: "",
@@ -46,6 +46,7 @@ export default class PredictionMarkets extends Component {
         this.onMarketAction = this.onMarketAction.bind(this);
         this.onResolveModalOpen = this.onResolveModalOpen.bind(this);
         this.onResolveModalClose = this.onResolveModalClose.bind(this);
+        this.updateAsset = this.updateAsset.bind(this);
     }
 
     componentWillMount() {
@@ -74,6 +75,7 @@ export default class PredictionMarkets extends Component {
         let searchAsset = this.state.lastAssetSymbol
             ? this.state.lastAssetSymbol
             : "A";
+
         if (fetchedAssets) {
             const lastAsset = fetchedAssets
                 .sort((a, b) => {
@@ -87,13 +89,7 @@ export default class PredictionMarkets extends Component {
                 })
                 .last();
             searchAsset = lastAsset ? lastAsset.symbol : "A";
-            const assets = fetchedAssets.filter(
-                a => a.bitasset_data && a.bitasset_data.is_prediction_market
-            );
-            this.setState({
-                assets: [...assets]
-            });
-            this._updatePredictionMarketsList();
+            this._updatePredictionMarketsList(fetchedAssets);
         }
         if (
             !this.state.lastAssetSymbol ||
@@ -103,11 +99,21 @@ export default class PredictionMarkets extends Component {
             this.setState({
                 lastAssetSymbol: searchAsset
             });
+        } else {
+            this.setState({
+                isFetchingFinished: true
+            });
         }
     }
 
-    _updatePredictionMarketsList() {
-        const predictionMarkets = this.state.assets.map(item => ({
+    _updatePredictionMarketsList(fetchedAssets) {
+        const assets = fetchedAssets.filter(
+            a =>
+                a.bitasset_data &&
+                a.bitasset_data.is_prediction_market &&
+                a.bitasset_data.settlement_fund === 0
+        );
+        const predictionMarkets = [...assets].map(item => ({
             asset_id: item[1].id,
             issuer: item[1].issuer,
             description: assetUtils.parseDescription(
@@ -118,9 +124,20 @@ export default class PredictionMarkets extends Component {
                 .condition,
             options: item[1].options
         }));
-        this.setState({
-            predictionMarkets
-        });
+
+        if (
+            this.state.predictionMarkets.length !== predictionMarkets.length &&
+            this.state.isFetchingFinished
+        ) {
+            this.setState({
+                selectedPredictionMarket: null,
+                predictionMarkets
+            });
+        } else {
+            this.setState({
+                predictionMarkets
+            });
+        }
     }
 
     _updateOpinionsList(fetchedOpinions) {
@@ -318,30 +335,33 @@ export default class PredictionMarkets extends Component {
             asset_id: asset.id,
             precision: asset.precision
         });
-
         let quoteAsset = ChainStore.getAsset(
             asset.bitasset.options.short_backing_asset
         );
-
         let quote = new Asset({
             real: 1,
             asset_id: asset.bitasset.options.short_backing_asset,
             precision: quoteAsset.get("precision")
         });
-
         let price = new Price({
             quote,
             base
         });
 
         AssetActions.assetGlobalSettle(asset, account, price).then(() => {
-            console.log(`Resolved ${asset}`);
+            let pause = new Promise(resolve => setTimeout(resolve, 1000));
+            pause.then(result => {
+                this.updateAsset(asset.symbol);
+            });
         });
-
         this.setState({
             isResolveModalOpen: false
         });
     };
+
+    updateAsset(symbol) {
+        AssetActions.getAssetList.defer(symbol, 1);
+    }
 
     getOverviewSection() {
         return (
@@ -422,9 +442,7 @@ export default class PredictionMarkets extends Component {
     }
 
     render() {
-        const symbols = Object.values(this.props.assets.toJS()).map(
-            item => item.symbol
-        );
+        const symbols = [...this.props.assets].map(item => item[1].symbol);
 
         return (
             <div
@@ -447,6 +465,7 @@ export default class PredictionMarkets extends Component {
                         onClose={this.onCreatePredictionMarketModalClose}
                         currentAccount={this.props.currentAccount}
                         symbols={symbols}
+                        onMarketCreated={this.updateAsset}
                     />
                 ) : null}
                 {this.state.isAddOpinionModalOpen ? (
