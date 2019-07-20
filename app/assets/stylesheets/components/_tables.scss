@@ -4,7 +4,17 @@
 
 .table > thead > tr > th {
     border-bottom: 1px solid #ddd;
-    padding-right: 8px;
+    padding: 12px 5px;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-size: 0.875rem;
+    color: #777;
+    text-align: left;
+}
+
+.table > thead > tr.top-header > th {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 8px 5px 5px;
     text-transform: uppercase;
     font-weight: normal;
     font-size: 12px;
@@ -12,10 +22,23 @@
     text-align: left;
 }
 
+.table > tbody.orderbook > tr > td {
+    border-left: 1px solid rgb(49, 49, 49);
+    padding: 0px 5px 4px 0px;
+    font-size: 12px !important;
+    text-align: right;
+}
+
+.table.order-table > tbody > tr > td {
+    border-left: 1px solid rgb(49, 49, 49);
+    padding: 0px 5px 4px 0px;
+    font-size: 12px !important;
+    text-align: right;
+}
+
 .table > tbody > tr > td {
     border-left: 1px solid rgb(49, 49, 49);
-    padding-right: 5px;
-    font-size: 12px !important;
+    padding: 5px;
     text-align: right;
 }
 
