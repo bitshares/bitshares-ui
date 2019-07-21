@@ -41,6 +41,13 @@
     text-align: right !important;
 }
 
+.table.order-table > tbody > tr > td.centric-items {
+    border-left: 1px solid rgb(49, 49, 49);
+    padding: 0px 5px 4px 0px;
+    font-size: 12px !important;
+    text-align: center !important;
+}
+
 .table > tbody > tr:last-of-type > td {
     border-bottom: none;
 }

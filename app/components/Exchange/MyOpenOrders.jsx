@@ -404,8 +404,8 @@ class MyOpenOrders extends React.Component {
             let emptyRow = (
                 <tr>
                     <td
+                        className="centric-items"
                         style={{
-                            textAlign: "center",
                             lineHeight: 4,
                             fontStyle: "italic"
                         }}

@@ -4,7 +4,6 @@ import {
     Tabs,
     Collapse,
     Icon as AntIcon,
-    Button,
     Tooltip
 } from "bitshares-ui-style-guide";
 import cnames from "classnames";
@@ -28,10 +27,8 @@ import ExchangeHeader from "./ExchangeHeader";
 import {MyOpenOrders} from "./MyOpenOrders";
 import {OrderBook} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
-import MyMarkets from "./MyMarkets";
 import MarketPicker from "./MarketPicker";
 import ConfirmOrderModal from "./ConfirmOrderModal";
-import Personalize from "./Personalize";
 import TradingViewPriceChart from "./TradingViewPriceChart";
 import DepthHighChart from "./DepthHighChart";
 import LoadingIndicator from "../LoadingIndicator";
@@ -2095,7 +2092,7 @@ class Exchange extends React.Component {
                 }
                 style={{
                     borderRight: "2px solid black",
-                    borderLeft: "2px solid black",
+                    borderLeft: "4px solid black",
                     borderTop: "2px solid black",
                     borderBottom: "4px solid black"
                 }}
@@ -2428,40 +2425,6 @@ class Exchange extends React.Component {
             tinyScreen && !this.state.mobileKey.includes("myMarkets")
                 ? null
                 : null;
-        // <MyMarkets
-        //     key={`actionCard_${actionCardIndex++}`}
-        //     className="left-order-book no-overflow order-9"
-        //     style={{
-        //         minWidth: 350,
-        //         height: smallScreen ? 680 : "calc(100vh - 215px)",
-        //         padding: smallScreen ? 10 : 0
-        //     }}
-        //     headerStyle={{
-        //         width: "100%",
-        //         display: !smallScreen ? "display: none" : ""
-        //     }}
-        //     noHeader={true}
-        //     listHeight={this.state.height - 450}
-        //     columns={[
-        //         {name: "star", index: 1},
-        //         {name: "market", index: 2},
-        //         {name: "vol", index: 3},
-        //         {name: "price", index: 4},
-        //         {name: "change", index: 5}
-        //     ]}
-        //     findColumns={[
-        //         {name: "market", index: 1},
-        //         {name: "issuer", index: 2},
-        //         {name: "vol", index: 3},
-        //         {name: "add", index: 4}
-        //     ]}
-        //     current={`${quoteSymbol}_${baseSymbol}`}
-        //     location={this.props.location}
-        //     history={this.props.history}
-        //     activeTab={
-        //         tabVerticalPanel ? tabVerticalPanel : "my-market"
-        //     }
-        // />
 
         let orderBook =
             tinyScreen && !this.state.mobileKey.includes("orderBook") ? null : (
@@ -2737,7 +2700,7 @@ class Exchange extends React.Component {
                     height: 0,
                     position: "absolute",
                     top: "10px",
-                    left: "910px"
+                    right: "10px"
                 }}
             >
                 {chartType == "price_chart" && (
@@ -2977,8 +2940,6 @@ class Exchange extends React.Component {
                 >
                     <Tabs
                         style={{
-                            borderRight: "2px solid black",
-                            borderBottom: "4px solid black",
                             borderTop: "2px solid black"
                         }}
                         activeKey={panelTabsActive[2]}
@@ -3312,67 +3273,6 @@ class Exchange extends React.Component {
                                 this
                             )}
                             {...this.props}
-                        />
-                    ) : null}
-
-                    {this.state.isPersonalizeModalVisible ||
-                    this.state.isPersonalizeModalLoaded ? (
-                        <Personalize
-                            visible={this.state.isPersonalizeModalVisible}
-                            showModal={this.showPersonalizeModal}
-                            hideModal={this.hidePersonalizeModal}
-                            viewSettings={this.props.viewSettings}
-                            chartType={chartType}
-                            chartHeight={chartHeight}
-                            onTogglePersonalize={this._togglePersonalize.bind(
-                                this
-                            )}
-                            onChangeChartHeight={this.onChangeChartHeight.bind(
-                                this
-                            )}
-                            handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
-                                this
-                            )}
-                            trackedGroupsConfig={trackedGroupsConfig}
-                            currentGroupOrderLimit={currentGroupOrderLimit}
-                            verticalOrderBook={verticalOrderBook}
-                            hideScrollbars={hideScrollbars}
-                            mirrorPanels={mirrorPanels}
-                            panelTabs={panelTabs}
-                            singleColumnOrderForm={singleColumnOrderForm}
-                            buySellTop={buySellTop}
-                            flipBuySell={flipBuySell}
-                            flipOrderBook={flipOrderBook}
-                            tinyScreen={tinyScreen}
-                            smallScreen={smallScreen}
-                            orderBookReversed={orderBookReversed}
-                            chartZoom={chartZoom}
-                            chartTools={chartTools}
-                            hideFunctionButtons={hideFunctionButtons}
-                            onMoveOrderBook={this._moveOrderBook.bind(this)}
-                            onMirrorPanels={this._mirrorPanels.bind(this)}
-                            onToggleScrollbars={this._toggleScrollbars.bind(
-                                this
-                            )}
-                            onSetAutoscroll={this._setAutoscroll.bind(this)}
-                            onToggleChart={this._toggleChart.bind(this)}
-                            onSetPanelTabs={this._setPanelTabs.bind(this)}
-                            onToggleSingleColumnOrderForm={this._toggleSingleColumnOrderForm.bind(
-                                this
-                            )}
-                            onToggleBuySellPosition={this._toggleBuySellPosition.bind(
-                                this
-                            )}
-                            onFlipBuySell={this._flipBuySell.bind(this)}
-                            onFlipOrderBook={this._flipOrderBook.bind(this)}
-                            onOrderBookReversed={this._orderBookReversed.bind(
-                                this
-                            )}
-                            onChartZoom={this._chartZoom.bind(this)}
-                            onChartTools={this._chartTools.bind(this)}
-                            onHideFunctionButtons={this._hideFunctionButtons.bind(
-                                this
-                            )}
                         />
                     ) : null}
 
