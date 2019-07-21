@@ -2,6 +2,11 @@
     width: 100%;
 }
 
+.table > tbody > tr > td {
+    padding: 5px;
+    text-align: left;
+}
+
 .table > thead > tr > th {
     border-bottom: 1px solid #ddd;
     padding: 12px 5px;
@@ -12,7 +17,7 @@
     text-align: left;
 }
 
-.table > thead > tr.top-header > th {
+.table.order-table > thead > tr > th {
     border-bottom: 1px solid #ddd;
     padding: 5px 8px 5px 5px;
     text-transform: uppercase;
@@ -26,20 +31,14 @@
     border-left: 1px solid rgb(49, 49, 49);
     padding: 0px 5px 4px 0px;
     font-size: 12px !important;
-    text-align: right;
+    text-align: right !important;
 }
 
 .table.order-table > tbody > tr > td {
     border-left: 1px solid rgb(49, 49, 49);
     padding: 0px 5px 4px 0px;
     font-size: 12px !important;
-    text-align: right;
-}
-
-.table > tbody > tr > td {
-    border-left: 1px solid rgb(49, 49, 49);
-    padding: 5px;
-    text-align: right;
+    text-align: right !important;
 }
 
 .table > tbody > tr:last-of-type > td {

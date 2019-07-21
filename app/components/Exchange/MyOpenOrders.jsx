@@ -405,7 +405,7 @@ class MyOpenOrders extends React.Component {
                 <tr>
                     <td
                         style={{
-                            textAlign: "right",
+                            textAlign: "center",
                             lineHeight: 4,
                             fontStyle: "italic"
                         }}
@@ -655,8 +655,8 @@ class MyOpenOrders extends React.Component {
                         ref="container"
                         style={{
                             overflow: "hidden",
-                            minHeight: !this.props.tinyScreen ? 256 : 0,
-                            maxHeight: 256,
+                            minHeight: !this.props.tinyScreen ? 242 : 0,
+                            maxHeight: 242,
                             lineHeight: "13px"
                         }}
                     >

@@ -857,7 +857,7 @@
             color: $secondary-text-color;
         }
         > tbody > tr > td {
-            text-align: right;
+            text-align: left;
             border-bottom-color: $dark-text-color;
             font-size: 0.875rem;
         }
@@ -1551,8 +1551,8 @@
         }
         > span.price-decimal,
         > span > span.price-decimal {
-            color: $primary-text-color;
-            opacity: 0.6;
+            color: $call-color;
+            opacity: 1;
         }
     }
     .order-table .my-order {
@@ -2706,13 +2706,13 @@
         display: none;
     }
     .menu-dropdown-wrapper {
-        height: 90px;
+        height: 20px;
         width: 65px;
         text-align: left;
         border-radius: 0;
         .hamburger .icon {
             position: relative;
-            top: 12px;
+            top: -6px;
         }
     }
     .dropdown.header-menu {
