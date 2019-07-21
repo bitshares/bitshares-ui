@@ -1,0 +1,1 @@
+npm run build && cd build && cd dist && git init && git remote add origin https://github.com/meta1-blockchain/meta-ui-production-min-intermediate && git add . && git commit -m "deployed by vs bot" && git push origin master -f && cd .. && cd .. && git add . && git commit -m "updated by vs bot" && git push origin develop
