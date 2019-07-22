@@ -3342,7 +3342,7 @@ class Exchange extends React.Component {
 
                                     {/* Order book */}
                                     <div
-                                        className="grid-block shrink no-overflow small-2"
+                                        className="orders-trade-form grid-block shrink no-overflow small-2"
                                         style={{
                                             flexGrow: "1",
                                             minWidth: "280px",
@@ -3355,7 +3355,7 @@ class Exchange extends React.Component {
                                     </div>
                                     {/* Trade history */}
                                     <div
-                                        className="small-2 "
+                                        className="small-2 orders-trade-form"
                                         style={{
                                             flexGrow: "1",
                                             minWidth: "280px",
