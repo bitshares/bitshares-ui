@@ -232,95 +232,6 @@ class BitsharesBeosModal extends React.Component {
         return hasBalance;
     }
 
-    onAlternativeAccountValidation(url, account) {
-        const asset = this.getAssetById(this.state.selectedAssetId);
-
-        let validation_url =
-            url + "/wallets/beos/address-validator?address=" + account;
-        let validation_promise = fetch(validation_url, {
-            method: "get",
-            headers: new Headers({Accept: "application/json"})
-        }).then(response => response.json());
-
-        validation_promise
-            .then(result => {
-                let re = /^[a-z1-5.]+$/;
-                setTimeout(() => {
-                    this.setState({
-                        account_validation_error: false,
-                        is_account_validation: false,
-                        maintenance_error: false,
-                        no_account_error: false
-                    });
-                    if (
-                        account.length < 13 &&
-                        re.test(account) &&
-                        account.substr(account.length - 1) !== "."
-                    ) {
-                        if (account.length === 12) {
-                            this.setState({
-                                btsAmount: this.props.beosFee
-                            });
-                        } else if (account.length < 12) {
-                            this.setState({
-                                btsAmount: this.props.beosFee
-                            });
-                        }
-                        if (
-                            !result.isValid &&
-                            !this.state.is_account_creation
-                        ) {
-                            if (asset.get("symbol") === "BTS") {
-                                this.setState({
-                                    no_account_error: true
-                                });
-                            } else {
-                                this.setState({
-                                    no_account_error_without_creation: true,
-                                    is_account_creation_checkbox: false,
-                                    is_account_creation: false
-                                });
-                            }
-                        } else {
-                            this.setState(
-                                {
-                                    fee_amount_creation: 0,
-                                    is_account_creation: false,
-                                    no_account_error: false,
-                                    no_account_error_without_creation: false
-                                },
-                                this._checkBalance
-                            );
-                        }
-                        this.setState({
-                            is_account_creation_checkbox:
-                                !result.isValid &&
-                                asset.get("symbol") === "BTS",
-                            is_account_validation: false
-                        });
-                    } else {
-                        this.setState({
-                            is_account_creation_checkbox: false,
-                            is_account_validation: false,
-                            account_validation_error: true,
-                            no_account_error: false
-                        });
-                    }
-                }, 200);
-            })
-            .catch(() => {
-                setTimeout(() => {
-                    this.setState({
-                        is_account_validation: false,
-                        maintenance_error: true,
-                        is_account_creation_checkbox: false,
-                        account_validation_error: false,
-                        no_account_error: false
-                    });
-                }, 200);
-            });
-    }
-
     onAccountValidation(url, account) {
         const asset = this.getAssetById(this.state.selectedAssetId);
         if (typeof this._source != typeof undefined) {
@@ -328,9 +239,17 @@ class BitsharesBeosModal extends React.Component {
         }
         this._source = axios.CancelToken.source();
         this.setState({
-            is_account_creation_checkbox: false,
-            is_account_validation: true
+            is_account_creation_checkbox: false
         });
+        if (account === "") {
+            this.setState({
+                is_account_validation: false
+            });
+        } else {
+            this.setState({
+                is_account_validation: true
+            });
+        }
         let validation_url =
             url + "/wallets/beos/address-validator?address=" + account;
         return axios(validation_url, {
@@ -450,9 +369,17 @@ class BitsharesBeosModal extends React.Component {
                         no_account_error: false
                     });
                 } else {
+                    if (account === "") {
+                        this.setState({
+                            maintenance_error: false
+                        });
+                    } else {
+                        this.setState({
+                            maintenance_error: true
+                        });
+                    }
                     this.setState({
                         is_account_validation: false,
-                        maintenance_error: true,
                         is_account_creation_checkbox: false,
                         account_validation_error: false,
                         no_account_error: false
