@@ -2094,7 +2094,8 @@ class Exchange extends React.Component {
                     borderRight: "2px solid black",
                     borderLeft: "4px solid black",
                     borderTop: "2px solid black",
-                    borderBottom: "4px solid black"
+                    borderBottom: "4px solid black",
+                    minWidth: "290px"
                 }}
                 onChange={this.handleOrderTypeTabChange.bind(this, "bid")}
                 tabBarExtraContent={<div>{buySellTitle(true)}</div>}
@@ -2263,7 +2264,9 @@ class Exchange extends React.Component {
                 style={{
                     borderLeft: "2px solid black",
                     borderTop: "2px solid black",
-                    borderBottom: "4px solid black"
+                    borderBottom: "4px solid black",
+                    flexGrow: 1,
+                    minWidth: "290px"
                 }}
                 className={cnames(
                     "exchange--buy-sell-form",
@@ -2565,18 +2568,20 @@ class Exchange extends React.Component {
             !this.state.mobileKey.includes("myOpenOrders") ? null : (
                 <MyOpenOrders
                     key={`actionCard_${actionCardIndex++}`}
-                    style={{marginBottom: !tinyScreen ? 0 : 0}}
+                    style={{marginBottom: 0}}
                     className={cnames(
                         panelTabs["my_orders"] == 0
                             ? centerContainerWidth > 1200
                                 ? "medium-6 large-6 xlarge-4"
                                 : centerContainerWidth > 800
-                                    ? "medium-6"
+                                    ? "medium-12"
                                     : ""
                             : "medium-12",
                         "no-padding no-overflow small-12 order-7"
                     )}
-                    innerStyle={{paddingBottom: !tinyScreen ? "0" : "0"}}
+                    innerStyle={{
+                        paddingBottom: "0"
+                    }}
                     noHeader={panelTabs["my_orders"] == 0 ? false : true}
                     orders={marketLimitOrders}
                     settleOrders={marketSettleOrders}
@@ -2765,7 +2770,7 @@ class Exchange extends React.Component {
                 className={"left-order-book small-12"}
                 style={{
                     paddingLeft: 5,
-                    width: !smallScreen ? 300 : "auto"
+                    width: !smallScreen ? 600 : 300
                 }}
             >
                 <Tabs
@@ -3309,7 +3314,7 @@ class Exchange extends React.Component {
                                             className="grid-block shrink no-overflow"
                                             id="market-charts"
                                             style={{
-                                                minWidth: "60%",
+                                                flexGrow: "2",
                                                 display: "inline-block",
                                                 borderBottom: "2px solid black"
                                             }}
@@ -3324,7 +3329,7 @@ class Exchange extends React.Component {
                                         <div
                                             className="grid-block vertical no-padding shrink"
                                             style={{
-                                                width: "60%",
+                                                flexGrow: "2",
                                                 display: "inline-block"
                                             }}
                                         >
@@ -3336,7 +3341,8 @@ class Exchange extends React.Component {
                                     <div
                                         className="grid-block shrink no-overflow small-2"
                                         style={{
-                                            minWidth: "20%",
+                                            flexGrow: "1",
+                                            minWidth: "280px",
                                             display: "inline-block",
                                             borderBottom: "2px solid black"
                                             //position: "absolute"
@@ -3348,7 +3354,8 @@ class Exchange extends React.Component {
                                     <div
                                         className="small-2 "
                                         style={{
-                                            minWidth: "20%",
+                                            flexGrow: "1",
+                                            minWidth: "280px",
                                             display: "inline-block",
                                             position: "relative",
                                             borderBottom: "2px solid black"
