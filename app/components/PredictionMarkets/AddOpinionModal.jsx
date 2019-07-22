@@ -8,6 +8,7 @@ import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import MarketsActions from "actions/MarketsActions";
 import {Notification} from "bitshares-ui-style-guide";
 import {ChainStore, FetchChain} from "bitsharesjs";
+import ExchangeInput from "components/Exchange/ExchangeInput";
 
 export default class AddOpinionModal extends Modal {
     constructor(props) {
@@ -20,18 +21,21 @@ export default class AddOpinionModal extends Modal {
                     this.props.preselectedAmount /
                         Math.pow(10, this.props.baseAsset.get("precision")) ||
                     " ",
+                probability: this.props.preselectedProbability || null,
                 fee: null
             },
             showWarning: false,
             inProgress: false,
             bool_opinion:
                 this.props.preselectedOpinion === "yes" ? true : false,
-            selectedAsset: null
+            selectedAsset: null,
+            wrongPropability: false
         };
 
         this.handleOpinionChange = this.handleOpinionChange.bind(this);
         this.handleAmountChange = this.handleAmountChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.handleProbabilityChange = this.handleProbabilityChange.bind(this);
     }
 
     _createOrder() {
@@ -47,14 +51,14 @@ export default class AddOpinionModal extends Modal {
         let expiry = parsedDescription.expiry
             ? new Date(parsedDescription.expiry)
             : date;
-
         let bid = {
             for_sale: new Asset({
                 asset_id: this.props.baseAsset.get("id"),
                 precision: this.props.baseAsset.get("precision"),
                 amount:
                     this.state.newOpinionParameters.amount *
-                    Math.pow(10, this.props.baseAsset.get("precision"))
+                    Math.pow(10, this.props.quoteAsset.get("precision")) *
+                    this.state.newOpinionParameters.probability
             }),
             to_receive: new Asset({
                 asset_id: this.props.quoteAsset.get("id"),
@@ -78,7 +82,8 @@ export default class AddOpinionModal extends Modal {
                 precision: this.props.baseAsset.get("precision"),
                 amount:
                     this.state.newOpinionParameters.amount *
-                    Math.pow(10, this.props.baseAsset.get("precision"))
+                    Math.pow(10, this.props.quoteAsset.get("precision")) *
+                    this.state.newOpinionParameters.probability
             })
         };
         ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
@@ -179,7 +184,23 @@ export default class AddOpinionModal extends Modal {
         }
     }
 
+    handleProbabilityChange(e) {
+        let newOpinion = this.state.newOpinionParameters;
+        newOpinion.probability = e.target.value;
+        this.setState({newOpinionParameter: newOpinion});
+    }
+
     _isFormValid() {
+        if (
+            !this.state.newOpinionParameters.probability ||
+            this.state.newOpinionParameters.probability < 0 ||
+            this.state.newOpinionParameters.probability > 1
+        ) {
+            this.setState({wrongProbability: true});
+            return false;
+        } else {
+            this.setState({wrongProbability: false});
+        }
         return parseFloat(this.state.newOpinionParameters.amount);
     }
 
@@ -192,7 +213,11 @@ export default class AddOpinionModal extends Modal {
     }
 
     render() {
-        const {showWarning, newOpinionParameters} = this.state;
+        const {
+            showWarning,
+            newOpinionParameters,
+            wrongProbability
+        } = this.state;
 
         const footer = [
             <Button
@@ -269,8 +294,7 @@ export default class AddOpinionModal extends Modal {
                         <Form.Item>
                             <span
                                 className={
-                                    (!newOpinionParameters.amount &&
-                                        showWarning) ||
+                                    newOpinionParameters.amount == 0 &&
                                     showWarning
                                         ? "has-error"
                                         : ""
@@ -286,7 +310,30 @@ export default class AddOpinionModal extends Modal {
                                             this.state.newOpinionParameters
                                                 .amount
                                         }
-                                        asset={this.props.baseAsset.get("id")}
+                                        asset={this.props.quoteAsset.get("id")}
+                                    />
+                                </label>
+                            </span>
+                        </Form.Item>
+                        <Form.Item>
+                            <span
+                                className={
+                                    (!newOpinionParameters.probability &&
+                                        showWarning) ||
+                                    wrongProbability
+                                        ? "has-error"
+                                        : ""
+                                }
+                            >
+                                <label className="left-label">
+                                    <Translate content="prediction.add_opinion_modal.probability" />
+                                    <ExchangeInput
+                                        placeholder="0.0"
+                                        onChange={this.handleProbabilityChange}
+                                        value={
+                                            this.state.newOpinionParameters
+                                                .probability
+                                        }
                                     />
                                 </label>
                             </span>
@@ -310,6 +357,7 @@ AddOpinionModal.propTypes = {
     submitNewOpinion: PropTypes.func,
     preselectedOpinion: PropTypes.string,
     preselectedAmount: PropTypes.number,
+    preselectedProbability: PropTypes.number,
     baseAsset: PropTypes.object,
     quoteAsset: PropTypes.object
 };

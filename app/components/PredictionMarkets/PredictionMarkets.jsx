@@ -30,6 +30,7 @@ export default class PredictionMarkets extends Component {
             opinions: [],
             preselectedOpinion: "no",
             preselectedAmount: 0,
+            preselectedProbability: 0,
             isCreateMarketModalOpen: false,
             isAddOpinionModalOpen: false,
             isResolveModalOpen: false,
@@ -155,11 +156,20 @@ export default class PredictionMarkets extends Component {
                 order.market_base === order.sell_price.base.asset_id
                     ? "yes"
                     : "no";
+            const amount =
+                order.market_base === order.sell_price.base.asset_id
+                    ? order.for_sale
+                    : order.for_sale /
+                      (order.sell_price.base.amount /
+                          order.sell_price.quote.amount);
+            const probability =
+                order.sell_price.base.amount / order.sell_price.quote.amount;
             orders.push({
                 order_id,
                 opinionator: order.seller,
                 opinion,
-                amount: order.for_sale,
+                amount,
+                probability,
                 fee: order.fee
             });
         });
@@ -205,7 +215,8 @@ export default class PredictionMarkets extends Component {
             switch (action) {
                 case "resolve": {
                     this.setState({
-                        preselectedAmount: 0
+                        preselectedAmount: 0,
+                        preselectedProbability: 0
                     });
                     this.onResolveModalOpen();
                     break;
@@ -213,6 +224,7 @@ export default class PredictionMarkets extends Component {
                 case "yes": {
                     this.setState({
                         preselectedAmount: 0,
+                        preselectedProbability: 0,
                         preselectedOpinion: "yes"
                     });
                     this.onAddOpinionModalOpen();
@@ -221,6 +233,7 @@ export default class PredictionMarkets extends Component {
                 case "no": {
                     this.setState({
                         preselectedAmount: 0,
+                        preselectedProbability: 0,
                         preselectedOpinion: "no"
                     });
                     this.onAddOpinionModalOpen();
@@ -228,7 +241,8 @@ export default class PredictionMarkets extends Component {
                 }
                 default: {
                     this.setState({
-                        preselectedAmount: 0
+                        preselectedAmount: 0,
+                        preselectedProbability: 0
                     });
                 }
             }
@@ -281,7 +295,8 @@ export default class PredictionMarkets extends Component {
         this.setState({
             isAddOpinionModalOpen: false,
             preselectedOpinion: "no",
-            preselectedAmount: 0
+            preselectedAmount: 0,
+            preselectedProbability: 0
         });
     }
 
@@ -301,14 +316,16 @@ export default class PredictionMarkets extends Component {
         const isHideUnknownHousesChecked = !this.state
             .isHideUnknownHousesChecked;
         this.setState({
-            isHideUnknownHousesChecked
+            isHideUnknownHousesChecked,
+            selectedPredictionMarket: null
         });
     }
 
     onOppose = opinion => {
         this.setState({
             preselectedOpinion: opinion.opinion === "no" ? "yes" : "no",
-            preselectedAmount: opinion.amount
+            preselectedAmount: opinion.amount,
+            preselectedProbability: opinion.probability
         });
         this.onAddOpinionModalOpen();
     };
@@ -506,6 +523,9 @@ export default class PredictionMarkets extends Component {
                         submitNewOpinion={this.onSubmitNewOpinion}
                         preselectedOpinion={this.state.preselectedOpinion}
                         preselectedAmount={this.state.preselectedAmount}
+                        preselectedProbability={
+                            this.state.preselectedProbability
+                        }
                         baseAsset={this.state.subscribedMarket.base}
                         quoteAsset={this.state.subscribedMarket.quote}
                     />

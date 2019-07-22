@@ -1625,6 +1625,7 @@
         },
         "details": {
             "amount": "Amount",
+            "probability": "Probability",
             "fee": "Fee",
             "opinionator": "Opinionator",
             "opinion": "Opinion",
@@ -1650,6 +1651,7 @@
             "yes": "YES",
             "no": "NO",
             "amount": "Amount",
+            "probability": "Probability (0...1)",
             "warning": "Set amount"
         },
         "resolve_modal": {

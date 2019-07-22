@@ -113,6 +113,29 @@ export default class PredictionMarketDetailsTable extends Component {
                 }
             },
             {
+                title: counterpart.translate("prediction.details.probability"),
+                dataIndex: "probability",
+                align: "left",
+                sorter: (a, b) => {
+                    return a.probability > b.probability
+                        ? 1
+                        : a.probability < b.probability
+                            ? -1
+                            : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <span>{item}</span>
+                        </div>
+                    );
+                }
+            },
+            {
                 title: counterpart.translate("prediction.details.fee"),
                 dataIndex: "fee",
                 align: "left",
