@@ -280,8 +280,16 @@ div.header-selector {
     > .action-buttons {
         float: right;
     }
+}
 
-    margin-bottom: 14px;
+div.voting {
+    div.header-selector {
+        padding: 1rem;
+    }
+
+    span.search-input {
+        width: 220px;
+    }
 }
 
 div.account-tabs {

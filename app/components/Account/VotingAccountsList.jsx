@@ -72,11 +72,13 @@ class VotingAccountsList extends React.Component {
         label: PropTypes.string.isRequired, // a translation key for the label,
         placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
-        action: PropTypes.string
+        action: PropTypes.string,
+        filterSearch: PropTypes.string
     };
 
     static defaultProps = {
-        action: "remove"
+        action: "remove",
+        filterSearch: null
     };
 
     constructor(props) {
@@ -303,7 +305,16 @@ class VotingAccountsList extends React.Component {
         let item_rows = this.props.items
             .filter(i => {
                 if (!i) return false;
-                //if (this.state.item_name_input) return i.get("name").indexOf(this.state.item_name_input) !== -1;
+                if (this.props.filterSearch) {
+                    if (
+                        i.get("name").indexOf(this.props.filterSearch) !== -1 ||
+                        i.get("id").indexOf(this.props.filterSearch) !== -1
+                    ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
                 return true;
             })
             .sort((a, b) => {

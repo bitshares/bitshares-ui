@@ -11,8 +11,10 @@ import {
     Col,
     Radio,
     Input,
-    Icon as AntIcon
+    Icon as AntIcon,
+    Button
 } from "bitshares-ui-style-guide";
+import SearchInput from "../../Utility/SearchInput";
 
 export default class Workers extends React.Component {
     constructor(props) {
@@ -74,20 +76,20 @@ export default class Workers extends React.Component {
             <div>
                 <div className="header-selector">
                     <div style={{float: "right"}}>
-                        <Link to="/create-worker" className="button primary">
-                            <Translate content="account.votes.create_worker" />
-                        </Link>
+                        <Button>
+                            <Link to="/create-worker">
+                                <Translate content="account.votes.create_worker" />
+                            </Link>
+                        </Button>
                     </div>
 
                     <div className="selector inline-block">
-                        <Input
+                        <SearchInput
                             placeholder={counterpart.translate(
                                 "explorer.witnesses.filter_by_name"
                             )}
                             value={filterSearch}
-                            style={{width: "220px"}}
                             onChange={onFilterChange}
-                            addonAfter={<AntIcon type="search" />}
                         />
                         <Radio.Group
                             defaultValue={1}

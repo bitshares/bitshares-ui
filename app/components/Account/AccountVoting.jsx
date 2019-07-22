@@ -595,8 +595,8 @@ class AccountVoting extends React.Component {
         };
 
         return (
-            <div className="grid-content no-padding page-layout ">
-                <div className="main-content content-block small-12 voting">
+            <div className="main-content grid-content">
+                <div className="voting">
                     <div className="padding">
                         <div>
                             <Translate content="voting.title" component="h1" />
@@ -629,51 +629,45 @@ class AccountVoting extends React.Component {
                                     key={tab.link}
                                     tab={counterpart.translate(tab.translate)}
                                 >
-                                    <div className="padding">
-                                        <TabContent
-                                            all_witnesses={all_witnesses}
-                                            proxy_witnesses={proxy_witnesses}
-                                            witnesses={witnesses}
-                                            proxy_account_id={proxy_account_id}
-                                            onFilterChange={onFilterChange}
-                                            validateAccountHandler={
-                                                validateAccountHandler
-                                            }
-                                            addWitnessHandler={
-                                                addWitnessHandler
-                                            }
-                                            removeWitnessHandler={
-                                                removeWitnessHandler
-                                            }
-                                            hasProxy={hasProxy}
-                                            globalObject={globalObject}
-                                            filterSearch={filterSearch}
-                                            account={account}
-                                            all_committee={all_committee}
-                                            proxy_committee={proxy_committee}
-                                            committee={committee}
-                                            addCommitteeHandler={
-                                                addCommitteeHandler
-                                            }
-                                            removeCommitteeHandler={
-                                                removeCommitteeHandler
-                                            }
-                                            vote_ids={vote_ids}
-                                            proxy_vote_ids={proxy_vote_ids}
-                                            hideLegacy={hideLegacy}
-                                            preferredUnit={preferredUnit}
-                                            totalBudget={totalBudget}
-                                            workerBudget={workerBudget}
-                                            hideLegacyProposals={
-                                                hideLegacyProposals
-                                            }
-                                            onChangeVotes={onChangeVotes}
-                                            getWorkerArray={getWorkerArray}
-                                            viewSettings={
-                                                this.props.viewSettings
-                                            }
-                                        />
-                                    </div>
+                                    <TabContent
+                                        all_witnesses={all_witnesses}
+                                        proxy_witnesses={proxy_witnesses}
+                                        witnesses={witnesses}
+                                        proxy_account_id={proxy_account_id}
+                                        onFilterChange={onFilterChange}
+                                        validateAccountHandler={
+                                            validateAccountHandler
+                                        }
+                                        addWitnessHandler={addWitnessHandler}
+                                        removeWitnessHandler={
+                                            removeWitnessHandler
+                                        }
+                                        hasProxy={hasProxy}
+                                        globalObject={globalObject}
+                                        filterSearch={filterSearch}
+                                        account={account}
+                                        all_committee={all_committee}
+                                        proxy_committee={proxy_committee}
+                                        committee={committee}
+                                        addCommitteeHandler={
+                                            addCommitteeHandler
+                                        }
+                                        removeCommitteeHandler={
+                                            removeCommitteeHandler
+                                        }
+                                        vote_ids={vote_ids}
+                                        proxy_vote_ids={proxy_vote_ids}
+                                        hideLegacy={hideLegacy}
+                                        preferredUnit={preferredUnit}
+                                        totalBudget={totalBudget}
+                                        workerBudget={workerBudget}
+                                        hideLegacyProposals={
+                                            hideLegacyProposals
+                                        }
+                                        onChangeVotes={onChangeVotes}
+                                        getWorkerArray={getWorkerArray}
+                                        viewSettings={this.props.viewSettings}
+                                    />
                                 </Tabs.TabPane>
                             );
                         })}

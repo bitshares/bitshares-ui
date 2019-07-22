@@ -5,6 +5,7 @@ import VotingAccountsList from "../VotingAccountsList";
 import cnames from "classnames";
 import {Input, Icon as AntIcon, Button} from "bitshares-ui-style-guide";
 import JoinWitnessesModal from "../../Modal/JoinWitnessesModal";
+import SearchInput from "../../Utility/SearchInput";
 
 export default class Witnesses extends Component {
     constructor(props) {
@@ -42,23 +43,18 @@ export default class Witnesses extends Component {
                 <div className={cnames("content-block")}>
                     <div className="header-selector">
                         <div style={{float: "right"}}>
-                            <Button
-                                style={{marginRight: "5px"}}
-                                onClick={showWitnessModal}
-                            >
+                            <Button onClick={showWitnessModal}>
                                 <Translate content="account.votes.join_witnesses" />
                             </Button>
                         </div>
 
                         <div className="selector inline-block">
-                            <Input
+                            <SearchInput
                                 placeholder={counterpart.translate(
                                     "explorer.witnesses.filter_by_name"
                                 )}
                                 value={filterSearch}
-                                style={{width: "220px"}}
                                 onChange={onFilterChange}
-                                addonAfter={<AntIcon type="search" />}
                             />
                         </div>
                     </div>
