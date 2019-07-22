@@ -57,8 +57,7 @@ class MarketHistoryView extends React.Component {
             tinyScreen,
             totalRows,
             historyRows,
-            showAll,
-            onSetShowAll
+            showAll
         } = this.props;
 
         const emptyRow = (
@@ -153,7 +152,7 @@ class MarketHistoryView extends React.Component {
                     </div>
                     {historyRows && totalRows > 11 ? (
                         <div className="orderbook-showall">
-                            <a onClick={onSetShowAll.bind(this)}>
+                            <a onClick={e => this.props.onSetShowAll(e)}>
                                 <Translate
                                     content={
                                         showAll
