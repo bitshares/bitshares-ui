@@ -129,8 +129,6 @@ class OpenSettleOrders extends React.Component {
     render() {
         let {orders, base, quote} = this.props;
 
-        console.log(orders);
-
         let activeOrders = null;
 
         const emptyRow = (
