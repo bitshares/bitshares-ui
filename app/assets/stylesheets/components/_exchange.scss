@@ -254,6 +254,18 @@ form.order-form {
     }
 }
 
+@media screen and (max-width: 1164px) {
+    #market-charts {
+        flex-basis: 100%;
+    }
+    .my-open-orders-res {
+        min-width: 100% !important;
+    }
+    .exchange--buy-sell-form {
+        max-width: 50% !important;
+    }
+}
+
 .left-order-book {
     width: 100%;
     display: flex;

@@ -2095,6 +2095,7 @@ class Exchange extends React.Component {
                     borderLeft: "4px solid black",
                     borderTop: "2px solid black",
                     borderBottom: "4px solid black",
+                    flexGrow: 1,
                     minWidth: "290px"
                 }}
                 onChange={this.handleOrderTypeTabChange.bind(this, "bid")}
@@ -2940,7 +2941,7 @@ class Exchange extends React.Component {
                                     ? "medium-12"
                                     : "medium-6"
                                 : "",
-                        "small-12 order-1"
+                        "small-12 order-1 my-open-orders-res"
                     )}
                 >
                     <Tabs
@@ -3307,7 +3308,9 @@ class Exchange extends React.Component {
                             }
                         >
                             {!tinyScreen ? (
-                                <div style={{display: "flex"}}>
+                                <div
+                                    style={{display: "flex", flexWrap: "wrap"}}
+                                >
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div
