@@ -145,6 +145,12 @@ class AccountSelector extends React.Component {
     _notifyOnChange(selectedAccountName, type) {
         let {props} = this;
 
+        // Clear selected account when we have new input data if we require an active select
+        if (type == "input" && this.props.requireActiveSelect) {
+            props.onChange(null);
+            props.onAccountChanged(null);
+        }
+
         let accountName = this.getVerifiedAccountName(selectedAccountName);
 
         // Synchronous onChange for input change
@@ -494,6 +500,9 @@ class AccountSelector extends React.Component {
                                     onSearch={this.onInputChanged.bind(this)}
                                     placeholder={counterpart.translate(
                                         "account.search"
+                                    )}
+                                    notFoundContent={counterpart.translate(
+                                        "global.not_found"
                                     )}
                                     value={account ? accountName : null}
                                     disabled={disabledInput ? true : undefined}
