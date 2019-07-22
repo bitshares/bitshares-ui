@@ -282,6 +282,16 @@ div.header-selector {
     }
 }
 
+div.voting {
+    div.header-selector {
+        padding: 1rem;
+    }
+
+    span.search-input {
+        width: 220px;
+    }
+}
+
 div.account-tabs {
     .padding {
         padding: 20px;

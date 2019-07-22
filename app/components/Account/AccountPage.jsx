@@ -150,9 +150,12 @@ class AccountPage extends React.Component {
                             )}
                         />
                         <Route
-                            path={`/account/${account_name}/voting`}
-                            exact
+                            path={`/account/${account_name}/voting/:tab`}
                             render={() => <AccountVoting {...passOnProps} />}
+                        />
+                        <Redirect
+                            from={`/account/${account_name}/voting`}
+                            to={`/account/${account_name}/voting/witnesses`}
                         />
                         <Route
                             path={`/account/${account_name}/whitelist`}
