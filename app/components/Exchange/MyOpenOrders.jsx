@@ -10,7 +10,7 @@ import {ChainStore} from "bitsharesjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
 import ReactTooltip from "react-tooltip";
 import {Button} from "bitshares-ui-style-guide";
-import {MarketsOrderView, MarketOrdersViewRow} from "./View/MarketOrdersView";
+import {MarketsOrderView, MarketOrdersRowView} from "./View/MarketOrdersView";
 
 class MarketOrdersRow extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -28,7 +28,8 @@ class MarketOrdersRow extends React.Component {
         let {base, quote, order, selected} = this.props;
 
         return (
-            <MarketOrdersViewRow
+            <MarketOrdersRowView
+                key={order.id}
                 order={order}
                 selected={selected}
                 base={base}
@@ -60,7 +61,8 @@ class MarketOrders extends React.Component {
             nextState.activeTab !== this.state.activeTab ||
             nextState.showAll !== this.state.showAll ||
             nextProps.currentAccount !== this.props.currentAccount ||
-            nextState.selectedOrders !== this.state.selectedOrders
+            nextState.selectedOrders !== this.state.selectedOrders ||
+            nextProps.settleOrders !== this.props.settleOrders
         );
     }
 

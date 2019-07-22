@@ -66,12 +66,15 @@ class SettleOrderRow extends React.Component {
         let amountSymbol = showSymbols ? " " + quote.get("symbol") : null;
 
         return (
-            <tr style={{paddingRight: 5}}>
-                <td style={{textAlign: "right"}}>
+            <tr>
+                <td className="text-center" style={{width: "6%"}}>
+                    {" "}
+                </td>
+                <td>
                     {utils.format_number(price, quote.get("precision"))}{" "}
                     {amountSymbol}
                 </td>
-                <td style={{textAlign: "right"}}>
+                <td>
                     {utils.format_number(
                         order[
                             !order.isBid() ? "amountForSale" : "amountToReceive"
@@ -79,7 +82,7 @@ class SettleOrderRow extends React.Component {
                         quote.get("precision")
                     )}
                 </td>
-                <td style={{textAlign: "right"}}>
+                <td>
                     {utils.format_number(
                         order[
                             !order.isBid() ? "amountToReceive" : "amountForSale"
@@ -126,11 +129,28 @@ class OpenSettleOrders extends React.Component {
     render() {
         let {orders, base, quote} = this.props;
 
+        console.log(orders);
+
         let activeOrders = null;
 
-        if (orders.size > 0 && base && quote) {
-            let index = 0;
+        const emptyRow = (
+            <tbody>
+                <tr>
+                    <td
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 4,
+                            fontStyle: "italic"
+                        }}
+                        colSpan="5"
+                    >
+                        <Translate content="account.no_orders" />
+                    </td>
+                </tr>
+            </tbody>
+        );
 
+        if (orders.size > 0 && base && quote) {
             activeOrders = orders
                 .sort((a, b) => {
                     return a.isBefore(b) ? -1 : 1;
@@ -138,7 +158,7 @@ class OpenSettleOrders extends React.Component {
                 .map(order => {
                     return Date.now() < order.settlement_date ? (
                         <SettleOrderRow
-                            key={index++}
+                            key={order.id}
                             order={order}
                             base={base}
                             quote={quote}
@@ -146,23 +166,6 @@ class OpenSettleOrders extends React.Component {
                     ) : null;
                 })
                 .toArray();
-        } else {
-            return (
-                <tbody>
-                    <tr>
-                        <td
-                            style={{
-                                textAlign: "center",
-                                lineHeight: 4,
-                                fontStyle: "italic"
-                            }}
-                            colSpan="5"
-                        >
-                            <Translate content="account.no_orders" />
-                        </td>
-                    </tr>
-                </tbody>
-            );
         }
 
         return (
@@ -171,7 +174,7 @@ class OpenSettleOrders extends React.Component {
                 component="tbody"
                 transitionName="newrow"
             >
-                {activeOrders}
+                {activeOrders ? activeOrders : emptyRow}
             </TransitionWrapper>
         );
     }

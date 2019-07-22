@@ -10,7 +10,6 @@ import {Tooltip, Checkbox} from "bitshares-ui-style-guide";
 function MarketOrdersViewTableHeader({
     baseSymbol,
     quoteSymbol,
-    isMyAccount,
     selected,
     onCancelToggle
 }) {
@@ -18,18 +17,20 @@ function MarketOrdersViewTableHeader({
         <thead>
             <tr>
                 <th style={{width: "6%", textAlign: "center"}}>
-                    <Tooltip
-                        title={counterpart.translate(
-                            "exchange.cancel_order_select_all"
-                        )}
-                        placement="left"
-                    >
-                        <Checkbox
-                            className="order-cancel-toggle"
-                            checked={selected}
-                            onChange={onCancelToggle}
-                        />
-                    </Tooltip>
+                    {onCancelToggle ? (
+                        <Tooltip
+                            title={counterpart.translate(
+                                "exchange.cancel_order_select_all"
+                            )}
+                            placement="left"
+                        >
+                            <Checkbox
+                                className="order-cancel-toggle"
+                                checked={selected}
+                                onChange={onCancelToggle}
+                            />
+                        </Tooltip>
+                    ) : null}
                 </th>
                 <th style={rightAlign}>
                     <Translate
@@ -67,7 +68,7 @@ MarketOrdersViewTableHeader.defaultProps = {
     baseSymbol: null
 };
 
-function MarketOrdersViewRow({order, selected, base, quote, onCheckCancel}) {
+function MarketOrdersRowView({order, selected, base, quote, onCheckCancel}) {
     const isBid = order.isBid();
     const isCall = order.isCall();
     const tdClass = isCall
@@ -127,111 +128,84 @@ function MarketOrdersViewRow({order, selected, base, quote, onCheckCancel}) {
     );
 }
 
-function MarketsOrderView({
-    // Styles and Classes
-    style,
-    className,
-    innerClass,
-    innerStyle,
-    headerStyle,
+class MarketsOrderView extends React.Component {
+    render() {
+        let {
+            // Styles and Classes
+            style,
+            className,
+            innerClass,
+            innerStyle,
+            headerStyle,
 
-    // Bools
-    noHeader,
-    isSelected,
-    tinyScreen,
+            // Bools
+            noHeader,
+            isSelected,
+            tinyScreen,
 
-    // Strings
-    activeTab,
-    baseSymbol,
-    quoteSymbol,
+            // Strings
+            activeTab,
+            baseSymbol,
+            quoteSymbol,
 
-    // Containers
-    contentContainer,
-    footerContainer,
+            // Containers
+            contentContainer,
+            footerContainer,
 
-    // Functions
-    onCancelToggle
-}) {
-    return (
-        <div style={style} key="open_orders" className={className}>
-            <div className={innerClass} style={innerStyle}>
-                {noHeader ? null : (
-                    <div
-                        style={headerStyle}
-                        className="exchange-content-header"
-                    >
-                        {activeTab == "my_orders" ? (
-                            <Translate content="exchange.my_orders" />
-                        ) : null}
-                        {activeTab == "open_settlement" ? (
-                            <Translate content="exchange.settle_orders" />
-                        ) : null}
-                    </div>
-                )}
-                <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                    <table className="table order-table text-right fixed-table market-right-padding">
-                        {activeTab == "my_orders" ? (
+            // Functions
+            onCancelToggle
+        } = this.props;
+
+        return (
+            <div style={style} key="open_orders" className={className}>
+                <div className={innerClass} style={innerStyle}>
+                    {noHeader ? null : (
+                        <div
+                            style={headerStyle}
+                            className="exchange-content-header"
+                        >
+                            {activeTab == "my_orders" ? (
+                                <Translate content="exchange.my_orders" />
+                            ) : null}
+                            {activeTab == "open_settlement" ? (
+                                <Translate content="exchange.settle_orders" />
+                            ) : null}
+                        </div>
+                    )}
+                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
+                        <table className="table order-table text-right fixed-table market-right-padding">
                             <MarketOrdersViewTableHeader
                                 baseSymbol={baseSymbol}
                                 quoteSymbol={quoteSymbol}
                                 selected={isSelected}
-                                onCancelToggle={onCancelToggle}
+                                onCancelToggle={
+                                    activeTab == "my_orders"
+                                        ? onCancelToggle
+                                        : null
+                                }
                             />
-                        ) : (
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="exchange.price"
-                                        />
-                                    </th>
-                                    <th>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={quoteSymbol}
-                                            />
-                                        </span>
-                                    </th>
-                                    <th>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={baseSymbol}
-                                            />
-                                        </span>
-                                    </th>
-                                    <th>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="explorer.block.date"
-                                        />
-                                    </th>
-                                </tr>
-                            </thead>
-                        )}
-                    </table>
-                </div>
+                        </table>
+                    </div>
 
-                <div
-                    className="table-container grid-block market-right-padding-only no-overflow"
-                    ref="container"
-                    style={{
-                        overflow: "hidden",
-                        minHeight: tinyScreen ? 260 : 0,
-                        maxHeight: 260,
-                        lineHeight: "13px"
-                    }}
-                >
-                    <table className="table order-table table-highlight-hover table-hover no-stripes text-right fixed-table market-right-padding">
-                        {contentContainer}
-                    </table>
+                    <div
+                        className="table-container grid-block market-right-padding-only no-overflow"
+                        ref="container"
+                        style={{
+                            overflow: "hidden",
+                            minHeight: tinyScreen ? 260 : 0,
+                            maxHeight: 260,
+                            lineHeight: "13px"
+                        }}
+                    >
+                        <table className="table order-table table-highlight-hover table-hover no-stripes text-right fixed-table market-right-padding">
+                            {contentContainer}
+                        </table>
+                    </div>
+                    {footerContainer}
                 </div>
-                {footerContainer}
             </div>
-        </div>
-    );
+        );
+    }
 }
 
-export {MarketsOrderView, MarketOrdersViewRow};
+export {MarketsOrderView, MarketOrdersRowView};
