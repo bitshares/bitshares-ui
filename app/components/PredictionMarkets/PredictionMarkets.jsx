@@ -222,21 +222,25 @@ export default class PredictionMarkets extends Component {
                     break;
                 }
                 case "yes": {
-                    this.setState({
-                        preselectedAmount: 0,
-                        preselectedProbability: 0,
-                        preselectedOpinion: "yes"
-                    });
-                    this.onAddOpinionModalOpen();
+                    if (this.state.subscribedMarket) {
+                        this.setState({
+                            preselectedAmount: 0,
+                            preselectedProbability: 0,
+                            preselectedOpinion: "yes"
+                        });
+                        this.onAddOpinionModalOpen();
+                    }
                     break;
                 }
                 case "no": {
-                    this.setState({
-                        preselectedAmount: 0,
-                        preselectedProbability: 0,
-                        preselectedOpinion: "no"
-                    });
-                    this.onAddOpinionModalOpen();
+                    if (this.state.subscribedMarket) {
+                        this.setState({
+                            preselectedAmount: 0,
+                            preselectedProbability: 0,
+                            preselectedOpinion: "no"
+                        });
+                        this.onAddOpinionModalOpen();
+                    }
                     break;
                 }
                 default: {
