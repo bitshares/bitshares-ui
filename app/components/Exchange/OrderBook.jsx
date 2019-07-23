@@ -852,7 +852,7 @@ class OrderBook extends React.Component {
                             />
                             <a
                                 onClick={() => this.toggleTotalAsset(true)}
-                                className="header-sub-title"
+                                className="header-sub-title underline-title"
                             >
                                 {" "}
                                 (<AssetName
@@ -920,7 +920,7 @@ class OrderBook extends React.Component {
                             />
                             <a
                                 onClick={() => this.toggleTotalAsset()}
-                                className="header-sub-title"
+                                className="header-sub-title underline-title"
                             >
                                 {" "}
                                 (<AssetName
