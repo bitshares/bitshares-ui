@@ -132,49 +132,24 @@ class HelpContent extends React.PureComponent {
     render() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
         if (!HelpData[locale]) {
-            console.error(
-                `missing locale '${locale}' help files, rolling back to 'en'`
-            );
             locale = "en";
         }
 
         let value = HelpData[locale][this.props.path];
 
         if (!value && locale !== "en") {
-            console.warn(
-                `missing path '${
-                    this.props.path
-                }' for locale '${locale}' help files, rolling back to 'en'`
-            );
             value = HelpData["en"][this.props.path];
         }
 
         if (!value && this.props.alt_path) {
-            console.warn(
-                `missing path '${
-                    this.props.path
-                }' for locale '${locale}' help files, rolling back to alt_path '${
-                    this.props.alt_path
-                }'`
-            );
             value = HelpData[locale][this.props.alt_path];
         }
 
         if (!value && this.props.alt_path && locale != "en") {
-            console.warn(
-                `missing alt_path '${
-                    this.props.alt_path
-                }' for locale '${locale}' help files, rolling back to 'en'`
-            );
             value = HelpData["en"][this.props.alt_path];
         }
 
         if (!value) {
-            console.error(
-                `help file not found '${
-                    this.props.path
-                }' for locale '${locale}'`
-            );
             return !null;
         }
 
@@ -192,20 +167,10 @@ class HelpContent extends React.PureComponent {
         }
 
         if (!value) {
-            console.error(
-                `help section not found ${this.props.path}#${
-                    this.props.section
-                }`
-            );
             return null;
         }
 
         if (typeof value === "object") {
-            console.error(
-                `help section content invalid ${this.props.path}#${
-                    this.props.section
-                }`
-            );
             return null;
         }
 
