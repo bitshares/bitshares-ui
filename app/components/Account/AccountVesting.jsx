@@ -7,131 +7,6 @@ import WalletActions from "actions/WalletActions";
 import {Apis} from "bitsharesjs-ws";
 import {Button} from "bitshares-ui-style-guide";
 
-function VestingBalanceView({
-    vestingAsset,
-    vestingType,
-    vestingId,
-    vestingBalance,
-    coinDaysEarned,
-    coinDaysRequired,
-    coinDaysRemaining,
-    availablePercent,
-    canClaim,
-    isCoinDays,
-    onClaim
-}) {
-    return (
-        <div>
-            <Translate
-                component="h5"
-                content="account.vesting.balance_number"
-                id={vestingId}
-            />
-
-            <table className="table key-value-table">
-                <tbody>
-                    <tr>
-                        <td>
-                            <Translate content="account.member.balance_type" />
-                        </td>
-                        <td>
-                            <Translate
-                                component="span"
-                                content={"account.vesting.type." + vestingType}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <Translate content="account.member.cashback" />
-                        </td>
-                        <td>
-                            <FormattedAsset
-                                amount={vestingBalance}
-                                asset={vestingAsset}
-                            />
-                        </td>
-                    </tr>
-                    {coinDaysEarned ? (
-                        <tr>
-                            <td>
-                                <Translate content="account.member.earned" />
-                            </td>
-                            <td>
-                                {coinDaysEarned}
-                                &nbsp;
-                                <Translate
-                                    content={
-                                        isCoinDays
-                                            ? "account.member.coindays"
-                                            : "account.member.days"
-                                    }
-                                />
-                            </td>
-                        </tr>
-                    ) : null}
-                    {coinDaysRequired ? (
-                        <tr>
-                            <td>
-                                <Translate content="account.member.required" />
-                            </td>
-                            <td>
-                                {coinDaysRequired}
-                                &nbsp;
-                                <Translate
-                                    content={
-                                        isCoinDays
-                                            ? "account.member.coindays"
-                                            : "account.member.days"
-                                    }
-                                />
-                            </td>
-                        </tr>
-                    ) : null}
-                    {coinDaysRemaining ? (
-                        <tr>
-                            <td>
-                                <Translate content="account.member.remaining" />
-                            </td>
-                            <td>
-                                {coinDaysRemaining}
-                                &nbsp;
-                                <Translate content="account.member.days" />
-                            </td>
-                        </tr>
-                    ) : null}
-                    {availablePercent ? (
-                        <tr>
-                            <td>
-                                <Translate content="account.member.available" />
-                            </td>
-                            <td>
-                                {(availablePercent * 100).toFixed(2)}% /{" "}
-                                <FormattedAsset
-                                    amount={availablePercent * vestingBalance}
-                                    asset={vestingAsset}
-                                />
-                            </td>
-                        </tr>
-                    ) : null}
-                    <tr>
-                        <td colSpan="2" style={{textAlign: "right"}}>
-                            {canClaim ? (
-                                <Button
-                                    onClick={onClaim.bind(this, false)}
-                                    type="primary"
-                                >
-                                    <Translate content="account.member.claim" />
-                                </Button>
-                            ) : null}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    );
-}
-
 class VestingBalance extends React.Component {
     _onClaim(claimAll, e) {
         e.preventDefault();
@@ -270,6 +145,131 @@ class VestingBalance extends React.Component {
             />
         );
     }
+}
+
+function VestingBalanceView({
+    vestingAsset,
+    vestingType,
+    vestingId,
+    vestingBalance,
+    coinDaysEarned,
+    coinDaysRequired,
+    coinDaysRemaining,
+    availablePercent,
+    canClaim,
+    isCoinDays,
+    onClaim
+}) {
+    return (
+        <div>
+            <Translate
+                component="h5"
+                content="account.vesting.balance_number"
+                id={vestingId}
+            />
+
+            <table className="table key-value-table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <Translate content="account.member.balance_type" />
+                        </td>
+                        <td>
+                            <Translate
+                                component="span"
+                                content={"account.vesting.type." + vestingType}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <Translate content="account.member.cashback" />
+                        </td>
+                        <td>
+                            <FormattedAsset
+                                amount={vestingBalance}
+                                asset={vestingAsset}
+                            />
+                        </td>
+                    </tr>
+                    {coinDaysEarned ? (
+                        <tr>
+                            <td>
+                                <Translate content="account.member.earned" />
+                            </td>
+                            <td>
+                                {coinDaysEarned}
+                                &nbsp;
+                                <Translate
+                                    content={
+                                        isCoinDays
+                                            ? "account.member.coindays"
+                                            : "account.member.days"
+                                    }
+                                />
+                            </td>
+                        </tr>
+                    ) : null}
+                    {coinDaysRequired ? (
+                        <tr>
+                            <td>
+                                <Translate content="account.member.required" />
+                            </td>
+                            <td>
+                                {coinDaysRequired}
+                                &nbsp;
+                                <Translate
+                                    content={
+                                        isCoinDays
+                                            ? "account.member.coindays"
+                                            : "account.member.days"
+                                    }
+                                />
+                            </td>
+                        </tr>
+                    ) : null}
+                    {coinDaysRemaining ? (
+                        <tr>
+                            <td>
+                                <Translate content="account.member.remaining" />
+                            </td>
+                            <td>
+                                {coinDaysRemaining}
+                                &nbsp;
+                                <Translate content="account.member.days" />
+                            </td>
+                        </tr>
+                    ) : null}
+                    {availablePercent ? (
+                        <tr>
+                            <td>
+                                <Translate content="account.member.available" />
+                            </td>
+                            <td>
+                                {(availablePercent * 100).toFixed(2)}% /{" "}
+                                <FormattedAsset
+                                    amount={availablePercent * vestingBalance}
+                                    asset={vestingAsset}
+                                />
+                            </td>
+                        </tr>
+                    ) : null}
+                    <tr>
+                        <td colSpan="2" style={{textAlign: "right"}}>
+                            {canClaim ? (
+                                <Button
+                                    onClick={onClaim.bind(this, false)}
+                                    type="primary"
+                                >
+                                    <Translate content="account.member.claim" />
+                                </Button>
+                            ) : null}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    );
 }
 
 class AccountVesting extends React.Component {
