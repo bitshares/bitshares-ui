@@ -135,8 +135,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
-        max-width: calc((450px + 32px) * 3);
-        // 450px + 32px padding * 3 cells
+        max-width: calc((450px + 32px) * 3); // 450px + 32px padding * 3 cells
     }
     .showcases-grid--wrapper--item {
         color: $secondary-text-color;
@@ -366,10 +365,6 @@
             color: $primary-text-color;
         }
     }
-    // select:hover {
-    // background-color: $panel-bg-color;
-    }
-
     .label.success {
         color: $success-color;
         border-color: $success-color;
@@ -454,6 +449,7 @@
             margin-right: 24px;
         }
     }
+
     .__react_component_tooltip.type-light {
         @include color($light-text-color, $super-light-panel-bg-color, true);
         &.place-bottom:after {
