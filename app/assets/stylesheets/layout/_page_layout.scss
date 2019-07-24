@@ -159,5 +159,8 @@ div.bordered-header {
 
 .json-link {
     cursor: pointer;
-    text-transform: uppercase;
+
+    .anticon {
+      padding-right: 5px;
+    }
 }

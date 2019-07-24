@@ -8,6 +8,7 @@ import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
+import { Icon as AntIcon } from "bitshares-ui-style-guide";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
@@ -64,6 +65,7 @@ class OpType extends React.Component {
                     </span>
                 </td>
                 <td className="json-link" onClick={this.props.openJSONModal}>
+                    <AntIcon type="file-search" />
                     <Translate component="a" content="transaction.view_json" />
                 </td>
             </tr>
