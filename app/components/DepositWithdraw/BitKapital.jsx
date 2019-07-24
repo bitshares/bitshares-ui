@@ -53,7 +53,8 @@ class BitKapital extends React.Component {
         return (
             <form onSubmit={this._onSubmit.bind(this)}>
                 <div style={{padding: "20px 0"}}>
-                    <Translate content="gateway.balance" />: &nbsp;<span
+                    <Translate content="gateway.balance" />: &nbsp;
+                    <span
                         style={{
                             fontWeight: "bold",
                             color: "#4A90E2",
@@ -135,7 +136,6 @@ class BitKapital extends React.Component {
             confirm_store_state.included &&
             confirm_store_state.broadcasted_transaction
         ) {
-            // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
         } else if (confirm_store_state.closed) {

@@ -51,7 +51,8 @@ class FeeGroup extends React.Component {
         let network_fee = globalObject.parameters.network_percent_of_fee / 1e4;
         let scale = current_fees.scale;
         let feesRaw = current_fees.parameters;
-        let preferredUnit = settings.get("unit") || core_asset.get("symbol");
+        let preferredUnit =
+            settings.get("fee_asset") || core_asset.get("symbol");
 
         let trxTypes = counterpart.translate("transaction.trxTypes");
 
