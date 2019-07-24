@@ -1,7 +1,7 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import FeeAssetSelector from "../Utility/FeeAssetSelector";
 import AccountStore from "stores/AccountStore";
@@ -168,19 +168,47 @@ class SendModal extends React.Component {
             });
     }
 
-    _initForm() {
-        if (this.props.to_name != this.props.from_name) {
-            this.setState({
-                to_name: this.props.to_name,
-                to_account: ChainStore.getAccount(this.props.to_name)
+    fetchToAccount(toName) {
+        if (!this.state.to_account ||
+            (this.state.to_account && this.state.to_account.size &&
+                this.state.to_account.get("name") !== toName)) {
+            FetchChain("getAccount", toName, false).then(account => {
+                this.setState({
+                    to_account: account
+                });
+            }).catch(err => {
+                console.log(err);
             });
+        }
+    }
+
+    fetchFromAccount(fromName) {
+        if (!this.state.from_account ||
+            (this.state.from_account && this.state.from_account.size &&
+                this.state.from_account.get("name") !== fromName)) {
+            FetchChain("getAccount", fromName, false).then(account => {
+                this.setState({
+                    from_account: account
+                });
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+    }
+
+    _initForm() {
+        if (this.props.to_name !== this.props.from_name) {
+            this.setState({
+                to_name: this.props.to_name
+            });
+            this.fetchToAccount(this.props.to_name);
         }
 
         if (this.props.from_name) {
             this.setState({
-                from_name: this.props.from_name,
-                from_account: ChainStore.getAccount(this.props.from_name)
+                from_name: this.props.from_name
             });
+            this.fetchFromAccount(this.props.from_name);
         }
 
         let {currentAccount} = this.props;
@@ -225,13 +253,15 @@ class SendModal extends React.Component {
         ) {
             this.setState({
                 from_name: np.from_name,
-                from_account: ChainStore.getAccount(np.from_name),
                 to_name: np.to_name ? np.to_name : "",
-                to_account: np.to_name
-                    ? ChainStore.getAccount(np.to_name)
-                    : null,
                 feeAmount: getUninitializedFeeAmount()
             });
+            this.fetchFromAccount(np.from_name);
+            if (np.to_name) {
+                this.fetchToAccount(np.to_name);
+            } else {
+                this.setState({ to_account: null });
+            }
         }
     }
 
