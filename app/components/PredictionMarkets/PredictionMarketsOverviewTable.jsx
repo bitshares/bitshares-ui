@@ -6,10 +6,11 @@ import LinkToAccountById from "../Utility/LinkToAccountById";
 import {Table, Button} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 import PaginatedList from "components/Utility/PaginatedList";
+import ChainTypes from "../Utility/ChainTypes";
 
 require("./prediction.scss");
 
-const ISSUERS_WHITELIST = ["iamredbar1", "sports-owner", "twat123"];
+const ISSUERS_WHITELIST = ["1.2.1634961"]; // "iamredbar1", "sports-owner", "twat123"
 
 export default class PredictionMarketsOverviewTable extends Component {
     onMarketAction(dataItem, option = "yes") {
@@ -26,17 +27,14 @@ export default class PredictionMarketsOverviewTable extends Component {
     };
 
     getHeader() {
-        const onCell = this.onRowAction;
-        const currentAccountId = ChainStore.getAccount(
-            this.props.currentAccount
-        ).get("id");
+        const isOwnedByCurrent = id =>
+            this.props.currentAccount.get("id") === id;
         return [
             {
                 title: "#",
                 dataIndex: "asset_id",
                 align: "left",
                 defaultSortOrder: "ascend",
-                onCell,
                 sorter: (a, b) => {
                     return a.symbol > b.symbol
                         ? 1
@@ -60,7 +58,6 @@ export default class PredictionMarketsOverviewTable extends Component {
                 title: counterpart.translate("prediction.overview.issuer"),
                 dataIndex: "issuer",
                 align: "left",
-                onCell,
                 sorter: (a, b) => {
                     let a_issuer = ChainStore.getAccount(a.issuer);
                     let b_issuer = ChainStore.getAccount(b.issuer);
@@ -88,7 +85,6 @@ export default class PredictionMarketsOverviewTable extends Component {
                 title: counterpart.translate("prediction.overview.prediction"),
                 dataIndex: "condition",
                 align: "left",
-                onCell,
                 sorter: (a, b) => {
                     if (!a.condition || a.condition === "") return -1;
                     if (!b.condition || b.condition === "") return 1;
@@ -110,7 +106,6 @@ export default class PredictionMarketsOverviewTable extends Component {
                 title: counterpart.translate("prediction.overview.description"),
                 dataIndex: "description",
                 align: "left",
-                onCell,
                 sorter: (a, b) => {
                     if (!a.description || a.description === "") return -1;
                     if (!b.description || b.description === "") return 1;
@@ -132,7 +127,6 @@ export default class PredictionMarketsOverviewTable extends Component {
                 title: counterpart.translate("prediction.overview.expiry"),
                 dataIndex: "expiry",
                 align: "left",
-                onCell,
                 sorter: (a, b) => {
                     if (!a.expiry || a.expiry === "") return -1;
                     if (!b.expiry || b.expiry === "") return 1;
@@ -150,25 +144,6 @@ export default class PredictionMarketsOverviewTable extends Component {
                     );
                 }
             },
-            // {
-            //     title: counterpart.translate("prediction.overview.odds"),
-            //     dataIndex: "odds",
-            //     align: "left",
-            //     sorter: (a, b) => {
-            //         return a.odds > b.odds ? 1 : a.odds < b.odds ? -1 : 0;
-            //     },
-            //     render: item => {
-            //         return (
-            //             <span
-            //                 style={{
-            //                     whiteSpace: "nowrap"
-            //                 }}
-            //             >
-            //                 <span>{item}</span>
-            //             </span>
-            //         );
-            //     }
-            // },
             {
                 title: counterpart.translate("prediction.overview.action"),
                 align: "center",
@@ -181,8 +156,7 @@ export default class PredictionMarketsOverviewTable extends Component {
                                 alignItems: "center"
                             }}
                         >
-                            {currentAccountId &&
-                            currentAccountId === dataItem.issuer ? (
+                            {isOwnedByCurrent(dataItem.issuer) ? (
                                 <Button
                                     style={{width: "170px"}}
                                     className="align-middle"
@@ -235,7 +209,7 @@ export default class PredictionMarketsOverviewTable extends Component {
     }
 
     _decideRowClassName(row, index) {
-        return this.props.selectedPredictionMarket ? "active-market" : "";
+        return this.props.selectedPredictionMarket ? "selected-row" : "";
     }
 
     render() {
@@ -272,22 +246,34 @@ export default class PredictionMarketsOverviewTable extends Component {
 
         if (this.props.hideUnknownHouses) {
             filteredMarkets = filteredMarkets.filter(item => {
-                let issuer = ChainStore.getAccount(item.issuer);
-                if (issuer) {
-                    return ISSUERS_WHITELIST.includes(issuer.get("name"));
-                }
+                return ISSUERS_WHITELIST.includes(item.issuer);
             });
         }
-
+        const rowSelection = {
+            type: this.props.selectedPredictionMarket ? undefined : "radio",
+            hideDefaultSelections: true,
+            // Uncomment the following line to show translated text as a cancellable column header instead of checkbox
+            //columnTitle: counterpart.translate("wallet.cancel")
+            onChange: (selectedRowKeys, selectedRows) => {
+                if (selectedRows.length > 0) {
+                    this.onMarketAction(selectedRows[0], null);
+                } else {
+                    this.onMarketAction(null, null);
+                }
+            },
+            // Required in order resetSelected to work
+            selectedRowKeys: this.props.selectedPredictionMarket
+                ? [this.props.selectedPredictionMarket.key]
+                : []
+        };
         return (
-            <div style={{paddingTop: "50px"}}>
-                <PaginatedList
-                    rows={filteredMarkets}
-                    header={header}
-                    pageSize={10}
-                    rowClassName={this._decideRowClassName.bind(this)}
-                />
-            </div>
+            <PaginatedList
+                rowSelection={rowSelection}
+                rows={filteredMarkets}
+                header={header}
+                pageSize={10}
+                rowClassName={this._decideRowClassName.bind(this)}
+            />
         );
     }
 }
@@ -295,7 +281,7 @@ export default class PredictionMarketsOverviewTable extends Component {
 PredictionMarketsOverviewTable.propTypes = {
     predictionMarkets: PropTypes.array.isRequired,
     onMarketAction: PropTypes.func.isRequired,
-    currentAccountId: PropTypes.string,
+    currentAccount: ChainTypes.ChainAccount.isRequired,
     searchTerm: PropTypes.string,
     selectedPredictionMarket: PropTypes.object,
     hideUnknownHouses: PropTypes.bool

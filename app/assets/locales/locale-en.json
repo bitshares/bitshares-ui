@@ -1679,13 +1679,18 @@
         },
         "details": {
             "amount": "Amount",
-            "probability": "Probability",
+            "predicated_likelihood": "Predicated Likelihood",
             "fee": "Fee",
-            "opinionator": "Opinionator",
-            "opinion": "Opinion",
+            "predictor": "Predictor",
+            "prediction": "Prediction",
+            "proves_true": "Proves true",
+            "incorrect": "Is incorrect",
             "cancel": "Cancel",
             "oppose": "Oppose",
-            "add_opinion": "Add opinion"
+            "add_opinion": "Add opinion",
+            "yes": "Proves true",
+            "no": "Is incorrect",
+            "all": "All"
         },
         "create_market_modal": {
             "title": "Create prediction market",

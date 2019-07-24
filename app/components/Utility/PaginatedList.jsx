@@ -48,6 +48,7 @@ export default class PaginatedList extends React.Component {
                             : (record, index) =>
                                   this.props.rowClassName(record, index)
                     }
+                    rowSelection={this.props.rowSelection}
                 />
                 {this.props.children}
             </div>

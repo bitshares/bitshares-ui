@@ -5,6 +5,7 @@ import LinkToAccountById from "../Utility/LinkToAccountById";
 import {Table, Button} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 import PaginatedList from "components/Utility/PaginatedList";
+import ChainTypes from "../Utility/ChainTypes";
 
 export default class PredictionMarketDetailsTable extends Component {
     getHeader() {
@@ -14,9 +15,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 this.props.predictionMarketData.predictionMarket.asset_id
             ).get("precision")
         );
-        const currentAccountId = ChainStore.getAccount(
-            this.props.currentAccount
-        ).get("id");
+        const currentAccountId = this.props.currentAccount.get("id");
         return [
             {
                 title: "#",
@@ -42,7 +41,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 }
             },
             {
-                title: counterpart.translate("prediction.details.opinionator"),
+                title: counterpart.translate("prediction.details.predictor"),
                 dataIndex: "opinionator",
                 align: "left",
                 sorter: (a, b) => {
@@ -67,7 +66,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 }
             },
             {
-                title: counterpart.translate("prediction.details.opinion"),
+                title: counterpart.translate("prediction.details.prediction"),
                 dataIndex: "opinion",
                 align: "left",
                 sorter: (a, b) => {
@@ -84,7 +83,11 @@ export default class PredictionMarketDetailsTable extends Component {
                                 whiteSpace: "nowrap"
                             }}
                         >
-                            <span>{item}</span>
+                            <span>
+                                {counterpart.translate(
+                                    "prediction.details." + item
+                                )}
+                            </span>
                         </div>
                     );
                 }
@@ -113,9 +116,12 @@ export default class PredictionMarketDetailsTable extends Component {
                 }
             },
             {
-                title: counterpart.translate("prediction.details.probability"),
+                title: counterpart.translate(
+                    "prediction.details.predicated_likelihood"
+                ),
                 dataIndex: "probability",
                 align: "left",
+                sortOrder: "ascend",
                 sorter: (a, b) => {
                     return a.probability > b.probability
                         ? 1
@@ -203,11 +209,25 @@ export default class PredictionMarketDetailsTable extends Component {
                 let accountName = ChainStore.getAccount(item.opinionator)
                     ? ChainStore.getAccount(item.opinionator).get("name")
                     : null;
-                return (
-                    (accountName + "\0" + item.opinion)
-                        .toUpperCase()
-                        .indexOf(this.props.detailsSearchTerm) !== -1
-                );
+                if (this.props.detailsSearchTerm) {
+                    if (
+                        !(accountName + "\0" + item.opinion)
+                            .toUpperCase()
+                            .indexOf(this.props.detailsSearchTerm) !== -1
+                    ) {
+                        return false;
+                    }
+                }
+                if (this.props.opinionFilter) {
+                    if (this.props.opinionFilter == "all") {
+                        return true;
+                    } else {
+                        if (!(this.props.opinionFilter == item.opinion)) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
             }
         );
 
@@ -218,13 +238,11 @@ export default class PredictionMarketDetailsTable extends Component {
         }));
 
         return (
-            <div style={{paddingTop: "50px"}}>
-                <PaginatedList
-                    rows={filteredOpinions}
-                    header={header}
-                    pageSize={10}
-                />
-            </div>
+            <PaginatedList
+                rows={filteredOpinions}
+                header={header}
+                pageSize={10}
+            />
         );
     }
 }
@@ -233,8 +251,9 @@ PredictionMarketDetailsTable.propTypes = {
     predictionMarketData: PropTypes.any.isRequired,
     onOppose: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
-    currentAccount: PropTypes.string,
-    detailsSearchTerm: PropTypes.string
+    currentAccount: ChainTypes.ChainAccount.isRequired,
+    detailsSearchTerm: PropTypes.string,
+    opinionFilter: PropTypes.string
 };
 
 PredictionMarketDetailsTable.defaultProps = {
