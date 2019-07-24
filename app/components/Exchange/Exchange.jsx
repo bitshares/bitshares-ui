@@ -2750,7 +2750,7 @@ class Exchange extends React.Component {
                 className={"exchange--chart-control"}
                 style={{
                     height: 33,
-                    right: "13rem",
+                    right: chartType == "price_chart" ? "5rem" : "15rem",
                     top: "1px",
                     position: "absolute",
                     zIndex: 1,
@@ -2924,70 +2924,76 @@ class Exchange extends React.Component {
         let groupTabs = {1: [], 2: []};
         let groupStandalone = [];
 
-        Object.keys(panelTabs).map(a => {
-            if (panelTabs[a] == 0) {
-                // Handle Standalone Settings
-                if (a == "my_history") {
-                    groupStandalone.push(myMarketHistory);
-                }
+        Object.keys(panelTabs)
+            .sort()
+            .map(a => {
+                if (panelTabs[a] == 0) {
+                    // Handle Standalone Settings
+                    if (a == "my_history") {
+                        groupStandalone.push(myMarketHistory);
+                    }
 
-                if (a == "history") {
-                    groupStandalone.push(marketHistory);
-                }
+                    if (a == "history") {
+                        groupStandalone.push(marketHistory);
+                    }
 
-                if (a == "my_orders") {
-                    groupStandalone.push(myOpenOrders);
-                }
+                    if (a == "my_orders") {
+                        groupStandalone.push(myOpenOrders);
+                    }
 
-                if (a == "open_settlement" && settlementOrders !== null) {
-                    groupStandalone.push(settlementOrders);
-                }
-            } else {
-                if (a == "my_history") {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.my_history")}
-                            key="my_history"
-                        >
-                            {myMarketHistory}
-                        </Tabs.TabPane>
-                    );
-                }
+                    if (a == "open_settlement" && settlementOrders !== null) {
+                        groupStandalone.push(settlementOrders);
+                    }
+                } else {
+                    if (a == "my_history") {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate(
+                                    "exchange.my_history"
+                                )}
+                                key="my_history"
+                            >
+                                {myMarketHistory}
+                            </Tabs.TabPane>
+                        );
+                    }
 
-                if (a == "history") {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.history")}
-                            key="history"
-                        >
-                            {marketHistory}
-                        </Tabs.TabPane>
-                    );
-                }
+                    if (a == "history") {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate("exchange.history")}
+                                key="history"
+                            >
+                                {marketHistory}
+                            </Tabs.TabPane>
+                        );
+                    }
 
-                if (a == "my_orders") {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.my_orders")}
-                            key="my_orders"
-                        >
-                            {myOpenOrders}
-                        </Tabs.TabPane>
-                    );
-                }
+                    if (a == "my_orders") {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate("exchange.my_orders")}
+                                key="my_orders"
+                            >
+                                {myOpenOrders}
+                            </Tabs.TabPane>
+                        );
+                    }
 
-                if (a == "open_settlement" && settlementOrders !== null) {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.settle_orders")}
-                            key="open_settlement"
-                        >
-                            {settlementOrders}
-                        </Tabs.TabPane>
-                    );
+                    if (a == "open_settlement" && settlementOrders !== null) {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate(
+                                    "exchange.settle_orders"
+                                )}
+                                key="open_settlement"
+                            >
+                                {settlementOrders}
+                            </Tabs.TabPane>
+                        );
+                    }
                 }
-            }
-        });
+            });
 
         Object.keys(panelTabsActive).map(thisTabsId => {
             Object.keys(panelTabs).map(thisPanelName => {
@@ -3528,13 +3534,13 @@ class Exchange extends React.Component {
                     <BorrowModal
                         visible={this.state.isBorrowQuoteModalVisible}
                         hideModal={this.hideBorrowQuoteModal}
-                        quote_asset={quoteAsset.get("id")}
-                        backing_asset={quoteAsset.getIn([
+                        quoteAssetObj={quoteAsset.get("id")}
+                        backingAssetObj={quoteAsset.getIn([
                             "bitasset",
                             "options",
                             "short_backing_asset"
                         ])}
-                        account={currentAccount}
+                        accountObj={currentAccount}
                     />
                 ) : null}
                 {baseIsBitAsset &&
@@ -3543,13 +3549,13 @@ class Exchange extends React.Component {
                     <BorrowModal
                         visible={this.state.isBorrowBaseModalVisible}
                         hideModal={this.hideBorrowBaseModal}
-                        quote_asset={baseAsset.get("id")}
-                        backing_asset={baseAsset.getIn([
+                        quoteAssetObj={baseAsset.get("id")}
+                        backingAssetObj={baseAsset.getIn([
                             "bitasset",
                             "options",
                             "short_backing_asset"
                         ])}
-                        account={currentAccount}
+                        accountObj={currentAccount}
                     />
                 ) : null}
 
