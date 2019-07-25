@@ -6,6 +6,8 @@ import {Table, Button} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 import PaginatedList from "components/Utility/PaginatedList";
 import ChainTypes from "../Utility/ChainTypes";
+import FormattedAsset from "../Utility/FormattedAsset";
+import AssetName from "../Utility/AssetName";
 
 export default class PredictionMarketDetailsTable extends Component {
     getHeader() {
@@ -85,32 +87,12 @@ export default class PredictionMarketDetailsTable extends Component {
                         >
                             <span>
                                 {counterpart.translate(
-                                    "prediction.details." + item
+                                    "prediction.details." +
+                                        (item == "yes"
+                                            ? "proves_true"
+                                            : "incorrect")
                                 )}
                             </span>
-                        </div>
-                    );
-                }
-            },
-            {
-                title: counterpart.translate("prediction.details.amount"),
-                dataIndex: "amount",
-                align: "left",
-                sorter: (a, b) => {
-                    return a.amount > b.amount
-                        ? 1
-                        : a.amount < b.amount
-                            ? -1
-                            : 0;
-                },
-                render: item => {
-                    return (
-                        <div
-                            style={{
-                                whiteSpace: "nowrap"
-                            }}
-                        >
-                            <span>{item / precision}</span>
                         </div>
                     );
                 }
@@ -142,8 +124,62 @@ export default class PredictionMarketDetailsTable extends Component {
                 }
             },
             {
-                title: counterpart.translate("prediction.details.fee"),
-                dataIndex: "fee",
+                title: counterpart.translate("prediction.details.premium"),
+                dataIndex: "premium",
+                align: "left",
+                sorter: (a, b) => {
+                    return a.amount > b.amount
+                        ? 1
+                        : a.amount < b.amount
+                            ? -1
+                            : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <FormattedAsset
+                                amount={item.amount}
+                                asset={item.asset_id}
+                            />
+                        </div>
+                    );
+                }
+            },
+            {
+                title: counterpart.translate(
+                    "prediction.details.potential_profit"
+                ),
+                dataIndex: "potentialProfit",
+                align: "left",
+                sorter: (a, b) => {
+                    return a.amount > b.amount
+                        ? 1
+                        : a.amount < b.amount
+                            ? -1
+                            : 0;
+                },
+                render: item => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <FormattedAsset
+                                amount={item.amount}
+                                asset={item.asset_id}
+                            />
+                        </div>
+                    );
+                }
+            },
+            {
+                title: counterpart.translate("prediction.details.commission"),
+                dataIndex: "commission",
                 align: "left",
                 sorter: (a, b) => {
                     return a.fee > b.fee ? 1 : a.fee < b.fee ? -1 : 0;
@@ -155,7 +191,10 @@ export default class PredictionMarketDetailsTable extends Component {
                                 whiteSpace: "nowrap"
                             }}
                         >
-                            <span>{item / precision}</span>
+                            <FormattedAsset
+                                amount={item.amount}
+                                asset={item.asset_id}
+                            />
                         </div>
                     );
                 }

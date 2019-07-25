@@ -20,6 +20,8 @@ import AssetStore from "../../stores/AssetStore";
 import MarketsStore from "../../stores/MarketsStore";
 import {connect} from "alt-react";
 
+const ISSUERS_WHITELIST = ["1.2.1634961"]; // "iamredbar1", "sports-owner", "twat123"
+
 class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
@@ -38,7 +40,7 @@ class PredictionMarkets extends Component {
             isAddOpinionModalOpen: false,
             isResolveModalOpen: false,
             isHideUnknownHousesChecked: true,
-            opinionFilter: "all"
+            opinionFilter: "yes"
         };
 
         this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
@@ -150,11 +152,6 @@ class PredictionMarkets extends Component {
         let orders = [];
         const selectedMarket = this.state.selectedPredictionMarket;
         fetchedOpinions.forEach((order, order_id) => {
-            if (order.market_base === order.sell_price.base.asset_id) {
-                //
-            }
-            let _selectedMarket = selectedMarket;
-            console.log(order);
             const opinion =
                 order.market_base === order.sell_price.base.asset_id
                     ? "yes"
@@ -165,19 +162,13 @@ class PredictionMarkets extends Component {
                     : order.sell_price.toReal();
             const amount =
                 order.market_base === order.sell_price.base.asset_id
-                    ? order.for_sale
-                    : order.for_sale /
-                      (order.sell_price.base.amount /
-                          order.sell_price.quote.amount);
+                    ? order.amountForSale()
+                    : order.amountToReceive();
             const probability = refPrice * 100;
-
-            const maxMarketFee = new Asset({
-                amount: selectedMarket.options.max_market_fee,
-                asset_id: selectedMarket.asset_id,
-                precision: selectedMarket.precision
-            });
-            const marketFeePercent =
-                selectedMarket.options.market_fee_percent / 100 + "%";
+            const premium =
+                order.market_base === order.sell_price.base.asset_id
+                    ? order.amountToReceive()
+                    : order.amountForSale();
             const flagBooleans = assetUtils.getFlagBooleans(
                 selectedMarket.options.flags,
                 true
@@ -185,8 +176,10 @@ class PredictionMarkets extends Component {
             let fee = 0;
             if (flagBooleans["charge_market_fee"]) {
                 fee = Math.min(
-                    maxMarketFee.getAmount(),
-                    (amount * selectedMarket.options.market_fee_percent) / 10000
+                    selectedMarket.options.max_market_fee,
+                    (amount.amount *
+                        selectedMarket.options.market_fee_percent) /
+                        10000
                 );
             }
 
@@ -197,7 +190,18 @@ class PredictionMarkets extends Component {
                     opinion,
                     amount,
                     probability,
-                    fee: fee
+                    fee: fee,
+                    potentialProfit: new Asset({
+                        amount: amount.amount,
+                        asset_id: premium.asset_id,
+                        precision: premium.precision
+                    }),
+                    premium: premium,
+                    commission: new Asset({
+                        amount: fee,
+                        asset_id: selectedMarket.asset_id,
+                        precision: selectedMarket.precision
+                    })
                 });
             }
         });
@@ -506,18 +510,20 @@ class PredictionMarkets extends Component {
                             </Radio>
                             <Radio value={"yes"}>
                                 {counterpart.translate(
-                                    "prediction.details.yes"
+                                    "prediction.details.proves_true"
                                 )}
                             </Radio>
                             <Radio value={"no"}>
-                                {counterpart.translate("prediction.details.no")}
+                                {counterpart.translate(
+                                    "prediction.details.incorrect"
+                                )}
                             </Radio>
                         </Radio.Group>
                     </div>
                     <span className="action-buttons">
                         <Button onClick={this.onAddOpinionModalOpen}>
                             {counterpart.translate(
-                                "prediction.details.add_opinion"
+                                "prediction.details.add_prediction"
                             )}
                         </Button>
                     </span>

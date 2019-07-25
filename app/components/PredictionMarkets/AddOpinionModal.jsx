@@ -6,9 +6,10 @@ import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import counterpart from "counterpart";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import MarketsActions from "actions/MarketsActions";
-import {Notification} from "bitshares-ui-style-guide";
+import {Notification, Radio} from "bitshares-ui-style-guide";
 import {ChainStore, FetchChain} from "bitsharesjs";
 import ExchangeInput from "components/Exchange/ExchangeInput";
+import ChainTypes from "../Utility/ChainTypes";
 
 export default class AddOpinionModal extends Modal {
     constructor(props) {
@@ -26,8 +27,7 @@ export default class AddOpinionModal extends Modal {
             },
             showWarning: false,
             inProgress: false,
-            bool_opinion:
-                this.props.preselectedOpinion === "yes" ? true : false,
+            selectedOpinion: this.props.preselectedOpinion,
             selectedAsset: null,
             wrongPropability: false
         };
@@ -94,7 +94,7 @@ export default class AddOpinionModal extends Modal {
             for_sale: current.for_sale,
             expiration: expiry,
             to_receive: current.to_receive,
-            seller: ChainStore.getAccount(this.props.currentAccount).get("id"),
+            seller: this.props.currentAccount.get("id"),
             fee: {
                 asset_id: feeID,
                 amount: 0
@@ -166,17 +166,17 @@ export default class AddOpinionModal extends Modal {
     handleOpinionChange() {
         let newOpinion = this.state.newOpinionParameters;
         newOpinion.opinion = newOpinion.opinion === "no" ? "yes" : "no";
-        newOpinion.opinionator = this.props.currentAccountId;
+        newOpinion.opinionator = this.props.currentAccount.get("id");
         this.setState({
             newOpinionParameters: newOpinion,
-            bool_opinion: !this.state.bool_opinion
+            selectedOpinion: newOpinion.opinion
         });
     }
 
     handleAmountChange({amount, asset}) {
         let newOpinion = this.state.newOpinionParameters;
         newOpinion.amount = amount;
-        newOpinion.opinionator = this.props.currentAccountId;
+        newOpinion.opinionator = this.props.currentAccount.get("id");
         this.setState({newOpinionParameter: newOpinion});
 
         if (typeof asset === "string") {
@@ -278,18 +278,21 @@ export default class AddOpinionModal extends Modal {
                             <label className="left-label">
                                 <Translate content="prediction.add_opinion_modal.opinion" />
                             </label>
-                            <Translate
-                                content="prediction.add_opinion_modal.no"
-                                style={{marginRight: "10px"}}
-                            />
-                            <Switch
-                                checked={this.state.bool_opinion}
+                            <Radio.Group
+                                value={this.state.selectedOpinion}
                                 onChange={this.handleOpinionChange}
-                            />
-                            <Translate
-                                content="prediction.add_opinion_modal.yes"
-                                style={{marginLeft: "10px"}}
-                            />
+                            >
+                                <Radio value={"yes"}>
+                                    {counterpart.translate(
+                                        "prediction.details.proves_true"
+                                    )}
+                                </Radio>
+                                <Radio value={"no"}>
+                                    {counterpart.translate(
+                                        "prediction.details.incorrect"
+                                    )}
+                                </Radio>
+                            </Radio.Group>
                         </Form.Item>
                         <Form.Item>
                             <span
@@ -353,7 +356,7 @@ AddOpinionModal.propTypes = {
     onClose: PropTypes.func,
     predictionMarket: PropTypes.any.isRequired,
     opinion: PropTypes.any,
-    currentAccount: PropTypes.string,
+    currentAccount: ChainTypes.ChainAccount.isRequired,
     submitNewOpinion: PropTypes.func,
     preselectedOpinion: PropTypes.string,
     preselectedAmount: PropTypes.number,

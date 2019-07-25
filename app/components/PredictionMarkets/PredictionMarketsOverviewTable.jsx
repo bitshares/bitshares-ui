@@ -184,21 +184,19 @@ export default class PredictionMarketsOverviewTable extends Component {
                                             this.onMarketAction(dataItem, "yes")
                                         }
                                     >
-                                        {counterpart.translate(
-                                            "prediction.overview.yes"
-                                        )}
+                                        Details
                                     </Button>
-                                    <Button
-                                        style={{marginLeft: "5px"}}
-                                        className="align-middle"
-                                        onClick={() =>
-                                            this.onMarketAction(dataItem, "no")
-                                        }
-                                    >
-                                        {counterpart.translate(
-                                            "prediction.overview.no"
-                                        )}
-                                    </Button>
+                                    {/*<Button*/}
+                                    {/*style={{marginLeft: "5px"}}*/}
+                                    {/*className="align-middle"*/}
+                                    {/*onClick={() =>*/}
+                                    {/*this.onMarketAction(dataItem, "no")*/}
+                                    {/*}*/}
+                                    {/*>*/}
+                                    {/*{counterpart.translate(*/}
+                                    {/*"prediction.overview.no"*/}
+                                    {/*)}*/}
+                                    {/*</Button>*/}
                                 </div>
                             )}
                         </div>
