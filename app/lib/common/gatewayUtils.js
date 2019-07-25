@@ -102,6 +102,10 @@ export function updateGatewayBackers(chain = "4018d784") {
 
         // Walk all Gateways
         for (let gateway in availableGateways) {
+            console.log(
+                "availableGateways[gateway]",
+                availableGateways[gateway]
+            );
             if (!!availableGateways[gateway].isEnabled) {
                 if (!!availableGateways[gateway].isSimple) {
                     GatewayActions.fetchCoinsSimple.defer({

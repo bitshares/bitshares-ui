@@ -69,6 +69,8 @@ class DepositModalContent extends DecimalChecker {
             }
         );
 
+        console.log("selectedAsset", selectedAsset);
+
         if (selectedGateway) {
             this._getDepositAddress(selectedAsset, selectedGateway);
         }
@@ -86,19 +88,21 @@ class DepositModalContent extends DecimalChecker {
     }
 
     _setDepositAsset(asset) {
+        console.log("asset", asset); // DEEX
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
         this.setState({coinToGatewayMapping});
 
         if (!asset) return;
 
-        let backedAsset = asset.split(".");
+        let backedAsset = asset.split("."); // [DEEX]
+        // this.state.gatewayStatus = {DEEX:{}}
         let usingGateway = this.state.gatewayStatus[backedAsset[0]]
             ? true
-            : false;
+            : false; // true
 
         if (usingGateway) {
-            let assetName = backedAsset[1];
-            let assetGateway = backedAsset[0];
+            let assetName = backedAsset[1] || asset; // undefined
+            let assetGateway = backedAsset[0]; // deex
             this._getDepositAddress(assetName, assetGateway);
         } else {
             this.setState({selectedAsset: "BTS"});
@@ -123,6 +127,11 @@ class DepositModalContent extends DecimalChecker {
     }
 
     _getDepositAddress(selectedAsset, selectedGateway) {
+        console.log(
+            "selectedAsset, selectedGateway",
+            selectedAsset,
+            selectedGateway
+        );
         let {account} = this.props;
         let {gatewayStatus} = this.state;
 
@@ -133,10 +142,17 @@ class DepositModalContent extends DecimalChecker {
         });
 
         // Get Backing Asset for Gateway
+        console.log(
+            "this.props.backedCoins",
+            this.props.backedCoins.toJS(),
+            selectedGateway.toUpperCase()
+        );
         let backingAsset = this.props.backedCoins
             .get(selectedGateway.toUpperCase(), [])
             .find(c => {
+                console.log("c", c);
                 let backingCoin = c.backingCoinType || c.backingCoin;
+                console.log("backingCoin", backingCoin);
 
                 if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
                     backingCoin = backingCoin.split(".")[1];
