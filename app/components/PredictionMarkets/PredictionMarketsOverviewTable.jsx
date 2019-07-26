@@ -7,12 +7,24 @@ import {Table, Button} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 import PaginatedList from "components/Utility/PaginatedList";
 import ChainTypes from "../Utility/ChainTypes";
+import MarketsActions from "../../actions/MarketsActions";
+import debounceRender from "react-debounce-render";
+import FormattedAsset from "../Utility/FormattedAsset";
+import utils from "../../lib/common/utils";
 
 require("./prediction.scss");
 
 const ISSUERS_WHITELIST = ["1.2.1634961"]; // "iamredbar1", "sports-owner", "twat123"
 
-export default class PredictionMarketsOverviewTable extends Component {
+class PredictionMarketsOverviewTable extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            ticker: {}
+        };
+        this.tickersLoaded = {};
+    }
+
     onMarketAction(dataItem, option = "yes") {
         this.props.onMarketAction({
             market: dataItem,
@@ -100,6 +112,167 @@ export default class PredictionMarketsOverviewTable extends Component {
                             <span>{item}</span>
                         </div>
                     );
+                }
+            },
+            {
+                title: counterpart.translate(
+                    "prediction.overview.market_confidence"
+                ),
+                dataIndex: "marketConfidence",
+                align: "left",
+                sorter: (a, b) => {
+                    return a.marketConfidence > b.marketConfidence
+                        ? 1
+                        : a.marketConfidence < b.marketConfidence
+                            ? -1
+                            : 0;
+                },
+                render: (item, row) => {
+                    const ticker = Object.assign(
+                        {},
+                        this.state.ticker[row.asset_id]
+                    );
+
+                    if (ticker) {
+                        if (
+                            !ticker.quote_volume ||
+                            ticker.quote_volume === "0" ||
+                            ticker.quote_volume === "1" ||
+                            ticker.quote_volume === "NaN" ||
+                            ticker.quote_volume === "-NaN"
+                        ) {
+                            ticker.quote_volume = 0;
+                        } else {
+                            ticker.quote_volume = utils.convert_typed_to_satoshi(
+                                parseFloat(ticker.quote_volume),
+                                ChainStore.getAsset(
+                                    row.asset[1].bitasset_data.options
+                                        .short_backing_asset
+                                )
+                            );
+                        }
+                        if (
+                            !ticker.percent_change ||
+                            ticker.percent_change === "NaN" ||
+                            ticker.percent_change === "-NaN"
+                        ) {
+                            ticker.percent_change = "-";
+                        } else {
+                            if (ticker.percent_change == "0") {
+                                ticker.percent_change = "0%";
+                            } else {
+                                ticker.percent_change =
+                                    (parseFloat(ticker.latest) > 0
+                                        ? "+"
+                                        : "-") +
+                                    ticker.percent_change +
+                                    "%";
+                            }
+                        }
+                        return (
+                            <span>
+                                {counterpart.translate("exchange.vol_short")}
+                                &nbsp;
+                                <FormattedAsset
+                                    amount={ticker.quote_volume}
+                                    asset={
+                                        row.asset[1].bitasset_data.options
+                                            .short_backing_asset
+                                    }
+                                />
+                                &nbsp;
+                                {/*({ticker.percent_change})&nbsp;*/}
+                            </span>
+                        );
+                    } else {
+                        return null;
+                    }
+                }
+            },
+            {
+                title: counterpart.translate(
+                    "prediction.overview.market_predicated_likelihood"
+                ),
+                dataIndex: "marketLikelihood",
+                align: "left",
+                sorter: (a, b) => {
+                    return a.marketLikelihood > b.marketLikelihood
+                        ? 1
+                        : a.marketLikelihood < b.marketLikelihood
+                            ? -1
+                            : 0;
+                },
+                render: (item, row) => {
+                    const ticker = Object.assign(
+                        {},
+                        this.state.ticker[row.asset_id]
+                    );
+
+                    if (ticker) {
+                        if (
+                            !ticker.latest ||
+                            ticker.latest === "0" ||
+                            ticker.latest === "1" ||
+                            ticker.latest === "NaN" ||
+                            ticker.latest === "-NaN"
+                        ) {
+                            ticker.latest = "-";
+                        } else {
+                            ticker.latest =
+                                (parseFloat(ticker.latest) * 100).toPrecision(
+                                    3
+                                ) + "%";
+                        }
+                        if (
+                            !ticker.highest_bid ||
+                            ticker.highest_bid === "0" ||
+                            ticker.highest_bid === "1" ||
+                            ticker.highest_bid === "NaN" ||
+                            ticker.highest_bid === "-NaN"
+                        ) {
+                            ticker.highest_bid = "-";
+                        } else {
+                            ticker.highest_bid =
+                                (
+                                    parseFloat(ticker.highest_bid) * 100
+                                ).toPrecision(3) + "%";
+                        }
+                        if (
+                            !ticker.lowest_ask ||
+                            ticker.lowest_ask === "0" ||
+                            ticker.lowest_ask === "1" ||
+                            ticker.lowest_ask === "NaN" ||
+                            ticker.lowest_ask === "-NaN"
+                        ) {
+                            ticker.lowest_ask = "-";
+                        } else {
+                            ticker.lowest_ask =
+                                (
+                                    parseFloat(ticker.lowest_ask) * 100
+                                ).toPrecision(3) + "%";
+                        }
+                        return ticker.latest !== "-" ? (
+                            <React.Fragment>
+                                <span>
+                                    {ticker.latest}
+                                    &nbsp;
+                                </span>
+                                <span className="supsub">
+                                    <sup className="superscript">
+                                        {ticker.highest_bid}
+                                    </sup>
+                                    <sub className="subscript">
+                                        {ticker.lowest_ask}
+                                    </sub>
+                                </span>
+                                &nbsp;&nbsp;&nbsp;
+                            </React.Fragment>
+                        ) : (
+                            "-"
+                        );
+                    } else {
+                        return null;
+                    }
                 }
             },
             {
@@ -210,6 +383,32 @@ export default class PredictionMarketsOverviewTable extends Component {
         return this.props.selectedPredictionMarket ? "selected-row" : "";
     }
 
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.predictionMarkets.length !==
+            this.props.predictionMarkets.length
+        ) {
+            this.props.predictionMarkets.forEach(market => {
+                if (!(market.asset[1].id in Object.keys(this.tickersLoaded))) {
+                    this.tickersLoaded[market.asset[1].id] = {};
+                    MarketsActions.getTicker(
+                        market.asset[1].bitasset_data.options
+                            .short_backing_asset,
+                        market.asset[1].id
+                    ).then(result => {
+                        let ticker = Object.assign(
+                            this.tickersLoaded,
+                            this.state.ticker
+                        );
+                        ticker[market.asset[1].id] = result;
+                        this.tickersLoaded[market.asset[1].id] = result;
+                        this.setState({ticker});
+                    });
+                }
+            });
+        }
+    }
+
     render() {
         const header = this.getHeader();
 
@@ -218,35 +417,38 @@ export default class PredictionMarketsOverviewTable extends Component {
         if (this.props.selectedPredictionMarket) {
             filteredMarkets = [this.props.selectedPredictionMarket];
         } else {
-            filteredMarkets = this.props.predictionMarkets.filter(item => {
-                let accountName = ChainStore.getAccount(item.issuer)
-                    ? ChainStore.getAccount(item.issuer).get("name")
-                    : null;
-                return (
-                    (
-                        accountName +
-                        "\0" +
-                        item.condition +
-                        "\0" +
-                        item.description
-                    )
-                        .toUpperCase()
-                        .indexOf(this.props.searchTerm) !== -1
-                );
-            });
+            if (this.props.predictionMarkets) {
+                filteredMarkets = this.props.predictionMarkets;
+                if (this.props.hideUnknownHouses) {
+                    filteredMarkets = filteredMarkets.filter(item => {
+                        return ISSUERS_WHITELIST.includes(item.issuer);
+                    });
+                }
+                filteredMarkets = filteredMarkets.filter(item => {
+                    let accountName = ChainStore.getAccount(item.issuer)
+                        ? ChainStore.getAccount(item.issuer).get("name")
+                        : null;
+                    return (
+                        (
+                            accountName +
+                            "\0" +
+                            item.condition +
+                            "\0" +
+                            item.description
+                        )
+                            .toUpperCase()
+                            .indexOf(this.props.searchTerm) !== -1
+                    );
+                });
 
-            let i = 0;
-            filteredMarkets = filteredMarkets.map(item => ({
-                ...item,
-                key: `${item.asset_id}${i++}`
-            }));
+                let i = 0;
+                filteredMarkets = filteredMarkets.map(item => ({
+                    ...item,
+                    key: `${item.asset_id}${i++}`
+                }));
+            }
         }
 
-        if (this.props.hideUnknownHouses) {
-            filteredMarkets = filteredMarkets.filter(item => {
-                return ISSUERS_WHITELIST.includes(item.issuer);
-            });
-        }
         const rowSelection = {
             type: this.props.selectedPredictionMarket ? undefined : "radio",
             hideDefaultSelections: true,
@@ -288,3 +490,9 @@ PredictionMarketsOverviewTable.propTypes = {
 PredictionMarketsOverviewTable.defaultProps = {
     predictionMarkets: []
 };
+
+export default (PredictionMarketsOverviewTable = debounceRender(
+    PredictionMarketsOverviewTable,
+    150,
+    {leading: false}
+));

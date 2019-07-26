@@ -2,12 +2,11 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 import counterpart from "counterpart";
 import LinkToAccountById from "../Utility/LinkToAccountById";
-import {Table, Button} from "bitshares-ui-style-guide";
+import {Table, Button, Icon, Tooltip} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 import PaginatedList from "components/Utility/PaginatedList";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
-import AssetName from "../Utility/AssetName";
 
 export default class PredictionMarketDetailsTable extends Component {
     getHeader() {
@@ -23,7 +22,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 title: "#",
                 dataIndex: "order_id",
                 align: "left",
-                sorter: (a, b) => {
+                sorter_inactive: (a, b) => {
                     return a.order_id > b.order_id
                         ? 1
                         : a.order_id < b.order_id
@@ -46,7 +45,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 title: counterpart.translate("prediction.details.predictor"),
                 dataIndex: "opinionator",
                 align: "left",
-                sorter: (a, b) => {
+                sorter_inactive: (a, b) => {
                     let a_name = ChainStore.getAccount(a.opinionator).get(
                         "name"
                     );
@@ -71,7 +70,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 title: counterpart.translate("prediction.details.prediction"),
                 dataIndex: "opinion",
                 align: "left",
-                sorter: (a, b) => {
+                sorter_inactive: (a, b) => {
                     return a.opinion > b.opinion
                         ? 1
                         : a.opinion < b.opinion
@@ -101,13 +100,14 @@ export default class PredictionMarketDetailsTable extends Component {
                 title: counterpart.translate(
                     "prediction.details.predicated_likelihood"
                 ),
-                dataIndex: "probability",
+                dataIndex: "likelihood",
                 align: "left",
-                sortOrder: "ascend",
+                sortOrder:
+                    this.props.opinionFilter == "yes" ? "descend" : "ascend",
                 sorter: (a, b) => {
-                    return a.probability > b.probability
+                    return a.likelihood > b.likelihood
                         ? 1
-                        : a.probability < b.probability
+                        : a.likelihood < b.likelihood
                             ? -1
                             : 0;
                 },
@@ -118,7 +118,7 @@ export default class PredictionMarketDetailsTable extends Component {
                                 whiteSpace: "nowrap"
                             }}
                         >
-                            <span>{item}</span>
+                            <span>{(item * 100).toPrecision(3)}%</span>
                         </div>
                     );
                 }
@@ -127,35 +127,7 @@ export default class PredictionMarketDetailsTable extends Component {
                 title: counterpart.translate("prediction.details.premium"),
                 dataIndex: "premium",
                 align: "left",
-                sorter: (a, b) => {
-                    return a.amount > b.amount
-                        ? 1
-                        : a.amount < b.amount
-                            ? -1
-                            : 0;
-                },
-                render: item => {
-                    return (
-                        <div
-                            style={{
-                                whiteSpace: "nowrap"
-                            }}
-                        >
-                            <FormattedAsset
-                                amount={item.amount}
-                                asset={item.asset_id}
-                            />
-                        </div>
-                    );
-                }
-            },
-            {
-                title: counterpart.translate(
-                    "prediction.details.potential_profit"
-                ),
-                dataIndex: "potentialProfit",
-                align: "left",
-                sorter: (a, b) => {
+                sorter_inactive: (a, b) => {
                     return a.amount > b.amount
                         ? 1
                         : a.amount < b.amount
@@ -181,8 +153,42 @@ export default class PredictionMarketDetailsTable extends Component {
                 title: counterpart.translate("prediction.details.commission"),
                 dataIndex: "commission",
                 align: "left",
-                sorter: (a, b) => {
+                sorter_inactive: (a, b) => {
                     return a.fee > b.fee ? 1 : a.fee < b.fee ? -1 : 0;
+                },
+                render: (item, row) => {
+                    return (
+                        <div
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <FormattedAsset
+                                amount={item.amount}
+                                asset={item.asset_id}
+                            />
+                            &nbsp;(
+                            {(
+                                (row.commission.amount / row.premium.amount) *
+                                100
+                            ).toPrecision(3)}
+                            %)
+                        </div>
+                    );
+                }
+            },
+            {
+                title: counterpart.translate(
+                    "prediction.details.potential_profit"
+                ),
+                dataIndex: "potentialProfit",
+                align: "left",
+                sorter_inactive: (a, b) => {
+                    return a.amount > b.amount
+                        ? 1
+                        : a.amount < b.amount
+                            ? -1
+                            : 0;
                 },
                 render: item => {
                     return (
@@ -208,7 +214,7 @@ export default class PredictionMarketDetailsTable extends Component {
                             style={{
                                 display: "flex",
                                 flexDirection: "column",
-                                alignItems: "center"
+                                alignItems: "right"
                             }}
                         >
                             {currentAccountId &&
@@ -223,15 +229,35 @@ export default class PredictionMarketDetailsTable extends Component {
                                     )}
                                 </Button>
                             ) : (
-                                <Button
-                                    onClick={() => {
-                                        this.props.onOppose(dataItem);
-                                    }}
-                                >
-                                    {counterpart.translate(
-                                        "prediction.details.oppose"
-                                    )}
-                                </Button>
+                                <React.Fragment>
+                                    <span>
+                                        <Tooltip
+                                            title={counterpart.translate(
+                                                dataItem.opinion == "yes"
+                                                    ? "prediction.tooltips.oppose_proves_true"
+                                                    : "prediction.tooltips.oppose_is_incorrect"
+                                            )}
+                                        >
+                                            <Icon
+                                                style={{
+                                                    fontSize: "1.3rem",
+                                                    marginRight: "0.5rem"
+                                                }}
+                                                type="question-circle"
+                                                theme="filled"
+                                            />
+                                        </Tooltip>
+                                        <Button
+                                            onClick={() => {
+                                                this.props.onOppose(dataItem);
+                                            }}
+                                        >
+                                            {counterpart.translate(
+                                                "prediction.details.oppose"
+                                            )}
+                                        </Button>
+                                    </span>
+                                </React.Fragment>
                             )}
                         </div>
                     );

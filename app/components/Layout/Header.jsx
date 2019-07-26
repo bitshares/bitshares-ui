@@ -830,6 +830,28 @@ class Header extends React.Component {
             );
         }
 
+        if (active.indexOf("/prediction") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/prediction") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="prediction"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="showcases.prediction_market.title"
+                    />
+                </a>
+            );
+        }
+
         if (active.indexOf("/htlc") !== -1) {
             dynamicMenuItem = (
                 <a

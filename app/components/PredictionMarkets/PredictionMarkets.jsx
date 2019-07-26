@@ -11,7 +11,7 @@ import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
 import ResolveModal from "./ResolveModal";
 import {ChainStore} from "bitsharesjs";
-import {Switch, Button, Radio} from "bitshares-ui-style-guide";
+import {Switch, Button, Radio, Icon, Tooltip} from "bitshares-ui-style-guide";
 import {Asset, Price} from "../../lib/common/MarketClasses";
 import Translate from "react-translate-component";
 import LoadingIndicator from "../LoadingIndicator";
@@ -33,6 +33,7 @@ class PredictionMarkets extends Component {
             detailsSearchTerm: "",
             selectedPredictionMarket: null,
             opinions: [],
+            fetchedAssets: [],
             preselectedOpinion: "no",
             preselectedAmount: 0,
             preselectedProbability: 0,
@@ -67,7 +68,6 @@ class PredictionMarkets extends Component {
     }
 
     componentWillReceiveProps(np) {
-        console.log(np.marketLimitOrders);
         if (np.assets !== this.props.assets) {
             this._checkAssets(np.assets);
         }
@@ -107,45 +107,56 @@ class PredictionMarkets extends Component {
             });
         } else {
             this.setState({
-                isFetchingFinished: true
+                isFetchingFinished: true,
+                fetchedAssets
             });
         }
     }
 
-    _updatePredictionMarketsList(fetchedAssets) {
-        const assets = fetchedAssets.filter(
-            a =>
-                a.bitasset_data &&
-                a.bitasset_data.is_prediction_market &&
-                a.bitasset_data.settlement_fund === 0
-        );
-        const predictionMarkets = [...assets].map(item => ({
-            asset_id: item[1].id,
-            issuer: item[1].issuer,
-            description: assetUtils.parseDescription(
-                item[1].options.description
-            ).main,
-            symbol: item[1].symbol,
-            condition: assetUtils.parseDescription(item[1].options.description)
-                .condition,
-            expiry: assetUtils.parseDescription(item[1].options.description)
-                .expiry,
-            options: item[1].options
-        }));
-
-        if (
-            this.state.predictionMarkets.length !== predictionMarkets.length &&
-            this.state.isFetchingFinished
-        ) {
-            this.setState({
-                selectedPredictionMarket: null,
-                predictionMarkets
-            });
-        } else {
-            this.setState({
-                predictionMarkets
-            });
+    _updatePredictionMarketsList(fetchedAssets = null) {
+        if (fetchedAssets == null) {
+            fetchedAssets = this.state.fetchedAssets;
         }
+        const assets = fetchedAssets.filter(asset => {
+            if (
+                asset.bitasset_data &&
+                asset.bitasset_data.is_prediction_market &&
+                asset.bitasset_data.settlement_fund === 0
+            ) {
+                if (
+                    this.state.isHideUnknownHousesChecked &&
+                    !ISSUERS_WHITELIST.includes(asset.issuer)
+                ) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        });
+        let predictionMarkets = [...assets].map(item => {
+            const description = assetUtils.parseDescription(
+                item[1].options.description
+            );
+            let predictionMarketTableRow = {
+                asset: item,
+                asset_id: item[1].id,
+                issuer: item[1].issuer,
+                description: description.main,
+                symbol: item[1].symbol,
+                condition: description.condition,
+                expiry: description.expiry,
+                options: item[1].options,
+                marketConfidence: 0,
+                marketLikelihood: 0
+            };
+            return predictionMarketTableRow;
+        });
+
+        this.setState({
+            predictionMarkets
+        });
     }
 
     _updateOpinionsList(fetchedOpinions) {
@@ -154,8 +165,8 @@ class PredictionMarkets extends Component {
         fetchedOpinions.forEach((order, order_id) => {
             const opinion =
                 order.market_base === order.sell_price.base.asset_id
-                    ? "yes"
-                    : "no";
+                    ? "no"
+                    : "yes";
             const refPrice =
                 order.market_base === order.sell_price.base.asset_id
                     ? order.sell_price.invert().toReal()
@@ -164,7 +175,6 @@ class PredictionMarkets extends Component {
                 order.market_base === order.sell_price.base.asset_id
                     ? order.amountForSale()
                     : order.amountToReceive();
-            const probability = refPrice * 100;
             const premium =
                 order.market_base === order.sell_price.base.asset_id
                     ? order.amountToReceive()
@@ -189,8 +199,7 @@ class PredictionMarkets extends Component {
                     opinionator: order.seller,
                     opinion,
                     amount,
-                    probability,
-                    fee: fee,
+                    likelihood: refPrice,
                     potentialProfit: new Asset({
                         amount: amount.amount,
                         asset_id: premium.asset_id,
@@ -198,9 +207,9 @@ class PredictionMarkets extends Component {
                     }),
                     premium: premium,
                     commission: new Asset({
-                        amount: fee,
-                        asset_id: selectedMarket.asset_id,
-                        precision: selectedMarket.precision
+                        amount: fee * refPrice,
+                        asset_id: premium.asset_id,
+                        precision: premium.precision
                     })
                 });
             }
@@ -301,13 +310,13 @@ class PredictionMarkets extends Component {
 
     onSearch(event) {
         this.setState({
-            searchTerm: (event.target.value || "").toUpperCase()
+            searchTerm: event.target.value || ""
         });
     }
 
     onSearchDetails(event) {
         this.setState({
-            detailsSearchTerm: (event.target.value || "").toUpperCase()
+            detailsSearchTerm: event.target.value || ""
         });
     }
 
@@ -353,10 +362,13 @@ class PredictionMarkets extends Component {
     handleUnknownHousesToggleChange() {
         const isHideUnknownHousesChecked = !this.state
             .isHideUnknownHousesChecked;
-        this.setState({
-            isHideUnknownHousesChecked,
-            selectedPredictionMarket: null
-        });
+        this.setState(
+            {
+                isHideUnknownHousesChecked,
+                selectedPredictionMarket: null
+            },
+            () => this._updatePredictionMarketsList()
+        );
     }
 
     onOppose = opinion => {
@@ -457,6 +469,20 @@ class PredictionMarkets extends Component {
                         </span>
                     </div>
                     <span className="action-buttons">
+                        <Tooltip
+                            title={counterpart.translate(
+                                "prediction.tooltips.create_prediction_market_asset"
+                            )}
+                        >
+                            <Icon
+                                style={{
+                                    fontSize: "1.3rem",
+                                    marginRight: "0.5rem"
+                                }}
+                                type="question-circle"
+                                theme="filled"
+                            />
+                        </Tooltip>
                         <Button
                             onClick={this.onCreatePredictionMarketModalOpen}
                         >
@@ -470,7 +496,7 @@ class PredictionMarkets extends Component {
                     predictionMarkets={this.state.predictionMarkets}
                     currentAccount={this.props.currentAccount}
                     onMarketAction={this.onMarketAction}
-                    searchTerm={this.state.searchTerm}
+                    searchTerm={this.state.searchTerm.toUpperCase()}
                     selectedPredictionMarket={
                         this.state.selectedPredictionMarket
                     }
@@ -488,6 +514,24 @@ class PredictionMarkets extends Component {
         };
         return (
             <div>
+                <h3>
+                    {counterpart.translate(
+                        "prediction.details.list_of_current_prediction_offers"
+                    )}
+                    <Tooltip
+                        title={counterpart.translate(
+                            "prediction.tooltips.what_is_a_prediction_offer"
+                        )}
+                    >
+                        <Icon
+                            style={{
+                                marginLeft: "0.5rem"
+                            }}
+                            type="question-circle"
+                            theme="filled"
+                        />
+                    </Tooltip>
+                </h3>
                 <div
                     className="header-selector"
                     style={{display: "inline-block", width: "100%"}}
@@ -521,6 +565,20 @@ class PredictionMarkets extends Component {
                         </Radio.Group>
                     </div>
                     <span className="action-buttons">
+                        <Tooltip
+                            title={counterpart.translate(
+                                "prediction.tooltips.add_prediction"
+                            )}
+                        >
+                            <Icon
+                                style={{
+                                    fontSize: "1.3rem",
+                                    marginRight: "0.5rem"
+                                }}
+                                type="question-circle"
+                                theme="filled"
+                            />
+                        </Tooltip>
                         <Button onClick={this.onAddOpinionModalOpen}>
                             {counterpart.translate(
                                 "prediction.details.add_prediction"
@@ -538,7 +596,7 @@ class PredictionMarkets extends Component {
                         currentAccount={this.props.currentAccount}
                         onOppose={this.onOppose}
                         onCancel={this.onCancelOpinion}
-                        detailsSearchTerm={this.state.detailsSearchTerm}
+                        detailsSearchTerm={this.state.detailsSearchTerm.toUpperCase()}
                         opinionFilter={this.state.opinionFilter}
                     />
                 ) : null}

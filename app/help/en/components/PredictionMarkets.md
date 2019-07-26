@@ -1,3 +1,22 @@
-# Prediction market
+# Prediction Market Assets
 
-A prediction market is a specialized BitAsset such that total debt and total collateral are always equal amounts (although asset IDs differ). No margin calls or force settlements may be performed on a prediction market asset. A prediction market is globally settled by the issuer after the event being predicted resolves, thus a prediction market must always have the `global_settle` permission enabled. The maximum price for global settlement or short sale of a prediction market asset is 1-to-1.
+A prediction market asset is a specialized BitAsset that allows you to
+agree or disagree with the prediction statement of the asset and put
+collateral behind your opinion. A prediction market is resolved by its
+issuer after the resolution date to reflect the real world outcome of
+the prediction on-chain.
+
+On the blockchain, a prediction market asset is special kind of SmartCoin
+that anyone can borrow. The total debt and total collateral are always
+equal amounts (borrowing 1:1), margin calls or force settlements are deactivated.
+A prediction market asset has the active market of itself with its collateral.
+Agreeing with the prediction means to buy the prediction market asset, whereas
+disagreeing with the prediction means to borrow it and sell it.
+Resolving a prediction market asset is done by forcing global settlement,
+with a global settlement price given by the issuer.
+After resolution (global settlement), and if the prediction proves true (global settlement price is 1),
+ holders of the prediction market asset can instantly force settle it to
+ obtain the same amount of the underlying collateral.
+If the prediction is incorrect (global settlement price 0), owners of
+margin positions will automatically get back all the collateral that was locked
+ up in the position.

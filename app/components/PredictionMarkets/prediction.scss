@@ -16,4 +16,23 @@ div.prediction-markets {
     div.ant-table-selection {
         display: none;
     }
+
+    span.supsub {
+        position: absolute;
+
+        .subscript {
+            color: red;
+            display: block;
+            position: relative;
+            left: 2px;
+            top: 1rem;
+        }
+        .superscript {
+            color: green;
+            display: block;
+            position: relative;
+            left: 2px;
+            top: 3px;
+        }
+    }
 }

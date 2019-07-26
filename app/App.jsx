@@ -525,7 +525,7 @@ class App extends React.Component {
                                 />
                                 <Route path="/htlc" component={Htlc} />
                                 <Route
-                                    path="/pm"
+                                    path="/prediction"
                                     component={PredictionMarketsPage}
                                 />
                                 <Route path="*" component={Page404} />
