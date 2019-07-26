@@ -110,7 +110,7 @@ export const availableGateways = {
         name: "DEEX",
         baseAPI: deexAPIs,
         isSimple: true,
-        simpleAssetGateway: true,
+        simpleAssetGateway: false,
         fixedMemo: {prepend: "dex:", append: ""},
         isEnabled: allowedGateway("DEEX"),
         addressValidatorMethod: "POST",
