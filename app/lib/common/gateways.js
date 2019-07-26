@@ -113,6 +113,7 @@ export const availableGateways = {
         simpleAssetGateway: true,
         fixedMemo: {prepend: "dex:", append: ""},
         isEnabled: allowedGateway("DEEX"),
+        addressValidatorMethod: "POST",
         options: {
             enabled: false,
             selected: false
