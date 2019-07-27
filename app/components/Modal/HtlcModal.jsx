@@ -213,8 +213,8 @@ class Preimage extends React.Component {
                                     hashMatch == null
                                         ? undefined
                                         : hashMatch
-                                            ? "green"
-                                            : "red"
+                                        ? "green"
+                                        : "red"
                             }}
                             name="preimage"
                             id="preimage"
@@ -385,13 +385,12 @@ class HtlcModal extends React.Component {
             preimage_size,
             preimage_hash,
             preimage_cipher,
-            claim_period
+            claim_period,
+            feeAmount
         } = this.state;
         const {
             operation: {type: operationType}
         } = this.props;
-
-        const fee_asset_id = this.state.feeAmount.asset_id;
 
         if (operationType === "create") {
             HtlcActions.create({
@@ -404,7 +403,7 @@ class HtlcModal extends React.Component {
                 preimage_size,
                 preimage_hash,
                 preimage_cipher,
-                fee_asset_id
+                fee_asset: feeAmount
             })
                 .then(result => {
                     this.props.hideModal();
@@ -830,8 +829,8 @@ class HtlcModal extends React.Component {
             operation && operation.type === "create"
                 ? counterpart.translate("showcases.htlc.create_htlc")
                 : isExtend
-                    ? counterpart.translate("showcases.htlc.extend_htlc")
-                    : counterpart.translate("showcases.htlc.redeem_htlc");
+                ? counterpart.translate("showcases.htlc.extend_htlc")
+                : counterpart.translate("showcases.htlc.redeem_htlc");
         let sendButtonText =
             operation && operation.type === "create"
                 ? counterpart.translate("showcases.direct_debit.create")
@@ -930,8 +929,8 @@ class HtlcModal extends React.Component {
                                     asset_types.length > 0 && asset
                                         ? asset.get("id")
                                         : asset_id
-                                            ? asset_id
-                                            : asset_types[0]
+                                        ? asset_id
+                                        : asset_types[0]
                                 }
                                 assets={asset_types}
                                 display_balance={
@@ -1006,7 +1005,12 @@ class HtlcModal extends React.Component {
                                             label="transfer.fee"
                                             account={from_account}
                                             trxInfo={{
-                                                type: "htlc_create"
+                                                type: "htlc_create",
+                                                options: ["price_per_kbyte"],
+                                                data: {
+                                                    type: "memo",
+                                                    content: null
+                                                }
                                             }}
                                             onChange={this.onFeeChanged.bind(
                                                 this

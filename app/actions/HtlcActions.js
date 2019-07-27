@@ -57,7 +57,7 @@ class HtlcActions {
         preimage = null,
         preimage_hash = null,
         preimage_size = null,
-        fee_asset_id
+        fee_asset
     }) {
         const tr = WalletApi.new_transaction();
 
@@ -76,10 +76,7 @@ class HtlcActions {
         tr.add_type_operation("htlc_create", {
             from: from_account_id,
             to: to_account_id,
-            fee: {
-                amount: 0,
-                asset_id: fee_asset_id
-            },
+            fee: fee_asset,
             amount: {
                 amount: amount,
                 asset_id: asset_id
