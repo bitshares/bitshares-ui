@@ -99,7 +99,7 @@ class DirectDebitModal extends React.Component {
                 period.type.seconds * Number(period.amount),
                 num_of_periods,
                 period_start_time.valueOf(),
-                feeAsset
+                fee_asset_id
             )
                 .then(result => {
                     this.props.hideModal();

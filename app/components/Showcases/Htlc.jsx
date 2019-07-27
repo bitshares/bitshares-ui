@@ -233,8 +233,8 @@ class Htlc extends Component {
                     return a.expires > b.expires
                         ? 1
                         : a.expires < b.expires
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: (text, record) => {
                     return counterpart.localize(
@@ -340,12 +340,14 @@ class Htlc extends Component {
                         </Col>
                     </Row>
 
-                    <HtlcModal
-                        isModalVisible={isModalVisible}
-                        hideModal={this.hideModal}
-                        operation={operationData}
-                        fromAccount={this.props.currentAccount}
-                    />
+                    {isModalVisible ? (
+                        <HtlcModal
+                            isModalVisible={isModalVisible}
+                            hideModal={this.hideModal}
+                            operation={operationData}
+                            fromAccount={this.props.currentAccount}
+                        />
+                    ) : null}
                 </Card>
             </div>
         );
