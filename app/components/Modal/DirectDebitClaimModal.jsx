@@ -22,7 +22,7 @@ class DirectDebitClaimModal extends React.Component {
         this._checkBalance = this._checkBalance.bind(this);
     }
 
-    getInitialState(props) {
+    getInitialState() {
         return {
             to_name: "",
             from_account: null,
@@ -33,7 +33,7 @@ class DirectDebitClaimModal extends React.Component {
             memo: "",
             error: null,
             fee_asset_id:
-                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                ChainStore.assets_by_symbol.get(this.props.fee_asset_symbol) ||
                 "1.3.0",
             feeAmount: new Asset({amount: 0}),
             maxAmount: false,
@@ -42,7 +42,7 @@ class DirectDebitClaimModal extends React.Component {
             limitError: false,
             firstPeriodError: false,
             payerBalanceWarning: false,
-            withdrawal_limit: null,
+            withdrawal_limit: this.props.operation.payload.withdrawal_limit,
             current_period_expires: "",
             claimedAmount: "",
             errorMessage: null
@@ -156,6 +156,13 @@ class DirectDebitClaimModal extends React.Component {
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
     }
+
+    setTotalLimit = limit => () => {
+        const {asset, claimedAmount} = this.state;
+        let amount = utils.get_asset_amount(limit - claimedAmount, asset);
+        this.setState({maxAmount: true, amount}, this.checkLimit);
+    };
+
     checkLimit() {
         const {
             withdrawal_limit,
@@ -164,8 +171,10 @@ class DirectDebitClaimModal extends React.Component {
             asset,
             claimedAmount
         } = this.state;
+        const withdrawalLimit =
+            withdrawal_limit || this.props.operation.payload.withdrawal_limit;
         const limit = utils.get_asset_amount(
-            withdrawal_limit.amount - claimedAmount,
+            withdrawalLimit.amount - claimedAmount,
             asset
         );
 
@@ -267,10 +276,7 @@ class DirectDebitClaimModal extends React.Component {
             from_account,
             to_account,
             asset,
-            asset_id,
-            feeAmount,
             amount,
-            error,
             memo,
             fee_asset_id,
             balanceError,
@@ -281,13 +287,9 @@ class DirectDebitClaimModal extends React.Component {
             claimedAmount
         } = this.state;
 
-        let {asset_types, fee_asset_types} = this._getAvailableAssets();
+        let {asset_types} = this._getAvailableAssets();
 
         let balance = null;
-        let balance_fee = null;
-
-        // Estimate fee
-        let fee = this.state.feeAmount.getAmount({real: true});
 
         // balance
         if (from_account && from_account.get("balances")) {
@@ -522,7 +524,7 @@ class DirectDebitClaimModal extends React.Component {
                                 {/*  F E E  */}
                                 <FeeAssetSelector
                                     label="transfer.fee"
-                                    account={from_account}
+                                    account={to_account}
                                     trxInfo={{
                                         type: "withdraw_permission_claim",
                                         options: ["price_per_kbyte"],
@@ -533,32 +535,6 @@ class DirectDebitClaimModal extends React.Component {
                                     }}
                                     onChange={this.onFeeChanged.bind(this)}
                                 />
-                                {/* <div id="txFeeSelector" className="small-12">
-                                    <AmountSelector
-                                        label="transfer.fee"
-                                        disabled={true}
-                                        amount={fee}
-                                        onChange={this.onFeeChanged.bind(this)}
-                                        asset={
-                                            fee_asset_types.length && feeAmount
-                                                ? feeAmount.asset_id
-                                                : fee_asset_types.length === 1
-                                                    ? fee_asset_types[0]
-                                                    : fee_asset_id
-                                                        ? fee_asset_id
-                                                        : fee_asset_types[0]
-                                        }
-                                        assets={fee_asset_types}
-                                        display_balance={balance_fee}
-                                        // tabIndex={tabIndex++}
-                                        error={
-                                            this.state.hasPoolBalance === false
-                                                ? "transfer.errors.insufficient"
-                                                : null
-                                        }
-                                        scroll_length={1}
-                                    />
-                                </div> */}
                             </div>
                         </div>
                     </Form>

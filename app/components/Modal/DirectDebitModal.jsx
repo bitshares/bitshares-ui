@@ -116,19 +116,14 @@ class DirectDebitModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const {operation} = this.props;
+        const {operation, currentAccount} = this.props;
         if (
-            this.props.isModalVisible &&
-            prevProps.isModalVisible !== this.props.isModalVisible
+            currentAccount !== prevProps.currentAccount ||
+            this.state.from_account == null
         ) {
             this.setState({
-                from_account: ChainStore.getAccount(this.props.currentAccount)
+                from_account: ChainStore.getAccount(currentAccount)
             });
-        } else if (
-            !this.props.isModalVisible &&
-            prevProps.isModalVisible !== this.props.isModalVisible
-        ) {
-            this.setState(this.getInitialState()); // reset state
         }
 
         // Update operation
