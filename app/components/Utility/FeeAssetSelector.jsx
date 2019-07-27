@@ -55,7 +55,8 @@ class FeeAssetSelector extends React.Component {
             ns.fee_asset_id !== this.state.fee_asset_id ||
             ns.isModalVisible !== this.state.isModalVisible ||
             ns.assets_fetched !== this.state.assets_fetched ||
-            ns.assets.length !== this.state.assets.length
+            ns.assets.length !== this.state.assets.length ||
+            np.multiplier !== this.props.multiplier
         );
     }
 
@@ -79,8 +80,11 @@ class FeeAssetSelector extends React.Component {
 
     _updateFee(asset_id, trxInfo, onChange, account = this.props.account) {
         if (!account) return null;
+        const availableAssets = this._getAvailableAssets(account);
 
         let feeID = asset_id || this.state.fee_asset_id;
+        if (!availableAssets.includes(feeID)) feeID = "1.3.0";
+
         this._getFees(this.state.assets, account, trxInfo);
         const options = {
             ...trxInfo,
@@ -103,7 +107,7 @@ class FeeAssetSelector extends React.Component {
                         onChange(fee);
                     }
                     this.setState({
-                        assets: this._getAvailableAssets(account),
+                        assets: availableAssets,
                         fee_amount: fee.getAmount({real: true}),
                         fee_asset_id: fee.asset_id
                     });
@@ -129,6 +133,12 @@ class FeeAssetSelector extends React.Component {
         if (needsFeeCalculation) {
             this._updateFee(fee_asset_id, np.trxInfo, np.onChange, np.account);
         }
+        if (account_changed) {
+            this.setState({
+                assets_fetched: false,
+                assets: []
+            });
+        }
     }
 
     _getAsset() {
@@ -137,8 +147,8 @@ class FeeAssetSelector extends React.Component {
             fee_asset_id
                 ? fee_asset_id
                 : assets.length === 1
-                    ? assets[0]
-                    : "1.3.0"
+                ? assets[0]
+                : "1.3.0"
         );
     }
 
@@ -193,10 +203,11 @@ class FeeAssetSelector extends React.Component {
             this.state.assets.length > 0
                 ? this.state.assets
                 : [currentAsset.get("id") || "1.3.0"];
+        const multiplier = this.props.multiplier || 1;
 
         let value = this.state.error
             ? counterpart.translate("transfer.errors.insufficient")
-            : this.state.fee_amount;
+            : this.state.fee_amount * multiplier;
 
         const label = this.props.label ? (
             <div className="amount-selector-field--label">

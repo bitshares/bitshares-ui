@@ -36,14 +36,13 @@ import {
     validateAddress as blocktradesValidateAddress,
     WithdrawAddresses
 } from "lib/common/gatewayMethods";
-import AmountSelector from "components/Utility/AmountSelectorStyleGuide";
-import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
+import FeeAssetSelector from "components/Utility/FeeAssetSelector";
+import {checkBalance} from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
 import {ChainStore} from "bitsharesjs";
 const gatewayBoolCheck = "withdrawalAllowed";
 
 import {getAssetAndGateway, getIntermediateAccount} from "common/gatewayUtils";
-import {isObject} from "util";
 
 class WithdrawModalNew extends React.Component {
     constructor(props) {
@@ -55,7 +54,6 @@ class WithdrawModalNew extends React.Component {
             selectedGateway: "",
             fee: 0,
             feeAmount: new Asset({amount: 0}),
-            feeStatus: {},
             hasBalance: null,
             hasPoolBalance: null,
             feeError: null,
@@ -82,13 +80,9 @@ class WithdrawModalNew extends React.Component {
         };
 
         this.handleQrScanSuccess = this.handleQrScanSuccess.bind(this);
-        this._checkFeeStatus = debounce(this._checkFeeStatus.bind(this), 250);
-        this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
 
     componentWillMount() {
-        this._updateFee(this.state);
-        this._checkFeeStatus();
         let initialState = {};
 
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(
@@ -138,11 +132,6 @@ class WithdrawModalNew extends React.Component {
 
     componentWillReceiveProps(np) {
         this.setState(this._getAssetPairVariables(np));
-
-        if (np.account !== this.props.account) {
-            this._checkFeeStatus();
-            this._updateFee();
-        }
 
         if (this.state.address != "") {
             this.onAddressSelected(this.state.address);
@@ -370,17 +359,6 @@ class WithdrawModalNew extends React.Component {
 
     _getAvailableAssets(state = this.state) {
         let btsAccount = this.props.account;
-        const {feeStatus} = state;
-        function hasFeePoolBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasPoolBalance;
-        }
-
-        function hasBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasBalance;
-        }
-
         let fee_asset_types = [];
         if (!(btsAccount && btsAccount.get("balances"))) {
             return {fee_asset_types};
@@ -431,92 +409,7 @@ class WithdrawModalNew extends React.Component {
                 }
             }
         }
-
-        fee_asset_types = fee_asset_types.filter(a => {
-            return hasFeePoolBalance(a) && hasBalance(a);
-        });
-
         return {fee_asset_types};
-    }
-
-    _checkFeeStatus(state = this.state) {
-        let account = this.props.account;
-        if (!account) return;
-
-        const {fee_asset_types: assets} = this._getAvailableAssets(state);
-        // const assets = ["1.3.0", this.props.asset.get("id")];
-        let feeStatus = {};
-        let p = [];
-        let memoContent =
-            state.selectedAsset.toLowerCase() +
-            ":" +
-            state.address +
-            (state.memo ? ":" + state.memo : "");
-        assets.forEach(a => {
-            p.push(
-                checkFeeStatusAsync({
-                    accountID: account.get("id"),
-                    feeID: a,
-                    options: ["price_per_kbyte"],
-                    data: {
-                        type: "memo",
-                        content: memoContent
-                    }
-                })
-            );
-        });
-        Promise.all(p)
-            .then(status => {
-                assets.forEach((a, idx) => {
-                    feeStatus[a] = status[idx];
-                });
-                if (!utils.are_equal_shallow(state.feeStatus, feeStatus)) {
-                    this.setState({
-                        feeStatus
-                    });
-                }
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }
-
-    _updateFee(state = this.state) {
-        let btsAccount = this.props.account;
-        let {fee_asset_id} = state;
-        const {fee_asset_types} = this._getAvailableAssets(state);
-        if (
-            fee_asset_types.length === 1 &&
-            fee_asset_types[0] !== fee_asset_id
-        ) {
-            fee_asset_id = fee_asset_types[0];
-        }
-
-        if (!btsAccount) return null;
-        let memoContent =
-            state.selectedAsset.toLowerCase() +
-            ":" +
-            state.address +
-            (state.memo ? ":" + state.memo : "");
-
-        checkFeeStatusAsync({
-            accountID: btsAccount.get("id"),
-            feeID: fee_asset_id,
-            options: ["price_per_kbyte"],
-            data: {
-                type: "memo",
-                content: memoContent
-            }
-        }).then(({fee, hasBalance, hasPoolBalance}) => {
-            if (this.unMounted) return;
-
-            this.setState({
-                feeAmount: fee,
-                hasBalance,
-                hasPoolBalance,
-                feeError: !hasBalance || !hasPoolBalance
-            });
-        });
     }
 
     _getBindingHelpers() {
@@ -526,18 +419,11 @@ class WithdrawModalNew extends React.Component {
         return {onFocus, onBlur};
     }
 
-    onFeeChanged({asset}) {
-        // If asset is an object, just extract asset ID
-        if (isObject(asset)) {
-            asset = asset.get("id");
-        }
-
-        this.setState(
-            {
-                fee_asset_id: asset
-            },
-            this._updateFee
-        );
+    onFeeChanged(asset) {
+        this.setState({
+            fee_asset_id: asset.asset_id,
+            feeAmount: asset
+        });
     }
 
     onAssetSelected(asset) {
@@ -638,7 +524,7 @@ class WithdrawModalNew extends React.Component {
 
     onAddressSelected(inputAddress) {
         this.validateAddress(inputAddress);
-        this.setState({address: inputAddress}, this._updateFee);
+        this.setState({address: inputAddress});
     }
 
     _getBackingAssetProps() {
@@ -707,11 +593,11 @@ class WithdrawModalNew extends React.Component {
         WithdrawAddresses.setLast({wallet: walletType, address});
 
         this.validateAddress(address);
-        this.setState({address}, this._updateFee);
+        this.setState({address});
     }
 
     onMemoChanged(e) {
-        this.setState({memo: e.target.value}, this._updateFee);
+        this.setState({memo: e.target.value});
     }
 
     onClickAvailableBalance(available) {
@@ -1300,23 +1186,31 @@ class WithdrawModalNew extends React.Component {
                         {assetAndGateway || isBTS ? (
                             <div className="grid-block no-overflow wrap shrink">
                                 <div
-                                    className="small-12 medium-6"
+                                    className="small-12 medium-6 withdraw-fee-selector"
                                     style={{paddingRight: 5}}
                                 >
-                                    <label className="left-label">
-                                        <Translate content="transfer.fee" />
-                                    </label>
-                                    <AmountSelector
-                                        asset={this.state.fee_asset_id}
-                                        assets={fee_asset_types}
-                                        amount={this.state.feeAmount.getAmount({
-                                            real: true
-                                        })}
+                                    <FeeAssetSelector
+                                        label="transfer.fee"
+                                        account={this.props.account}
+                                        trxInfo={{
+                                            type: "transfer",
+                                            options: ["price_per_kbyte"],
+                                            data: {
+                                                type: "memo",
+                                                content:
+                                                    this.state.selectedAsset.toLowerCase() +
+                                                    ":" +
+                                                    this.state.address +
+                                                    (this.state.memo
+                                                        ? ":" + this.state.memo
+                                                        : "")
+                                            }
+                                        }}
                                         onChange={this.onFeeChanged.bind(this)}
                                     />
                                 </div>
-                                <div className="small-12 medium-6">
-                                    <label className="left-label">
+                                <div className="small-12 medium-6 ant-form-item-label withdraw-fee-selector">
+                                    <label className="amount-selector-field--label">
                                         <Translate content="gateway.fee" />
                                     </label>
                                     <div className="grid-block no-overflow wrap shrink">

@@ -169,8 +169,8 @@ const ApplicationApi = {
                                       memo
                                   )
                                 : Buffer.isBuffer(memo)
-                                    ? memo.toString("utf-8")
-                                    : memo
+                                ? memo.toString("utf-8")
+                                : memo
                         };
                     }
                 }
@@ -285,7 +285,7 @@ const ApplicationApi = {
         });
     },
 
-    transfer_list(list_of_transfers) {
+    transfer_list(list_of_transfers, proposal_fee) {
         return WalletUnlockActions.unlock().then(() => {
             let proposer = null;
             let transfers = [];
@@ -309,6 +309,7 @@ const ApplicationApi = {
                             }
                         });
                         tr.add_type_operation("proposal_create", {
+                            fee: proposal_fee,
                             proposed_ops: propose,
                             fee_paying_account: proposer.get("id")
                         });
@@ -391,8 +392,8 @@ const ApplicationApi = {
                               memo
                           )
                         : Buffer.isBuffer(memo)
-                            ? memo.toString("utf-8")
-                            : memo
+                        ? memo.toString("utf-8")
+                        : memo
                 };
             }
 
@@ -688,8 +689,8 @@ const ApplicationApi = {
                               memo
                           )
                         : Buffer.isBuffer(memo)
-                            ? memo.toString("utf-8")
-                            : memo
+                        ? memo.toString("utf-8")
+                        : memo
                 };
             }
         }

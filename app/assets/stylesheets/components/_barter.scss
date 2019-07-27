@@ -19,3 +19,11 @@
         margin-top: 30px;
     }
 }
+.barter-fee-selector {
+    .amount-selector-field--label {
+        text-align: left !important;
+    }
+    :after {
+        content: none !important;
+    }
+}
