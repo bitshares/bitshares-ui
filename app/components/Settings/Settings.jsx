@@ -148,7 +148,7 @@ class Settings extends React.Component {
         menuEntries.push("accounts");
         if (!props.settings.get("passwordLogin")) menuEntries.push("password");
         if (!props.settings.get("passwordLogin")) menuEntries.push("backup");
-        if (!props.settings.get("passwordLogin")) menuEntries.push("restore");
+        menuEntries.push("restore");
         menuEntries.push("access");
 
         if (getFaucet().show) menuEntries.push("faucet_address");
