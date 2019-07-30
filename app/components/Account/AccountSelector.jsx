@@ -5,7 +5,13 @@ import AccountImage from "../Account/AccountImage";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
-import {ChainStore, PublicKey, ChainValidation, FetchChain} from "bitsharesjs";
+import {
+    ChainStore,
+    PublicKey,
+    ChainValidation,
+    FetchChain,
+    FetchChainObjects
+} from "bitsharesjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import counterpart from "counterpart";
@@ -126,38 +132,70 @@ class AccountSelector extends React.Component {
     _fetchAccounts() {
         let {searchResults} = this.state;
 
-        searchResults.forEach(search => {
-            // Only query for accounts if
-            // we have no data, they are not already in a query
-            // and hasn't failed to many times (meaning account does not exists)
-
-            if (!search.data && !search.inQuery && search.fails < 5) {
-                searchResults[
-                    this._getSearchIndex(search.name, searchResults)
-                ].inQuery = true;
+        // Filter out what objects we still require data for
+        let search_array = searchResults
+            .filter(search => {
+                return !search.data && search.fails < 5 ? search.name : null;
+            })
+            .map(search => {
+                // Update status
+                let objectIndex = this._getSearchIndex(
+                    search.name,
+                    searchResults
+                );
+                searchResults[objectIndex].inQuery = true;
                 this.setState({
                     searching: true,
                     searchResults: searchResults
                 });
-                FetchChain("getAccount", search.name, false)
-                    .then(account => {
-                        this._populateSearchResults(account, search.name);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-        });
 
+                return search.name;
+            });
+
+        if (search_array.length > 0) {
+            if (__DEV__)
+                console.log("Looked for " + search_array.length + " accounts");
+            FetchChainObjects(
+                ChainStore.getAccount,
+                search_array,
+                2000,
+                {}
+            ).then(accounts => {
+                // Update results for each object that has returned data
+                // and remove object for search_array
+                accounts.forEach(account => {
+                    if (account) {
+                        let objectIndex = this._getSearchIndex(
+                            account.get("name"),
+                            searchResults
+                        );
+                        searchResults[
+                            objectIndex
+                        ] = this._populateSearchResults(account);
+                        search_array.splice(account.get("name"));
+                    }
+                });
+
+                // Any objects still in search_array was not found
+                // update with a null result
+                search_array.forEach(account_to_find => {
+                    let objectIndex = this._getSearchIndex(
+                        account_to_find,
+                        searchResults
+                    );
+                    searchResults[objectIndex].fails++;
+                    searchResults[objectIndex].inQuery = false;
+                });
+            });
+            this.setState({
+                searchResults: searchResults
+            });
+        }
         this._getUpdatedSearchStatus();
     }
 
-    _populateSearchResults(accountResult, lookupAccount) {
-        let {searchResults} = this.state;
-
+    _populateSearchResults(accountResult) {
         let {myActiveAccounts, contacts} = this.props;
-
-        let objectIndex = this._getSearchIndex(lookupAccount, searchResults);
 
         if (accountResult) {
             let accountName = accountResult.get("name");
@@ -177,7 +215,7 @@ class AccountSelector extends React.Component {
                         ? accountResult.get("name")
                         : null;
 
-            searchResults[objectIndex] = {
+            return {
                 name: accountName,
                 inQuery: false,
                 fails: 0,
@@ -198,14 +236,7 @@ class AccountSelector extends React.Component {
                             : null
                 }
             };
-        } else if (searchResults[objectIndex]) {
-            searchResults[objectIndex].fails++;
-            searchResults[objectIndex].inQuery = false;
         }
-
-        this.setState({
-            searchResults: searchResults
-        });
     }
 
     _getUpdatedSearchStatus() {
@@ -238,7 +269,7 @@ class AccountSelector extends React.Component {
             return;
         }
 
-        let inputType = this.getInputType(account.get("name"));
+        let inputType = account ? this.getInputType(account.get("name")) : null;
 
         if (
             !error &&
