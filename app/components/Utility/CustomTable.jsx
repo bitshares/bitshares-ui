@@ -122,7 +122,9 @@ class CustomTable extends React.Component {
                         className="customizable-column--selector--option"
                         value="default"
                     >
-                        {counterpart.translate("account.table_columns.default")}
+                        {counterpart.translate(
+                            "customizable_table.customize_the_columns"
+                        )}
                     </Option>
                     {this._getCustomizableColumns(header).map((item, key) => {
                         return (
