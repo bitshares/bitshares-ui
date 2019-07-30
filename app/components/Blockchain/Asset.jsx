@@ -331,9 +331,6 @@ class Asset extends React.Component {
         var issuer = ChainStore.getObject(asset.issuer, false, false);
         var issuerName = issuer ? issuer.get("name") : "";
 
-        let isPrediction =
-            "bitasset" in asset && asset.bitasset.is_prediction_market;
-
         // Add <a to any links included in the description
         let description = assetUtils.parseDescription(
             asset.options.description
@@ -354,7 +351,7 @@ class Asset extends React.Component {
             : core_asset
                 ? core_asset.get("symbol")
                 : "BTS";
-        if (isPrediction) {
+        if (asset.bitasset) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
             );
