@@ -115,14 +115,13 @@ class AccountStore extends BaseStore {
             }
         }
 
-        let prevRef = ss.get("referralAccount", null);
-
-        // Store referreral only if there is no previous referral
-        if (referralAccount && !prevRef) {
+        // Store referral if we have one (will update any old referral)
+        if (referralAccount) {
             ss.set("referralAccount", referralAccount);
+            if (__DEV__)
+                console.log("Stored Referral Account: ", referralAccount);
         }
 
-        if (referralAccount) console.log("referralAccount", referralAccount);
         return referralAccount;
     }
 
