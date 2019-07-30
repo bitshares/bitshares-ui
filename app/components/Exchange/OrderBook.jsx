@@ -154,20 +154,22 @@ class OrderBookRowHorizontal extends React.Component {
                   order.amountToReceive().getAmount({real: true}),
                   base.get("precision")
               );
-        const totalValueBids = quoteTotal ?
-            order.totalToReceive() : order.totalForSale();
-        const totalValueAsks = quoteTotal ?
-            order.totalForSale() : order.totalToReceive();
+        const totalValueBids = quoteTotal
+            ? order.totalToReceive()
+            : order.totalForSale();
+        const totalValueAsks = quoteTotal
+            ? order.totalForSale()
+            : order.totalToReceive();
         const totalAsset = quoteTotal ? quote : base;
         const total = isBid
             ? utils.format_number(
-                totalValueBids.getAmount({real: true}),
-                totalAsset.get("precision")
-            )
+                  totalValueBids.getAmount({real: true}),
+                  totalAsset.get("precision")
+              )
             : utils.format_number(
-                totalValueAsks.getAmount({real: true}),
-                totalAsset.get("precision")
-            );
+                  totalValueAsks.getAmount({real: true}),
+                  totalAsset.get("precision")
+              );
 
         return (
             <tr
@@ -282,20 +284,22 @@ class GroupedOrderBookRowHorizontal extends React.Component {
                   order.amountToReceive().getAmount({real: true}),
                   base.get("precision")
               );
-        const totalValueBids = quoteTotal ?
-            order.totalToReceive() : order.totalForSale();
-        const totalValueAsks = quoteTotal ?
-            order.totalForSale() : order.totalToReceive();
+        const totalValueBids = quoteTotal
+            ? order.totalToReceive()
+            : order.totalForSale();
+        const totalValueAsks = quoteTotal
+            ? order.totalForSale()
+            : order.totalToReceive();
         const totalAsset = quoteTotal ? quote : base;
         const total = isBid
             ? utils.format_number(
-                totalValueBids.getAmount({real: true}),
-                totalAsset.get("precision")
-            )
+                  totalValueBids.getAmount({real: true}),
+                  totalAsset.get("precision")
+              )
             : utils.format_number(
-                totalValueAsks.getAmount({real: true}),
-                totalAsset.get("precision")
-            );
+                  totalValueAsks.getAmount({real: true}),
+                  totalAsset.get("precision")
+              );
 
         return (
             <tr onClick={this.props.onClick}>
@@ -855,15 +859,15 @@ class OrderBook extends React.Component {
                                 className="header-sub-title underline-title"
                             >
                                 {" "}
-                                (<AssetName
+                                <AssetName
                                     dataPlace="top"
                                     name={
-                                        !this.state.quoteTotalBids ?
-                                            baseSymbol :
-                                            quoteSymbol
+                                        !this.state.quoteTotalBids
+                                            ? baseSymbol
+                                            : quoteSymbol
                                     }
+                                    noTip
                                 />
-                                )
                             </a>
                         </th>
                         <th>
@@ -923,15 +927,15 @@ class OrderBook extends React.Component {
                                 className="header-sub-title underline-title"
                             >
                                 {" "}
-                                (<AssetName
+                                <AssetName
                                     dataPlace="top"
                                     name={
-                                        !this.state.quoteTotalAsks ?
-                                            baseSymbol :
-                                            quoteSymbol
+                                        !this.state.quoteTotalAsks
+                                            ? baseSymbol
+                                            : quoteSymbol
                                     }
+                                    noTip
                                 />
-                                )
                             </a>
                         </th>
                     </tr>
