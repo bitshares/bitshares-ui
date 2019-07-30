@@ -40,7 +40,6 @@ class SettingsStore {
                 SettingsActions.setExchangeTutorialShown,
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
-            onChangeViewSettingsByKey: SettingsActions.changeViewSettingsByKey,
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
             onAddStarMarket: SettingsActions.addStarMarket,
             onRemoveStarMarket: SettingsActions.removeStarMarket,
@@ -465,28 +464,9 @@ class SettingsStore {
             this.starredMarkets = Immutable.Map(ss.get(this.starredKey, []));
             this.userMarkets = Immutable.Map(ss.get(this.marketsKey, {}));
 
-            // If ViewSettings haven't been set already, get the default object
-            if (this.viewSettings.size === 0) {
-                this.onChangeViewSetting({
-                    enabledColumns: this._getDefaultViewSettings()
-                });
-            }
-
             this.initDone = true;
             resolve();
         });
-    }
-
-    _getDefaultViewSettings() {
-        return {
-            buy: true,
-            deposit: true,
-            withdraw: true,
-            trade: true,
-            borrow: true,
-            settle: true,
-            burn: true
-        };
     }
 
     _getDefaultMarkets() {
@@ -548,27 +528,12 @@ class SettingsStore {
                 this._saveSettings();
             }
         }
-        // else {
-        //     console.warn(
-        //         "Trying to save unchanged value (" +
-        //             payload.setting +
-        //             ": " +
-        //             payload.value +
-        //             "), consider refactoring to avoid this"
-        //     );
-        // }
     }
 
     onChangeViewSetting(payload) {
         for (let key in payload) {
             this.viewSettings = this.viewSettings.set(key, payload[key]);
         }
-
-        ss.set("viewSettings_v1", this.viewSettings.toJS());
-    }
-
-    onChangeViewSettingsByKey(payload) {
-        this.viewSettings = this.viewSettings.set(payload.key, payload.value);
 
         ss.set("viewSettings_v1", this.viewSettings.toJS());
     }

@@ -1,19 +1,31 @@
 import React from "react";
 import counterpart from "counterpart";
 import {Checkbox, Select} from "bitshares-ui-style-guide";
-import lodash from "lodash-es";
 import SettingsActions from "actions/SettingsActions";
 import PaginatedList from "./PaginatedList";
 import "./paginated-list.scss";
+import {connect} from "alt-react";
+import SettingsStore from "../../stores/SettingsStore";
+import PropTypes from "prop-types";
 
 const {Option} = Select;
-export default class CustomTable extends React.Component {
+class CustomTable extends React.Component {
+    static propTypes = {
+        viewSettingsKey: PropTypes.string,
+        viewSettings: PropTypes.object,
+        allowCustomization: PropTypes.bool
+    };
+
+    static defaultProps = {
+        viewSettingsKey: null,
+        viewSettings: null,
+        allowCustomization: false
+    };
+
     constructor(props) {
         super(props);
 
         this.state = {
-            pageSize: props.pageSize,
-            enabledColumns: props.viewSettings.get(props.viewSettingsKey),
             columnSelector: "default"
         };
 
@@ -21,113 +33,119 @@ export default class CustomTable extends React.Component {
         this.isColumnChecked = this.isColumnChecked.bind(this);
     }
 
-    static defaultProps = {
-        rows: [],
-        pageSize: 15,
-        label: "utility.total_x_items",
-        className: "table",
-        extraRow: null,
-        style: {paddingBottom: "1rem"},
-        viewSettingsKey: null
-    };
-
-    modHeader() {
-        // Only modify the header if there was a viewSettingsKey provided
-        return this.props.viewSettingsKey === null
-            ? this.props.header
-            : lodash.filter(this.props.header, item => {
-                  // If no customization is allowed on the column, always show the column
-                  if (item.allowCustomization === false) {
-                      return true;
-                  } else {
-                      // Otherwise, check the enabledColumns array to see what the current status of the display is
-                      return (
-                          this.state.enabledColumns[item.dataIndex] === true ||
-                          this.state.enabledColumns[item.dataIndex] ===
-                              undefined
-                      );
-                  }
-              });
+    _getViewSettingsKey() {
+        // add a prefix for all column customizations
+        return "columns_" + this.props.viewSettingsKey;
     }
 
-    _columnCheckboxChange(item) {
-        // Copy and modify for state
-        let enabledColumns = Object.assign({}, this.state.enabledColumns);
-        if (enabledColumns[item] === true || enabledColumns[item] === false) {
-            enabledColumns[item] = !enabledColumns[item];
-        } else {
-            enabledColumns[item] = false;
-        }
+    _getEnabledColumns() {
+        let settings = this.props.viewSettings.get(this._getViewSettingsKey());
+        return settings || {};
+    }
 
-        // Reflect change in Store
-        SettingsActions.changeViewSettingsByKey(
-            this.props.viewSettingsKey,
-            enabledColumns
-        );
-
-        this.setState({
-            enabledColumns
+    _getCustomizableColumns(header) {
+        return header.filter(item => {
+            // default is that customization is allowed
+            return this._isColumnCustomizable(item).customizable;
         });
     }
 
-    // Checks to see whether or not the column provided is checked within the enabledColumns (provided by SettingsStore)
+    modHeader(header) {
+        if (!this.props.allowCustomization) {
+            return header;
+        }
+        return header.filter(item => {
+            // per default show all, only hide if specifically set to false
+            return (
+                !this._isColumnCustomizable(item) || this.isColumnChecked(item)
+            );
+        });
+    }
+
+    _columnCheckboxChange(item) {
+        // copy and modify for state
+        let enabledColumns = this._getEnabledColumns();
+        enabledColumns[item] = !this.isColumnChecked(item);
+
+        // reflect change in Store
+        SettingsActions.changeViewSetting({
+            [this._getViewSettingsKey()]: enabledColumns
+        });
+    }
+
+    _isColumnCustomizable(column) {
+        console.log(column);
+        // filter out empty columns
+        if (!column.dataIndex) {
+            return {
+                customizable: false,
+                default: false
+            };
+        }
+
+        let customizable =
+            column.customizable == undefined ? true : column.customizable;
+
+        // customizable can be bool or object
+        let defaultVisibility =
+            column.customizable == undefined ||
+            typeof column.customizable == "boolean"
+                ? true
+                : column.customizable.default;
+
+        return {
+            customizable: customizable,
+            default: defaultVisibility
+        };
+    }
+
     isColumnChecked(column) {
-        return (
-            this.state.enabledColumns[column.dataIndex] === undefined ||
-            this.state.enabledColumns[column.dataIndex] === true
-        );
+        if (typeof column == "string") {
+            column = {dataIndex: column, customizable: true};
+        }
+        return this._getEnabledColumns()[column.dataIndex] == undefined
+            ? this._isColumnCustomizable(column).default
+            : this._getEnabledColumns()[column.dataIndex];
     }
 
     _renderEnabledColumnsSelector() {
-        let {header, viewSettingsKey} = this.props;
+        let {header} = this.props;
 
-        // Only render the dropdown configuration menu, if there is a viewSettingsKey
         return (
-            viewSettingsKey !== null && (
-                <div className="inline-block columnSelector">
-                    <Select
-                        defaultValue={this.state.columnSelector}
-                        value={this.state.columnSelector}
-                        onChange={this._columnSelectorChange}
+            <div className="customizable-column--selector">
+                <Select
+                    defaultValue={this.state.columnSelector}
+                    value={this.state.columnSelector}
+                    onChange={this._columnSelectorChange}
+                >
+                    <Option
+                        className="customizable-column--selector--option"
+                        value="default"
                     >
-                        <Option
-                            className="columnSelector-option"
-                            value="default"
-                        >
-                            {counterpart.translate(
-                                "account.table_columns.default"
-                            )}
-                        </Option>
-                        {header.map((item, key) => {
-                            return (
-                                (item.allowCustomization === undefined ||
-                                    item.allowCustomization === true) && (
-                                    <Option
-                                        key={key}
-                                        className="columnSelector-option"
-                                        value={item.dataIndex}
-                                        disabled
-                                    >
-                                        <Checkbox
-                                            checked={this.isColumnChecked(item)}
-                                            onChange={this._columnCheckboxChange.bind(
-                                                this,
-                                                item.dataIndex
-                                            )}
-                                        >
-                                            {counterpart.translate(
-                                                `account.table_columns.${
-                                                    item.dataIndex
-                                                }`
-                                            )}
-                                        </Checkbox>
-                                    </Option>
-                                )
-                            );
-                        })}
-                    </Select>
-                </div>
-            )
+                        {counterpart.translate("account.table_columns.default")}
+                    </Option>
+                    {this._getCustomizableColumns(header).map((item, key) => {
+                        return (
+                            <Option
+                                key={key}
+                                className="customizable-column--selector--option"
+                                value={item.dataIndex}
+                                disabled
+                            >
+                                <Checkbox
+                                    checked={this.isColumnChecked(item)}
+                                    onChange={this._columnCheckboxChange.bind(
+                                        this,
+                                        item.dataIndex
+                                    )}
+                                >
+                                    {item.title}
+                                </Checkbox>
+                            </Option>
+                        );
+                    })}
+                </Select>
+            </div>
         );
     }
 
@@ -139,15 +157,39 @@ export default class CustomTable extends React.Component {
     }
 
     render() {
-        // Modify the header according to which columns the user would like to see
-        const header = this.modHeader();
+        let {header, ...other} = this.props;
+
+        // modify the header according to which columns the user would like to see
+        header = this.modHeader(header);
 
         return (
             <div>
-                {this._renderEnabledColumnsSelector()}
-                <PaginatedList {...this.props} header={header} />
+                {this.props.allowCustomization && (
+                    <div style={{position: "relative"}}>
+                        {this._renderEnabledColumnsSelector()}
+                    </div>
+                )}
+                <PaginatedList {...other} header={header} />
                 {this.props.children}
             </div>
         );
     }
 }
+
+export default (CustomTable = connect(
+    CustomTable,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps(nextProps) {
+            if (!nextProps.viewSettings) {
+                return {
+                    viewSettings: SettingsStore.getState().viewSettings
+                };
+            } else {
+                return {};
+            }
+        }
+    }
+));

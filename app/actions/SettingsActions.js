@@ -9,10 +9,6 @@ class SettingsActions {
         return value;
     }
 
-    changeViewSettingsByKey(key, value) {
-        return {key, value};
-    }
-
     changeMarketDirection(value) {
         return value;
     }

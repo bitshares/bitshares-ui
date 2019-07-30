@@ -2777,3 +2777,16 @@
         }
     }
 }
+
+.customizable-column--selector {
+    position: absolute;
+    right: 1rem;
+    top: -3rem;
+}
+
+.customizable-column--selector--option {
+    padding: 10px;
+    .ant-checkbox-wrapper {
+        width: 100%;
+    }
+}
