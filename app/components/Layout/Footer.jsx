@@ -194,6 +194,9 @@ class Footer extends React.Component {
 
         const testNet = node.url.indexOf("testnet") !== -1;
 
+        if (!!node.location && node.location.translate)
+            node.location = counterpart.translate(node.location.translate);
+
         let title = node.operator + " " + !!node.location ? node.location : "";
         if ("country" in node) {
             title = node.country + (!!title ? " - " + title : "");
@@ -613,12 +616,11 @@ class Footer extends React.Component {
                                         }}
                                     >
                                         <div className="footer-status">
-                                            {connected &&
-                                                activeNode.testNet && (
-                                                    <span className="testnet">
-                                                        <Translate content="settings.testnet_nodes" />{" "}
-                                                    </span>
-                                                )}
+                                            {connected && activeNode.testNet && (
+                                                <span className="testnet">
+                                                    <Translate content="settings.testnet_nodes" />{" "}
+                                                </span>
+                                            )}
                                             {!connected ? (
                                                 <span className="warning">
                                                     <Translate content="footer.disconnected" />
@@ -638,10 +640,10 @@ class Footer extends React.Component {
                                                 {!connected
                                                     ? "-"
                                                     : !activeNode.ping
-                                                        ? "-"
-                                                        : parseInt(
-                                                              activeNode.ping
-                                                          ) + "ms"}
+                                                    ? "-"
+                                                    : parseInt(
+                                                          activeNode.ping
+                                                      ) + "ms"}
                                                 &nbsp;/&nbsp;
                                                 <span className="footer-block-title">
                                                     <Translate content="footer.block" />
