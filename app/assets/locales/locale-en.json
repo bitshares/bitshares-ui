@@ -418,6 +418,9 @@
             "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
+    "customizable_table": {
+        "customize_the_columns": "Customize the Columns"
+    },
     "account_browsing_mode": {
         "go_back": "Go back to my account",
         "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
