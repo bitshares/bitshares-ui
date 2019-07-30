@@ -582,7 +582,6 @@ export default class Barter extends Component {
             confirm_store_state.included &&
             confirm_store_state.broadcasted_transaction
         ) {
-            // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
         } else if (confirm_store_state.closed) {
@@ -652,7 +651,7 @@ export default class Barter extends Component {
 
     handleMemoOpen = (type, index) => e => {
         const memos = Object.assign({}, this.state.memo);
-        memos[type][index] = {shown: true};
+        memos[type][index] = {message: "", shown: true};
         this.setState({memo: memos});
     };
 

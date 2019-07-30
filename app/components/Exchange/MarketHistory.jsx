@@ -2,24 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
-import Translate from "react-translate-component";
-import market_utils from "common/market_utils";
-import PriceText from "../Utility/PriceText";
-import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import {connect} from "alt-react";
-import TransitionWrapper from "../Utility/TransitionWrapper";
-import AssetName from "../Utility/AssetName";
 import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
 const {operations} = grapheneChainTypes;
-import BlockDate from "../Utility/BlockDate";
-import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
-import getLocale from "browser-locale";
-import utils from "common/utils";
 import {FillOrder} from "common/MarketClasses";
-import {Tooltip} from "bitshares-ui-style-guide";
+import {
+    MarketHistoryView,
+    MarketHistoryViewRow
+} from "./View/MarketHistoryView";
 
 class MarketHistory extends React.Component {
     constructor(props) {
@@ -32,25 +25,6 @@ class MarketHistory extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.activeTab !== this.props.activeTab) {
-            this._changeTab(nextProps.activeTab);
-        }
-
-        if (
-            this.props.hideScrollbars &&
-            nextState.showAll != this.state.showAll
-        ) {
-            let historyContainer = this.refs.history;
-            if (!nextState.showAll) {
-                Ps.destroy(historyContainer);
-            } else {
-                Ps.initialize(historyContainer);
-                Ps.update(historyContainer);
-            }
-            this.refs.historyTransition.resetAnimation();
-            if (historyContainer) historyContainer.scrollTop = 0;
-        }
-
         return (
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
@@ -67,43 +41,90 @@ class MarketHistory extends React.Component {
 
     componentDidMount() {
         if (!this.props.hideScrollbars) {
-            let historyContainer = this.refs.history;
-            if (historyContainer) Ps.initialize(historyContainer);
+            this.updateContainer(1);
         }
     }
 
-    componentDidUpdate() {
-        if (
-            !this.props.hideScrollbars ||
-            (this.props.hideScrollbars && this.state.showAll)
-        ) {
-            let historyContainer = this.refs.history;
-            if (historyContainer) Ps.update(historyContainer);
+    componentDidUpdate(prevState) {
+        let {hideScrollbars} = this.props;
+        let {showAll} = this.state;
+
+        if (prevState.showAll != showAll) {
+            if (showAll && !hideScrollbars) {
+                this.updateContainer(2);
+            } else if (!showAll && !hideScrollbars) {
+                this.updateContainer(3);
+            } else if (showAll && hideScrollbars) {
+                this.updateContainer(1);
+            } else {
+                this.updateContainer(0);
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let historyContainer = this.refs.history;
-
-        if (
-            nextProps.hideScrollbars !== this.props.hideScrollbars &&
-            nextProps.hideScrollbars
-        ) {
-            Ps.destroy(historyContainer);
+        if (nextProps.activeTab !== this.props.activeTab) {
+            this.changeTab(nextProps.activeTab);
         }
 
+        // Reset on Market Switch
         if (
-            nextProps.hideScrollbars !== this.props.hideScrollbars &&
-            !nextProps.hideScrollbars
+            nextProps.baseSymbol !== this.props.baseSymbol ||
+            nextProps.quoteSymbol !== this.props.quoteSymbol
         ) {
-            Ps.initialize(historyContainer);
-            this.refs.historyTransition.resetAnimation();
-            if (historyContainer) historyContainer.scrollTop = 0;
-            Ps.update(historyContainer);
+            this.setState({showAll: false});
+            this.updateContainer(0);
+
+            if (!this.props.hideScrollbars) {
+                this.updateContainer(1);
+            }
+        }
+
+        // Reset on hideScrollbars switch
+        if (nextProps.hideScrollbars !== this.props.hideScrollbars) {
+            this.updateContainer(0);
+
+            if (!nextProps.hideScrollbars) {
+                this.updateContainer(1);
+            }
         }
     }
 
-    _changeTab(tab) {
+    /***
+     * Update PS Container
+     * type:int [0:destroy, 1:init, 2:update, 3:update w/ scrollTop] (default: 2)
+     */
+    updateContainer(type = 2) {
+        let containerNode = this.refs.view.refs.history;
+        let containerTransition = this.refs.view.refs.historyTransition;
+
+        if (!containerNode) return;
+
+        if (type == 0) {
+            containerNode.scrollTop = 0;
+            Ps.destroy(containerNode);
+        } else if (type == 1) {
+            Ps.initialize(containerNode);
+            this.updateContainer(3);
+        } else if (type == 2) {
+            Ps.update(containerNode);
+        } else if (type == 3) {
+            containerNode.scrollTop = 0;
+            Ps.update(containerNode);
+        }
+
+        if (containerTransition) {
+            containerTransition.resetAnimation();
+        }
+    }
+
+    onSetShowAll() {
+        this.setState({
+            showAll: !this.state.showAll
+        });
+    }
+
+    changeTab(tab) {
         SettingsActions.changeViewSetting({
             historyTab: tab
         });
@@ -112,21 +133,9 @@ class MarketHistory extends React.Component {
         });
 
         // Ensure that focus goes back to top of scrollable container when tab is changed
-        let historyNode = this.refs.history;
-        historyNode.scrollTop = 0;
-        Ps.update(historyNode);
+        this.updateContainer(3);
 
         setTimeout(ReactTooltip.rebuild, 1000);
-    }
-
-    _onSetShowAll() {
-        this.setState({
-            showAll: !this.state.showAll
-        });
-
-        if (this.state.showAll) {
-            this.refs.history.scrollTop = 0;
-        }
     }
 
     render() {
@@ -147,16 +156,18 @@ class MarketHistory extends React.Component {
             activeTab = "history";
         }
 
-        const assets = {
-            [quote.get("id")]: {
-                precision: quote.get("precision")
-            },
-            [base.get("id")]: {
-                precision: base.get("precision")
-            }
-        };
-
         if (activeTab === "my_history" && (myHistory && myHistory.size)) {
+            // User History
+
+            const assets = {
+                [quote.get("id")]: {
+                    precision: quote.get("precision")
+                },
+                [base.get("id")]: {
+                    precision: base.get("precision")
+                }
+            };
+
             historyRows = myHistory
                 .filter(a => {
                     let opType = a.getIn(["op", 0]);
@@ -182,177 +193,54 @@ class MarketHistory extends React.Component {
                     );
 
                     return (
-                        <tr key={fill.id}>
-                            <td className={fill.className}>
-                                <PriceText
-                                    price={fill.getPrice()}
-                                    base={this.props.base}
-                                    quote={this.props.quote}
-                                />
-                            </td>
-                            <td>{fill.amountToReceive()}</td>
-                            <td>{fill.amountToPay()}</td>
-                            <BlockDate
-                                component="td"
-                                block_number={fill.block}
-                                tooltip
-                            />
-                        </tr>
+                        <MarketHistoryViewRow
+                            key={fill.id}
+                            fill={fill}
+                            base={base}
+                            quote={quote}
+                        />
                     );
                 })
                 .toArray();
         } else if (history && history.size) {
+            // Market History
             historyRows = this.props.history
                 .take(100)
                 .map(fill => {
                     return (
-                        <tr key={"history_" + fill.id}>
-                            <td className={fill.className}>
-                                <PriceText
-                                    price={fill.getPrice()}
-                                    base={this.props.base}
-                                    quote={this.props.quote}
-                                />
-                            </td>
-                            <td>{fill.amountToReceive()}</td>
-                            <td>{fill.amountToPay()}</td>
-                            <td>
-                                <Tooltip title={fill.time.toString()}>
-                                    <div
-                                        className="tooltip"
-                                        style={{whiteSpace: "nowrap"}}
-                                    >
-                                        {counterpart.localize(fill.time, {
-                                            type: "date",
-                                            format:
-                                                getLocale()
-                                                    .toLowerCase()
-                                                    .indexOf("en-us") !== -1
-                                                    ? "market_history_us"
-                                                    : "market_history"
-                                        })}
-                                    </div>
-                                </Tooltip>
-                            </td>
-                        </tr>
+                        <MarketHistoryViewRow
+                            key={fill.id}
+                            fill={fill}
+                            base={base}
+                            quote={quote}
+                        />
                     );
                 })
                 .toArray();
         }
 
-        let emptyRow = (
-            <tr>
-                <td
-                    style={{
-                        textAlign: "center",
-                        lineHeight: 4,
-                        fontStyle: "italic"
-                    }}
-                    colSpan="5"
-                >
-                    <Translate content="account.no_orders" />
-                </td>
-            </tr>
-        );
-
+        let totalRows = historyRows ? historyRows.length : null;
         if (!showAll && historyRows) {
             historyRows.splice(rowCount, historyRows.length);
         }
 
         return (
-            <div className={cnames(this.props.className)}>
-                <div
-                    className={this.props.innerClass}
-                    style={this.props.innerStyle}
-                >
-                    {this.props.noHeader ? null : (
-                        <div
-                            style={this.props.headerStyle}
-                            className="exchange-content-header"
-                        >
-                            {activeTab === "my_history" ? (
-                                <Translate content="exchange.my_history" />
-                            ) : null}
-                            {activeTab === "history" ? (
-                                <Translate content="exchange.history" />
-                            ) : null}
-                        </div>
-                    )}
-                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
-                            <thead>
-                                <tr>
-                                    <th style={{textAlign: "right"}}>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="exchange.price"
-                                        />
-                                    </th>
-                                    <th style={{textAlign: "right"}}>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={quoteSymbol}
-                                            />
-                                        </span>
-                                    </th>
-                                    <th style={{textAlign: "right"}}>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={baseSymbol}
-                                            />
-                                        </span>
-                                    </th>
-                                    <th style={{textAlign: "right"}}>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="explorer.block.date"
-                                        />
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div
-                        className="table-container grid-block market-right-padding-only no-overflow"
-                        ref="history"
-                        style={{
-                            minHeight: !this.props.tinyScreen ? 260 : 0,
-                            maxHeight: 260,
-                            overflow: "hidden",
-                            lineHeight: "13px"
-                        }}
-                    >
-                        <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
-                            <TransitionWrapper
-                                ref="historyTransition"
-                                component="tbody"
-                                transitionName="newrow"
-                                className="orderbook"
-                            >
-                                {!!historyRows && historyRows.length > 0
-                                    ? historyRows
-                                    : emptyRow}
-                            </TransitionWrapper>
-                        </table>
-                    </div>
-                    {historyRows && historyRows.length > 11 ? (
-                        <div className="orderbook-showall">
-                            <a onClick={this._onSetShowAll.bind(this)}>
-                                <Translate
-                                    content={
-                                        showAll
-                                            ? "exchange.hide"
-                                            : "exchange.show_all_trades"
-                                    }
-                                    rowcount={historyRows.length}
-                                />
-                            </a>
-                        </div>
-                    ) : null}
-                </div>
-            </div>
+            <MarketHistoryView
+                ref="view"
+                className={this.props.className}
+                innerClass={this.props.innerClass}
+                innerStyle={this.props.innerStyle}
+                noHeader={this.props.noHeader}
+                headerStyle={this.props.headerStyle}
+                activeTab={activeTab}
+                quoteSymbol={quoteSymbol}
+                baseSymbol={baseSymbol}
+                tinyScreen={this.props.tinyScreen}
+                historyRows={historyRows}
+                totalRows={totalRows}
+                showAll={showAll}
+                onSetShowAll={this.onSetShowAll.bind(this)}
+            />
         );
     }
 }
