@@ -132,13 +132,26 @@ class AccountSelector extends React.Component {
     _fetchAccounts() {
         let {searchResults} = this.state;
 
+        const max_fails = 5;
+
+        // For all objects in search_array, query with FetchChainObjects
+        // Update results for each object with returned data and remove from search_array
+        // Update search_array for all remaining objects with increased fails count
+        // which is when account does not exists, but can also be if node failed to send results
+        // back in time, so we query at least `max_fails` times before we stop
+
+        // Always call `_getUpdatedSearchStatus()` to look for `inQuery` statuses
+        // for the searching indicator
+
         // Filter out what objects we still require data for
         let search_array = searchResults
             .filter(search => {
-                return !search.data && search.fails < 5 ? search.name : null;
+                return !search.data && search.fails < max_fails
+                    ? search.name
+                    : null;
             })
             .map(search => {
-                // Update status
+                // Update status for object
                 let objectIndex = this._getSearchIndex(
                     search.name,
                     searchResults
@@ -161,8 +174,6 @@ class AccountSelector extends React.Component {
                 2000,
                 {}
             ).then(accounts => {
-                // Update results for each object that has returned data
-                // and remove object for search_array
                 accounts.forEach(account => {
                     if (account) {
                         let objectIndex = this._getSearchIndex(
@@ -176,8 +187,6 @@ class AccountSelector extends React.Component {
                     }
                 });
 
-                // Any objects still in search_array was not found
-                // update with a null result
                 search_array.forEach(account_to_find => {
                     let objectIndex = this._getSearchIndex(
                         account_to_find,
@@ -197,46 +206,44 @@ class AccountSelector extends React.Component {
     _populateSearchResults(accountResult) {
         let {myActiveAccounts, contacts} = this.props;
 
-        if (accountResult) {
-            let accountName = accountResult.get("name");
-            let accountStatus = ChainStore.getAccountMemberStatus(
-                accountResult
-            );
-            let accountType = this.getInputType(accountName);
+        // Should not happen, just failsafe
+        if (!accountResult) return null;
 
-            let statusLabel = !accountUtils.isKnownScammer(accountName)
-                ? counterpart.translate("account.member." + accountStatus)
-                : counterpart.translate("account.member.suspected_scammer");
+        let accountName = accountResult.get("name");
+        let accountStatus = ChainStore.getAccountMemberStatus(accountResult);
+        let accountType = this.getInputType(accountName);
 
-            let rightLabel =
-                accountType === "name"
-                    ? "#" + accountResult.get("id").substring(4)
-                    : accountType === "id"
-                        ? accountResult.get("name")
-                        : null;
+        let statusLabel = !accountUtils.isKnownScammer(accountName)
+            ? counterpart.translate("account.member." + accountStatus)
+            : counterpart.translate("account.member.suspected_scammer");
 
-            return {
+        let rightLabel =
+            accountType === "name"
+                ? "#" + accountResult.get("id").substring(4)
+                : accountType === "id"
+                    ? accountResult.get("name")
+                    : null;
+
+        return {
+            name: accountName,
+            inQuery: false,
+            fails: 0,
+            data: {
+                id: accountResult.get("id"),
                 name: accountName,
-                inQuery: false,
-                fails: 0,
-                data: {
-                    id: accountResult.get("id"),
-                    name: accountName,
-                    type: accountType,
-                    status: accountStatus,
-                    isOwnAccount: myActiveAccounts.has(accountName),
-                    isContact: contacts.has(accountName),
-                    isKnownScammer: accountUtils.isKnownScammer(accountName),
-                    statusLabel: statusLabel,
-                    rightLabel: rightLabel,
-                    className:
-                        accountUtils.isKnownScammer(accountName) ||
-                        !accountResult
-                            ? "negative"
-                            : null
-                }
-            };
-        }
+                type: accountType,
+                status: accountStatus,
+                isOwnAccount: myActiveAccounts.has(accountName),
+                isContact: contacts.has(accountName),
+                isKnownScammer: accountUtils.isKnownScammer(accountName),
+                statusLabel: statusLabel,
+                rightLabel: rightLabel,
+                className:
+                    accountUtils.isKnownScammer(accountName) || !accountResult
+                        ? "negative"
+                        : null
+            }
+        };
     }
 
     _getUpdatedSearchStatus() {
