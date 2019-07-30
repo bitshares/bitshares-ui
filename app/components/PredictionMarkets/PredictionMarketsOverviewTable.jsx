@@ -333,7 +333,6 @@ class PredictionMarketsOverviewTable extends Component {
                                 <Button
                                     style={{width: "170px"}}
                                     className="align-middle"
-                                    type="primary"
                                     onClick={() =>
                                         this.onMarketAction(dataItem, "resolve")
                                     }

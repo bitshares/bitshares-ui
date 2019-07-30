@@ -1712,14 +1712,14 @@
             "description": "Description",
             "resolution_date": "Resolution date",
             "backing_asset": "Backing asset",
-            "participation_fee": "Participation fee",
+            "commission": "Commission",
             "warning": "Fill all blanks"
         },
         "add_opinion_modal": {
             "title": "Add opinion",
             "symbol": "Symbol",
             "condition": "Condition",
-            "opinion": "Opinion",
+            "resolution": "Resolution",
             "yes": "YES",
             "no": "NO",
             "amount": "Amount",
@@ -1727,7 +1727,12 @@
             "warning": "Set amount"
         },
         "resolve_modal": {
-            "title": "Resolve"
+            "title": "Resolve Prediction Market Asset",
+            "prediction": "Prediction",
+            "resolution": "Resolution",
+            "the_prediction_has": "The predition ...",
+            "proven_true": "... has proven true",
+            "was_incorrect": "... was incorrect"
         }
     },
     "proposal": {
