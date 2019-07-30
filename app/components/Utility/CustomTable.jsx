@@ -74,7 +74,6 @@ class CustomTable extends React.Component {
     }
 
     _isColumnCustomizable(column) {
-        console.log(column);
         // filter out empty columns
         if (!column.dataIndex) {
             return {
