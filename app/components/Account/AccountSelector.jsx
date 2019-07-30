@@ -268,14 +268,11 @@ class AccountSelector extends React.Component {
     getError() {
         let {account, accountName, allowPubKey, error} = this.props;
 
-        // Non-typeahead error handling
-        if (!account && !this.props.typeahead) {
-            if (accountName.length > 0) {
-                return counterpart.translate("account.errors.unknown");
-            }
-            return;
-        }
+        if (this.props.typeahead) return;
 
+        if (!account && accountName && accountName.length > 0) {
+            error = counterpart.translate("account.errors.unknown");
+        }
         let inputType = account ? this.getInputType(account.get("name")) : null;
 
         if (
@@ -452,15 +449,15 @@ class AccountSelector extends React.Component {
                 searchResults && searchResults[objectIndex]
                     ? searchResults[objectIndex].data
                     : null;
-
-            disabledAction =
-                !(
-                    account ||
-                    (selectedAccount && selectedAccount.type === "pubkey")
-                ) ||
-                error ||
-                disableActionButton;
         }
+
+        disabledAction =
+            !(
+                account ||
+                (selectedAccount && selectedAccount.type === "pubkey")
+            ) ||
+            error ||
+            disableActionButton;
 
         if (selectedAccount && selectedAccount.isOwnAccount) {
             linked_status = (
@@ -635,8 +632,8 @@ class AccountSelector extends React.Component {
         ) : (
             <AccountImage
                 size={{
-                    height: this.props.size || 80,
-                    width: this.props.size || 80
+                    height: this.props.size || 33,
+                    width: this.props.size || 33
                 }}
                 account={selectedAccount ? selectedAccount.id : null}
                 custom_image={null}

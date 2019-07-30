@@ -586,7 +586,6 @@ class SendModal extends React.Component {
                                                 this.props.currentAccount
                                             }
                                             account={this.props.currentAccount}
-                                            size={35}
                                             typeahead={true}
                                             tabIndex={tabIndex++}
                                             locked={true}
@@ -603,7 +602,6 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onFromAccountChanged.bind(
                                         this
                                     )}
-                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
                                     locked={!!propose ? undefined : true}
@@ -617,7 +615,6 @@ class SendModal extends React.Component {
                                     onAccountChanged={this.onToAccountChanged.bind(
                                         this
                                     )}
-                                    size={35}
                                     typeahead={true}
                                     tabIndex={tabIndex++}
                                 />
