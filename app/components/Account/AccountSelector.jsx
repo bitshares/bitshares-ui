@@ -222,7 +222,9 @@ class AccountSelector extends React.Component {
                 ? "#" + accountResult.get("id").substring(4)
                 : accountType === "id"
                     ? accountResult.get("name")
-                    : null;
+                    : accountType == "pubkey" && this.props.allowPubKey
+                        ? "Public Key"
+                        : null;
 
         return {
             name: accountName,
@@ -266,22 +268,24 @@ class AccountSelector extends React.Component {
     }
 
     getError() {
-        let {account, accountName, allowPubKey, error} = this.props;
+        let {account, accountName, error, typeahead} = this.props;
 
-        if (this.props.typeahead) return;
+        let inputType = accountName ? this.getInputType(accountName) : null;
 
-        if (!account && accountName && accountName.length > 0) {
-            error = counterpart.translate("account.errors.unknown");
+        if (!typeahead) {
+            if (!account && accountName && inputType !== "pubkey") {
+                error = counterpart.translate("account.errors.unknown");
+            }
+        } else {
+            // Typeahead can't select an unknown account!
+            // if (
+            //     !(allowPubKey && inputType === "pubkey") &&
+            //     !error &&
+            //     accountName &&
+            //     !account
+            // )
+            //     error = counterpart.translate("account.errors.unknown");
         }
-        let inputType = account ? this.getInputType(account.get("name")) : null;
-
-        if (
-            !error &&
-            !account &&
-            accountName &&
-            (inputType !== "pubkey" || !(allowPubKey && inputType === "pubkey"))
-        )
-            error = counterpart.translate("account.errors.unknown");
 
         if (!error && account && !inputType)
             error = counterpart.translate("account.errors.invalid");
