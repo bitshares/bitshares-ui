@@ -3,6 +3,7 @@ import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import {Button} from "bitshares-ui-style-guide";
+import willTransitionTo from "../../routerTransition";
 
 export default class ResetSettings extends React.Component {
     constructor() {
@@ -62,6 +63,9 @@ export default class ResetSettings extends React.Component {
                             this._setMessage(
                                 "settings.restore_default_success"
                             );
+                            setTimeout(() => {
+                                willTransitionTo(false);
+                            }, 50);
                         });
                     }}
                 >

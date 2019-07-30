@@ -58,10 +58,11 @@ class AccountPage extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.currentAccount !== this.props.currentAccount) {
-            let currentPath = this.props.location.pathname.split("/");
-            currentPath[2] = this.props.currentAccount;
-            this.props.history.push(currentPath.join("/"));
+        const {currentAccount, history, location} = this.props;
+        if (prevProps.currentAccount !== currentAccount && currentAccount) {
+            let currentPath = location.pathname.split("/");
+            currentPath[2] = currentAccount;
+            history.push(currentPath.join("/"));
         }
     }
 
