@@ -25,8 +25,8 @@ export default class ResolveModal extends Modal {
         this.handleResultChange = this.handleResultChange.bind(this);
     }
 
-    handleResultChange() {
-        const result = this.state.result;
+    handleResultChange(event) {
+        const result = event.target.value;
         this.setState({
             resolveParameters: {
                 ...this.state.resolveParameters,
@@ -56,7 +56,6 @@ export default class ResolveModal extends Modal {
                 {counterpart.translate("global.cancel")}
             </Button>
         ];
-
         return (
             <Modal
                 title={<Translate content="prediction.resolve_modal.title" />}

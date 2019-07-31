@@ -1716,7 +1716,7 @@
             "warning": "Fill all blanks"
         },
         "add_opinion_modal": {
-            "title": "Add opinion",
+            "title": "Add Prediction Offer",
             "symbol": "Symbol",
             "condition": "Condition",
             "resolution": "Resolution",

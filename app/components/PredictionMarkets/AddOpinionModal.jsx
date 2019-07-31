@@ -276,7 +276,7 @@ export default class AddOpinionModal extends Modal {
                         </Form.Item>
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.add_opinion_modal.opinion" />
+                                <Translate content="prediction.details.prediction" />
                             </label>
                             <Radio.Group
                                 value={this.state.selectedOpinion}
@@ -313,7 +313,7 @@ export default class AddOpinionModal extends Modal {
                                             this.state.newOpinionParameters
                                                 .amount
                                         }
-                                        asset={this.props.quoteAsset.get("id")}
+                                        asset={this.props.baseAsset.get("id")}
                                     />
                                 </label>
                             </span>
