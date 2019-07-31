@@ -1368,6 +1368,12 @@
         "memo": "Memo",
         "note": "Note",
         "paid_by": "Paid by",
+        "pay": {
+            "title": "Pay",
+            "barcode": "Barcode",
+            "invoice_qr_code": "Invoice QR code",
+            "payment_qr_code": "Payment QR code"
+        },
         "pay_button": "Pay %(asset)s to %(name)s",
         "pay_invoice": "Pay Invoice",
         "pay_to": "Pay To",
@@ -1375,7 +1381,19 @@
         "payment_request": "Payment request",
         "print_receipt": "Print receipt",
         "receipt_total": "Receipt Total",
-        "recipient_name": "Recipient Name",
+        "request": {
+            "title": "Request",
+            "submit": "Submit",
+            "identifier": "Identifier",
+            "items": "Items",
+            "currency": "Currency",
+            "action": "Action",
+            "quantity": "Quantity",
+            "price": "Price",
+            "recipient_account": "Recipient Account",
+            "recipient_name": "Recipient Name",
+            "note": "Note"
+        },
         "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
         "total": "Total",
         "transaction": "Transaction",
@@ -2068,6 +2086,10 @@
                 "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
                 "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
             }
+        },
+        "merchant_protocol": {
+            "description": "Discription...",
+            "title": "Merchant Protocol"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",

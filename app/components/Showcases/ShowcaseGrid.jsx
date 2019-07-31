@@ -123,6 +123,14 @@ class ShowcaseGrid extends Component {
                 icon: "alarm",
                 disabled: true,
                 comingSoon: true
+            },
+            {
+                title: "showcases.merchant_protocol.title",
+                target: () => {},
+                description: "showcases.merchant_protocol.description",
+                icon: "people",
+                disabled: true,
+                comingSoon: true
             }
             // .... even more tiles in this list
         ];
