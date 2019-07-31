@@ -6,6 +6,7 @@ import {Apis} from "bitsharesjs-ws";
 import marketUtils from "common/market_utils";
 import accountUtils from "common/account_utils";
 import Immutable from "immutable";
+import SettingsStore from "stores/SettingsStore";
 
 let subs = {};
 let currentBucketSize;
@@ -690,7 +691,7 @@ class MarketsActions {
             });
     }
 
-    cancelLimitOrder(accountID, orderID) {
+    cancelLimitOrder(accountID, orderID, feeId) {
         // Set the fee asset to use
         let fee_asset_id = accountUtils.getFinalFeeAsset(
             accountID,
@@ -701,7 +702,7 @@ class MarketsActions {
         tr.add_type_operation("limit_order_cancel", {
             fee: {
                 amount: 0,
-                asset_id: fee_asset_id
+                asset_id: feeId || fee_asset_id
             },
             fee_paying_account: accountID,
             order: orderID
@@ -716,13 +717,15 @@ class MarketsActions {
             accountID,
             "limit_order_cancel"
         );
-
+        const feeAssetId = ChainStore.assets_by_symbol.get(
+            SettingsStore.getState().settings.get("fee_asset")
+        ) || fee_asset_id;
         var tr = WalletApi.new_transaction();
         orderIDs.forEach(id => {
             tr.add_type_operation("limit_order_cancel", {
                 fee: {
                     amount: 0,
-                    asset_id: fee_asset_id
+                    asset_id: feeAssetId
                 },
                 fee_paying_account: accountID,
                 order: id

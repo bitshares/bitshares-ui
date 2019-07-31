@@ -28,6 +28,7 @@ import {
 import BalanceComponent from "../Utility/BalanceComponent";
 import ApplicationApi from "../../api/ApplicationApi";
 import {map} from "lodash-es";
+import SettingsStore from "stores/SettingsStore";
 
 function moveDecimal(num, decimals) {
     if (!num) return;
@@ -466,6 +467,9 @@ export default class Barter extends Component {
         this.setState({from_error: null, to_error: null});
         let sendAmount;
         let transfer_list = [];
+        const feeAssetId = ChainStore.assets_by_symbol.get(
+            SettingsStore.getState().settings.get("fee_asset")
+        ) || "1.3.0";
 
         let proposer = AccountStore.getState().currentAccount;
 
@@ -489,7 +493,7 @@ export default class Barter extends Component {
                     amount: escrow_payment,
                     asset: "1.3.0",
                     memo: escrowMemo ? new Buffer(escrowMemo, "utf-8") : null,
-                    feeAsset: "1.3.0",
+                    feeAsset: feeAssetId,
                     propose_account: proposer
                 });
             }
@@ -519,7 +523,7 @@ export default class Barter extends Component {
                         : this.state.memo,
                     feeAsset: item.from_feeAsset
                         ? item.from_feeAsset.get("id")
-                        : "1.3.0"
+                        : feeAssetId
                 });
             }
 
@@ -533,7 +537,7 @@ export default class Barter extends Component {
                     : null,
                 feeAsset: item.from_feeAsset
                     ? item.from_feeAsset.get("id")
-                    : "1.3.0",
+                    : feeAssetId,
                 propose_account: proposer
             });
         });
@@ -545,7 +549,7 @@ export default class Barter extends Component {
                 amount: 1,
                 asset: "1.3.0",
                 memo: null,
-                feeAsset: "1.3.0",
+                feeAsset: feeAssetId,
                 propose_account: proposer
             });
         }
@@ -569,7 +573,7 @@ export default class Barter extends Component {
                 memo: toBarterMemo ? new Buffer(toBarterMemo, "utf-8") : null,
                 feeAsset: item.to_feeAsset
                     ? item.to_feeAsset.get("id")
-                    : "1.3.0",
+                    : feeAssetId,
                 propose_account: proposer
             });
         });

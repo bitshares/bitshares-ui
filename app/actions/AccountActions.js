@@ -6,6 +6,8 @@ import WalletApi from "api/WalletApi";
 import ApplicationApi from "api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
 import WalletActions from "actions/WalletActions";
+import { ChainStore } from "bitsharesjs";
+import SettingsStore from "stores/SettingsStore";
 
 let accountSearch = {};
 
@@ -162,12 +164,15 @@ class AccountActions {
             account_id,
             "account_upgrade"
         );
+        const feeAssetId = ChainStore.assets_by_symbol.get(
+            SettingsStore.getState().settings.get("fee_asset")
+        ) || fee_asset_id;
 
         var tr = WalletApi.new_transaction();
         tr.add_type_operation("account_upgrade", {
             fee: {
                 amount: 0,
-                asset_id: fee_asset_id
+                asset_id: feeAssetId
             },
             account_to_upgrade: account_id,
             upgrade_to_lifetime_member: lifetime
@@ -190,11 +195,14 @@ class AccountActions {
     createCommittee({url, account}) {
         const account_id = account.get("id");
         var tr = WalletApi.new_transaction();
+        const feeAssetId = ChainStore.assets_by_symbol.get(
+            SettingsStore.getState().settings.get("fee_asset")
+        ) || "1.3.0";
 
         tr.add_type_operation("committee_member_create", {
             fee: {
                 amount: 0,
-                asset_id: "1.3.0"
+                asset_id: feeAssetId
             },
             committee_member_account: account_id,
             url: url
@@ -217,11 +225,14 @@ class AccountActions {
     createWitness({url, account, signingKey}) {
         const account_id = account.get("id");
         var tr = WalletApi.new_transaction();
+        const feeAssetId = ChainStore.assets_by_symbol.get(
+            SettingsStore.getState().settings.get("fee_asset")
+        ) || "1.3.0";
 
         tr.add_type_operation("witness_create", {
             fee: {
                 amount: 0,
-                asset_id: "1.3.0"
+                asset_id: feeAssetId
             },
             witness_account: account_id,
             url: url,

@@ -11,6 +11,7 @@ import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
 import {ChainStore} from "bitsharesjs";
 import {Modal, Button} from "bitshares-ui-style-guide";
+import SettingsStore from "stores/SettingsStore";
 
 export const finalRequiredPerms = (
     requiredPermissions,
@@ -69,6 +70,9 @@ class ProposalModal extends React.Component {
         let proposalObject = oldProposal.toJS();
         let {active, key, owner, payee} = this.state;
         const fee_paying_account = payee || active;
+        const feeAssetId = ChainStore.assets_by_symbol.get(
+            SettingsStore.getState().settings.get("fee_asset")
+        ) || "1.3.0";
 
         if (this.props.action === "delete") {
             const transaction = WalletApi.new_transaction();
@@ -76,7 +80,11 @@ class ProposalModal extends React.Component {
                 fee_paying_account:
                     fee_paying_account || this.props.account.get("id"),
                 proposal: proposalObject.id,
-                using_owner_authority: false
+                using_owner_authority: false,
+                fee: {
+                    asset_id: feeAssetId,
+                    amount: 0
+                }
             });
             WalletDb.process_transaction(transaction, null, true);
         } else {
@@ -88,7 +96,11 @@ class ProposalModal extends React.Component {
                 owner_approvals_to_add: [],
                 owner_approvals_to_remove: [],
                 key_approvals_to_add: [],
-                key_approvals_to_remove: []
+                key_approvals_to_remove: [],
+                fee: {
+                    asset_id: feeAssetId,
+                    amount: 0
+                }
             };
 
             let isAdd = this.props.action === "approve";

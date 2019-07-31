@@ -14,6 +14,8 @@ import {Modal, Button} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
 import {BorrowModalView} from "./View/BorrowModalView";
 import debounceRender from "react-debounce-render";
+import { ChainStore } from "bitsharesjs";
+import SettingsStore from "stores/SettingsStore";
 
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset
@@ -501,13 +503,16 @@ class BorrowModalContent extends React.Component {
         if (delta_collateral_amount == 0 && delta_debt_amount == 0) {
             delta_collateral_amount = 1;
         }
+        const feeAssetId = ChainStore.assets_by_symbol.get(
+            SettingsStore.getState().settings.get("fee_asset")
+        ) || "1.3.0";
 
         var tr = WalletApi.new_transaction();
         if (extensionsProp) {
             tr.add_type_operation("call_order_update", {
                 fee: {
                     amount: 0,
-                    asset_id: 0
+                    asset_id: feeAssetId
                 },
                 funding_account: this.props.accountObj.get("id"),
                 delta_collateral: {
@@ -524,7 +529,7 @@ class BorrowModalContent extends React.Component {
             tr.add_type_operation("call_order_update", {
                 fee: {
                     amount: 0,
-                    asset_id: 0
+                    asset_id: feeAssetId
                 },
                 funding_account: this.props.accountObj.get("id"),
                 delta_collateral: {
