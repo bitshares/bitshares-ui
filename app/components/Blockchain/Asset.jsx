@@ -24,16 +24,8 @@ import AssetOwnerUpdate from "./AssetOwnerUpdate";
 import AssetPublishFeed from "./AssetPublishFeed";
 import AssetResolvePrediction from "./AssetResolvePrediction";
 import BidCollateralOperation from "./BidCollateralOperation";
-import {Tab, Tabs} from "../Utility/Tabs";
-import {
-    Tooltip,
-    Icon,
-    Table,
-    Tabs as AntTabs,
-    Collapse
-} from "bitshares-ui-style-guide";
+import {Tooltip, Icon, Table, Tabs, Collapse} from "bitshares-ui-style-guide";
 const {Panel} = Collapse;
-// TODO: Replace remaining old style Tabs with new
 
 class AssetFlag extends React.Component {
     render() {
@@ -82,7 +74,8 @@ class Asset extends React.Component {
             sortDirection: true,
             showCollateralBidInInfo: false,
             cumulativeGrouping: false,
-            activeFeedTab: "margin"
+            activeFeedTab: "margin",
+            activeAssetTab: "info"
         };
     }
 
@@ -359,8 +352,8 @@ class Asset extends React.Component {
         let preferredMarket = description.market
             ? description.market
             : core_asset
-                ? core_asset.get("symbol")
-                : "BTS";
+            ? core_asset.get("symbol")
+            : "BTS";
         if (isPrediction) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
@@ -1113,50 +1106,42 @@ class Asset extends React.Component {
 
     renderAssetOwnerUpdate(asset) {
         return (
-            <div
-                className="grid-content small-no-padding"
-                style={{overflowY: "visible"}}
+            <Panel
+                header={
+                    <Translate content="account.user_issued_assets.update_owner" />
+                }
             >
-                <div className="asset-card no-padding">
-                    <div className="card-divider">
-                        <Translate content="account.user_issued_assets.update_owner" />
-                    </div>
-                    <Translate
-                        component="p"
-                        content="account.user_issued_assets.update_owner_text"
-                        asset={asset.symbol}
-                    />
-                    <AssetOwnerUpdate
-                        asset={asset}
-                        account={this.props.currentAccount}
-                        currentOwner={asset.issuer}
-                    />
-                </div>
-            </div>
+                <Translate
+                    component="p"
+                    content="account.user_issued_assets.update_owner_text"
+                    asset={asset.symbol}
+                />
+                <AssetOwnerUpdate
+                    asset={asset}
+                    account={this.props.currentAccount}
+                    currentOwner={asset.issuer}
+                />
+            </Panel>
         );
     }
 
     renderFeedPublish(asset) {
         return (
-            <div
-                className="grid-content small-no-padding"
-                style={{overflowY: "visible"}}
+            <Panel
+                header={
+                    <Translate content="transaction.trxTypes.asset_publish_feed" />
+                }
             >
-                <div className="asset-card no-padding">
-                    <div className="card-divider">
-                        <Translate content="transaction.trxTypes.asset_publish_feed" />
-                    </div>
-                    <Translate
-                        component="p"
-                        content="explorer.asset.feed_producer_text"
-                    />
-                    <AssetPublishFeed
-                        asset={asset.id}
-                        account={this.props.currentAccount}
-                        currentOwner={asset.issuer}
-                    />
-                </div>
-            </div>
+                <Translate
+                    component="p"
+                    content="explorer.asset.feed_producer_text"
+                />
+                <AssetPublishFeed
+                    asset={asset.id}
+                    account={this.props.currentAccount}
+                    currentOwner={asset.issuer}
+                />
+            </Panel>
         );
     }
 
@@ -1194,23 +1179,20 @@ class Asset extends React.Component {
 
     renderFeePoolFunding(asset) {
         return (
-            <div className="grid-content small-no-padding">
-                <div className="asset-card no-padding">
-                    <div className="card-divider">
-                        <Translate content="explorer.asset.fee_pool.fund" />
-                    </div>
-                    <Translate
-                        component="p"
-                        content="explorer.asset.fee_pool.fund_text"
-                        asset={asset.symbol}
-                    />
-                    <FeePoolOperation
-                        asset={asset.symbol}
-                        funderAccountName={this.props.currentAccount}
-                        hideBalance
-                    />
-                </div>
-            </div>
+            <Panel
+                header={<Translate content="explorer.asset.fee_pool.fund" />}
+            >
+                <Translate
+                    component="p"
+                    content="explorer.asset.fee_pool.fund_text"
+                    asset={asset.symbol}
+                />
+                <FeePoolOperation
+                    asset={asset.symbol}
+                    funderAccountName={this.props.currentAccount}
+                    hideBalance
+                />
+            </Panel>
         );
     }
 
@@ -1218,20 +1200,19 @@ class Asset extends React.Component {
         let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         return (
-            <div className="grid-content small-no-padding">
-                <div className="asset-card no-padding">
-                    <div className="card-divider">
-                        <Translate content="explorer.asset.fee_pool.claim_balance" />
-                    </div>
-                    <FeePoolOperation
-                        asset={asset.symbol}
-                        funderAccountName={this.props.currentAccount}
-                        dynamic={dynamic}
-                        hideBalance
-                        type="claim"
-                    />
-                </div>
-            </div>
+            <Panel
+                header={
+                    <Translate content="explorer.asset.fee_pool.claim_balance" />
+                }
+            >
+                <FeePoolOperation
+                    asset={asset.symbol}
+                    funderAccountName={this.props.currentAccount}
+                    dynamic={dynamic}
+                    hideBalance
+                    type="claim"
+                />
+            </Panel>
         );
     }
 
@@ -1239,20 +1220,19 @@ class Asset extends React.Component {
         let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         return (
-            <div className="grid-content small-no-padding">
-                <div className="asset-card no-padding">
-                    <div className="card-divider">
-                        <Translate content="transaction.trxTypes.asset_claim_fees" />
-                    </div>
-                    <FeePoolOperation
-                        asset={asset.symbol}
-                        dynamic={dynamic}
-                        funderAccountName={this.props.currentAccount}
-                        hideBalance
-                        type="claim_fees"
-                    />
-                </div>
-            </div>
+            <Panel
+                header={
+                    <Translate content="transaction.trxTypes.asset_claim_fees" />
+                }
+            >
+                <FeePoolOperation
+                    asset={asset.symbol}
+                    dynamic={dynamic}
+                    funderAccountName={this.props.currentAccount}
+                    hideBalance
+                    type="claim_fees"
+                />
+            </Panel>
         );
     }
 
@@ -1545,8 +1525,8 @@ class Asset extends React.Component {
                                     median_offset > 0
                                         ? "txtlabel success"
                                         : median_offset < 0
-                                            ? "txtlabel warning"
-                                            : "txtlabel"
+                                        ? "txtlabel warning"
+                                        : "txtlabel"
                                 }
                             >
                                 {median_offset}%
@@ -2039,6 +2019,12 @@ class Asset extends React.Component {
         });
     }
 
+    _setAssetTab(tab) {
+        this.setState({
+            activeAssetTab: tab
+        });
+    }
+
     renderFeedTables(asset) {
         var bitAsset = asset.bitasset;
         if (
@@ -2053,11 +2039,12 @@ class Asset extends React.Component {
         let isGlobalSettlement = bitAsset.settlement_fund > 0 ? true : false;
 
         return (
-            <AntTabs
+            <Tabs
+                type="card"
                 onChange={this._setFeedTab.bind(this)}
                 activeKey={this.state.activeFeedTab}
             >
-                <AntTabs.TabPane
+                <Tabs.TabPane
                     tab={counterpart.translate(
                         isGlobalSettlement
                             ? "explorer.asset.collateral_bid.title"
@@ -2070,8 +2057,8 @@ class Asset extends React.Component {
                             ? this._renderCollBidTable()
                             : this._renderMarginTable()
                         : null}
-                </AntTabs.TabPane>
-                <AntTabs.TabPane
+                </Tabs.TabPane>
+                <Tabs.TabPane
                     tab={counterpart.translate(
                         "explorer.asset.price_feed_data.title"
                     )}
@@ -2080,31 +2067,27 @@ class Asset extends React.Component {
                     {this.state.activeFeedTab == "feed"
                         ? this._renderFeedTable(asset)
                         : null}
-                </AntTabs.TabPane>
-            </AntTabs>
+                </Tabs.TabPane>
+            </Tabs>
         );
     }
 
     renderAssetResolvePrediction(asset) {
         return (
-            <div
-                className="grid-content small-no-padding"
-                style={{overflowY: "visible"}}
+            <Panel
+                header={
+                    <Translate content="account.user_issued_assets.resolve_prediction" />
+                }
             >
-                <div className="asset-card no-padding">
-                    <div className="card-divider">
-                        <Translate content="account.user_issued_assets.resolve_prediction" />
-                    </div>
-                    <Translate
-                        component="p"
-                        content="account.user_issued_assets.resolve_prediction_text"
-                    />
-                    <AssetResolvePrediction
-                        asset={asset}
-                        account={this.props.currentAccount}
-                    />
-                </div>
-            </div>
+                <Translate
+                    component="p"
+                    content="account.user_issued_assets.resolve_prediction_text"
+                />
+                <AssetResolvePrediction
+                    asset={asset}
+                    account={this.props.currentAccount}
+                />
+            </Panel>
         );
     }
 
@@ -2127,13 +2110,17 @@ class Asset extends React.Component {
                         </div>
 
                         <Tabs
-                            setting="assetDataTabs"
+                            type="card"
+                            onChange={this._setAssetTab.bind(this)}
+                            activeKey={this.state.activeAssetTab}
                             className="grid-block vertical"
-                            tabsClass="bordered-header content-block"
-                            contentClass="tab-no-background"
-                            segmented={false}
                         >
-                            <Tab title="explorer.asset.info">
+                            <Tabs.TabPane
+                                tab={counterpart.translate(
+                                    "explorer.asset.info"
+                                )}
+                                key="info"
+                            >
                                 <div
                                     className="grid-block vertical large-horizontal medium-up-1 large-up-2"
                                     style={{paddingTop: "1rem"}}
@@ -2164,12 +2151,14 @@ class Asset extends React.Component {
                                     </div>
                                 </div>
                                 {priceFeedData ? priceFeedData : null}
-                            </Tab>
-                            <Tab title="explorer.asset.actions">
-                                <div
-                                    className="grid-block vertical large-horizontal medium-up-1 large-up-2"
-                                    style={{paddingTop: "1rem"}}
-                                >
+                            </Tabs.TabPane>
+                            <Tabs.TabPane
+                                tab={counterpart.translate(
+                                    "explorer.asset.actions"
+                                )}
+                                key="actions"
+                            >
+                                <Collapse className="asset-collapse">
                                     {this.renderFeePoolFunding(asset)}
                                     {this.renderFeePoolClaiming(asset)}
                                     {this.renderFeesClaiming(asset)}
@@ -2184,8 +2173,8 @@ class Asset extends React.Component {
                                         this.renderAssetResolvePrediction(
                                             asset
                                         )}
-                                </div>
-                            </Tab>
+                                </Collapse>
+                            </Tabs.TabPane>
                         </Tabs>
                     </div>
                 </div>
