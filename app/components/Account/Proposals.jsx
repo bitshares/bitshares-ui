@@ -266,8 +266,12 @@ class Proposals extends Component {
             const id = proposal.proposal.get("id");
             const proposer = proposal.proposal.get("proposer");
             const expiration = proposal.proposal.get("expiration_time");
-            const operation = proposal.operations && proposal.operations.size &&
-                proposal.operations.toJS()[0];
+            const trxTypes = counterpart.translate("transaction.trxTypes");
+            const operations = proposal.operations && proposal.operations.toJS();
+            const title = operations.length > 1 ?
+                counterpart.translate("transaction.operations") :
+                trxTypes[ops[operations[0] && operations[0][0]]];
+
             let text = proposal.operations
                 .map((o, index) => {
                     return (
@@ -296,7 +300,6 @@ class Proposals extends Component {
 
             let canReject = this._canReject(proposal.proposal.toJS());
             let proposalId = proposal.proposal.get("id");
-            const trxTypes = counterpart.translate("transaction.trxTypes");
 
             let type = proposal.proposal.get("required_active_approvals").size
                 ? "active"
@@ -314,8 +317,9 @@ class Proposals extends Component {
                         />
                         <JSONModal
                             visible={this.state.visibleId === id}
-                            operation={operation && operation[1]}
-                            title={trxTypes[ops[operation && operation[0]] || ""]}
+                            operation={operations.length > 1 ?
+                                operations : operations[0] && operations[0][1]}
+                            title={title || ""}
                             hideModal={this.closeJSONModal}
                         />
                     </td>
