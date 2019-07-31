@@ -71,7 +71,7 @@ class AccountSelector extends React.Component {
         super(props);
         this.state = {
             searching: false,
-            searchResults: [],
+            accountIndex: [],
             locked: null
         };
         this.timer = null;
@@ -80,8 +80,9 @@ class AccountSelector extends React.Component {
     componentDidMount() {
         let {account, accountName} = this.props;
 
-        if (typeof account === "undefined")
-            account = ChainStore.getAccount(accountName);
+        if (accountName) {
+            this._addToIndex(accountName);
+        }
 
         if (this.props.onAccountChanged && account)
             this.props.onAccountChanged(account);
@@ -104,13 +105,13 @@ class AccountSelector extends React.Component {
         }
     }
 
-    _addToSearch(accountName) {
-        let {searchResults} = this.state;
+    _addToIndex(accountName) {
+        let {accountIndex} = this.state;
 
-        let inAccountList = searchResults.find(a => a.name === accountName);
+        let inAccountList = accountIndex.find(a => a.name === accountName);
 
         if (accountName && !inAccountList) {
-            searchResults.push({
+            accountIndex.push({
                 name: accountName,
                 data: null,
                 fails: 0,
@@ -125,12 +126,12 @@ class AccountSelector extends React.Component {
         }, 250);
     }
 
-    _getSearchIndex(name, searchResults) {
-        return searchResults.findIndex(a => a.name === name);
+    _getIndex(name, index) {
+        return index.findIndex(a => a.name === name);
     }
 
     _fetchAccounts() {
-        let {searchResults} = this.state;
+        let {accountIndex} = this.state;
 
         const max_fails = 5;
 
@@ -144,7 +145,7 @@ class AccountSelector extends React.Component {
         // for the searching indicator
 
         // Filter out what objects we still require data for
-        let search_array = searchResults
+        let search_array = accountIndex
             .filter(search => {
                 return !search.data && search.fails < max_fails
                     ? search.name
@@ -152,14 +153,11 @@ class AccountSelector extends React.Component {
             })
             .map(search => {
                 // Update status for object
-                let objectIndex = this._getSearchIndex(
-                    search.name,
-                    searchResults
-                );
-                searchResults[objectIndex].inQuery = true;
+                let objectIndex = this._getIndex(search.name, accountIndex);
+                accountIndex[objectIndex].inQuery = true;
                 this.setState({
                     searching: true,
-                    searchResults: searchResults
+                    accountIndex: accountIndex
                 });
 
                 return search.name;
@@ -176,34 +174,46 @@ class AccountSelector extends React.Component {
             ).then(accounts => {
                 accounts.forEach(account => {
                     if (account) {
-                        let objectIndex = this._getSearchIndex(
+                        let objectIndex = this._getIndex(
                             account.get("name"),
-                            searchResults
+                            accountIndex
                         );
-                        searchResults[
-                            objectIndex
-                        ] = this._populateSearchResults(account);
-                        search_array.splice(account.get("name"));
+
+                        let result = this._populateAccountIndex(account);
+
+                        if (result) {
+                            accountIndex[objectIndex] = result;
+                            search_array.splice(account.get("name"));
+                        }
                     }
                 });
 
                 search_array.forEach(account_to_find => {
-                    let objectIndex = this._getSearchIndex(
+                    let objectIndex = this._getIndex(
                         account_to_find,
-                        searchResults
+                        accountIndex
                     );
-                    searchResults[objectIndex].fails++;
-                    searchResults[objectIndex].inQuery = false;
+                    accountIndex[objectIndex].fails++;
+                    accountIndex[objectIndex].inQuery = false;
                 });
             });
             this.setState({
-                searchResults: searchResults
+                accountIndex: accountIndex
             });
         }
-        this._getUpdatedSearchStatus();
+
+        let searchInProgress = false;
+
+        accountIndex.forEach(search => {
+            if (search.inQuery) searchInProgress = true;
+        });
+
+        this.setState({
+            searching: searchInProgress
+        });
     }
 
-    _populateSearchResults(accountResult) {
+    _populateAccountIndex(accountResult) {
         let {myActiveAccounts, contacts} = this.props;
 
         // Should not happen, just failsafe
@@ -246,20 +256,6 @@ class AccountSelector extends React.Component {
                         : null
             }
         };
-    }
-
-    _getUpdatedSearchStatus() {
-        let {searchResults} = this.state;
-
-        let searchInProgress = false;
-
-        searchResults.forEach(search => {
-            if (search.inQuery) searchInProgress = true;
-        });
-
-        this.setState({
-            searching: searchInProgress
-        });
     }
 
     // can be used in parent component: this.refs.account_selector.getAccount()
@@ -375,13 +371,13 @@ class AccountSelector extends React.Component {
     }
 
     onInputChanged(e) {
-        this._addToSearch(this.getVerifiedAccountName(e));
+        this._addToIndex(this.getVerifiedAccountName(e));
         this._notifyOnChange(e, "input");
     }
 
     onKeyDown(e) {
         clearTimeout(this.timer);
-        this._addToSearch(this.getVerifiedAccountName(e));
+        this._addToIndex(this.getVerifiedAccountName(e));
         if (e.keyCode === 13 || e.keyCode === 9) {
             this.onAction(e);
         }
@@ -406,7 +402,7 @@ class AccountSelector extends React.Component {
     }
 
     render() {
-        let {searchResults} = this.state;
+        let {accountIndex} = this.state;
 
         let {account, accountName, disableActionButton} = this.props;
 
@@ -423,11 +419,11 @@ class AccountSelector extends React.Component {
 
         // Populate account search array
         this.props.myActiveAccounts.map(a => {
-            this._addToSearch(a, false);
+            this._addToIndex(a, false);
         });
 
         this.props.contacts.map(a => {
-            this._addToSearch(a, false);
+            this._addToIndex(a, false);
         });
 
         editableInput = !!lockedState
@@ -444,14 +440,11 @@ class AccountSelector extends React.Component {
 
         // Selected Account
         if (account) {
-            let objectIndex = this._getSearchIndex(
-                account.get("name"),
-                searchResults
-            );
+            let objectIndex = this._getIndex(account.get("name"), accountIndex);
 
             selectedAccount =
-                searchResults && searchResults[objectIndex]
-                    ? searchResults[objectIndex].data
+                accountIndex && accountIndex[objectIndex]
+                    ? accountIndex[objectIndex].data
                     : null;
         }
 
@@ -512,7 +505,7 @@ class AccountSelector extends React.Component {
         }
 
         if (this.props.typeahead) {
-            let optionsContainer = searchResults
+            let optionsContainer = accountIndex
                 .filter(account => {
                     // Filter accounts based on
                     // - Exclude without results (missing chain data at the moment)
