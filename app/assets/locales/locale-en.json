@@ -725,6 +725,7 @@
         "settle_better_settleprice": "Settlement price is in favour",
         "settle_delay": "This asset will settle in %(hours)s hours",
         "settle_delay_globally_settled": "This asset will settle instantly",
+        "settle_market_predition": "Settling a prediction market asset is not possible",
         "settle_globally_settled": "Settle instantly",
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_offset": "Settlement price offset: %(offset)s%",

@@ -338,19 +338,24 @@ class ModalContent extends React.Component {
               3600
             : 0;
 
-        return (
-            <Modal
-                title={counterpart.translate("modal.settle.title", {
-                    asset: assetFullName
-                })}
-                visible={this.props.visible}
-                id={this.props.modalId}
-                footer={footer}
-                onCancel={this.props.hideModal}
-                overlay={true}
-                ref="settlement_modal"
-            >
-                {isGlobalSettled ? (
+        const isPredictionMarket = asset.getIn([
+            "bitasset",
+            "is_prediction_market"
+        ]);
+
+        let modalContent = isPredictionMarket ? (
+            <Alert
+                message={counterpart.translate(
+                    "exchange.settle_market_predition"
+                )}
+                type="info"
+                showIcon
+            />
+        ) : (
+            <React.Fragment>
+                {isPredictionMarket ? (
+                    <Alert message={"Test"} type="info" showIcon />
+                ) : isGlobalSettled ? (
                     <Alert
                         message={counterpart.translate(
                             "exchange.settle_delay_globally_settled"
@@ -420,6 +425,22 @@ class ModalContent extends React.Component {
                         </Fragment>
                     ) : null}
                 </Form>
+            </React.Fragment>
+        );
+
+        return (
+            <Modal
+                title={counterpart.translate("modal.settle.title", {
+                    asset: assetFullName
+                })}
+                visible={this.props.visible}
+                id={this.props.modalId}
+                footer={!isPredictionMarket ? footer : null}
+                onCancel={this.props.hideModal}
+                overlay={true}
+                ref="settlement_modal"
+            >
+                {modalContent}
             </Modal>
         );
     }

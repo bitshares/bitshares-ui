@@ -787,7 +787,7 @@ class BorrowModalContent extends React.Component {
                     isRatioLocked={this.state.isRatioLocked}
                     isOriginalBelowMCR={isOriginalBelowMCR}
                     isPredictionMarket={isPredictionMarket}
-                    isValid={!isPredictionMarket && !isNaN(feed_price)}
+                    isValid={!isPredictionMarket || !isNaN(feed_price)}
                     useTargetCollateral={useTargetCollateral}
                     // Actions
                     onBorrowChange={this._onBorrowChange.bind(this)}

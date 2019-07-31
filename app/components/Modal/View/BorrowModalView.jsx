@@ -163,7 +163,7 @@ export function BorrowModalView({
                 />
             )}
 
-            {isOriginalBelowMCR ? (
+            {!isPredictionMarket && isOriginalBelowMCR ? (
                 <Translate
                     component="h6"
                     className="has-warning"
