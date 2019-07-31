@@ -419,11 +419,11 @@ class AccountSelector extends React.Component {
 
         // Populate account search array
         this.props.myActiveAccounts.map(a => {
-            this._addToIndex(a, false);
+            this._addToIndex(a);
         });
 
         this.props.contacts.map(a => {
-            this._addToIndex(a, false);
+            this._addToIndex(a);
         });
 
         editableInput = !!lockedState
