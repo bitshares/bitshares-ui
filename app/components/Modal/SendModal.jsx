@@ -168,27 +168,14 @@ class SendModal extends React.Component {
             });
     }
 
-    fetchToAccount(toName) {
-        if (!this.state.to_account ||
-            (this.state.to_account && this.state.to_account.size &&
-                this.state.to_account.get("name") !== toName)) {
-            FetchChain("getAccount", toName, false).then(account => {
+    fetchAccount(name, toAccount) {
+        const account = toAccount ? "to_account" : "from_account";
+        if (!this.state[account] ||
+            (this.state[account] && this.state[account].size &&
+                this.state[account].get("name") !== name)) {
+            FetchChain("getAccount", name, false).then(acc => {
                 this.setState({
-                    to_account: account
-                });
-            }).catch(err => {
-                console.log(err);
-            });
-        }
-    }
-
-    fetchFromAccount(fromName) {
-        if (!this.state.from_account ||
-            (this.state.from_account && this.state.from_account.size &&
-                this.state.from_account.get("name") !== fromName)) {
-            FetchChain("getAccount", fromName, false).then(account => {
-                this.setState({
-                    from_account: account
+                    [account]: acc
                 });
             }).catch(err => {
                 console.log(err);
@@ -201,14 +188,14 @@ class SendModal extends React.Component {
             this.setState({
                 to_name: this.props.to_name
             });
-            this.fetchToAccount(this.props.to_name);
+            this.fetchAccount(this.props.to_name, true);
         }
 
         if (this.props.from_name) {
             this.setState({
                 from_name: this.props.from_name
             });
-            this.fetchFromAccount(this.props.from_name);
+            this.fetchAccount(this.props.from_name);
         }
 
         let {currentAccount} = this.props;
@@ -256,9 +243,9 @@ class SendModal extends React.Component {
                 to_name: np.to_name ? np.to_name : "",
                 feeAmount: getUninitializedFeeAmount()
             });
-            this.fetchFromAccount(np.from_name);
+            this.fetchAccount(np.from_name);
             if (np.to_name) {
-                this.fetchToAccount(np.to_name);
+                this.fetchAccount(np.to_name, true);
             } else {
                 this.setState({ to_account: null });
             }
