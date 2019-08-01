@@ -3457,7 +3457,8 @@ class Exchange extends React.Component {
                                             flexGrow: "1",
                                             minWidth: "280px",
                                             display: "inline-block",
-                                            borderBottom: "2px solid black"
+                                            borderBottom: "2px solid black",
+                                            borderRight: "1px solid black"
                                             //position: "absolute"
                                         }}
                                     >
