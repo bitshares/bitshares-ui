@@ -10,6 +10,7 @@ import {Notification, Radio} from "bitshares-ui-style-guide";
 import {ChainStore, FetchChain} from "bitsharesjs";
 import ExchangeInput from "components/Exchange/ExchangeInput";
 import ChainTypes from "../Utility/ChainTypes";
+import utils from "common/utils";
 
 export default class AddOpinionModal extends Modal {
     constructor(props) {
@@ -41,7 +42,9 @@ export default class AddOpinionModal extends Modal {
     _createOrder() {
         this.setState({inProgress: true});
         const type =
-            this.state.newOpinionParameters.opinion === "no" ? "bid" : "ask";
+            this.state.newOpinionParameters.opinion === "yes"
+                ? "buy"
+                : "shortAndSell";
         const feeID = this.props.baseAsset.get("id");
 
         let {description} = this.props.predictionMarket.options;
@@ -88,7 +91,7 @@ export default class AddOpinionModal extends Modal {
         };
         ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
 
-        let current = type === "ask" ? ask : bid;
+        let current = type === "buy" ? ask : bid;
 
         const order = new LimitOrderCreate({
             for_sale: current.for_sale,
@@ -101,8 +104,35 @@ export default class AddOpinionModal extends Modal {
             }
         });
 
-        if (type === "bid") {
-            return MarketsActions.createLimitOrder2(order)
+        if (type === "buy") {
+            const buy = new LimitOrderCreate({
+                for_sale: new Asset({
+                    asset_id: this.props.baseAsset.get("id"),
+                    precision: this.props.baseAsset.get("precision"),
+                    amount: utils.convert_typed_to_satoshi(
+                        this.state.newOpinionParameters.amount,
+                        this.props.baseAsset
+                    )
+                }),
+                expiration: null,
+                to_receive: new Asset({
+                    asset_id: this.props.quoteAsset.get("id"),
+                    precision: this.props.quoteAsset.get("precision"),
+                    amount:
+                        utils.convert_typed_to_satoshi(
+                            this.state.newOpinionParameters.amount,
+                            this.props.quoteAsset
+                        ) /
+                        parseFloat(this.state.newOpinionParameters.probability)
+                }),
+                seller: this.props.currentAccount.get("id"),
+                fee: {
+                    asset_id: feeID,
+                    amount: 0
+                }
+            });
+
+            return MarketsActions.createLimitOrder2(buy)
                 .then(result => {
                     this.setState({inProgress: false});
                     if (result.error) {
@@ -125,41 +155,55 @@ export default class AddOpinionModal extends Modal {
                 });
         }
 
-        if (type === "ask") {
-            Promise.all([
-                FetchChain(
-                    "getAsset",
-                    this.props.quoteAsset.getIn([
-                        "bitasset",
-                        "options",
-                        "short_backing_asset"
-                    ])
-                )
-            ]).then(assets => {
-                let [backingAsset] = assets;
-                let collateral = new Asset({
-                    amount: order.amount_for_sale.getAmount(),
-                    asset_id: backingAsset.get("id"),
-                    precision: backingAsset.get("precision")
-                });
-                MarketsActions.createPredictionShort(order, collateral).then(
-                    result => {
-                        this.setState({inProgress: false});
-                        if (result.error) {
-                            if (result.error.message !== "wallet locked")
-                                Notification.error({
-                                    message: counterpart.translate(
-                                        "notifications.exchange_unknown_error_place_order",
-                                        {
-                                            amount: buyAssetAmount,
-                                            symbol: buyAsset.symbol
-                                        }
-                                    )
-                                });
-                        }
-                    }
-                );
+        if (type === "shortAndSell") {
+            const sell = new LimitOrderCreate({
+                for_sale: new Asset({
+                    asset_id: this.props.quoteAsset.get("id"),
+                    precision: this.props.quoteAsset.get("precision"),
+                    amount: utils.convert_typed_to_satoshi(
+                        this.state.newOpinionParameters.amount,
+                        this.props.quoteAsset
+                    )
+                }),
+                expiration: null,
+                to_receive: new Asset({
+                    asset_id: this.props.baseAsset.get("id"),
+                    precision: this.props.baseAsset.get("precision"),
+                    amount:
+                        utils.convert_typed_to_satoshi(
+                            this.state.newOpinionParameters.amount,
+                            this.props.baseAsset
+                        ) *
+                        parseFloat(this.state.newOpinionParameters.probability)
+                }),
+                seller: this.props.currentAccount.get("id"),
+                fee: {
+                    asset_id: feeID,
+                    amount: 0
+                }
             });
+            let collateral = new Asset({
+                amount: sell.amount_for_sale.getAmount(),
+                asset_id: this.props.baseAsset.get("id"),
+                precision: this.props.baseAsset.get("precision")
+            });
+            MarketsActions.createPredictionShort(sell, collateral).then(
+                result => {
+                    this.setState({inProgress: false});
+                    if (result.error) {
+                        if (result.error.message !== "wallet locked")
+                            Notification.error({
+                                message: counterpart.translate(
+                                    "notifications.exchange_unknown_error_place_order",
+                                    {
+                                        amount: buyAssetAmount,
+                                        symbol: buyAsset.symbol
+                                    }
+                                )
+                            });
+                    }
+                }
+            );
         }
     }
 
@@ -187,21 +231,63 @@ export default class AddOpinionModal extends Modal {
     handleProbabilityChange(e) {
         let newOpinion = this.state.newOpinionParameters;
         newOpinion.probability = e.target.value;
-        this.setState({newOpinionParameter: newOpinion});
+        this.setState({
+            newOpinionParameter: newOpinion,
+            wrongProbability: !this._isProbabilityValid(newOpinion)
+        });
+    }
+
+    _isProbabilityValid(newOpinion = null) {
+        if (newOpinion == null) {
+            newOpinion = this.state.newOpinionParameters;
+        }
+        if (
+            !newOpinion.probability ||
+            newOpinion.probability <= 0.01 ||
+            newOpinion.probability >= 0.99
+        ) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     _isFormValid() {
+        return (
+            this._isProbabilityValid() &&
+            parseFloat(this.state.newOpinionParameters.amount) > 0
+        );
+    }
+
+    _getPotentialWinnings() {
         if (
-            !this.state.newOpinionParameters.probability ||
-            this.state.newOpinionParameters.probability < 0 ||
-            this.state.newOpinionParameters.probability > 1
+            this.state.newOpinionParameters.probability &&
+            this.state.newOpinionParameters.amount
         ) {
-            this.setState({wrongProbability: true});
-            return false;
+            if (this.state.newOpinionParameters.opinion === "yes") {
+                return utils.format_number(
+                    this.state.newOpinionParameters.amount /
+                        parseFloat(this.state.newOpinionParameters.probability),
+                    this.props.baseAsset.get("precision"),
+                    false
+                );
+            } else {
+                return utils.format_number(
+                    this.state.newOpinionParameters.amount *
+                        (1 +
+                            (this.state.newOpinionParameters.probability
+                                ? parseFloat(
+                                      this.state.newOpinionParameters
+                                          .probability
+                                  )
+                                : 0)),
+                    this.props.baseAsset.get("precision"),
+                    false
+                );
+            }
         } else {
-            this.setState({wrongProbability: false});
+            return 0;
         }
-        return parseFloat(this.state.newOpinionParameters.amount);
     }
 
     onSubmit() {
@@ -237,6 +323,7 @@ export default class AddOpinionModal extends Modal {
             </Button>
         ];
 
+        console.log("asd");
         return (
             <Modal
                 title={
@@ -248,7 +335,7 @@ export default class AddOpinionModal extends Modal {
                 closable={!this.state.inProgress}
                 footer={footer}
             >
-                <div>
+                <div className="prediction-markets--add-prediction-offer">
                     <Form className="full-width" layout="vertical">
                         <Form.Item>
                             <label className="left-label">
@@ -263,7 +350,7 @@ export default class AddOpinionModal extends Modal {
                         </Form.Item>
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.add_opinion_modal.condition" />
+                                <Translate content="prediction.details.prediction" />
                                 <Input
                                     type="text"
                                     disabled={true}
@@ -275,9 +362,34 @@ export default class AddOpinionModal extends Modal {
                             </label>
                         </Form.Item>
                         <Form.Item>
-                            <label className="left-label">
-                                <Translate content="prediction.details.prediction" />
-                            </label>
+                            <span
+                                className={
+                                    (!newOpinionParameters.probability &&
+                                        showWarning) ||
+                                    wrongProbability
+                                        ? "has-error"
+                                        : ""
+                                }
+                            >
+                                <label className="left-label">
+                                    <Translate content="prediction.details.predicated_likelihood" />
+                                    <ExchangeInput
+                                        placeholder="0.0"
+                                        onChange={this.handleProbabilityChange}
+                                        value={
+                                            this.state.newOpinionParameters
+                                                .probability
+                                        }
+                                    />
+                                </label>
+                            </span>
+                        </Form.Item>
+                        <Form.Item style={{marginBottom: "1rem"}}>
+                            <span>
+                                <label className="left-label">
+                                    <Translate content="prediction.details.i_think_that" />
+                                </label>
+                            </span>
                             <Radio.Group
                                 value={this.state.selectedOpinion}
                                 onChange={this.handleOpinionChange}
@@ -295,16 +407,9 @@ export default class AddOpinionModal extends Modal {
                             </Radio.Group>
                         </Form.Item>
                         <Form.Item>
-                            <span
-                                className={
-                                    newOpinionParameters.amount == 0 &&
-                                    showWarning
-                                        ? "has-error"
-                                        : ""
-                                }
-                            >
+                            <span>
                                 <label className="left-label">
-                                    <Translate content="prediction.add_opinion_modal.amount" />
+                                    <Translate content="prediction.details.premium" />
                                     <AmountSelector
                                         onChange={this.handleAmountChange}
                                         placeholder="0.0"
@@ -319,27 +424,32 @@ export default class AddOpinionModal extends Modal {
                             </span>
                         </Form.Item>
                         <Form.Item>
-                            <span
-                                className={
-                                    (!newOpinionParameters.probability &&
-                                        showWarning) ||
-                                    wrongProbability
-                                        ? "has-error"
-                                        : ""
-                                }
-                            >
-                                <label className="left-label">
-                                    <Translate content="prediction.add_opinion_modal.probability" />
-                                    <ExchangeInput
-                                        placeholder="0.0"
-                                        onChange={this.handleProbabilityChange}
-                                        value={
-                                            this.state.newOpinionParameters
-                                                .probability
-                                        }
-                                    />
-                                </label>
-                            </span>
+                            <label className="left-label">
+                                <Translate content="prediction.details.commission" />
+                                <AmountSelector
+                                    disabled
+                                    amount={Math.min(
+                                        this.props.predictionMarket
+                                            .max_market_fee,
+                                        (this.state.newOpinionParameters
+                                            .amount *
+                                            this.props.predictionMarket
+                                                .market_fee) /
+                                            10000
+                                    )}
+                                    asset={this.props.baseAsset.get("id")}
+                                />
+                            </label>
+                        </Form.Item>
+                        <Form.Item>
+                            <label className="left-label">
+                                <Translate content="prediction.details.potential_profit" />
+                                <AmountSelector
+                                    disabled
+                                    amount={this._getPotentialWinnings()}
+                                    asset={this.props.baseAsset.get("id")}
+                                />
+                            </label>
                         </Form.Item>
                         {this.state.inProgress ? (
                             <Translate content="footer.loading" />

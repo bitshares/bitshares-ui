@@ -1706,7 +1706,8 @@
             "all": "All",
             "premium": "Premium",
             "commission": "Commission",
-            "potential_profit": "Potential Winnings"
+            "potential_profit": "Potential Winnings",
+            "i_think_that": "I think that the prediction"
         },
         "create_market_modal": {
             "title": "Create prediction market",

@@ -34,7 +34,7 @@ class PredictionMarkets extends Component {
             selectedPredictionMarket: null,
             opinions: [],
             fetchedAssets: [],
-            preselectedOpinion: "no",
+            preselectedOpinion: "yes",
             preselectedAmount: 0,
             preselectedProbability: 0,
             isCreateMarketModalOpen: false,
@@ -139,6 +139,16 @@ class PredictionMarkets extends Component {
             const description = assetUtils.parseDescription(
                 item[1].options.description
             );
+            const flagBooleans = assetUtils.getFlagBooleans(
+                item[1].options.flags,
+                true
+            );
+            let market_fee = 0;
+            let max_market_fee = 0;
+            if (flagBooleans["charge_market_fee"]) {
+                market_fee = item[1].options.market_fee_percent;
+                max_market_fee = item[1].options.max_market_fee;
+            }
             let predictionMarketTableRow = {
                 asset: item,
                 asset_id: item[1].id,
@@ -149,7 +159,9 @@ class PredictionMarkets extends Component {
                 expiry: description.expiry,
                 options: item[1].options,
                 marketConfidence: 0,
-                marketLikelihood: 0
+                marketLikelihood: 0,
+                market_fee,
+                max_market_fee
             };
             return predictionMarketTableRow;
         });
