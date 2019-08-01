@@ -794,7 +794,11 @@ class ScaledOrderForm extends Component {
                         </div>
                     </Form.Item>
 
-                    <Form.Item label={lastPriceLabel} {...formItemProps}>
+                    <Form.Item
+                        style={{marginTop: "7px"}}
+                        label={lastPriceLabel}
+                        {...formItemProps}
+                    >
                         <span
                             style={{
                                 borderBottom: "#A09F9F 1px dotted",
@@ -817,6 +821,7 @@ class ScaledOrderForm extends Component {
                     </Form.Item>
 
                     <Form.Item
+                        style={{marginTop: "7px"}}
                         label={counterpart.translate("exchange.balance")}
                         {...formItemProps}
                     >

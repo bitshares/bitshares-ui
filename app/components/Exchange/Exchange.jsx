@@ -2761,60 +2761,7 @@ class Exchange extends React.Component {
                         />
                     </Tooltip>
                 )}
-                {this.state.isPersonalizeModalVisible ||
-                this.state.isPersonalizeModalLoaded ? (
-                    <Personalize
-                        visible={this.state.isPersonalizeModalVisible}
-                        showModal={this.showPersonalizeModal}
-                        hideModal={this.hidePersonalizeModal}
-                        viewSettings={this.props.viewSettings}
-                        chartType={chartType}
-                        chartHeight={chartHeight}
-                        onTogglePersonalize={this._togglePersonalize.bind(this)}
-                        onChangeChartHeight={this.onChangeChartHeight.bind(
-                            this
-                        )}
-                        handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
-                            this
-                        )}
-                        trackedGroupsConfig={trackedGroupsConfig}
-                        currentGroupOrderLimit={currentGroupOrderLimit}
-                        verticalOrderBook={verticalOrderBook}
-                        hideScrollbars={hideScrollbars}
-                        mirrorPanels={mirrorPanels}
-                        panelTabs={panelTabs}
-                        singleColumnOrderForm={singleColumnOrderForm}
-                        buySellTop={buySellTop}
-                        flipBuySell={flipBuySell}
-                        flipOrderBook={flipOrderBook}
-                        tinyScreen={tinyScreen}
-                        smallScreen={smallScreen}
-                        orderBookReversed={orderBookReversed}
-                        chartZoom={chartZoom}
-                        chartTools={chartTools}
-                        hideFunctionButtons={hideFunctionButtons}
-                        onMoveOrderBook={this._moveOrderBook.bind(this)}
-                        onMirrorPanels={this._mirrorPanels.bind(this)}
-                        onToggleScrollbars={this._toggleScrollbars.bind(this)}
-                        onSetAutoscroll={this._setAutoscroll.bind(this)}
-                        onToggleChart={this._toggleChart.bind(this)}
-                        onSetPanelTabs={this._setPanelTabs.bind(this)}
-                        onToggleSingleColumnOrderForm={this._toggleSingleColumnOrderForm.bind(
-                            this
-                        )}
-                        onToggleBuySellPosition={this._toggleBuySellPosition.bind(
-                            this
-                        )}
-                        onFlipBuySell={this._flipBuySell.bind(this)}
-                        onFlipOrderBook={this._flipOrderBook.bind(this)}
-                        onOrderBookReversed={this._orderBookReversed.bind(this)}
-                        onChartZoom={this._chartZoom.bind(this)}
-                        onChartTools={this._chartTools.bind(this)}
-                        onHideFunctionButtons={this._hideFunctionButtons.bind(
-                            this
-                        )}
-                    />
-                ) : null}
+
                 <Tooltip
                     title={
                         chartType == "market_depth"
@@ -3387,6 +3334,67 @@ class Exchange extends React.Component {
                                 this
                             )}
                             {...this.props}
+                        />
+                    ) : null}
+
+                    {this.state.isPersonalizeModalVisible ||
+                    this.state.isPersonalizeModalLoaded ? (
+                        <Personalize
+                            visible={this.state.isPersonalizeModalVisible}
+                            showModal={this.showPersonalizeModal}
+                            hideModal={this.hidePersonalizeModal}
+                            viewSettings={this.props.viewSettings}
+                            chartType={chartType}
+                            chartHeight={chartHeight}
+                            onTogglePersonalize={this._togglePersonalize.bind(
+                                this
+                            )}
+                            onChangeChartHeight={this.onChangeChartHeight.bind(
+                                this
+                            )}
+                            handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
+                                this
+                            )}
+                            trackedGroupsConfig={trackedGroupsConfig}
+                            currentGroupOrderLimit={currentGroupOrderLimit}
+                            verticalOrderBook={verticalOrderBook}
+                            hideScrollbars={hideScrollbars}
+                            mirrorPanels={mirrorPanels}
+                            panelTabs={panelTabs}
+                            singleColumnOrderForm={singleColumnOrderForm}
+                            buySellTop={buySellTop}
+                            flipBuySell={flipBuySell}
+                            flipOrderBook={flipOrderBook}
+                            tinyScreen={tinyScreen}
+                            smallScreen={smallScreen}
+                            orderBookReversed={orderBookReversed}
+                            chartZoom={chartZoom}
+                            chartTools={chartTools}
+                            hideFunctionButtons={hideFunctionButtons}
+                            onMoveOrderBook={this._moveOrderBook.bind(this)}
+                            onMirrorPanels={this._mirrorPanels.bind(this)}
+                            onToggleScrollbars={this._toggleScrollbars.bind(
+                                this
+                            )}
+                            onSetAutoscroll={this._setAutoscroll.bind(this)}
+                            onToggleChart={this._toggleChart.bind(this)}
+                            onSetPanelTabs={this._setPanelTabs.bind(this)}
+                            onToggleSingleColumnOrderForm={this._toggleSingleColumnOrderForm.bind(
+                                this
+                            )}
+                            onToggleBuySellPosition={this._toggleBuySellPosition.bind(
+                                this
+                            )}
+                            onFlipBuySell={this._flipBuySell.bind(this)}
+                            onFlipOrderBook={this._flipOrderBook.bind(this)}
+                            onOrderBookReversed={this._orderBookReversed.bind(
+                                this
+                            )}
+                            onChartZoom={this._chartZoom.bind(this)}
+                            onChartTools={this._chartTools.bind(this)}
+                            onHideFunctionButtons={this._hideFunctionButtons.bind(
+                                this
+                            )}
                         />
                     ) : null}
 
