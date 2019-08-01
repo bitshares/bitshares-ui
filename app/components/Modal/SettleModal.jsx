@@ -346,7 +346,7 @@ class ModalContent extends React.Component {
         let modalContent = isPredictionMarket ? (
             <Alert
                 message={counterpart.translate(
-                    "exchange.settle_market_predition"
+                    "tooltip.settle_market_prediction"
                 )}
                 type="info"
                 showIcon
