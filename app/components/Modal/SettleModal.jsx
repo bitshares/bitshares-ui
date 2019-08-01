@@ -353,9 +353,7 @@ class ModalContent extends React.Component {
             />
         ) : (
             <React.Fragment>
-                {isPredictionMarket ? (
-                    <Alert message={"Test"} type="info" showIcon />
-                ) : isGlobalSettled ? (
+                {isGlobalSettled ? (
                     <Alert
                         message={counterpart.translate(
                             "exchange.settle_delay_globally_settled"

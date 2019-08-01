@@ -291,26 +291,23 @@ class BorrowModalContent extends React.Component {
         let currentPosition = this.props
             ? this._getCurrentPosition(this.props)
             : {};
-        let initialCollateral = 0;
-
+        let initialCollateralTyped = 0;
         if (currentPosition.collateral) {
-            initialCollateral = utils.get_asset_amount(
+            initialCollateralTyped = utils.convert_satoshi_to_typed(
                 currentPosition.collateral,
                 this.props.backingAssetObj
             );
         }
 
-        // Short amount must be anyting than zero
-        let debtAmount = this.state.debtAmount != 0 ? this.state.debtAmount : 1;
-        let collateral = this.props.collateralBalanceObj.get("balance");
-        let precision = utils.get_asset_precision(this.props.backingAssetObj);
+        let backingAssetBalanceTyped = utils.convert_satoshi_to_typed(
+            this.props.collateralBalanceObj.get("balance"),
+            this.props.backingAssetObj
+        );
 
-        // Make sure we don't go over the maximum collateral ratio
-        let maximizedCollateral = Math.floor(
-            Math.min(
-                collateral / precision + initialCollateral - 10,
-                (debtAmount / this._getFeedPrice()) * 1000.0
-            )
+        // make sure we don't go over the maximum available collateral balance, and also not negative
+        let maximizedCollateral = Math.max(
+            Math.floor(backingAssetBalanceTyped + initialCollateralTyped - 10),
+            0
         );
 
         this._onCollateralChange(
@@ -787,7 +784,10 @@ class BorrowModalContent extends React.Component {
                     isRatioLocked={this.state.isRatioLocked}
                     isOriginalBelowMCR={isOriginalBelowMCR}
                     isPredictionMarket={isPredictionMarket}
-                    isValid={!isPredictionMarket || !isNaN(feed_price)}
+                    isValid={
+                        isPredictionMarket ||
+                        (!isPredictionMarket && !isNaN(feed_price))
+                    }
                     useTargetCollateral={useTargetCollateral}
                     // Actions
                     onBorrowChange={this._onBorrowChange.bind(this)}
