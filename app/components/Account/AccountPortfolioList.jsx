@@ -68,6 +68,7 @@ class AccountPortfolioList extends React.Component {
         this.priceRefs = {};
         this.valueRefs = {};
         this.changeRefs = {};
+        this.invertedPriceRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
@@ -249,6 +250,21 @@ class AccountPortfolioList extends React.Component {
         priceValue: function(a, b) {
             let aPrice = this.priceRefs[a.key];
             let bPrice = this.priceRefs[b.key];
+            if (aPrice && bPrice) {
+                return this.props.sortDirection
+                    ? aPrice - bPrice
+                    : bPrice - aPrice;
+            } else if (aPrice === null && bPrice !== null) {
+                return 1;
+            } else if (aPrice !== null && bPrice === null) {
+                return -1;
+            } else {
+                return this.sortFunctions.alphabetic(a, b, true);
+            }
+        },
+        invertedPriceValue: function(a, b) {
+            let aPrice = this.invertedPriceRefs[a.key];
+            let bPrice = this.invertedPriceRefs[b.key];
             if (aPrice && bPrice) {
                 return this.props.sortDirection
                     ? aPrice - bPrice
@@ -516,6 +532,22 @@ class AccountPortfolioList extends React.Component {
                 align: "right",
                 sorter: this.sortFunctions.priceValue,
                 sortOrder: portfolioSort === "price" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                className: "column-hide-small",
+                title: (
+                    <span>
+                        <Translate content="exchange.inverted_price" />
+                    </span>
+                ),
+                dataIndex: "invertedPrice",
+                align: "right",
+                sorter: this.sortFunctions.invertedPriceValue,
+                sortOrder:
+                    portfolioSort === "invertedPrice" && portfolioSortDirection,
                 render: item => {
                     return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
                 }
@@ -841,7 +873,15 @@ class AccountPortfolioList extends React.Component {
                       this.props.allMarketStats,
                       true
                   );
-
+            this.invertedPriceRefs[asset.get("symbol")] = !!preferredAsset
+                ? MarketUtils.getFinalPrice(
+                      this.props.coreAsset,
+                      preferredAsset,
+                      asset,
+                      this.props.allMarketStats,
+                      true
+                  )
+                : null;
             let marketId = asset.get("symbol") + "_" + preferredUnit;
             let currentMarketStats = this.props.allMarketStats.get(marketId);
             this.changeRefs[asset.get("symbol")] =
@@ -859,6 +899,14 @@ class AccountPortfolioList extends React.Component {
                 price: (
                     <EquivalentPrice
                         fromAsset={asset.get("id")}
+                        pulsate={{reverse: true, fill: "forwards"}}
+                        hide_symbols
+                    />
+                ),
+                invertedPrice: (
+                    <EquivalentPrice
+                        fromAsset={preferredAsset.get("id")}
+                        toAsset={asset.get("id")}
                         pulsate={{reverse: true, fill: "forwards"}}
                         hide_symbols
                     />
