@@ -61,6 +61,8 @@ export default class CreateMarketModal extends Modal {
         let flagBooleans = assetUtils.getFlagBooleans(0, IS_BITASSET);
         let permissionBooleans = assetUtils.getFlagBooleans("all", IS_BITASSET);
 
+        flagBooleans["charge_market_fee"] = true;
+
         return {
             flagBooleans,
             permissionBooleans
@@ -154,12 +156,21 @@ export default class CreateMarketModal extends Modal {
         }
     }
 
-    handleFeeChange({asset}) {
-        // let newMarket = this.state.marketOptions;
-        // newMarket.feeAsset = asset;
-        // if (typeof asset === "string") {
-        //     this.setState({marketOptions: newMarket}, handleWarning);
-        // }
+    _forcePositive(number) {
+        return parseFloat(number) < 0 ? "0" : number;
+    }
+
+    handleFeeChange(event) {
+        console.log(event);
+
+        let newMarketOptions = this.state.marketOptions;
+        newMarketOptions.market_fee_percent = this._forcePositive(
+            event.target.value
+        );
+
+        this.setState({
+            marketOptions: newMarketOptions
+        });
     }
 
     _isFormValid() {
@@ -331,17 +342,14 @@ export default class CreateMarketModal extends Modal {
                         </Form.Item>
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.create_market_modal.participation_fee" />
-                                <AmountSelector
+                                <Translate content="prediction.create_market_modal.commission" />
+                                <Input
                                     tabIndex={6}
-                                    disabled={true}
-                                    assets={[
-                                        "1.3.0",
-                                        "1.3.113",
-                                        "1.3.120",
-                                        "1.3.121"
-                                    ]}
-                                    asset={this.state.marketOptions.feeAsset}
+                                    type="number"
+                                    value={
+                                        this.state.marketOptions
+                                            .market_fee_percent
+                                    }
                                     onChange={this.handleFeeChange}
                                 />
                             </label>

@@ -1,5 +1,12 @@
 import React from "react";
-import {Modal, Input, Form, Switch, Button} from "bitshares-ui-style-guide";
+import {
+    Modal,
+    Input,
+    Form,
+    Switch,
+    Button,
+    Radio
+} from "bitshares-ui-style-guide";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -10,24 +17,22 @@ export default class ResolveModal extends Modal {
         this.state = {
             resolveParameters: {
                 asset_id: this.props.predictionMarket.asset_id,
-                result: "no"
+                result: "yes"
             },
-            isChecked: false
+            result: "yes"
         };
 
         this.handleResultChange = this.handleResultChange.bind(this);
     }
 
-    handleResultChange() {
-        const isChecked = !this.state.isChecked;
-        const result =
-            this.state.resolveParameters.result === "no" ? "yes" : "no";
+    handleResultChange(event) {
+        const result = event.target.value;
         this.setState({
             resolveParameters: {
                 ...this.state.resolveParameters,
                 result
             },
-            isChecked
+            result
         });
     }
 
@@ -51,7 +56,6 @@ export default class ResolveModal extends Modal {
                 {counterpart.translate("global.cancel")}
             </Button>
         ];
-
         return (
             <Modal
                 title={<Translate content="prediction.resolve_modal.title" />}
@@ -76,7 +80,7 @@ export default class ResolveModal extends Modal {
                         </Form.Item>
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.add_opinion_modal.condition" />
+                                <Translate content="prediction.resolve_modal.prediction" />
                                 <Input
                                     type="text"
                                     disabled={true}
@@ -89,20 +93,23 @@ export default class ResolveModal extends Modal {
                         </Form.Item>
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.add_opinion_modal.opinion" />
+                                <Translate content="prediction.resolve_modal.the_prediction_has" />
                             </label>
-                            <Translate
-                                content="prediction.add_opinion_modal.no"
-                                style={{marginRight: "10px"}}
-                            />
-                            <Switch
-                                checked={this.state.isChecked}
+                            <Radio.Group
+                                value={this.state.result}
                                 onChange={this.handleResultChange}
-                            />
-                            <Translate
-                                content="prediction.add_opinion_modal.yes"
-                                style={{marginLeft: "10px"}}
-                            />
+                            >
+                                <Radio value={"yes"}>
+                                    {counterpart.translate(
+                                        "prediction.resolve_modal.proven_true"
+                                    )}
+                                </Radio>
+                                <Radio value={"no"}>
+                                    {counterpart.translate(
+                                        "prediction.resolve_modal.was_incorrect"
+                                    )}
+                                </Radio>
+                            </Radio.Group>
                         </Form.Item>
                     </Form>
                 </div>
