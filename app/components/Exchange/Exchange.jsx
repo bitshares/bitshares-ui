@@ -3292,7 +3292,35 @@ class Exchange extends React.Component {
                 </div>
             );
 
-            rightPanelContainer = null;
+            rightPanelContainer = (
+                <div className="grid-block left-column shrink no-overflow">
+                    {enableToggleRight ? (
+                        <div
+                            style={{
+                                width: "auto",
+                                paddingTop: "calc(50vh - 80px)"
+                            }}
+                            onClick={this._togglePanel.bind(this, "right")}
+                        >
+                            <AntIcon
+                                data-intro={translator.translate(
+                                    "walkthrough.panel_hide"
+                                )}
+                                type={
+                                    activePanels.includes("right")
+                                        ? "caret-right"
+                                        : "caret-left"
+                                }
+                            />
+                        </div>
+                    ) : null}
+                    {activePanels.includes("right")
+                        ? !mirrorPanels
+                            ? rightPanel
+                            : leftPanel
+                        : null}
+                </div>
+            );
             <div className="grid-block left-column shrink no-overflow">
                 {enableToggleRight ? (
                     <div
