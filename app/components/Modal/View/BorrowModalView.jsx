@@ -149,21 +149,27 @@ export function BorrowModalView({
     ) : (
         <div style={{textAlign: "left"}}>
             {disableHelp ? null : (
-                <HelpContent
-                    path={
-                        "components/" +
-                        (isPredictionMarket
-                            ? "BorrowModalPrediction"
-                            : "BorrowModal")
-                    }
-                    debt={quoteAssetObj.get("symbol")}
-                    collateral={backingAssetObj.get("symbol")}
-                    borrower={accountObj.get("name")}
-                    mr={maintenanceRatio}
-                />
+                <div
+                    style={{
+                        paddingBottom: "1rem"
+                    }}
+                >
+                    <HelpContent
+                        path={
+                            "components/" +
+                            (isPredictionMarket
+                                ? "BorrowModalPrediction"
+                                : "BorrowModal")
+                        }
+                        debt={quoteAssetObj.get("symbol")}
+                        collateral={backingAssetObj.get("symbol")}
+                        borrower={accountObj.get("name")}
+                        mr={maintenanceRatio}
+                    />
+                </div>
             )}
 
-            {isOriginalBelowMCR ? (
+            {!isPredictionMarket && isOriginalBelowMCR ? (
                 <Translate
                     component="h6"
                     className="has-warning"
