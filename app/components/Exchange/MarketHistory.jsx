@@ -191,7 +191,6 @@ class MarketHistory extends React.Component {
                                 />
                             </td>
                             <td>{fill.amountToReceive()}</td>
-                            <td>{fill.amountToPay()}</td>
                             <BlockDate
                                 component="td"
                                 block_number={fill.block}

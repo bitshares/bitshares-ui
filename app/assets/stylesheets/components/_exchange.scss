@@ -177,6 +177,13 @@ p.order-table-title {
     padding-bottom: 0.25rem !important;
 }
 
+.short-long-button span {
+    width: 100% !important;
+}
+.short-long-button button {
+    width: 100% !important;
+}
+
 .buySellButton {
     float: right;
     min-width: 4rem;
@@ -192,6 +199,7 @@ form.order-form {
     }
 
     .ant-form-item-label {
+        line-height: initial !important;
         text-align: left;
         font-family: Roboto Medium, Monospaced Number, Chinese Quote,
             -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, PingFang SC,
@@ -200,6 +208,9 @@ form.order-form {
 
         label {
             font-size: 12px;
+        }
+        label:after {
+            content: "" !important;
         }
     }
 
@@ -254,7 +265,7 @@ form.order-form {
     }
 }
 
-@media screen and (max-width: 1162px) {
+@media screen and (max-width: 1439px) {
     #market-charts {
         flex-basis: 100%;
     }

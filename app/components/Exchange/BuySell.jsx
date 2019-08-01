@@ -1235,7 +1235,7 @@ class BuySell extends React.Component {
                                     </div>
                                 ) : null}
                                 <div style={{marginTop: 10}}>
-                                    <div>
+                                    <div className="short-long-button">
                                         <Tooltip
                                             placement="top"
                                             title={
@@ -1254,17 +1254,10 @@ class BuySell extends React.Component {
                                                     true
                                                 )}
                                                 type="primary"
-                                                style={{margin: 5}}
                                             >
                                                 {isBid ? "Buy" : "Sell"}
                                             </Button>
                                         </Tooltip>
-                                        {/* <Button
-                                            style={{margin: 5}}
-                                            onClick={this.props.clearForm.bind(this, isBid)}
-                                        >
-                                            Clear
-                                        </Button> */}
 
                                         {this.props.currentBridges &&
                                         !this.props.backedCoin ? (
@@ -1279,7 +1272,6 @@ class BuySell extends React.Component {
                                                 )}
                                             >
                                                 <Button
-                                                    style={{margin: 5}}
                                                     onClick={this.props.onBuy.bind(
                                                         this
                                                     )}
@@ -1310,7 +1302,6 @@ class BuySell extends React.Component {
                                                 )}
                                             >
                                                 <Button
-                                                    style={{margin: 5}}
                                                     onClick={this.props.onDeposit.bind(
                                                         this
                                                     )}
@@ -1411,7 +1402,6 @@ class BuySell extends React.Component {
                                                     )}
                                                 >
                                                     <Button
-                                                        style={{margin: 5}}
                                                         disabled={
                                                             !this.props
                                                                 .currentAccount ||
@@ -1435,7 +1425,6 @@ class BuySell extends React.Component {
                                         {this.props.onBorrow &&
                                         !isGloballySettled ? (
                                             <Button
-                                                style={{margin: 5}}
                                                 disabled={
                                                     !this.props
                                                         .currentAccount ||
@@ -1450,7 +1439,6 @@ class BuySell extends React.Component {
                                         ) : null}
                                         {isGloballySettled ? (
                                             <Button
-                                                style={{margin: 5}}
                                                 disabled={
                                                     !this.props
                                                         .currentAccount ||

@@ -69,6 +69,10 @@ div.account-image {
     }
 }
 
+.ant-form-item-control {
+    line-height: 0px !important;
+}
+
 .asset-input.ant-form-item {
     .ant-form-item-control {
         max-width: none;

@@ -1,15 +1,6 @@
 import React, {Component} from "react";
 import moment from "moment";
-import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {
-    Input,
-    Form,
-    Select,
-    Button,
-    Col,
-    Row,
-    Radio
-} from "bitshares-ui-style-guide";
+import {Input, Form, Select, Button, Radio} from "bitshares-ui-style-guide";
 import AssetNameWrapper from "../Utility/AssetName";
 import {SCALED_ORDER_ACTION_TYPES} from "../../services/Exchange";
 import {Asset} from "../../lib/common/MarketClasses";
@@ -852,6 +843,7 @@ class ScaledOrderForm extends Component {
 
                     <Button
                         onClick={this.props.handleSubmit}
+                        style={{marginTop: 10, width: "100%"}}
                         type="primary"
                         disabled={!this.isFormValid()}
                     >
