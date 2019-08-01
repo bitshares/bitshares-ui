@@ -81,7 +81,7 @@ class AccountSelector extends React.Component {
         let {account, accountName} = this.props;
 
         if (accountName) {
-            this._addToIndex(accountName);
+            this._addToIndex(accountName, true);
         }
 
         if (this.props.onAccountChanged && account)
@@ -105,7 +105,7 @@ class AccountSelector extends React.Component {
         }
     }
 
-    _addToIndex(accountName) {
+    _addToIndex(accountName, noDelay = false) {
         let {accountIndex} = this.state;
 
         let inAccountList = accountIndex.find(a => a.name === accountName);
@@ -119,11 +119,15 @@ class AccountSelector extends React.Component {
             });
         }
 
-        // Delay lookups for 250ms
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
+        if (noDelay) {
             this._fetchAccounts();
-        }, 250);
+        } else {
+            // Delay lookups for 250ms
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this._fetchAccounts();
+            }, 250);
+        }
     }
 
     _getIndex(name, index) {
