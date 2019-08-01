@@ -611,6 +611,7 @@
         "panels_mirror": "Paneles de espejo",
         "period": "Periodo de tiempo (days)",
         "price": "Precio",
+        "inverted_price": "Inverted Price",
         "price_alert": {
             "add_rule": "añadir regla",
             "alert_when": "Alertarme cuando",

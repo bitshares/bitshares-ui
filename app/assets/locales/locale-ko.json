@@ -611,6 +611,7 @@
         "panels_mirror": "Mirror Panels",
         "period": "Time period (days)",
         "price": "가격",
+        "inverted_price": "Inverted Price",
         "price_alert": {
             "add_rule": "add rule",
             "alert_when": "Alert me when",

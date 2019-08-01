@@ -611,6 +611,7 @@
         "panels_mirror": "镜像面板",
         "period": "周期 (天)",
         "price": "价格",
+        "inverted_price": "Inverted Price",
         "price_alert": {
             "add_rule": "添加规则",
             "alert_when": "警告条件",

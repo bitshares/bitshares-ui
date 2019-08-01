@@ -611,6 +611,7 @@
         "panels_mirror": "Отобразить панели зеркально",
         "period": "Временной период (дни)",
         "price": "Цена",
+        "inverted_price": "Inverted Price",
         "price_alert": {
             "add_rule": "добавить правило",
             "alert_when": "Уведомить меня в случае",
