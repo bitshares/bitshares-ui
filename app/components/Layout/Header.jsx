@@ -52,8 +52,7 @@ class Header extends React.Component {
             isDepositModalVisible: false,
             hasDepositModalBeenShown: false,
             isWithdrawModalVisible: false,
-            hasWithdrawalModalBeenShown: false,
-            accountNotificationActiveKeys: []
+            hasWithdrawalModalBeenShown: false
         };
 
         this.unlisten = null;
@@ -80,6 +79,8 @@ class Header extends React.Component {
 
         this.onBodyClick = this.onBodyClick.bind(this);
     }
+
+    _accountNotificationActiveKeys = [];
 
     showDepositModal() {
         this.setState({
@@ -270,19 +271,15 @@ class Header extends React.Component {
                 }),
                 key,
                 onClose: () => {
-                    this.setState({
-                        accountNotificationActiveKeys: this.state.accountNotificationActiveKeys.filter(
-                            el => el !== key
-                        )
-                    });
+                    // Remove key of notification from notificationKeys array after close
+                    this._accountNotificationActiveKeys = this._accountNotificationActiveKeys.filter(
+                        el => el !== key
+                    );
                 }
             });
-            this.setState({
-                accountNotificationActiveKeys: [
-                    ...this.state.accountNotificationActiveKeys,
-                    key
-                ]
-            });
+
+            this._accountNotificationActiveKeys.push(key);
+
             this._closeDropdown();
         }
     }
@@ -316,10 +313,8 @@ class Header extends React.Component {
     }
 
     _closeAccountNotifications() {
-        this.state.accountNotificationActiveKeys.map(key =>
-            Notification.close(key)
-        );
-        this.setState({accountNotificationActiveKeys: []});
+        this._accountNotificationActiveKeys.map(key => Notification.close(key));
+        this._accountNotificationActiveKeys = [];
     }
 
     onBodyClick(e) {
