@@ -2952,12 +2952,7 @@ class Exchange extends React.Component {
             } else {
                 if (a == "history") {
                     groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.history")}
-                            key="history"
-                        >
-                            {marketHistory}
-                        </Tabs.TabPane>
+                        <div key="history">{marketHistory}</div>
                     );
                 }
 
@@ -3451,15 +3446,7 @@ class Exchange extends React.Component {
                                             borderBottom: "2px solid black"
                                         }}
                                     >
-                                        <Tabs
-                                            activeKey={panelTabsActive[1]}
-                                            onChange={this._setPanelTabInGroup.bind(
-                                                this,
-                                                1
-                                            )}
-                                        >
-                                            {groupTabs[1]}
-                                        </Tabs>
+                                        {groupTabs[1]}
                                     </div>
                                 </div>
                             ) : null}

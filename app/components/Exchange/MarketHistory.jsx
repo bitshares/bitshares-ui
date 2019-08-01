@@ -312,7 +312,7 @@ class MarketHistory extends React.Component {
                         ref="history"
                         style={{
                             minHeight: !this.props.tinyScreen ? 260 : 0,
-                            maxHeight: 435,
+                            maxHeight: 478,
                             overflow: "auto",
                             lineHeight: "10px"
                         }}
