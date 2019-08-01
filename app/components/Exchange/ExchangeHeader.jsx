@@ -215,15 +215,9 @@ export default class ExchangeHeader extends React.Component {
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
                     <div className="grid-block shrink">
-                        {/* <AntIcon
-                            onClick={this.props.showPriceAlertModal}
-                            type={"bell"}
-                            className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
-                            data-intro={translator.translate(
-                                "walkthrough.price_alerts"
-                            )}
-                        />
+                        &nbsp;&nbsp;
                         <a
+                            id="center-item"
                             onClick={() => {
                                 this._addMarket(
                                     this.props.quoteAsset.get("symbol"),
@@ -235,16 +229,44 @@ export default class ExchangeHeader extends React.Component {
                             )}
                         >
                             <Icon
+                                size="1_5x"
                                 className={starClass}
                                 name="fi-star"
                                 title="icons.fi_star.market"
                             />
-                        </a> */}
-
+                        </a>
+                        <AntIcon
+                            style={{marginRight: 0}}
+                            id="center-item"
+                            onClick={this.props.showPriceAlertModal}
+                            type={"bell"}
+                            className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
+                            data-intro={translator.translate(
+                                "walkthrough.price_alerts"
+                            )}
+                        />
+                        <Link
+                            id="center-item"
+                            style={{marginLeft: 0}}
+                            onClick={() => {
+                                MarketsActions.switchMarket();
+                            }}
+                            to={`/market/${baseSymbol}_${quoteSymbol}`}
+                            data-intro={translator.translate(
+                                "walkthrough.switch_button"
+                            )}
+                        >
+                            <Icon
+                                className="shuffle center-item"
+                                name="shuffle"
+                                title="icons.shuffle"
+                            />
+                        </Link>
                         <div
                             style={{
                                 padding: "10px",
                                 borderRight: "1px solid black",
+                                borderLeft: "1px solid black",
                                 height: "100%"
                             }}
                         >

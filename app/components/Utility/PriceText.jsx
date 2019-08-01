@@ -12,6 +12,7 @@ class PriceText extends React.Component {
         if (formattedPrice.full >= 1) {
             return (
                 <span>
+                    &nbsp;&nbsp;
                     <span className="price-integer">{formattedPrice.int}.</span>
                     {formattedPrice.dec ? (
                         <span className="price-integer">
@@ -28,6 +29,7 @@ class PriceText extends React.Component {
         } else if (formattedPrice.full >= 0.1) {
             return (
                 <span>
+                    &nbsp;&nbsp;
                     <span className="price-decimal">{formattedPrice.int}.</span>
                     {formattedPrice.dec ? (
                         <span className="price-integer">
@@ -44,6 +46,7 @@ class PriceText extends React.Component {
         } else {
             return (
                 <span>
+                    &nbsp;&nbsp;
                     <span className="price-decimal">{formattedPrice.int}.</span>
                     {formattedPrice.dec ? (
                         <span className="price-decimal">
