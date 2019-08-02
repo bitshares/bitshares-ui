@@ -436,6 +436,7 @@ class HtlcModal extends React.Component {
                     console.error(err);
                 });
         }
+        this.props.hideModal();
     };
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
