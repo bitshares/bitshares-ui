@@ -26,7 +26,8 @@ class TransactionConfirm extends React.Component {
         super(props);
 
         this.state = {
-            isModalVisible: false
+            isModalVisible: false,
+            feeAssets: []
         };
 
         this.onCloseClick = this.onCloseClick.bind(this);
@@ -69,24 +70,45 @@ class TransactionConfirm extends React.Component {
         else e.preventDefault();
     }
 
+    changeTransactionOperations() {
+        const { feeAssets } = this.state;
+        const { transaction } = this.props;
+        let changedOperations;
+        if (feeAssets.length) {
+            const { operations } = transaction;
+            changedOperations = operations.map((item, index) => {
+                feeAssets.forEach(fee => {
+                    if (fee.opIndex === index) {
+                        item[1].fee.asset_id = fee.id;
+                        item[1].fee.amount = fee.amount;
+                    }
+                });
+                return item;
+            });
+            transaction.operations = changedOperations;
+        }
+        return transaction;
+    }
+
     onConfirmClick(e) {
         e.preventDefault();
+        const transaction = this.changeTransactionOperations();
         if (this.props.propose) {
             const propose_options = {
                 fee_paying_account: ChainStore.getAccount(
                     this.props.fee_paying_account
                 ).get("id")
             };
-            this.props.transaction.update_head_block().then(() => {
+            transaction.update_head_block().then(() => {
                 WalletDb.process_transaction(
-                    this.props.transaction.propose(propose_options),
+                    transaction.propose(propose_options),
                     null,
                     true
                 );
             });
         } else {
             TransactionConfirmActions.broadcast(
-                this.props.transaction,
+                transaction,
                 this.props.resolve,
                 this.props.reject
             );
@@ -106,6 +128,25 @@ class TransactionConfirm extends React.Component {
         ChainStore.getAccount(fee_paying_account);
         TransactionConfirmActions.proposeFeePayingAccount(fee_paying_account);
     }
+
+    onChangeFeeAsset = (assetId, amount, index) => {
+        const { feeAssets } = this.state;
+        let feeAssetsChanged = [];
+        const feeAssetsOperations = feeAssets.map(item => item.opIndex);
+        if (feeAssets.length && feeAssetsOperations.indexOf(index) !== -1) {
+            feeAssetsChanged = feeAssets.map(item => {
+                if (item.opIndex === index) {
+                    item.id = assetId;
+                    item.amount = amount;
+                }
+                return item;
+            });
+        } else {
+            feeAssetsChanged = [...feeAssets, {opIndex: index, id: assetId, amount}];
+        }
+
+        this.setState({ feeAssets: feeAssetsChanged });
+    };
 
     componentWillReceiveProps(np) {
         if (np.broadcast && np.included && !this.props.included && !np.error) {
@@ -251,6 +292,7 @@ class TransactionConfirm extends React.Component {
                                 trx={this.props.transaction.serialize()}
                                 index={0}
                                 no_links={true}
+                                onChangeFeeAsset={this.onChangeFeeAsset}
                             />
                         </div>
 

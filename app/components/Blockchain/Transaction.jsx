@@ -24,8 +24,10 @@ import moment from "moment";
 import {Link, DirectLink} from "react-scroll";
 import {Tooltip} from "bitshares-ui-style-guide";
 import JSONModal from "components/Modal/JSONModal";
+import SetDefaultFeeAssetModal from "components/Modal/SetDefaultFeeAssetModal";
 import asset_utils from "../../lib/common/asset_utils";
 import sanitize from "sanitize";
+import {convertFee} from "common/trxHelper";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -80,11 +82,19 @@ class NoLinkDecorator extends React.Component {
 }
 
 class OperationTable extends React.Component {
+    static propTypes = {
+        onChangeFeeAsset: PropTypes.oneOfType([PropTypes.bool, PropTypes.func])
+            .isRequired
+    };
+
     constructor(props) {
         super(props);
 
         this.state = {
-            visible: false
+            visible: false,
+            showFeeModal: false,
+            currentFeeAsset: props.operation[1].fee.asset_id || "1.3.0",
+            feeAmount: props.operation[1].fee.amount || 0
         };
     }
 
@@ -96,8 +106,22 @@ class OperationTable extends React.Component {
         this.setState({visible: false});
     };
 
+    openFeeAssetModal = () => {
+        this.setState({showFeeModal: true});
+    };
+
+    async onChangeCurrentFeeAsset(value) {
+        const { operation, onChangeFeeAsset } = this.props;
+        const type = ops[operation[0]];
+        const fee = await convertFee({type, feeID: value});
+        if (fee) {
+            this.setState({ feeAmount: fee.amount, currentFeeAsset: fee.id });
+            onChangeFeeAsset(value, fee.amount, this.props.index);
+        }
+    }
+
     render() {
-        const {operation} = this.props;
+        const { operation, onChangeFeeAsset } = this.props;
         let fee_row = (
             <tr>
                 <td>
@@ -108,14 +132,28 @@ class OperationTable extends React.Component {
                         <span>
                             <FormattedAsset
                                 color="fee"
-                                amount={operation[1].fee.amount}
-                                asset={operation[1].fee.asset_id}
+                                amount={this.state.feeAmount}
+                                asset={this.state.currentFeeAsset}
                                 style={{marginRight: "10px"}}
                             />
                             &nbsp;&nbsp;
-                            <Icon
+                            {onChangeFeeAsset ? <AntIcon
+                                type="down-square"
+                                onClick={this.openFeeAssetModal}
+                            /> : <Icon
                                 name="question-circle"
                                 title="settings.can_change_default_fee_asset_tooltip"
+                            />}
+                            <SetDefaultFeeAssetModal
+                                key="change_fee_asset_confirmation_modal"
+                                className="modal"
+                                show={this.state.showFeeModal}
+                                current_asset={this.state.currentFeeAsset}
+                                onChange={val => this.onChangeCurrentFeeAsset(val)}
+                                close={() => {
+                                    this.setState({showFeeModal: false});
+                                }}
+                                withoutCheckbox
                             />
                         </span>
                     ) : (
@@ -2410,6 +2448,7 @@ class Transaction extends React.Component {
                     index={opIndex}
                     color={color}
                     operation={op}
+                    onChangeFeeAsset={this.props.onChangeFeeAsset}
                 >
                     {rows}
                 </OperationTable>
@@ -2421,13 +2460,15 @@ class Transaction extends React.Component {
 }
 
 Transaction.defaultProps = {
-    no_links: false
+    no_links: false,
+    onChangeFeeAsset: false
 };
 
 Transaction.propTypes = {
     trx: PropTypes.object.isRequired,
     index: PropTypes.number.isRequired,
-    no_links: PropTypes.bool
+    no_links: PropTypes.bool,
+    onChangeFeeAsset: PropTypes.func
 };
 
 export default Transaction;

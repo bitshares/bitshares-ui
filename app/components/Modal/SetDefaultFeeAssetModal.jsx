@@ -62,7 +62,7 @@ class SetDefaultFeeAssetModal extends React.Component {
     }
 
     _getAssetsRows(assets) {
-        return assets.filter(item => !!item).map(assetInfo => ({
+        return assets.filter(item => !!item && item.asset).map(assetInfo => ({
             id: assetInfo.asset.get("id"),
             key: assetInfo.asset.get("id"),
             asset: assetInfo.asset.get("symbol"),
@@ -189,18 +189,19 @@ class SetDefaultFeeAssetModal extends React.Component {
                     dataSource={dataSource}
                     footer={null}
                 />
-
-                <Checkbox
-                    onClick={this._setSelectedAssetAsDefault.bind(this)}
-                    disabled={this.props.forceDefault}
-                    checked={this.state.useByDefault}
-                    style={{paddingTop: "30px"}}
-                >
-                    <Translate
-                        component="span"
-                        content="explorer.asset.fee_pool.use_asset_as_default_fee"
-                    />
-                </Checkbox>
+                {this.props.withoutCheckbox ? null : (
+                    <Checkbox
+                        onClick={this._setSelectedAssetAsDefault.bind(this)}
+                        disabled={this.props.forceDefault}
+                        checked={this.state.useByDefault}
+                        style={{paddingTop: "30px"}}
+                    >
+                        <Translate
+                            component="span"
+                            content="explorer.asset.fee_pool.use_asset_as_default_fee"
+                        />
+                    </Checkbox>
+                )}
             </Modal>
         );
     }
@@ -225,7 +226,8 @@ SetDefaultFeeAssetModal.propTypes = {
     onChange: PropTypes.func,
     // tells if modal is visible or not
     show: PropTypes.bool,
-    close: PropTypes.func
+    close: PropTypes.func,
+    withoutCheckbox: PropTypes.bool
 };
 
 SetDefaultFeeAssetModal.defaultProps = {
@@ -234,7 +236,8 @@ SetDefaultFeeAssetModal.defaultProps = {
     displayFees: false,
     forceDefault: false,
     current_asset: "1.3.0",
-    show: false
+    show: false,
+    withoutCheckbox: false
 };
 
 SetDefaultFeeAssetModal = connect(

@@ -200,6 +200,56 @@ function checkFeeStatusAsync({
     });
 }
 
+function convertFee({ feeID = "1.3.0", type = "transfer" } = {}) {
+    return new Promise((res, rej) => {
+        Promise.all([
+            estimateFeeAsync(type),
+            FetchChain("getAsset", "1.3.0"),
+            feeID !== "1.3.0" ? FetchChain("getAsset", feeID) : null
+        ])
+            .then(result => {
+                let [
+                    coreFee,
+                    coreAsset,
+                    feeAsset
+                ] = result;
+                if (feeID === "1.3.0") feeAsset = coreAsset;
+                let fee = new Asset({amount: coreFee});
+
+                if (feeID !== "1.3.0") {
+                    // Convert the amount using the CER
+                    let cer = feeAsset.getIn([
+                        "options",
+                        "core_exchange_rate"
+                    ]);
+                    let b = cer.get("base").toJS();
+                    b.precision =
+                        b.asset_id === feeID
+                            ? feeAsset.get("precision")
+                            : coreAsset.get("precision");
+                    let base = new Asset(b);
+                    let q = cer.get("quote").toJS();
+                    q.precision =
+                        q.asset_id === feeID
+                            ? feeAsset.get("precision")
+                            : coreAsset.get("precision");
+                    let quote = new Asset(q);
+                    /*
+                    ** If the CER is incorrectly configured, the multiplication
+                    ** will fail, so catch the error and default to core
+                    */
+                    try {
+                        let price = new Price({base, quote});
+                        res({ amount: fee.times(price, true).getAmount(), id: feeID });
+                    } catch(err) {
+                        res({ amount: coreFee, id: "1.3.0" });
+                    }
+                }
+            })
+            .catch(rej);
+    });
+}
+
 const privKey = "5KikQ23YhcM7jdfHbFBQg1G7Do5y6SgD9sdBZq7BqQWXmNH7gqo";
 const nonce = TransactionHelper.unique_nonce_uint64();
 let _privKey;
@@ -352,5 +402,6 @@ export {
     checkFeePoolAsync,
     checkFeeStatusAsync,
     checkBalance,
-    shouldPayFeeWithAssetAsync
+    shouldPayFeeWithAssetAsync,
+    convertFee
 };
