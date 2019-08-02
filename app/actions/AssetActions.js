@@ -7,7 +7,6 @@ import {ChainStore} from "bitsharesjs";
 import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
 import {price} from "bitsharesjs/es/serializer/src/operations";
-import SettingsStore from "stores/SettingsStore";
 let inProgress = {};
 
 class AssetActions {
@@ -23,14 +22,7 @@ class AssetActions {
          *  - Settlement Price: feed price * force settlement offset factor
          *
          */
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
         tr.add_type_operation("asset_publish_feed", {
-            fee: {
-                amount: 0,
-                asset_id: feeAssetId
-            },
             publisher,
             asset_id,
             feed: {
@@ -56,13 +48,10 @@ class AssetActions {
     fundPool(account_id, core, asset, amount) {
         let tr = WalletApi.new_transaction();
         let precision = utils.get_asset_precision(core.get("precision"));
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
         tr.add_type_operation("asset_fund_fee_pool", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: "1.3.0"
             },
             from_account: account_id,
             asset_id: asset.get("id"),
@@ -83,13 +72,10 @@ class AssetActions {
 
     claimPool(asset, amount) {
         let tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
         tr.add_type_operation("asset_claim_pool", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: "1.3.0"
             },
             issuer: asset.get("issuer"),
             asset_id: asset.get("id"),
@@ -110,14 +96,12 @@ class AssetActions {
     bidCollateral(account_id, core, asset, coll, debt) {
         let core_precision = utils.get_asset_precision(core.get("precision"));
         let asset_precision = utils.get_asset_precision(asset.get("precision"));
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
+
         var tr = WalletApi.new_transaction();
         tr.add_type_operation("bid_collateral", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: "1.3.0"
             },
             bidder: account_id,
             additional_collateral: {
@@ -145,13 +129,10 @@ class AssetActions {
 
     updateOwner(asset, new_issuer_id) {
         let tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
         tr.add_type_operation("asset_update_issuer", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: "1.3.0"
             },
             issuer: asset.issuer,
             asset_to_update: asset.id,
@@ -198,13 +179,11 @@ class AssetActions {
 
     claimPoolFees(account_id, asset, amount) {
         let tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
+
         tr.add_type_operation("asset_claim_fees", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: 0
             },
             issuer: account_id,
             amount_to_claim: {
@@ -226,13 +205,11 @@ class AssetActions {
 
     assetGlobalSettle(asset, account_id, price) {
         let tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
+
         tr.add_type_operation("asset_global_settle", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: 0
             },
             issuer: account_id,
             asset_to_settle: asset.id,
@@ -289,14 +266,11 @@ class AssetActions {
         let corePrecision = utils.get_asset_precision(
             ChainStore.getAsset(cer.base.asset_id).get("precision")
         );
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
 
         let operationJSON = {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: 0
             },
             issuer: account_id,
             symbol: createObject.symbol,
@@ -369,10 +343,6 @@ class AssetActions {
     ) {
         // Create asset action here...
         let tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
-
         if (assetChanged) {
             let quotePrecision = utils.get_asset_precision(
                 asset.get("precision")
@@ -417,7 +387,7 @@ class AssetActions {
             let updateObject = {
                 fee: {
                     amount: 0,
-                    asset_id: feeAssetId
+                    asset_id: 0
                 },
                 asset_to_update: asset.get("id"),
                 extensions: asset.get("extensions"),
@@ -478,7 +448,7 @@ class AssetActions {
             let bitAssetUpdateObject = {
                 fee: {
                     amount: 0,
-                    asset_id: feeAssetId
+                    asset_id: 0
                 },
                 asset_to_update: asset.get("id"),
                 issuer: issuer,
@@ -504,7 +474,7 @@ class AssetActions {
             tr.add_type_operation("asset_update_feed_producers", {
                 fee: {
                     amount: 0,
-                    asset_id: feeAssetId
+                    asset_id: "1.3.0"
                 },
                 issuer: issuer,
                 asset_to_update: asset.get("id"),
@@ -621,13 +591,10 @@ class AssetActions {
 
     reserveAsset(amount, assetId, payer) {
         var tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
         tr.add_type_operation("asset_reserve", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: 0
             },
             amount_to_reserve: {
                 amount: amount,

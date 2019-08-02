@@ -6,7 +6,6 @@ import WalletDb from "stores/WalletDb";
 import {ChainStore, hash, FetchChainObjects} from "bitsharesjs";
 import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
-import SettingsStore from "stores/SettingsStore";
 let inProgress = {};
 
 const calculateHash = (cipher, preimage) => {
@@ -72,16 +71,13 @@ class HtlcActions {
                 throw Error("Preimage must be given if size is empty");
             }
         }
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
 
         tr.add_type_operation("htlc_create", {
             from: from_account_id,
             to: to_account_id,
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: "1.3.0"
             },
             amount: {
                 amount: amount,
@@ -109,14 +105,12 @@ class HtlcActions {
 
     redeem({htlc_id, user_id, preimage}) {
         let tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
+
         tr.add_type_operation("htlc_redeem", {
             preimage: new Buffer(preimage).toString("hex"),
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: "1.3.0"
             },
             htlc_id: htlc_id,
             redeemer: user_id
@@ -139,13 +133,11 @@ class HtlcActions {
 
     extend({htlc_id, user_id, seconds_to_add}) {
         let tr = WalletApi.new_transaction();
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
+
         tr.add_type_operation("htlc_extend", {
             fee: {
                 amount: 0,
-                asset_id: feeAssetId
+                asset_id: "1.3.0"
             },
             htlc_id: htlc_id,
             update_issuer: user_id,

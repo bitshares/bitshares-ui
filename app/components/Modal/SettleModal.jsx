@@ -15,7 +15,6 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {Alert, Form, Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 import utils from "common/utils";
 import AssetWrapper from "../Utility/AssetWrapper";
-import SettingsStore from "stores/SettingsStore";
 
 const WorthLessSettlementWarning = withWorthLessSettlementFlag(
     ({
@@ -199,9 +198,7 @@ class ModalContent extends React.Component {
         tr.add_type_operation("asset_settle", {
             fee: {
                 amount: 0,
-                asset_id: ChainStore.assets_by_symbol.get(
-                    SettingsStore.getState().settings.get("fee_asset")
-                ) || "1.3.0"
+                asset_id: 0
             },
             account: this.props.account.get("id"),
             amount: {

@@ -283,9 +283,7 @@ class AccountVoting extends React.Component {
         // Set fee asset
         updateObject.fee = {
             amount: 0,
-            asset_id: ChainStore.assets_by_symbol.get(
-                SettingsStore.getState().settings.get("fee_asset")
-            ) || accountUtils.getFinalFeeAsset(
+            asset_id: accountUtils.getFinalFeeAsset(
                 updated_account.id,
                 "account_update"
             )

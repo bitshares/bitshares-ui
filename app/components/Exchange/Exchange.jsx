@@ -43,7 +43,6 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
 import counterpart from "counterpart";
-import SettingsStore from "stores/SettingsStore";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -992,9 +991,7 @@ class Exchange extends React.Component {
                     to_receive: order.to_receive,
                     seller: this.props.currentAccount.get("id"),
                     fee: {
-                        asset_id: ChainStore.assets_by_symbol.get(
-                            SettingsStore.getState().settings.get("fee_asset")
-                        ) || feeID,
+                        asset_id: feeID,
                         amount: 0
                     }
                 })
@@ -1039,9 +1036,7 @@ class Exchange extends React.Component {
             to_receive: current.to_receive,
             seller: this.props.currentAccount.get("id"),
             fee: {
-                asset_id: ChainStore.assets_by_symbol.get(
-                    SettingsStore.getState().settings.get("fee_asset")
-                ) || feeID,
+                asset_id: feeID,
                 amount: 0
             }
         });
@@ -1103,15 +1098,12 @@ class Exchange extends React.Component {
 
     _createPredictionShort(feeID) {
         let current = this.state.ask;
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || feeID;
         const order = new LimitOrderCreate({
             for_sale: current.for_sale,
             to_receive: current.to_receive,
             seller: this.props.currentAccount.get("id"),
             fee: {
-                asset_id: feeAssetId,
+                asset_id: feeID,
                 amount: 0
             }
         });
@@ -1133,7 +1125,7 @@ class Exchange extends React.Component {
                 precision: backingAsset.get("precision")
             });
 
-            MarketsActions.createPredictionShort(order, collateral, feeAssetId).then(
+            MarketsActions.createPredictionShort(order, collateral).then(
                 result => {
                     if (result.error) {
                         if (result.error.message !== "wallet locked")
@@ -1213,10 +1205,7 @@ class Exchange extends React.Component {
         let {currentAccount} = this.props;
         MarketsActions.cancelLimitOrder(
             currentAccount.get("id"),
-            orderID, // order id to cancel
-            ChainStore.assets_by_symbol.get(
-                SettingsStore.getState().settings.get("fee_asset")
-            )
+            orderID // order id to cancel
         );
     }
 

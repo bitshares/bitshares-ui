@@ -16,7 +16,6 @@ import {List} from "immutable";
 import {Link} from "react-router-dom";
 import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
-import SettingsStore from "stores/SettingsStore";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -104,9 +103,7 @@ class MarginPosition extends React.Component {
         tr.add_type_operation("call_order_update", {
             fee: {
                 amount: 0,
-                asset_id: ChainStore.assets_by_symbol.get(
-                    SettingsStore.getState().settings.get("fee_asset")
-                ) || "1.3.0"
+                asset_id: 0
             },
             funding_account: this.props.object.get("borrower"),
             delta_collateral: {

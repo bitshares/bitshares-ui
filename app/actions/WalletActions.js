@@ -2,7 +2,7 @@ import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import CachedPropertyActions from "actions/CachedPropertyActions";
 import ApplicationApi from "api/ApplicationApi";
-import {TransactionBuilder, FetchChain, ChainStore} from "bitsharesjs";
+import {TransactionBuilder, FetchChain} from "bitsharesjs";
 import {Apis} from "bitsharesjs-ws";
 import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";
@@ -339,12 +339,9 @@ class WalletActions {
                 }
             }
         }
-        const feeAssetId = ChainStore.assets_by_symbol.get(
-            SettingsStore.getState().settings.get("fee_asset")
-        ) || "1.3.0";
 
         tr.add_type_operation("vesting_balance_withdraw", {
-            fee: {amount: "0", asset_id: feeAssetId},
+            fee: {amount: "0", asset_id: "1.3.0"},
             owner: account,
             vesting_balance: vb.id,
             amount: {
@@ -374,9 +371,6 @@ class WalletActions {
                     account_name_or_id
                 );
                 let unlock = WalletUnlockActions.unlock();
-                const feeAssetId = ChainStore.assets_by_symbol.get(
-                    SettingsStore.getState().settings.get("fee_asset")
-                ) || "1.3.0";
 
                 let p = Promise.all([unlock, account_lookup])
                     .then(results => {
@@ -416,7 +410,7 @@ class WalletActions {
 
                             signer_pubkeys[public_key_string] = true;
                             balance_claims.push({
-                                fee: {amount: "0", asset_id: feeAssetId},
+                                fee: {amount: "0", asset_id: "1.3.0"},
                                 deposit_to_account: account.get("id"),
                                 balance_to_claim: balance.id,
                                 balance_owner_key: public_key_string,

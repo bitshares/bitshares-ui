@@ -11,7 +11,6 @@ import {
 } from "bitsharesjs";
 import counterpart from "counterpart";
 import {Notification} from "bitshares-ui-style-guide";
-import SettingsStore from "stores/SettingsStore";
 
 const ApplicationApi = {
     create_account(
@@ -311,13 +310,7 @@ const ApplicationApi = {
                         });
                         tr.add_type_operation("proposal_create", {
                             proposed_ops: propose,
-                            fee_paying_account: proposer.get("id"),
-                            fee: {
-                                asset_id: ChainStore.assets_by_symbol.get(
-                                    SettingsStore.getState().settings.get("fee_asset")
-                                ) || "1.3.0",
-                                amount: 0
-                            }
+                            fee_paying_account: proposer.get("id")
                         });
                         return WalletDb.process_transaction(
                             tr,
@@ -407,9 +400,7 @@ const ApplicationApi = {
             tr.add_type_operation("asset_issue", {
                 fee: {
                     amount: 0,
-                    asset_id: ChainStore.assets_by_symbol.get(
-                        SettingsStore.getState().settings.get("fee_asset")
-                    ) || "1.3.0"
+                    asset_id: 0
                 },
                 issuer: from_account,
                 asset_to_issue: {
@@ -442,9 +433,7 @@ const ApplicationApi = {
                 tr.add_type_operation("worker_create", {
                     fee: {
                         amount: 0,
-                        asset_id: ChainStore.assets_by_symbol.get(
-                            SettingsStore.getState().settings.get("fee_asset")
-                        ) || "1.3.0"
+                        asset_id: 0
                     },
                     owner,
                     work_begin_date: options.start,
@@ -465,15 +454,7 @@ const ApplicationApi = {
 
     updateAccount(updateObject) {
         let tr = new TransactionBuilder();
-        tr.add_type_operation("account_update", {
-            ...updateObject,
-            fee: {
-                amount: 0,
-                asset_id: ChainStore.assets_by_symbol.get(
-                    SettingsStore.getState().settings.get("fee_asset")
-                ) || "1.3.0"
-            }
-        });
+        tr.add_type_operation("account_update", updateObject);
         return WalletDb.process_transaction(tr, null, true);
     },
 
