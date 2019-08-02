@@ -480,6 +480,20 @@ ul.market-stats {
     margin-left: 25px;
 }
 
+@media (max-width: 480px) {
+    .top-stats {
+        display: none;
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 330px) {
+    .exchange--chart-control {
+        display: none;
+        visibility: hidden;
+    }
+}
+
 .stats .stat {
     text-align: center;
     padding: 2px 5px;
