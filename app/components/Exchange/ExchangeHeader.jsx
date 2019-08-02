@@ -456,7 +456,7 @@ export default class ExchangeHeader extends React.Component {
                                 ) : null}
                             </ul>
                             <ul
-                                className="market-stats stats top-stats"
+                                className="market-stats stats top-stats exchange-gear"
                                 style={{marginBottom: "0"}}
                                 data-position={"left"}
                                 data-step="1"

@@ -480,17 +480,12 @@ ul.market-stats {
     margin-left: 25px;
 }
 
-@media (max-width: 480px) {
-    .top-stats {
-        display: none;
-        visibility: hidden;
+@media (max-width: 450px) {
+    .exchange-gear {
+        display: none !important;
     }
-}
-
-@media (max-width: 330px) {
     .exchange--chart-control {
-        display: none;
-        visibility: hidden;
+        display: none !important;
     }
 }
 
