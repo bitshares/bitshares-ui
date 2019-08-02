@@ -100,16 +100,14 @@ class AccountSelector extends React.Component {
             this.onInputChanged(accountName);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (this.props.focus && !!this.props.editable && !this.props.disabled) {
             this.refs.user_input.focus();
         }
-    }
 
-    componentWillReceiveProps(np) {
-        if (np.account && np.account !== this.props.account) {
+        if (prevProps.account && prevProps.account !== this.props.account) {
             if (this.props.onAccountChanged) {
-                this.props.onAccountChanged(np.account);
+                this.props.onAccountChanged(this.props.account);
             }
         }
     }
@@ -176,10 +174,7 @@ class AccountSelector extends React.Component {
 
         if (search_array.length > 0) {
             if (__DEV__)
-                console.log(
-                    "Looked for " + search_array.length + " accounts",
-                    search_array
-                );
+                console.log("Looked for " + search_array.length + " accounts");
             FetchChainObjects(
                 ChainStore.getAccount,
                 search_array,
