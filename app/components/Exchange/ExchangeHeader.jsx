@@ -264,7 +264,7 @@ export default class ExchangeHeader extends React.Component {
                         </Link>
                         <div
                             style={{
-                                padding: "10px",
+                                padding: "12px",
                                 borderRight: "1px solid black",
                                 borderLeft: "1px solid black",
                                 height: "100%"

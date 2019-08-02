@@ -385,7 +385,7 @@ class OrderBook extends React.Component {
             flip: props.flipOrderBook,
             showAllBids: false,
             showAllAsks: false,
-            rowCount: 12,
+            rowCount: 22,
             autoScroll: props.autoScroll
         };
         this.verticalStickyTable = React.createRef();
@@ -901,7 +901,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 240,
+                                    maxHeight: 226,
                                     lineHeight: "15px"
                                 }}
                             >
