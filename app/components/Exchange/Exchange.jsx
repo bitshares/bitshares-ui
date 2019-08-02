@@ -2741,7 +2741,7 @@ class Exchange extends React.Component {
                     height: 0,
                     position: "absolute",
                     top: "10px",
-                    right: "10px"
+                    right: "38px"
                 }}
             >
                 {chartType == "price_chart" && (

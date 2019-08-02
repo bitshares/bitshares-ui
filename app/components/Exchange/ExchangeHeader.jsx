@@ -455,6 +455,31 @@ export default class ExchangeHeader extends React.Component {
                                     />
                                 ) : null}
                             </ul>
+                            <ul
+                                className="market-stats stats top-stats"
+                                style={{marginBottom: "0"}}
+                                data-position={"left"}
+                                data-step="1"
+                                data-intro={translator.translate(
+                                    "walkthrough.personalize"
+                                )}
+                            >
+                                <li
+                                    style={{paddingTop: "11.5px"}}
+                                    className="stressed-stat input clickable"
+                                    onClick={this.props.onTogglePersonalize.bind(
+                                        this
+                                    )}
+                                >
+                                    <AntIcon
+                                        type="setting"
+                                        style={{
+                                            paddingRight: 10,
+                                            fontSize: "1.6em"
+                                        }}
+                                    />
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

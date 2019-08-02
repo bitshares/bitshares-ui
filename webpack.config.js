@@ -80,7 +80,7 @@ module.exports = function(env) {
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(__VERSION__),
             __ELECTRON__: !!env.electron,
-            __HASH_HISTORY__: true,
+            __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
             __UI_API__: JSON.stringify(env.apiUrl),
             __TESTNET__: !!env.testnet,
