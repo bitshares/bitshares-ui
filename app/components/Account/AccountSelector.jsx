@@ -28,6 +28,7 @@ import {
     Form
 } from "bitshares-ui-style-guide";
 
+const MAX_LOOKUP_ATTEMPTS = 5;
 /*
  * @brief Allows the user to enter an account by name or #ID
  *
@@ -70,7 +71,6 @@ class AccountSelector extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            searching: false,
             accountIndex: [],
             locked: null
         };
@@ -83,6 +83,15 @@ class AccountSelector extends React.Component {
         if (accountName) {
             this._addToIndex(accountName, true);
         }
+
+        // Populate account search array
+        this.props.myActiveAccounts.map(a => {
+            this._addToIndex(a, true);
+        });
+
+        this.props.contacts.map(a => {
+            this._addToIndex(a, true);
+        });
 
         if (this.props.onAccountChanged && account)
             this.props.onAccountChanged(account);
@@ -106,7 +115,21 @@ class AccountSelector extends React.Component {
     }
 
     _addToIndex(accountName, noDelay = false) {
+        if (noDelay) {
+            this._addThisToIndex(accountName);
+            this._fetchAccounts();
+        } else {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this._addToIndex(accountName, true);
+            }, 500);
+        }
+    }
+
+    _addThisToIndex(accountName) {
         let {accountIndex} = this.state;
+
+        if (!accountName) return;
 
         let inAccountList = accountIndex.find(a => a.name === accountName);
 
@@ -114,19 +137,8 @@ class AccountSelector extends React.Component {
             accountIndex.push({
                 name: accountName,
                 data: null,
-                fails: 0,
-                inQuery: false
+                attempts: 0
             });
-        }
-
-        if (noDelay) {
-            this._fetchAccounts();
-        } else {
-            // Delay lookups for 250ms
-            clearTimeout(this.timer);
-            this.timer = setTimeout(() => {
-                this._fetchAccounts();
-            }, 250);
         }
     }
 
@@ -134,46 +146,44 @@ class AccountSelector extends React.Component {
         return index.findIndex(a => a.name === name);
     }
 
-    _fetchAccounts() {
+    _getSearchArray() {
         let {accountIndex} = this.state;
-
-        const max_fails = 5;
 
         // For all objects in search_array, query with FetchChainObjects
         // Update results for each object with returned data and remove from search_array
-        // Update search_array for all remaining objects with increased fails count
+        // Update search_array for all remaining objects with increased attempts count
         // which is when account does not exists, but can also be if node failed to send results
-        // back in time, so we query at least `max_fails` times before we stop
-
-        // Always call `_getUpdatedSearchStatus()` to look for `inQuery` statuses
-        // for the searching indicator
+        // back in time, so we query at least `MAX_LOOKUP_ATTEMPTS` times before we stop
 
         // Filter out what objects we still require data for
         let search_array = accountIndex
             .filter(search => {
-                return !search.data && search.fails < max_fails
+                return !search.data && search.attempts < MAX_LOOKUP_ATTEMPTS
                     ? search.name
                     : null;
             })
             .map(search => {
-                // Update status for object
-                let objectIndex = this._getIndex(search.name, accountIndex);
-                accountIndex[objectIndex].inQuery = true;
-                this.setState({
-                    searching: true,
-                    accountIndex: accountIndex
-                });
-
                 return search.name;
             });
 
+        return search_array;
+    }
+
+    _fetchAccounts() {
+        let {accountIndex} = this.state;
+
+        let search_array = this._getSearchArray();
+
         if (search_array.length > 0) {
             if (__DEV__)
-                console.log("Looked for " + search_array.length + " accounts");
+                console.log(
+                    "Looked for " + search_array.length + " accounts",
+                    search_array
+                );
             FetchChainObjects(
                 ChainStore.getAccount,
                 search_array,
-                2000,
+                3000,
                 {}
             ).then(accounts => {
                 accounts.forEach(account => {
@@ -197,24 +207,24 @@ class AccountSelector extends React.Component {
                         account_to_find,
                         accountIndex
                     );
-                    accountIndex[objectIndex].fails++;
-                    accountIndex[objectIndex].inQuery = false;
+                    accountIndex[objectIndex].attempts++;
                 });
-            });
-            this.setState({
-                accountIndex: accountIndex
+                this.setState({
+                    accountIndex: accountIndex
+                });
+
+                // Run another fetch of accounts if data is still missing
+                let isDataMissing = this.state.accountIndex.find(
+                    a => !a.data && a.attempts < MAX_LOOKUP_ATTEMPTS
+                );
+
+                if (isDataMissing) {
+                    setTimeout(() => {
+                        this._fetchAccounts();
+                    }, 500);
+                }
             });
         }
-
-        let searchInProgress = false;
-
-        accountIndex.forEach(search => {
-            if (search.inQuery) searchInProgress = true;
-        });
-
-        this.setState({
-            searching: searchInProgress
-        });
     }
 
     _populateAccountIndex(accountResult) {
@@ -242,8 +252,7 @@ class AccountSelector extends React.Component {
 
         return {
             name: accountName,
-            inQuery: false,
-            fails: 0,
+            attempts: 0,
             data: {
                 id: accountResult.get("id"),
                 name: accountName,
@@ -380,8 +389,6 @@ class AccountSelector extends React.Component {
     }
 
     onKeyDown(e) {
-        clearTimeout(this.timer);
-        this._addToIndex(this.getVerifiedAccountName(e));
         if (e.keyCode === 13 || e.keyCode === 9) {
             this.onAction(e);
         }
@@ -410,6 +417,10 @@ class AccountSelector extends React.Component {
 
         let {account, accountName, disableActionButton} = this.props;
 
+        let searchInProgress = this.state.accountIndex.find(
+            a => !a.data && a.attempts < MAX_LOOKUP_ATTEMPTS
+        );
+
         const lockedState =
             this.state.locked !== null ? this.state.locked : this.props.locked;
 
@@ -420,15 +431,6 @@ class AccountSelector extends React.Component {
             disabledInput,
             editableInput,
             linked_status;
-
-        // Populate account search array
-        this.props.myActiveAccounts.map(a => {
-            this._addToIndex(a);
-        });
-
-        this.props.contacts.map(a => {
-            this._addToIndex(a);
-        });
 
         editableInput = !!lockedState
             ? false
@@ -712,7 +714,7 @@ class AccountSelector extends React.Component {
                         <div className="inline-label input-wrapper">
                             {accountImageContainer}
                             {formContainer}
-                            {this.state.searching ? (
+                            {searchInProgress ? (
                                 <AntIcon type="loading" style={{padding: 10}} />
                             ) : null}
                             {lockedStateContainer}
