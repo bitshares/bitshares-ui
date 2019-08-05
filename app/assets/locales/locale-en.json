@@ -133,7 +133,7 @@
         "pay": "Send to",
         "pay_from": "Pay with account",
         "payees": "Payees",
-        "percent": "Percent of total supply",
+        "percent": "% total supply",
         "perm": {
             "account_name_or_key": "Account name or key",
             "acct_or_key": "Account / Key / Address",
