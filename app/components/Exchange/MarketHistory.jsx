@@ -26,7 +26,7 @@ class MarketHistory extends React.Component {
         super();
         this.state = {
             activeTab: props.viewSettings.get("historyTab", "history"),
-            rowCount: 60,
+            rowCount: 100,
             showAll: false
         };
     }
@@ -312,7 +312,7 @@ class MarketHistory extends React.Component {
                         ref="history"
                         style={{
                             minHeight: !this.props.tinyScreen ? 260 : 0,
-                            maxHeight: 478,
+                            maxHeight: this.props.chartHeight,
                             overflow: "auto",
                             lineHeight: "10px"
                         }}

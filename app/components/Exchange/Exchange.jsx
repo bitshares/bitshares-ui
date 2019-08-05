@@ -2478,6 +2478,7 @@ class Exchange extends React.Component {
                     combinedBids={combinedBids}
                     combinedAsks={combinedAsks}
                     highestBid={highestBid}
+                    chartHeight={chartHeight}
                     lowestAsk={lowestAsk}
                     totalBids={totals.bid}
                     totalAsks={totals.ask}
@@ -2556,6 +2557,7 @@ class Exchange extends React.Component {
                     myHistory={currentAccount.get("history")}
                     base={base}
                     quote={quote}
+                    chartHeight={chartHeight}
                     baseSymbol={baseSymbol}
                     quoteSymbol={quoteSymbol}
                     activeTab={"history"}
@@ -2690,7 +2692,7 @@ class Exchange extends React.Component {
                     buckets={buckets}
                     bucketSize={bucketSize}
                     currentPeriod={this.state.currentPeriod}
-                    chartHeight={thisChartHeight}
+                    chartHeight={chartHeight + 22}
                     chartZoom={tinyScreen ? false : chartZoom}
                     chartTools={tinyScreen ? false : chartTools}
                     mobile={tinyScreen}

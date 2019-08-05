@@ -385,7 +385,7 @@ class OrderBook extends React.Component {
             flip: props.flipOrderBook,
             showAllBids: false,
             showAllAsks: false,
-            rowCount: 22,
+            rowCount: 35,
             autoScroll: props.autoScroll
         };
         this.verticalStickyTable = React.createRef();
@@ -901,7 +901,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 226,
+                                    maxHeight: this.props.chartHeight / 2,
                                     lineHeight: "15px"
                                 }}
                             >
@@ -927,18 +927,13 @@ class OrderBook extends React.Component {
                         )}
                     >
                         <div>
-                            <div className="market-right-padding-only">
-                                <table className="table order-table table-hover fixed-table text-right">
-                                    {flipOrderBook ? rightHeader : leftHeader}
-                                </table>
-                            </div>
                             <div
                                 className="grid-block"
                                 ref="hor_bids"
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 226,
+                                    maxHeight: this.props.chartHeight / 2,
                                     lineHeight: "13px"
                                 }}
                             >
