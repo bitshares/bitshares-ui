@@ -6,7 +6,6 @@ import Translate from "react-translate-component";
 import PropTypes from "prop-types";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
-import SettingsActions from "actions/SettingsActions";
 import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
@@ -662,6 +661,7 @@ class OrderBook extends React.Component {
                 return a.getPrice() - b.getPrice();
             });
         }
+
         if (base && quote) {
             // limit orders or grouped orders
             if (this.props.currentGroupOrderLimit !== 0) {
@@ -792,6 +792,35 @@ class OrderBook extends React.Component {
                         />
                     );
                 });
+                askRows.reverse();
+                if (askRows.length < 24) {
+                    for (
+                        var iterator = 24 - askRows.length;
+                        iterator < 25;
+                        iterator++
+                    )
+                        askRows.push(
+                            <tr>
+                                <td className="orderHistoryAsk">-</td>
+                                <td>-</td>
+                                <td className="column-hide-xs">-</td>
+                            </tr>
+                        );
+                }
+                if (bidRows.length < 24) {
+                    for (
+                        var iterator = 24 - bidRows.length;
+                        iterator < 25;
+                        iterator++
+                    )
+                        bidRows.push(
+                            <tr>
+                                <td className="orderHistoryBid">-</td>
+                                <td>-</td>
+                                <td className="column-hide-xs">-</td>
+                            </tr>
+                        );
+                }
             }
         }
         if (this.props.horizontal) {
@@ -901,7 +930,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: this.props.chartHeight / 2,
+                                    maxHeight: this.props.chartHeight / 2 - 2,
                                     lineHeight: "15px"
                                 }}
                             >
@@ -921,6 +950,7 @@ class OrderBook extends React.Component {
                     </div>
 
                     <div
+                        style={{borderTop: "2px solid black"}}
                         className={cnames(
                             innerClass,
                             flipOrderBook ? "order-2" : "order-1"
@@ -933,7 +963,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: this.props.chartHeight / 2,
+                                    maxHeight: this.props.chartHeight / 2 - 2,
                                     lineHeight: "13px"
                                 }}
                             >
