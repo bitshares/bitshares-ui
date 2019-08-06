@@ -95,7 +95,7 @@ class TransactionConfirm extends React.Component {
 
     onCloseClick(e) {
         e.preventDefault();
-        TransactionConfirmActions.close();
+        TransactionConfirmActions.close(this.props.reject);
     }
 
     onProposeClick() {
