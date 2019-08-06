@@ -534,15 +534,6 @@ class SettingsStore {
                 this._saveSettings();
             }
         }
-        // else {
-        //     console.warn(
-        //         "Trying to save unchanged value (" +
-        //             payload.setting +
-        //             ": " +
-        //             payload.value +
-        //             "), consider refactoring to avoid this"
-        //     );
-        // }
     }
 
     onChangeViewSetting(payload) {

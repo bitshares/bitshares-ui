@@ -1,9 +1,7 @@
 import React from "react";
-import {Pagination} from "antd";
 import counterpart from "counterpart";
 import {Table} from "bitshares-ui-style-guide";
 import "./paginated-list.scss";
-
 export default class PaginatedList extends React.Component {
     constructor(props) {
         super(props);
@@ -50,6 +48,7 @@ export default class PaginatedList extends React.Component {
                             : (record, index) =>
                                   this.props.rowClassName(record, index)
                     }
+                    rowSelection={this.props.rowSelection}
                 />
                 {this.props.children}
             </div>

@@ -354,7 +354,7 @@ class HtlcModal extends React.Component {
             error: null,
             feeAsset: null,
             fee_asset_id:
-                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                ChainStore.assets_by_symbol.get(this.props.fee_asset_symbol) ||
                 "1.3.0",
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},

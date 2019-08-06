@@ -2687,6 +2687,14 @@
     .modal--transaction-confirm {
         zindex: 10000; // make transaction confirm modal above another modals
     }
+
+    .asset-collapse {
+        .ant-collapse-header {
+            background: $panel-bg-color;
+            color: $primary-text-color !important;
+            border: solid 1.2px $panel-bg-color !important;
+        }
+    }
 }
 .rc-time-picker-panel {
     z-index: 9999 !important;
@@ -2836,5 +2844,18 @@
                 border: 0;
             }
         }
+    }
+}
+
+.customizable-column--selector {
+    position: absolute;
+    right: 1rem;
+    top: -3rem;
+}
+
+.customizable-column--selector--option {
+    padding: 10px;
+    .ant-checkbox-wrapper {
+        width: 100%;
     }
 }

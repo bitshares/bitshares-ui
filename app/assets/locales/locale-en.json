@@ -419,6 +419,9 @@
             "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
+    "customizable_table": {
+        "customize_the_columns": "Customize the Columns"
+    },
     "account_browsing_mode": {
         "go_back": "Go back to my account",
         "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
@@ -1666,6 +1669,86 @@
         "newer": "Newer",
         "older": "Older"
     },
+    "prediction": {
+        "tooltips": {
+            "what_is_a_prediction_market_asset": "A prediction market asset is a special kind of asset that allows you to agree or disagree with the prediction statement of the asset and put collateral behind your opinion. It can be created by any user, and if you are participating you need to trust the issuer to properly reflects the real world outcome on the blockchain.",
+            "create_prediction_market_asset": "A prediction market is a special kind of SmartCoin. This lets you create such a prediction market asset with inputs tailored for this purpose.",
+            "hide_unknown_houses": "Per default the table below only shows prediction market assets of known issuers that meet requirements to increase their trustworthiness. As a participant, you need trust in the asset issuer such that the asset will be resolved according to the real world outcome. Uncheck this to show all issuers that exist on the blockchain, and make sure you know what you are doing. If you are the owner of a prediction market asset and want to be included in the default list, please contact the BitShares community.",
+            "hide_invalid_asset": "Per default the table below only shows prediction market assets that meet common standards required for a consistent user experience (prediction and resolution date are given, and reasonable market fee). Uncheck this to show all assets that exist on the blockchain, and make sure you know what you are doing.",
+            "add_prediction": "A prediction is reflected as a limit order on the market of the prediction market asset with its collateral. This lets you create a buy order (you agree with the prediction), or a sell order with previous borrowing of the prediction market asset (you disagree with the prediction). You can also oppose one of the existing predictions listed below, which correlates to matching one of the existing limit orders on the blockchain.",
+            "what_is_a_prediction_offer": "A prediction offer reflects limit orders on the market of the prediction market asset and its collateral. Agreement with the prediction (Prediction proves true) means that you want to buy the prediction market asset, disagreement (Prediction is incorrect) means that you borrow the prediction market asset and sell it",
+            "oppose_proves_true": "You are opposing someone that thinks the prediction proves true. That means, you think the prediction will be incorrect. On the blockchain that reflects as borrowing and selling the prediction market asset.",
+            "oppose_is_incorrect": "You are opposing someone that thinks the prediction is incorrect. That means, you think the prediction will prove true. On the blockchain that reflects as buying and hodling the prediction market asset."
+        },
+        "overview": {
+            "loading": "Loading...",
+            "hide_unknown_houses": "Hide unknown houses",
+            "hide_invalid_asset": "Hide invalid assets",
+            "issuer": "House",
+            "prediction": "Prediction",
+            "description": "Description",
+            "expiry": "Resolution date",
+            "odds": "Odds",
+            "action": "Action",
+            "create_market": "Create Prediction Market",
+            "resolve": "Resolve",
+            "yes": "Yes",
+            "no": "No",
+            "market_confidence": "Market confidence",
+            "market_predicated_likelihood": "Market predicated likelihood",
+            "all": "All",
+            "open": "Open",
+            "past_resolution_date": "Past Resolution Time"
+        },
+        "details": {
+            "list_of_current_prediction_offers": "List of current prediction offers",
+            "amount": "Amount",
+            "predicated_likelihood": "Predicated Likelihood",
+            "fee": "Fee",
+            "predictor": "Predictor",
+            "prediction": "Prediction",
+            "proves_true": "Proves true",
+            "incorrect": "Is incorrect",
+            "cancel": "Cancel",
+            "oppose": "Oppose",
+            "add_prediction": "Add prediction",
+            "all": "All",
+            "premium": "Premium",
+            "commission": "Commission",
+            "potential_profit": "Potential Winnings",
+            "i_think_that": "I think that the prediction"
+        },
+        "create_market_modal": {
+            "title": "Create prediction market",
+            "symbol": "Symbol",
+            "condition": "Condition",
+            "description": "Description",
+            "resolution_date": "Resolution date",
+            "backing_asset": "Backing asset",
+            "commission": "Commission",
+            "warning": "Fill all blanks"
+        },
+        "add_opinion_modal": {
+            "title": "Add Prediction Offer",
+            "symbol": "Symbol",
+            "condition": "Condition",
+            "resolution": "Resolution",
+            "yes": "YES",
+            "no": "NO",
+            "amount": "Amount",
+            "probability": "Probability (0...1)",
+            "warning": "Set amount"
+        },
+        "resolve_modal": {
+            "title": "Resolve Prediction Market Asset",
+            "symbol": "Symbol",
+            "prediction": "Prediction",
+            "resolution": "Resolution",
+            "the_prediction_has": "The prediction ...",
+            "proven_true": "... has proven true",
+            "was_incorrect": "... was incorrect"
+        }
+    },
     "proposal": {
         "action": "Actions",
         "add": "Add",
@@ -2121,6 +2204,7 @@
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
+        "settle_market_prediction": "Settling a prediction market asset is only possible after its resolution.",
         "hide_asset": "Click here to hide this asset from this list.",
         "lack_funds": "There is not enough funds to perform the operation",
         "latest_price": "This is the latest price seen in this market.",
@@ -2351,7 +2435,8 @@
         "withdraw_permission_claim": "Claimed withdrawal permission for account",
         "withdraw_permission_create": "Gave withdrawal permission for account",
         "withdraw_permission_delete": "Deleted withdrawal permissions for account",
-        "withdraw_permission_update": "Updated withdrawal permission for account"
+        "withdraw_permission_update": "Updated withdrawal permission for account",
+        "view_json": "Show raw json"
     },
     "transfer": {
         "again": "MAKE ANOTHER TRANSFER",

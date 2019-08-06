@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "3.1.190731-rc1",
+    "version": "3.1.190820-rc1",
     "description": "Reference UI to showcase all features of the BitShares blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Worker <ui-dev@bitshares.org>",
@@ -249,7 +249,7 @@
         "husky": "^0.14.3",
         "jest-cli": "^24.7.1",
         "less-plugin-precompile-import": "git+https://github.com/gibbsfromncis/less-plugin-precompile-import.git#166550452515c03c0d497cae97bf58ba15ca1f84",
-        "markdown-loader": "^5.0.0",
+        "markdown-loader": "^5.1.0",
         "md5-file": "^4.0.0",
         "mini-css-extract-plugin": "^0.4.0",
         "mocha": "^5.1.1",
