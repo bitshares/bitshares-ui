@@ -452,6 +452,9 @@
     "assets": {
         "BTS": "BTS is the core token of the BitShares Blockchain"
     },
+    "errors": {
+        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+    },
     "boolean": {
         "false": "False",
         "true": "True"

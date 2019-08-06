@@ -11,12 +11,14 @@ import SearchInput from "../Utility/SearchInput";
 import counterpart from "counterpart";
 
 class AccountVesting extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             vesting_balances: [],
-            searchTerm: ""
+            searchTerm: "",
+            loading: false,
+            error: false
         };
 
         this.onSearch = this.onSearch.bind(this);
@@ -37,15 +39,25 @@ class AccountVesting extends React.Component {
     }
 
     retrieveVestingBalances(accountId) {
+        this.setState({
+            loading: true
+        });
         accountId = accountId || this.props.account.get("id");
         Apis.instance()
             .db_api()
             .exec("get_vesting_balances", [accountId])
             .then(vesting_balances => {
                 this.mapVestingBalances(vesting_balances);
+                this.setState({
+                    loading: false
+                });
             })
             .catch(err => {
                 console.log("error:", err);
+                this.setState({
+                    loading: false,
+                    error: true
+                });
             });
     }
 
@@ -305,7 +317,7 @@ class AccountVesting extends React.Component {
                     return item.canClaim ? (
                         <Button
                             onClick={() => this.onClaim(item)}
-                            type="primary"
+                            type="secondary"
                         >
                             <Translate content="account.member.claim" />
                         </Button>
@@ -324,7 +336,7 @@ class AccountVesting extends React.Component {
 
     onSearch(event) {
         this.setState({
-            searchTerm: (event.target.value || "").toUpperCase()
+            searchTerm: event.target.value || ""
         });
     }
 
@@ -335,16 +347,13 @@ class AccountVesting extends React.Component {
             return (
                 `${item.vestingId}\0${item.vestingType}`
                     .toUpperCase()
-                    .indexOf(this.state.searchTerm) !== -1
+                    .indexOf(this.state.searchTerm.toUpperCase()) !== -1
             );
         });
 
         return (
             <div className="grid-content app-tables no-padding">
-                <div
-                    className="grid-block main-content margin-block wrap"
-                    style={{margin: 0}}
-                >
+                <div className="grid-block main-content" style={{margin: 0}}>
                     <div className="grid-content">
                         <Translate
                             component="h1"
@@ -354,25 +363,25 @@ class AccountVesting extends React.Component {
                             content="account.vesting.explain"
                             component="p"
                         />
-                        <SearchInput
-                            style={{
-                                width: "60%",
-                                float: "left",
-                                paddingBottom: "20px"
-                            }}
-                            onChange={this.onSearch.bind(this)}
-                            onClear={() => {
-                                this.setState({searchTerm: ""});
-                            }}
-                            value={this.state.searchTerm}
-                            maxLength={256}
-                            autoComplete="off"
-                            placeholder={counterpart.translate(
-                                "exchange.filter"
+                        <div className="header-selector padding">
+                            <SearchInput
+                                onChange={this.onSearch.bind(this)}
+                                value={this.state.searchTerm}
+                                autoComplete="off"
+                                placeholder={counterpart.translate(
+                                    "exchange.filter"
+                                )}
+                            />
+                            {this.state.error && (
+                                <Translate
+                                    className="header-selector--error"
+                                    content="errors.loading_from_blockchain"
+                                />
                             )}
-                        />
-                        <div style={{paddingTop: "20px"}}>
+                        </div>
+                        <div>
                             <PaginatedList
+                                loading={this.state.loading}
                                 rows={vb}
                                 header={header}
                                 pageSize={10}

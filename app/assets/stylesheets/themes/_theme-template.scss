@@ -1153,6 +1153,58 @@
             background-color: $explorer-tab-content-background-color;
         }
     }
+
+    div.header-selector {
+        > .filter {
+            margin-right: 1rem;
+            input {
+                margin: 0;
+                height: 2rem;
+                padding: 0 10px;
+            }
+        }
+        > .selector div {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            &:nth-of-type(n + 1) {
+                padding-left: 10px;
+                padding-right: 10px;
+                border-right: 1px solid white; // TODO: FIX
+            }
+            &:hover.inactive {
+                color: inherit;
+            }
+        }
+        > .selector div:last-of-type {
+            border-right: 0px;
+        }
+        > .group-by {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        > .filter-block {
+            float: left;
+            display: flex;
+            align-items: center;
+            > .filter {
+                margin-right: 10px;
+            }
+        }
+
+        > .action-buttons {
+            float: right;
+        }
+
+        > .header-selector--error {
+            color: red;
+            line-height: 2rem;
+            vertical-align: middle;
+            margin-left: 1rem;
+        }
+    }
     // Exchange
     .depthchart {
         background-color: $bg-color;

@@ -19,16 +19,18 @@ export default class PaginatedList extends React.Component {
         label: "utility.total_x_items",
         className: "table",
         extraRow: null,
-        style: {paddingBottom: "1rem"}
+        style: {paddingBottom: "1rem"},
+        loading: false
     };
 
     render() {
         const {pageSize} = this.state;
-        const {header, rows, extraRow} = this.props;
+        const {header, rows, extraRow, loading} = this.props;
 
         return (
             <div className="paginated-list" style={this.props.style}>
                 <Table
+                    loading={loading}
                     dataSource={rows}
                     uns
                     columns={Array.isArray(header) ? header : []}
