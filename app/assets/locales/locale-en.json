@@ -1669,7 +1669,8 @@
         "tooltips": {
             "what_is_a_prediction_market_asset": "A prediction market asset is a special kind of asset that allows you to agree or disagree with the prediction statement of the asset and put collateral behind your opinion. It can be created by any user, and if you are participating you need to trust the issuer to properly reflects the real world outcome on the blockchain.",
             "create_prediction_market_asset": "A prediction market is a special kind of SmartCoin. This lets you create such a prediction market asset with inputs tailored for this purpose.",
-            "hide_unknown_houses": "Per default the table below only shows prediction market assets that meet certain criterias to ensure a consistant use and reduce risks for participants. Uncheck this to show all that exist on the blockchain, and make sure you know what you are doing then. If you are the owner of a prediction market asset and want to be included in the default list, please contact the BitShares community.",
+            "hide_unknown_houses": "Per default the table below only shows prediction market assets of known issuers that meet requirements to increase their trustworthiness. As a participant, you need trust in the asset issuer such that the asset will be resolved according to the real world outcome. Uncheck this to show all issuers that exist on the blockchain, and make sure you know what you are doing. If you are the owner of a prediction market asset and want to be included in the default list, please contact the BitShares community.",
+            "hide_invalid_asset": "Per default the table below only shows prediction market assets that meet common standards required for a consistent user experience (prediction and resolution date are given, and reasonable market fee). Uncheck this to show all assets that exist on the blockchain, and make sure you know what you are doing.",
             "add_prediction": "A prediction is reflected as a limit order on the market of the prediction market asset with its collateral. This lets you create a buy order (you agree with the prediction), or a sell order with previous borrowing of the prediction market asset (you disagree with the prediction). You can also oppose one of the existing predictions listed below, which correlates to matching one of the existing limit orders on the blockchain.",
             "what_is_a_prediction_offer": "A prediction offer reflects limit orders on the market of the prediction market asset and its collateral. Agreement with the prediction (Prediction proves true) means that you want to buy the prediction market asset, disagreement (Prediction is incorrect) means that you borrow the prediction market asset and sell it",
             "oppose_proves_true": "You are opposing someone that thinks the prediction proves true. That means, you think the prediction will be incorrect. On the blockchain that reflects as borrowing and selling the prediction market asset.",
@@ -1677,7 +1678,8 @@
         },
         "overview": {
             "loading": "Loading...",
-            "toggle_label": "Hide unknown houses",
+            "hide_unknown_houses": "Hide unknown houses",
+            "hide_invalid_asset": "Hide invalid assets",
             "issuer": "House",
             "prediction": "Prediction",
             "description": "Description",
@@ -1689,7 +1691,10 @@
             "yes": "Yes",
             "no": "No",
             "market_confidence": "Market confidence",
-            "market_predicated_likelihood": "Market predicated likelihood"
+            "market_predicated_likelihood": "Market predicated likelihood",
+            "all": "All",
+            "open": "Open",
+            "past_resolution_date": "Past Resolution Time"
         },
         "details": {
             "list_of_current_prediction_offers": "List of current prediction offers",
@@ -1732,9 +1737,10 @@
         },
         "resolve_modal": {
             "title": "Resolve Prediction Market Asset",
+            "symbol": "Symbol",
             "prediction": "Prediction",
             "resolution": "Resolution",
-            "the_prediction_has": "The predition ...",
+            "the_prediction_has": "The prediction ...",
             "proven_true": "... has proven true",
             "was_incorrect": "... was incorrect"
         }

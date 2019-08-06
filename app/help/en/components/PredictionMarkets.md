@@ -1,8 +1,8 @@
 # Prediction Market Assets
 
-A prediction market asset is a specialized BitAsset that allows you to
-agree or disagree with the prediction statement of the asset and put
-collateral behind your opinion. A prediction market is resolved by its
+A prediction market asset allows you to agree or disagree with the
+prediction (condition) of the asset and put collateral behind your opinion.
+A prediction market is resolved by its
 issuer after the resolution date to reflect the real world outcome of
 the prediction on-chain.
 

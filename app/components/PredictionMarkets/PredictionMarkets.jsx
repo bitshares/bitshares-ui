@@ -41,7 +41,9 @@ class PredictionMarkets extends Component {
             isAddOpinionModalOpen: false,
             isResolveModalOpen: false,
             isHideUnknownHousesChecked: true,
-            opinionFilter: "yes"
+            isHideInvalidAssetsChecked: true,
+            opinionFilter: "yes",
+            predictionMarketAssetFilter: "open"
         };
 
         this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
@@ -59,6 +61,9 @@ class PredictionMarkets extends Component {
         this.onResolveModalClose = this.onResolveModalClose.bind(this);
         this.updateAsset = this.updateAsset.bind(this);
         this.handleUnknownHousesToggleChange = this.handleUnknownHousesToggleChange.bind(
+            this
+        );
+        this.handleInvalidAssetsChecked = this.handleInvalidAssetsChecked.bind(
             this
         );
     }
@@ -95,6 +100,22 @@ class PredictionMarkets extends Component {
                 })
                 .last();
             searchAsset = lastAsset ? lastAsset.symbol : "A";
+
+            // parse flags and description
+            fetchedAssets.forEach(item => {
+                if (!item.forPredictions) {
+                    item.forPredictions = {
+                        description: assetUtils.parseDescription(
+                            item.options.description
+                        ),
+                        flagBooleans: assetUtils.getFlagBooleans(
+                            item.options.flags,
+                            true
+                        )
+                    };
+                }
+            });
+
             this._updatePredictionMarketsList(fetchedAssets);
         }
         if (
@@ -113,39 +134,86 @@ class PredictionMarkets extends Component {
         }
     }
 
+    _isKnownIssuer(asset) {
+        return ISSUERS_WHITELIST.includes(asset.issuer);
+    }
+
+    _isValidPredictionMarketAsset(asset) {
+        // must have valid date
+        const resolutionDate = new Date(
+            asset.forPredictions.description.expiry
+        );
+        if (resolutionDate instanceof Date && isNaN(resolutionDate.getTime())) {
+            return false;
+        }
+        // must have description and prediction filled
+        if (!asset.forPredictions.description.condition) {
+            return false;
+        }
+        if (!asset.forPredictions.description.main) {
+            return false;
+        }
+        // must have meaningfull description and prediction
+        if (asset.forPredictions.description.condition.length < 10) {
+            return false;
+        }
+        if (asset.forPredictions.description.main.length < 20) {
+            return false;
+        }
+        // market fee may not be crazy
+        if (asset.options.market_fee_percent / 100 >= 10) {
+            return false;
+        }
+        return true;
+    }
+
     _updatePredictionMarketsList(fetchedAssets = null) {
         if (fetchedAssets == null) {
             fetchedAssets = this.state.fetchedAssets;
         }
+        const filter = this.state.predictionMarketAssetFilter;
         const assets = fetchedAssets.filter(asset => {
             if (
                 asset.bitasset_data &&
-                asset.bitasset_data.is_prediction_market &&
-                asset.bitasset_data.settlement_fund === 0
+                asset.bitasset_data.is_prediction_market
             ) {
                 if (
                     this.state.isHideUnknownHousesChecked &&
-                    !ISSUERS_WHITELIST.includes(asset.issuer)
+                    !this._isKnownIssuer(asset)
+                ) {
+                    return false;
+                } else if (
+                    this.state.isHideInvalidAssetsChecked &&
+                    !this._isValidPredictionMarketAsset(asset)
                 ) {
                     return false;
                 } else {
-                    return true;
+                    if (filter && !(filter === "all")) {
+                        const resolutionDate = new Date(
+                            asset.forPredictions.description.expiry
+                        );
+                        const isExpiredOrResolved =
+                            asset.bitasset_data.settlement_fund > 0 ||
+                            resolutionDate < new Date();
+                        if (filter === "open") {
+                            return !isExpiredOrResolved;
+                        } else if (filter === "past_resolution_date") {
+                            return isExpiredOrResolved;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return true;
+                    }
                 }
             } else {
                 return false;
             }
         });
         let predictionMarkets = [...assets].map(item => {
-            const description = assetUtils.parseDescription(
-                item[1].options.description
-            );
-            const flagBooleans = assetUtils.getFlagBooleans(
-                item[1].options.flags,
-                true
-            );
             let market_fee = 0;
             let max_market_fee = 0;
-            if (flagBooleans["charge_market_fee"]) {
+            if (item[1].forPredictions.flagBooleans["charge_market_fee"]) {
                 market_fee = item[1].options.market_fee_percent;
                 max_market_fee = item[1].options.max_market_fee;
             }
@@ -153,10 +221,10 @@ class PredictionMarkets extends Component {
                 asset: item,
                 asset_id: item[1].id,
                 issuer: item[1].issuer,
-                description: description.main,
+                description: item[1].forPredictions.description.main,
                 symbol: item[1].symbol,
-                condition: description.condition,
-                expiry: description.expiry,
+                condition: item[1].forPredictions.description.condition,
+                expiry: item[1].forPredictions.description.expiry,
                 options: item[1].options,
                 marketConfidence: 0,
                 marketLikelihood: 0,
@@ -383,6 +451,18 @@ class PredictionMarkets extends Component {
         );
     }
 
+    handleInvalidAssetsChecked() {
+        const isHideInvalidAssetsChecked = !this.state
+            .isHideInvalidAssetsChecked;
+        this.setState(
+            {
+                isHideInvalidAssetsChecked,
+                selectedPredictionMarket: null
+            },
+            () => this._updatePredictionMarketsList()
+        );
+    }
+
     onOppose = opinion => {
         this.setState({
             preselectedOpinion: opinion.opinion === "no" ? "yes" : "no",
@@ -420,7 +500,7 @@ class PredictionMarkets extends Component {
     };
 
     onResolveMarket = market => {
-        const account = this.props.currentAccount;
+        const account = this.props.currentAccount.get("id");
         const globalSettlementPrice = market.result === "yes" ? 1 : 0;
         const asset = ChainStore.getAsset(market.asset_id).toJS();
         let base = new Asset({
@@ -457,6 +537,14 @@ class PredictionMarkets extends Component {
     }
 
     getOverviewSection() {
+        const setPredictionMarketAssetFilter = e => {
+            this.setState(
+                {
+                    predictionMarketAssetFilter: e.target.value
+                },
+                this._updatePredictionMarketsList
+            );
+        };
         return (
             <div>
                 <div
@@ -468,6 +556,27 @@ class PredictionMarkets extends Component {
                             onChange={this.onSearch}
                             value={this.state.searchTerm}
                         />
+                        <Radio.Group
+                            style={{marginLeft: "20px"}}
+                            value={this.state.predictionMarketAssetFilter}
+                            onChange={setPredictionMarketAssetFilter}
+                        >
+                            <Radio value={"all"}>
+                                {counterpart.translate(
+                                    "prediction.overview.all"
+                                )}
+                            </Radio>
+                            <Radio value={"open"}>
+                                {counterpart.translate(
+                                    "prediction.overview.open"
+                                )}
+                            </Radio>
+                            <Radio value={"past_resolution_date"}>
+                                {counterpart.translate(
+                                    "prediction.overview.past_resolution_date"
+                                )}
+                            </Radio>
+                        </Radio.Group>
                         <span>
                             <Switch
                                 style={{marginLeft: "20px"}}
@@ -475,9 +584,52 @@ class PredictionMarkets extends Component {
                                 checked={this.state.isHideUnknownHousesChecked}
                             />
                             <Translate
-                                content="prediction.overview.toggle_label"
-                                style={{marginLeft: "10px"}}
+                                onClick={this.handleUnknownHousesToggleChange}
+                                content="prediction.overview.hide_unknown_houses"
+                                style={{
+                                    marginLeft: "10px",
+                                    cursor: "pointer"
+                                }}
                             />
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "prediction.tooltips.hide_unknown_houses"
+                                )}
+                            >
+                                <Icon
+                                    style={{
+                                        marginLeft: "0.5rem"
+                                    }}
+                                    type="question-circle"
+                                    theme="filled"
+                                />
+                            </Tooltip>
+                            <Switch
+                                style={{marginLeft: "20px"}}
+                                onChange={this.handleInvalidAssetsChecked}
+                                checked={this.state.isHideInvalidAssetsChecked}
+                            />
+                            <Translate
+                                onClick={this.handleInvalidAssetsChecked}
+                                content="prediction.overview.hide_invalid_asset"
+                                style={{
+                                    marginLeft: "10px",
+                                    cursor: "pointer"
+                                }}
+                            />
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "prediction.tooltips.hide_invalid_asset"
+                                )}
+                            >
+                                <Icon
+                                    style={{
+                                        marginLeft: "0.5rem"
+                                    }}
+                                    type="question-circle"
+                                    theme="filled"
+                                />
+                            </Tooltip>
                         </span>
                     </div>
                     <span className="action-buttons">

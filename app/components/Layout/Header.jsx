@@ -841,7 +841,7 @@ class Header extends React.Component {
                     <Icon
                         size="1_5x"
                         style={{position: "relative", top: 0, left: -8}}
-                        name="prediction"
+                        name="prediction-large"
                     />
                     <Translate
                         className="column-hide-small"

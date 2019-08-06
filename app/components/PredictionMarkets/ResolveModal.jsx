@@ -65,11 +65,11 @@ export default class ResolveModal extends Modal {
                 closable={!this.state.inProgress}
                 footer={footer}
             >
-                <div>
+                <div className="prediction-markets--resolve-prediction-market-asset">
                     <Form className="full-width" layout="vertical">
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.add_opinion_modal.symbol" />
+                                <Translate content="prediction.resolve_modal.symbol" />
                                 <Input
                                     type="text"
                                     disabled={true}
