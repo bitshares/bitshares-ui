@@ -352,8 +352,8 @@ class Asset extends React.Component {
         let preferredMarket = description.market
             ? description.market
             : core_asset
-            ? core_asset.get("symbol")
-            : "BTS";
+                ? core_asset.get("symbol")
+                : "BTS";
         if (isPrediction) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
@@ -1525,8 +1525,8 @@ class Asset extends React.Component {
                                     median_offset > 0
                                         ? "txtlabel success"
                                         : median_offset < 0
-                                        ? "txtlabel warning"
-                                        : "txtlabel"
+                                            ? "txtlabel warning"
+                                            : "txtlabel"
                                 }
                             >
                                 {median_offset}%
@@ -2040,7 +2040,6 @@ class Asset extends React.Component {
 
         return (
             <Tabs
-                type="card"
                 onChange={this._setFeedTab.bind(this)}
                 activeKey={this.state.activeFeedTab}
             >
@@ -2110,7 +2109,6 @@ class Asset extends React.Component {
                         </div>
 
                         <Tabs
-                            type="card"
                             onChange={this._setAssetTab.bind(this)}
                             activeKey={this.state.activeAssetTab}
                             className="grid-block vertical"
