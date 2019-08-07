@@ -979,3 +979,9 @@ tbody.orderbook > tr.my-order > td {
 .tether-element {
     z-index: 100;
 }
+
+.underline-title {
+    > * {
+        text-decoration: underline;
+    }
+}

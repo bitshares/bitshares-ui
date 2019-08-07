@@ -296,10 +296,18 @@
         }
         .amount-selector-field--balance {
             float: right;
-            cursor: pointer;
-            &:hover {
-                color: $link-text-color;
+            .amount-selector-field--link {
+                cursor: pointer;
+                &:hover {
+                    color: $link-text-color;
+                }
             }
+        }
+    }
+    .input-group-unbordered-before {
+        > span > span:first-of-type {
+            background: none !important;
+            border: none !important;
         }
     }
     .form-input-header {
@@ -415,6 +423,7 @@
         color: $warning-color;
     }
     .txtlabel.cancel,
+    .txtlabel.alert,
     .label.alert {
         color: $alert-color;
     }
@@ -1144,6 +1153,58 @@
         }
         &.explorer-tab-content {
             background-color: $explorer-tab-content-background-color;
+        }
+    }
+
+    div.header-selector {
+        > .filter {
+            margin-right: 1rem;
+            input {
+                margin: 0;
+                height: 2rem;
+                padding: 0 10px;
+            }
+        }
+        > .selector div {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            &:nth-of-type(n + 1) {
+                padding-left: 10px;
+                padding-right: 10px;
+                border-right: 1px solid white; // TODO: FIX
+            }
+            &:hover.inactive {
+                color: inherit;
+            }
+        }
+        > .selector div:last-of-type {
+            border-right: 0px;
+        }
+        > .group-by {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        > .filter-block {
+            float: left;
+            display: flex;
+            align-items: center;
+            > .filter {
+                margin-right: 10px;
+            }
+        }
+
+        > .action-buttons {
+            float: right;
+        }
+
+        > .header-selector--error {
+            color: red;
+            line-height: 2rem;
+            vertical-align: middle;
+            margin-left: 1rem;
         }
     }
     // Exchange
@@ -2203,7 +2264,7 @@
 
         box-shadow: $header-shadow;
 
-        z-index: 1010;
+        z-index: 2;
 
         .menu-group {
             .menu-bar {
@@ -2628,6 +2689,14 @@
     .modal--transaction-confirm {
         zindex: 10000; // make transaction confirm modal above another modals
     }
+
+    .asset-collapse {
+        .ant-collapse-header {
+            background: $panel-bg-color;
+            color: $primary-text-color !important;
+            border: solid 1.2px $panel-bg-color !important;
+        }
+    }
 }
 .rc-time-picker-panel {
     z-index: 9999 !important;
@@ -2778,5 +2847,18 @@
                 border: 0;
             }
         }
+    }
+}
+
+.customizable-column--selector {
+    position: absolute;
+    right: 1rem;
+    top: -3rem;
+}
+
+.customizable-column--selector--option {
+    padding: 10px;
+    .ant-checkbox-wrapper {
+        width: 100%;
     }
 }

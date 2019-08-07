@@ -272,24 +272,81 @@ class WalletActions {
         }
     }
 
-    claimVestingBalance(account, cvb, forceAll = false) {
+    claimVestingBalance(account, vb, forceAll = false) {
         let tr = new TransactionBuilder();
 
-        let balance = cvb.balance.amount,
-            earned = cvb.policy[1].coin_seconds_earned,
-            vestingPeriod = cvb.policy[1].vesting_seconds,
-            availablePercent =
-                (forceAll || vestingPeriod) === 0
+        let balance;
+        let available_percentage;
+
+        if (vb) {
+            balance = vb.balance.amount;
+
+            // Vesting is 100% available if:
+            // - policy[0] is set to 2
+            // - vesting_seconds is 0
+            // - foreAll is set to true
+            available_percentage =
+                vb.policy[0] === 2 ||
+                vb.policy[1].vesting_seconds === 0 ||
+                forceAll
                     ? 1
-                    : earned / (vestingPeriod * balance);
+                    : 0;
+
+            // Vesting percentage needs to be checked further
+            if (!available_percentage && vb.policy && vb.policy[0] !== 2) {
+                let start = Math.floor(
+                    new Date(vb.policy[1].start_claim + "Z").getTime() / 1000
+                );
+                let now = Math.floor(new Date().getTime() / 1000);
+
+                if (start > 0) {
+                    // Vesting has a specific start date.
+                    // Vesting with locked value required to mautre fully before claiming
+                    // Full vesting period must pass before it can be claimed.
+                    // Calculate days left before a claim is possible
+                    // Example asset is BRIDGE.BCO - 1.3.1564
+
+                    let seconds_earned = now - start;
+                    let seconds_period = vb.policy[1].vesting_seconds;
+
+                    if (seconds_earned >= seconds_period) {
+                        available_percentage = 1;
+                    }
+                } else {
+                    // Vesting has no start time.
+                    // Vesting balances has a vesting with maturing value
+                    // If period is 0 we expect a 100% claimable balance
+                    // otherwise we expect to be allowed to claim the matured percentage.
+
+                    // Core is lazy calculating the vesting balance object, so we
+                    // need to account for the time passed since it was last updated
+                    let seconds_last_updated = Math.floor(
+                        new Date(
+                            vb.policy[1].coin_seconds_earned_last_update + "Z"
+                        ).getTime() / 1000
+                    );
+                    let seconds_earned =
+                        parseFloat(vb.policy[1].coin_seconds_earned) +
+                        balance * (now - seconds_last_updated);
+                    let seconds_period = vb.policy[1].vesting_seconds;
+
+                    available_percentage =
+                        seconds_earned / (seconds_period * balance);
+
+                    // Make sure we don't go over 1
+                    available_percentage =
+                        available_percentage > 1 ? 1 : available_percentage;
+                }
+            }
+        }
 
         tr.add_type_operation("vesting_balance_withdraw", {
             fee: {amount: "0", asset_id: "1.3.0"},
             owner: account,
-            vesting_balance: cvb.id,
+            vesting_balance: vb.id,
             amount: {
-                amount: Math.floor(balance * availablePercent),
-                asset_id: cvb.balance.asset_id
+                amount: Math.floor(balance * available_percentage),
+                asset_id: vb.balance.asset_id
             }
         });
 

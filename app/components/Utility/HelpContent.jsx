@@ -55,7 +55,7 @@ function adjust_links(str) {
 
 // console.log("-- HelpData -->", HelpData);
 
-class HelpContent extends React.Component {
+class HelpContent extends React.PureComponent {
     static propTypes = {
         path: PropTypes.string.isRequired,
         section: PropTypes.string

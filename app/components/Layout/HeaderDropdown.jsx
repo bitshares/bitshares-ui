@@ -196,8 +196,8 @@ export default class DropDownMenu extends React.Component {
                         disabled: !showAccountLinks,
                         mainText: "header.payments",
                         mainCallback: this.props.showSend,
-                        subText: "header.payments_legacy",
-                        subURL: "/transfer"
+                        subText: null,
+                        subURL: null
                     },
                     {
                         icon: {
@@ -252,25 +252,27 @@ export default class DropDownMenu extends React.Component {
                             </div>
                             <div className="table-cell">
                                 <Translate content={mainText} />{" "}
-                                <span
-                                    onClick={
-                                        disabled
-                                            ? () => {}
-                                            : event => {
-                                                  event.stopPropagation();
-                                                  this.props.onNavigate.bind(
-                                                      this,
-                                                      subURL
-                                                  )(event);
-                                              }
-                                    }
-                                    className={cnames(
-                                        "header-dropdown-sub-link",
-                                        {enabled: !disabled}
-                                    )}
-                                >
-                                    <Translate content={subText} />
-                                </span>
+                                {subText && (
+                                    <span
+                                        onClick={
+                                            disabled
+                                                ? () => {}
+                                                : event => {
+                                                      event.stopPropagation();
+                                                      this.props.onNavigate.bind(
+                                                          this,
+                                                          subURL
+                                                      )(event);
+                                                  }
+                                        }
+                                        className={cnames(
+                                            "header-dropdown-sub-link",
+                                            {enabled: !disabled}
+                                        )}
+                                    >
+                                        <Translate content={subText} />
+                                    </span>
+                                )}
                             </div>
                         </li>
                     )

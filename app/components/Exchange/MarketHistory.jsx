@@ -2,24 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
-import Translate from "react-translate-component";
-import market_utils from "common/market_utils";
-import PriceText from "../Utility/PriceText";
-import cnames from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import {connect} from "alt-react";
-import TransitionWrapper from "../Utility/TransitionWrapper";
-import AssetName from "../Utility/AssetName";
 import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
 const {operations} = grapheneChainTypes;
-import BlockDate from "../Utility/BlockDate";
-import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
-import getLocale from "browser-locale";
-import utils from "common/utils";
 import {FillOrder} from "common/MarketClasses";
-import {Tooltip} from "bitshares-ui-style-guide";
+import {
+    MarketHistoryView,
+    MarketHistoryViewRow
+} from "./View/MarketHistoryView";
 
 class MarketHistory extends React.Component {
     constructor(props) {
@@ -32,25 +25,6 @@ class MarketHistory extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.activeTab !== this.props.activeTab) {
-            this._changeTab(nextProps.activeTab);
-        }
-
-        if (
-            this.props.hideScrollbars &&
-            nextState.showAll != this.state.showAll
-        ) {
-            let historyContainer = this.refs.history;
-            if (!nextState.showAll) {
-                Ps.destroy(historyContainer);
-            } else {
-                Ps.initialize(historyContainer);
-                Ps.update(historyContainer);
-            }
-            this.refs.historyTransition.resetAnimation();
-            if (historyContainer) historyContainer.scrollTop = 0;
-        }
-
         return (
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
@@ -67,43 +41,90 @@ class MarketHistory extends React.Component {
 
     componentDidMount() {
         if (!this.props.hideScrollbars) {
-            let historyContainer = this.refs.history;
-            if (historyContainer) Ps.initialize(historyContainer);
+            this.updateContainer(1);
         }
     }
 
-    componentDidUpdate() {
-        if (
-            !this.props.hideScrollbars ||
-            (this.props.hideScrollbars && this.state.showAll)
-        ) {
-            let historyContainer = this.refs.history;
-            if (historyContainer) Ps.update(historyContainer);
+    componentDidUpdate(prevState) {
+        let {hideScrollbars} = this.props;
+        let {showAll} = this.state;
+
+        if (prevState.showAll != showAll) {
+            if (showAll && !hideScrollbars) {
+                this.updateContainer(2);
+            } else if (!showAll && !hideScrollbars) {
+                this.updateContainer(3);
+            } else if (showAll && hideScrollbars) {
+                this.updateContainer(1);
+            } else {
+                this.updateContainer(0);
+            }
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let historyContainer = this.refs.history;
-
-        if (
-            nextProps.hideScrollbars !== this.props.hideScrollbars &&
-            nextProps.hideScrollbars
-        ) {
-            Ps.destroy(historyContainer);
+        if (nextProps.activeTab !== this.props.activeTab) {
+            this.changeTab(nextProps.activeTab);
         }
 
+        // Reset on Market Switch
         if (
-            nextProps.hideScrollbars !== this.props.hideScrollbars &&
-            !nextProps.hideScrollbars
+            nextProps.baseSymbol !== this.props.baseSymbol ||
+            nextProps.quoteSymbol !== this.props.quoteSymbol
         ) {
-            Ps.initialize(historyContainer);
-            this.refs.historyTransition.resetAnimation();
-            if (historyContainer) historyContainer.scrollTop = 0;
-            Ps.update(historyContainer);
+            this.setState({showAll: false});
+            this.updateContainer(0);
+
+            if (!this.props.hideScrollbars) {
+                this.updateContainer(1);
+            }
+        }
+
+        // Reset on hideScrollbars switch
+        if (nextProps.hideScrollbars !== this.props.hideScrollbars) {
+            this.updateContainer(0);
+
+            if (!nextProps.hideScrollbars) {
+                this.updateContainer(1);
+            }
         }
     }
 
-    _changeTab(tab) {
+    /***
+     * Update PS Container
+     * type:int [0:destroy, 1:init, 2:update, 3:update w/ scrollTop] (default: 2)
+     */
+    updateContainer(type = 2) {
+        let containerNode = this.refs.view.refs.history;
+        let containerTransition = this.refs.view.refs.historyTransition;
+
+        if (!containerNode) return;
+
+        if (type == 0) {
+            containerNode.scrollTop = 0;
+            Ps.destroy(containerNode);
+        } else if (type == 1) {
+            Ps.initialize(containerNode);
+            this.updateContainer(3);
+        } else if (type == 2) {
+            Ps.update(containerNode);
+        } else if (type == 3) {
+            containerNode.scrollTop = 0;
+            Ps.update(containerNode);
+        }
+
+        if (containerTransition) {
+            containerTransition.resetAnimation();
+        }
+    }
+
+    onSetShowAll() {
+        this.setState({
+            showAll: !this.state.showAll
+        });
+    }
+
+    changeTab(tab) {
         SettingsActions.changeViewSetting({
             historyTab: tab
         });
@@ -112,21 +133,9 @@ class MarketHistory extends React.Component {
         });
 
         // Ensure that focus goes back to top of scrollable container when tab is changed
-        let historyNode = this.refs.history;
-        historyNode.scrollTop = 0;
-        Ps.update(historyNode);
+        this.updateContainer(3);
 
         setTimeout(ReactTooltip.rebuild, 1000);
-    }
-
-    _onSetShowAll() {
-        this.setState({
-            showAll: !this.state.showAll
-        });
-
-        if (this.state.showAll) {
-            this.refs.history.scrollTop = 0;
-        }
     }
 
     render() {
@@ -147,16 +156,18 @@ class MarketHistory extends React.Component {
             activeTab = "history";
         }
 
-        const assets = {
-            [quote.get("id")]: {
-                precision: quote.get("precision")
-            },
-            [base.get("id")]: {
-                precision: base.get("precision")
-            }
-        };
-
         if (activeTab === "my_history" && (myHistory && myHistory.size)) {
+            // User History
+
+            const assets = {
+                [quote.get("id")]: {
+                    precision: quote.get("precision")
+                },
+                [base.get("id")]: {
+                    precision: base.get("precision")
+                }
+            };
+
             historyRows = myHistory
                 .filter(a => {
                     let opType = a.getIn(["op", 0]);
@@ -201,6 +212,7 @@ class MarketHistory extends React.Component {
                 })
                 .toArray();
         } else if (history && history.size) {
+            // Market History
             historyRows = this.props.history
                 .take(100)
                 .map(fill => {
@@ -240,7 +252,6 @@ class MarketHistory extends React.Component {
                 })
                 .toArray();
         }
-
         let emptyRow = (
             <tr>
                 <td
@@ -255,7 +266,6 @@ class MarketHistory extends React.Component {
                 </td>
             </tr>
         );
-
         if (!showAll && historyRows) {
             historyRows.splice(rowCount, historyRows.length);
         }

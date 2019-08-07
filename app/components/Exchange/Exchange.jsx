@@ -24,7 +24,7 @@ import utils from "common/utils";
 import BuySell from "./BuySell";
 import ScaledOrderTab from "./ScaledOrderTab";
 import ExchangeHeader from "./ExchangeHeader";
-import {MyOpenOrders} from "./MyOpenOrders";
+import {MarketOrders} from "./MyOpenOrders";
 import {OrderBook} from "./OrderBook";
 import MyMarkets from "./MyMarkets";
 import MarketHistory from "./MarketHistory";
@@ -2604,7 +2604,7 @@ class Exchange extends React.Component {
         let myOpenOrders =
             tinyScreen &&
             !this.state.mobileKey.includes("myOpenOrders") ? null : (
-                <MyOpenOrders
+                <MarketOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: 0}}
                     className={cnames(
@@ -2644,7 +2644,7 @@ class Exchange extends React.Component {
             marketSettleOrders.size === 0 ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("settlementOrders")) ? null : (
-                <MyOpenOrders
+                <MarketOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: !tinyScreen ? 0 : 0}}
                     className={cnames(
@@ -2880,21 +2880,22 @@ class Exchange extends React.Component {
         let groupTabs = {1: [], 2: []};
         let groupStandalone = [];
 
-        Object.keys(panelTabs).map(a => {
-            if (panelTabs[a] == 0) {
-                // Handle Standalone Settings
-                if (a == "my_history") {
-                    groupStandalone.push(myMarketHistory);
-                }
+        Object.keys(panelTabs)
+            .sort()
+            .map(a => {
+                if (panelTabs[a] == 0) {
+                    // Handle Standalone Settings
+                    if (a == "my_history") {
+                        groupStandalone.push(myMarketHistory);
+                    }
 
-                if (a == "history") {
-                    groupStandalone.push(marketHistory);
-                }
+                    if (a == "history") {
+                        groupStandalone.push(marketHistory);
+                    }
 
-                if (a == "my_orders") {
-                    groupStandalone.push(myOpenOrders);
-                }
-
+                    if (a == "my_orders") {
+                        groupStandalone.push(myOpenOrders);
+                    }
                 if (a == "open_settlement" && settlementOrders !== null) {
                     groupStandalone.push(settlementOrders);
                 }
@@ -2923,19 +2924,20 @@ class Exchange extends React.Component {
                         </Tabs.TabPane>
                     );
                 }
-
-                if (a == "open_settlement" && settlementOrders !== null) {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.settle_orders")}
-                            key="open_settlement"
-                        >
-                            {settlementOrders}
-                        </Tabs.TabPane>
-                    );
+                    if (a == "open_settlement" && settlementOrders !== null) {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate(
+                                    "exchange.settle_orders"
+                                )}
+                                key="open_settlement"
+                            >
+                                {settlementOrders}
+                            </Tabs.TabPane>
+                        );
+                    }
                 }
-            }
-        });
+            });
 
         Object.keys(panelTabsActive).map(thisTabsId => {
             Object.keys(panelTabs).map(thisPanelName => {
@@ -3509,13 +3511,13 @@ class Exchange extends React.Component {
                     <BorrowModal
                         visible={this.state.isBorrowQuoteModalVisible}
                         hideModal={this.hideBorrowQuoteModal}
-                        quote_asset={quoteAsset.get("id")}
-                        backing_asset={quoteAsset.getIn([
+                        quoteAssetObj={quoteAsset.get("id")}
+                        backingAssetObj={quoteAsset.getIn([
                             "bitasset",
                             "options",
                             "short_backing_asset"
                         ])}
-                        account={currentAccount}
+                        accountObj={currentAccount}
                     />
                 ) : null}
                 {baseIsBitAsset &&
@@ -3524,13 +3526,13 @@ class Exchange extends React.Component {
                     <BorrowModal
                         visible={this.state.isBorrowBaseModalVisible}
                         hideModal={this.hideBorrowBaseModal}
-                        quote_asset={baseAsset.get("id")}
-                        backing_asset={baseAsset.getIn([
+                        quoteAssetObj={baseAsset.get("id")}
+                        backingAssetObj={baseAsset.getIn([
                             "bitasset",
                             "options",
                             "short_backing_asset"
                         ])}
-                        account={currentAccount}
+                        accountObj={currentAccount}
                     />
                 ) : null}
 
