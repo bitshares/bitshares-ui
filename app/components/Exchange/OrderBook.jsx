@@ -795,8 +795,8 @@ class OrderBook extends React.Component {
                 askRows.reverse();
                 if (askRows.length < 24) {
                     for (
-                        var iterator = 24 - askRows.length;
-                        iterator < 25;
+                        var iterator = 0;
+                        iterator < 25 - askRows.length;
                         iterator++
                     )
                         askRows.push(
@@ -809,8 +809,8 @@ class OrderBook extends React.Component {
                 }
                 if (bidRows.length < 24) {
                     for (
-                        var iterator = 24 - bidRows.length;
-                        iterator < 25;
+                        var iterator = 0;
+                        iterator < 25 - bidRows.length;
                         iterator++
                     )
                         bidRows.push(
