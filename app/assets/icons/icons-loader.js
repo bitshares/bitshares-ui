@@ -69,7 +69,8 @@ let icons = [
     "paperclip",
     "wallet",
     "prediction",
-    "prediction-large"
+    "prediction-large",
+    "swap"
 ];
 
 let iconsMap = {};

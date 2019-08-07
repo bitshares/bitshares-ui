@@ -636,6 +636,7 @@
         "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
         "quick_deposit_gateway_button": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s, click to open options",
+        "quick_trade": "Quick trade",
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "Quote supply",

@@ -14,6 +14,7 @@ import {Asset, Price} from "common/MarketClasses";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
 import {Tooltip} from "bitshares-ui-style-guide";
+import QuickTrade from "components/QuickTrade/QuickTrade";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -40,7 +41,13 @@ class FormattedPrice extends React.Component {
             this.props.quote_asset
         );
 
-        this.state = {isPopoverOpen: false, marketName, first, second};
+        this.state = {
+            isQuickTradeVisible: false,
+            isPopoverOpen: false,
+            marketName,
+            first,
+            second
+        };
         this.togglePopover = this.togglePopover.bind(this);
         this.closePopover = this.closePopover.bind(this);
     }
@@ -65,6 +72,7 @@ class FormattedPrice extends React.Component {
 
     closePopover() {
         this.setState({isPopoverOpen: false});
+        setTimeout(() => this.setState({isQuickTradeVisible: false}), 300);
     }
 
     onFlip() {
@@ -74,6 +82,10 @@ class FormattedPrice extends React.Component {
             this.state.marketName
         );
         SettingsActions.changeMarketDirection(setting);
+    }
+
+    showQuickTrade() {
+        this.setState({isQuickTradeVisible: true});
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -108,7 +120,7 @@ class FormattedPrice extends React.Component {
             noPopOver,
             pulsate
         } = this.props;
-        const {marketName, first, second} = this.state;
+        const {isQuickTradeVisible, marketName, first, second} = this.state;
         if (!first || !second) return <span>--</span>;
         let inverted = marketDirections.get(marketName) || this.props.invert;
         if (
@@ -224,15 +236,30 @@ class FormattedPrice extends React.Component {
         const currency_popover_body =
             !noPopOver && !hide_symbols ? (
                 <div>
-                    <div className="button" onClick={this.onFlip.bind(this)}>
-                        <Translate content="exchange.invert" />
-                    </div>
-                    <div
-                        className="button"
-                        onClick={this.goToMarket.bind(this)}
-                    >
-                        <Translate content="exchange.to_market" />
-                    </div>
+                    {isQuickTradeVisible ? (
+                        <QuickTrade />
+                    ) : (
+                        <div>
+                            <div
+                                className="button"
+                                onClick={this.onFlip.bind(this)}
+                            >
+                                <Translate content="exchange.invert" />
+                            </div>
+                            <div
+                                className="button"
+                                onClick={this.goToMarket.bind(this)}
+                            >
+                                <Translate content="exchange.to_market" />
+                            </div>
+                            <div
+                                className="button"
+                                onClick={this.showQuickTrade.bind(this)}
+                            >
+                                <Translate content="exchange.quick_trade" />
+                            </div>
+                        </div>
+                    )}
                 </div>
             ) : null;
 
