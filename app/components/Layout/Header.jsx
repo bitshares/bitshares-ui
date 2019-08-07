@@ -55,6 +55,7 @@ class Header extends React.Component {
             hasWithdrawalModalBeenShown: false
         };
 
+        this._accountNotificationActiveKeys = [];
         this.unlisten = null;
         this._toggleAccountDropdownMenu = this._toggleAccountDropdownMenu.bind(
             this
@@ -79,8 +80,6 @@ class Header extends React.Component {
 
         this.onBodyClick = this.onBodyClick.bind(this);
     }
-
-    _accountNotificationActiveKeys = [];
 
     showDepositModal() {
         this.setState({
