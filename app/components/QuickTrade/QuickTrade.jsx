@@ -3,59 +3,136 @@ import {bindToCurrentAccount} from "../Utility/BindToCurrentAccount";
 import {connect} from "alt-react";
 import AssetStore from "../../stores/AssetStore";
 import MarketsStore from "../../stores/MarketsStore";
-import {
-    Switch,
-    Button,
-    Radio,
-    Icon,
-    Tooltip,
-    Card
-} from "bitshares-ui-style-guide";
+import {Card} from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
+import {validate} from "@babel/types";
+
+const ASSET_PLACEHOLDER = "-";
 
 class QuickTrade extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            mounted: false,
             isDetailsVisible: false,
             swappable: false,
             sellAmount: null,
-            receiveAmount: 999,
+            receiveAmount: null,
             assetToSell: null,
             assetToReceive: null,
-            assetsToSell: ["1.3.0", "1.3.121", "1.3.1999"],
-            assetsToReceive: ["1.3.0", "1.3.121", "1.3.1999"]
+            sellAssetPlaceholder: ASSET_PLACEHOLDER,
+            receiveAssetPlaceholder: ASSET_PLACEHOLDER,
+            assetsToSell: this.getAssetsToSell(),
+            assetsToReceive: []
         };
         this.onSellChange = this.onSellChange.bind(this);
         this.onReceiveChange = this.onReceiveChange.bind(this);
+        this.onSwap = this.onSwap.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({
+            mounted: true
+        });
     }
 
     onSellChange(e) {
+        //TODO checkDetails, checkSwappability
+        if (!this.state.mounted) return;
         const {asset, amount} = e;
-        this.setState({
-            sellAmount: amount,
-            assetToSell: asset.get("id")
-        });
+        if (asset) {
+            this.setState({
+                sellAmount: amount,
+                assetToSell: asset.get("id"),
+                sellAssetPlaceholder: null,
+                assetsToReceive: this.getAssetsToReceive()
+            });
+            if (this.state.assetToReceive) this.updateReceiveAmount();
+        } else {
+            this.setState({
+                sellAmount: amount
+            });
+        }
     }
 
     onReceiveChange(e) {
-        const {asset, amount} = e;
+        //TODO checkDetails, checkSwappability
+        if (!this.state.mounted) return;
+        const {asset} = e;
         this.setState({
-            receiveAmount: amount,
+            receiveAmount: this.state.receiveAmount,
+            receiveAssetPlaceholder: null,
             assetToReceive: asset.get("id")
+        });
+        this.updateReceiveAmount();
+    }
+
+    onSwap() {
+        const {assetToSell, assetToReceive} = this.state;
+        if (this.state.swappable) {
+            this.setState({
+                assetToSell: assetToReceive,
+                assetToReceive: assetToSell
+            });
+            this.updateReceiveAmount();
+        }
+    }
+
+    updateReceiveAmount() {
+        this.setState({
+            receiveAmount: Math.random().toString() //TODO
         });
     }
 
+    getAssetsToSell() {
+        return ["1.3.0", "1.3.121", "1.3.1999"]; //TODO
+    }
+
+    getAssetsToReceive() {
+        return ["1.3.0", "1.3.121", "1.3.1999"]; //TODO
+    }
+
+    getDetails() {
+        //TODO
+        return (
+            <div>
+                <p />
+                <p>Price</p>
+                <p>Fee</p>
+                <p>Orders</p>
+            </div>
+        );
+    }
+
+    checkDetails() {
+        const {assetToSell, assetToReceive, sellAmount} = this.state;
+        if (assetToSell && assetToReceive && sellAmount) {
+            this.setState({
+                isDetailsVisible: true
+            });
+        } else {
+            this.setState({
+                isDetailsVisible: false
+            });
+        }
+    }
+
+    checkSwappability() {}
+
     render() {
-        console.log(this.state);
-        let {
+        const {
+            isDetailsVisible,
             sellAmount,
             receiveAmount,
             assetToSell,
             assetToReceive,
             assetsToSell,
-            assetsToReceive
+            assetsToReceive,
+            sellAssetPlaceholder,
+            receiveAssetPlaceholder
         } = this.state;
+
+        const Details = this.getDetails();
 
         return (
             <Card
@@ -73,9 +150,14 @@ class QuickTrade extends Component {
                     assetToReceive={assetToReceive}
                     assetsToSell={assetsToSell}
                     assetsToReceive={assetsToReceive}
+                    sellAssetPlaceholder={sellAssetPlaceholder}
+                    receiveAssetPlaceholder={receiveAssetPlaceholder}
                     onSellChange={this.onSellChange}
                     onReceiveChange={this.onReceiveChange}
+                    onSwap={this.onSwap}
                 />
+
+                {isDetailsVisible ? Details : null}
             </Card>
         );
     }
