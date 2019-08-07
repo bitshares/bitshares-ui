@@ -19,12 +19,10 @@ class FeeAssetSelector extends React.Component {
 
         this.state = {
             asset: null,
-            assets: [],
+            assets: null,
             fee_amount: 0,
-            fee_asset_id:
-                ChainStore.assets_by_symbol.get(
-                    props.settings.get("fee_asset")
-                ) || "1.3.0",
+            fee_asset_id: "1.3.0",
+            feeAsset: props.defaultFeeAsset,
             fees: {},
             feeStatus: {},
             isModalVisible: false,
@@ -77,11 +75,30 @@ class FeeAssetSelector extends React.Component {
         return true;
     }
 
-    _updateFee(asset_id, trxInfo, onChange, account = this.props.account) {
-        if (!account) return null;
+    _updateFee(
+        asset_id = null,
+        trxInfo = null,
+        onChange = null,
+        account = null
+    ) {
+        if (!asset_id) {
+            asset_id = this.state.fee_asset_id;
+        }
+        if (!trxInfo) {
+            trxInfo = this.props.trxInfo;
+        }
+        if (!onChange) {
+            onChange = this.props.onChange;
+        }
+        if (!account) {
+            account = this.props.account;
+        }
+        if (!account) return null; // not loaded yet
 
-        let feeID = asset_id || this.state.fee_asset_id;
+        let feeID = asset_id;
+
         this._getFees(this.state.assets, account, trxInfo);
+
         const options = {
             ...trxInfo,
             accountID: account.get("id"),
@@ -114,32 +131,13 @@ class FeeAssetSelector extends React.Component {
         }
     }
 
-    componentWillReceiveProps(np, ns) {
-        const {fee_amount, fee_asset_id} = this.state;
-        const trxInfoChanged = !this.__are_equal_shallow(
-            np.trxInfo,
-            this.props.trxInfo
-        );
-        const account_changed =
-            np.account &&
-            this.props.account &&
-            np.account.get("id") !== this.props.account.get("id");
-        const needsFeeCalculation =
-            trxInfoChanged || !fee_amount || account_changed;
-        if (needsFeeCalculation) {
-            this._updateFee(fee_asset_id, np.trxInfo, np.onChange, np.account);
-        }
-    }
-
     _getAsset() {
-        const {assets, fee_asset_id} = this.state;
-        return ChainStore.getAsset(
-            fee_asset_id
-                ? fee_asset_id
-                : assets.length === 1
-                    ? assets[0]
-                    : "1.3.0"
-        );
+        const {assets, feeAsset} = this.state;
+        return feeAsset
+            ? feeAsset
+            : assets && assets.length > 0
+                ? assets[0]
+                : null;
     }
 
     _getAvailableAssets(account = this.props.account) {
@@ -176,6 +174,30 @@ class FeeAssetSelector extends React.Component {
 
     componentDidMount() {
         this.onAssetChange(this.state.fee_asset_id);
+    }
+
+    componentDidUpdate(prevProps) {
+        const {fee_amount, fee_asset_id} = this.state;
+        const trxInfoChanged = !this.__are_equal_shallow(
+            prevProps.trxInfo,
+            this.props.trxInfo
+        );
+
+        const accountChanged =
+            this.props.account &&
+            prevProps.account.get("id") !== this.props.account.get("id");
+        const infoChanged = !this.__are_equal_shallow(
+            prevProps.trxInfo,
+            this.props.trxInfo
+        );
+        const noFeeSetYet = !fee_amount;
+        if (accountChanged || infoChanged || noFeeSetYet) {
+            this._updateFee();
+        }
+    }
+
+    componentWillReceiveProps(np, ns) {
+        // don't do async loading in componentWillReceiveProps
     }
 
     onAssetChange(selected_asset) {
@@ -224,6 +246,8 @@ class FeeAssetSelector extends React.Component {
                 </Button>
             </Tooltip>
         );
+
+        const selectableAssets = assets ? assets : [currentAsset.get("symbol")];
 
         return (
             <div>
@@ -293,7 +317,7 @@ FeeAssetSelector.propTypes = {
     onChange: PropTypes.func,
     tabIndex: PropTypes.number,
     selectDisabled: PropTypes.bool,
-    settings: PropTypes.any,
+    defaultFeeAsset: PropTypes.any.isRequired,
     // Object wih data required for fee calculation
     trxInfo: PropTypes.any
 };
@@ -311,7 +335,9 @@ FeeAssetSelector.defaultProps = {
     }
 };
 
-FeeAssetSelector = AssetWrapper(FeeAssetSelector);
+FeeAssetSelector = AssetWrapper(FeeAssetSelector, {
+    propNames: ["defaultFeeAsset"]
+});
 
 export default connect(
     FeeAssetSelector,
@@ -319,9 +345,11 @@ export default connect(
         listenTo() {
             return [SettingsStore];
         },
-        getProps(props) {
+        getProps() {
             return {
-                settings: SettingsStore.getState().settings
+                defaultFeeAsset:
+                    SettingsStore.getState().settings.get("fee_asset") ||
+                    "1.3.0"
             };
         }
     }
