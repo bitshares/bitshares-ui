@@ -15,20 +15,14 @@ class SetDefaultFeeAssetModal extends React.Component {
         super(props);
         this.state = {
             useByDefault: props.forceDefault ? true : false,
-            selectedAssetId:
-                ChainStore.assets_by_symbol.get(
-                    props.settings.get("fee_asset")
-                ) || "1.3.0",
+            selectedAssetId: props.current_asset,
             balances: {}
         };
     }
 
-    _updateStateForAccount(account, current_asset) {
-        const balances = account.get("balances").toJS();
+    _updateStateForAccount() {
+        const balances = this.props.currentAccount.get("balances").toJS();
         this.setState({
-            selectedAssetId: current_asset
-                ? current_asset
-                : this.state.selectedAssetId,
             balances: Object.keys(balances).reduce((result, asset_id) => {
                 const balanceObject = ChainStore.getObject(balances[asset_id]);
                 result[asset_id] = balanceObject.get("balance");
@@ -37,21 +31,26 @@ class SetDefaultFeeAssetModal extends React.Component {
         });
     }
 
-    componentWillReceiveProps(np) {
-        let account = np.account;
-        if (!account) {
-            account = ChainStore.getAccount(np.currentAccount);
-        }
+    componentDidMount() {
+        this._updateStateForAccount();
+    }
 
-        if (account) {
-            if (
-                Object.keys(this.state.balances).length === 0 ||
-                account.get("name") !== this.props.currentAccount ||
-                (np.current_asset &&
-                    this.state.selectedAssetId !== np.current_asset)
-            ) {
-                this._updateStateForAccount(account, np.current_asset);
+    componentDidUpdate(prevProps) {
+        const accountChanged =
+            this.props.account &&
+            prevProps.account.get("id") !== this.props.account.get("id");
+        if (accountChanged) {
+            if (Object.keys(this.state.balances).length === 0) {
+                this._updateStateForAccount();
             }
+        }
+        if (
+            this.props.current_asset &&
+            prevProps.current_asset !== this.props.current_asset
+        ) {
+            this.setState({
+                selectedAssetId: this.props.current_asset
+            });
         }
     }
 
@@ -62,19 +61,22 @@ class SetDefaultFeeAssetModal extends React.Component {
     }
 
     _getAssetsRows(assets) {
-        return assets.filter(item => !!item).map(assetInfo => {
-            console.log(assetInfo);
-            return {
-                id: assetInfo.asset.get("id"),
-                key: assetInfo.asset.get("id"),
-                asset: assetInfo.asset.get("symbol"),
-                link: `/asset/${assetInfo.asset.get("symbol")}`,
-                balance:
-                    assetInfo.balance /
-                    Math.pow(10, assetInfo.asset.get("precision")),
-                fee: assetInfo.fee
-            };
-        });
+        return assets
+            .filter(item => {
+                return !!item && item.balance > 0 && !!item.asset;
+            })
+            .map(assetInfo => {
+                return {
+                    id: assetInfo.asset.get("id"),
+                    key: assetInfo.asset.get("id"),
+                    asset: assetInfo.asset.get("symbol"),
+                    link: `/asset/${assetInfo.asset.get("symbol")}`,
+                    balance:
+                        assetInfo.balance /
+                        Math.pow(10, assetInfo.asset.get("precision")),
+                    fee: assetInfo.fee
+                };
+            });
     }
 
     onSubmit() {
@@ -146,17 +148,10 @@ class SetDefaultFeeAssetModal extends React.Component {
                 asset: ChainStore.getAsset(asset_id),
                 balance: this.state.balances[asset_id]
             }));
-            if (this.props.asset_types.length > 0) {
-                assets = this.props.asset_types.map(assetInfo => ({
-                    ...assetInfo,
-                    asset: ChainStore.getAsset(assetInfo.asset),
-                    balance: this.state.balances[assetInfo.asset]
-                }));
-            }
         }
         let dataSource = this._getAssetsRows(assets);
         const footer = (
-            <div style={{position: "relative", left: "0px"}}>
+            <div key="buttons" style={{position: "relative", left: "0px"}}>
                 <Button key="cancel" onClick={this.props.close}>
                     <Translate component="span" content="transfer.cancel" />
                 </Button>

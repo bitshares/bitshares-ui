@@ -676,7 +676,7 @@ class SendModal extends React.Component {
                                 <FeeAssetSelector
                                     label="transfer.fee"
                                     account={from_account}
-                                    trxInfo={{
+                                    transaction={{
                                         type: "transfer",
                                         options: ["price_per_kbyte"],
                                         data: {

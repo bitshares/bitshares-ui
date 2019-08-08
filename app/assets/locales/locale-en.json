@@ -2376,7 +2376,9 @@
             "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
             "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
             "noFunds": "No funds",
+            "unknown": "Unknown error",
             "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+            "noPoolBalanceShort": "Fee pool empty",
             "pos": "Amount must be positive",
             "precision": "Minimum withdraw precision value: %(precision)s",
             "req": "Required field",
@@ -2397,6 +2399,7 @@
         "see": "SEE MY TRANSFERS",
         "send": "Send",
         "total": "Total: ",
+        "to": "To",
         "warn_name_unable_read_memo": "Proposed sender will be unable to read this memo!"
     },
     "trx_error": {
