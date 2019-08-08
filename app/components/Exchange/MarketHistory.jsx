@@ -193,21 +193,12 @@ class MarketHistory extends React.Component {
                     );
 
                     return (
-                        <tr key={fill.id}>
-                            <td className={fill.className}>
-                                <PriceText
-                                    price={fill.getPrice()}
-                                    base={this.props.base}
-                                    quote={this.props.quote}
-                                />
-                            </td>
-                            <td>{fill.amountToReceive()}</td>
-                            <BlockDate
-                                component="td"
-                                block_number={fill.block}
-                                tooltip
-                            />
-                        </tr>
+                        <MarketHistoryViewRow
+                            key={fill.id}
+                            fill={fill}
+                            base={base}
+                            quote={quote}
+                        />
                     );
                 })
                 .toArray();
@@ -217,131 +208,39 @@ class MarketHistory extends React.Component {
                 .take(100)
                 .map(fill => {
                     return (
-                        <tr key={"history_" + fill.id}>
-                            <td className={fill.className}>
-                                <PriceText
-                                    price={fill.getPrice()}
-                                    base={this.props.base}
-                                    quote={this.props.quote}
-                                />
-                            </td>
-                            <td>{fill.amountToReceive()}</td>
-                            <td>
-                                <Tooltip title={fill.time.toString()}>
-                                    <div
-                                        className="tooltip"
-                                        style={{whiteSpace: "nowrap"}}
-                                    >
-                                        {counterpart
-                                            .localize(fill.time, {
-                                                type: "time",
-                                                format:
-                                                    "long" /*
-                                                getLocale()
-                                                    .toLowerCase()
-                                                    .indexOf("en-us") !== -1
-                                                    ? "market_history_us"
-                                                    : "market_history"*/
-                                            })
-                                            .slice(0, 8)}
-                                    </div>
-                                </Tooltip>
-                            </td>
-                        </tr>
+                        <MarketHistoryViewRow
+                            key={fill.id}
+                            fill={fill}
+                            base={base}
+                            quote={quote}
+                        />
                     );
                 })
                 .toArray();
         }
-        let emptyRow = (
-            <tr>
-                <td
-                    className="centric-items"
-                    style={{
-                        lineHeight: 4,
-                        fontStyle: "italic"
-                    }}
-                    colSpan="5"
-                >
-                    <Translate content="account.no_orders" />
-                </td>
-            </tr>
-        );
+        let totalRows = historyRows ? historyRows.length : null;
         if (!showAll && historyRows) {
             historyRows.splice(rowCount, historyRows.length);
         }
 
         return (
-            <div className={cnames(this.props.className)}>
-                <div
-                    className={this.props.innerClass}
-                    style={this.props.innerStyle}
-                >
-                    {this.props.noHeader ? null : (
-                        <div
-                            style={this.props.headerStyle}
-                            className="exchange-content-header"
-                        >
-                            {activeTab === "my_history" ? (
-                                <Translate content="exchange.my_history" />
-                            ) : null}
-                            {activeTab === "history" ? (
-                                <Translate content="exchange.history" />
-                            ) : null}
-                        </div>
-                    )}
-                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
-                            <thead>
-                                <tr>
-                                    <th style={{textAlign: "right"}}>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="exchange.price"
-                                        />
-                                    </th>
-                                    <th style={{textAlign: "right"}}>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={quoteSymbol}
-                                            />
-                                        </span>
-                                    </th>
-                                    <th style={{textAlign: "right"}}>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="explorer.block.date"
-                                        />
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div
-                        className="table-container grid-block market-right-padding-only no-overflow"
-                        ref="history"
-                        style={{
-                            minHeight: !this.props.tinyScreen ? 260 : 0,
-                            maxHeight: this.props.chartHeight - 2,
-                            overflow: "auto",
-                            lineHeight: "10px"
-                        }}
-                    >
-                        <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
-                            <TransitionWrapper
-                                ref="historyTransition"
-                                component="tbody"
-                                transitionName="newrow"
-                                className="orderbook"
-                            >
-                                {!!historyRows && historyRows.length > 0
-                                    ? historyRows
-                                    : emptyRow}
-                            </TransitionWrapper>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <MarketHistoryView
+                ref="view"
+                className={this.props.className}
+                innerClass={this.props.innerClass}
+                innerStyle={this.props.innerStyle}
+                noHeader={this.props.noHeader}
+                headerStyle={this.props.headerStyle}
+                activeTab={activeTab}
+                chartHeight={this.props.chartHeight}
+                quoteSymbol={quoteSymbol}
+                baseSymbol={baseSymbol}
+                tinyScreen={this.props.tinyScreen}
+                historyRows={historyRows}
+                totalRows={totalRows}
+                showAll={showAll}
+                onSetShowAll={this.onSetShowAll.bind(this)}
+            />
         );
     }
 }

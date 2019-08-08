@@ -37,7 +37,6 @@ function MarketHistoryViewRow({fill, base, quote}) {
                 <PriceText price={fill.getPrice()} base={base} quote={quote} />
             </td>
             <td>{fill.amountToReceive()}</td>
-            <td>{fill.amountToPay()}</td>
             {timestamp}
         </tr>
     );
@@ -110,14 +109,6 @@ class MarketHistoryView extends React.Component {
                                         </span>
                                     </th>
                                     <th style={{textAlign: "right"}}>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={baseSymbol}
-                                            />
-                                        </span>
-                                    </th>
-                                    <th style={{textAlign: "right"}}>
                                         <Translate
                                             className="header-sub-title"
                                             content="explorer.block.date"
@@ -132,9 +123,9 @@ class MarketHistoryView extends React.Component {
                         ref="history"
                         style={{
                             minHeight: !tinyScreen ? 260 : 0,
-                            maxHeight: 260,
+                            maxHeight: this.props.chartHeight - 2,
                             overflow: "hidden",
-                            lineHeight: "13px"
+                            lineHeight: "10px"
                         }}
                     >
                         <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
@@ -150,20 +141,6 @@ class MarketHistoryView extends React.Component {
                             </TransitionWrapper>
                         </table>
                     </div>
-                    {historyRows && totalRows > 11 ? (
-                        <div className="orderbook-showall">
-                            <a onClick={e => this.props.onSetShowAll(e)}>
-                                <Translate
-                                    content={
-                                        showAll
-                                            ? "exchange.hide"
-                                            : "exchange.show_all_trades"
-                                    }
-                                    rowcount={totalRows}
-                                />
-                            </a>
-                        </div>
-                    ) : null}
                 </div>
             </div>
         );
