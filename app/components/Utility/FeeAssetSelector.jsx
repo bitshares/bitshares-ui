@@ -6,7 +6,7 @@ import AssetWrapper from "./AssetWrapper";
 import PropTypes from "prop-types";
 import {Form, Input, Button, Tooltip, Icon} from "bitshares-ui-style-guide";
 import AssetSelect from "./AssetSelect";
-import {ChainStore, FetchChain} from "bitsharesjs";
+import {FetchChain} from "bitsharesjs";
 import SetDefaultFeeAssetModal from "../Modal/SetDefaultFeeAssetModal";
 import debounceRender from "react-debounce-render";
 import {connect} from "alt-react";
