@@ -24,7 +24,7 @@ function getAssetsToSell(account) {
     let assetTypes = [];
 
     if (!(account && account.get("balances"))) {
-        return {assetTypes};
+        return assetTypes;
     }
     // "vesting_balances" ?
     let accountBalances = account.get("balances").toJS();
@@ -38,7 +38,7 @@ function getAssetsToSell(account) {
         }
     }
 
-    return {assetTypes};
+    return assetTypes;
 }
 
 // Returns a list of asset ids that the user can buy, input is selected asset to sell

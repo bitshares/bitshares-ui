@@ -6,6 +6,9 @@ import MarketsStore from "../../stores/MarketsStore";
 import {Card} from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
 import {validate} from "@babel/types";
+import MarketsActions from "actions/MarketsActions";
+import {getAssetsToSell} from "./QuickTradeHelper";
+import {ChainStore} from "bitsharesjs";
 
 const ASSET_PLACEHOLDER = "-";
 
@@ -28,12 +31,45 @@ class QuickTrade extends Component {
         this.onSellChange = this.onSellChange.bind(this);
         this.onReceiveChange = this.onReceiveChange.bind(this);
         this.onSwap = this.onSwap.bind(this);
+        this._subToMarket = this._subToMarket.bind(this);
     }
 
     componentDidMount() {
+        const {bucketSize, currentGroupOrderLimit} = this.props;
         this.setState({
             mounted: true
         });
+
+        const baseAsset = ChainStore.getAsset("1.3.0");
+        const quoteAsset = ChainStore.getAsset("1.3.2672");
+
+        MarketsActions.subscribeMarket.defer(
+            baseAsset,
+            quoteAsset,
+            bucketSize,
+            currentGroupOrderLimit
+        );
+    }
+
+    _subToMarket(props, newBucketSize, newGroupLimit) {
+        let {quoteAsset, baseAsset, bucketSize, currentGroupOrderLimit} = props;
+        if (newBucketSize) {
+            bucketSize = newBucketSize;
+        }
+        if (newGroupLimit) {
+            currentGroupOrderLimit = newGroupLimit;
+        }
+        if (quoteAsset.get("id") && baseAsset.get("id")) {
+            MarketsActions.subscribeMarket.defer(
+                baseAsset,
+                quoteAsset,
+                bucketSize,
+                currentGroupOrderLimit
+            );
+            this.setState({
+                sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}`
+            });
+        }
     }
 
     onSellChange(e) {
@@ -131,6 +167,7 @@ class QuickTrade extends Component {
             sellAssetPlaceholder,
             receiveAssetPlaceholder
         } = this.state;
+        console.log(this.props);
 
         const Details = this.getDetails();
 
@@ -172,7 +209,11 @@ QuickTrade = connect(
         getProps() {
             return {
                 assets: AssetStore.getState().assets,
-                markets: MarketsStore.getState().marketData
+                markets: MarketsStore.getState().marketData,
+                activeMarketHistory: MarketsStore.getState()
+                    .activeMarketHistory,
+                bucketSize: MarketsStore.getState().bucketSize,
+                currentGroupOrderLimit: MarketsStore.getState().bucketSize
             };
         }
     }
