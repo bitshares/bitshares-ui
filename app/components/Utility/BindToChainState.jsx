@@ -619,7 +619,12 @@ function BindToChainState(Component, options = {}) {
             for (let prop of this.required_props) {
                 if (this.state[prop] === undefined) {
                     if (typeof options !== "undefined" && options.show_loader) {
-                        return <LoadingIndicator />;
+                        return (
+                            <React.Fragment>
+                                <LoadingIndicator />
+                                <h3 className="text-center">Required prop "{prop}" isn't given</h3>
+                            </React.Fragment>
+                        );
                     } else if (this.hasErrored) {
                         return (
                             <span>
