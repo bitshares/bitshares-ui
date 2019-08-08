@@ -13,7 +13,11 @@ function estimateFeeAsync(type, options = null, data = {}) {
     return new Promise((res, rej) => {
         FetchChain("getObject", "2.0.0")
             .then(obj => {
-                res(estimateFee(type, options, obj, data));
+                try {
+                    res(estimateFee(type, options, obj, data));
+                } catch (err) {
+                    rej(err);
+                }
             })
             .catch(rej);
     });
@@ -25,17 +29,19 @@ function checkFeePoolAsync({
     options = null,
     data
 } = {}) {
-    return new Promise(res => {
+    return new Promise((res, rej) => {
         if (assetID === "1.3.0") {
             res(true);
         } else {
             Promise.all([
                 estimateFeeAsync(type, options, data),
                 FetchChain("getObject", assetID.replace(/^1\./, "2."))
-            ]).then(result => {
-                const [fee, dynamicObject] = result;
-                res(parseInt(dynamicObject.get("fee_pool"), 10) >= fee);
-            });
+            ])
+                .then(result => {
+                    const [fee, dynamicObject] = result;
+                    res(parseInt(dynamicObject.get("fee_pool"), 10) >= fee);
+                })
+                .catch(rej);
         }
     });
 }
@@ -192,9 +198,9 @@ function checkFeeStatusAsync({
                     }, feeStatusTTL);
                 });
             })
-            .catch(() => {
+            .catch(err => {
                 asyncCache[key].queue.forEach(promise => {
-                    promise.rej();
+                    promise.rej(err);
                 });
             });
     });
