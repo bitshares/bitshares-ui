@@ -1,12 +1,8 @@
 import alt from "alt-instance";
 import {Apis} from "bitsharesjs-ws";
-import utils from "common/utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import {ChainStore, hash, FetchChainObjects} from "bitsharesjs";
-import big from "bignumber.js";
-import {gatewayPrefixes} from "common/gateways";
-let inProgress = {};
 
 const calculateHash = (cipher, preimage) => {
     let preimage_hash_calculated = null;
@@ -57,8 +53,14 @@ class HtlcActions {
         preimage = null,
         preimage_hash = null,
         preimage_size = null,
-        fee_asset
+        fee_asset = null
     }) {
+        if (!fee_asset) {
+            fee_asset = "1.3.0";
+        }
+        if (typeof fee_asset !== "string") {
+            fee_asset = fee_asset.get("id");
+        }
         const tr = WalletApi.new_transaction();
 
         let preimage_hash_cipher = getCipherInt(preimage_cipher);
@@ -76,7 +78,10 @@ class HtlcActions {
         tr.add_type_operation("htlc_create", {
             from: from_account_id,
             to: to_account_id,
-            fee: fee_asset,
+            fee: {
+                amount: 0,
+                asset_id: fee_asset
+            },
             amount: {
                 amount: amount,
                 asset_id: asset_id
