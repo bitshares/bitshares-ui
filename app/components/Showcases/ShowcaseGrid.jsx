@@ -126,11 +126,12 @@ class ShowcaseGrid extends Component {
             },
             {
                 title: "showcases.merchant_protocol.title",
-                target: () => {},
+                target: event => {
+                    thiz.props.history.push("/invoice/request");
+                },
                 description: "showcases.merchant_protocol.description",
                 icon: "people",
-                disabled: true,
-                comingSoon: true
+                disabled: false
             }
             // .... even more tiles in this list
         ];
