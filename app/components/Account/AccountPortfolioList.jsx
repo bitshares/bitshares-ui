@@ -1061,6 +1061,7 @@ class AccountPortfolioList extends React.Component {
                     <FormattedAsset
                         amount={orders[asset.get("id")]}
                         asset={asset.get("id")}
+                        hide_asset
                     />
                 ) : (
                     "--"
@@ -1069,6 +1070,7 @@ class AccountPortfolioList extends React.Component {
                     <FormattedAsset
                         amount={vestingBalance}
                         asset={asset.get("id")}
+                        hide_asset
                     />
                 ) : (
                     "--"
@@ -1077,6 +1079,7 @@ class AccountPortfolioList extends React.Component {
                     <FormattedAsset
                         amount={collateralBalance}
                         asset={asset.get("id")}
+                        hide_asset
                     />
                 ) : (
                     "--"
