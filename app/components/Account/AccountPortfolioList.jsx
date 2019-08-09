@@ -507,7 +507,7 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-small",
                 title: (
-                    <span>
+                    <span style={{whiteSpace: "nowrap"}}>
                         <Translate content="exchange.price" /> (
                         <AssetName name={preferredUnit} noTip />)
                     </span>
@@ -534,18 +534,20 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-small",
                 title: (
-                    <TranslateWithLinks
-                        noLink
-                        string="account.eq_value_header"
-                        keys={[
-                            {
-                                type: "asset",
-                                value: preferredUnit,
-                                arg: "asset"
-                            }
-                        ]}
-                        noTip
-                    />
+                    <span style={{whiteSpace: "nowrap"}}>
+                        <TranslateWithLinks
+                            noLink
+                            string="account.eq_value_header"
+                            keys={[
+                                {
+                                    type: "asset",
+                                    value: preferredUnit,
+                                    arg: "asset"
+                                }
+                            ]}
+                            noTip
+                        />
+                    </span>
                 ),
                 dataIndex: "value",
                 align: "right",
