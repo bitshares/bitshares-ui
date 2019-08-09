@@ -51,8 +51,15 @@ function getPrices(activeMarketHistory, feedPrice) {
 }
 
 // Returns a dict with keys liquidityPenalty, marketFee and transactionFee, input is selected assets and amounts
-function getFees(assets, amounts) {
-    return {};
+function getFees(price, marketPrice, feedPrice) {
+    const liquidityFee1 = 1 - price / marketPrice;
+    const liquidityFee2 = 1 - price / feedPrice;
+
+    return {
+        liquidityPenalty: [liquidityFee1, liquidityFee2],
+        marketFee: 0,
+        transactionFee: 0
+    };
 }
 
 // Returns a list of asset ids that the user can sell
@@ -77,8 +84,19 @@ function getAssetsToSell(account) {
 }
 
 // Returns a list of asset ids that the user can buy, input is selected asset to sell
-function getAssetsToReceive(asset) {
-    AssetActions.getAssetList.defer(asset, 100);
+function getAssetsToReceive(value, count, gatewayAssets = false) {
+    if (!value && value !== "") return;
+
+    let quote = value.toUpperCase();
+
+    if (quote.startsWith("BIT") && quote.length >= 6) {
+        quote = value.substr(3, quote.length - 1);
+    }
+
+    const test = AssetActions.getAssetList.defer(quote, count, gatewayAssets);
+    console.log("test", test);
+
+    return {lookupQuote: quote};
 }
 
 export {getOrders, getPrices, getFees, getAssetsToSell, getAssetsToReceive};

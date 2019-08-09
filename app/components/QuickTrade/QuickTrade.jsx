@@ -8,6 +8,7 @@ import SellReceive from "components/QuickTrade/SellReceive";
 import MarketsActions from "actions/MarketsActions";
 import {getAssetsToSell, getPrices, getOrders} from "./QuickTradeHelper";
 import {ChainStore} from "bitsharesjs";
+import {debounce} from "lodash-es";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -36,10 +37,11 @@ class QuickTrade extends Component {
         this.onReceiveImageError = this.onReceiveImageError.bind(this);
         this.onSwap = this.onSwap.bind(this);
         this._subToMarket = this._subToMarket.bind(this);
+        this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
     }
 
     componentDidMount() {
-        const {bucketSize, currentGroupOrderLimit} = this.props;
+        /* const {bucketSize, currentGroupOrderLimit} = this.props;
         const baseAsset = ChainStore.getAsset("1.3.1999");
         const quoteAsset = ChainStore.getAsset("1.3.0");
 
@@ -49,7 +51,7 @@ class QuickTrade extends Component {
                 bucketSize,
                 currentGroupOrderLimit
             );
-        }
+        } */
         this.setState({
             mounted: true,
             sellAssets: getAssetsToSell(this.props.currentAccount),
@@ -101,6 +103,8 @@ class QuickTrade extends Component {
     }
 
     onReceiveAssetInputChange(e) {
+        console.log("onReceiveAssetInputChange", e);
+
         const receiveAssets = this.getAssetsToReceive();
         const filteredReceiveAssets = receiveAssets.filter(item => {
             return ChainStore.getAsset(item)
@@ -274,8 +278,8 @@ class QuickTrade extends Component {
                     onSellAmountChange={this.onSellAmountChange}
                     onSellImageError={this.onSellImageError}
                     receiveAssetInput={receiveAssetInput}
-                    receiveAsset={receiveAsset}
-                    receiveAssets={receiveAssets}
+                    receiveAsset=""
+                    receiveAssets={[]}
                     receiveAmount={receiveAmount}
                     receiveImgName={receiveImgName}
                     onReceiveAssetInputChange={this.onReceiveAssetInputChange}
@@ -297,7 +301,8 @@ QuickTrade = connect(
         },
         getProps() {
             return {
-                assets: AssetStore.getState().assets,
+                searchAssets: AssetStore.getState().assets,
+                assetsLoading: AssetStore.getState().assetsLoading,
                 marketData: MarketsStore.getState().marketData,
                 activeMarketHistory: MarketsStore.getState()
                     .activeMarketHistory,
