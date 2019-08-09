@@ -2436,7 +2436,8 @@
         "withdraw_permission_create": "Gave withdrawal permission for account",
         "withdraw_permission_delete": "Deleted withdrawal permissions for account",
         "withdraw_permission_update": "Updated withdrawal permission for account",
-        "view_json": "Show raw json"
+        "view_json": "Show raw json",
+        "operations": "Operations"
     },
     "transfer": {
         "again": "MAKE ANOTHER TRANSFER",
