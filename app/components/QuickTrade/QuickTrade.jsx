@@ -7,7 +7,7 @@ import {Card} from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
 import {validate} from "@babel/types";
 import MarketsActions from "actions/MarketsActions";
-import {getAssetsToSell} from "./QuickTradeHelper";
+import {getAssetsToSell, getPrices, getOrders} from "./QuickTradeHelper";
 import {ChainStore} from "bitsharesjs";
 
 const ASSET_PLACEHOLDER = "-";
@@ -36,19 +36,19 @@ class QuickTrade extends Component {
 
     componentDidMount() {
         const {bucketSize, currentGroupOrderLimit} = this.props;
+        const baseAsset = ChainStore.getAsset("1.3.1999");
+        const quoteAsset = ChainStore.getAsset("1.3.0");
+
+        if (baseAsset && quoteAsset) {
+            this._subToMarket(
+                {baseAsset, quoteAsset},
+                bucketSize,
+                currentGroupOrderLimit
+            );
+        }
         this.setState({
             mounted: true
         });
-
-        const baseAsset = ChainStore.getAsset("1.3.0");
-        const quoteAsset = ChainStore.getAsset("1.3.2672");
-
-        MarketsActions.subscribeMarket.defer(
-            baseAsset,
-            quoteAsset,
-            bucketSize,
-            currentGroupOrderLimit
-        );
     }
 
     _subToMarket(props, newBucketSize, newGroupLimit) {
@@ -167,7 +167,16 @@ class QuickTrade extends Component {
             sellAssetPlaceholder,
             receiveAssetPlaceholder
         } = this.state;
-        console.log(this.props);
+        const {activeMarketHistory, feedPrice, marketData} = this.props;
+        console.log("in render");
+
+        if (
+            marketData &&
+            marketData.combinedBids &&
+            marketData.combinedBids.length
+        ) {
+            console.dir(getOrders(2000 * 10 ** 5, marketData.combinedBids));
+        }
 
         const Details = this.getDetails();
 
@@ -209,11 +218,13 @@ QuickTrade = connect(
         getProps() {
             return {
                 assets: AssetStore.getState().assets,
-                markets: MarketsStore.getState().marketData,
+                marketData: MarketsStore.getState().marketData,
                 activeMarketHistory: MarketsStore.getState()
                     .activeMarketHistory,
                 bucketSize: MarketsStore.getState().bucketSize,
-                currentGroupOrderLimit: MarketsStore.getState().bucketSize
+                currentGroupOrderLimit: MarketsStore.getState().bucketSize,
+                feedPrice: MarketsStore.getState().feedPrice,
+                marketLimitOrders: MarketsStore.getState().marketLimitOrders
             };
         }
     }
