@@ -61,7 +61,6 @@ class AmountSelector extends DecimalChecker {
         assets: PropTypes.array,
         amount: PropTypes.any,
         placeholder: PropTypes.string,
-        assetPlaceholder: PropTypes.string,
         onChange: PropTypes.func,
         tabIndex: PropTypes.number,
         error: PropTypes.string,
@@ -87,11 +86,10 @@ class AmountSelector extends DecimalChecker {
     }
 
     _onChange(e) {
-        const asset = this.props.assetPlaceholder ? null : this.props.asset;
         if (this.props.onChange)
             this.props.onChange({
                 amount: this.getNumericEventValue(e),
-                asset: asset
+                asset: this.props.asset
             });
     }
 
@@ -142,10 +140,7 @@ class AmountSelector extends DecimalChecker {
                         ) : (
                             <AssetSelector
                                 ref={this.props.refCallback}
-                                value={
-                                    this.props.assetPlaceholder ||
-                                    this.props.asset.get("symbol")
-                                }
+                                value={this.props.asset.get("symbol")}
                                 assets={Immutable.List(this.props.assets)}
                                 onChange={this.onAssetChange.bind(this)}
                                 scroll_length={this.props.scroll_length}
