@@ -9,6 +9,13 @@ import MarketsActions from "actions/MarketsActions";
 import {getAssetsToSell, getPrices, getOrders} from "./QuickTradeHelper";
 import {ChainStore} from "bitsharesjs";
 import {debounce} from "lodash-es";
+import AssetActions from "actions/AssetActions";
+import {ChainValidation} from "bitsharesjs";
+import {
+    lookupAssets,
+    assetFilter,
+    fetchIssuerName
+} from "../Exchange/MarketPickerHelpers";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -25,7 +32,8 @@ class QuickTrade extends Component {
             receiveAsset: "",
             receiveAssets: [],
             receiveAmount: "",
-            receiveImgName: "BTS"
+            receiveImgName: "BTS",
+            inputValue: ""
         };
         this.onSellAssetInputChange = this.onSellAssetInputChange.bind(this);
         this.onReceiveAssetInputChange = this.onReceiveAssetInputChange.bind(
@@ -38,6 +46,10 @@ class QuickTrade extends Component {
         this.onSwap = this.onSwap.bind(this);
         this._subToMarket = this._subToMarket.bind(this);
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
+        this.setState = this.setState.bind(this);
+        this._checkAndUpdateMarketList = this._checkAndUpdateMarketList.bind(
+            this
+        );
     }
 
     componentDidMount() {
@@ -57,6 +69,24 @@ class QuickTrade extends Component {
             sellAssets: getAssetsToSell(this.props.currentAccount),
             receiveAssets: this.getAssetsToReceive()
         });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.searchAssets !== this.props.searchAssets)
+            assetFilter(
+                {
+                    searchAssets: this.props.searchAssets,
+                    marketPickerAsset: this.props.marketPickerAsset,
+                    baseAsset: this.props.baseAsset,
+                    quoteAsset: this.props.quoteAsset
+                },
+                {
+                    inputValue: this.state.inputValue,
+                    lookupQuote: this.state.lookupQuote
+                },
+                this.setState,
+                this._checkAndUpdateMarketList
+            );
     }
 
     _subToMarket(props, newBucketSize, newGroupLimit) {
@@ -102,28 +132,57 @@ class QuickTrade extends Component {
         });
     }
 
-    onReceiveAssetInputChange(e) {
-        console.log("onReceiveAssetInputChange", e);
+    onReceiveAssetInputChange(getBackedAssets, e) {
+        let toFind = e.target.value.trim().toUpperCase();
+        let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
 
-        const receiveAssets = this.getAssetsToReceive();
-        const filteredReceiveAssets = receiveAssets.filter(item => {
-            return ChainStore.getAsset(item)
-                ? ChainStore.getAsset(item)
-                      .get("symbol")
-                      .includes(e)
-                : false;
-        });
-        const asset =
-            filteredReceiveAssets.length === 1 ? filteredReceiveAssets[0] : "";
-        const assetImage = asset
-            ? ChainStore.getAsset(asset).get("symbol")
-            : "BTS";
-        this.setState({
-            receiveAsset: asset,
-            receiveAssets: filteredReceiveAssets,
-            receiveAssetInput: e,
-            receiveImgName: assetImage
-        });
+        if (!isValidName) {
+            /* Don't lookup invalid asset names */
+            this.setState({
+                inputValue: toFind,
+                activeSearch: false,
+                marketsList: []
+            });
+            return;
+        } else {
+            this.setState({
+                inputValue: toFind,
+                activeSearch: true,
+                marketsList: []
+            });
+        }
+
+        if (this.state.inputValue !== toFind) {
+            this.timer && clearTimeout(this.timer);
+        }
+
+        this.timer = setTimeout(() => {
+            lookupAssets(
+                toFind,
+                getBackedAssets,
+                this.getAssetList,
+                this.setState
+            );
+        }, 1500);
+    }
+
+    _checkAndUpdateMarketList(marketsList) {
+        clearInterval(this.intervalId);
+        this.intervalId = setInterval(() => {
+            let needFetchIssuer = 0;
+            for (let [, market] of marketsList) {
+                if (!market.issuer) {
+                    market.issuer = fetchIssuerName(market.issuerId);
+                    if (!market.issuer) needFetchIssuer++;
+                }
+            }
+            if (needFetchIssuer) return;
+            clearInterval(this.intervalId);
+            this.setState({
+                marketsList,
+                activeSearch: false
+            });
+        }, 300);
     }
 
     onSellAmountChange(e) {
@@ -282,12 +341,16 @@ class QuickTrade extends Component {
                     receiveAssets={[]}
                     receiveAmount={receiveAmount}
                     receiveImgName={receiveImgName}
-                    onReceiveAssetInputChange={this.onReceiveAssetInputChange}
+                    // onReceiveAssetInputChange={}
                     onReceiveAmountChange={this.onReceiveAmountChange}
                     onReceiveImageError={this.onReceiveImageError}
                     onSwap={this.onSwap}
                 />
                 {isDetailsVisible ? Details : null}
+                <input
+                    value={this.state.inputValue}
+                    onChange={this.onReceiveAssetInputChange.bind(this, true)}
+                />
             </Card>
         );
     }
