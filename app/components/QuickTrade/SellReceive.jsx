@@ -17,11 +17,9 @@ class SellReceive extends Component {
         receiveAmount: PropTypes.string,
         receiveImgName: PropTypes.string,
         onSellAssetInputChange: PropTypes.func.isRequired,
-        onSellFound: PropTypes.func.isRequired,
         onSellAmountChange: PropTypes.func.isRequired,
         onSellImageError: PropTypes.func.isRequired,
         onReceiveAssetInputChange: PropTypes.func.isRequired,
-        onReceiveFound: PropTypes.func.isRequired,
         onReceiveAmountChange: PropTypes.func.isRequired,
         onReceiveImageError: PropTypes.func.isRequired,
         onSwap: PropTypes.func.isRequired
@@ -41,11 +39,9 @@ class SellReceive extends Component {
             receiveAmount,
             receiveImgName,
             onSellAssetInputChange,
-            onSellFound,
             onSellAmountChange,
             onSellImageError,
             onReceiveAssetInputChange,
-            onReceiveFound,
             onReceiveAmountChange,
             onReceiveImageError,
             onSwap
@@ -59,7 +55,6 @@ class SellReceive extends Component {
                 assets={sellAssets}
                 amount={sellAmount}
                 onAssetInputChange={onSellAssetInputChange}
-                onFound={onSellFound}
                 onAmountChange={onSellAmountChange}
                 onImageError={onSellImageError}
                 imgName={sellImgName}
@@ -75,7 +70,6 @@ class SellReceive extends Component {
                 assets={receiveAssets}
                 amount={receiveAmount}
                 onAssetInputChange={onReceiveAssetInputChange}
-                onFound={onReceiveFound}
                 onAmountChange={onReceiveAmountChange}
                 onImageError={onReceiveImageError}
                 imgName={receiveImgName}

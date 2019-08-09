@@ -12,7 +12,7 @@ import {ChainStore} from "bitsharesjs";
 class QuickTrade extends Component {
     constructor(props) {
         super(props);
-        (this.state = {
+        this.state = {
             mounted: false,
             isDetailsVisible: false,
             sellAssetInput: "",
@@ -20,23 +20,18 @@ class QuickTrade extends Component {
             sellAssets: [],
             sellAmount: "",
             sellImgName: "BTS",
-            sellFounded: false,
             receiveAssetInput: "",
             receiveAsset: "",
             receiveAssets: [],
             receiveAmount: "",
             receiveImgName: "BTS"
-        }),
-            (this.onSellAssetInputChange = this.onSellAssetInputChange.bind(
-                this
-            ));
+        };
+        this.onSellAssetInputChange = this.onSellAssetInputChange.bind(this);
         this.onReceiveAssetInputChange = this.onReceiveAssetInputChange.bind(
             this
         );
         this.onSellAmountChange = this.onSellAmountChange.bind(this);
         this.onReceiveAmountChange = this.onReceiveAmountChange.bind(this);
-        this.onSellFound = this.onSellFound.bind(this);
-        this.onReceiveFound = this.onReceiveFound.bind(this);
         this.onSellImageError = this.onSellImageError.bind(this);
         this.onReceiveImageError = this.onReceiveImageError.bind(this);
         this.onSwap = this.onSwap.bind(this);
@@ -57,7 +52,8 @@ class QuickTrade extends Component {
         }
         this.setState({
             mounted: true,
-            sellAssets: getAssetsToSell(this.props.currentAccount)
+            sellAssets: getAssetsToSell(this.props.currentAccount),
+            receiveAssets: this.getAssetsToReceive()
         });
     }
 
@@ -83,14 +79,6 @@ class QuickTrade extends Component {
     }
 
     onSellAssetInputChange(e) {
-        console.log("CHANGED", e, this.state);
-
-        if (this.state.sellFounded) {
-            this.setState({
-                sellFounded: false
-            });
-            return;
-        }
         const sellAssets = getAssetsToSell(this.props.currentAccount);
         const filteredSellAssets = sellAssets.filter(item => {
             return ChainStore.getAsset(item)
@@ -113,7 +101,25 @@ class QuickTrade extends Component {
     }
 
     onReceiveAssetInputChange(e) {
-        console.log(e);
+        const receiveAssets = this.getAssetsToReceive();
+        const filteredReceiveAssets = receiveAssets.filter(item => {
+            return ChainStore.getAsset(item)
+                ? ChainStore.getAsset(item)
+                      .get("symbol")
+                      .includes(e)
+                : false;
+        });
+        const asset =
+            filteredReceiveAssets.length === 1 ? filteredReceiveAssets[0] : "";
+        const assetImage = asset
+            ? ChainStore.getAsset(asset).get("symbol")
+            : "BTS";
+        this.setState({
+            receiveAsset: asset,
+            receiveAssets: filteredReceiveAssets,
+            receiveAssetInput: e,
+            receiveImgName: assetImage
+        });
     }
 
     onSellAmountChange(e) {
@@ -136,28 +142,6 @@ class QuickTrade extends Component {
             },
             () => this.updateSellAmount()
         );
-    }
-
-    onSellFound(e) {
-        console.log("FOUNDED", e, this.state);
-        if (!this.state.mounted) return;
-        const asset = e.get("id");
-        this.setState(
-            {
-                sellFounded: true
-            },
-            () =>
-                this.setState({
-                    sellAsset: asset,
-                    sellAssets: [],
-                    sellAssetInput: ChainStore.getAsset(asset).get("symbol"),
-                    sellImgName: ChainStore.getAsset(asset).get("symbol")
-                })
-        );
-    }
-
-    onReceiveFound(e) {
-        console.log(e);
     }
 
     onSellImageError() {
@@ -287,7 +271,6 @@ class QuickTrade extends Component {
                     sellAmount={sellAmount}
                     sellImgName={sellImgName}
                     onSellAssetInputChange={this.onSellAssetInputChange}
-                    onSellFound={this.onSellFound}
                     onSellAmountChange={this.onSellAmountChange}
                     onSellImageError={this.onSellImageError}
                     receiveAssetInput={receiveAssetInput}
@@ -296,7 +279,6 @@ class QuickTrade extends Component {
                     receiveAmount={receiveAmount}
                     receiveImgName={receiveImgName}
                     onReceiveAssetInputChange={this.onReceiveAssetInputChange}
-                    onReceiveFound={this.onReceiveFound}
                     onReceiveAmountChange={this.onReceiveAmountChange}
                     onReceiveImageError={this.onReceiveImageError}
                     onSwap={this.onSwap}

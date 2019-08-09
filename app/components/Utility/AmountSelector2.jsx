@@ -14,7 +14,6 @@ class AmountSelector2 extends React.Component {
         amount: PropTypes.string,
         disabled: PropTypes.bool,
         onAssetInputChange: PropTypes.func,
-        onFound: PropTypes.func,
         onAmountChange: PropTypes.func,
         onImageError: PropTypes.func,
         imgName: PropTypes.string,
@@ -35,7 +34,6 @@ class AmountSelector2 extends React.Component {
             amount,
             disabled,
             onAssetInputChange,
-            onFound,
             onAmountChange,
             onImageError,
             imgName,
@@ -62,7 +60,7 @@ class AmountSelector2 extends React.Component {
                 assets={assets}
                 assetInput={assetInput}
                 style={{width: "100%"}}
-                onFound={onFound}
+                onFound={() => {}}
                 error={" "} //do not change
                 noLabel
             />
