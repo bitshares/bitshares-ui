@@ -30,8 +30,8 @@ class AccountVesting extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        let newId = prevProps.account.get("id");
-        let oldId = this.props.account.get("id");
+        let oldId = prevProps.account.get("id");
+        let newId = this.props.account.get("id");
 
         if (newId !== oldId) {
             this.retrieveVestingBalances.call(this, newId);
