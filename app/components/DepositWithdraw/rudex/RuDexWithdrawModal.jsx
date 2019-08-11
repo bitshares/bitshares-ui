@@ -30,7 +30,8 @@ class RuDexWithdrawModal extends React.Component {
         output_supports_memos: PropTypes.bool.isRequired,
         amount_to_withdraw: PropTypes.string,
         balance: ChainTypes.ChainObject,
-        min_amount: PropTypes.number
+        min_amount: PropTypes.number,
+        gateFee: PropTypes.number
     };
 
     constructor(props) {

@@ -22,9 +22,9 @@ export const openledgerAPIs = {
 };
 
 export const rudexAPIs = {
-    BASE: "https://gateway.rudex.org/api/v0_1",
+    BASE: "https://gateway.rudex.org/api/v3_0",
     COINS_LIST: "/coins",
-    NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
+    NEW_DEPOSIT_ADDRESS: "/simple-api/initiate-trade"
 };
 
 export const bitsparkAPIs = {

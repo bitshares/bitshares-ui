@@ -2,6 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import utils from "common/utils";
 import {requestDepositAddress} from "common/gatewayMethods";
+import {ChainStore} from "bitsharesjs";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
@@ -81,8 +82,30 @@ class DepositModalContent extends DecimalChecker {
             selectedGateway: null,
             fetchingAddress: false,
             backingAsset: null,
-            gatewayStatus: availableGateways
+            gatewayStatus: availableGateways,
+            depositConfirmation: null
         };
+    }
+
+    _getDepositConfirmation(backingAsset) {
+        let depositConfirmation = null;
+        if (backingAsset.confirmations && backingAsset.confirmations.type) {
+            if (backingAsset.confirmations.type === "irreversible") {
+                depositConfirmation = {
+                    type: "irreversible"
+                };
+            } else if (
+                backingAsset.confirmations.type === "blocks" &&
+                backingAsset.confirmations.value
+            ) {
+                depositConfirmation = {
+                    type: "blocks",
+                    value: backingAsset.confirmations.value
+                };
+            }
+        }
+
+        this.setState({depositConfirmation});
     }
 
     _setDepositAsset(asset) {
@@ -158,6 +181,8 @@ class DepositModalContent extends DecimalChecker {
             return;
         }
 
+        this._getDepositConfirmation(backingAsset);
+
         let depositAddress;
         if (selectedGateway && selectedAsset) {
             depositAddress = this.deposit_address_cache.getCachedInputAddress(
@@ -170,16 +195,33 @@ class DepositModalContent extends DecimalChecker {
             );
         }
 
-        if (!!gatewayStatus[selectedGateway].simpleAssetGateway) {
+        if (
+            !!gatewayStatus[selectedGateway].simpleAssetGateway &&
+            !!backingAsset.gatewayWallet
+        ) {
+            let memoText;
+            if (!!backingAsset.memoType && backingAsset.memoType === "btsid") {
+                let accountMap = ChainStore.getAccount(account, false);
+                memoText =
+                    gatewayStatus[selectedGateway].fixedMemo["prepend_btsid"] +
+                    accountMap.get("id").replace("1.2.", "") +
+                    gatewayStatus[selectedGateway].fixedMemo["append"];
+            } else {
+                memoText =
+                    gatewayStatus[selectedGateway].fixedMemo[
+                        "prepend_default"
+                    ] +
+                    account +
+                    gatewayStatus[selectedGateway].fixedMemo["append"];
+            }
+
+            depositAddress = {
+                address: backingAsset.gatewayWallet,
+                memo: memoText
+            };
+
             this.setState({
-                depositAddress: {
-                    address: backingAsset.gatewayWallet,
-                    memo: !gatewayStatus[selectedGateway].fixedMemo
-                        ? account
-                        : gatewayStatus[selectedGateway].fixedMemo["prepend"] +
-                          account +
-                          gatewayStatus[selectedGateway].fixedMemo["append"]
-                },
+                depositAddress,
                 fetchingAddress: false
             });
         } else {
@@ -236,7 +278,8 @@ class DepositModalContent extends DecimalChecker {
             depositAddress,
             fetchingAddress,
             gatewayStatus,
-            backingAsset
+            backingAsset,
+            depositConfirmation
         } = this.state;
         let {account} = this.props;
         let usingGateway = true;
@@ -409,6 +452,28 @@ class DepositModalContent extends DecimalChecker {
                                     </div>
                                 </div>
                             ) : null}
+                            {depositConfirmation ? (
+                                <div
+                                    style={{
+                                        fontSize: "0.8rem",
+                                        fontWeight: "bold",
+                                        fontStyle: "italic",
+                                        paddingBottom: "0.3rem"
+                                    }}
+                                >
+                                    {depositConfirmation.type ===
+                                    "irreversible" ? (
+                                        <Translate content="gateway.gateway_deposit.confirmations.last_irreversible" />
+                                    ) : depositConfirmation.type ===
+                                    "blocks" ? (
+                                        <Translate
+                                            content="gateway.gateway_deposit.confirmations.n_blocks"
+                                            blocks={depositConfirmation.value}
+                                        />
+                                    ) : null}
+                                </div>
+                            ) : null}
+
                             <Translate
                                 component="span"
                                 style={{fontSize: "0.8rem"}}
