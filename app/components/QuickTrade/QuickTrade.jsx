@@ -3,7 +3,14 @@ import {bindToCurrentAccount} from "../Utility/BindToCurrentAccount";
 import {connect} from "alt-react";
 import AssetStore from "../../stores/AssetStore";
 import MarketsStore from "../../stores/MarketsStore";
-import {Card} from "bitshares-ui-style-guide";
+import {
+    Card,
+    Collapse,
+    Row,
+    Col,
+    Table,
+    Button
+} from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
 import MarketsActions from "actions/MarketsActions";
 import {getAssetsToSell, getPrices, getOrders} from "./QuickTradeHelper";
@@ -12,14 +19,15 @@ import {debounce} from "lodash-es";
 import AssetActions from "actions/AssetActions";
 import {ChainValidation} from "bitsharesjs";
 import {lookupAssets} from "../Exchange/MarketPickerHelpers";
-import {Input} from "antd";
+import counterpart from "counterpart";
+import FormattedPrice from "../Utility/FormattedPrice";
 
 class QuickTrade extends Component {
     constructor(props) {
         super(props);
         this.state = {
             mounted: false,
-            isDetailsVisible: false,
+            sub: "",
             sellAssetInput: "",
             sellAsset: "",
             sellAssets: [],
@@ -30,7 +38,7 @@ class QuickTrade extends Component {
             receiveAssets: [],
             receiveAmount: "",
             receiveImgName: "BTS",
-            inputValue: ""
+            lookupQuote: ""
         };
         this.onSellAssetInputChange = this.onSellAssetInputChange.bind(this);
         this.onReceiveAssetInputChange = this.onReceiveAssetInputChange.bind(
@@ -41,6 +49,8 @@ class QuickTrade extends Component {
         this.onSellImageError = this.onSellImageError.bind(this);
         this.onReceiveImageError = this.onReceiveImageError.bind(this);
         this.onSwap = this.onSwap.bind(this);
+        this.handleSell = this.handleSell.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
         this._subToMarket = this._subToMarket.bind(this);
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
         this.setState = this.setState.bind(this);
@@ -50,21 +60,9 @@ class QuickTrade extends Component {
     }
 
     componentDidMount() {
-        /* const {bucketSize, currentGroupOrderLimit} = this.props;
-        const baseAsset = ChainStore.getAsset("1.3.1999");
-        const quoteAsset = ChainStore.getAsset("1.3.0");
-
-        if (baseAsset && quoteAsset) {
-            this._subToMarket(
-                {baseAsset, quoteAsset},
-                bucketSize,
-                currentGroupOrderLimit
-            );
-        } */
         this.setState({
             mounted: true,
-            sellAssets: getAssetsToSell(this.props.currentAccount),
-            receiveAssets: this.getAssetsToReceive()
+            sellAssets: getAssetsToSell(this.props.currentAccount)
         });
     }
 
@@ -78,15 +76,11 @@ class QuickTrade extends Component {
         }
     }
 
-    _subToMarket(props, newBucketSize, newGroupLimit) {
-        let {quoteAsset, baseAsset, bucketSize, currentGroupOrderLimit} = props;
-        if (newBucketSize) {
-            bucketSize = newBucketSize;
-        }
-        if (newGroupLimit) {
-            currentGroupOrderLimit = newGroupLimit;
-        }
-        if (quoteAsset.get("id") && baseAsset.get("id")) {
+    _subToMarket(baseAssetId, quoteAssetId) {
+        const {bucketSize, currentGroupOrderLimit} = this.props;
+        if (baseAssetId && quoteAssetId) {
+            const baseAsset = ChainStore.getAsset(baseAssetId);
+            const quoteAsset = ChainStore.getAsset(quoteAssetId);
             MarketsActions.subscribeMarket.defer(
                 baseAsset,
                 quoteAsset,
@@ -94,7 +88,7 @@ class QuickTrade extends Component {
                 currentGroupOrderLimit
             );
             this.setState({
-                sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}`
+                sub: `${quoteAsset.get("symbol")}_${baseAsset.get("symbol")}`
             });
         }
     }
@@ -108,62 +102,97 @@ class QuickTrade extends Component {
                       .includes(e)
                 : false;
         });
-        const asset =
-            filteredSellAssets.length === 1 ? filteredSellAssets[0] : "";
+        let asset = "";
+        if (ChainStore.getAsset(e)) {
+            const assetId = ChainStore.getAsset(e).get("id");
+            if (filteredSellAssets.includes(assetId)) {
+                asset = e;
+            }
+        }
+        if (filteredSellAssets.length === 1) {
+            asset = filteredSellAssets[0];
+        }
         const assetImage = asset
             ? ChainStore.getAsset(asset).get("symbol")
             : "BTS";
-        this.setState({
-            sellAsset: asset,
-            sellAssets: filteredSellAssets,
-            sellAssetInput: e,
-            sellImgName: assetImage
-        });
+        this.setState(
+            {
+                sellAsset: asset,
+                sellAssets: filteredSellAssets,
+                sellAssetInput: e,
+                sellImgName: assetImage
+            },
+            () => {
+                const {sellAsset, receiveAsset} = this.state;
+                if (sellAsset && receiveAsset) {
+                    this._subToMarket(sellAsset, receiveAsset);
+                }
+            }
+        );
     }
 
-    onReceiveAssetInputChange(getBackedAssets, e) {
-        let toFind = e.target.value.trim().toUpperCase();
-        let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
-
+    onReceiveAssetInputChange(e) {
+        if (!this.state.mounted) return;
+        let isValidName = !ChainValidation.is_valid_symbol_error(e, true);
         if (!isValidName) {
             /* Don't lookup invalid asset names */
             this.setState({
-                inputValue: toFind,
+                receiveAsset: "",
+                receiveAssetInput: e,
                 activeSearch: false,
-                marketsList: []
+                receiveAssets: []
             });
             return;
         } else {
             this.setState({
-                inputValue: toFind,
+                receiveAsset: "",
+                receiveAssetInput: e,
                 activeSearch: true,
-                marketsList: []
+                receiveAssets: []
             });
         }
 
-        if (this.state.inputValue !== toFind) {
+        if (this.state.receiveAssetInput !== e) {
             this.timer && clearTimeout(this.timer);
         }
 
         this.timer = setTimeout(() => {
-            lookupAssets(
-                toFind,
-                getBackedAssets,
-                this.getAssetList,
-                this.setState
-            );
-        }, 1500);
+            lookupAssets(e, true, this.getAssetList, this.setState);
+        }, 100);
     }
 
     _checkAndUpdateMarketList(marketsList) {
+        const receiveAssets = marketsList.map(asset => asset.id);
         clearInterval(this.intervalId);
+        const {receiveAssetInput} = this.state;
+        let asset = "";
+        if (ChainStore.getAsset(receiveAssetInput)) {
+            const assetId = ChainStore.getAsset(receiveAssetInput).get("id");
+            if (receiveAssets.includes(assetId)) {
+                asset = ChainStore.getAsset(receiveAssetInput).get("id");
+            }
+        }
+        const assetImage = asset
+            ? ChainStore.getAsset(asset).get("symbol")
+            : "BTS";
+
         this.intervalId = setInterval(() => {
             clearInterval(this.intervalId);
-            this.setState({
-                marketsList,
-                activeSearch: false
-            });
-        }, 300);
+            this.setState(
+                {
+                    receiveAsset: asset,
+                    receiveAssets,
+                    activeSearch: false,
+                    receiveImgName: assetImage
+                },
+                () => {
+                    const {sellAsset, receiveAsset} = this.state;
+                    if (sellAsset && receiveAsset) {
+                        this._subToMarket(sellAsset, receiveAsset);
+                    }
+                }
+            );
+        }, 100);
     }
 
     onSellAmountChange(e) {
@@ -201,7 +230,7 @@ class QuickTrade extends Component {
     }
 
     onSwap() {
-        if (this.checkSwappability()) {
+        if (this.isSwappable()) {
             const {
                 sellAsset,
                 receiveAsset,
@@ -215,6 +244,8 @@ class QuickTrade extends Component {
                 {
                     sellAsset: receiveAsset,
                     receiveAsset: sellAsset,
+                    sellAssets: [receiveAsset],
+                    receiveAssets: [sellAsset],
                     sellAssetInput: receiveAssetInput,
                     receiveAssetInput: sellAssetInput,
                     sellImgName: receiveImgName,
@@ -224,6 +255,14 @@ class QuickTrade extends Component {
                 () => this.updateReceiveAmount()
             );
         }
+    }
+
+    handleSell() {
+        console.log("Sell"); //TODO
+    }
+
+    handleCancel() {
+        this.props.history.goBack();
     }
 
     updateSellAmount() {
@@ -238,42 +277,208 @@ class QuickTrade extends Component {
         });
     }
 
-    getAssetsToReceive() {
-        return ["1.3.0", "1.3.121", "1.3.1999"]; //TODO
+    isSwappable() {
+        const {sellAsset, receiveAsset} = this.state;
+        const sellAssets = getAssetsToSell(this.props.currentAccount);
+        return sellAsset &&
+            receiveAsset &&
+            sellAssets.includes(ChainStore.getAsset(receiveAsset).get("id"))
+            ? true
+            : false;
     }
 
     getDetails() {
-        //TODO
+        const priceSection = this.getPriceSection();
+        const feeSection = this.getFeeSection();
+        const ordersSection = this.getOrdersSection();
+        const yourPrice = this.getYourPrice();
+        const totalPercentFee = this.getTotalPercentFee();
+        const amountOfOrders = this.getAmountOfOrders();
         return (
-            <div>
-                <p />
-                <p>Price</p>
-                <p>Fee</p>
-                <p>Orders</p>
-            </div>
+            <Collapse
+                style={{
+                    marginTop: "1rem"
+                }}
+            >
+                <Collapse.Panel
+                    header={counterpart.translate("exchange.price")}
+                    extra={yourPrice}
+                >
+                    {priceSection}
+                </Collapse.Panel>
+                <Collapse.Panel
+                    header={counterpart.translate("exchange.fee")}
+                    extra={totalPercentFee}
+                >
+                    {feeSection}
+                </Collapse.Panel>
+                <Collapse.Panel
+                    header={counterpart.translate("exchange.orders")}
+                    extra={amountOfOrders}
+                >
+                    {ordersSection}
+                </Collapse.Panel>
+            </Collapse>
         );
     }
 
-    checkDetails() {
-        const {assetToSell, assetToReceive, sellAmount} = this.state;
-        if (assetToSell && assetToReceive && sellAmount) {
-            this.setState({
-                isDetailsVisible: true
-            });
-        } else {
-            this.setState({
-                isDetailsVisible: false
-            });
-        }
+    showDetails() {
+        const {sellAsset, receiveAsset, sellAmount, receiveAmount} = this.state;
+        return sellAsset && receiveAsset && sellAmount && receiveAmount
+            ? true
+            : false;
     }
 
-    checkSwappability() {
-        return true; //TODO
+    getPriceSection() {
+        return (
+            <Row>
+                <Col span={12}>
+                    <p>
+                        {counterpart.translate(
+                            "exchange.quick_trade_details.your_price"
+                        )}
+                    </p>
+                    <p>
+                        {counterpart.translate(
+                            "exchange.quick_trade_details.feed_price"
+                        )}
+                    </p>
+                    <p>
+                        {counterpart.translate(
+                            "exchange.quick_trade_details.last_price"
+                        )}
+                    </p>
+                </Col>
+                <Col span={12} style={{textAlign: "right"}}>
+                    <p>{this.getYourPrice()}</p>
+                    <p>1005615136143614</p>
+                    <p>3514313514351351</p>
+                </Col>
+            </Row>
+        );
+    }
+
+    getFeeSection() {
+        return (
+            <Row>
+                <Col span={12}>
+                    <p>
+                        {counterpart.translate(
+                            "exchange.quick_trade_details.liquidity_penalty"
+                        )}
+                    </p>
+                    <p>
+                        {counterpart.translate(
+                            "exchange.quick_trade_details.market_fee"
+                        )}
+                    </p>
+                    <p>
+                        {counterpart.translate(
+                            "exchange.quick_trade_details.transaction_fee"
+                        )}
+                    </p>
+                </Col>
+                <Col span={12} style={{textAlign: "right"}}>
+                    <p>53441433143535</p>
+                    <p>1005615136143614</p>
+                    <p>3514313514351351</p>
+                </Col>
+            </Row>
+        );
+    }
+
+    getOrdersSection() {
+        const dataSource = [
+            {
+                key: "1",
+                id: "123",
+                seller: "Account1",
+                amount: 32,
+                price: "13.5"
+            },
+            {
+                key: "2",
+                id: "124",
+                seller: "Account2",
+                amount: 15,
+                price: "15.5"
+            }
+        ];
+
+        const columns = [
+            {
+                title: counterpart.translate("exchange.quick_trade_details.id"),
+                dataIndex: "id",
+                key: "id"
+            },
+            {
+                title: counterpart.translate(
+                    "exchange.quick_trade_details.seller"
+                ),
+                dataIndex: "seller",
+                key: "seller"
+            },
+            {
+                title: counterpart.translate(
+                    "exchange.quick_trade_details.amount"
+                ),
+                dataIndex: "amount",
+                key: "amount"
+            },
+            {
+                title: counterpart.translate(
+                    "exchange.quick_trade_details.price"
+                ),
+                dataIndex: "price",
+                key: "price"
+            }
+        ];
+        return (
+            <Table
+                columns={columns}
+                dataSource={dataSource}
+                style={{width: "100%"}}
+                pagination={
+                    dataSource.length > 4
+                        ? {
+                              pageSize: 5
+                          }
+                        : false
+                }
+            />
+        );
+    }
+
+    getYourPrice() {
+        const {sellAmount, receiveAmount, sellAsset, receiveAsset} = this.state;
+        const sellAssetPrecession = ChainStore.getAsset(sellAsset).get(
+            "precision"
+        );
+        const receiveAssetPrecession = ChainStore.getAsset(receiveAsset).get(
+            "precision"
+        );
+        return (
+            <FormattedPrice
+                quote_amount={receiveAmount * 10 ** receiveAssetPrecession}
+                quote_asset={receiveAsset}
+                base_asset={sellAsset}
+                base_amount={sellAmount * 10 ** sellAssetPrecession}
+            />
+        );
+    }
+
+    getTotalPercentFee() {
+        return "1%"; //TODO
+    }
+
+    getAmountOfOrders() {
+        return "3"; //TODO
     }
 
     render() {
+        console.log("PROPS", this.props);
+        console.log("STATE", this.state);
         const {
-            isDetailsVisible,
             sellAssetInput,
             sellAsset,
             sellAssets,
@@ -283,8 +488,7 @@ class QuickTrade extends Component {
             receiveAsset,
             receiveAssets,
             receiveAmount,
-            receiveImgName,
-            lookupQuote
+            receiveImgName
         } = this.state;
         const {
             activeMarketHistory,
@@ -299,10 +503,13 @@ class QuickTrade extends Component {
             marketData.combinedBids &&
             marketData.combinedBids.length
         ) {
-            console.dir(getOrders(2000 * 10 ** 5, marketData.combinedBids));
+            console.log(
+                "ORDERS",
+                getOrders(2000 * 10 ** 5, marketData.combinedBids)
+            );
         }
 
-        const Details = this.getDetails();
+        const Details = this.showDetails() ? this.getDetails() : null;
 
         return (
             <Card
@@ -324,20 +531,35 @@ class QuickTrade extends Component {
                     onSellAmountChange={this.onSellAmountChange}
                     onSellImageError={this.onSellImageError}
                     receiveAssetInput={receiveAssetInput}
-                    receiveAsset=""
-                    receiveAssets={[]}
+                    receiveAsset={receiveAsset}
+                    receiveAssets={receiveAssets}
                     receiveAmount={receiveAmount}
                     receiveImgName={receiveImgName}
-                    onReceiveAssetInputChange={() => null}
+                    onReceiveAssetInputChange={this.onReceiveAssetInputChange}
                     onReceiveAmountChange={this.onReceiveAmountChange}
                     onReceiveImageError={this.onReceiveImageError}
                     onSwap={this.onSwap}
+                    isSwappable={this.isSwappable()}
                 />
-                {isDetailsVisible ? Details : null}
-                <Input
-                    value={this.state.inputValue}
-                    onChange={this.onReceiveAssetInputChange.bind(this, true)}
-                />
+                {Details}
+                <div
+                    style={{
+                        marginTop: "1rem",
+                        textAlign: "center"
+                    }}
+                >
+                    <Button
+                        key="sell"
+                        type="primary"
+                        disabled={!this.showDetails()}
+                        onClick={this.handleSell}
+                    >
+                        {counterpart.translate("exchange.sell")}
+                    </Button>
+                    <Button key="cancel" onClick={this.handleCancel}>
+                        {counterpart.translate("global.cancel")}
+                    </Button>
+                </div>
             </Card>
         );
     }

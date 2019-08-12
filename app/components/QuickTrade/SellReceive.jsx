@@ -22,7 +22,8 @@ class SellReceive extends Component {
         onReceiveAssetInputChange: PropTypes.func.isRequired,
         onReceiveAmountChange: PropTypes.func.isRequired,
         onReceiveImageError: PropTypes.func.isRequired,
-        onSwap: PropTypes.func.isRequired
+        onSwap: PropTypes.func.isRequired,
+        isSwappable: PropTypes.bool
     };
 
     render() {
@@ -44,7 +45,8 @@ class SellReceive extends Component {
             onReceiveAssetInputChange,
             onReceiveAmountChange,
             onReceiveImageError,
-            onSwap
+            onSwap,
+            isSwappable
         } = this.props;
 
         const sellSelector = (
@@ -76,14 +78,19 @@ class SellReceive extends Component {
                 placeholder={"0.0"}
             />
         );
+
+        const btnStyle = {
+            align: "center",
+            display: "flex",
+            justifyContent: "center"
+        };
+
+        if (!isSwappable) {
+            btnStyle.opacity = 0.1;
+        }
+
         const swapButton = (
-            <div
-                style={{
-                    align: "center",
-                    display: "flex",
-                    justifyContent: "center"
-                }}
-            >
+            <div style={btnStyle}>
                 <Icon
                     name="swap"
                     size="2x"
