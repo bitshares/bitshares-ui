@@ -11,11 +11,8 @@ import {ChainStore} from "bitsharesjs";
 import {debounce} from "lodash-es";
 import AssetActions from "actions/AssetActions";
 import {ChainValidation} from "bitsharesjs";
-import {
-    lookupAssets,
-    assetFilter,
-    fetchIssuerName
-} from "../Exchange/MarketPickerHelpers";
+import {lookupAssets} from "../Exchange/MarketPickerHelpers";
+import {Input} from "antd";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -72,21 +69,13 @@ class QuickTrade extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.searchAssets !== this.props.searchAssets)
-            assetFilter(
-                {
-                    searchAssets: this.props.searchAssets,
-                    marketPickerAsset: this.props.marketPickerAsset,
-                    baseAsset: this.props.baseAsset,
-                    quoteAsset: this.props.quoteAsset
-                },
-                {
-                    inputValue: this.state.inputValue,
-                    lookupQuote: this.state.lookupQuote
-                },
-                this.setState,
-                this._checkAndUpdateMarketList
-            );
+        if (nextProps.searchAssets !== this.props.searchAssets) {
+            this.setState({activeSearch: true});
+            let filteredAssets = this.props.searchAssets
+                .toArray()
+                .filter(a => a.symbol.indexOf(this.state.lookupQuote) !== -1);
+            this._checkAndUpdateMarketList(filteredAssets);
+        }
     }
 
     _subToMarket(props, newBucketSize, newGroupLimit) {
@@ -169,14 +158,6 @@ class QuickTrade extends Component {
     _checkAndUpdateMarketList(marketsList) {
         clearInterval(this.intervalId);
         this.intervalId = setInterval(() => {
-            let needFetchIssuer = 0;
-            for (let [, market] of marketsList) {
-                if (!market.issuer) {
-                    market.issuer = fetchIssuerName(market.issuerId);
-                    if (!market.issuer) needFetchIssuer++;
-                }
-            }
-            if (needFetchIssuer) return;
             clearInterval(this.intervalId);
             this.setState({
                 marketsList,
@@ -302,9 +283,15 @@ class QuickTrade extends Component {
             receiveAsset,
             receiveAssets,
             receiveAmount,
-            receiveImgName
+            receiveImgName,
+            lookupQuote
         } = this.state;
-        const {activeMarketHistory, feedPrice, marketData} = this.props;
+        const {
+            activeMarketHistory,
+            feedPrice,
+            marketData,
+            searchAssets
+        } = this.props;
         console.log("in render");
 
         if (
@@ -341,13 +328,13 @@ class QuickTrade extends Component {
                     receiveAssets={[]}
                     receiveAmount={receiveAmount}
                     receiveImgName={receiveImgName}
-                    // onReceiveAssetInputChange={}
+                    onReceiveAssetInputChange={() => null}
                     onReceiveAmountChange={this.onReceiveAmountChange}
                     onReceiveImageError={this.onReceiveImageError}
                     onSwap={this.onSwap}
                 />
                 {isDetailsVisible ? Details : null}
-                <input
+                <Input
                     value={this.state.inputValue}
                     onChange={this.onReceiveAssetInputChange.bind(this, true)}
                 />
