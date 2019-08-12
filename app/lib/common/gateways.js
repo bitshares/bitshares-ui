@@ -6,7 +6,6 @@
 import {
     rudexAPIs,
     bitsparkAPIs,
-    widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
     gdex2APIs,
@@ -14,16 +13,22 @@ import {
     citadelAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
-import {getGateways} from "../chain/onChainConfig";
-//const temp = getGateways().OPEN.enabled;
-export const availableApis = {
-    OPEN: openledgerAPIs,
-    RUDEX: rudexAPIs,
-    SPARKDEX: bitsparkAPIs,
-    BRIDGE: cryptoBridgeAPIs,
-    GDEX: gdex2APIs,
-    XBTSX: xbtsxAPIs,
-    CITADEL: citadelAPIs
+import {isGatewayTemporarilyDisabled} from "../chain/onChainConfig";
+
+const _isEnabled = gatewayKey => {
+    return async function() {
+        const allowed = allowedGateway(gatewayKey);
+        if (allowed) {
+            const temporarilyDisabled = await isGatewayTemporarilyDisabled(
+                gatewayKey
+            );
+            if (temporarilyDisabled) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    };
 };
 
 export const availableGateways = {
@@ -31,9 +36,7 @@ export const availableGateways = {
         id: "OPEN",
         name: "OPENLEDGER",
         baseAPI: openledgerAPIs,
-        isEnabled: getGateways().OPEN
-            ? getGateways().OPEN.enabled
-            : allowedGateway("OPEN"),
+        isEnabled: () => false,
         selected: false,
         options: {
             enabled: false,
@@ -44,9 +47,7 @@ export const availableGateways = {
         id: "RUDEX",
         name: "RUDEX",
         baseAPI: rudexAPIs,
-        isEnabled: getGateways().RUDEX
-            ? getGateways().RUDEX.enabled
-            : allowedGateway("RUDEX"),
+        isEnabled: _isEnabled("RUDEX"),
         isSimple: true,
         selected: false,
         simpleAssetGateway: true,
@@ -61,9 +62,7 @@ export const availableGateways = {
         id: "SPARKDEX",
         name: "SPARKDEX",
         baseAPI: bitsparkAPIs,
-        isEnabled: getGateways().SPARKDEX
-            ? getGateways().SPARKDEX.enabled
-            : allowedGateway("SPARKDEX"),
+        isEnabled: _isEnabled("SPARKDEX"),
         selected: false,
         options: {
             enabled: false,
@@ -74,9 +73,7 @@ export const availableGateways = {
         id: "BRIDGE",
         name: "CRYPTO-BRIDGE",
         baseAPI: cryptoBridgeAPIs,
-        isEnabled: getGateways().BRIDGE
-            ? getGateways().BRIDGE.enabled
-            : allowedGateway("BRIDGE"),
+        isEnabled: _isEnabled("BRIDGE"),
         selected: false,
         singleWallet: true, // Has no coresponging coinType == backingCoinType specific wallet
         addressValidatorAsset: true, // Address validator requires output_asset parameter
@@ -91,9 +88,7 @@ export const availableGateways = {
         id: "GDEX",
         name: "GDEX",
         baseAPI: gdex2APIs,
-        isEnabled: getGateways().GDEX
-            ? getGateways().GDEX.enabled
-            : allowedGateway("GDEX"),
+        isEnabled: _isEnabled("GDEX"),
         options: {
             enabled: false,
             selected: false
@@ -103,9 +98,7 @@ export const availableGateways = {
         id: "XBTSX",
         name: "XBTSX",
         baseAPI: xbtsxAPIs,
-        isEnabled: getGateways().XBTSX
-            ? getGateways().XBTSX.enabled
-            : allowedGateway("XBTSX"),
+        isEnabled: _isEnabled("XBTSX"),
         isSimple: true,
         selected: false,
         simpleAssetGateway: false,
@@ -119,9 +112,7 @@ export const availableGateways = {
         id: "CITADEL",
         name: "CITADEL",
         baseAPI: citadelAPIs,
-        isEnabled: getGateways().CITADEL
-            ? getGateways().CITADEL.enabled
-            : allowedGateway("CITADEL"),
+        isEnabled: _isEnabled("CITADEL"),
         selected: false,
         assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
         options: {

@@ -1,72 +1,63 @@
-import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 import {getConfigurationAsset} from "branding";
 import asset_utils from "common/asset_utils";
 import {availableApis} from "common/gateways";
 
-const getNotifications = () => {
+const _fetchOnChainConfig = async function() {
     let config = getConfigurationAsset();
-    if (typeof config.symbol == "string") {
-        config.symbol = [config.symbol];
-    }
-
-    return new Promise((res, rej) => {
-        FetchChainObjects(ChainStore.getAsset, config.symbol)
-            .then(assets => {
-                let notificationList = [];
-                assets.forEach(asset => {
-                    if (!asset) {
-                        return;
-                    }
-                    try {
-                        asset = asset.toJS();
-                        let notification = asset_utils.parseDescription(
-                            asset.options.description
-                        );
-                        if (!!notification.main) {
-                            notification = notification.main.split(
-                                config.explanation
-                            );
-                            if (notification.length > 1 && !!notification[1]) {
-                                let onChainConfig = JSON.parse(notification[1]);
-                                onChainConfig.notifications.forEach(item => {
-                                    notificationList.push(item);
-                                });
-                            }
-                        }
-                    } catch (err) {
-                        console.error(
-                            "Head feed could not be parsed from asset",
-                            asset
-                        );
-                    }
-                });
-                res(notificationList);
-            })
-            .catch(rej);
+    const assets = [await FetchChain("getAsset", config.symbol)];
+    let onChainConfig = {};
+    assets.forEach(asset => {
+        if (!asset) {
+            return;
+        }
+        try {
+            asset = asset.toJS();
+            let notification = asset_utils.parseDescription(
+                asset.options.description
+            );
+            if (!!notification.main) {
+                notification = notification.main.split(config.explanation);
+                if (notification.length > 1 && !!notification[1]) {
+                    let _onChainConfig = JSON.parse(notification[1]);
+                    onChainConfig = Object.assign(
+                        onChainConfig,
+                        _onChainConfig
+                    );
+                }
+            }
+        } catch (err) {
+            console.error(
+                "JSON payload could not be parsed from asset description " +
+                    asset.symbol,
+                asset
+            );
+        }
     });
+    return onChainConfig;
 };
 
-const getGateways = () => {
-    const _gateways = Object.values(availableApis).map(item => {
-        return fetch(item.BASE + item.COINS_LIST)
-            .then(resp => {
-                return resp.ok;
-            })
-            .catch(err => {
-                console.warn(err);
-                return false;
-            });
+const getNotifications = async function() {
+    const onChainConfig = await _fetchOnChainConfig();
+    let notificationList = [];
+    onChainConfig.notifications.forEach(item => {
+        notificationList.push(item);
     });
-    return Promise.all(_gateways).then(results => {
-        const gateways = Object.keys(availableApis).reduce(
-            (sum, item, index) => {
-                return {...sum, [item]: {enabled: results[index]}};
-            },
-            {}
-        );
-
-        return gateways;
-    });
+    return notificationList;
 };
 
-export {getNotifications, getGateways};
+const isGatewayTemporarilyDisabled = async function(gatewayKey) {
+    // map of all known gateways with additional values
+    // e.g. {OPEN: {enabled: true}}
+    const onChainConfig = await _fetchOnChainConfig();
+
+    if (!onChainConfig.gateways) return false;
+
+    if (!onChainConfig.gateways[gatewayKey]) return false;
+
+    if (onChainConfig.gateways[gatewayKey].enabled === false) return true;
+
+    return false;
+};
+
+export {getNotifications, isGatewayTemporarilyDisabled};
