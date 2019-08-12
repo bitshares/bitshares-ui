@@ -24,6 +24,8 @@ import counterpart from "counterpart";
 import {hasLoaded} from "../Utility/BindToCurrentAccount";
 import Operation from "../Blockchain/Operation";
 import QRCode from "qrcode.react";
+import ScanOrEnterText from "./ScanOrEnterText";
+
 // invoice example:
 //{
 //    "to" : "merchant_account_name",
@@ -49,7 +51,8 @@ class InvoicePay extends React.Component {
             pay_to_account: null,
             error: null,
             blockNum: null,
-            invoiceQr: false
+            invoiceQr: false,
+            rawDataInputValue: ""
         };
         this.onBroadcastAndConfirm = this.onBroadcastAndConfirm.bind(this);
         this.getTotal = this.getTotal.bind(this);
@@ -76,16 +79,35 @@ class InvoicePay extends React.Component {
 
     componentDidMount() {
         let compressed_data = bs58.decode(this.props.match.params.data);
-
+        console.log("compressed_data", compressed_data);
         TransactionConfirmStore.unlisten(this.onBroadcastAndConfirm);
         TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
+        this.parseInvoiceData(compressed_data);
+    }
 
+    componentWillReceiveProps(nextProps, nextContext) {
+        if (this.state.pay_from_name == null && this.props.currentAccount) {
+            // check if current account has already paid
+            let paymentOperation = this._findPayment();
+
+            this.setState({
+                pay_from_name: this.props.currentAccount.get("name"),
+                paymentOperation
+            });
+        }
+    }
+
+    parseInvoiceData = compressedData => {
         try {
-            decompress(compressed_data, result => {
+            decompress(compressedData, result => {
+                console.log("decompress res", result);
+
                 result = sanitize(result, {
                     whiteList: [], // empty, means filter out all tags
                     stripIgnoreTag: true // filter out all HTML not in the whilelist
                 });
+                console.log("sunitized res", result);
+
                 let invoice = JSON.parse(result);
                 if (this.props.validateFormat(invoice)) {
                     FetchChainObjects(ChainStore.getAsset, [
@@ -97,7 +119,8 @@ class InvoicePay extends React.Component {
                                 asset: assets_array[0],
                                 pay_from_name: this.props.currentAccount.get(
                                     "name"
-                                )
+                                ),
+                                error: null
                             },
                             this.getTotal
                         );
@@ -112,19 +135,17 @@ class InvoicePay extends React.Component {
             console.error(error);
             this.setState({error: error.message});
         }
-    }
+    };
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        if (this.state.pay_from_name == null && this.props.currentAccount) {
-            // check if current account has already paid
-            let paymentOperation = this._findPayment();
+    handleRawInvoiceDataChange = e => {
+        const value = e.target.value;
+        console.log(value);
 
-            this.setState({
-                pay_from_name: this.props.currentAccount.get("name"),
-                paymentOperation
-            });
-        }
-    }
+        this.setState({rawDataInputValue: value}, () => {
+            let compressed_data = bs58.decode(value);
+            this.parseInvoiceData(compressed_data);
+        });
+    };
 
     parsePrice(price) {
         let m = price.match(/([\d\,\.\s]+)/);
@@ -262,6 +283,16 @@ class InvoicePay extends React.Component {
         if (this.state.error)
             return (
                 <div>
+                    <ScanOrEnterText
+                        labelContent={
+                            <Translate
+                                component="span"
+                                content="invoice.raw_invoice_data"
+                            />
+                        }
+                        onInputChange={this.handleRawInvoiceDataChange}
+                        inputValue={this.state.rawDataInputValue}
+                    />
                     <br />
                     <h4 className="has-error text-center">
                         {this.state.error}

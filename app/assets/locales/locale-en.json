@@ -1397,7 +1397,8 @@
         "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
         "total": "Total",
         "transaction": "Transaction",
-        "unit": "Unit"
+        "unit": "Unit",
+        "raw_invoice_data": "raw invoice data"
     },
     "languages": {
         "de": "Deutsch",
