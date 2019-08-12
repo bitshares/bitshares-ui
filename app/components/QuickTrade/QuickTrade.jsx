@@ -13,7 +13,12 @@ import {
 } from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
 import MarketsActions from "actions/MarketsActions";
-import {getAssetsToSell, getPrices, getOrders} from "./QuickTradeHelper";
+import {
+    getAssetsToSell,
+    getPrices,
+    getOrders,
+    getFees
+} from "./QuickTradeHelper";
 import {ChainStore} from "bitsharesjs";
 import {debounce} from "lodash-es";
 import AssetActions from "actions/AssetActions";
@@ -59,10 +64,17 @@ class QuickTrade extends Component {
         );
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const {currentAccount} = this.props;
+        const baseAsset = ChainStore.getAsset("1.3.1999");
+        const quoteAsset = ChainStore.getAsset("1.3.0");
+
+        const fees = await getFees(baseAsset, quoteAsset, currentAccount);
+        console.log("fees", fees);
+
         this.setState({
             mounted: true,
-            sellAssets: getAssetsToSell(this.props.currentAccount)
+            sellAssets: getAssetsToSell(currentAccount)
         });
     }
 

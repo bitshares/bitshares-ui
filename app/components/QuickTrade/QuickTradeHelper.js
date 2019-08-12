@@ -1,6 +1,6 @@
 import utils from "common/utils";
 import {ChainStore} from "bitsharesjs";
-import AssetActions from "actions/AssetActions";
+import {checkFeeStatusAsync} from "common/trxHelper";
 
 // Returns a list of dicts with keys id, seller amount and price and respective values
 function getOrders(amount, orders) {
@@ -50,18 +50,6 @@ function getPrices(activeMarketHistory, feedPrice) {
     return {latestPrice, feedPrice: feedPrice ? feedPrice.toReal() : feedPrice};
 }
 
-// Returns a dict with keys liquidityPenalty, marketFee and transactionFee, input is selected assets and amounts
-function getFees(price, marketPrice, feedPrice) {
-    const liquidityFee1 = 1 - price / marketPrice;
-    const liquidityFee2 = 1 - price / feedPrice;
-
-    return {
-        liquidityPenalty: [liquidityFee1, liquidityFee2],
-        marketFee: 0,
-        transactionFee: 0
-    };
-}
-
 // Returns a list of asset ids that the user can sell
 function getAssetsToSell(account) {
     let assetTypes = [];
@@ -81,6 +69,63 @@ function getAssetsToSell(account) {
     }
 
     return assetTypes;
+}
+
+// Returns a dict with keys liquidityPenalty, marketFee and transactionFee, input is selected assets and amounts
+async function getFees(
+    baseAsset,
+    quoteAsset,
+    currentAccount,
+    {price, marketPrice, feedPrice} = {}
+) {
+    let liquidityFee1, liquidityFee2;
+    if (price && marketPrice && feedPrice) {
+        liquidityFee1 = 1 - price / marketPrice;
+        liquidityFee2 = 1 - price / feedPrice;
+    }
+    const baseMarketFeePercent =
+        baseAsset.getIn(["options", "market_fee_percent"]) / 100 + "%";
+    const quoteMarketFeePercent =
+        quoteAsset.getIn(["options", "market_fee_percent"]) / 100 + "%";
+
+    const trxFee = await checkFeeStatus(
+        [baseAsset, quoteAsset],
+        currentAccount
+    );
+
+    return {
+        liquidityPenalty:
+            liquidityFee1 && liquidityFee2
+                ? [liquidityFee1, liquidityFee2]
+                : null,
+        marketFee: {baseMarketFeePercent, quoteMarketFeePercent},
+        transactionFee: trxFee
+    };
+}
+
+async function checkFeeStatus(assets = [], account) {
+    let feeStatus = {};
+    let p = [];
+    assets.forEach(a => {
+        p.push(
+            checkFeeStatusAsync({
+                accountID: account.get("id"),
+                feeID: a.get("id"),
+                type: "limit_order_create"
+            })
+        );
+    });
+    return Promise.all(p)
+        .then(status => {
+            assets.forEach((a, idx) => {
+                feeStatus[a.get("id")] = status[idx];
+            });
+            return feeStatus;
+        })
+        .catch(err => {
+            console.error("checkFeeStatusAsync error", err);
+            return feeStatus;
+        });
 }
 
 export {getOrders, getPrices, getFees, getAssetsToSell};
