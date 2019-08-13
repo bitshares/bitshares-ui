@@ -52,7 +52,8 @@ class InvoicePay extends React.Component {
             error: null,
             blockNum: null,
             invoiceQr: false,
-            rawDataInputValue: ""
+            rawDataInputValue: "",
+            isRawDataInputVisible: false
         };
         this.onBroadcastAndConfirm = this.onBroadcastAndConfirm.bind(this);
         this.getTotal = this.getTotal.bind(this);
@@ -77,12 +78,16 @@ class InvoicePay extends React.Component {
         });
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         let compressed_data = bs58.decode(this.props.match.params.data);
-        console.log("compressed_data", compressed_data);
         TransactionConfirmStore.unlisten(this.onBroadcastAndConfirm);
         TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
-        this.parseInvoiceData(compressed_data);
+        try {
+            const data = await this.decompressRawData(compressed_data);
+            this.parseInvoiceData(data);
+        } catch (e) {
+            this.setState({isRawDataInputVisible: true});
+        }
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -97,22 +102,29 @@ class InvoicePay extends React.Component {
         }
     }
 
-    parseInvoiceData = compressedData => {
+    decompressRawData = data => {
+        return new Promise((resolve, reject) => {
+            decompress(data, (result, error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    };
+
+    parseInvoiceData = data => {
         try {
-            decompress(compressedData, result => {
-                console.log("decompress res", result);
+            data = sanitize(data, {
+                whiteList: [], // empty, means filter out all tags
+                stripIgnoreTag: true // filter out all HTML not in the whilelist
+            });
 
-                result = sanitize(result, {
-                    whiteList: [], // empty, means filter out all tags
-                    stripIgnoreTag: true // filter out all HTML not in the whilelist
-                });
-                console.log("sunitized res", result);
-
-                let invoice = JSON.parse(result);
-                if (this.props.validateFormat(invoice)) {
-                    FetchChainObjects(ChainStore.getAsset, [
-                        invoice.currency
-                    ]).then(assets_array => {
+            let invoice = JSON.parse(data);
+            if (this.props.validateFormat(invoice)) {
+                FetchChainObjects(ChainStore.getAsset, [invoice.currency]).then(
+                    assets_array => {
                         this.setState(
                             {
                                 invoice,
@@ -120,30 +132,36 @@ class InvoicePay extends React.Component {
                                 pay_from_name: this.props.currentAccount.get(
                                     "name"
                                 ),
-                                error: null
+                                error: null,
+                                isRawDataInputVisible: false
                             },
                             this.getTotal
                         );
-                    });
-                } else {
-                    this.setState({
-                        error: counterpart.translate("invoice.invalid_format")
-                    });
-                }
-            });
+                    }
+                );
+            } else {
+                this.setState({
+                    error: counterpart.translate("invoice.invalid_format")
+                });
+            }
         } catch (error) {
-            console.error(error);
             this.setState({error: error.message});
         }
     };
 
     handleRawInvoiceDataChange = e => {
         const value = e.target.value;
-        console.log(value);
-
-        this.setState({rawDataInputValue: value}, () => {
-            let compressed_data = bs58.decode(value);
-            this.parseInvoiceData(compressed_data);
+        this.setState({rawDataInputValue: value}, async () => {
+            try {
+                const compressedData = bs58.decode(value);
+                const decompressedData = await this.decompressRawData(
+                    compressedData
+                );
+                this.parseInvoiceData(decompressedData);
+            } catch (e) {
+                console.log(e);
+                this.setState({error: e.message});
+            }
         });
     };
 
@@ -280,7 +298,7 @@ class InvoicePay extends React.Component {
     }
 
     render() {
-        if (this.state.error)
+        if (this.state.isRawDataInputVisible) {
             return (
                 <div>
                     <ScanOrEnterText
@@ -293,6 +311,16 @@ class InvoicePay extends React.Component {
                         onInputChange={this.handleRawInvoiceDataChange}
                         inputValue={this.state.rawDataInputValue}
                     />
+                    <br />
+                    <h4 className="has-error text-center">
+                        {this.state.error}
+                    </h4>
+                </div>
+            );
+        }
+        if (this.state.error)
+            return (
+                <div>
                     <br />
                     <h4 className="has-error text-center">
                         {this.state.error}

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Input} from "bitshares-ui-style-guide";
 import QRScanner from "../QRAddressScanner";
 
@@ -16,7 +17,7 @@ export default function ScanOrEnterText({
                 <div className="inline-label">
                     <Input.TextArea
                         style={{marginBottom: 0}}
-                        rows={2}
+                        rows={3}
                         onChange={onInputChange}
                         value={inputValue}
                     />
@@ -31,3 +32,10 @@ export default function ScanOrEnterText({
         </div>
     );
 }
+
+ScanOrEnterText.propTypes = {
+    labelContent: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    handleQrScanSuccess: PropTypes.func.isRequired,
+    onInputChange: PropTypes.func.isRequired,
+    inputValue: PropTypes.string
+};
