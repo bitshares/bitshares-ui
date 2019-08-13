@@ -1,13 +1,11 @@
 import React from "react";
 import {Alert, Icon} from "bitshares-ui-style-guide";
-import {ChainStore, FetchChainObjects} from "bitsharesjs";
-import asset_utils from "../../lib/common/asset_utils";
 import {Carousel} from "antd";
 import SettingsActions from "actions/SettingsActions";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
-import {getConfigurationAsset} from "../../branding";
 import {hash} from "bitsharesjs";
+import {getNotifications, getGateways} from "../../lib/chain/onChainConfig";
 
 const getNewsItemHash = news => {
     return hash
@@ -82,46 +80,13 @@ class NewsHeadline extends React.Component {
             );
     }
 
-    getNewsThroughAsset() {
-        let config = getConfigurationAsset();
-        if (typeof config.symbol == "string") {
-            config.symbol = [config.symbol];
-        }
-        FetchChainObjects(ChainStore.getAsset, config.symbol).then(assets => {
-            let notificationList = [];
-            assets.forEach(asset => {
-                if (!asset) {
-                    return;
-                }
-                try {
-                    asset = asset.toJS();
-                    let notification = asset_utils.parseDescription(
-                        asset.options.description
-                    );
-                    if (!!notification.main) {
-                        notification = notification.main.split(
-                            config.explanation
-                        );
-                        if (notification.length > 1 && !!notification[1]) {
-                            let onChainConfig = JSON.parse(notification[1]);
-                            onChainConfig.notifications.forEach(item => {
-                                notificationList.push(item);
-                            });
-                        }
-                    }
-                } catch (err) {
-                    console.error(
-                        "Head feed could not be parsed from asset",
-                        asset
-                    );
-                }
-            });
-            const news = filterNews(
-                notificationList,
-                this.props.hiddenNewsHeadline
-            );
-            this.setState({news});
-        });
+    async getNewsThroughAsset() {
+        const notificationList = await getNotifications();
+        const news = filterNews(
+            notificationList,
+            this.props.hiddenNewsHeadline
+        );
+        this.setState({news});
     }
 
     onClose(item) {
