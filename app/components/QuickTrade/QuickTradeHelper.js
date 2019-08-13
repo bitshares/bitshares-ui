@@ -3,7 +3,7 @@ import {ChainStore} from "bitsharesjs";
 import {checkFeeStatusAsync} from "common/trxHelper";
 
 // Returns a list of dicts with keys id, seller amount and price and respective values
-function getOrders(amount, orders) {
+function getOrdersWithSellAmount(amount, orders) {
     const matchedOrders = [];
     let totalAmount;
     orders.sort((a, b) => {
@@ -12,9 +12,8 @@ function getOrders(amount, orders) {
 
     for (let i = 0; i < orders.length; i++) {
         if (matchedOrders.length) {
-            totalAmount = 0;
             matchedOrders.forEach(({order}) => {
-                totalAmount += order.total_to_receive.getAmount();
+                totalAmount = order.total_to_receive.getAmount();
             });
 
             if (totalAmount >= amount) {
@@ -22,14 +21,48 @@ function getOrders(amount, orders) {
             } else {
                 matchedOrders.push({
                     order: orders[i],
-                    amount: orders[i].total_to_receive.getAmount(),
+                    amount: orders[i].amountToReceive().amount,
                     price: orders[i].getPrice()
                 });
             }
         } else {
             matchedOrders.push({
                 order: orders[i],
-                amount: orders[i].total_to_receive.getAmount(),
+                amount: orders[i].amountToReceive().amount,
+                price: orders[i].getPrice()
+            });
+        }
+    }
+
+    return matchedOrders;
+}
+
+function getOrdersWithReceiveAmount(amount, orders) {
+    const matchedOrders = [];
+    let totalAmount;
+    orders.sort((a, b) => {
+        return b.getPrice() - a.getPrice(); // getPrice === _real_price
+    });
+
+    for (let i = 0; i < orders.length; i++) {
+        if (matchedOrders.length) {
+            matchedOrders.forEach(({order}) => {
+                totalAmount = order.total_for_sale.getAmount();
+            });
+
+            if (totalAmount >= amount) {
+                break;
+            } else {
+                matchedOrders.push({
+                    order: orders[i],
+                    amount: orders[i].amountToReceive().amount,
+                    price: orders[i].getPrice()
+                });
+            }
+        } else {
+            matchedOrders.push({
+                order: orders[i],
+                amount: orders[i].amountToReceive().amount,
                 price: orders[i].getPrice()
             });
         }
@@ -128,4 +161,10 @@ async function checkFeeStatus(assets = [], account) {
         });
 }
 
-export {getOrders, getPrices, getFees, getAssetsToSell};
+export {
+    getOrdersWithSellAmount,
+    getOrdersWithReceiveAmount,
+    getPrices,
+    getFees,
+    getAssetsToSell
+};
