@@ -1,9 +1,11 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Translate from "react-translate-component";
 import {saveAs} from "file-saver";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
+import JSONModal from "components/Modal/JSONModal";
+import { Icon as AntIcon } from "bitshares-ui-style-guide";
 import {
     ChainTypes as grapheneChainTypes,
     FetchChain,
@@ -81,7 +83,8 @@ class RecentTransactions extends React.Component {
             rows: [],
             showModal: false,
             esNodeCustom: false,
-            esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
+            esNode: settingsAPIs.ES_WRAPPER_LIST[0].url,
+            visibleId: ""
         };
         this.getDataSource = this.getDataSource.bind(this);
 
@@ -191,6 +194,7 @@ class RecentTransactions extends React.Component {
         if (this.state.showModal !== nextState.showModal) return true;
         if (this.state.esNode !== nextState.esNode) return true;
         if (this.state.esNodeCustom !== nextState.esNodeCustom) return true;
+        if (this.state.visibleId !== nextState.visibleId) return true;
         return false;
     }
 
@@ -286,6 +290,14 @@ class RecentTransactions extends React.Component {
         });
     }
 
+    openJSONModal(id) {
+        this.setState({ visibleId: id });
+    }
+
+    closeJSONModal = () => {
+        this.setState({ visibleId: "" });
+    };
+
     getDataSource(o, current_account_id) {
         let fee = o.op[1].fee;
         let trxTypes = counterpart.translate("transaction.trxTypes");
@@ -303,7 +315,22 @@ class RecentTransactions extends React.Component {
         );
         return {
             key: o.id,
-            id: o.id,
+            id: (
+                <Fragment>
+                    <span
+                        className="cursor-pointer"
+                        onClick={() => this.openJSONModal(o.id)}
+                    >
+                        {o.id} <AntIcon type="file-search" />
+                    </span>
+                    <JSONModal
+                        visible={this.state.visibleId === o.id}
+                        operation={o.op}
+                        title={trxTypes[ops[o.op[0]] || ""]}
+                        hideModal={this.closeJSONModal}
+                    />
+                </Fragment>
+            ),
             type: (
                 <Link
                     className="inline-block"

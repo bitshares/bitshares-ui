@@ -25,7 +25,7 @@ import utils from "common/utils";
 import BuySell from "./BuySell";
 import ScaledOrderTab from "./ScaledOrderTab";
 import ExchangeHeader from "./ExchangeHeader";
-import {MyOpenOrders} from "./MyOpenOrders";
+import {MarketOrders} from "./MyOpenOrders";
 import {OrderBook} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
@@ -2613,7 +2613,7 @@ class Exchange extends React.Component {
         let myOpenOrders =
             tinyScreen &&
             !this.state.mobileKey.includes("myOpenOrders") ? null : (
-                <MyOpenOrders
+                <MarketOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: !tinyScreen ? 15 : 0}}
                     className={cnames(
@@ -2652,7 +2652,7 @@ class Exchange extends React.Component {
             marketSettleOrders.size === 0 ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("settlementOrders")) ? null : (
-                <MyOpenOrders
+                <MarketOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: !tinyScreen ? 15 : 0}}
                     className={cnames(

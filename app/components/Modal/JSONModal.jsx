@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import counterpart from "counterpart";
-import { Modal, Button } from "bitshares-ui-style-guide";
+import {Modal, Button} from "bitshares-ui-style-guide";
 import Inspector from "react-json-inspector";
 
-export default function JSONModal({ operation, visible, hideModal, title }) {
+export default function JSONModal({operation, visible, hideModal, title}) {
     return (
         <Modal
             title={title || counterpart.translate("explorer.block.op")}
