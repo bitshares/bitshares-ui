@@ -165,6 +165,19 @@ class InvoicePay extends React.Component {
         });
     };
 
+    handleQrScanSuccess = async ({address}) => {
+        try {
+            const compressedData = bs58.decode(address);
+            const decompressedData = await this.decompressRawData(
+                compressedData
+            );
+            this.parseInvoiceData(decompressedData);
+        } catch (e) {
+            console.log(e);
+            this.setState({error: e.message});
+        }
+    };
+
     parsePrice(price) {
         let m = price.match(/([\d\,\.\s]+)/);
         if (!m || m.length < 2) 0.0;
@@ -308,8 +321,17 @@ class InvoicePay extends React.Component {
                                 content="invoice.raw_invoice_data"
                             />
                         }
+                        submitBtnText={counterpart.translate(
+                            "invoice.use_invoice_data"
+                        )}
+                        dataFoundText={
+                            counterpart.translate(
+                                "invoice.invoice_data_found"
+                            ) + ":"
+                        }
                         onInputChange={this.handleRawInvoiceDataChange}
                         inputValue={this.state.rawDataInputValue}
+                        handleQrScanSuccess={this.handleQrScanSuccess}
                     />
                     <br />
                     <h4 className="has-error text-center">

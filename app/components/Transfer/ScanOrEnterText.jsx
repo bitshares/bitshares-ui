@@ -7,7 +7,9 @@ export default function ScanOrEnterText({
     labelContent,
     handleQrScanSuccess,
     onInputChange,
-    inputValue
+    inputValue,
+    submitBtnText,
+    dataFoundText
 }) {
     return (
         <div style={{marginBottom: "1em"}}>
@@ -25,6 +27,8 @@ export default function ScanOrEnterText({
                         <QRScanner
                             label="Scan"
                             onSuccess={handleQrScanSuccess}
+                            submitBtnText={submitBtnText}
+                            dataFoundText={dataFoundText}
                         />
                     </span>
                 </div>
@@ -37,5 +41,7 @@ ScanOrEnterText.propTypes = {
     labelContent: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
     handleQrScanSuccess: PropTypes.func.isRequired,
     onInputChange: PropTypes.func.isRequired,
-    inputValue: PropTypes.string
+    inputValue: PropTypes.string,
+    submitBtnText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    dataFoundText: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
 };

@@ -14,7 +14,9 @@ class QRScanner extends React.Component {
     static propTypes = {
         onSuccess: PropTypes.func,
         onError: PropTypes.func,
-        label: PropTypes.string
+        label: PropTypes.string,
+        submitBtnText: PropTypes.string.isRequired,
+        dataFoundText: PropTypes.string.isRequired
     };
 
     constructor(props) {
@@ -131,9 +133,7 @@ class QRScanner extends React.Component {
                                         type="primary"
                                         onClick={this.submit}
                                     >
-                                        {counterpart.translate(
-                                            "qr_address_scanner.use_address"
-                                        )}
+                                        {this.props.submitBtnText}
                                     </Button>
                                 ]}
                             </div>
@@ -155,10 +155,7 @@ class QRScanner extends React.Component {
                         <div>
                             <div className="qr-address-scanner-status">
                                 <div className="qr-address-scanner-status-title">
-                                    {counterpart.translate(
-                                        "qr_address_scanner.address_found"
-                                    )}
-                                    :
+                                    {this.props.dataFoundText}
                                 </div>
                                 <div className="qr-address-scanner-status-address">
                                     {this.state.address}

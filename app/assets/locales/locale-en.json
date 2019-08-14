@@ -1398,7 +1398,9 @@
         "total": "Total",
         "transaction": "Transaction",
         "unit": "Unit",
-        "raw_invoice_data": "raw invoice data"
+        "raw_invoice_data": "raw invoice data",
+        "use_invoice_data": "Use invoice data",
+        "invoice_data_found": "Invoice data found"
     },
     "languages": {
         "de": "Deutsch",

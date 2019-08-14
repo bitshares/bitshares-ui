@@ -1257,6 +1257,14 @@ class WithdrawModalNew extends React.Component {
                                                 onSuccess={
                                                     this.handleQrScanSuccess
                                                 }
+                                                submitBtnText={counterpart.translate(
+                                                    "qr_address_scanner.use_address"
+                                                )}
+                                                dataFoundText={
+                                                    counterpart.translate(
+                                                        "qr_address_scanner.address_found"
+                                                    ) + ":"
+                                                }
                                             />
                                         </span>
                                     </div>
