@@ -46,7 +46,9 @@ class QuickTrade extends Component {
             receiveAmount: "",
             receiveImgName: "BTS",
             lookupQuote: "",
-            orders: []
+            orders: [],
+            fees: null,
+            prices: null
         };
         this.onSellAssetInputChange = this.onSellAssetInputChange.bind(this);
         this.onReceiveAssetInputChange = this.onReceiveAssetInputChange.bind(
@@ -67,14 +69,8 @@ class QuickTrade extends Component {
         );
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         const {currentAccount} = this.props;
-        const baseAsset = ChainStore.getAsset("1.3.1999");
-        const quoteAsset = ChainStore.getAsset("1.3.0");
-
-        const fees = await getFees(baseAsset, quoteAsset, currentAccount);
-        //        console.log("fees", fees);
-
         this.setState({
             mounted: true,
             sellAssets: getAssetsToSell(currentAccount)
@@ -98,27 +94,61 @@ class QuickTrade extends Component {
         }
     }
 
-    _subToMarket(baseAssetId, quoteAssetId) {
-        //        console.log("SUBSCRIBE");
+    componentWillUnmount() {
+        const {sub, sellAsset, receiveAsset} = this.state;
+        if (sub) {
+            MarketsActions.unSubscribeMarket(sellAsset, receiveAsset);
+        }
+    }
+
+    async _subToMarket(baseAssetId, quoteAssetId) {
+        const {sub, sellAsset, receiveAsset} = this.state;
         const {bucketSize, currentGroupOrderLimit} = this.props;
+        if (sub) {
+            let [qa, ba] = sub.split("_");
+            if (qa === quoteAssetId && ba === baseAssetId) {
+                return;
+            }
+        }
+        if (sub) {
+            await MarketsActions.unSubscribeMarket(sellAsset, receiveAsset);
+        }
         if (baseAssetId && quoteAssetId) {
             const baseAsset = ChainStore.getAsset(baseAssetId);
             const quoteAsset = ChainStore.getAsset(quoteAssetId);
-            MarketsActions.subscribeMarket.defer(
+            await MarketsActions.subscribeMarket(
                 baseAsset,
                 quoteAsset,
                 bucketSize,
                 currentGroupOrderLimit
             );
-            this.setState(
-                {
-                    sub: `${quoteAsset.get("symbol")}_${baseAsset.get(
-                        "symbol"
-                    )}`
-                },
-                () => this.getOrders()
-            ); ///CHECK
+            this.setState({
+                sub: `${quoteAssetId}_${baseAssetId}`
+            });
+            this.getAllFees();
+            this.getAllPrices();
         }
+    }
+
+    async getAllFees() {
+        const {currentAccount} = this.props;
+        const {sellAsset, receiveAsset} = this.state;
+        if (sellAsset && receiveAsset) {
+            const baseAsset = ChainStore.getAsset(receiveAsset);
+            const quoteAsset = ChainStore.getAsset(sellAsset);
+            const fees = await getFees(baseAsset, quoteAsset, currentAccount);
+            this.setState({
+                fees
+            });
+        }
+    }
+
+    getAllPrices() {
+        const {activeMarketHistory, feedPrice} = this.props;
+        const prices = getPrices(activeMarketHistory, feedPrice);
+        this.setState({
+            prices
+        });
     }
 
     getOrders() {
@@ -245,6 +275,7 @@ class QuickTrade extends Component {
                 asset = ChainStore.getAsset(receiveAssetInput).get("id");
             }
         }
+        if (receiveAssets.length === 1) asset = receiveAssets[0];
         const assetImage = asset
             ? ChainStore.getAsset(asset).get("symbol")
             : "BTS";
@@ -459,29 +490,36 @@ class QuickTrade extends Component {
     }
 
     getPriceSection() {
+        const {prices, sellAmount, receiveAmount, receiveAsset} = this.state;
+        const receiveAssetPrecession = ChainStore.getAsset(receiveAsset).get(
+            "precision"
+        );
+        const yourPrice = (receiveAmount / sellAmount).toFixed(
+            receiveAssetPrecession
+        );
         return (
             <Row>
                 <Col span={12}>
-                    <p>
+                    <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.your_price"
                         )}
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.feed_price"
                         )}
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.last_price"
                         )}
-                    </p>
+                    </div>
                 </Col>
                 <Col span={12} style={{textAlign: "right"}}>
-                    <p>{this.getYourPrice()}</p>
-                    <p>1005615136143614</p>
-                    <p>3514313514351351</p>
+                    <div>{yourPrice || "-"}</div>
+                    <div>{prices.feedPrice || "-"}</div>
+                    <div>{prices.latestPrice || "-"}</div>
                 </Col>
             </Row>
         );
@@ -491,26 +529,26 @@ class QuickTrade extends Component {
         return (
             <Row>
                 <Col span={12}>
-                    <p>
+                    <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.liquidity_penalty"
                         )}
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.market_fee"
                         )}
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.transaction_fee"
                         )}
-                    </p>
+                    </div>
                 </Col>
                 <Col span={12} style={{textAlign: "right"}}>
-                    <p>53441433143535</p>
-                    <p>1005615136143614</p>
-                    <p>3514313514351351</p>
+                    <div>53441433143535</div>
+                    <div>1005615136143614</div>
+                    <div>3514313514351351</div>
                 </Col>
             </Row>
         );
@@ -585,10 +623,10 @@ class QuickTrade extends Component {
         );
         return (
             <FormattedPrice
-                quote_amount={receiveAmount * 10 ** receiveAssetPrecession}
-                quote_asset={receiveAsset}
-                base_asset={sellAsset}
-                base_amount={sellAmount * 10 ** sellAssetPrecession}
+                quote_amount={receiveAmount * 10 ** sellAssetPrecession}
+                quote_asset={sellAsset}
+                base_asset={receiveAsset}
+                base_amount={sellAmount * 10 ** receiveAssetPrecession}
             />
         );
     }
