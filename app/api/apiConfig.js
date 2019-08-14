@@ -63,7 +63,7 @@ export const gdex2APIs = {
 };
 
 export const deexAPIs = {
-    BASE: "http://192.168.40.64/gateway",
+    BASE: "https://deex.exchange/gateway",
     COINS_LIST: "/pay/get_coins"
 };
 
