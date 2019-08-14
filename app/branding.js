@@ -350,7 +350,8 @@ export function getAssetNamespaces() {
         "GDEX.",
         "XBTSX.",
         "SPARKDEX.",
-        "CITADEL."
+        "CITADEL.",
+        "DEEX."
     ];
 }
 
