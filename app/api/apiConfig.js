@@ -62,6 +62,11 @@ export const gdex2APIs = {
     TRADING_PAIRS: "/trading-pairs"
 };
 
+export const deexAPIs = {
+    BASE: "http://192.168.40.64/gateway",
+    COINS_LIST: "/pay/get_coins"
+};
+
 // Legacy Deposit/Withdraw
 export const gdexAPIs = {
     BASE: "https://api.gdex.io",

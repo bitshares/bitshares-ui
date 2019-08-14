@@ -10,7 +10,8 @@ import {
     cryptoBridgeAPIs,
     gdex2APIs,
     xbtsxAPIs,
-    citadelAPIs
+    citadelAPIs,
+    deexAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 import {isGatewayTemporarilyDisabled} from "../chain/onChainConfig";
@@ -115,6 +116,20 @@ export const availableGateways = {
         isEnabled: _isEnabled("CITADEL"),
         selected: false,
         assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    DEEX: {
+        id: "DEEX",
+        name: "DEEX",
+        baseAPI: deexAPIs,
+        isSimple: true,
+        simpleAssetGateway: false,
+        fixedMemo: {prepend: "dex:", append: ""},
+        isEnabled: allowedGateway("DEEX"),
+        addressValidatorMethod: "POST",
         options: {
             enabled: false,
             selected: false

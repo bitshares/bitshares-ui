@@ -377,7 +377,8 @@ export function allowedGateway(gateway) {
             "GDEX",
             "XBTSX",
             "SPARKDEX",
-            "CITADEL"
+            "CITADEL",
+            "DEEX"
         ].indexOf(gateway) >= 0
     );
 }
