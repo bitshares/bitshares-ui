@@ -137,6 +137,15 @@ class Header extends React.Component {
         document.body.removeEventListener("click", this.onBodyClick);
     }
 
+    componentWillReceiveProps(np) {
+        if (
+            np.passwordLogin !== this.props.passwordLogin &&
+            this.state.active.includes("/settings/")
+        ) {
+            this.props.history.push("/settings/general");
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.myActiveAccounts !== this.props.myActiveAccounts ||
@@ -989,20 +998,22 @@ class Header extends React.Component {
                                 component="div"
                                 className="table-cell"
                             />
+                        </li>,
+                        <li
+                            key={"settings.restore"}
+                            onClick={this._onNavigate.bind(
+                                this,
+                                "/settings/restore"
+                            )}
+                        >
+                            <Translate
+                                content="settings.restore"
+                                component="div"
+                                className="table-cell"
+                            />
                         </li>
                     ]}
-                    <li
-                        onClick={this._onNavigate.bind(
-                            this,
-                            "/settings/restore"
-                        )}
-                    >
-                        <Translate
-                            content="settings.restore"
-                            component="div"
-                            className="table-cell"
-                        />
-                    </li>
+
                     <li
                         onClick={this._onNavigate.bind(
                             this,
