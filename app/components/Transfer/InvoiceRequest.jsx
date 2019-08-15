@@ -166,17 +166,17 @@ class InvoiceRequest extends React.Component {
                                     )}
                                 </Col>
                                 <Col span={2}>
-                                    {k > 0 ? (
-                                        <Button
-                                            type="primary"
-                                            icon="minus-circle-o"
-                                            onClick={() => this.remove(k)}
-                                        />
-                                    ) : (
+                                    {k == keys.length - 1 ? (
                                         <Button
                                             type="primary"
                                             icon="plus-circle-o"
                                             onClick={() => this.add(k)}
+                                        />
+                                    ) : (
+                                        <Button
+                                            type="primary"
+                                            icon="minus-circle-o"
+                                            onClick={() => this.remove(k)}
                                         />
                                     )}
                                 </Col>
@@ -190,7 +190,7 @@ class InvoiceRequest extends React.Component {
         const error = this.hasErrors();
 
         return (
-            <div style={{width: "50%"}}>
+            <div className="merchant-protocol--request">
                 <AccountSelector
                     className="invoice-request-input"
                     label="invoice.request.recipient_account"
@@ -231,16 +231,11 @@ class InvoiceRequest extends React.Component {
                         className="invoice-request-input"
                         label={counterpart.translate("invoice.request.note")}
                     >
-                        {getFieldDecorator("note")(
-                            <Input.TextArea
-                                style={{marginBottom: 0}}
-                                rows={3}
-                            />
-                        )}
+                        {getFieldDecorator("note")(<Input.TextArea rows={3} />)}
                     </Form.Item>
 
                     {formItems}
-                    <Form.Item style={{marginTop: "24px"}}>
+                    <Form.Item>
                         <Button
                             type="primary"
                             htmlType="submit"

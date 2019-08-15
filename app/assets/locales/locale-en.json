@@ -2091,7 +2091,7 @@
             }
         },
         "merchant_protocol": {
-            "description": "Discription...",
+            "description": "Create, view and pay remittance requests or invoices",
             "title": "Merchant Protocol"
         },
         "paper_wallet": {

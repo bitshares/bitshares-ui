@@ -1,0 +1,20 @@
+.merchant-protocol {
+    padding: 10px;
+    max-width: 60rem;
+    min-width: 35rem;
+    margin: 0 auto;
+
+    div.merchant-protocol--request {
+        max-width: 35rem;
+
+        .ant-form-item {
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+    }
+
+    div.merchant-protocol--pay {
+        .ant-form-item {
+        }
+    }
+}

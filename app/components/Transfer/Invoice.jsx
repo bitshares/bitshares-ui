@@ -5,6 +5,7 @@ import InvoiceRequest from "./InvoiceRequest";
 import InvoicePay from "./InvoicePay";
 import {bindToCurrentAccount} from "../Utility/BindToCurrentAccount";
 import {validate} from "jsonschema";
+import "../../assets/stylesheets/components/_merchant.scss";
 
 class Invoice extends React.Component {
     constructor(props) {
@@ -74,25 +75,11 @@ class Invoice extends React.Component {
     }
     render() {
         return (
-            <div
-                className="center"
-                style={{
-                    padding: "10px",
-                    maxWidth: "60rem",
-                    minWidth: "40rem",
-                    width: "100%",
-                    margin: "0 auto"
-                }}
-            >
+            <div className="merchant-protocol center">
                 <Card>
                     <Tabs
                         activeKey={this.props.location.pathname}
                         animated={false}
-                        style={{
-                            display: "table",
-                            height: "100%",
-                            width: "100%"
-                        }}
                         onChange={this.onTabChange.bind(this)}
                     >
                         {this.state.tabs.map(tab => {

@@ -435,7 +435,7 @@ class InvoicePay extends React.Component {
         console.log(this.state.paymentOperation);
 
         return (
-            <div>
+            <div className="merchant-protocol--pay">
                 <div style={{float: "right"}}>
                     <PrintReceiptButton
                         data={receiptData}
