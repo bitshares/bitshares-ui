@@ -2762,6 +2762,9 @@
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
         "wallet_password": "Login anywhere using your password",
-        "wallet_types": "wallet types"
+        "wallet_types": "wallet types",
+        "wif_import_error": "Please enter a valid WIF",
+        "wif_length_error": "Incorrect input length",
+        "wif_associated_accounts": "Associated Account(s): "
     }
 }
