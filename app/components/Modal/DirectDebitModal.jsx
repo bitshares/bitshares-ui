@@ -616,7 +616,6 @@ class DirectDebitModal extends React.Component {
                                 {/*  F E E  */}
 
                                 <FeeAssetSelector
-                                    label="transfer.fee"
                                     account={from_account}
                                     trxInfo={{
                                         type:

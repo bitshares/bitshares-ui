@@ -52,10 +52,12 @@ class DepositWithdrawContent extends DecimalChecker {
                 asset_id: props.asset.get("id"),
                 precision: props.asset.get("precision")
             }),
-            fee_asset_id:
-                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
-                "1.3.0",
-            feeAmount: new Asset({amount: 0}),
+            feeAsset: {
+                asset_id:
+                    ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                    "1.3.0",
+                amount: 0
+            },
             loading: false,
             emptyAddressDeposit: false
         };
@@ -148,6 +150,14 @@ class DepositWithdrawContent extends DecimalChecker {
         ReactTooltip.rebuild();
     }
 
+    getMemo() {
+        return (
+            this.props.backingCoinType.toLowerCase() +
+            ":" +
+            this.state.toAddress +
+            (this.state.memo ? ":" + new Buffer(this.state.memo, "utf-8") : "")
+        );
+    }
     onSubmit(e) {
         e.preventDefault();
         if (this.state.to_withdraw.getAmount() === 0) {
@@ -158,7 +168,7 @@ class DepositWithdrawContent extends DecimalChecker {
 
         if (!this.props.intermediateAccount) return;
 
-        const fee = this.state.feeAmount;
+        const fee = this.state.feeAsset;
         const gateFee = this._getGateFee();
 
         let sendAmount = this.state.to_withdraw.clone();
@@ -180,19 +190,14 @@ class DepositWithdrawContent extends DecimalChecker {
             this.props.intermediateAccount,
             this.state.to_withdraw.getAmount(),
             this.state.to_withdraw.asset_id,
-            this.props.backingCoinType.toLowerCase() +
-                ":" +
-                this.state.toAddress +
-                (this.state.memo
-                    ? ":" + new Buffer(this.state.memo, "utf-8")
-                    : ""),
+            this.getMemo(),
             null,
             fee.asset_id
         );
     }
 
     _updateAmount() {
-        const {feeAmount} = this.state;
+        const {feeAsset} = this.state;
         const currentBalance = this._getCurrentBalance();
 
         let total = new Asset({
@@ -202,8 +207,8 @@ class DepositWithdrawContent extends DecimalChecker {
         });
 
         // Subtract the fee if it is using the same asset
-        if (total.asset_id === feeAmount.asset_id) {
-            total.minus(feeAmount);
+        if (total.asset_id === feeAsset.asset_id) {
+            total.minus(feeAsset);
         }
 
         this.state.to_withdraw.setAmount({sats: total.getAmount()});
@@ -230,14 +235,14 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _checkBalance() {
-        const {feeAmount, to_withdraw} = this.state;
+        const {feeAsset, to_withdraw} = this.state;
         const {asset} = this.props;
         const balance = this._getCurrentBalance();
-        if (!balance || !feeAmount) return;
+        if (!balance || !feeAsset) return;
         const hasBalance = checkBalance(
             to_withdraw.getAmount({real: true}),
             asset,
-            feeAmount,
+            feeAsset,
             balance,
             this._getGateFee()
         );
@@ -318,16 +323,23 @@ class DepositWithdrawContent extends DecimalChecker {
 
     onFeeChanged(asset) {
         this.setState({
-            fee_asset_id: asset.asset_id,
-            feeAmount: asset
+            feeAsset: asset
         });
     }
 
     _renderWithdraw() {
-        const {amountError} = this.state;
-        const {name: assetName} = utils.replaceName(this.props.asset);
+        const {
+            amountError,
+            toAddress,
+            memo,
+            feeAsset,
+            balanceError,
+            withdrawValue,
+            validAddress
+        } = this.state;
+        const {supportsMemos, asset, account} = this.props;
+        const {name: assetName} = utils.replaceName(asset);
         let tabIndex = 1;
-        const {supportsMemos} = this.props;
 
         // if(this.props.fiatModal){
         //     if(~this.props.fiatModal.indexOf('canFiatWith')){
@@ -343,13 +355,12 @@ class DepositWithdrawContent extends DecimalChecker {
         //     }
         // }
 
-        const currentFee = this.state.feeAmount;
+        const currentFee = feeAsset;
+
+        const trxInfoContent = this.getMemo();
 
         const disableSubmit =
-            !currentFee ||
-            this.state.balanceError ||
-            !this.state.toAddress ||
-            !this.state.withdrawValue;
+            !currentFee || balanceError || !toAddress || !withdrawValue;
 
         return (
             <div>
@@ -373,7 +384,7 @@ class DepositWithdrawContent extends DecimalChecker {
                             type="number"
                             min="0"
                             onKeyPress={this.onKeyPress.bind(this)}
-                            value={this.state.withdrawValue}
+                            value={withdrawValue}
                             onChange={this._onInputAmount.bind(this)}
                         />
                         <div className="form-label select floating-dropdown">
@@ -403,19 +414,13 @@ class DepositWithdrawContent extends DecimalChecker {
                 <div className="SimpleTrade__withdraw-row withdraw-fee-selector">
                     <FeeAssetSelector
                         label="showcases.barter.fee_when_proposal_executes"
-                        account={this.props.account}
+                        account={account}
                         trxInfo={{
                             type: "transfer",
                             options: ["price_per_kbyte"],
                             data: {
                                 type: "memo",
-                                content:
-                                    this.props.backingCoinType.toLowerCase() +
-                                    ":" +
-                                    this.state.toAddress +
-                                    (this.state.memo
-                                        ? ":" + this.state.memo
-                                        : "")
+                                content: trxInfoContent
                             }
                         }}
                         onChange={this.onFeeChanged.bind(this)}
@@ -434,7 +439,7 @@ class DepositWithdrawContent extends DecimalChecker {
                             )}
                             tabIndex={tabIndex++}
                             type="text"
-                            value={this.state.toAddress}
+                            value={toAddress}
                             onChange={this._onInputTo.bind(this)}
                         />
 
@@ -452,7 +457,7 @@ class DepositWithdrawContent extends DecimalChecker {
                             </div>
                         </div>
                     </div>
-                    {!this.state.validAddress && this.state.toAddress ? (
+                    {!validAddress && toAddress ? (
                         <div className="has-error" style={{paddingTop: 10}}>
                             <Translate
                                 content="gateway.valid_address"
@@ -470,12 +475,12 @@ class DepositWithdrawContent extends DecimalChecker {
                         <div className="inline-label input-wrapper">
                             <textarea
                                 rows="3"
-                                value={this.state.memo}
+                                value={memo}
                                 tabIndex={tabIndex++}
                                 onChange={this._onMemoChanged.bind(this)}
                             />
                         </div>
-                        {!this.state.validAddress && this.state.toAddress ? (
+                        {!validAddress && toAddress ? (
                             <div className="has-error" style={{paddingTop: 10}}>
                                 <Translate
                                     content="gateway.valid_address"

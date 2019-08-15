@@ -74,7 +74,6 @@ export default class Barter extends Component {
             },
             proposal_fee: {
                 amount: 0,
-                _real_amount: 0,
                 asset_id: "1.3.0"
             },
             showEscrow: false,

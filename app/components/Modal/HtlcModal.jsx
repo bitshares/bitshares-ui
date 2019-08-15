@@ -998,7 +998,6 @@ class HtlcModal extends React.Component {
                                 <div className="content-block transfer-input">
                                     <div className="no-margin no-padding">
                                         <FeeAssetSelector
-                                            label="transfer.fee"
                                             account={from_account}
                                             trxInfo={{
                                                 type: "htlc_create",

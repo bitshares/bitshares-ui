@@ -523,7 +523,6 @@ class DirectDebitClaimModal extends React.Component {
                             <div className="no-margin no-padding">
                                 {/*  F E E  */}
                                 <FeeAssetSelector
-                                    label="transfer.fee"
                                     account={to_account}
                                     trxInfo={{
                                         type: "withdraw_permission_claim",
