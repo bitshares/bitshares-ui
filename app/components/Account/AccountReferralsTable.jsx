@@ -69,7 +69,7 @@ class AccountReferralsTable extends React.Component {
                         });
                     })
                     .catch(err => {
-                        reject(err);
+                        reject("ES Node - referrer_count failed", err);
                     });
             });
         }
@@ -134,7 +134,7 @@ class AccountReferralsTable extends React.Component {
                     });
                 })
                 .catch(err => {
-                    reject(err);
+                    reject("ES Node - all_referrers failed", err);
                 });
         });
     }
@@ -259,6 +259,7 @@ class AccountReferralsTable extends React.Component {
 
         return (
             <Table
+                rowKey="accountReferrals"
                 columns={refColumns}
                 dataSource={refData}
                 pagination={{
