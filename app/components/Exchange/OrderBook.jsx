@@ -819,7 +819,7 @@ class OrderBook extends React.Component {
                         />
                     );
                 });
-                askRows.reverse();
+
                 if (askRows.length < 24) {
                     for (
                         var iterator = 0;
@@ -979,7 +979,7 @@ class OrderBook extends React.Component {
                                         transitionName="newrow"
                                         id="top-order-rows"
                                     >
-                                        {askRows}
+                                        {askRows.reverse()}
                                     </TransitionWrapper>
                                 </table>
                             </div>

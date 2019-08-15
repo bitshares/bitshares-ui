@@ -414,7 +414,7 @@ class DepthHighChart extends React.Component {
             });
         }
 
-        config.chart.height = "479px";
+        config.chart.height = this.props.height;
         // Add onClick event listener if defined
         if (this.props.onClick) {
             config.chart.events = {

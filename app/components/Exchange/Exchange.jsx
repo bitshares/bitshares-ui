@@ -2720,7 +2720,7 @@ class Exchange extends React.Component {
                     totalAsks={totals.ask}
                     base={base}
                     quote={quote}
-                    height={thisChartHeight}
+                    height={chartHeight + 8}
                     isPanelActive={isPanelActive}
                     onClick={this._depthChartClick.bind(this, base, quote)}
                     feedPrice={
@@ -2896,34 +2896,36 @@ class Exchange extends React.Component {
                     if (a == "my_orders") {
                         groupStandalone.push(myOpenOrders);
                     }
-                if (a == "open_settlement" && settlementOrders !== null) {
-                    groupStandalone.push(settlementOrders);
-                }
-            } else {
-                if (a == "history") {
-                    groupTabs[panelTabs[a]].push(
-                        <div key="history">{marketHistory}</div>
-                    );
-                }
+                    if (a == "open_settlement" && settlementOrders !== null) {
+                        groupStandalone.push(settlementOrders);
+                    }
+                } else {
+                    if (a == "history") {
+                        groupTabs[panelTabs[a]].push(
+                            <div key="history">{marketHistory}</div>
+                        );
+                    }
 
-                if (a == "my_orders") {
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.my_orders")}
-                            key="my_orders"
-                        >
-                            {myOpenOrders}
-                        </Tabs.TabPane>
-                    );
-                    groupTabs[panelTabs[a]].push(
-                        <Tabs.TabPane
-                            tab={translator.translate("exchange.my_history")}
-                            key="my_history"
-                        >
-                            {myMarketHistory}
-                        </Tabs.TabPane>
-                    );
-                }
+                    if (a == "my_orders") {
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate("exchange.my_orders")}
+                                key="my_orders"
+                            >
+                                {myOpenOrders}
+                            </Tabs.TabPane>
+                        );
+                        groupTabs[panelTabs[a]].push(
+                            <Tabs.TabPane
+                                tab={translator.translate(
+                                    "exchange.my_history"
+                                )}
+                                key="my_history"
+                            >
+                                {myMarketHistory}
+                            </Tabs.TabPane>
+                        );
+                    }
                     if (a == "open_settlement" && settlementOrders !== null) {
                         groupTabs[panelTabs[a]].push(
                             <Tabs.TabPane
@@ -3455,7 +3457,8 @@ class Exchange extends React.Component {
                                             style={{
                                                 flexGrow: "2",
                                                 width: "280px",
-                                                display: "inline-block"
+                                                display: "inline-block",
+                                                borderBottom: "2px solid black"
                                             }}
                                         >
                                             {deptHighChart}
