@@ -426,11 +426,8 @@ class InvoicePay extends React.Component {
 
         const qrcode = this.state.invoiceQr
             ? invoiceData
-            : `bitshares:operation/transfer?to=<${invoice.to_name}>&from=<${
-                  this.state.pay_from_name
-              }>&asset=<${asset}>&amount=<${total_amount}>&memo=<${
-                  invoice.memo
-              }>`;
+            : `bitshares:operation/transfer?to=${this.state.pay_to_account}&from=${this.state.pay_from_name}&asset=${asset}&amount=${total_amount}` +
+              (invoice.memo ? `&memo=${invoice.memo}` : "");
 
         console.log(this.state.paymentOperation);
 

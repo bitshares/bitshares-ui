@@ -1,5 +1,7 @@
 import React from "react";
+import {ChainStore} from "bitsharesjs";
 import AccountSelector from "../Account/AccountSelector";
+import AssetSelect from "../Utility/AssetSelect";
 import {compress} from "lzma";
 import bs58 from "common/base58";
 import Translate from "react-translate-component";
@@ -14,7 +16,9 @@ class InvoiceRequest extends React.Component {
         this.state = {
             invoice: null,
             recipient_name: null,
-            recipient_name_account: null
+            recipient_name_account: null,
+            currency: "BTS",
+            defaultAssets: ["BTS", "CNY", "USD"]
         };
     }
 
@@ -52,7 +56,6 @@ class InvoiceRequest extends React.Component {
     hasErrors = () => {
         let formError = false;
         const values = this.props.form.getFieldsValue([
-            "currency",
             "line_items",
             "memo",
             "keys"
@@ -98,10 +101,11 @@ class InvoiceRequest extends React.Component {
     };
 
     handleSubmit(e) {
+        const {currency} = this.state;
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const {currency, line_items, memo, note, to_label} = values;
+                const {line_items, memo, note, to_label} = values;
                 this._printInvoice({
                     currency,
                     line_items,
@@ -114,8 +118,14 @@ class InvoiceRequest extends React.Component {
         });
     }
 
+    onChangeCurrency(e) {
+        const asset = ChainStore.getAsset(e);
+        this.setState({currency: asset.get("symbol")});
+    }
+
     render() {
         const {getFieldValue, getFieldDecorator} = this.props.form;
+        const {currency, defaultAssets} = this.state;
         getFieldDecorator("keys", {initialValue: [0]});
         let keys = getFieldValue("keys");
         const formItems = (
@@ -210,13 +220,18 @@ class InvoiceRequest extends React.Component {
                     >
                         {getFieldDecorator("memo")(<Input />)}
                     </Form.Item>
+
                     <Form.Item
                         className="invoice-request-input"
                         label={counterpart.translate(
                             "invoice.request.currency"
                         )}
                     >
-                        {getFieldDecorator("currency")(<Input />)}
+                        <AssetSelect
+                            value={currency}
+                            assets={defaultAssets}
+                            onChange={this.onChangeCurrency.bind(this)}
+                        />
                     </Form.Item>
 
                     <Form.Item
