@@ -22,7 +22,7 @@ export default class PaginatedList extends React.Component {
 
     render() {
         const {pageSize} = this.state;
-        const {header, rows, extraRow} = this.props;
+        const {header, rows, extraRow, loading} = this.props;
 
         return (
             <div className="paginated-list" style={this.props.style}>
@@ -47,6 +47,7 @@ export default class PaginatedList extends React.Component {
                                   this.props.rowClassName(record, index)
                     }
                     rowSelection={this.props.rowSelection}
+                    loading={loading}
                 />
                 {this.props.children}
             </div>

@@ -46,6 +46,11 @@ const getNotifications = async function() {
     return notificationList;
 };
 
+const getPredictionMarketIssuers = async function() {
+    const onChainConfig = await _fetchOnChainConfig();
+    return onChainConfig.predictionMarketIssuers;
+};
+
 const isGatewayTemporarilyDisabled = async function(gatewayKey) {
     // map of all known gateways with additional values
     // e.g. {OPEN: {enabled: true}}
@@ -60,4 +65,8 @@ const isGatewayTemporarilyDisabled = async function(gatewayKey) {
     return false;
 };
 
-export {getNotifications, isGatewayTemporarilyDisabled};
+export {
+    getNotifications,
+    getPredictionMarketIssuers,
+    isGatewayTemporarilyDisabled
+};

@@ -14,8 +14,6 @@ import utils from "../../lib/common/utils";
 
 require("./prediction.scss");
 
-const ISSUERS_WHITELIST = ["1.2.1634961"]; // "iamredbar1", "sports-owner", "twat123"
-
 class PredictionMarketsOverviewTable extends Component {
     constructor(props) {
         super(props);
@@ -420,7 +418,9 @@ class PredictionMarketsOverviewTable extends Component {
                 filteredMarkets = this.props.predictionMarkets;
                 if (this.props.hideUnknownHouses) {
                     filteredMarkets = filteredMarkets.filter(item => {
-                        return ISSUERS_WHITELIST.includes(item.issuer);
+                        return this.props.whitelistedHouses.includes(
+                            item.issuer
+                        );
                     });
                 }
                 filteredMarkets = filteredMarkets.filter(item => {
@@ -472,6 +472,7 @@ class PredictionMarketsOverviewTable extends Component {
                 header={header}
                 pageSize={10}
                 rowClassName={this._decideRowClassName.bind(this)}
+                loading={this.props.loading}
             />
         );
     }

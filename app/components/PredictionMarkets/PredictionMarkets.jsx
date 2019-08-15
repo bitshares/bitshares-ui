@@ -10,17 +10,15 @@ import HelpContent from "../Utility/HelpContent";
 import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
 import ResolveModal from "./ResolveModal";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import {Switch, Button, Radio, Icon, Tooltip} from "bitshares-ui-style-guide";
 import {Asset, Price} from "../../lib/common/MarketClasses";
 import Translate from "react-translate-component";
-import LoadingIndicator from "../LoadingIndicator";
 import {bindToCurrentAccount} from "../Utility/BindToCurrentAccount";
 import AssetStore from "../../stores/AssetStore";
 import MarketsStore from "../../stores/MarketsStore";
 import {connect} from "alt-react";
-
-const ISSUERS_WHITELIST = ["1.2.1634961"]; // "iamredbar1", "sports-owner", "twat123"
+import {getPredictionMarketIssuers} from "../../lib/chain/onChainConfig";
 
 class PredictionMarkets extends Component {
     constructor(props) {
@@ -43,7 +41,8 @@ class PredictionMarkets extends Component {
             isHideUnknownHousesChecked: true,
             isHideInvalidAssetsChecked: true,
             opinionFilter: "yes",
-            predictionMarketAssetFilter: "open"
+            predictionMarketAssetFilter: "open",
+            whitelistedHouses: []
         };
 
         this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
@@ -69,7 +68,8 @@ class PredictionMarkets extends Component {
     }
 
     componentWillMount() {
-        this._checkAssets(this.props.assets);
+        this.getWhitelistedHousesThroughAsset();
+        //    this._checkAssets(this.props.assets);
     }
 
     componentWillReceiveProps(np) {
@@ -80,6 +80,40 @@ class PredictionMarkets extends Component {
         if (np.marketLimitOrders !== this.props.marketLimitOrders) {
             this._updateOpinionsList(np.marketLimitOrders);
         }
+    }
+
+    async getWhitelistedHousesThroughAsset() {
+        let whitelistedHouses = await getPredictionMarketIssuers();
+        whitelistedHouses = ["1.2.428447", "1.2.1099493", "1.2.160399"]; //!!!!!!!!!FOR TESTING!!!!!!!!!!!!!!!!!
+        this.setState({
+            whitelistedHouses
+        });
+        this._getWhitelistedAssets(whitelistedHouses);
+    }
+
+    async _getWhitelistedAssets(whitelistedHouses) {
+        let assets = [];
+        let accountObjects = await FetchChainObjects(
+            ChainStore.getAsset,
+            whitelistedHouses,
+            undefined,
+            {}
+        );
+        accountObjects.forEach(item => {
+            if (item) {
+                item = item.toJS();
+                assets = [...assets, ...item.assets];
+            }
+        });
+        let assetsObjects = await FetchChainObjects(
+            ChainStore.getAsset,
+            assets,
+            undefined,
+            {}
+        );
+        assetsObjects = assetsObjects.map(item => item.toJS());
+
+        console.log("assetsObjects", assetsObjects);
     }
 
     _checkAssets(fetchedAssets) {
@@ -135,7 +169,7 @@ class PredictionMarkets extends Component {
     }
 
     _isKnownIssuer(asset) {
-        return ISSUERS_WHITELIST.includes(asset.issuer);
+        return this.state.whitelistedHouses.includes(asset.issuer);
     }
 
     _isValidPredictionMarketAsset(asset) {
@@ -665,6 +699,8 @@ class PredictionMarkets extends Component {
                         this.state.selectedPredictionMarket
                     }
                     hideUnknownHouses={this.state.isHideUnknownHousesChecked}
+                    loading={!this.state.isFetchingFinished}
+                    whitelistedHouses={this.state.whitelistedHouses}
                 />
             </div>
         );
@@ -818,13 +854,6 @@ class PredictionMarkets extends Component {
                         onClose={this.onResolveModalClose}
                         predictionMarket={this.state.selectedPredictionMarket}
                         onResolveMarket={this.onResolveMarket}
-                    />
-                ) : null}
-                {!this.state.isFetchingFinished ? (
-                    <LoadingIndicator
-                        loadingText={counterpart.translate(
-                            "prediction.overview.loading"
-                        )}
                     />
                 ) : null}
             </div>
