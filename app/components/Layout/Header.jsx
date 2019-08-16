@@ -390,7 +390,10 @@ class Header extends React.Component {
                 })}
                 onClick={this._onNavigate.bind(this, "/")}
             >
-                <img style={{marginTop: -11, height: 35}} src={logo} />
+                <img
+                    style={{marginTop: -11, height: 35, width: 26.5}}
+                    src={logo}
+                />
             </a>
         );
 
@@ -655,8 +658,7 @@ class Header extends React.Component {
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active:
-                            active.indexOf("/signedmessages") !== -1
+                        active: active.indexOf("/signedmessages") !== -1
                     })}
                 >
                     <Icon
@@ -1007,10 +1009,7 @@ class Header extends React.Component {
                         />
                     </li>
                     <li
-                        onClick={this._onNavigate.bind(
-                            this,
-                            "/settings/reset"
-                        )}
+                        onClick={this._onNavigate.bind(this, "/settings/reset")}
                     >
                         <Translate
                             content="settings.reset"
@@ -1082,30 +1081,24 @@ class Header extends React.Component {
                                         to={`/account/${currentAccount}`}
                                         className={cnames({
                                             active:
-                                                active.indexOf(
-                                                    "/account/"
-                                                ) !== -1 &&
-                                                active.indexOf(
-                                                    "/account/"
-                                                ) !== -1 &&
-                                                active.indexOf(
-                                                    "/assets"
-                                                ) === -1 &&
-                                                active.indexOf(
-                                                    "/voting"
-                                                ) === -1 &&
+                                                active.indexOf("/account/") !==
+                                                    -1 &&
+                                                active.indexOf("/account/") !==
+                                                    -1 &&
+                                                active.indexOf("/assets") ===
+                                                    -1 &&
+                                                active.indexOf("/voting") ===
+                                                    -1 &&
                                                 active.indexOf(
                                                     "/signedmessages"
                                                 ) === -1 &&
                                                 active.indexOf(
                                                     "/member-stats"
                                                 ) === -1 &&
-                                                active.indexOf(
-                                                    "/vesting"
-                                                ) === -1 &&
-                                                active.indexOf(
-                                                    "/whitelist"
-                                                ) === -1 &&
+                                                active.indexOf("/vesting") ===
+                                                    -1 &&
+                                                active.indexOf("/whitelist") ===
+                                                    -1 &&
                                                 active.indexOf(
                                                     "/permissions"
                                                 ) === -1
@@ -1244,9 +1237,7 @@ class Header extends React.Component {
                                 className={cnames(
                                     {
                                         active:
-                                            active.indexOf(
-                                                "/accounts"
-                                            ) !== -1
+                                            active.indexOf("/accounts") !== -1
                                     },
                                     "divider"
                                 )}
