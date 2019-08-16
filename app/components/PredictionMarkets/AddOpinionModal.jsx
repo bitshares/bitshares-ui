@@ -47,13 +47,8 @@ export default class AddOpinionModal extends Modal {
                 : "shortAndSell";
         const feeID = this.props.baseAsset.get("id");
 
-        let {description} = this.props.predictionMarket.options;
-        const parsedDescription = JSON.parse(description);
         let date = new Date();
         date.setFullYear(date.getFullYear() + 1);
-        let expiry = parsedDescription.expiry
-            ? new Date(parsedDescription.expiry)
-            : date;
         let bid = {
             for_sale: new Asset({
                 asset_id: this.props.baseAsset.get("id"),
@@ -92,17 +87,6 @@ export default class AddOpinionModal extends Modal {
         ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
 
         let current = type === "buy" ? ask : bid;
-
-        const order = new LimitOrderCreate({
-            for_sale: current.for_sale,
-            expiration: expiry,
-            to_receive: current.to_receive,
-            seller: this.props.currentAccount.get("id"),
-            fee: {
-                asset_id: feeID,
-                amount: 0
-            }
-        });
 
         if (type === "buy") {
             const buy = new LimitOrderCreate({
@@ -323,7 +307,6 @@ export default class AddOpinionModal extends Modal {
             </Button>
         ];
 
-        console.log("asd");
         return (
             <Modal
                 title={
@@ -467,7 +450,6 @@ AddOpinionModal.propTypes = {
     predictionMarket: PropTypes.any.isRequired,
     opinion: PropTypes.any,
     currentAccount: ChainTypes.ChainAccount.isRequired,
-    submitNewOpinion: PropTypes.func,
     preselectedOpinion: PropTypes.string,
     preselectedAmount: PropTypes.number,
     preselectedProbability: PropTypes.number,

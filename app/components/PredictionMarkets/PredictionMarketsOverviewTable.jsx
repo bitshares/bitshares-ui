@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import counterpart from "counterpart";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import LinkToAccountById from "../Utility/LinkToAccountById";
-import {Table, Button} from "bitshares-ui-style-guide";
+import {Button} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 import PaginatedList from "components/Utility/PaginatedList";
 import ChainTypes from "../Utility/ChainTypes";
@@ -131,7 +131,7 @@ class PredictionMarketsOverviewTable extends Component {
                         this.state.ticker[row.asset_id]
                     );
 
-                    if (ticker) {
+                    if (this.state.ticker[row.asset_id]) {
                         if (
                             !ticker.quote_volume ||
                             ticker.quote_volume === "0" ||
@@ -143,10 +143,7 @@ class PredictionMarketsOverviewTable extends Component {
                         } else {
                             ticker.quote_volume = utils.convert_typed_to_satoshi(
                                 parseFloat(ticker.quote_volume),
-                                ChainStore.getAsset(
-                                    row.asset[1].bitasset_data.options
-                                        .short_backing_asset
-                                )
+                                ChainStore.getAsset(row.short_backing_asset)
                             );
                         }
                         if (
@@ -173,10 +170,7 @@ class PredictionMarketsOverviewTable extends Component {
                                 &nbsp;
                                 <FormattedAsset
                                     amount={ticker.quote_volume}
-                                    asset={
-                                        row.asset[1].bitasset_data.options
-                                            .short_backing_asset
-                                    }
+                                    asset={row.short_backing_asset}
                                 />
                                 &nbsp;
                                 {/*({ticker.percent_change})&nbsp;*/}
@@ -206,7 +200,7 @@ class PredictionMarketsOverviewTable extends Component {
                         this.state.ticker[row.asset_id]
                     );
 
-                    if (ticker) {
+                    if (this.state.ticker[row.asset_id]) {
                         if (
                             !ticker.latest ||
                             ticker.latest === "0" ||
@@ -386,21 +380,23 @@ class PredictionMarketsOverviewTable extends Component {
             this.props.predictionMarkets.length
         ) {
             this.props.predictionMarkets.forEach(market => {
-                if (!(market.asset[1].id in Object.keys(this.tickersLoaded))) {
-                    this.tickersLoaded[market.asset[1].id] = {};
+                console.log(market);
+                if (!(market.asset.id in Object.keys(this.tickersLoaded))) {
+                    this.tickersLoaded[market.asset.id] = {};
                     MarketsActions.getTicker(
-                        market.asset[1].bitasset_data.options
-                            .short_backing_asset,
-                        market.asset[1].id
-                    ).then(result => {
-                        let ticker = Object.assign(
-                            this.tickersLoaded,
-                            this.state.ticker
-                        );
-                        ticker[market.asset[1].id] = result;
-                        this.tickersLoaded[market.asset[1].id] = result;
-                        this.setState({ticker});
-                    });
+                        market.short_backing_asset,
+                        market.asset.id
+                    )
+                        .then(result => {
+                            let ticker = Object.assign(
+                                this.tickersLoaded,
+                                this.state.ticker
+                            );
+                            ticker[market.asset.id] = result;
+                            this.tickersLoaded[market.asset.id] = result;
+                            this.setState({ticker});
+                        })
+                        .catch(err => console.error(err));
                 }
             });
         }
