@@ -105,21 +105,13 @@ function getAssetsToSell(account) {
 }
 
 // Returns a dict with keys liquidityPenalty, marketFee and transactionFee, input is selected assets and amounts
-async function getFees(
-    baseAsset,
-    quoteAsset,
-    currentAccount,
-    {price, marketPrice, feedPrice} = {}
-) {
-    let liquidityFee1, liquidityFee2;
-    if (price && marketPrice && feedPrice) {
-        liquidityFee1 = 1 - price / marketPrice;
-        liquidityFee2 = 1 - price / feedPrice;
-    }
+async function getFees(baseAsset, quoteAsset, currentAccount) {
     const baseMarketFeePercent =
         baseAsset.getIn(["options", "market_fee_percent"]) / 100 + "%";
     const quoteMarketFeePercent =
         quoteAsset.getIn(["options", "market_fee_percent"]) / 100 + "%";
+    const baseMarketFee = baseAsset.getIn(["options", "market_fee_percent"]);
+    const quoteMarketFee = quoteAsset.getIn(["options", "market_fee_percent"]);
 
     const trxFee = await checkFeeStatus(
         [baseAsset, quoteAsset],
@@ -127,11 +119,12 @@ async function getFees(
     );
 
     return {
-        liquidityPenalty:
-            liquidityFee1 && liquidityFee2
-                ? [liquidityFee1, liquidityFee2]
-                : null,
-        marketFee: {baseMarketFeePercent, quoteMarketFeePercent},
+        marketFee: {
+            baseMarketFeePercent,
+            quoteMarketFeePercent,
+            baseMarketFee,
+            quoteMarketFee
+        },
         transactionFee: trxFee
     };
 }
