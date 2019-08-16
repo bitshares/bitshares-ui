@@ -26,8 +26,9 @@ import AssetActions from "actions/AssetActions";
 import {ChainValidation} from "bitsharesjs";
 import {lookupAssets} from "../Exchange/MarketPickerHelpers";
 import counterpart from "counterpart";
-import FormattedPrice from "../Utility/FormattedPrice";
 import LinkToAccountById from "../Utility/LinkToAccountById";
+import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
+import {Notification} from "bitshares-ui-style-guide";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -71,9 +72,12 @@ class QuickTrade extends Component {
 
     componentDidMount() {
         const {currentAccount} = this.props;
+        const sellAssets = getAssetsToSell(currentAccount);
+        const sellAsset = sellAssets.length === 1 ? sellAssets[0] : "";
         this.setState({
             mounted: true,
-            sellAssets: getAssetsToSell(currentAccount)
+            sellAsset,
+            sellAssets
         });
     }
 
@@ -89,7 +93,7 @@ class QuickTrade extends Component {
             nextProps.marketData.combinedBids !==
             this.props.marketData.combinedBids
         ) {
-            this.getOrders(); ///CHECK
+            this.getOrders();
         }
     }
 
@@ -368,7 +372,56 @@ class QuickTrade extends Component {
     }
 
     handleSell() {
-        console.log("Sell"); //TODO
+        const {currentAccount} = this.props;
+        const {sellAmount, receiveAmount, sellAsset, receiveAsset} = this.state;
+        const sellAssetPrecision = ChainStore.getAsset(sellAsset).get(
+            "precision"
+        );
+        const receiveAssetPrecision = ChainStore.getAsset(receiveAsset).get(
+            "precision"
+        );
+        const forSale = new Asset({
+            asset_id: sellAsset,
+            precision: sellAssetPrecision,
+            amount: sellAmount * 10 ** sellAssetPrecision
+        });
+        const toReceive = new Asset({
+            asset_id: receiveAsset,
+            precision: receiveAssetPrecision,
+            amount: receiveAmount * 10 ** receiveAssetPrecision
+        });
+        const expirationTime = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+        const price = new Price({base: toReceive, quote: forSale});
+
+        const order = new LimitOrderCreate({
+            for_sale: forSale,
+            expiration: expirationTime,
+            to_receive: toReceive,
+            seller: currentAccount.get("id"),
+            fee: {
+                asset_id: sellAsset,
+                amount: 0
+            }
+        });
+
+        return MarketsActions.createLimitOrder2(order)
+            .then(result => {
+                if (result.error) {
+                    if (result.error.message !== "wallet locked")
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_order",
+                                {
+                                    amount: receiveAmount,
+                                    symbol: receiveAsset
+                                }
+                            )
+                        });
+                }
+            })
+            .catch(e => {
+                console.error("order failed:", e);
+            });
     }
 
     handleCancel() {
@@ -591,10 +644,11 @@ class QuickTrade extends Component {
             ).toFixed(2);
         }
         const [liqidityPenalty1, liqidityPenalty2] = this.getLiquidityPenalty();
-        let liqidityPenalty = liqidityPenalty1
-            ? liqidityPenalty1.toFixed(2)
-            : "-";
-        if (liqidityPenalty2)
+        let liqidityPenalty =
+            liqidityPenalty1 || liqidityPenalty1 === 0
+                ? liqidityPenalty1.toFixed(2)
+                : "-";
+        if (liqidityPenalty2 || liqidityPenalty1 === 0)
             liqidityPenalty = `${liqidityPenalty}% / ${liqidityPenalty2.toFixed(
                 2
             )}%`;
@@ -697,14 +751,13 @@ class QuickTrade extends Component {
         const receiveAssetPrecision = ChainStore.getAsset(receiveAsset).get(
             "precision"
         );
-        return (
-            <FormattedPrice
-                quote_amount={sellAmount * 10 ** sellAssetPrecision}
-                quote_asset={receiveAsset}
-                base_asset={sellAsset}
-                base_amount={receiveAmount * 10 ** receiveAssetPrecision}
-            />
+        const sellAssetSymbol = ChainStore.getAsset(sellAsset).get("symbol");
+        const receiveAssetSymbol = ChainStore.getAsset(receiveAsset).get(
+            "symbol"
         );
+        return `${(receiveAmount / sellAmount).toFixed(
+            receiveAssetPrecision
+        )} ${receiveAssetSymbol}/${sellAssetSymbol}`;
     }
 
     getLiquidityPenalty() {
@@ -738,13 +791,10 @@ class QuickTrade extends Component {
             0,
             fees.marketFee.baseMarketFeePercent.length - 1
         );
-        const totalFee = +transactionFeePercent + +marketFee;
         return +transactionFeePercent + +marketFee + "%";
     }
 
     render() {
-        //        console.log("PROPS", this.props);
-        //       console.log("STATE", this.state);
         const {
             sellAssetInput,
             sellAsset,
