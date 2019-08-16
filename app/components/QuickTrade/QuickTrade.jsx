@@ -227,7 +227,9 @@ class QuickTrade extends Component {
                 sellAsset: asset,
                 sellAssets: filteredSellAssets,
                 sellAssetInput: e,
-                sellImgName: assetImage
+                sellImgName: assetImage,
+                sellAmount: "",
+                receiveAmount: ""
             },
             () => {
                 const {sellAsset, receiveAsset} = this.state;
@@ -351,23 +353,20 @@ class QuickTrade extends Component {
                 sellImgName,
                 receiveImgName,
                 sellAssetInput,
-                receiveAssetInput,
-                receiveAmount
+                receiveAssetInput
             } = this.state;
-            this.setState(
-                {
-                    sellAsset: receiveAsset,
-                    receiveAsset: sellAsset,
-                    sellAssets: [receiveAsset],
-                    receiveAssets: [sellAsset],
-                    sellAssetInput: receiveAssetInput,
-                    receiveAssetInput: sellAssetInput,
-                    sellImgName: receiveImgName,
-                    receiveImgName: sellImgName,
-                    sellAmount: receiveAmount
-                },
-                () => this.updateReceiveAmount()
-            );
+            this.setState({
+                sellAsset: receiveAsset,
+                receiveAsset: sellAsset,
+                sellAssets: [receiveAsset],
+                receiveAssets: [sellAsset],
+                sellAssetInput: receiveAssetInput,
+                receiveAssetInput: sellAssetInput,
+                sellImgName: receiveImgName,
+                receiveImgName: sellImgName,
+                sellAmount: "",
+                receiveAmount: ""
+            });
         }
     }
 
@@ -733,7 +732,7 @@ class QuickTrade extends Component {
                 dataSource={dataSource}
                 style={{width: "100%"}}
                 pagination={
-                    dataSource.length > 4
+                    dataSource.length > 5
                         ? {
                               pageSize: 5
                           }
