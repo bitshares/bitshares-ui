@@ -135,8 +135,8 @@ class OpenSettleOrders extends React.Component {
             <tbody>
                 <tr>
                     <td
+                        className="centric-items"
                         style={{
-                            textAlign: "center",
                             lineHeight: 4,
                             fontStyle: "italic"
                         }}

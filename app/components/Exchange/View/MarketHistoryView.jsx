@@ -62,8 +62,8 @@ class MarketHistoryView extends React.Component {
         const emptyRow = (
             <tr>
                 <td
+                    className="centric-items"
                     style={{
-                        textAlign: "center",
                         lineHeight: 4,
                         fontStyle: "italic"
                     }}

@@ -2434,7 +2434,7 @@ class Exchange extends React.Component {
                     className="left-order-book no-overflow order-9"
                     style={{
                         minWidth: 350,
-                        height: smallScreen ? 680 : "calc(100vh - 215px)",
+                        height: smallScreen ? 680 : "calc(100vh - 167px)",
                         padding: smallScreen ? 10 : 0
                     }}
                     headerStyle={{
