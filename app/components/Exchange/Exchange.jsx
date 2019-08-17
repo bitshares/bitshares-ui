@@ -3430,9 +3430,7 @@ class Exchange extends React.Component {
                             }
                         >
                             {!tinyScreen ? (
-                                <div
-                                    style={{display: "flex", flexWrap: "wrap"}}
-                                >
+                                <div className="tiny-screen-flex">
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div

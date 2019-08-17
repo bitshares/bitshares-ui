@@ -541,6 +541,19 @@ div.bucket-option {
     padding-top: 5px !important;
 }
 
+.tiny-screen-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media not all and (min-resolution: 0.001dpcm) {
+    @supports (-webkit-appearance: none) {
+        .tiny-screen-flex {
+            display: flex;
+            flex-wrap: wrap-reverse !important;
+        }
+    }
+}
 .buy-sell-label {
     font-size: 12px;
     padding: 1px;
