@@ -30,8 +30,8 @@ class AccountVesting extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        let newId = prevProps.account.get("id");
-        let oldId = this.props.account.get("id");
+        let oldId = prevProps.account.get("id");
+        let newId = this.props.account.get("id");
 
         if (newId !== oldId) {
             this.retrieveVestingBalances.call(this, newId);
@@ -352,42 +352,30 @@ class AccountVesting extends React.Component {
         });
 
         return (
-            <div className="grid-content app-tables no-padding">
-                <div className="grid-block main-content" style={{margin: 0}}>
-                    <div className="grid-content">
+            <div className="grid-content vertical">
+                <Translate component="h1" content="account.vesting.title" />
+                <Translate content="account.vesting.explain" component="p" />
+                <div className="header-selector padding">
+                    <SearchInput
+                        onChange={this.onSearch.bind(this)}
+                        value={this.state.searchTerm}
+                        autoComplete="off"
+                        placeholder={counterpart.translate("exchange.filter")}
+                    />
+                    {this.state.error && (
                         <Translate
-                            component="h1"
-                            content="account.vesting.title"
+                            className="header-selector--error"
+                            content="errors.loading_from_blockchain"
                         />
-                        <Translate
-                            content="account.vesting.explain"
-                            component="p"
-                        />
-                        <div className="header-selector padding">
-                            <SearchInput
-                                onChange={this.onSearch.bind(this)}
-                                value={this.state.searchTerm}
-                                autoComplete="off"
-                                placeholder={counterpart.translate(
-                                    "exchange.filter"
-                                )}
-                            />
-                            {this.state.error && (
-                                <Translate
-                                    className="header-selector--error"
-                                    content="errors.loading_from_blockchain"
-                                />
-                            )}
-                        </div>
-                        <div>
-                            <PaginatedList
-                                loading={this.state.loading}
-                                rows={vb}
-                                header={header}
-                                pageSize={10}
-                            />
-                        </div>
-                    </div>
+                    )}
+                </div>
+                <div>
+                    <PaginatedList
+                        loading={this.state.loading}
+                        rows={vb}
+                        header={header}
+                        pageSize={10}
+                    />
                 </div>
             </div>
         );

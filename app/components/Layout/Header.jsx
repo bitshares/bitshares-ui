@@ -55,6 +55,7 @@ class Header extends React.Component {
             hasWithdrawalModalBeenShown: false
         };
 
+        this._accountNotificationActiveKeys = [];
         this.unlisten = null;
         this._toggleAccountDropdownMenu = this._toggleAccountDropdownMenu.bind(
             this
@@ -65,6 +66,9 @@ class Header extends React.Component {
         this._toggleDropdownSubmenu = this._toggleDropdownSubmenu.bind(this);
         this._closeMenuDropdown = this._closeMenuDropdown.bind(this);
         this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(
+            this
+        );
+        this._closeAccountNotifications = this._closeAccountNotifications.bind(
             this
         );
 
@@ -133,6 +137,15 @@ class Header extends React.Component {
         document.body.removeEventListener("click", this.onBodyClick);
     }
 
+    componentWillReceiveProps(np) {
+        if (
+            np.passwordLogin !== this.props.passwordLogin &&
+            this.state.active.includes("/settings/")
+        ) {
+            this.props.history.push("/settings/general");
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.myActiveAccounts !== this.props.myActiveAccounts ||
@@ -197,6 +210,7 @@ class Header extends React.Component {
             }
         }
         this._closeDropdown();
+        this._closeAccountNotifications();
     }
 
     _onNavigate(route, e) {
@@ -258,11 +272,22 @@ class Header extends React.Component {
         ZfApi.publish("account_drop_down", "close");
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
+            const key = `account-notification-${Date.now()}`;
             Notification.success({
                 message: counterpart.translate("header.account_notify", {
                     account: account_name
-                })
+                }),
+                key,
+                onClose: () => {
+                    // Remove key of notification from notificationKeys array after close
+                    this._accountNotificationActiveKeys = this._accountNotificationActiveKeys.filter(
+                        el => el !== key
+                    );
+                }
             });
+
+            this._accountNotificationActiveKeys.push(key);
+
             this._closeDropdown();
         }
     }
@@ -273,7 +298,7 @@ class Header extends React.Component {
         const hasLocalWallet = !!WalletDb.getWallet();
 
         if (!hasLocalWallet) return false;
-
+        this._closeAccountNotifications();
         this.setState({
             accountsListDropdownActive: !this.state.accountsListDropdownActive
         });
@@ -292,6 +317,12 @@ class Header extends React.Component {
         this.setState({
             dropdownActive: !this.state.dropdownActive
         });
+        this._closeAccountNotifications();
+    }
+
+    _closeAccountNotifications() {
+        this._accountNotificationActiveKeys.map(key => Notification.close(key));
+        this._accountNotificationActiveKeys = [];
     }
 
     onBodyClick(e) {
@@ -970,20 +1001,22 @@ class Header extends React.Component {
                                 component="div"
                                 className="table-cell"
                             />
+                        </li>,
+                        <li
+                            key={"settings.restore"}
+                            onClick={this._onNavigate.bind(
+                                this,
+                                "/settings/restore"
+                            )}
+                        >
+                            <Translate
+                                content="settings.restore"
+                                component="div"
+                                className="table-cell"
+                            />
                         </li>
                     ]}
-                    <li
-                        onClick={this._onNavigate.bind(
-                            this,
-                            "/settings/restore"
-                        )}
-                    >
-                        <Translate
-                            content="settings.restore"
-                            component="div"
-                            className="table-cell"
-                        />
-                    </li>
+
                     <li
                         onClick={this._onNavigate.bind(
                             this,

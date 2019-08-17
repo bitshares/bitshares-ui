@@ -13,7 +13,7 @@ export default class PaginatedList extends React.Component {
 
     static defaultProps = {
         rows: [],
-        pageSize: 15,
+        pageSize: 20,
         label: "utility.total_x_items",
         className: "table",
         extraRow: null,
@@ -25,6 +25,10 @@ export default class PaginatedList extends React.Component {
         const {pageSize} = this.state;
         const {header, rows, extraRow, loading} = this.props;
 
+        const pageSizeOptions = [10, 20, 30, 40, 50, 100].filter(
+            item => item < rows.length
+        );
+        pageSizeOptions.push(rows.length);
         return (
             <div className="paginated-list" style={this.props.style}>
                 <Table
@@ -35,8 +39,10 @@ export default class PaginatedList extends React.Component {
                     footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
                     onChange={this.props.toggleSortOrder}
                     pagination={{
-                        hideOnSinglePage: true,
-                        pageSize: pageSize,
+                        showSizeChanger: true,
+                        hideOnSinglePage: false,
+                        defaultPageSize: pageSize,
+                        pageSizeOptions,
                         showTotal: (total, range) =>
                             counterpart.translate(this.props.label, {
                                 count: total

@@ -9,13 +9,18 @@ import ChainTypes from "components/Utility/ChainTypes";
 import utils from "common/utils";
 import ProposalModal, {finalRequiredPerms} from "../Modal/ProposalModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
-import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
 import counterpart from "counterpart";
 import permission_utils from "common/permission_utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import AccountStore from "stores/AccountStore";
 import accountUtils from "common/account_utils";
 import {Tooltip} from "bitshares-ui-style-guide";
+import JSONModal from "components/Modal/JSONModal";
+
+const {operations} = grapheneChainTypes;
+const ops = Object.keys(operations);
+
 
 class Proposals extends Component {
     static propTypes = {
@@ -31,7 +36,8 @@ class Proposals extends Component {
                 action: null,
                 proposalId: null,
                 accountId: null
-            }
+            },
+            visibleId: ""
         };
 
         this._proposals = [];
@@ -234,6 +240,14 @@ class Proposals extends Component {
         return isUnknown;
     }
 
+    openJSONModal(id) {
+        this.setState({ visibleId: id });
+    }
+
+    closeJSONModal = () => {
+        this.setState({ visibleId: "" });
+    };
+
     render() {
         let {account} = this.props;
         if (!account) return null;
@@ -252,6 +266,12 @@ class Proposals extends Component {
             const id = proposal.proposal.get("id");
             const proposer = proposal.proposal.get("proposer");
             const expiration = proposal.proposal.get("expiration_time");
+            const trxTypes = counterpart.translate("transaction.trxTypes");
+            const operations = proposal.operations && proposal.operations.toJS();
+            const title = operations.length > 1 ?
+                counterpart.translate("transaction.operations") :
+                trxTypes[ops[operations[0] && operations[0][0]]];
+
             let text = proposal.operations
                 .map((o, index) => {
                     return (
@@ -293,6 +313,14 @@ class Proposals extends Component {
                         <TransactionIDAndExpiry
                             id={id}
                             expiration={expiration}
+                            openJSONModal={() => this.openJSONModal(id)}
+                        />
+                        <JSONModal
+                            visible={this.state.visibleId === id}
+                            operation={operations.length > 1 ?
+                                operations : operations[0] && operations[0][1]}
+                            title={title || ""}
+                            hideModal={this.closeJSONModal}
                         />
                     </td>
                 </tr>

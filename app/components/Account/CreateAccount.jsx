@@ -284,7 +284,7 @@ class CreateAccount extends React.Component {
                     <PasswordInput
                         ref="password"
                         confirmation={true}
-                        onChange={this.onPasswordChange.bind(this)}
+                        onValidationChange={this.onPasswordChange.bind(this)}
                         noLabel
                         checkStrength
                     />

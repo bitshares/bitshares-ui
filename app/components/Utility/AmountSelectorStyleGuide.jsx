@@ -114,18 +114,23 @@ class AmountSelector extends DecimalChecker {
                 validateStatus={this.props.validateStatus}
                 help={this.props.help}
             >
-                <Input
-                    disabled={this.props.disabled}
-                    value={value || ""}
-                    placeholder={this.props.placeholder}
-                    onChange={this._onChange.bind(this)}
-                    tabIndex={this.props.tabIndex}
-                    onPaste={this.props.onPaste || this.onPaste.bind(this)}
-                    onKeyPress={this.onKeyPress.bind(this)}
-                    addonAfter={addonAfter}
-                    addonBefore={addonBefore}
-                    className="input-group-unbordered-before"
-                />
+                <Input.Group compact>
+                    <Input
+                        disabled={this.props.disabled}
+                        value={value || ""}
+                        style={{
+                            width: "calc(100% - 130px)"
+                        }}
+                        placeholder={this.props.placeholder}
+                        onChange={this._onChange.bind(this)}
+                        tabIndex={this.props.tabIndex}
+                        onPaste={this.props.onPaste || this.onPaste.bind(this)}
+                        onKeyPress={this.onKeyPress.bind(this)}
+                        addonBefore={addonBefore}
+                        className="input-group-unbordered-before"
+                    />
+                    {addonAfter}
+                </Input.Group>
             </Form.Item>
         );
     }
