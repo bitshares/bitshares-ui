@@ -1,6 +1,6 @@
 import React from "react";
 import counterpart from "counterpart";
-import {Checkbox, Select} from "bitshares-ui-style-guide";
+import {Checkbox, Icon, Select} from "bitshares-ui-style-guide";
 import SettingsActions from "actions/SettingsActions";
 import PaginatedList from "./PaginatedList";
 import "./paginated-list.scss";
@@ -26,7 +26,8 @@ class CustomTable extends React.Component {
         super(props);
 
         this.state = {
-            columnSelector: "default"
+            columnSelector: "default",
+            isDropDownOpen: false
         };
 
         this._columnSelectorChange = this._columnSelectorChange.bind(this);
@@ -116,14 +117,22 @@ class CustomTable extends React.Component {
                     defaultValue={this.state.columnSelector}
                     value={this.state.columnSelector}
                     onChange={this._columnSelectorChange}
+                    dropdownClassName="customizable-column--selector--dropdown"
+                    onDropdownVisibleChange={open => {
+                        this.setState({
+                            isDropDownOpen: open
+                        });
+                    }}
                 >
                     <Option
                         className="customizable-column--selector--option"
                         value="default"
                     >
-                        {counterpart.translate(
-                            "customizable_table.customize_the_columns"
-                        )}
+                        {!this.state.isDropDownOpen && <Icon type="setting" />}
+                        {this.state.isDropDownOpen &&
+                            counterpart.translate(
+                                "customizable_table.customize_the_columns"
+                            )}
                     </Option>
                     {this._getCustomizableColumns(header).map((item, key) => {
                         return (
