@@ -412,13 +412,6 @@ class PredictionMarketsOverviewTable extends Component {
         } else {
             if (this.props.predictionMarkets) {
                 filteredMarkets = this.props.predictionMarkets;
-                if (this.props.hideUnknownHouses) {
-                    filteredMarkets = filteredMarkets.filter(item => {
-                        return this.props.whitelistedHouses.includes(
-                            item.issuer
-                        );
-                    });
-                }
                 filteredMarkets = filteredMarkets.filter(item => {
                     let accountName = ChainStore.getAccount(item.issuer)
                         ? ChainStore.getAccount(item.issuer).get("name")
@@ -479,8 +472,7 @@ PredictionMarketsOverviewTable.propTypes = {
     onMarketAction: PropTypes.func.isRequired,
     currentAccount: ChainTypes.ChainAccount.isRequired,
     searchTerm: PropTypes.string,
-    selectedPredictionMarket: PropTypes.object,
-    hideUnknownHouses: PropTypes.bool
+    selectedPredictionMarket: PropTypes.object
 };
 
 PredictionMarketsOverviewTable.defaultProps = {

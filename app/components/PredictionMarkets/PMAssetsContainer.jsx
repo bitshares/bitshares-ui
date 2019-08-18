@@ -9,25 +9,25 @@ import {getPredictionMarketIssuers} from "../../lib/chain/onChainConfig";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import assetUtils from "common/asset_utils";
 
-const _convertPredictionMarketForUI = marketData => {
+const _convertPredictionMarketForUI = asset => {
     let market_fee = 0;
     let max_market_fee = 0;
-    const itemData = marketData;
-    if (itemData.forPredictions.flagBooleans["charge_market_fee"]) {
-        market_fee = itemData.options.market_fee_percent;
-        max_market_fee = itemData.options.max_market_fee;
+    if (asset.forPredictions.flagBooleans["charge_market_fee"]) {
+        market_fee = asset.options.market_fee_percent;
+        max_market_fee = asset.options.max_market_fee;
     }
-    const bitassetData = marketData.bitasset_data || marketData.bitasset || {};
+    const bitassetData = asset.bitasset_data || asset.bitasset || {};
     let uiMarketData = {
-        asset: itemData,
-        short_baking_asset: bitassetData.options.short_backing_asset || "1.3.0",
-        asset_id: itemData.id,
-        issuer: itemData.issuer,
-        description: itemData.forPredictions.description.main,
-        symbol: itemData.symbol,
-        condition: itemData.forPredictions.description.condition,
-        expiry: itemData.forPredictions.description.expiry,
-        options: itemData.options,
+        asset: asset,
+        short_backing_asset:
+            bitassetData.options.short_backing_asset || "1.3.0",
+        asset_id: asset.id,
+        issuer: asset.issuer,
+        description: asset.forPredictions.description.main,
+        symbol: asset.symbol,
+        condition: asset.forPredictions.description.condition,
+        expiry: asset.forPredictions.description.expiry,
+        options: asset.options,
         marketConfidence: 0,
         marketLikelihood: 0,
         market_fee,
@@ -43,15 +43,24 @@ class PMAssetsContainer extends React.Component {
             lastAssetSymbol: "",
             predictionMarkets: [],
             fetching: true,
-            whitelistedHouses: [],
+            whitelistedIssuers: [],
             fetchAllAssets: false
         };
     }
 
-    componentWillReceiveProps(np) {
-        if (np.assets !== this.props.assets && this.state.fetchAllAssets) {
-            console.log("get assets");
-            const lastAsset = np.assets
+    _getPredictionMarketList(assets) {
+        return [...assets]
+            .map(asset => asset[1])
+            .filter(this._isPredictionMarket)
+            .map(this._normalizePredictionMarketAsset);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (
+            prevProps.assets !== this.props.assets &&
+            this.state.fetchAllAssets
+        ) {
+            const lastAsset = prevProps.assets
                 .sort((a, b) => {
                     if (a.symbol > b.symbol) {
                         return 1;
@@ -62,14 +71,12 @@ class PMAssetsContainer extends React.Component {
                     }
                 })
                 .last();
-            const predictionMarkets = [...np.assets]
-                .map(asset => asset[1])
-                .filter(this._isPredictionMarket)
-                .map(this._normalizePredictionMarketAsset);
+            const predictionMarkets = this._getPredictionMarketList(
+                this.props.assets
+            );
             AssetActions.getAssetList.defer(lastAsset.symbol, 100);
             const fetchingFinished =
                 this.state.lastAssetSymbol === lastAsset.symbol;
-            console.log(fetchingFinished, predictionMarkets);
             setTimeout(() => {
                 this.setState({
                     predictionMarkets: predictionMarkets,
@@ -82,14 +89,14 @@ class PMAssetsContainer extends React.Component {
     }
 
     componentWillMount() {
-        getPredictionMarketIssuers().then(whitelistedHouses => {
-            whitelistedHouses = ["1.2.428447", "1.2.1099493", "1.2.160399"]; //!!!!!!!!!FOR TESTING!!!!!!!!!!!!!!!!!
-            this._getWhitelistedAssets(whitelistedHouses).then(assets => {
+        getPredictionMarketIssuers().then(whitelistedIssuers => {
+            whitelistedIssuers = ["1.2.428447", "1.2.1099493", "1.2.160399"]; //!!!!!!!!!FOR TESTING!!!!!!!!!!!!!!!!!
+            this._getWhitelistedAssets(whitelistedIssuers).then(assets => {
                 const predictionMarkets = assets
                     .filter(this._isPredictionMarket)
                     .map(this._normalizePredictionMarketAsset);
                 this.setState({
-                    whitelistedHouses,
+                    whitelistedIssuers: whitelistedIssuers,
                     predictionMarkets,
                     fetching: false
                 });
@@ -120,14 +127,15 @@ class PMAssetsContainer extends React.Component {
         return bitassetData.is_prediction_market;
     }
 
-    async _getWhitelistedAssets(whitelistedHouses) {
+    async _getWhitelistedAssets(whitelistedIssuers) {
         let assets = [];
         let accountObjects = await FetchChainObjects(
-            ChainStore.getAsset,
-            whitelistedHouses,
+            ChainStore.getAccount,
+            whitelistedIssuers,
             undefined,
             {}
         );
+        console.log("asdasd");
         accountObjects.forEach(item => {
             if (item) {
                 item = item.toJS();
@@ -144,18 +152,17 @@ class PMAssetsContainer extends React.Component {
     }
 
     fetchAllAssets() {
-        this.setState({fething: true, fetchAllAssets: true});
+        this.setState({fetching: true, fetchAllAssets: true});
         AssetActions.getAssetList.defer("", 100);
     }
 
     render() {
-        console.log(this.state.predictionMarkets);
         return (
             <PredictionMarkets
                 assets={this.props.assets}
-                whitelistedHouses={this.state.whitelistedHouses}
+                whitelistedIssuers={this.state.whitelistedIssuers}
                 predictionMarkets={this.state.predictionMarkets}
-                fetching={this.state.fetching}
+                loading={this.state.fetching}
                 fetchAllAssets={() => {
                     this.fetchAllAssets();
                 }}

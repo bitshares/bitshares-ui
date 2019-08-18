@@ -23,8 +23,7 @@ class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            predictionMarkets: [],
-            isFetchingFinished: false,
+            loading: false,
             searchTerm: "",
             detailsSearchTerm: "",
             selectedPredictionMarket: null,
@@ -38,8 +37,7 @@ class PredictionMarkets extends Component {
             isHideUnknownHousesChecked: true,
             isHideInvalidAssetsChecked: true,
             opinionFilter: "yes",
-            predictionMarketAssetFilter: "open",
-            whitelistedHouses: []
+            predictionMarketAssetFilter: "open"
         };
 
         this.onCreatePredictionMarketModalOpen = this.onCreatePredictionMarketModalOpen.bind(
@@ -64,28 +62,14 @@ class PredictionMarkets extends Component {
         );
     }
 
-    componentWillReceiveProps(np) {
-        if (
-            this.state.predictionMarkets !== np.predictionMarkets ||
-            this.state.whitelistedHouses !== np.whitelistedHouses
-        ) {
-            this.setState({
-                whitelistedHouses: np.whitelistedHouses,
-                predictionMarkets: np.predictionMarkets
-            });
-        }
-
-        if (np.fetching === this.state.isFetchingFinished) {
-            this.state.isFetchingFinished = !np.fetching;
-        }
-
-        if (np.marketLimitOrders !== this.props.marketLimitOrders) {
-            this._updateOpinionsList(np.marketLimitOrders);
+    componentDidUpdate(prevProps) {
+        if (prevProps.marketLimitOrders !== this.props.marketLimitOrders) {
+            this._updateOpinionsList(this.props.marketLimitOrders);
         }
     }
 
     _isKnownIssuer(asset) {
-        return this.state.whitelistedHouses.includes(asset.issuer);
+        return this.props.whitelistedIssuers.includes(asset.issuer);
     }
 
     _isValidPredictionMarketAsset(asset) {
@@ -393,7 +377,7 @@ class PredictionMarkets extends Component {
 
     _filterMarkets() {
         const filter = this.state.predictionMarketAssetFilter;
-        const markets = this.state.predictionMarkets.filter(assetInfo => {
+        const markets = this.props.predictionMarkets.filter(assetInfo => {
             const asset = assetInfo.asset;
             if (!asset) {
                 return false;
@@ -558,9 +542,7 @@ class PredictionMarkets extends Component {
                     selectedPredictionMarket={
                         this.state.selectedPredictionMarket
                     }
-                    hideUnknownHouses={this.state.isHideUnknownHousesChecked}
-                    loading={!this.state.isFetchingFinished}
-                    whitelistedHouses={this.state.whitelistedHouses}
+                    loading={this.props.loading}
                 />
             </div>
         );
