@@ -135,8 +135,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
-        max-width: calc((450px + 32px) * 3);
-        // 450px + 32px padding * 3 cells
+        max-width: calc((450px + 32px) * 3); // 450px + 32px padding * 3 cells
     }
     .showcases-grid--wrapper--item {
         color: $secondary-text-color;
@@ -1278,7 +1277,6 @@
         > p:first-of-type {
             color: $light-text-color;
         }
-
         .account-title {
             &.flash {
                 color: white;
@@ -1963,7 +1961,6 @@
             background-color: lighten($positive-color, 5%);
         }
     }
-
     div.ok-indicator {
         color: $secondary-text-color;
         &.success {
@@ -2053,6 +2050,7 @@
                         color: $account-dimmed;
                     }
                 }
+
                 .icon.locked > svg > path {
                     fill: $button-bg-color;
                 }
@@ -2756,7 +2754,6 @@
             top: 12px;
         }
     }
-
     .dropdown.header-menu {
         top: 65px;
     }
