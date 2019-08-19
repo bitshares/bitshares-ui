@@ -797,7 +797,8 @@ class BitsharesBeosModal extends React.Component {
                 "BTS" &&
             this.state.is_account_creation_checkbox &&
             this.state.account !== "" &&
-            !this.state.maintenance_error
+            !this.state.maintenance_error &&
+            !this.state.multiSigError
         ) {
             account_creation_checkbox = (
                 <table className="table" style={{width: "inherit"}}>
@@ -917,7 +918,9 @@ class BitsharesBeosModal extends React.Component {
             this.state.is_account_validation ||
             this.state.no_account_error_without_creation ||
             this.getPendingAccounts().includes(this.state.account) ||
-            this.state.multiSigError ||
+            (this.state.multiSigError &&
+                (this.state.no_account_error ||
+                    this.state.no_account_error_without_creation)) ||
             this.state.maintenance_error;
 
         return (
@@ -1025,7 +1028,11 @@ class BitsharesBeosModal extends React.Component {
                                 />
                             </p>
                         ) : null}
-                        {this.state.multiSigError ? (
+                        {this.state.multiSigError &&
+                        this.state.account !== "" &&
+                        !this.state.maintenance_error &&
+                        (this.state.no_account_error ||
+                            this.state.no_account_error_without_creation) ? (
                             <p
                                 className="has-error no-margin"
                                 style={{paddingBottom: 15}}
