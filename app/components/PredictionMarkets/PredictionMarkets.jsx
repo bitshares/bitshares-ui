@@ -508,6 +508,10 @@ class PredictionMarkets extends Component {
                                     theme="filled"
                                 />
                             </Tooltip>
+                            &nbsp;&nbsp;
+                            <span style={{color: "darkgray"}}>
+                                {this.props.predictionMarkets.length}
+                            </span>
                         </span>
                     </div>
                     <span className="action-buttons">

@@ -60,7 +60,7 @@ class PMAssetsContainer extends React.Component {
             prevProps.assets !== this.props.assets &&
             this.state.fetchAllAssets
         ) {
-            const lastAsset = prevProps.assets
+            const lastAsset = this.props.assets
                 .sort((a, b) => {
                     if (a.symbol > b.symbol) {
                         return 1;

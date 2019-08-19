@@ -380,7 +380,6 @@ class PredictionMarketsOverviewTable extends Component {
             this.props.predictionMarkets.length
         ) {
             this.props.predictionMarkets.forEach(market => {
-                console.log(market);
                 if (!(market.asset.id in Object.keys(this.tickersLoaded))) {
                     this.tickersLoaded[market.asset.id] = {};
                     MarketsActions.getTicker(
@@ -462,6 +461,7 @@ class PredictionMarketsOverviewTable extends Component {
                 pageSize={10}
                 rowClassName={this._decideRowClassName.bind(this)}
                 loading={this.props.loading}
+                totalLabel="utility.total_x_assets"
             />
         );
     }

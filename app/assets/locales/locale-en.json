@@ -2503,6 +2503,7 @@
         "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_items_y_hidden": "Total of %(totelCount)s items loaded, %(count)s of those shown in pagination",
         "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
