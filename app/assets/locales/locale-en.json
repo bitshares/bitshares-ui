@@ -649,7 +649,8 @@
             "id": "Id",
             "seller": "Seller",
             "amount": "Amount",
-            "price": "Price"
+            "price": "Price",
+            "tooltip": "Enter at least three characters of an asset symbol to search"
         },
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
