@@ -214,6 +214,7 @@ export function getMyMarketsQuotes() {
             "XBTSX.LCRT"
         ],
         otherTokens: [
+            "BEOS",
             "BTWTY",
             "TWENTIX",
 
@@ -281,6 +282,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["OPEN.BTC", "OPEN.DASH"],
         ["OPEN.BTC", "OPEN.DGD"],
         ["OPEN.BTC", "OPEN.STEEM"],
+        ["BTS", "BEOS"],
         ["BTS", "OPEN.ETH"],
         ["BTS", "OPEN.EOS"],
         ["BTS", "PPY"],
