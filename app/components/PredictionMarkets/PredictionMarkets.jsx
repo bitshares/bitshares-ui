@@ -394,6 +394,24 @@ class PredictionMarkets extends Component {
             ) {
                 return false;
             } else {
+                let accountName = ChainStore.getAccount(asset.issuer)
+                    ? ChainStore.getAccount(asset.issuer).get("name")
+                    : null;
+                if (accountName && this.state.searchTerm) {
+                    let noMatch =
+                        (
+                            accountName +
+                            "\0" +
+                            asset.condition +
+                            "\0" +
+                            asset.description
+                        )
+                            .toUpperCase()
+                            .indexOf(this.state.searchTerm) !== -1;
+                    if (noMatch) {
+                        return false;
+                    }
+                }
                 if (filter && filter !== "all") {
                     const resolutionDate = new Date(
                         asset.forPredictions.description.expiry
@@ -508,12 +526,25 @@ class PredictionMarkets extends Component {
                                     theme="filled"
                                 />
                             </Tooltip>
-                            &nbsp;&nbsp;
-                            <span style={{color: "darkgray"}}>
-                                {this.props.predictionMarkets.length}
-                            </span>
                         </span>
                     </div>
+                    <div className="filter-status">
+                        {counterpart.translate("utility.x_assets_hidden", {
+                            count:
+                                this.props.predictionMarkets.length -
+                                predictionMarketsToShow.length,
+                            total: this.props.predictionMarkets.length
+                        })}
+                    </div>
+                </div>
+                <div
+                    className="header-selector"
+                    style={{
+                        display: "inline-block",
+                        width: "100%",
+                        paddingTop: "0rem"
+                    }}
+                >
                     <span className="action-buttons">
                         <Tooltip
                             title={counterpart.translate(
@@ -542,7 +573,6 @@ class PredictionMarkets extends Component {
                     predictionMarkets={predictionMarketsToShow}
                     currentAccount={this.props.currentAccount}
                     onMarketAction={this.onMarketAction}
-                    searchTerm={this.state.searchTerm.toUpperCase()}
                     selectedPredictionMarket={
                         this.state.selectedPredictionMarket
                     }

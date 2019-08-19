@@ -253,7 +253,7 @@ export default class CreateMarketModal extends Modal {
                 closable={!this.state.inProgress}
                 footer={footer}
             >
-                <div>
+                <div className="prediction-markets--create-prediction-market">
                     <Form className="full-width" layout="vertical">
                         <Form.Item>
                             <span

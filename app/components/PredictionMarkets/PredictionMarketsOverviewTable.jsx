@@ -411,23 +411,6 @@ class PredictionMarketsOverviewTable extends Component {
         } else {
             if (this.props.predictionMarkets) {
                 filteredMarkets = this.props.predictionMarkets;
-                filteredMarkets = filteredMarkets.filter(item => {
-                    let accountName = ChainStore.getAccount(item.issuer)
-                        ? ChainStore.getAccount(item.issuer).get("name")
-                        : null;
-                    return (
-                        (
-                            accountName +
-                            "\0" +
-                            item.condition +
-                            "\0" +
-                            item.description
-                        )
-                            .toUpperCase()
-                            .indexOf(this.props.searchTerm) !== -1
-                    );
-                });
-
                 let i = 0;
                 filteredMarkets = filteredMarkets.map(item => ({
                     ...item,
@@ -471,7 +454,6 @@ PredictionMarketsOverviewTable.propTypes = {
     predictionMarkets: PropTypes.array.isRequired,
     onMarketAction: PropTypes.func.isRequired,
     currentAccount: ChainTypes.ChainAccount.isRequired,
-    searchTerm: PropTypes.string,
     selectedPredictionMarket: PropTypes.object
 };
 

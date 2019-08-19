@@ -1730,7 +1730,7 @@
             "tooltip_resolution_date": "The point in time at which the prediction will be resolved. This needs to be done manually by you as the asset owner.",
             "backing_asset": "Backing asset",
             "tooltip_backing_asset": "The backing asset will be used to pay the premium, i.e. it is the leverage that participants use.",
-            "commission": "Commission",
+            "commission": "Commission (in %)",
             "tooltip_commission": "Every participant pays the commission when opposing opinions on the prediction are being matched. On the blockchain, the commission is the market fee of this new asset.",
             "warning": "Fill all blanks",
             "select_date_and_time": "Select date and time"
@@ -2505,7 +2505,8 @@
         "total_x_items": "Total of %(count)s items",
         "total_x_items_y_hidden": "Total of %(totelCount)s items loaded, %(count)s of those shown in pagination",
         "total_x_markets": "Total of %(count)s markets",
-        "total_x_operations": "Total of %(count)s operations"
+        "total_x_operations": "Total of %(count)s operations",
+        "x_assets_hidden": "%(count)s of %(total)s assets filtered out"
     },
     "validation": {
         "messages": {

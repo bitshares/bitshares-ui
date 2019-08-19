@@ -15,6 +15,7 @@ import utils from "common/utils";
 export default class AddOpinionModal extends Modal {
     constructor(props) {
         super(props);
+
         this.state = {
             newOpinionParameters: {
                 opinionator: null,
@@ -189,6 +190,36 @@ export default class AddOpinionModal extends Modal {
                 }
             );
         }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (
+            this.props.preselectedOpinion !== prevProps.preselectedOpinion ||
+            this.props.preselectedAmount !== prevProps.preselectedAmount ||
+            this.props.preselectedProbability !==
+                prevProps.preselectedProbability
+        ) {
+            this._updateStateFromProps();
+        }
+    }
+
+    componentDidMount() {
+        this._updateStateFromProps();
+    }
+
+    _updateStateFromProps() {
+        let newOpinionParameters = this.state.newOpinionParameters;
+        newOpinionParameters = Object.assign({}, newOpinionParameters);
+        newOpinionParameters.opinion = this.props.preselectedOpinion;
+        newOpinionParameters.amount =
+            this.props.preselectedAmount /
+                Math.pow(10, this.props.baseAsset.get("precision")) || " ";
+        newOpinionParameters.probability =
+            this.props.preselectedProbability || null;
+        this.setState({
+            newOpinionParameters,
+            selectedOpinion: this.props.preselectedOpinion
+        });
     }
 
     handleOpinionChange() {
