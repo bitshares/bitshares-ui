@@ -72,7 +72,7 @@ export default class PaginatedList extends React.Component {
                         showSizeChanger: true,
                         hideOnSinglePage: false,
                         defaultPageSize: pageSize,
-                        pageSizeOptions,
+                        pageSizeOptions: pageSizeOptions.map(o => o.toString()),
                         showTotal: (total, range) => totalColumnsLabel(total)
                     }}
                     rowClassName={
@@ -82,7 +82,6 @@ export default class PaginatedList extends React.Component {
                                   this.props.rowClassName(record, index)
                     }
                     rowSelection={this.props.rowSelection}
-                    loading={loading}
                 />
                 {this.props.children}
             </div>
