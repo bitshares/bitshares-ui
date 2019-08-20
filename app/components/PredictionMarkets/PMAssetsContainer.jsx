@@ -135,7 +135,6 @@ class PMAssetsContainer extends React.Component {
             undefined,
             {}
         );
-        console.log("asdasd");
         accountObjects.forEach(item => {
             if (item) {
                 item = item.toJS();
