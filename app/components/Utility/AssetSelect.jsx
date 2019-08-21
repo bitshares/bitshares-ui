@@ -8,6 +8,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import {Map} from "immutable";
 import AssetName from "../Utility/AssetName";
+import LoadingIndicator from "../LoadingIndicator";
 
 const AssetSelectView = ({
     label,
@@ -17,24 +18,30 @@ const AssetSelectView = ({
     style,
     placeholder,
     value,
+    onDropdownVisibleChange,
     ...props
 }) => {
+    const disableSelect =
+        assets.filter(Map.isMap).length <= 1 && !onDropdownVisibleChange;
+    // if onDropdownVisibleChange given we assume that lazy loading takes place
     const select = (
         <Select
             showSearch
+            onDropdownVisibleChange={onDropdownVisibleChange}
+            showArrow={disableSelect ? false : undefined}
             style={selectStyle}
             placeholder={
                 <Translate
                     content={placeholder || "utility.asset_select_placeholder"}
                 />
             }
-            value={<AssetName noTip name={value} />}
+            value={value}
             {...props}
             optionFilterProp="children"
             filterOption={(input, option) =>
                 option.key.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
-            disabled={assets.filter(Map.isMap).length <= 1}
+            disabled={disableSelect}
             notFoundContent={counterpart.translate("global.not_found")}
         >
             {assets.filter(Map.isMap).map(asset => {
@@ -49,6 +56,11 @@ const AssetSelectView = ({
                     </Select.Option>
                 );
             })}
+            {props.loading && (
+                <Select.Option key="loading" value="loading" disabled={true}>
+                    <LoadingIndicator type="three-bounce" />
+                </Select.Option>
+            )}
         </Select>
     );
     return (

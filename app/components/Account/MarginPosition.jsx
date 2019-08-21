@@ -235,6 +235,10 @@ class MarginPosition extends React.Component {
 
         let {isBitAsset} = utils.replaceName(this.props.debtAsset);
 
+        let isPrediction =
+            debtAsset.get("bitasset") &&
+            debtAsset.getIn(["bitasset", "is_prediction_market"]);
+
         let settlement_fund = this.props.debtAsset.getIn([
             "bitasset",
             "settlement_fund"
@@ -292,13 +296,18 @@ class MarginPosition extends React.Component {
                         data-tip={this._getCRTip()}
                         className={"center-content " + this._getStatusClass()}
                     >
-                        {utils.format_number(this._getCollateralRatio(), 2)}
+                        {isPrediction
+                            ? "1:1"
+                            : utils.format_number(
+                                  this._getCollateralRatio(),
+                                  2
+                              )}
                     </td>
                 ) : (
                     <td />
                 )}
                 <td>
-                    {target_collateral_ratio
+                    {target_collateral_ratio && !isPrediction
                         ? utils.format_number(target_collateral_ratio, 2)
                         : null}
                 </td>
@@ -320,28 +329,36 @@ class MarginPosition extends React.Component {
                 </td>
                 <td style={alignRight} className={"column-hide-small"}>
                     {has_order ? (
-                        <FormattedPrice
-                            base_amount={collateral_amount}
-                            base_asset={collateralAsset.get("id")}
-                            quote_amount={debt_amount * (mcr / 1000)}
-                            quote_asset={debtAsset.get("id")}
-                            hide_symbols
-                        />
+                        isPrediction ? (
+                            "-"
+                        ) : (
+                            <FormattedPrice
+                                base_amount={collateral_amount}
+                                base_asset={collateralAsset.get("id")}
+                                quote_amount={debt_amount * (mcr / 1000)}
+                                quote_asset={debtAsset.get("id")}
+                                hide_symbols
+                            />
+                        )
                     ) : null}
                 </td>
                 <td style={alignRight} className={"column-hide-small"}>
                     {has_order ? (
-                        <FormattedPrice
-                            base_amount={asset_utils
-                                .extractRawFeedPrice(debtAsset)
-                                .getIn(["base", "amount"])}
-                            base_asset={co.call_price.quote.asset_id}
-                            quote_amount={asset_utils
-                                .extractRawFeedPrice(debtAsset)
-                                .getIn(["quote", "amount"])}
-                            quote_asset={co.call_price.base.asset_id}
-                            hide_symbols
-                        />
+                        isPrediction ? (
+                            "1"
+                        ) : (
+                            <FormattedPrice
+                                base_amount={asset_utils
+                                    .extractRawFeedPrice(debtAsset)
+                                    .getIn(["base", "amount"])}
+                                base_asset={co.call_price.quote.asset_id}
+                                quote_amount={asset_utils
+                                    .extractRawFeedPrice(debtAsset)
+                                    .getIn(["quote", "amount"])}
+                                quote_asset={co.call_price.base.asset_id}
+                                hide_symbols
+                            />
+                        )
                     ) : null}
                 </td>
                 <td
@@ -440,13 +457,13 @@ class MarginPosition extends React.Component {
                             hideModal={this.hideBorrowModal.bind(this)}
                             ref={this.state.modalRef}
                             modalId={this.state.modalRef}
-                            quote_asset={balance_asset}
-                            backing_asset={debtAsset.getIn([
+                            quoteAssetObj={balance_asset}
+                            backingAssetObj={debtAsset.getIn([
                                 "bitasset",
                                 "options",
                                 "short_backing_asset"
                             ])}
-                            account={this.props.account}
+                            accountObj={this.props.account}
                         />
                     ) : null}
                 </td>

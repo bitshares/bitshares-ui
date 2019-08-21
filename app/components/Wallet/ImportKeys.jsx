@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {connect} from "alt-react";
 import cname from "classnames";
-import {PrivateKey, Aes, PublicKey, hash} from "bitsharesjs";
+import {PrivateKey, Aes, PublicKey, FetchChain, hash} from "bitsharesjs";
+import AccountApi from "api/accountApi";
 import {ChainConfig} from "bitsharesjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
@@ -31,6 +32,8 @@ const KeyCount = ({key_count}) => {
     return <span>Found {key_count} private keys</span>;
 };
 
+const WIF_KEY_LENGTH = 51;
+
 class ImportKeys extends Component {
     constructor() {
         super();
@@ -59,6 +62,8 @@ class ImportKeys extends Component {
             import_password_message: null,
             imported_keys_public: {},
             key_text_message: null,
+            associatedAccount: null,
+            errorTextMessage: null,
             genesis_filtering: false,
             genesis_filter_status: [],
             genesis_filter_finished: undefined,
@@ -74,7 +79,7 @@ class ImportKeys extends Component {
 
     onWif(event) {
         event.preventDefault();
-        let value = this.refs.wifInput.value;
+        const value = this.refs.wifInput.state.value;
         this.addByPattern(value);
     }
 
@@ -605,8 +610,22 @@ class ImportKeys extends Component {
     }
 
     addByPattern(contents) {
-        if (!contents) return false;
-
+        if (!contents) {
+            this.setState({
+                errorTextMessage: counterpart.translate(
+                    "wallet.wif_import_error"
+                )
+            });
+            return false;
+        }
+        if (contents.length !== WIF_KEY_LENGTH) {
+            this.setState({
+                errorTextMessage: counterpart.translate(
+                    "wallet.wif_length_error"
+                )
+            });
+            return false;
+        }
         let count = 0,
             invalid_count = 0;
         let wif_regex = /5[HJK][1-9A-Za-z]{49}/g;
@@ -621,6 +640,25 @@ class ImportKeys extends Component {
                     account_names: [],
                     public_key_string
                 };
+
+                let accountName = [];
+                AccountApi.lookupAccountByPublicKey(public_key_string).then(
+                    async result => {
+                        let batch;
+                        batch = result[0].map(value => {
+                            return FetchChain("getAccount", value);
+                        });
+                        let accountNames = await Promise.all(batch);
+                        accountNames.map(value => {
+                            let name = value.get("name");
+                            if (accountName.indexOf(name) === -1) {
+                                accountName.push(name);
+                            }
+                        });
+                        this.setState({associatedAccount: accountName});
+                    }
+                );
+
                 count++;
             } catch (e) {
                 invalid_count++;
@@ -641,7 +679,10 @@ class ImportKeys extends Component {
             () => this.updateOnChange()
         );
         // removes the message on the next render
-        this.state.key_text_message = null;
+        this.setState({
+            key_text_message: null,
+            errorTextMessage: null
+        });
         return count;
     }
 
@@ -772,6 +813,19 @@ class ImportKeys extends Component {
                             )
                         </span>
                     )}
+                    <span>
+                        <br />
+                        {this.state.associatedAccount && (
+                            <div>
+                                <Translate content="wallet.wif_associated_accounts" />
+                                {this.state.associatedAccount.map(
+                                    (value, key) => {
+                                        return <p key={key}>{value}</p>;
+                                    }
+                                )}
+                            </div>
+                        )}
+                    </span>
                 </div>
 
                 {account_rows ? (
@@ -817,7 +871,11 @@ class ImportKeys extends Component {
                                             tabIndex={tabIndex++}
                                             style={{marginBottom: "16px"}}
                                         />
-
+                                        <div className="importError">
+                                            <span className="red">
+                                                {this.state.errorTextMessage}
+                                            </span>
+                                        </div>
                                         <Button
                                             type="primary"
                                             htmlType="submit"

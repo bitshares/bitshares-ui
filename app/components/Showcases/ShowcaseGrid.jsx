@@ -113,8 +113,9 @@ class ShowcaseGrid extends Component {
                 },
                 description: "showcases.prediction_market.description",
                 icon: "prediction",
-                disabled: "Visit bitshares-ui issue #2717 to check progress",
-                comingSoon: true
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.timed_transfer.title",
