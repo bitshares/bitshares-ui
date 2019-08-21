@@ -317,12 +317,7 @@ class Asset extends React.Component {
                 var marketName = market + "/" + symbol;
                 return (
                     <span key={marketID}>
-                        <Link
-                            to={`/market/${marketID}`}
-                            onClick={() => MarketsActions.switchMarket()}
-                        >
-                            {marketName}
-                        </Link>
+                        <Link to={`/market/${marketID}`}>{marketName}</Link>
                         &nbsp;
                     </span>
                 );
@@ -393,7 +388,6 @@ class Asset extends React.Component {
                 <Link
                     className="button market-button"
                     to={`/market/${asset.symbol}_${preferredMarket}`}
-                    onClick={() => MarketsActions.switchMarket()}
                 >
                     <Translate content="exchange.market" />
                 </Link>

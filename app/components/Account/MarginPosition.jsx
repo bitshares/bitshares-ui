@@ -363,7 +363,6 @@ class MarginPosition extends React.Component {
                         to={`/market/${debtAsset.get(
                             "symbol"
                         )}_${collateralAsset.get("symbol")}`}
-                        onClick={() => MarketsActions.switchMarket()}
                     >
                         <Icon
                             name="trade"

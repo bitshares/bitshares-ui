@@ -225,7 +225,6 @@ class ExchangeSubscriber extends React.Component {
             nextProps.baseAsset &&
             nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])
         ) {
-            MarketsActions.switchMarket();
             this.props.history.push(
                 `/market/${nextProps.baseAsset.get(
                     "symbol"

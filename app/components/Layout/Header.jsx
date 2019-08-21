@@ -210,7 +210,6 @@ class Header extends React.Component {
             });
         }
 
-        MarketsActions.switchMarket();
         this.props.history.push(route);
         this._closeDropdown();
     }

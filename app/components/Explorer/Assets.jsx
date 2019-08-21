@@ -217,10 +217,7 @@ class Assets extends React.Component {
                     dataIndex: "marketId",
                     render: item => {
                         return (
-                            <Link
-                                to={`/market/${item}`}
-                                onClick={() => MarketsActions.switchMarket()}
-                            >
+                            <Link to={`/market/${item}`}>
                                 <Icon type={"line-chart"} />{" "}
                                 <Translate content="header.exchange" />
                             </Link>
@@ -328,10 +325,7 @@ class Assets extends React.Component {
                     dataIndex: "marketId",
                     render: item => {
                         return (
-                            <Link
-                                to={`/market/${item}`}
-                                onClick={() => MarketsActions.switchMarket()}
-                            >
+                            <Link to={`/market/${item}`}>
                                 <Icon type={"line-chart"} />{" "}
                                 <Translate content="header.exchange" />
                             </Link>
