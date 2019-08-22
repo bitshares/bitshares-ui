@@ -46,11 +46,21 @@ class TransactionConfirmActions {
                     // longer messages are remote API exceptions (use the 1st line)
                     let splitError = error.message.split("\n");
                     let message = splitError[0];
+                    let code = splitError[2];
+                    let data;
+                    try {
+                        data = JSON.parse(splitError[3]);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                    console.log("data", data);
                     dispatch({
                         broadcast: false,
                         broadcasting: false,
                         error: message,
-                        closed: false
+                        closed: false,
+                        error_code: code,
+                        error_data: data
                     });
                     if (reject) reject();
                 });

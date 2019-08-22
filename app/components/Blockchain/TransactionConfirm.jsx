@@ -151,9 +151,13 @@ class TransactionConfirm extends React.Component {
         if (!this.props.transaction || this.props.closed) {
             return null;
         }
+        let a = <a href="https:/google.com">MORE</a>;
         let button_group,
             footer,
             header,
+            error_code,
+            error_data,
+            error_message,
             confirmButtonClass = "button";
         if (this.props.propose && !this.props.fee_paying_account)
             confirmButtonClass += " disabled";
@@ -164,6 +168,22 @@ class TransactionConfirm extends React.Component {
                       message: ""
                   })
                 : counterpart.translate("transaction.transaction_confirmed");
+
+            error_message = this.props.error;
+            error_code = this.props.error_code;
+            error_data = this.props.error_data;
+            if (error_code) {
+                error_message = `${error_code} - ${error_message}`;
+            }
+            if (error_data) {
+                error_message = (
+                    <div>
+                        {error_message}
+                        <br />
+                        <a>Show more</a>
+                    </div>
+                );
+            }
 
             footer = [
                 <Button key={"cancel"} onClick={this.onCloseClick}>
@@ -223,7 +243,7 @@ class TransactionConfirm extends React.Component {
                 >
                     <div className="grid-block vertical no-padding no-margin">
                         {this.props.error ? (
-                            <Alert type="error" message={this.props.error} />
+                            <Alert type="error" message={error_message} />
                         ) : null}
 
                         {this.props.included ? (
