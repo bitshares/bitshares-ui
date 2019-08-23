@@ -17,9 +17,13 @@ const AssetSelectView = ({
     style,
     placeholder,
     value,
+    enableWhenOnlyOne = false,
     ...props
 }) => {
-    const onlyOne = assets.filter(Map.isMap).length <= 1;
+    let onlyOne = assets.filter(Map.isMap).length <= 1;
+    if (enableWhenOnlyOne) {
+        onlyOne = false;
+    }
     const select = (
         <Select
             showSearch

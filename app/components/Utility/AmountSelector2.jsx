@@ -64,6 +64,7 @@ class AmountSelector2 extends React.Component {
                 onChange={onAssetInputChange}
                 assets={assets}
                 onSearch={onSearch}
+                enableWhenOnlyOne={true}
             />
         );
 
