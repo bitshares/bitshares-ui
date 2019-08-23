@@ -356,7 +356,6 @@ class QuickTrade extends Component {
             return;
         }
         const {amount} = e;
-        console.log("onSellAmountChange", e);
         this.setState(
             {
                 sellAmount: amount,
@@ -379,7 +378,6 @@ class QuickTrade extends Component {
             return;
         }
         const {amount} = e;
-        console.log("onReceiveAmountChange", e);
         this.setState(
             {
                 receiveAmount: amount,
@@ -589,6 +587,7 @@ class QuickTrade extends Component {
         const ordersCaption = amountOfOrders < 2 ? "order" : "orders";
         return (
             <Collapse
+                className="asset-collapse"
                 style={{
                     marginTop: "1rem"
                 }}
