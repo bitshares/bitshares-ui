@@ -2183,6 +2183,10 @@
         "voting": {
             "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
             "title": "Voting"
+        },
+        "instant_trade": {
+            "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+            "title": "Instant trade"
         }
     },
     "sync_fail": {
