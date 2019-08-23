@@ -578,6 +578,10 @@ class QuickTrade extends Component {
     }
 
     getDetails() {
+        const {sub} = this.state;
+        if (!sub) {
+            return;
+        }
         const priceSection = this.getPriceSection();
         const feeSection = this.getFeeSection();
         const ordersSection = this.getOrdersSection();
@@ -844,7 +848,8 @@ class QuickTrade extends Component {
             receiveAmount,
             receiveImgName,
             sellAssetHasError,
-            receiveAssetHasError
+            receiveAssetHasError,
+            sub
         } = this.state;
 
         const Details = this.showDetails() ? this.getDetails() : null;
@@ -892,7 +897,7 @@ class QuickTrade extends Component {
                     <Button
                         key="sell"
                         type="primary"
-                        disabled={!this.showDetails()}
+                        disabled={!this.showDetails() || !sub}
                         onClick={this.handleSell}
                     >
                         {counterpart.translate("exchange.sell")}
