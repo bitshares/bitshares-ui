@@ -26,19 +26,28 @@ class TransactionConfirm extends React.Component {
         super(props);
 
         this.state = {
-            isModalVisible: false
+            isModalVisible: false,
+            isErrorDetailsVisible: false
         };
 
         this.onCloseClick = this.onCloseClick.bind(this);
 
         this.onConfirmClick = this.onConfirmClick.bind(this);
 
+        this.onShowDetailsClick = this.onShowDetailsClick.bind(this);
+
         this.onKeyUp = this.onKeyUp.bind(this);
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         if (!nextProps.transaction) {
             return false;
+        }
+
+        if (
+            nextState.isErrorDetailsVisible !== this.state.isErrorDetailsVisible
+        ) {
+            return true;
         }
 
         return !utils.are_equal_shallow(nextProps, this.props);
@@ -60,7 +69,8 @@ class TransactionConfirm extends React.Component {
 
     hideModal() {
         this.setState({
-            isModalVisible: false
+            isModalVisible: false,
+            isErrorDetailsVisible: false
         });
     }
 
@@ -96,6 +106,12 @@ class TransactionConfirm extends React.Component {
     onCloseClick(e) {
         e.preventDefault();
         TransactionConfirmActions.close(this.props.reject);
+    }
+
+    onShowDetailsClick() {
+        this.setState(state => {
+            return {isErrorDetailsVisible: !state.isErrorDetailsVisible};
+        });
     }
 
     onProposeClick() {
@@ -148,10 +164,10 @@ class TransactionConfirm extends React.Component {
 
     render() {
         let {broadcast, broadcasting} = this.props;
+        let {isErrorDetailsVisible} = this.state;
         if (!this.props.transaction || this.props.closed) {
             return null;
         }
-        let a = <a href="https:/google.com">MORE</a>;
         let button_group,
             footer,
             header,
@@ -171,7 +187,7 @@ class TransactionConfirm extends React.Component {
 
             error_message = this.props.error;
             error_code = this.props.error_code;
-            error_data = this.props.error_data;
+            error_data = JSON.stringify(this.props.error_data, null, " ");
             if (error_code) {
                 error_message = `${error_code} - ${error_message}`;
             }
@@ -180,7 +196,13 @@ class TransactionConfirm extends React.Component {
                     <div>
                         {error_message}
                         <br />
-                        <a>Show more</a>
+                        <a onClick={this.onShowDetailsClick}>
+                            {isErrorDetailsVisible
+                                ? counterpart.translate("transaction.hide")
+                                : counterpart.translate(
+                                      "transaction.show_more"
+                                  )}
+                        </a>
                     </div>
                 );
             }
@@ -255,6 +277,14 @@ class TransactionConfirm extends React.Component {
                                 description={`#${this.props.trx_id}@${
                                     this.props.trx_block_num
                                 }`}
+                            />
+                        ) : null}
+
+                        {isErrorDetailsVisible ? (
+                            <Alert
+                                type="error"
+                                style={{fontSize: "0.7rem"}}
+                                message={error_data}
                             />
                         ) : null}
 

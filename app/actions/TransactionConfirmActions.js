@@ -53,7 +53,6 @@ class TransactionConfirmActions {
                     } catch (e) {
                         console.log(e);
                     }
-                    console.log("data", data);
                     dispatch({
                         broadcast: false,
                         broadcasting: false,
