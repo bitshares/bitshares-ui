@@ -150,7 +150,7 @@ class InvoicePay extends React.Component {
     };
 
     handleRawInvoiceDataChange = e => {
-        const value = e.target.value;
+        const value = e.target.value.replace(/\s/g, "");
         this.setState({rawDataInputValue: value}, async () => {
             try {
                 const compressedData = bs58.decode(value);
@@ -307,10 +307,11 @@ class InvoicePay extends React.Component {
     }
 
     onToAccountChanged(pay_to_account) {
-        this.setState({pay_to_account});
+        this.setState({pay_to_account: pay_to_account.get("name")});
     }
 
     render() {
+        const {data} = this.props.match.params;
         if (this.state.isRawDataInputVisible) {
             return (
                 <div>
@@ -422,14 +423,13 @@ class InvoicePay extends React.Component {
                 </Row>
             );
         });
-        const invoiceData = this.props.match.params.data;
+        const invoiceData =
+            data !== "pay" ? data : this.state.rawDataInputValue;
 
         const qrcode = this.state.invoiceQr
             ? invoiceData
             : `bitshares:operation/transfer?to=${this.state.pay_to_account}&from=${this.state.pay_from_name}&asset=${asset}&amount=${total_amount}` +
               (invoice.memo ? `&memo=${invoice.memo}` : "");
-
-        console.log(this.state.paymentOperation);
 
         return (
             <div className="merchant-protocol--pay">

@@ -176,7 +176,7 @@ class InvoiceRequest extends React.Component {
                                     )}
                                 </Col>
                                 <Col span={2}>
-                                    {k == keys.length - 1 ? (
+                                    {k == keys[keys.length - 1] ? (
                                         <Button
                                             type="primary"
                                             icon="plus-circle-o"

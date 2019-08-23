@@ -124,12 +124,16 @@ class QRScanner extends React.Component {
                         ) : (
                             <div style={{justifyContent: "center"}}>
                                 {[
-                                    <Button onClick={this.retry}>
+                                    <Button
+                                        onClick={this.retry}
+                                        key="qr-retry-button"
+                                    >
                                         {counterpart.translate(
                                             "qr_address_scanner.retry"
                                         )}
                                     </Button>,
                                     <Button
+                                        key="qr-submit-button"
                                         type="primary"
                                         onClick={this.submit}
                                     >
