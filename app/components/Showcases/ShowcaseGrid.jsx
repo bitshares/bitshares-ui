@@ -132,11 +132,9 @@ class ShowcaseGrid extends Component {
                 },
                 description: "showcases.instant_trade.description",
                 icon: "instant-trade",
-                // disabled: hasAccount
-                //     ? false
-                //     : "Please login to use this functionality"
-                disabled: true,
-                comingSoon: true
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             }
             // .... even more tiles in this list
         ];

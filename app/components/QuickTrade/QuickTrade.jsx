@@ -687,15 +687,22 @@ class QuickTrade extends Component {
                 100
             ).toFixed(2);
         }
-        const [liqidityPenalty1, liqidityPenalty2] = this.getLiquidityPenalty();
-        let liqidityPenalty =
-            liqidityPenalty1 || liqidityPenalty1 === 0
-                ? liqidityPenalty1.toFixed(2)
-                : "-";
-        if (liqidityPenalty2 || liqidityPenalty1 === 0)
-            liqidityPenalty = `${liqidityPenalty}% / ${liqidityPenalty2.toFixed(
-                2
-            )}%`;
+        let [
+            liqidityPenaltyMarket,
+            liqidityPenaltyFeed
+        ] = this.getLiquidityPenalty();
+        if (liqidityPenaltyMarket || liqidityPenaltyMarket === 0) {
+            liqidityPenaltyMarket =
+                (liqidityPenaltyMarket * 100).toFixed(2) + "%";
+        } else {
+            liqidityPenaltyMarket = "-";
+        }
+        if (liqidityPenaltyFeed || liqidityPenaltyFeed === 0) {
+            liqidityPenaltyFeed = (liqidityPenaltyFeed * 100).toFixed(2) + "%";
+        } else {
+            liqidityPenaltyFeed = "-";
+        }
+        const liqidityPenalty = `${liqidityPenaltyMarket} / ${liqidityPenaltyFeed}`;
 
         return (
             <Row>
@@ -808,10 +815,16 @@ class QuickTrade extends Component {
         const feedPrice = prices.feedPrice;
         let liquidityFee1, liquidityFee2;
         if (price && marketPrice) {
-            liquidityFee1 = 1 - price / marketPrice;
+            liquidityFee1 = Math.max(
+                1 - price / marketPrice,
+                1 - marketPrice / price
+            );
         }
         if (price && feedPrice) {
-            liquidityFee2 = 1 - price / feedPrice;
+            liquidityFee2 = Math.max(
+                1 - price / feedPrice,
+                1 - feedPrice / price
+            );
         }
         return [liquidityFee1, liquidityFee2];
     }
