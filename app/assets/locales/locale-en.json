@@ -1385,6 +1385,7 @@
             "title": "Request",
             "submit": "Submit",
             "identifier": "Identifier",
+            "identifier_tooltip": "The identifier needs to be used as the memo/message when the request is paid.",
             "items": "Items",
             "currency": "Currency",
             "action": "Action",
@@ -1392,7 +1393,11 @@
             "price": "Price",
             "recipient_account": "Recipient Account",
             "recipient_name": "Recipient Name",
-            "note": "Note"
+            "recipient_name_tooltip": "You can define an arbitrary plaintext name for yourself to indicate who is being paid. Must not be a BitShares account name.",
+            "payment_asset": "Payment Asset",
+            "payment_asset_tooltip": "This payment request will be paid with one transfer, and will be requesting to be paid in the indicated asset.",
+            "note": "Note",
+            "note_tooltip": "You can attach a note to this payment request, this can be any additional information."
         },
         "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
         "total": "Total",

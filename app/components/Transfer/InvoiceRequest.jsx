@@ -5,8 +5,18 @@ import AssetSelect from "../Utility/AssetSelect";
 import {compress} from "lzma";
 import bs58 from "common/base58";
 import Translate from "react-translate-component";
-import {Button, Row, Col, Form, Input} from "bitshares-ui-style-guide";
+import {
+    Button,
+    Row,
+    Col,
+    Form,
+    Input,
+    Tooltip,
+    Icon
+} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
+import CopyButton from "../Utility/CopyButton";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 let id = 1;
 
@@ -15,6 +25,7 @@ class InvoiceRequest extends React.Component {
         super(props);
         this.state = {
             invoice: null,
+            invoiceData: null,
             recipient_name: null,
             recipient_name_account: null,
             currency: "BTS",
@@ -31,8 +42,11 @@ class InvoiceRequest extends React.Component {
     _printInvoice(invoice) {
         if (this.props.validateFormat(invoice)) {
             compress(JSON.stringify(invoice), 9, (result, error) => {
-                let a = bs58;
-                console.log(bs58.encode(Buffer.from(result)));
+                const invoiceData = bs58.encode(Buffer.from(result));
+                this.setState({
+                    invoiceData: invoiceData
+                });
+                console.log("Invoice data", invoice, invoiceData);
             });
         }
     }
@@ -130,7 +144,7 @@ class InvoiceRequest extends React.Component {
         let keys = getFieldValue("keys");
         const formItems = (
             <React.Fragment>
-                <Row>
+                <Row style={{marginTop: "0.5rem", marginBottom: "0.5rem"}}>
                     <Col span={12}>
                         <Translate
                             component="span"
@@ -214,18 +228,50 @@ class InvoiceRequest extends React.Component {
                 <Form onSubmit={this.handleSubmit.bind(this)} required={true}>
                     <Form.Item
                         className="invoice-request-input"
-                        label={counterpart.translate(
-                            "invoice.request.identifier"
-                        )}
+                        label={
+                            <span>
+                                {counterpart.translate(
+                                    "invoice.request.identifier"
+                                )}
+                                <Tooltip
+                                    placement="topLeft"
+                                    title={counterpart.translate(
+                                        "invoice.request.identifier_tooltip"
+                                    )}
+                                >
+                                    &nbsp;
+                                    <Icon
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </Tooltip>
+                            </span>
+                        }
                     >
                         {getFieldDecorator("memo")(<Input />)}
                     </Form.Item>
 
                     <Form.Item
                         className="invoice-request-input"
-                        label={counterpart.translate(
-                            "invoice.request.currency"
-                        )}
+                        label={
+                            <span>
+                                {counterpart.translate(
+                                    "invoice.request.payment_asset"
+                                )}
+                                <Tooltip
+                                    placement="topLeft"
+                                    title={counterpart.translate(
+                                        "invoice.request.payment_asset_tooltip"
+                                    )}
+                                >
+                                    &nbsp;
+                                    <Icon
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </Tooltip>
+                            </span>
+                        }
                     >
                         <AssetSelect
                             value={currency}
@@ -236,15 +282,47 @@ class InvoiceRequest extends React.Component {
 
                     <Form.Item
                         className="invoice-request-input"
-                        label={counterpart.translate(
-                            "invoice.request.recipient_name"
-                        )}
+                        label={
+                            <span>
+                                {counterpart.translate(
+                                    "invoice.request.recipient_name"
+                                )}
+                                <Tooltip
+                                    placement="topLeft"
+                                    title={counterpart.translate(
+                                        "invoice.request.recipient_name_tooltip"
+                                    )}
+                                >
+                                    &nbsp;
+                                    <Icon
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </Tooltip>
+                            </span>
+                        }
                     >
                         {getFieldDecorator("to_label")(<Input />)}
                     </Form.Item>
                     <Form.Item
                         className="invoice-request-input"
-                        label={counterpart.translate("invoice.request.note")}
+                        label={
+                            <span>
+                                {counterpart.translate("invoice.request.note")}
+                                <Tooltip
+                                    placement="topLeft"
+                                    title={counterpart.translate(
+                                        "invoice.request.note_tooltip"
+                                    )}
+                                >
+                                    &nbsp;
+                                    <Icon
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </Tooltip>
+                            </span>
+                        }
                     >
                         {getFieldDecorator("note")(<Input.TextArea rows={3} />)}
                     </Form.Item>
@@ -260,6 +338,20 @@ class InvoiceRequest extends React.Component {
                         </Button>
                     </Form.Item>
                 </Form>
+                {this.state.invoiceData && (
+                    <React.Fragment>
+                        <div style={{marginTop: "2rem"}}>
+                            <Input.TextArea
+                                disabled
+                                rows={4}
+                                value={this.state.invoiceData}
+                            />
+                        </div>
+                        <div style={{float: "right"}}>
+                            <CopyButton useDiv={false} text={"asdasd!"} />
+                        </div>
+                    </React.Fragment>
+                )}
             </div>
         );
     }
