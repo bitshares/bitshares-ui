@@ -90,7 +90,6 @@ class PMAssetsContainer extends React.Component {
 
     componentWillMount() {
         getPredictionMarketIssuers().then(whitelistedIssuers => {
-            whitelistedIssuers = ["1.2.428447", "1.2.1099493", "1.2.160399"]; //!!!!!!!!!FOR TESTING!!!!!!!!!!!!!!!!!
             this._getWhitelistedAssets(whitelistedIssuers).then(assets => {
                 const predictionMarkets = assets
                     .filter(this._isPredictionMarket)
