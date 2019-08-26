@@ -97,7 +97,7 @@ class DepositModalContent extends DecimalChecker {
             : false;
 
         if (usingGateway) {
-            let assetName = backedAsset[1] || asset;
+            let assetName = backedAsset[1];
             let assetGateway = backedAsset[0];
             this._getDepositAddress(assetName, assetGateway);
         } else {

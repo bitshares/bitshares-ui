@@ -64,7 +64,7 @@ export const gdex2APIs = {
 
 export const deexAPIs = {
     BASE: "https://deex.exchange/gateway",
-    COINS_LIST: "/pay/get_coins"
+    COINS_LIST: "/compatibility/get_coins"
 };
 
 // Legacy Deposit/Withdraw
