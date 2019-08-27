@@ -50,7 +50,7 @@ export default class DropDownMenu extends React.Component {
                     overflowY: "auto"
                 }}
             >
-                <li className="divider" onClick={toggleLock}>
+                <li onClick={toggleLock}>
                     <div className="table-cell">
                         <Icon size="2x" name="power" title="icons.power" />
                     </div>
@@ -64,6 +64,8 @@ export default class DropDownMenu extends React.Component {
                         />
                     </div>
                 </li>
+
+                <li className="divider" />
 
                 {locked ? (
                     <li
@@ -120,7 +122,6 @@ export default class DropDownMenu extends React.Component {
 
                 {!isMyAccount && showAccountLinks ? (
                     <li
-                        className="divider"
                         onClick={this[
                             isContact ? "_onRemoveContact" : "_onAddContact"
                         ].bind(this)}
@@ -144,6 +145,10 @@ export default class DropDownMenu extends React.Component {
                             />
                         </div>
                     </li>
+                ) : null}
+
+                {!isMyAccount && showAccountLinks ? (
+                    <li className="divider" />
                 ) : null}
 
                 <li
@@ -283,7 +288,6 @@ export default class DropDownMenu extends React.Component {
                         {
                             active: active.indexOf("/settings") !== -1
                         },
-                        "divider",
                         "desktop-only"
                     )}
                     onClick={this.props.onNavigate.bind(this, "/settings")}
@@ -296,13 +300,12 @@ export default class DropDownMenu extends React.Component {
                     </div>
                 </li>
 
+                <li className="divider desktop-only" />
+
                 <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/spotlight") !== -1
-                        },
-                        "divider"
-                    )}
+                    className={cnames({
+                        active: active.indexOf("/spotlight") !== -1
+                    })}
                     onClick={this.props.onNavigate.bind(this, "/spotlight")}
                 >
                     <div className="table-cell">
@@ -317,12 +320,13 @@ export default class DropDownMenu extends React.Component {
                     </div>
                 </li>
 
+                <li className="divider" />
+
                 <li
                     className={cnames(
                         {
                             active: active.indexOf("/settings") !== -1
                         },
-                        "divider",
                         "mobile-only",
                         "has-submenu"
                     )}
@@ -335,6 +339,8 @@ export default class DropDownMenu extends React.Component {
                         <Translate content="header.settings" />{" "}
                     </div>
                 </li>
+
+                <li className="divider mobile-only" />
 
                 <li
                     className={cnames({
@@ -478,7 +484,7 @@ export default class DropDownMenu extends React.Component {
                 </li>
 
                 <li
-                    className={cnames("divider", {
+                    className={cnames({
                         active: active.indexOf("/permissions") !== -1,
                         disabled: !showAccountLinks
                     })}
@@ -495,14 +501,13 @@ export default class DropDownMenu extends React.Component {
                     </div>
                 </li>
 
+                <li className="divider" />
+
                 {showAccountLinks ? (
                     <li
-                        className={cnames(
-                            {
-                                active: active.indexOf("/accounts") !== -1
-                            },
-                            "divider"
-                        )}
+                        className={cnames({
+                            active: active.indexOf("/accounts") !== -1
+                        })}
                         onClick={this.props.onNavigate.bind(this, "/accounts")}
                     >
                         <div className="table-cell">
@@ -517,6 +522,8 @@ export default class DropDownMenu extends React.Component {
                         </div>
                     </li>
                 ) : null}
+
+                {showAccountLinks ? <li className="divider" /> : null}
             </ul>
         );
     }
