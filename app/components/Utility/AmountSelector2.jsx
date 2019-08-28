@@ -23,7 +23,7 @@ class AmountSelector2 extends React.Component {
 
     static defaultProps = {
         disabled: false,
-        imgName: "BTS"
+        imgName: "unknown"
     };
 
     render() {

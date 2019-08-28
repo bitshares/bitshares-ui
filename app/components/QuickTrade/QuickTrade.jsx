@@ -40,12 +40,12 @@ class QuickTrade extends Component {
             sellAsset: "",
             sellAssets: [],
             sellAmount: "",
-            sellImgName: "BTS",
+            sellImgName: "unknown",
             receiveAssetInput: "",
             receiveAsset: "",
             receiveAssets: [],
             receiveAmount: "",
-            receiveImgName: "BTS",
+            receiveImgName: "unknown",
             activeInput: "",
             lookupQuote: "",
             orders: [],
@@ -216,7 +216,9 @@ class QuickTrade extends Component {
     onSellAssetInputChange(e) {
         const {receiveAsset} = this.state;
         if (e === receiveAsset) {
-            const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "BTS";
+            const assetImage = e
+                ? ChainStore.getAsset(e).get("symbol")
+                : "unknown";
             this.setState(
                 state => {
                     return {
@@ -238,7 +240,9 @@ class QuickTrade extends Component {
                 }
             );
         } else {
-            const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "BTS";
+            const assetImage = e
+                ? ChainStore.getAsset(e).get("symbol")
+                : "unknown";
             this.setState(
                 {
                     sellAssetInput: e,
@@ -259,7 +263,7 @@ class QuickTrade extends Component {
 
     onReceiveAssetInputChange(e) {
         const {sellAsset, receiveAsset, sellAssets} = this.state;
-        const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "BTS";
+        const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "unknown";
         if (e === sellAsset && sellAssets.includes(receiveAsset)) {
             this.setState(
                 state => {
@@ -292,7 +296,7 @@ class QuickTrade extends Component {
                         sellAmount: "",
                         sellAsset: "",
                         sellAssetInput: "",
-                        sellImgName: "BTS"
+                        sellImgName: "unknown"
                     };
                 },
                 () => {
@@ -428,13 +432,13 @@ class QuickTrade extends Component {
 
     onSellImageError() {
         this.setState({
-            sellImgName: "BTS"
+            sellImgName: "unknown"
         });
     }
 
     onReceiveImageError() {
         this.setState({
-            receiveImgName: "BTS"
+            receiveImgName: "unknown"
         });
     }
 
