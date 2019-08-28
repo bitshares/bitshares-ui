@@ -30,6 +30,7 @@ import AccountBrowsingMode from "../Account/AccountBrowsingMode";
 import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 import HeaderMenuItem from "./HeaderMenuItem";
 import DividerMenuItem from "./DividerMenuItem";
+import SubmenuItem from "./SubmenuItem";
 import MenuItemType from "./MenuItemType";
 
 import {getLogo} from "branding";
@@ -544,120 +545,61 @@ class Header extends React.Component {
                         </div>
                     </li>
                     <DividerMenuItem />
-                    <li
-                        onClick={this._onNavigate.bind(
+                    <SubmenuItem
+                        target={this._onNavigate.bind(
                             this,
                             "/settings/general"
                         )}
-                    >
-                        <Translate
-                            content="settings.general"
-                            component="div"
-                            className="table-cell"
-                        />
-                    </li>
-                    {!this.props.settings.get("passwordLogin") && (
-                        <li
-                            onClick={this._onNavigate.bind(
-                                this,
-                                "/settings/wallet"
-                            )}
-                        >
-                            <Translate
-                                content="settings.wallet"
-                                component="div"
-                                className="table-cell"
-                            />
-                        </li>
-                    )}
-                    <li
-                        onClick={this._onNavigate.bind(
+                        text="settings.general"
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(this, "/settings/wallet")}
+                        text=""
+                        hidden={!!this.props.settings.get("passwordLogin")}
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(
                             this,
                             "/settings/accounts"
                         )}
-                    >
-                        <Translate
-                            content="settings.accounts"
-                            component="div"
-                            className="table-cell"
-                        />
-                    </li>
-
-                    {!this.props.settings.get("passwordLogin") && [
-                        <li
-                            key={"settings.password"}
-                            onClick={this._onNavigate.bind(
-                                this,
-                                "/settings/password"
-                            )}
-                        >
-                            <Translate
-                                content="settings.password"
-                                component="div"
-                                className="table-cell"
-                            />
-                        </li>,
-                        <li
-                            key={"settings.backup"}
-                            onClick={this._onNavigate.bind(
-                                this,
-                                "/settings/backup"
-                            )}
-                        >
-                            <Translate
-                                content="settings.backup"
-                                component="div"
-                                className="table-cell"
-                            />
-                        </li>,
-                        <li
-                            key={"settings.restore"}
-                            onClick={this._onNavigate.bind(
-                                this,
-                                "/settings/restore"
-                            )}
-                        >
-                            <Translate
-                                content="settings.restore"
-                                component="div"
-                                className="table-cell"
-                            />
-                        </li>
-                    ]}
-
-                    <li
-                        onClick={this._onNavigate.bind(
+                        text="settings.accounts"
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(
                             this,
-                            "/settings/access"
+                            "/settings/password"
                         )}
-                    >
-                        <Translate
-                            content="settings.access"
-                            component="div"
-                            className="table-cell"
-                        />
-                    </li>
-                    <li
-                        onClick={this._onNavigate.bind(
+                        text="settings.password"
+                        hidden={!!this.props.settings.get("passwordLogin")}
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(this, "/settings/backup")}
+                        text="settings.backup"
+                        hidden={!!this.props.settings.get("passwordLogin")}
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(
+                            this,
+                            "/settings/restore"
+                        )}
+                        text="settings.restore"
+                        hidden={!!this.props.settings.get("passwordLogin")}
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(this, "/settings/access")}
+                        text="settings.access"
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(
                             this,
                             "/settings/faucet_address"
                         )}
-                    >
-                        <Translate
-                            content="settings.faucet_address"
-                            component="div"
-                            className="table-cell"
-                        />
-                    </li>
-                    <li
-                        onClick={this._onNavigate.bind(this, "/settings/reset")}
-                    >
-                        <Translate
-                            content="settings.reset"
-                            component="div"
-                            className="table-cell"
-                        />
-                    </li>
+                        text="settings.faucet_address"
+                    />
+                    <SubmenuItem
+                        target={this._onNavigate.bind(this, "/settings/reset")}
+                        text="settings.reset"
+                    />
                 </ul>
             )
         };
