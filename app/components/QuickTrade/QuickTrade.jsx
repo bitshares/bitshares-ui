@@ -891,7 +891,9 @@ class QuickTrade extends Component {
             0,
             fees.marketFee.baseMarketFeePercent.length - 1
         );
-        return +transactionFeePercent + +marketFee + "%";
+        const liquidityFee =
+            Math.round(this.getLiquidityPenalty()[0] * 10000) / 100;
+        return +transactionFeePercent + +marketFee + liquidityFee + "%";
     }
 
     render() {
