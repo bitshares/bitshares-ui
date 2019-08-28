@@ -52,6 +52,7 @@ class HeaderMenuItem extends React.Component {
         }
 
         // Check patterns which decides should the class names be assigned or not
+        let actualHideClass = undefined;
         let patternMatched = false;
         if (includePattern || excludePattern) {
             patternMatched = true;
@@ -79,7 +80,6 @@ class HeaderMenuItem extends React.Component {
             }
         }
 
-        let actualHideClass = undefined;
         if (hideClassName && patternMatched) {
             actualHideClass = hideClassName;
         }
