@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import cnames from "classnames";
 import AccountActions from "actions/AccountActions";
 import DropdownMenuItem from "./DropdownMenuItem";
+import DividerMenuItem from "./DividerMenuItem";
 
 export default class DropDownMenu extends React.Component {
     shouldComponentUpdate(np) {
@@ -62,7 +63,7 @@ export default class DropDownMenu extends React.Component {
                     }`}
                 />
 
-                <li className="divider" />
+                <DividerMenuItem />
 
                 <DropdownMenuItem
                     currentPath={active}
@@ -112,9 +113,7 @@ export default class DropDownMenu extends React.Component {
                     hidden={isMyAccount || !showAccountLinks}
                 />
 
-                {!isMyAccount && showAccountLinks ? (
-                    <li className="divider" />
-                ) : null}
+                <DividerMenuItem hidden={isMyAccount || !showAccountLinks} />
 
                 <DropdownMenuItem
                     currentPath={active}
@@ -244,7 +243,7 @@ export default class DropDownMenu extends React.Component {
                     text="header.settings"
                 />
 
-                <li className="divider desktop-only" />
+                <DividerMenuItem additionalClassName="desktop-only" />
 
                 <DropdownMenuItem
                     currentPath={active}
@@ -256,7 +255,7 @@ export default class DropDownMenu extends React.Component {
                     text="header.showcases"
                 />
 
-                <li className="divider" />
+                <DividerMenuItem />
 
                 <DropdownMenuItem
                     currentPath={active}
@@ -269,7 +268,7 @@ export default class DropDownMenu extends React.Component {
                     text="header.settings"
                 />
 
-                <li className="divider mobile-only" />
+                <DividerMenuItem additionalClassName="mobile-only" />
 
                 <DropdownMenuItem
                     currentPath={active}
@@ -382,7 +381,7 @@ export default class DropDownMenu extends React.Component {
                     text="account.permissions"
                 />
 
-                <li className="divider" />
+                <DividerMenuItem />
 
                 <DropdownMenuItem
                     currentPath={active}
@@ -396,7 +395,8 @@ export default class DropDownMenu extends React.Component {
                     hidden={!showAccountLinks}
                 />
 
-                {showAccountLinks ? <li className="divider" /> : null}
+                <DividerMenuItem hidden={!showAccountLinks} />
+
             </ul>
         );
     }

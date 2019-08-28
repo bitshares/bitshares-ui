@@ -29,6 +29,7 @@ import {Notification} from "bitshares-ui-style-guide";
 import AccountBrowsingMode from "../Account/AccountBrowsingMode";
 import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 import HeaderMenuItem from "./HeaderMenuItem";
+import DividerMenuItem from "./DividerMenuItem";
 import MenuItemType from "./MenuItemType";
 
 import {getLogo} from "branding";
@@ -542,7 +543,7 @@ class Header extends React.Component {
                             />
                         </div>
                     </li>
-                    <li className="divider" />
+                    <DividerMenuItem />
                     <li
                         onClick={this._onNavigate.bind(
                             this,
@@ -1014,7 +1015,7 @@ class Header extends React.Component {
                                 text="header.accounts_manage"
                             />
 
-                            <li className="divider" />
+                            <DividerMenuItem />
 
                             {accountsList}
                         </ul>
