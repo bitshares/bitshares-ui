@@ -1,7 +1,4 @@
 import React from "react";
-import Icon from "../Icon/Icon";
-import Translate from "react-translate-component";
-import cnames from "classnames";
 import AccountActions from "actions/AccountActions";
 import DropdownMenuItem from "./DropdownMenuItem";
 import DividerMenuItem from "./DividerMenuItem";
@@ -141,96 +138,52 @@ export default class DropDownMenu extends React.Component {
                     text="header.explorer"
                 />
 
-                {[
-                    {
-                        icon: {
-                            name: "transfer",
-                            title: "icons.transfer"
-                        },
-                        disabled: !showAccountLinks,
-                        mainText: "header.payments",
-                        mainCallback: this.props.showSend,
-                        subText: null,
-                        subURL: null
-                    },
-                    {
-                        icon: {
-                            name: "deposit",
-                            title: "icons.deposit.deposit"
-                        },
-                        disabled: !enableDepositWithdraw,
-                        mainText: "modal.deposit.submit",
-                        mainCallback: this.props.showDeposit,
-                        subText: "header.deposit_legacy",
-                        subURL: "/deposit-withdraw"
-                    },
-                    {
-                        icon: {
-                            name: "withdraw",
-                            title: "icons.withdraw"
-                        },
-                        disabled: !enableDepositWithdraw,
-                        mainText: "modal.withdraw.submit",
-                        mainCallback: this.props.showWithdraw,
-                        subText: "header.withdraw_legacy",
-                        subURL: "/deposit-withdraw"
-                    }
-                ].map(
-                    (
-                        {
-                            icon,
-                            subURL,
-                            disabled,
-                            mainText,
-                            subText,
-                            mainCallback
-                        },
-                        index
-                    ) => (
-                        <li
-                            key={index}
-                            className={cnames({
-                                active: active.indexOf(subURL) !== -1,
-                                disabled
-                            })}
-                            onClick={
-                                disabled
-                                    ? event => {
-                                          event.stopPropagation();
-                                      }
-                                    : mainCallback
-                            }
-                        >
-                            <div className="table-cell">
-                                <Icon size="2x" {...icon} />
-                            </div>
-                            <div className="table-cell">
-                                <Translate content={mainText} />{" "}
-                                {subText && (
-                                    <span
-                                        onClick={
-                                            disabled
-                                                ? () => {}
-                                                : event => {
-                                                      event.stopPropagation();
-                                                      this.props.onNavigate.bind(
-                                                          this,
-                                                          subURL
-                                                      )(event);
-                                                  }
-                                        }
-                                        className={cnames(
-                                            "header-dropdown-sub-link",
-                                            {enabled: !disabled}
-                                        )}
-                                    >
-                                        <Translate content={subText} />
-                                    </span>
-                                )}
-                            </div>
-                        </li>
-                    )
-                )}
+                <DropdownMenuItem
+                    currentPath={active}
+                    target={this.props.showSend}
+                    icon={{
+                        name: "transfer"
+                    }}
+                    text="header.payments"
+                    disabled={!showAccountLinks}
+                />
+
+                <DropdownMenuItem
+                    currentPath={active}
+                    target={this.props.showDeposit}
+                    icon={{
+                        name: "deposit",
+                        title: "icons.deposit.deposit"
+                    }}
+                    text="modal.deposit.submit"
+                    disabled={!enableDepositWithdraw}
+                    submenu={{
+                        target: this.props.onNavigate.bind(
+                            this,
+                            "/deposit-withdraw"
+                        ),
+                        text: "header.deposit_legacy",
+                        disabled: !enableDepositWithdraw
+                    }}
+                />
+
+                <DropdownMenuItem
+                    currentPath={active}
+                    target={this.props.showWithdraw}
+                    icon={{
+                        name: "withdraw"
+                    }}
+                    text="modal.withdraw.submit"
+                    disabled={!enableDepositWithdraw}
+                    submenu={{
+                        target: this.props.onNavigate.bind(
+                            this,
+                            "/deposit-withdraw"
+                        ),
+                        text: "header.withdraw_legacy",
+                        disabled: !enableDepositWithdraw
+                    }}
+                />
 
                 <DropdownMenuItem
                     currentPath={active}
@@ -396,7 +349,6 @@ export default class DropDownMenu extends React.Component {
                 />
 
                 <DividerMenuItem hidden={!showAccountLinks} />
-
             </ul>
         );
     }

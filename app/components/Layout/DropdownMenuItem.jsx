@@ -1,7 +1,7 @@
 import React from "react";
 import Translate from "react-translate-component";
 import cnames from "classnames";
-import {isString} from "lodash-es";
+import {isArray, isString} from "lodash-es";
 import Icon from "../Icon/Icon";
 import MenuItemType from "./MenuItemType";
 
@@ -16,6 +16,7 @@ class DropdownMenuItem extends React.Component {
             icon,
             text,
             behavior,
+            submenu, // {target, text, disabled}
             hidden,
             disabled
         } = this.props;
@@ -90,6 +91,9 @@ class DropdownMenuItem extends React.Component {
             event.stopPropagation();
         };
 
+        // If submenu is a single object, render it as pure link
+        let renderAlternativeSubmenu = submenu && !isArray(submenu);
+
         return actuallyHidden ? null : (
             <li
                 className={cnames(
@@ -110,6 +114,22 @@ class DropdownMenuItem extends React.Component {
                 </div>
                 <div className="table-cell">
                     <Translate content={text} />
+
+                    {renderAlternativeSubmenu ? " " : null}
+                    {renderAlternativeSubmenu ? (
+                        <span
+                            onClick={
+                                submenu.disabled
+                                    ? emptyClickHandler
+                                    : submenu.target
+                            }
+                            className={cnames("header-dropdown-sub-link", {
+                                enabled: !submenu.disabled
+                            })}
+                        >
+                            <Translate content={submenu.text} />
+                        </span>
+                    ) : null}
                 </div>
             </li>
         );
