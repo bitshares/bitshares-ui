@@ -527,7 +527,7 @@ class Header extends React.Component {
                     }}
                 >
                     <li
-                        className="divider parent-item"
+                        className="parent-item"
                         onClick={this._toggleDropdownSubmenu.bind(
                             this,
                             undefined
@@ -542,6 +542,7 @@ class Header extends React.Component {
                             />
                         </div>
                     </li>
+                    <li className="divider" />
                     <li
                         onClick={this._onNavigate.bind(
                             this,
@@ -962,7 +963,6 @@ class Header extends React.Component {
                                 text="showcases.htlc.title_short"
                                 behavior={MenuItemType.Dynamic}
                             />
-
                         </ul>
                     </div>
                 </div>
