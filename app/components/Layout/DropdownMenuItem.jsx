@@ -121,7 +121,10 @@ class DropdownMenuItem extends React.Component {
                             onClick={
                                 submenu.disabled
                                     ? emptyClickHandler
-                                    : submenu.target
+                                    : event => {
+                                          event.stopPropagation();
+                                          submenu.target(event);
+                                      }
                             }
                             className={cnames("header-dropdown-sub-link", {
                                 enabled: !submenu.disabled
