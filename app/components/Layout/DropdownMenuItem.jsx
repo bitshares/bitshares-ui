@@ -16,7 +16,8 @@ class DropdownMenuItem extends React.Component {
             icon,
             text,
             behavior,
-            hidden
+            hidden,
+            disabled
         } = this.props;
 
         // Defalut icon title if not set
@@ -84,15 +85,21 @@ class DropdownMenuItem extends React.Component {
             actuallyHidden = true;
         }
 
+        // Click handler for disabled elements
+        const emptyClickHandler = event => {
+            event.stopPropagation();
+        };
+
         return actuallyHidden ? null : (
             <li
                 className={cnames(
                     {
-                        active: patternMatched
+                        active: patternMatched,
+                        disabled: disabled
                     },
                     additionalClassName
                 )}
-                onClick={target}
+                onClick={disabled ? emptyClickHandler : target}
             >
                 <div className="table-cell">
                     <Icon

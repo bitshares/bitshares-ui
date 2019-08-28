@@ -284,7 +284,6 @@ export default class DropDownMenu extends React.Component {
                 <DropdownMenuItem
                     currentPath={active}
                     includePattern="/voting"
-                    additionalClassName={cnames({disabled: !showAccountLinks})}
                     target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/voting`
@@ -294,12 +293,12 @@ export default class DropDownMenu extends React.Component {
                         title: "icons.thumbs_up"
                     }}
                     text="account.voting"
+                    disabled={!showAccountLinks}
                 />
 
                 <DropdownMenuItem
                     currentPath={active}
                     includePattern={["/assets", "/account/"]}
-                    additionalClassName={cnames({disabled: !showAccountLinks})}
                     target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/assets`
@@ -308,12 +307,12 @@ export default class DropDownMenu extends React.Component {
                         name: "assets"
                     }}
                     text="explorer.assets.title"
+                    disabled={!showAccountLinks}
                 />
 
                 <DropdownMenuItem
                     currentPath={active}
                     includePattern="/signedmessages"
-                    additionalClassName={cnames({disabled: !showAccountLinks})}
                     target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/signedmessages`
@@ -323,12 +322,12 @@ export default class DropDownMenu extends React.Component {
                         title: "icons.text.signed_messages"
                     }}
                     text="account.signedmessages.menuitem"
+                    disabled={!showAccountLinks}
                 />
 
                 <DropdownMenuItem
                     currentPath={active}
                     includePattern="/member-stats"
-                    additionalClassName={cnames({disabled: !showAccountLinks})}
                     target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/member-stats`
@@ -338,6 +337,7 @@ export default class DropDownMenu extends React.Component {
                         title: "icons.text.membership_stats"
                     }}
                     text="account.member.stats"
+                    disabled={!showAccountLinks}
                 />
 
                 <DropdownMenuItem
@@ -357,7 +357,6 @@ export default class DropDownMenu extends React.Component {
                 <DropdownMenuItem
                     currentPath={active}
                     includePattern="/whitelist"
-                    additionalClassName={cnames({disabled: !showAccountLinks})}
                     target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/whitelist`
@@ -366,6 +365,7 @@ export default class DropDownMenu extends React.Component {
                         name: "list"
                     }}
                     text="account.whitelist.title"
+                    disabled={!showAccountLinks}
                 />
 
                 <DropdownMenuItem
