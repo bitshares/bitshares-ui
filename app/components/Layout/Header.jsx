@@ -999,30 +999,23 @@ class Header extends React.Component {
                                 width: "20em"
                             }}
                         >
-                            <li
-                                className={cnames(
-                                    {
-                                        active:
-                                            active.indexOf("/accounts") !== -1
-                                    },
-                                    "divider"
-                                )}
-                                onClick={this._onNavigate.bind(
+                            <HeaderMenuItem
+                                currentPath={active}
+                                includePattern="/accounts"
+                                target={this._onNavigate.bind(
                                     this,
                                     "/accounts"
                                 )}
-                            >
-                                <div className="table-cell">
-                                    <Icon
-                                        size="2x"
-                                        name="people"
-                                        title="icons.manage_accounts"
-                                    />
-                                </div>
-                                <div className="table-cell">
-                                    <Translate content="header.accounts_manage" />
-                                </div>
-                            </li>
+                                icon={{
+                                    name: "people",
+                                    title: "icons.manage_accounts",
+                                    size: "2x"
+                                }}
+                                text="header.accounts_manage"
+                            />
+
+                            <li className="divider" />
+
                             {accountsList}
                         </ul>
                     )}
