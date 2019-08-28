@@ -29,6 +29,7 @@ import counterpart from "counterpart";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import {Notification} from "bitshares-ui-style-guide";
+import FormattedPrice from "../Utility/FormattedPrice";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -628,10 +629,16 @@ class QuickTrade extends Component {
         if (!sub) {
             return;
         }
+        const {sellAmount, receiveAmount, sellAsset, receiveAsset} = this.state;
+        const sellAssetPrecision = ChainStore.getAsset(sellAsset).get(
+            "precision"
+        );
+        const receiveAssetPrecision = ChainStore.getAsset(receiveAsset).get(
+            "precision"
+        );
         const priceSection = this.getPriceSection();
         const feeSection = this.getFeeSection();
         const ordersSection = this.getOrdersSection();
-        const yourPrice = this.getYourPrice();
         const totalPercentFee = this.getTotalPercentFee();
         const amountOfOrders = this.state.orders.length;
         const ordersCaption = amountOfOrders < 2 ? "order" : "orders";
@@ -644,7 +651,21 @@ class QuickTrade extends Component {
             >
                 <Collapse.Panel
                     header={counterpart.translate("exchange.price")}
-                    extra={yourPrice}
+                    extra={
+                        <FormattedPrice
+                            base_asset={sellAsset}
+                            quote_asset={receiveAsset}
+                            base_amount={sellAmount * 10 ** sellAssetPrecision}
+                            quote_amount={
+                                receiveAmount * 10 ** receiveAssetPrecision
+                            }
+                            noPopOver
+                            force_direction={ChainStore.getAsset(
+                                receiveAsset
+                            ).get("symbol")}
+                            noInvertTip
+                        />
+                    }
                 >
                     {priceSection}
                 </Collapse.Panel>
@@ -676,12 +697,18 @@ class QuickTrade extends Component {
     }
 
     getPriceSection() {
-        const {prices, sellAmount, receiveAmount, receiveAsset} = this.state;
-        const receiveAssetPrecision = ChainStore.getAsset(receiveAsset).get(
+        const {
+            prices,
+            sellAmount,
+            receiveAmount,
+            sellAsset,
+            receiveAsset
+        } = this.state;
+        const sellAssetPrecision = ChainStore.getAsset(sellAsset).get(
             "precision"
         );
-        const yourPrice = (receiveAmount / sellAmount).toFixed(
-            receiveAssetPrecision
+        const receiveAssetPrecision = ChainStore.getAsset(receiveAsset).get(
+            "precision"
         );
         return (
             <Row>
@@ -703,9 +730,51 @@ class QuickTrade extends Component {
                     </div>
                 </Col>
                 <Col span={12} style={{textAlign: "right"}}>
-                    <div>{yourPrice || "-"}</div>
-                    <div>{prices.feedPrice || "-"}</div>
-                    <div>{prices.latestPrice || "-"}</div>
+                    <div>
+                        <FormattedPrice
+                            base_asset={sellAsset}
+                            quote_asset={receiveAsset}
+                            base_amount={sellAmount * 10 ** sellAssetPrecision}
+                            quote_amount={
+                                receiveAmount * 10 ** receiveAssetPrecision
+                            }
+                            noPopOver
+                            force_direction={ChainStore.getAsset(
+                                receiveAsset
+                            ).get("symbol")}
+                            noInvertTip
+                        />
+                    </div>
+                    <div>
+                        <FormattedPrice
+                            base_asset={sellAsset}
+                            quote_asset={receiveAsset}
+                            base_amount={1 * 10 ** sellAssetPrecision}
+                            quote_amount={
+                                prices.feedPrice * 10 ** receiveAssetPrecision
+                            }
+                            noPopOver
+                            force_direction={ChainStore.getAsset(
+                                receiveAsset
+                            ).get("symbol")}
+                            noInvertTip
+                        />
+                    </div>
+                    <div>
+                        <FormattedPrice
+                            base_asset={sellAsset}
+                            quote_asset={receiveAsset}
+                            base_amount={1 * 10 ** sellAssetPrecision}
+                            quote_amount={
+                                prices.latestPrice * 10 ** receiveAssetPrecision
+                            }
+                            noPopOver
+                            force_direction={ChainStore.getAsset(
+                                receiveAsset
+                            ).get("symbol")}
+                            noInvertTip
+                        />
+                    </div>
                 </Col>
             </Row>
         );
@@ -782,7 +851,7 @@ class QuickTrade extends Component {
     }
 
     getOrdersSection() {
-        const {orders, sellAsset} = this.state;
+        const {orders, sellAsset, receiveAsset} = this.state;
         const sellAssetPrecision = ChainStore.getAsset(sellAsset).get(
             "precision"
         );
@@ -795,6 +864,24 @@ class QuickTrade extends Component {
                 price: item.price
             };
         });
+
+        const price = (
+            <span>
+                {counterpart.translate("exchange.quick_trade_details.price")}
+                &nbsp;(
+                <FormattedPrice
+                    base_asset={sellAsset}
+                    quote_asset={receiveAsset}
+                    noPopOver
+                    force_direction={ChainStore.getAsset(receiveAsset).get(
+                        "symbol"
+                    )}
+                    noInvertTip
+                    hide_value
+                />
+                )
+            </span>
+        );
 
         const columns = [
             {
@@ -817,9 +904,7 @@ class QuickTrade extends Component {
                 key: "amount"
             },
             {
-                title: counterpart.translate(
-                    "exchange.quick_trade_details.price"
-                ),
+                title: price,
                 dataIndex: "price",
                 key: "price"
             }
@@ -838,20 +923,6 @@ class QuickTrade extends Component {
                 }
             />
         );
-    }
-
-    getYourPrice() {
-        const {sellAmount, receiveAmount, sellAsset, receiveAsset} = this.state;
-        const receiveAssetPrecision = ChainStore.getAsset(receiveAsset).get(
-            "precision"
-        );
-        const sellAssetSymbol = ChainStore.getAsset(sellAsset).get("symbol");
-        const receiveAssetSymbol = ChainStore.getAsset(receiveAsset).get(
-            "symbol"
-        );
-        return `${(receiveAmount / sellAmount).toFixed(
-            receiveAssetPrecision
-        )} ${receiveAssetSymbol}/${sellAssetSymbol}`;
     }
 
     getLiquidityPenalty() {

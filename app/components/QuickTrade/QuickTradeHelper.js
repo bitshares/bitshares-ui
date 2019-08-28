@@ -80,7 +80,10 @@ function getPrices(activeMarketHistory, feedPrice) {
         latestPrice = latest.getPrice();
     }
     // feed price === null if not a bitasset market
-    return {latestPrice, feedPrice: feedPrice ? feedPrice.toReal() : feedPrice};
+    return {
+        latestPrice: latestPrice ? latestPrice : null,
+        feedPrice: feedPrice ? feedPrice.toReal() : feedPrice
+    };
 }
 
 // Returns a list of asset ids that the user can sell

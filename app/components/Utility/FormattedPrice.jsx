@@ -203,13 +203,14 @@ class FormattedPrice extends React.Component {
                 );
             }
         }
+        let tipText = "Click to invert the price";
+        if (this.props.noInvertTip) {
+            tipText = "";
+        }
         let symbols = hide_symbols ? (
             ""
         ) : (
-            <Tooltip
-                placement="bottom"
-                title={noPopOver ? "Click to invert the price" : null}
-            >
+            <Tooltip placement="bottom" title={noPopOver ? tipText : null}>
                 <span
                     className={noPopOver ? "clickable inline-block" : ""}
                     onClick={noPopOver ? this.onFlip.bind(this) : null}
