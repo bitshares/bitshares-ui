@@ -1,0 +1,112 @@
+import React from "react";
+import Translate from "react-translate-component";
+import cnames from "classnames";
+import {isString} from "lodash-es";
+import Icon from "../Icon/Icon";
+import MenuItemType from "./MenuItemType";
+
+class DropdownMenuItem extends React.Component {
+    render() {
+        const {
+            target,
+            currentPath,
+            includePattern,
+            excludePattern,
+            additionalClassName,
+            icon,
+            text,
+            behavior,
+            hidden
+        } = this.props;
+
+        // Defalut icon title if not set
+        if (!icon.title) {
+            icon.title = "icons." + icon.name;
+        }
+
+        // Default icon size if not set
+        if (!icon.size) {
+            icon.size = "2x";
+        }
+
+        // Convert sigle strings to array
+        let includePatternArray = includePattern;
+        if (isString(includePattern)) {
+            includePatternArray = [includePattern];
+        }
+
+        let excludePatternArray = excludePattern;
+        if (isString(excludePattern)) {
+            excludePatternArray = [excludePattern];
+        }
+
+        // Check patterns which decides should the class names be assigned or not
+        let patternMatched = false;
+        if (includePattern || excludePattern) {
+            patternMatched = true;
+
+            if (includePatternArray) {
+                for (let i = 0; i < includePatternArray.length; i++) {
+                    if (currentPath.indexOf(includePatternArray[i]) === -1) {
+                        patternMatched = false;
+                        break;
+                    }
+                }
+            }
+
+            if (excludePatternArray) {
+                for (let i = 0; i < excludePatternArray.length; i++) {
+                    if (currentPath.indexOf(excludePatternArray[i]) !== -1) {
+                        patternMatched = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Choose a behavior, defaults to Always
+        let actualBehavior = MenuItemType.Always;
+        if (behavior) {
+            actualBehavior = behavior;
+        }
+
+        // Show or hide element by it's behavior
+        let actuallyHidden = true;
+        if (
+            actualBehavior == MenuItemType.Always ||
+            (actualBehavior == MenuItemType.Dynamic && patternMatched)
+        ) {
+            actuallyHidden = false;
+        }
+
+        //But also count a direct hidding
+        if (hidden) {
+            actuallyHidden = true;
+        }
+
+        return actuallyHidden ? null : (
+            <li
+                className={cnames(
+                    {
+                        active: patternMatched
+                    },
+                    additionalClassName
+                )}
+                onClick={target}
+            >
+                <div className="table-cell">
+                    <Icon
+                        size={icon.size}
+                        name={icon.name}
+                        title={icon.title}
+                    />
+                </div>
+                <div className="table-cell">
+                    <Translate content={text} />
+                </div>
+            </li>
+        );
+    }
+}
+
+export default DropdownMenuItem;

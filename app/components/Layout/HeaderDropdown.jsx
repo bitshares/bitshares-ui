@@ -3,6 +3,7 @@ import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import cnames from "classnames";
 import AccountActions from "actions/AccountActions";
+import DropdownMenuItem from "./DropdownMenuItem";
 
 export default class DropDownMenu extends React.Component {
     shouldComponentUpdate(np) {
@@ -50,147 +51,96 @@ export default class DropDownMenu extends React.Component {
                     overflowY: "auto"
                 }}
             >
-                <li onClick={toggleLock}>
-                    <div className="table-cell">
-                        <Icon size="2x" name="power" title="icons.power" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate
-                            content={`header.${
-                                this.props.locked
-                                    ? "unlock_short"
-                                    : "lock_short"
-                            }`}
-                        />
-                    </div>
-                </li>
+                <DropdownMenuItem
+                    currentPath={active}
+                    target={toggleLock}
+                    icon={{
+                        name: "power"
+                    }}
+                    text={`header.${
+                        this.props.locked ? "unlock_short" : "lock_short"
+                    }`}
+                />
 
                 <li className="divider" />
 
-                {locked ? (
-                    <li
-                        className={cnames({
-                            active:
-                                active.indexOf(
-                                    `/create-account/${
-                                        !passwordLogin ? "wallet" : "password"
-                                    }`
-                                ) !== -1
-                        })}
-                        onClick={this.props.onNavigate.bind(
-                            this,
-                            `/create-account/${
-                                !passwordLogin ? "wallet" : "password"
-                            }`
-                        )}
-                    >
-                        <div className="table-cell">
-                            <Icon
-                                size="2x"
-                                name="user"
-                                title="icons.user.create_account"
-                            />
-                        </div>
-                        <div className="table-cell">
-                            <Translate content="header.create_account" />
-                        </div>
-                    </li>
-                ) : null}
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern={`/create-account/${
+                        !passwordLogin ? "wallet" : "password"
+                    }`}
+                    target={this.props.onNavigate.bind(
+                        this,
+                        `/create-account/${
+                            !passwordLogin ? "wallet" : "password"
+                        }`
+                    )}
+                    icon={{
+                        name: "user",
+                        title: "icons.user.create_account"
+                    }}
+                    text="header.create_account"
+                    hidden={!locked}
+                />
 
-                {!this.props.locked ? (
-                    <li
-                        className={cnames({
-                            active: active.indexOf("/account") !== -1
-                        })}
-                        onClick={this.props.onNavigate.bind(
-                            this,
-                            `/account/${currentAccount}`
-                        )}
-                    >
-                        <div className="table-cell">
-                            <Icon
-                                size="2x"
-                                name="dashboard"
-                                title="icons.dasboard"
-                            />
-                        </div>
-                        <div className="table-cell">
-                            <Translate content="header.dashboard" />
-                        </div>
-                    </li>
-                ) : null}
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/account"
+                    target={this.props.onNavigate.bind(
+                        this,
+                        `/account/${currentAccount}`
+                    )}
+                    icon={{
+                        name: "dashboard"
+                    }}
+                    text="header.dashboard"
+                    hidden={locked}
+                />
 
-                {!isMyAccount && showAccountLinks ? (
-                    <li
-                        onClick={this[
-                            isContact ? "_onRemoveContact" : "_onAddContact"
-                        ].bind(this)}
-                    >
-                        <div className="table-cell">
-                            <Icon
-                                size="2x"
-                                name={`${isContact ? "minus" : "plus"}-circle`}
-                                title={
-                                    isContact
-                                        ? "icons.minus_circle.remove_contact"
-                                        : "icons.plus_circle.add_contact"
-                                }
-                            />
-                        </div>
-                        <div className="table-cell">
-                            <Translate
-                                content={`account.${
-                                    isContact ? "unfollow" : "follow"
-                                }`}
-                            />
-                        </div>
-                    </li>
-                ) : null}
+                <DropdownMenuItem
+                    currentPath={active}
+                    target={this[
+                        isContact ? "_onRemoveContact" : "_onAddContact"
+                    ].bind(this)}
+                    icon={{
+                        name: `${isContact ? "minus" : "plus"}-circle`,
+                        title: isContact
+                            ? "icons.minus_circle.remove_contact"
+                            : "icons.plus_circle.add_contact"
+                    }}
+                    text={`account.${isContact ? "unfollow" : "follow"}`}
+                    hidden={isMyAccount || !showAccountLinks}
+                />
 
                 {!isMyAccount && showAccountLinks ? (
                     <li className="divider" />
                 ) : null}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/market/") !== -1
-                        },
-                        "column-show-small"
-                    )}
-                    onClick={this.props.onNavigate.bind(this, tradeUrl)}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="trade"
-                            title="icons.trade.exchange"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.exchange" />
-                    </div>
-                </li>
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/market/"
+                    additionalClassName="column-show-small"
+                    target={this.props.onNavigate.bind(this, tradeUrl)}
+                    icon={{
+                        name: "trade",
+                        title: "icons.trade.exchange"
+                    }}
+                    text="header.exchange"
+                />
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/explorer") !== -1
-                        },
-                        "column-show-small"
-                    )}
-                    onClick={this.props.onNavigate.bind(
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/explorer"
+                    additionalClassName="column-show-small"
+                    target={this.props.onNavigate.bind(
                         this,
                         "/explorer/blocks"
                     )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="server" title="icons.server" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.explorer" />
-                    </div>
-                </li>
+                    icon={{
+                        name: "server"
+                    }}
+                    text="header.explorer"
+                />
 
                 {[
                     {
@@ -283,245 +233,168 @@ export default class DropDownMenu extends React.Component {
                     )
                 )}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/settings") !== -1
-                        },
-                        "desktop-only"
-                    )}
-                    onClick={this.props.onNavigate.bind(this, "/settings")}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="cogs" title="icons.cogs" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.settings" />
-                    </div>
-                </li>
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/settings"
+                    additionalClassName="desktop-only"
+                    target={this.props.onNavigate.bind(this, "/settings")}
+                    icon={{
+                        name: "cogs"
+                    }}
+                    text="header.settings"
+                />
 
                 <li className="divider desktop-only" />
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/spotlight") !== -1
-                    })}
-                    onClick={this.props.onNavigate.bind(this, "/spotlight")}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="showcases"
-                            title="icons.showcases"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.showcases" />
-                    </div>
-                </li>
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/spotlight"
+                    target={this.props.onNavigate.bind(this, "/spotlight")}
+                    icon={{
+                        name: "showcases"
+                    }}
+                    text="header.showcases"
+                />
 
                 <li className="divider" />
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/settings") !== -1
-                        },
-                        "mobile-only",
-                        "has-submenu"
-                    )}
-                    onClick={this.props.toggleDropdownSubmenu}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="cogs" title="icons.cogs" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.settings" />{" "}
-                    </div>
-                </li>
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/settings"
+                    additionalClassName="mobile-only has-submenu"
+                    target={this.props.toggleDropdownSubmenu}
+                    icon={{
+                        name: "cogs"
+                    }}
+                    text="header.settings"
+                />
 
                 <li className="divider mobile-only" />
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/news") !== -1
-                    })}
-                    onClick={this.props.onNavigate.bind(this, "/news")}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="news" title="icons.news" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="news.news" />
-                    </div>
-                </li>
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/news"
+                    target={this.props.onNavigate.bind(this, "/news")}
+                    icon={{
+                        name: "news"
+                    }}
+                    text="news.news"
+                />
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/voting") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/voting"
+                    additionalClassName={cnames({disabled: !showAccountLinks})}
+                    target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/voting`
                     )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="thumbs-up"
-                            title="icons.thumbs_up"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.voting" />
-                    </div>
-                </li>
+                    icon={{
+                        name: "thumbs-up",
+                        title: "icons.thumbs_up"
+                    }}
+                    text="account.voting"
+                />
 
-                <li
-                    className={cnames({
-                        active:
-                            active.indexOf("/assets") !== -1 &&
-                            active.indexOf("/account/") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern={["/assets", "/account/"]}
+                    additionalClassName={cnames({disabled: !showAccountLinks})}
+                    target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/assets`
                     )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="assets" title="icons.assets" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="explorer.assets.title" />
-                    </div>
-                </li>
+                    icon={{
+                        name: "assets"
+                    }}
+                    text="explorer.assets.title"
+                />
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/signedmessages") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/signedmessages"
+                    additionalClassName={cnames({disabled: !showAccountLinks})}
+                    target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/signedmessages`
                     )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="text"
-                            title="icons.text.signed_messages"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.signedmessages.menuitem" />
-                    </div>
-                </li>
+                    icon={{
+                        name: "text",
+                        title: "icons.text.signed_messages"
+                    }}
+                    text="account.signedmessages.menuitem"
+                />
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/member-stats") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/member-stats"
+                    additionalClassName={cnames({disabled: !showAccountLinks})}
+                    target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/member-stats`
                     )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="text"
-                            title="icons.text.membership_stats"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.member.stats" />
-                    </div>
-                </li>
+                    icon={{
+                        name: "text",
+                        title: "icons.text.membership_stats"
+                    }}
+                    text="account.member.stats"
+                />
 
-                {isMyAccount ? (
-                    <li
-                        className={cnames({
-                            active: active.indexOf("/vesting") !== -1
-                        })}
-                        onClick={this.props.onNavigate.bind(
-                            this,
-                            `/account/${currentAccount}/vesting`
-                        )}
-                    >
-                        <div className="table-cell">
-                            <Icon
-                                size="2x"
-                                name="hourglass"
-                                title="icons.hourglass"
-                            />
-                        </div>
-                        <div className="table-cell">
-                            <Translate content="account.vesting.title" />
-                        </div>
-                    </li>
-                ) : null}
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/vesting"
+                    target={this.props.onNavigate.bind(
+                        this,
+                        `/account/${currentAccount}/vesting`
+                    )}
+                    icon={{
+                        name: "hourglass"
+                    }}
+                    text="account.vesting.title"
+                    hidden={!isMyAccount}
+                />
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/whitelist") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/whitelist"
+                    additionalClassName={cnames({disabled: !showAccountLinks})}
+                    target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/whitelist`
                     )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="list" title="icons.list" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.whitelist.title" />
-                    </div>
-                </li>
+                    icon={{
+                        name: "list"
+                    }}
+                    text="account.whitelist.title"
+                />
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/permissions") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/permissions"
+                    target={this.props.onNavigate.bind(
                         this,
                         `/account/${currentAccount}/permissions`
                     )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="warning" title="icons.warning" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.permissions" />
-                    </div>
-                </li>
+                    icon={{
+                        name: "warning",
+                        title: ""
+                    }}
+                    text="account.permissions"
+                />
 
                 <li className="divider" />
 
-                {showAccountLinks ? (
-                    <li
-                        className={cnames({
-                            active: active.indexOf("/accounts") !== -1
-                        })}
-                        onClick={this.props.onNavigate.bind(this, "/accounts")}
-                    >
-                        <div className="table-cell">
-                            <Icon
-                                size="2x"
-                                name="folder"
-                                title="icons.folder"
-                            />
-                        </div>
-                        <div className="table-cell">
-                            <Translate content="explorer.accounts.title" />
-                        </div>
-                    </li>
-                ) : null}
+                <DropdownMenuItem
+                    currentPath={active}
+                    includePattern="/accounts"
+                    target={this.props.onNavigate.bind(this, "/accounts")}
+                    icon={{
+                        name: "folder",
+                        title: ""
+                    }}
+                    text="explorer.accounts.title"
+                    hidden={!showAccountLinks}
+                />
 
                 {showAccountLinks ? <li className="divider" /> : null}
             </ul>
