@@ -705,39 +705,15 @@ class Header extends React.Component {
                                 text="header.explorer"
                             />
 
-                            {/*<HeaderMenuItem
-                                currentPath={active}
-                                hideClassName="column-hide-xs"
-                                includePattern="showcases"
-                                target={this._onNavigate.bind(
-                                    this,
-                                    "/showcases"
-                                )}
-                                icon={{
-                                    name: "showcases",
-                                    size: "2x"
-                                }}
-                                text="header.showcases"
-                            />*/}
-
-                            {/* Dynamic Menu Items */}
+                            {/* Dynamic Menu Items - Common */}
                             <HeaderMenuItem
                                 currentPath={active}
-                                includePattern="transfer"
+                                includePattern="deposit-withdraw"
                                 icon={{
-                                    name: "transfer"
+                                    name: "deposit-withdraw",
+                                    title: "icons.deposit.deposit_withdraw"
                                 }}
-                                text="header.payments"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="spotlight"
-                                icon={{
-                                    name: "showcases"
-                                }}
-                                text="header.showcases"
+                                text="header.deposit-withdraw"
                                 behavior={MenuItemType.Dynamic}
                             />
 
@@ -753,12 +729,11 @@ class Header extends React.Component {
 
                             <HeaderMenuItem
                                 currentPath={active}
-                                includePattern="deposit-withdraw"
+                                includePattern="spotlight"
                                 icon={{
-                                    name: "deposit-withdraw",
-                                    title: "icons.deposit.deposit_withdraw"
+                                    name: "showcases"
                                 }}
-                                text="header.deposit-withdraw"
+                                text="header.showcases"
                                 behavior={MenuItemType.Dynamic}
                             />
 
@@ -769,17 +744,6 @@ class Header extends React.Component {
                                     name: "news"
                                 }}
                                 text="news.news"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="help"
-                                icon={{
-                                    name: "question-circle",
-                                    title: "icons.question_circle"
-                                }}
-                                text="header.help"
                                 behavior={MenuItemType.Dynamic}
                             />
 
@@ -854,6 +818,18 @@ class Header extends React.Component {
                                     name: "warning"
                                 }}
                                 text="account.permissions"
+                                behavior={MenuItemType.Dynamic}
+                            />
+
+                            {/* Dynamic Menu Items - Unique */}
+                            <HeaderMenuItem
+                                currentPath={active}
+                                includePattern="help"
+                                icon={{
+                                    name: "question-circle",
+                                    title: "icons.question_circle"
+                                }}
+                                text="header.help"
                                 behavior={MenuItemType.Dynamic}
                             />
 
