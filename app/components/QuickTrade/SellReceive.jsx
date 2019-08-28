@@ -47,8 +47,6 @@ class SellReceive extends Component {
             onReceiveAmountChange,
             onReceiveImageError,
             onReceiveAssetSearch,
-            sellAssetHasError,
-            receiveAssetHasError,
             onSwap,
             isSwappable
         } = this.props;
@@ -65,7 +63,6 @@ class SellReceive extends Component {
                 onImageError={onSellImageError}
                 imgName={sellImgName}
                 placeholder={"0.0"}
-                assetHasError={sellAssetHasError}
             />
         );
 
@@ -85,7 +82,6 @@ class SellReceive extends Component {
                 tooltipText={counterpart.translate(
                     "exchange.quick_trade_details.tooltip"
                 )}
-                assetHasError={receiveAssetHasError}
             />
         );
 

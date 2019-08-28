@@ -37,12 +37,12 @@ class QuickTrade extends Component {
             mounted: false,
             sub: "",
             sellAssetInput: "",
-            sellAsset: "1.3.0",
+            sellAsset: "",
             sellAssets: [],
             sellAmount: "",
             sellImgName: "BTS",
             receiveAssetInput: "",
-            receiveAsset: "1.3.0",
+            receiveAsset: "",
             receiveAssets: [],
             receiveAmount: "",
             receiveImgName: "BTS",
@@ -50,9 +50,7 @@ class QuickTrade extends Component {
             lookupQuote: "",
             orders: [],
             fees: null,
-            prices: null,
-            sellAssetHasError: false,
-            receiveAssetHasError: false
+            prices: null
         };
         this.onSellAssetInputChange = this.onSellAssetInputChange.bind(this);
         this.onReceiveAssetInputChange = this.onReceiveAssetInputChange.bind(
@@ -218,59 +216,109 @@ class QuickTrade extends Component {
     onSellAssetInputChange(e) {
         const {receiveAsset} = this.state;
         if (e === receiveAsset) {
-            this.setState({
-                sellAssetHasError: true,
-                receiveAssetHasError: true
-            });
-            return;
-        }
-        const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "BTS";
-        this.setState(
-            {
-                sellAssetInput: e,
-                sellAsset: e,
-                sellImgName: assetImage,
-                sellAmount: "",
-                receiveAmount: "",
-                sellAssetHasError: false,
-                receiveAssetHasError: false
-            },
-            () => {
-                const {sellAsset, receiveAsset} = this.state;
-                if (sellAsset && receiveAsset) {
-                    this._subToMarket(receiveAsset, sellAsset);
+            const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "BTS";
+            this.setState(
+                state => {
+                    return {
+                        sellAssetInput: e,
+                        sellAsset: e,
+                        sellImgName: assetImage,
+                        sellAmount: "",
+                        receiveAmount: "",
+                        receiveAsset: state.sellAsset,
+                        receiveAssetInput: state.sellAssetInput,
+                        receiveImgName: state.sellImgName
+                    };
+                },
+                () => {
+                    const {sellAsset, receiveAsset} = this.state;
+                    if (sellAsset && receiveAsset) {
+                        this._subToMarket(receiveAsset, sellAsset);
+                    }
                 }
-            }
-        );
+            );
+        } else {
+            const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "BTS";
+            this.setState(
+                {
+                    sellAssetInput: e,
+                    sellAsset: e,
+                    sellImgName: assetImage,
+                    sellAmount: "",
+                    receiveAmount: ""
+                },
+                () => {
+                    const {sellAsset, receiveAsset} = this.state;
+                    if (sellAsset && receiveAsset) {
+                        this._subToMarket(receiveAsset, sellAsset);
+                    }
+                }
+            );
+        }
     }
 
     onReceiveAssetInputChange(e) {
-        const {sellAsset} = this.state;
-        if (e === sellAsset) {
-            this.setState({
-                sellAssetHasError: true,
-                receiveAssetHasError: true
-            });
-            return;
-        }
+        const {sellAsset, receiveAsset, sellAssets} = this.state;
         const assetImage = e ? ChainStore.getAsset(e).get("symbol") : "BTS";
-        this.setState(
-            {
-                receiveAssetInput: e,
-                receiveAsset: e,
-                receiveImgName: assetImage,
-                sellAmount: "",
-                receiveAmount: "",
-                sellAssetHasError: false,
-                receiveAssetHasError: false
-            },
-            () => {
-                const {sellAsset, receiveAsset} = this.state;
-                if (sellAsset && receiveAsset) {
-                    this._subToMarket(receiveAsset, sellAsset);
+        if (e === sellAsset && sellAssets.includes(receiveAsset)) {
+            this.setState(
+                state => {
+                    return {
+                        receiveAssetInput: e,
+                        receiveAsset: e,
+                        receiveImgName: assetImage,
+                        receiveAmount: "",
+                        sellAmount: "",
+                        sellAsset: state.receiveAsset,
+                        sellAssetInput: state.receiveAssetInput,
+                        sellImgName: state.receiveImgName
+                    };
+                },
+                () => {
+                    const {sellAsset, receiveAsset} = this.state;
+                    if (sellAsset && receiveAsset) {
+                        this._subToMarket(receiveAsset, sellAsset);
+                    }
                 }
-            }
-        );
+            );
+        } else if (e === sellAsset) {
+            this.setState(
+                state => {
+                    return {
+                        receiveAssetInput: e,
+                        receiveAsset: e,
+                        receiveImgName: assetImage,
+                        receiveAmount: "",
+                        sellAmount: "",
+                        sellAsset: "",
+                        sellAssetInput: "",
+                        sellImgName: "BTS"
+                    };
+                },
+                () => {
+                    const {sellAsset, receiveAsset} = this.state;
+                    if (sellAsset && receiveAsset) {
+                        this._subToMarket(receiveAsset, sellAsset);
+                    }
+                }
+            );
+        } else {
+            this.setState(
+                {
+                    receiveAssetInput: e,
+                    receiveAsset: e,
+                    receiveImgName: assetImage,
+                    sellAmount: "",
+                    receiveAmount: ""
+                },
+                () => {
+                    const {sellAsset, receiveAsset} = this.state;
+                    if (sellAsset && receiveAsset) {
+                        this._subToMarket(receiveAsset, sellAsset);
+                    }
+                }
+            );
+        }
     }
 
     onReceiveAssetSearch(e) {
@@ -322,18 +370,13 @@ class QuickTrade extends Component {
             const {currentAccount} = this.props;
             receiveAssets = getAssetsToSell(currentAccount);
         }
-        const assetImage = asset
-            ? ChainStore.getAsset(asset).get("symbol")
-            : "BTS";
 
         this.intervalId = setInterval(() => {
             clearInterval(this.intervalId);
             this.setState(
                 {
-                    receiveAsset: asset,
                     receiveAssets,
-                    activeSearch: false,
-                    receiveImgName: assetImage
+                    activeSearch: false
                 },
                 () => {
                     const {sellAsset, receiveAsset} = this.state;
@@ -347,19 +390,16 @@ class QuickTrade extends Component {
 
     onSellAmountChange(e) {
         if (!this.state.mounted) return;
-        const {sellAsset, receiveAsset} = this.state;
-        if (sellAsset === receiveAsset) {
-            this.setState({
-                sellAssetHasError: true,
-                receiveAssetHasError: true
-            });
-            return;
-        }
         const {amount} = e;
+        let {receiveAmount} = this.state;
+        if (amount === "") {
+            receiveAmount = "";
+        }
         this.setState(
             {
                 sellAmount: amount,
-                activeInput: "sell"
+                activeInput: "sell",
+                receiveAmount
             },
             () => {
                 this.getOrders();
@@ -369,19 +409,16 @@ class QuickTrade extends Component {
 
     onReceiveAmountChange(e) {
         if (!this.state.mounted) return;
-        const {sellAsset, receiveAsset} = this.state;
-        if (sellAsset === receiveAsset) {
-            this.setState({
-                sellAssetHasError: true,
-                receiveAssetHasError: true
-            });
-            return;
-        }
         const {amount} = e;
+        let {sellAmount} = this.state;
+        if (amount === "") {
+            sellAmount = "";
+        }
         this.setState(
             {
                 receiveAmount: amount,
-                activeInput: "receive"
+                activeInput: "receive",
+                sellAmount
             },
             () => {
                 this.getOrders();
@@ -403,14 +440,18 @@ class QuickTrade extends Component {
 
     onSwap() {
         if (this.isSwappable()) {
-            const {
+            let {
                 sellAsset,
                 receiveAsset,
                 sellImgName,
                 receiveImgName,
                 sellAssetInput,
-                receiveAssetInput
+                receiveAssetInput,
+                receiveAssets
             } = this.state;
+            if (!receiveAssets.includes(sellAsset)) {
+                receiveAssets = [...receiveAssets, sellAsset];
+            }
             this.setState({
                 sellAsset: receiveAsset,
                 receiveAsset: sellAsset,
@@ -419,7 +460,8 @@ class QuickTrade extends Component {
                 sellImgName: receiveImgName,
                 receiveImgName: sellImgName,
                 sellAmount: "",
-                receiveAmount: ""
+                receiveAmount: "",
+                receiveAssets
             });
         }
     }
@@ -860,8 +902,6 @@ class QuickTrade extends Component {
             receiveAssets,
             receiveAmount,
             receiveImgName,
-            sellAssetHasError,
-            receiveAssetHasError,
             sub
         } = this.state;
 
@@ -895,8 +935,6 @@ class QuickTrade extends Component {
                     onReceiveAmountChange={this.onReceiveAmountChange}
                     onReceiveImageError={this.onReceiveImageError}
                     onReceiveAssetSearch={this.onReceiveAssetSearch}
-                    sellAssetHasError={sellAssetHasError}
-                    receiveAssetHasError={receiveAssetHasError}
                     onSwap={this.onSwap}
                     isSwappable={this.isSwappable()}
                 />

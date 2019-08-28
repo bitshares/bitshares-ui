@@ -40,8 +40,7 @@ class AmountSelector2 extends React.Component {
             onImageError,
             imgName,
             placeholder,
-            tooltipText,
-            assetHasError
+            tooltipText
         } = this.props;
 
         const labelText = (
@@ -64,7 +63,6 @@ class AmountSelector2 extends React.Component {
                 onChange={onAssetInputChange}
                 assets={assets}
                 onSearch={onSearch}
-                enableWhenOnlyOne={true}
             />
         );
 
@@ -105,9 +103,7 @@ class AmountSelector2 extends React.Component {
                     </Col>
                     <Col span={19}>
                         <Tooltip placement="top" title={tooltipText}>
-                            <span className={assetHasError ? "has-error" : ""}>
-                                {assetSelector}
-                            </span>
+                            {assetSelector}
                         </Tooltip>
                         {amountSelector}
                     </Col>
