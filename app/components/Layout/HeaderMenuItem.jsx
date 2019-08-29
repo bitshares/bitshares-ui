@@ -30,14 +30,19 @@ class HeaderMenuItem extends React.Component {
             href = target;
         }
 
-        // Defalut icon title if not set
-        if (!icon.title) {
-            icon.title = "icons." + icon.name;
+        let actualIcon = icon;
+        if (isString(icon)) {
+            actualIcon = {name: icon};
+        }
+
+        // Default icon title if not set
+        if (!actualIcon.title) {
+            actualIcon.title = "icons." + actualIcon.name;
         }
 
         // Default icon size if not set
-        if (!icon.size) {
-            icon.size = "1_5x";
+        if (!actualIcon.size) {
+            actualIcon.size = "1_5x";
         }
 
         // Convert sigle strings to array
@@ -115,14 +120,14 @@ class HeaderMenuItem extends React.Component {
                     href={href}
                 >
                     <Icon
-                        size={icon.size}
+                        size={actualIcon.size}
                         style={{
                             position: "relative",
                             top: 0,
                             left: -8
                         }}
-                        name={icon.name}
-                        title={icon.title}
+                        name={actualIcon.name}
+                        title={actualIcon.title}
                     />
                     <Translate
                         className="column-hide-small"

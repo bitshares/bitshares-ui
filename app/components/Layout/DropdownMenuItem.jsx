@@ -21,14 +21,19 @@ class DropdownMenuItem extends React.Component {
             disabled
         } = this.props;
 
-        // Defalut icon title if not set
-        if (!icon.title) {
-            icon.title = "icons." + icon.name;
+        let actualIcon = icon;
+        if (isString(icon)) {
+            actualIcon = {name: icon};
+        }
+
+        // Default icon title if not set
+        if (!actualIcon.title) {
+            actualIcon.title = "icons." + actualIcon.name;
         }
 
         // Default icon size if not set
-        if (!icon.size) {
-            icon.size = "2x";
+        if (!actualIcon.size) {
+            actualIcon.size = "2x";
         }
 
         // Convert sigle strings to array
@@ -107,9 +112,9 @@ class DropdownMenuItem extends React.Component {
             >
                 <div className="table-cell">
                     <Icon
-                        size={icon.size}
-                        name={icon.name}
-                        title={icon.title}
+                        size={actualIcon.size}
+                        name={actualIcon.name}
+                        title={actualIcon.title}
                     />
                 </div>
                 <div className="table-cell">
