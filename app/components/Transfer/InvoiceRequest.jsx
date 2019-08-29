@@ -16,7 +16,6 @@ import {
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import CopyButton from "../Utility/CopyButton";
-import CopyToClipboard from "react-copy-to-clipboard";
 
 let id = 1;
 
@@ -99,9 +98,9 @@ class InvoiceRequest extends React.Component {
         if (keys.length === 1) {
             return;
         }
-
+        const nextKeys = keys.filter(key => key !== k);
         form.setFieldsValue({
-            keys: keys.filter(key => key !== k)
+            keys: nextKeys
         });
     };
 
@@ -119,7 +118,9 @@ class InvoiceRequest extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const {line_items, memo, note, to_label} = values;
+                let {line_items, memo, note, to_label} = values;
+                // remove empty lines
+                line_items = line_items.filter(item => !!item);
                 this._printInvoice({
                     currency,
                     line_items,
