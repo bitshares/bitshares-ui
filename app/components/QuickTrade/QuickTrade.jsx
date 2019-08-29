@@ -27,9 +27,10 @@ import {ChainValidation} from "bitsharesjs";
 import {lookupAssets} from "../Exchange/MarketPickerHelpers";
 import counterpart from "counterpart";
 import LinkToAccountById from "../Utility/LinkToAccountById";
-import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
+import {Asset, LimitOrderCreate} from "common/MarketClasses";
 import {Notification} from "bitshares-ui-style-guide";
 import FormattedPrice from "../Utility/FormattedPrice";
+import AssetName from "../Utility/AssetName";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -491,7 +492,6 @@ class QuickTrade extends Component {
             amount: receiveAmount * 10 ** receiveAssetPrecision
         });
         const expirationTime = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
-        const price = new Price({base: toReceive, quote: forSale});
 
         const order = new LimitOrderCreate({
             for_sale: forSale,
@@ -624,6 +624,39 @@ class QuickTrade extends Component {
             : false;
     }
 
+    _getTransactionFee(denominationAsset) {
+        const {fees, prices, sellAsset} = this.state;
+        if (!denominationAsset || denominationAsset === sellAsset) {
+            return (
+                fees.transactionFee[sellAsset].fee.amount /
+                10 ** fees.transactionFee[sellAsset].fee.precision
+            );
+        } else {
+            return (
+                (fees.transactionFee[sellAsset].fee.amount /
+                    10 ** fees.transactionFee[sellAsset].fee.precision) *
+                prices.latestPrice
+            );
+        }
+    }
+
+    _getMarketFee(denomindatedAsset) {
+        const {fees, prices, receiveAsset, receiveAmount} = this.state;
+        if (!denomindatedAsset || denomindatedAsset === receiveAsset) {
+            return (fees.marketFee.baseMarketFee * receiveAmount) / 10000;
+        } else {
+            return (
+                (fees.marketFee.baseMarketFee * receiveAmount) /
+                prices.latestPrice /
+                10000
+            );
+        }
+    }
+
+    _getFeePercent(feeAmount, totalAmount) {
+        return +totalAmount ? (+totalAmount + +feeAmount) / totalAmount - 1 : 0;
+    }
+
     getDetails() {
         const {sub} = this.state;
         if (!sub) {
@@ -639,7 +672,7 @@ class QuickTrade extends Component {
         const priceSection = this.getPriceSection();
         const feeSection = this.getFeeSection();
         const ordersSection = this.getOrdersSection();
-        const totalPercentFee = this.getTotalPercentFee();
+        const totalPercentFee = (this.getTotalPercentFee() * 100).toFixed(2);
         const amountOfOrders = this.state.orders.length;
         const ordersCaption = amountOfOrders < 2 ? "order" : "orders";
         return (
@@ -671,7 +704,7 @@ class QuickTrade extends Component {
                 </Collapse.Panel>
                 <Collapse.Panel
                     header={counterpart.translate("exchange.fee")}
-                    extra={totalPercentFee}
+                    extra={`${totalPercentFee}%`}
                 >
                     {feeSection}
                 </Collapse.Panel>
@@ -691,9 +724,7 @@ class QuickTrade extends Component {
 
     showDetails() {
         const {sellAsset, receiveAsset, sellAmount, receiveAmount} = this.state;
-        return sellAsset && receiveAsset && sellAmount && receiveAmount
-            ? true
-            : false;
+        return sellAsset && receiveAsset && +sellAmount && +receiveAmount;
     }
 
     getPriceSection() {
@@ -781,27 +812,29 @@ class QuickTrade extends Component {
     }
 
     getFeeSection() {
-        const {
-            fees,
-            sellAmount,
-            receiveAmount,
-            sellAsset,
-            receiveAsset
-        } = this.state;
+        const {sellAmount, receiveAmount, sellAsset, receiveAsset} = this.state;
         const sellAssetSymbol = ChainStore.getAsset(sellAsset).get("symbol");
         const receiveAssetSymbol = ChainStore.getAsset(receiveAsset).get(
             "symbol"
         );
-        const transactionFee =
-            fees.transactionFee[sellAsset].fee.amount /
-            10 ** fees.transactionFee[sellAsset].fee.precision;
-        let transactionFeePercent = "";
-        if (sellAmount > 0) {
-            transactionFeePercent = (
-                ((+sellAmount + +transactionFee) * 100) / sellAmount -
-                100
-            ).toFixed(2);
-        }
+        const sellAssetPrecision = ChainStore.getAsset(sellAsset).get(
+            "precision"
+        );
+        const receiveAssetPrecision = ChainStore.getAsset(receiveAsset).get(
+            "precision"
+        );
+
+        const transactionFee = this._getTransactionFee().toFixed(
+            sellAssetPrecision
+        );
+        const transactionFeePercent = (
+            this._getFeePercent(this._getTransactionFee(), sellAmount) * 100
+        ).toFixed(2);
+        const marketFee = this._getMarketFee().toFixed(receiveAssetPrecision);
+        const marketFeePercent = (
+            this._getFeePercent(this._getMarketFee(), receiveAmount) * 100
+        ).toFixed(2);
+
         let [
             liqidityPenaltyMarket,
             liqidityPenaltyFeed
@@ -831,7 +864,7 @@ class QuickTrade extends Component {
                         {counterpart.translate(
                             "exchange.quick_trade_details.market_fee"
                         )}
-                        {` ${fees.marketFee.baseMarketFeePercent}`}
+                        {` ${marketFeePercent}%`}
                     </div>
                     <div>
                         {counterpart.translate(
@@ -842,9 +875,16 @@ class QuickTrade extends Component {
                 </Col>
                 <Col span={12} style={{textAlign: "right"}}>
                     <div>{liqidityPenalty}</div>
-                    <div>{`${(fees.marketFee.baseMarketFee * receiveAmount) /
-                        10000} ${receiveAssetSymbol}`}</div>
-                    <div>{`${transactionFee} ${sellAssetSymbol}`}</div>
+                    <div>
+                        {marketFee}
+                        &nbsp;
+                        <AssetName name={receiveAssetSymbol} noTip />
+                    </div>
+                    <div>
+                        {transactionFee}
+                        &nbsp;
+                        <AssetName name={sellAssetSymbol} noTip />
+                    </div>
                 </Col>
             </Row>
         );
@@ -864,6 +904,18 @@ class QuickTrade extends Component {
                 price: item.price
             };
         });
+
+        const amount = (
+            <span>
+                {counterpart.translate("exchange.quick_trade_details.amount")}
+                &nbsp;(
+                <AssetName
+                    name={ChainStore.getAsset(sellAsset).get("symbol")}
+                    noTip
+                />
+                )
+            </span>
+        );
 
         const price = (
             <span>
@@ -897,9 +949,7 @@ class QuickTrade extends Component {
                 key: "seller"
             },
             {
-                title: `${counterpart.translate(
-                    "exchange.quick_trade_details.amount"
-                )} (${ChainStore.getAsset(sellAsset).get("symbol")})`,
+                title: amount,
                 dataIndex: "amount",
                 key: "amount"
             },
@@ -947,24 +997,17 @@ class QuickTrade extends Component {
     }
 
     getTotalPercentFee() {
-        const {fees, sellAmount, sellAsset} = this.state;
-        const transactionFee =
-            fees.transactionFee[sellAsset].fee.amount /
-            10 ** fees.transactionFee[sellAsset].fee.precision;
-        let transactionFeePercent = "";
-        if (sellAmount > 0) {
-            transactionFeePercent = (
-                ((+sellAmount + +transactionFee) * 100) / sellAmount -
-                100
-            ).toFixed(2);
-        }
-        const marketFee = fees.marketFee.baseMarketFeePercent.slice(
-            0,
-            fees.marketFee.baseMarketFeePercent.length - 1
+        const {sellAmount, receiveAmount} = this.state;
+        const transactionFeePercent = this._getFeePercent(
+            this._getTransactionFee(),
+            sellAmount
         );
-        const liquidityFee =
-            Math.round(this.getLiquidityPenalty()[0] * 10000) / 100;
-        return +transactionFeePercent + +marketFee + liquidityFee + "%";
+        const marketFeePercent = this._getFeePercent(
+            this._getMarketFee(),
+            receiveAmount
+        );
+        const liquidityFee = this.getLiquidityPenalty()[0];
+        return transactionFeePercent + marketFeePercent + liquidityFee;
     }
 
     render() {
