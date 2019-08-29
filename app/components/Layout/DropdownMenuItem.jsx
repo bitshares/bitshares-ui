@@ -16,7 +16,7 @@ class DropdownMenuItem extends React.Component {
             icon,
             text,
             behavior,
-            submenu, // {target, text, disabled}
+            submenu, // {target, text, disabled} || [{target, text, hidden}]
             hidden,
             disabled
         } = this.props;
@@ -104,7 +104,8 @@ class DropdownMenuItem extends React.Component {
                 className={cnames(
                     {
                         active: patternMatched,
-                        disabled: disabled
+                        disabled: disabled,
+                        "has-submenu": isArray(submenu)
                     },
                     additionalClassName
                 )}

@@ -1,7 +1,10 @@
 import React from "react";
+import {isArray, isString} from "lodash-es";
 import AccountActions from "actions/AccountActions";
 import DropdownMenuItem from "./DropdownMenuItem";
 import DividerMenuItem from "./DividerMenuItem";
+import MenuItemType from "./MenuItemType";
+import MenuDataStructure from "./MenuDataStructure";
 
 export default class DropDownMenu extends React.Component {
     shouldComponentUpdate(np) {
@@ -34,10 +37,41 @@ export default class DropDownMenu extends React.Component {
             tradeUrl,
             enableDepositWithdraw,
             currentAccount,
-            contacts
+            contacts,
+            showSend,
+            showDeposit,
+            showWithdraw,
+            toggleDropdownSubmenu
         } = this.props;
 
         let isContact = contacts.has(currentAccount);
+
+        let clickHandlers = {
+            toggleLock: toggleLock,
+            followUnfollow: this[
+                isContact ? "_onRemoveContact" : "_onAddContact"
+            ].bind(this),
+            showSend: showSend,
+            showDeposit: showDeposit,
+            showWithdraw: showWithdraw,
+            toggleDropdownSubmenu: toggleDropdownSubmenu
+        };
+
+        let renderingProps = {
+            isAccountLocked: locked,
+            passwordLogin: passwordLogin,
+            currentAccount: currentAccount,
+            isContact: isContact,
+            isMyAccount: isMyAccount,
+            showAccountLinks: showAccountLinks,
+            tradeUrl: tradeUrl,
+            enableDepositWithdraw: enableDepositWithdraw
+        };
+
+        let menuDataStructure = MenuDataStructure.getData(
+            clickHandlers,
+            renderingProps
+        );
 
         return (
             <ul
@@ -49,306 +83,60 @@ export default class DropDownMenu extends React.Component {
                     overflowY: "auto"
                 }}
             >
-                <DropdownMenuItem
-                    currentPath={active}
-                    target={toggleLock}
-                    icon={{
-                        name: "power"
-                    }}
-                    text={`header.${
-                        this.props.locked ? "unlock_short" : "lock_short"
-                    }`}
-                />
-
-                <DividerMenuItem />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern={`/create-account/${
-                        !passwordLogin ? "wallet" : "password"
-                    }`}
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/create-account/${
-                            !passwordLogin ? "wallet" : "password"
-                        }`
-                    )}
-                    icon={{
-                        name: "user",
-                        title: "icons.user.create_account"
-                    }}
-                    text="header.create_account"
-                    hidden={!locked}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/account"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}`
-                    )}
-                    icon={{
-                        name: "dashboard"
-                    }}
-                    text="header.dashboard"
-                    hidden={locked}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    target={this[
-                        isContact ? "_onRemoveContact" : "_onAddContact"
-                    ].bind(this)}
-                    icon={{
-                        name: `${isContact ? "minus" : "plus"}-circle`,
-                        title: isContact
-                            ? "icons.minus_circle.remove_contact"
-                            : "icons.plus_circle.add_contact"
-                    }}
-                    text={`account.${isContact ? "unfollow" : "follow"}`}
-                    hidden={isMyAccount || !showAccountLinks}
-                />
-
-                <DividerMenuItem hidden={isMyAccount || !showAccountLinks} />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/market/"
-                    additionalClassName="column-show-small"
-                    target={this.props.onNavigate.bind(this, tradeUrl)}
-                    icon={{
-                        name: "trade",
-                        title: "icons.trade.exchange"
-                    }}
-                    text="header.exchange"
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/explorer"
-                    additionalClassName="column-show-small"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        "/explorer/blocks"
-                    )}
-                    icon={{
-                        name: "server"
-                    }}
-                    text="header.explorer"
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    target={this.props.showSend}
-                    icon={{
-                        name: "transfer"
-                    }}
-                    text="header.payments"
-                    disabled={!showAccountLinks}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    target={this.props.showDeposit}
-                    icon={{
-                        name: "deposit",
-                        title: "icons.deposit.deposit"
-                    }}
-                    text="modal.deposit.submit"
-                    disabled={!enableDepositWithdraw}
-                    submenu={{
-                        target: this.props.onNavigate.bind(
-                            this,
-                            "/deposit-withdraw"
-                        ),
-                        text: "header.deposit_legacy",
-                        disabled: !enableDepositWithdraw
-                    }}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    target={this.props.showWithdraw}
-                    icon={{
-                        name: "withdraw"
-                    }}
-                    text="modal.withdraw.submit"
-                    disabled={!enableDepositWithdraw}
-                    submenu={{
-                        target: this.props.onNavigate.bind(
-                            this,
-                            "/deposit-withdraw"
-                        ),
-                        text: "header.withdraw_legacy",
-                        disabled: !enableDepositWithdraw
-                    }}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/settings"
-                    additionalClassName="desktop-only"
-                    target={this.props.onNavigate.bind(this, "/settings")}
-                    icon={{
-                        name: "cogs"
-                    }}
-                    text="header.settings"
-                />
-
-                <DividerMenuItem additionalClassName="desktop-only" />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/spotlight"
-                    target={this.props.onNavigate.bind(this, "/spotlight")}
-                    icon={{
-                        name: "showcases"
-                    }}
-                    text="header.showcases"
-                />
-
-                <DividerMenuItem />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/settings"
-                    additionalClassName="mobile-only has-submenu"
-                    target={this.props.toggleDropdownSubmenu}
-                    icon={{
-                        name: "cogs"
-                    }}
-                    text="header.settings"
-                />
-
-                <DividerMenuItem additionalClassName="mobile-only" />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/news"
-                    target={this.props.onNavigate.bind(this, "/news")}
-                    icon={{
-                        name: "news"
-                    }}
-                    text="news.news"
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/voting"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/voting`
-                    )}
-                    icon={{
-                        name: "thumbs-up",
-                        title: "icons.thumbs_up"
-                    }}
-                    text="account.voting"
-                    disabled={!showAccountLinks}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern={["/assets", "/account/"]}
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/assets`
-                    )}
-                    icon={{
-                        name: "assets"
-                    }}
-                    text="explorer.assets.title"
-                    disabled={!showAccountLinks}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/signedmessages"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/signedmessages`
-                    )}
-                    icon={{
-                        name: "text",
-                        title: "icons.text.signed_messages"
-                    }}
-                    text="account.signedmessages.menuitem"
-                    disabled={!showAccountLinks}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/member-stats"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/member-stats`
-                    )}
-                    icon={{
-                        name: "text",
-                        title: "icons.text.membership_stats"
-                    }}
-                    text="account.member.stats"
-                    disabled={!showAccountLinks}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/vesting"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/vesting`
-                    )}
-                    icon={{
-                        name: "hourglass"
-                    }}
-                    text="account.vesting.title"
-                    hidden={!isMyAccount}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/whitelist"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/whitelist`
-                    )}
-                    icon={{
-                        name: "list"
-                    }}
-                    text="account.whitelist.title"
-                    disabled={!showAccountLinks}
-                />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/permissions"
-                    target={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/permissions`
-                    )}
-                    icon={{
-                        name: "warning",
-                        title: ""
-                    }}
-                    text="account.permissions"
-                />
-
-                <DividerMenuItem />
-
-                <DropdownMenuItem
-                    currentPath={active}
-                    includePattern="/accounts"
-                    target={this.props.onNavigate.bind(this, "/accounts")}
-                    icon={{
-                        name: "folder",
-                        title: ""
-                    }}
-                    text="explorer.accounts.title"
-                    hidden={!showAccountLinks}
-                />
-
-                <DividerMenuItem hidden={!showAccountLinks} />
+                {menuDataStructure.map((menuItem, index) => {
+                    switch (menuItem.inDropdownBehavior) {
+                        case MenuItemType.Always:
+                        case MenuItemType.Dynamic:
+                            // Convert pure path to click handler
+                            let clickHandler = isString(menuItem.target)
+                                ? this.props.onNavigate.bind(
+                                      this,
+                                      menuItem.target
+                                  )
+                                : menuItem.target;
+                            if (
+                                menuItem.submenu &&
+                                !isArray(menuItem.submenu)
+                            ) {
+                                menuItem.submenu.target = isString(
+                                    menuItem.submenu.target
+                                )
+                                    ? this.props.onNavigate.bind(
+                                          this,
+                                          menuItem.submenu.target
+                                      )
+                                    : menuItem.submenu.target;
+                            }
+                            return (
+                                <DropdownMenuItem
+                                    key={index}
+                                    currentPath={active}
+                                    includePattern={menuItem.includePattern}
+                                    excludePattern={menuItem.excludePattern}
+                                    target={clickHandler}
+                                    additionalClassName={
+                                        menuItem.additionalClassName
+                                    }
+                                    icon={menuItem.icon}
+                                    text={menuItem.text}
+                                    behavior={menuItem.inDropdownBehavior}
+                                    submenu={menuItem.submenu}
+                                    hidden={menuItem.hidden}
+                                    disabled={menuItem.disabled}
+                                />
+                            );
+                        case MenuItemType.Divider:
+                            return (
+                                <DividerMenuItem
+                                    key={index}
+                                    additionalClassName={
+                                        menuItem.additionalClassName
+                                    }
+                                    hidden={menuItem.hidden}
+                                />
+                            );
+                    }
+                })}
             </ul>
         );
     }

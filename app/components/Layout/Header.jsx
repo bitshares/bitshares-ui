@@ -1,5 +1,6 @@
 import React from "react";
 import {connect} from "alt-react";
+import {isString} from "lodash-es";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
@@ -32,6 +33,7 @@ import HeaderMenuItem from "./HeaderMenuItem";
 import DividerMenuItem from "./DividerMenuItem";
 import SubmenuItem from "./SubmenuItem";
 import MenuItemType from "./MenuItemType";
+import MenuDataStructure from "./MenuDataStructure";
 
 import {getLogo} from "branding";
 var logo = getLogo();
@@ -604,6 +606,20 @@ class Header extends React.Component {
             )
         };
 
+        let clickHandlers = {};
+
+        let renderingProps = {
+            currentAccount: currentAccount,
+            tradeUrl: tradeUrl,
+
+            createAccountLink: createAccountLink
+        };
+
+        let menuDataStructure = MenuDataStructure.getData(
+            clickHandlers,
+            renderingProps
+        );
+
         return (
             <div className="header-container" style={{minHeight: "64px"}}>
                 <div>
@@ -658,230 +674,53 @@ class Header extends React.Component {
                         <ul className="menu-bar">
                             <li>{dashboard}</li>
 
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern={["account/", "/account/"]}
-                                excludePattern={[
-                                    "/assets",
-                                    "/voting",
-                                    "/signedmessages",
-                                    "/member-stats",
-                                    "/vesting",
-                                    "/whitelist",
-                                    "/permissions"
-                                ]}
-                                target={`/account/${currentAccount}`}
-                                icon={{
-                                    name: "dashboard"
-                                }}
-                                text="header.dashboard"
-                                hidden={currentAccount && !createAccountLink}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                hideClassName="column-hide-xxs"
-                                includePattern="market/"
-                                target={this._onNavigate.bind(this, tradeUrl)}
-                                icon={{
-                                    name: "trade",
-                                    title: "icons.trade.exchange"
-                                }}
-                                text="header.exchange"
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                hideClassName="column-hide-xs"
-                                includePattern="explorer"
-                                target={this._onNavigate.bind(
-                                    this,
-                                    "/explorer/blocks"
-                                )}
-                                icon={{
-                                    name: "server",
-                                    size: "2x"
-                                }}
-                                text="header.explorer"
-                            />
-
-                            {/* Dynamic Menu Items - Common */}
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="deposit-withdraw"
-                                icon={{
-                                    name: "deposit-withdraw",
-                                    title: "icons.deposit.deposit_withdraw"
-                                }}
-                                text="header.deposit-withdraw"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="settings"
-                                icon={{
-                                    name: "cogs"
-                                }}
-                                text="header.settings"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="spotlight"
-                                icon={{
-                                    name: "showcases"
-                                }}
-                                text="header.showcases"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="news"
-                                icon={{
-                                    name: "news"
-                                }}
-                                text="news.news"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/voting"
-                                icon={{
-                                    name: "thumbs-up",
-                                    title: "icons.thumbs_up"
-                                }}
-                                text="account.voting"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/assets"
-                                excludePattern="explorer"
-                                icon={{
-                                    name: "assets"
-                                }}
-                                text="explorer.assets.title"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/signedmessages"
-                                icon={{
-                                    name: "text",
-                                    title: "icons.text.signed_messages"
-                                }}
-                                text="account.signedmessages.menuitem"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/member-stats"
-                                icon={{
-                                    name: "text",
-                                    title: "icons.text.membership_stats"
-                                }}
-                                text="account.member.stats"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/vesting"
-                                icon={{
-                                    name: "hourglass"
-                                }}
-                                text="account.vesting.title"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/whitelist"
-                                icon={{
-                                    name: "list"
-                                }}
-                                text="account.whitelist.title"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/permissions"
-                                icon={{
-                                    name: "warning"
-                                }}
-                                text="account.permissions"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            {/* Dynamic Menu Items - Unique */}
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="help"
-                                icon={{
-                                    name: "question-circle",
-                                    title: "icons.question_circle"
-                                }}
-                                text="header.help"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/borrow"
-                                icon={{
-                                    name: "borrow"
-                                }}
-                                text="showcases.borrow.title"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/barter"
-                                icon={{
-                                    name: "barter"
-                                }}
-                                text="showcases.barter.title"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/direct-debit"
-                                icon={{
-                                    name: "direct_debit"
-                                }}
-                                text="showcases.direct_debit.title"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/prediction"
-                                icon={{
-                                    name: "prediction-large"
-                                }}
-                                text="showcases.prediction_market.title"
-                                behavior={MenuItemType.Dynamic}
-                            />
-
-                            <HeaderMenuItem
-                                currentPath={active}
-                                includePattern="/htlc"
-                                icon={{
-                                    name: "htlc"
-                                }}
-                                text="showcases.htlc.title_short"
-                                behavior={MenuItemType.Dynamic}
-                            />
+                            {menuDataStructure.map((menuItem, index) => {
+                                switch (menuItem.inHeaderBehavior) {
+                                    case MenuItemType.Always:
+                                    case MenuItemType.Dynamic:
+                                        // Convert pure path to click handler
+                                        let clickHandler = isString(
+                                            menuItem.target
+                                        )
+                                            ? this._onNavigate.bind(
+                                                  this,
+                                                  menuItem.target
+                                              )
+                                            : menuItem.target;
+                                        return (
+                                            <HeaderMenuItem
+                                                key={index}
+                                                currentPath={active}
+                                                includePattern={
+                                                    menuItem.includePattern
+                                                }
+                                                excludePattern={
+                                                    menuItem.excludePattern
+                                                }
+                                                target={clickHandler}
+                                                hideClassName={
+                                                    menuItem.hideClassName
+                                                }
+                                                icon={menuItem.icon}
+                                                text={menuItem.text}
+                                                behavior={
+                                                    menuItem.inHeaderBehavior
+                                                }
+                                                hidden={menuItem.hidden}
+                                            />
+                                        );
+                                    case MenuItemType.Divider:
+                                        return (
+                                            <DividerMenuItem
+                                                key={index}
+                                                additionalClassName={
+                                                    menuItem.additionalClassName
+                                                }
+                                                hidden={menuItem.hidden}
+                                            />
+                                        );
+                                }
+                            })}
                         </ul>
                     </div>
                 </div>
