@@ -16,8 +16,7 @@ import MarketsActions from "actions/MarketsActions";
 import {
     getAssetsToSell,
     getPrices,
-    getOrdersWithSellAmount,
-    getOrdersWithReceiveAmount,
+    getOrders,
     getFees
 } from "./QuickTradeHelper";
 import {ChainStore} from "bitsharesjs";
@@ -51,6 +50,7 @@ class QuickTrade extends Component {
             activeInput: "",
             lookupQuote: "",
             orders: [],
+            orderView: "amount",
             fees: null,
             prices: null
         };
@@ -64,6 +64,7 @@ class QuickTrade extends Component {
         this.onReceiveImageError = this.onReceiveImageError.bind(this);
         this.onReceiveAssetSearch = this.onReceiveAssetSearch.bind(this);
         this.onSwap = this.onSwap.bind(this);
+        this.hendleOrderView = this.hendleOrderView.bind(this);
         this.handleSell = this.handleSell.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this._subToMarket = this._subToMarket.bind(this);
@@ -97,7 +98,7 @@ class QuickTrade extends Component {
             nextProps.marketData.combinedBids !==
             this.props.marketData.combinedBids
         ) {
-            this.getOrders();
+            this._getOrders();
         }
     }
 
@@ -159,7 +160,7 @@ class QuickTrade extends Component {
         });
     }
 
-    getOrders() {
+    _getOrders() {
         const {combinedBids} = this.props.marketData;
         if (combinedBids && combinedBids.length) {
             const {
@@ -178,9 +179,10 @@ class QuickTrade extends Component {
                 const sellAssetPrecision = ChainStore.getAsset(sellAsset).get(
                     "precision"
                 );
-                const orders = getOrdersWithSellAmount(
+                const orders = getOrders(
                     sellAmount * 10 ** sellAssetPrecision,
-                    combinedBids
+                    combinedBids,
+                    "sell"
                 );
                 this.setState(
                     {
@@ -197,9 +199,10 @@ class QuickTrade extends Component {
                 const receiveAssetPrecision = ChainStore.getAsset(
                     receiveAsset
                 ).get("precision");
-                const orders = getOrdersWithReceiveAmount(
+                const orders = getOrders(
                     receiveAmount * 10 ** receiveAssetPrecision,
-                    combinedBids
+                    combinedBids,
+                    "receive"
                 );
                 this.setState(
                     {
@@ -408,7 +411,7 @@ class QuickTrade extends Component {
                 receiveAmount
             },
             () => {
-                this.getOrders();
+                this._getOrders();
             }
         );
     }
@@ -427,7 +430,7 @@ class QuickTrade extends Component {
                 sellAmount
             },
             () => {
-                this.getOrders();
+                this._getOrders();
             }
         );
     }
@@ -470,6 +473,15 @@ class QuickTrade extends Component {
                 receiveAssets
             });
         }
+    }
+
+    hendleOrderView() {
+        this.setState(state => {
+            const orderView = state.orderView === "amount" ? "total" : "amount";
+            return {
+                orderView
+            };
+        });
     }
 
     handleSell() {
@@ -891,7 +903,7 @@ class QuickTrade extends Component {
     }
 
     getOrdersSection() {
-        const {orders, sellAsset, receiveAsset} = this.state;
+        const {orders, sellAsset, receiveAsset, orderView} = this.state;
         const sellAssetPrecision = ChainStore.getAsset(sellAsset).get(
             "precision"
         );
@@ -900,14 +912,26 @@ class QuickTrade extends Component {
                 key: item.order.id,
                 id: item.order.id,
                 seller: <LinkToAccountById account={item.order.seller} />,
-                amount: item.amount / 10 ** sellAssetPrecision,
+                amount: (
+                    <div onClick={this.hendleOrderView}>
+                        {orderView === "amount"
+                            ? item.amount / 10 ** sellAssetPrecision
+                            : item.total_amount / 10 ** sellAssetPrecision}
+                    </div>
+                ),
                 price: item.price
             };
         });
 
         const amount = (
             <span>
-                {counterpart.translate("exchange.quick_trade_details.amount")}
+                {orderView === "amount"
+                    ? counterpart.translate(
+                          "exchange.quick_trade_details.amount"
+                      )
+                    : counterpart.translate(
+                          "exchange.quick_trade_details.total"
+                      )}
                 &nbsp;(
                 <AssetName
                     name={ChainStore.getAsset(sellAsset).get("symbol")}
