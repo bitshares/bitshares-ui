@@ -1384,6 +1384,7 @@
         "request": {
             "title": "Request",
             "submit": "Submit",
+            "create_invoice_string": "Create invoice string",
             "identifier": "Identifier",
             "identifier_tooltip": "The identifier needs to be used as the memo/message when the request is paid.",
             "items": "Items",

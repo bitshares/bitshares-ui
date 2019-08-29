@@ -334,7 +334,7 @@ class InvoiceRequest extends React.Component {
                             htmlType="submit"
                             disabled={error}
                         >
-                            <Translate content="invoice.request.submit" />
+                            <Translate content="invoice.request.create_invoice_string" />
                         </Button>
                     </Form.Item>
                 </Form>
@@ -348,7 +348,10 @@ class InvoiceRequest extends React.Component {
                             />
                         </div>
                         <div style={{float: "right"}}>
-                            <CopyButton useDiv={false} text={"asdasd!"} />
+                            <CopyButton
+                                useDiv={false}
+                                text={this.state.invoiceData}
+                            />
                         </div>
                     </React.Fragment>
                 )}
