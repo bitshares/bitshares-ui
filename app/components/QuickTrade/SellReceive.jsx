@@ -100,9 +100,13 @@ class SellReceive extends Component {
                 <Icon
                     name="swap"
                     size="2x"
-                    style={{
-                        marginTop: "3rem"
-                    }}
+                    style={
+                        !smallScreen
+                            ? {
+                                  marginTop: "3rem"
+                              }
+                            : null
+                    }
                     onClick={onSwap}
                 />
             </div>

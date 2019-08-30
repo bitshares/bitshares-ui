@@ -90,9 +90,19 @@ class AmountSelector2 extends React.Component {
         );
 
         return (
-            <div className="amount-selector-2">
+            <div
+                className="amount-selector-2"
+                style={{
+                    minWidth: "3.5rem",
+                    width: "100%"
+                }}
+            >
                 {labelText}
-                <Row>
+                <Row
+                    style={{
+                        minWidth: "18rem"
+                    }}
+                >
                     <Col
                         style={{
                             minWidth: "3.5rem"
