@@ -21,6 +21,7 @@ import JSONModal from "components/Modal/JSONModal";
 const {operations} = grapheneChainTypes;
 const ops = Object.keys(operations);
 
+
 class Proposals extends Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired
@@ -240,11 +241,11 @@ class Proposals extends Component {
     }
 
     openJSONModal(id) {
-        this.setState({visibleId: id});
+        this.setState({ visibleId: id });
     }
 
     closeJSONModal = () => {
-        this.setState({visibleId: ""});
+        this.setState({ visibleId: "" });
     };
 
     render() {
@@ -266,12 +267,10 @@ class Proposals extends Component {
             const proposer = proposal.proposal.get("proposer");
             const expiration = proposal.proposal.get("expiration_time");
             const trxTypes = counterpart.translate("transaction.trxTypes");
-            const operations =
-                proposal.operations && proposal.operations.toJS();
-            const title =
-                operations.length > 1
-                    ? counterpart.translate("transaction.operations")
-                    : trxTypes[ops[operations[0] && operations[0][0]]];
+            const operations = proposal.operations && proposal.operations.toJS();
+            const title = operations.length > 1 ?
+                counterpart.translate("transaction.operations") :
+                trxTypes[ops[operations[0] && operations[0][0]]];
 
             let text = proposal.operations
                 .map((o, index) => {
@@ -318,11 +317,8 @@ class Proposals extends Component {
                         />
                         <JSONModal
                             visible={this.state.visibleId === id}
-                            operation={
-                                operations.length > 1
-                                    ? operations
-                                    : operations[0] && operations[0][1]
-                            }
+                            operation={operations.length > 1 ?
+                                operations : operations[0] && operations[0][1]}
                             title={title || ""}
                             hideModal={this.closeJSONModal}
                         />

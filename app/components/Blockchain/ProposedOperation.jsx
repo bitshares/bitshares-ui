@@ -12,32 +12,26 @@ const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
 import opComponents from "./operations";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {Icon as AntIcon} from "bitshares-ui-style-guide";
+import { Icon as AntIcon } from "bitshares-ui-style-guide";
 
 require("./operations.scss");
 
 let ops = Object.keys(operations);
 // let listings = account_constants.account_listing;
 
-export const TransactionIDAndExpiry = ({
-    id,
-    expiration,
-    style,
-    openJSONModal
-}) => {
+export const TransactionIDAndExpiry = ({ id, expiration, style, openJSONModal }) => {
     const endDate = counterpart.localize(new Date(expiration), {
         format: "short"
     });
     return (
         <b style={style}>
-            {openJSONModal ? (
+            {openJSONModal ?
                 <span className="cursor-pointer" onClick={openJSONModal}>
                     {id} <AntIcon type="file-search" />
                     {" | "}
-                </span>
-            ) : (
+                </span> :
                 <span>{id} | </span>
-            )}
+            }
             <span>
                 <Translate content="proposal.expires" />: {endDate}
             </span>

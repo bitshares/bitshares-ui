@@ -1,11 +1,11 @@
-import React, {Fragment} from "react";
+import React, { Fragment } from "react";
 import Translate from "react-translate-component";
 import {saveAs} from "file-saver";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import JSONModal from "components/Modal/JSONModal";
-import {Icon as AntIcon} from "bitshares-ui-style-guide";
+import { Icon as AntIcon } from "bitshares-ui-style-guide";
 import {
     ChainTypes as grapheneChainTypes,
     FetchChain,
@@ -291,11 +291,11 @@ class RecentTransactions extends React.Component {
     }
 
     openJSONModal(id) {
-        this.setState({visibleId: id});
+        this.setState({ visibleId: id });
     }
 
     closeJSONModal = () => {
-        this.setState({visibleId: ""});
+        this.setState({ visibleId: "" });
     };
 
     getDataSource(o, current_account_id) {
