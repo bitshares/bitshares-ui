@@ -117,8 +117,6 @@ class QuickTrade extends Component {
             if (qa === quoteAssetId && ba === baseAssetId) {
                 return;
             }
-        }
-        if (sub) {
             await MarketsActions.unSubscribeMarket(sellAsset, receiveAsset);
         }
         if (baseAssetId && quoteAssetId) {
@@ -686,7 +684,10 @@ class QuickTrade extends Component {
         const ordersSection = this.getOrdersSection();
         const totalPercentFee = (this.getTotalPercentFee() * 100).toFixed(2);
         const amountOfOrders = this.state.orders.length;
-        const ordersCaption = amountOfOrders < 2 ? "order" : "orders";
+        const ordersCaption =
+            amountOfOrders < 2
+                ? counterpart.translate("exchange.quick_trade_details.order")
+                : counterpart.translate("exchange.quick_trade_details.orders");
         return (
             <Collapse
                 className="asset-collapse"
