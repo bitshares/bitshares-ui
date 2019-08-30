@@ -185,9 +185,12 @@ class TransactionConfirm extends React.Component {
                   })
                 : counterpart.translate("transaction.transaction_confirmed");
 
-            error_message = this.props.error;
-            error_code = this.props.error_code;
-            error_data = JSON.stringify(this.props.error_data, null, " ");
+            ({error: error_message, error_code, error_data} = this.props);
+            error_data = (
+                <div>
+                    <pre>{JSON.stringify(error_data, null, 1)}</pre>
+                </div>
+            );
             if (error_code) {
                 error_message = `${error_code} - ${error_message}`;
             }
@@ -196,12 +199,15 @@ class TransactionConfirm extends React.Component {
                     <div>
                         {error_message}
                         <br />
-                        <a onClick={this.onShowDetailsClick}>
-                            {isErrorDetailsVisible
-                                ? counterpart.translate("transaction.hide")
-                                : counterpart.translate(
-                                      "transaction.show_more"
-                                  )}
+                        <a>
+                            <Translate
+                                onClick={this.onShowDetailsClick}
+                                content={
+                                    isErrorDetailsVisible
+                                        ? "transaction.hide"
+                                        : "transaction.show_more"
+                                }
+                            />
                         </a>
                     </div>
                 );
