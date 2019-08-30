@@ -7,8 +7,7 @@ class MenuDataStructure {
             followUnfollow,
             showSend,
             showDeposit,
-            showWithdraw,
-            toggleDropdownSubmenu
+            showWithdraw
         },
         renderingProps: {
             isAccountLocked,
@@ -18,6 +17,8 @@ class MenuDataStructure {
             showAccountLinks,
             tradeUrl,
             enableDepositWithdraw,
+
+            passwordLogin,
 
             currentAccount,
             createAccountLink
@@ -213,11 +214,50 @@ class MenuDataStructure {
             },
             {
                 includePattern: "/settings",
-                target: clickHandlers.toggleDropdownSubmenu,
                 additionalClassName: "mobile-only",
                 icon: "cogs",
                 text: "header.settings",
-                submenu: [],
+                submenu: [
+                    {
+                        target: "/settings/general",
+                        text: "settings.general"
+                    },
+                    {
+                        target: "/settings/wallet",
+                        hidden: renderingProps.passwordLogin
+                    },
+                    {
+                        target: "/settings/accounts",
+                        text: "settings.accounts"
+                    },
+                    {
+                        target: "/settings/password",
+                        text: "settings.password",
+                        hidden: renderingProps.passwordLogin
+                    },
+                    {
+                        target: "/settings/backup",
+                        text: "settings.backup",
+                        hidden: renderingProps.passwordLogin
+                    },
+                    {
+                        target: "/settings/restore",
+                        text: "settings.restore",
+                        hidden: renderingProps.passwordLogin
+                    },
+                    {
+                        target: "/settings/access",
+                        text: "settings.access"
+                    },
+                    {
+                        target: "/settings/faucet_address",
+                        text: "settings.faucet_address"
+                    },
+                    {
+                        target: "/settings/reset",
+                        text: "settings.reset"
+                    }
+                ],
                 inHeaderBehavior: MenuItemType.Never,
                 inDropdownBehavior: MenuItemType.Always
             },

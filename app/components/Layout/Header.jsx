@@ -10,7 +10,6 @@ import SendModal from "../Modal/SendModal";
 import DepositModal from "../Modal/DepositModal";
 import GatewayStore from "stores/GatewayStore";
 import Icon from "../Icon/Icon";
-import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -31,7 +30,6 @@ import AccountBrowsingMode from "../Account/AccountBrowsingMode";
 import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 import HeaderMenuItem from "./HeaderMenuItem";
 import DividerMenuItem from "./DividerMenuItem";
-import SubmenuItem from "./SubmenuItem";
 import MenuItemType from "./MenuItemType";
 import MenuDataStructure from "./MenuDataStructure";
 
@@ -42,10 +40,6 @@ var logo = getLogo();
 //     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
 // };
 
-const SUBMENUS = {
-    SETTINGS: "SETTINGS"
-};
-
 class Header extends React.Component {
     constructor(props) {
         super();
@@ -53,7 +47,6 @@ class Header extends React.Component {
             active: props.location.pathname,
             accountsListDropdownActive: false,
             dropdownActive: false,
-            dropdownSubmenuActive: false,
             isDepositModalVisible: false,
             hasDepositModalBeenShown: false,
             isWithdrawModalVisible: false,
@@ -67,8 +60,6 @@ class Header extends React.Component {
         );
         this._toggleDropdownMenu = this._toggleDropdownMenu.bind(this);
         this._closeDropdown = this._closeDropdown.bind(this);
-        this._closeDropdownSubmenu = this._closeDropdownSubmenu.bind(this);
-        this._toggleDropdownSubmenu = this._toggleDropdownSubmenu.bind(this);
         this._closeMenuDropdown = this._closeMenuDropdown.bind(this);
         this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(
             this
@@ -164,8 +155,6 @@ class Header extends React.Component {
             nextState.active !== this.state.active ||
             nextState.hiddenAssets !== this.props.hiddenAssets ||
             nextState.dropdownActive !== this.state.dropdownActive ||
-            nextState.dropdownSubmenuActive !==
-                this.state.dropdownSubmenuActive ||
             nextState.accountsListDropdownActive !==
                 this.state.accountsListDropdownActive ||
             nextProps.height !== this.props.height ||
@@ -248,18 +237,9 @@ class Header extends React.Component {
         }
     }
 
-    _closeDropdownSubmenu() {
-        if (this.state.dropdownSubmenuActive) {
-            this.setState({
-                dropdownSubmenuActive: false
-            });
-        }
-    }
-
     _closeDropdown() {
         this._closeMenuDropdown();
         this._closeAccountsListDropdown();
-        this._closeDropdownSubmenu();
     }
 
     _onGoBack(e) {
@@ -309,15 +289,6 @@ class Header extends React.Component {
         });
     }
 
-    _toggleDropdownSubmenu(item = this.state.dropdownSubmenuActiveItem, e) {
-        if (e) e.stopPropagation();
-
-        this.setState({
-            dropdownSubmenuActive: !this.state.dropdownSubmenuActive,
-            dropdownSubmenuActiveItem: item
-        });
-    }
-
     _toggleDropdownMenu() {
         this.setState({
             dropdownActive: !this.state.dropdownActive
@@ -356,7 +327,6 @@ class Header extends React.Component {
         if (!insideAccountDropdown) this._closeAccountsListDropdown();
         if (!insideMenuDropdown) {
             this._closeMenuDropdown();
-            this._closeDropdownSubmenu();
         }
     }
 
@@ -518,93 +488,6 @@ class Header extends React.Component {
             />
         );
         const hasLocalWallet = !!WalletDb.getWallet();
-
-        const submenus = {
-            [SUBMENUS.SETTINGS]: (
-                <ul
-                    className="dropdown header-menu header-submenu"
-                    style={{
-                        left: -200,
-                        top: 64,
-                        maxHeight: !this.state.dropdownActive ? 0 : maxHeight,
-                        overflowY: "auto"
-                    }}
-                >
-                    <li
-                        className="parent-item"
-                        onClick={this._toggleDropdownSubmenu.bind(
-                            this,
-                            undefined
-                        )}
-                    >
-                        <div className="table-cell">
-                            <span className="parent-item-icon">&lt;</span>
-                            <Translate
-                                content="header.settings"
-                                component="span"
-                                className="parent-item-name"
-                            />
-                        </div>
-                    </li>
-                    <DividerMenuItem />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(
-                            this,
-                            "/settings/general"
-                        )}
-                        text="settings.general"
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(this, "/settings/wallet")}
-                        text=""
-                        hidden={!!this.props.settings.get("passwordLogin")}
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(
-                            this,
-                            "/settings/accounts"
-                        )}
-                        text="settings.accounts"
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(
-                            this,
-                            "/settings/password"
-                        )}
-                        text="settings.password"
-                        hidden={!!this.props.settings.get("passwordLogin")}
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(this, "/settings/backup")}
-                        text="settings.backup"
-                        hidden={!!this.props.settings.get("passwordLogin")}
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(
-                            this,
-                            "/settings/restore"
-                        )}
-                        text="settings.restore"
-                        hidden={!!this.props.settings.get("passwordLogin")}
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(this, "/settings/access")}
-                        text="settings.access"
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(
-                            this,
-                            "/settings/faucet_address"
-                        )}
-                        text="settings.faucet_address"
-                    />
-                    <SubmenuItem
-                        target={this._onNavigate.bind(this, "/settings/reset")}
-                        text="settings.reset"
-                    />
-                </ul>
-            )
-        };
 
         let clickHandlers = {};
 
@@ -807,32 +690,24 @@ class Header extends React.Component {
                     >
                         <div className="hamburger">{hamburger}</div>
 
-                        {(this.state.dropdownSubmenuActive &&
-                            submenus[this.state.dropdownSubmenuActiveItem] &&
-                            submenus[this.state.dropdownSubmenuActiveItem]) || (
-                            <DropDownMenu
-                                dropdownActive={this.state.dropdownActive}
-                                toggleLock={this._toggleLock.bind(this)}
-                                maxHeight={maxHeight}
-                                locked={this.props.locked}
-                                active={active}
-                                passwordLogin={passwordLogin}
-                                onNavigate={this._onNavigate.bind(this)}
-                                isMyAccount={isMyAccount}
-                                contacts={this.props.contacts}
-                                showAccountLinks={showAccountLinks}
-                                tradeUrl={tradeUrl}
-                                currentAccount={currentAccount}
-                                enableDepositWithdraw={enableDepositWithdraw}
-                                showDeposit={this._showDeposit.bind(this)}
-                                showWithdraw={this._showWithdraw.bind(this)}
-                                showSend={this._showSend.bind(this)}
-                                toggleDropdownSubmenu={this._toggleDropdownSubmenu.bind(
-                                    this,
-                                    SUBMENUS.SETTINGS
-                                )}
-                            />
-                        )}
+                        <DropDownMenu
+                            dropdownActive={this.state.dropdownActive}
+                            toggleLock={this._toggleLock.bind(this)}
+                            maxHeight={maxHeight}
+                            locked={this.props.locked}
+                            active={active}
+                            passwordLogin={passwordLogin}
+                            onNavigate={this._onNavigate.bind(this)}
+                            isMyAccount={isMyAccount}
+                            contacts={this.props.contacts}
+                            showAccountLinks={showAccountLinks}
+                            tradeUrl={tradeUrl}
+                            currentAccount={currentAccount}
+                            enableDepositWithdraw={enableDepositWithdraw}
+                            showDeposit={this._showDeposit.bind(this)}
+                            showWithdraw={this._showWithdraw.bind(this)}
+                            showSend={this._showSend.bind(this)}
+                        />
                     </div>
                 </div>
                 <SendModal
