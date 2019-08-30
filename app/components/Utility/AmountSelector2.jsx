@@ -18,12 +18,15 @@ class AmountSelector2 extends React.Component {
         onImageError: PropTypes.func,
         onSearch: PropTypes.func,
         imgName: PropTypes.string,
+        placeholderAmount: PropTypes.string,
         placeholder: PropTypes.string
     };
 
     static defaultProps = {
         disabled: false,
-        imgName: "unknown"
+        imgName: "unknown",
+        placeholderAmount: "0.0",
+        placeholder: ""
     };
 
     render() {
@@ -40,6 +43,7 @@ class AmountSelector2 extends React.Component {
             onImageError,
             imgName,
             placeholder,
+            placeholderAmount,
             tooltipText
         } = this.props;
 
@@ -58,8 +62,9 @@ class AmountSelector2 extends React.Component {
 
         const assetSelector = (
             <AssetSelect
+                placeholder={placeholder}
                 showSearch={true}
-                value={assetInput}
+                value={!!assetInput ? assetInput : undefined}
                 onChange={onAssetInputChange}
                 assets={assets}
                 onSearch={onSearch}
@@ -84,7 +89,7 @@ class AmountSelector2 extends React.Component {
                 amount={amount}
                 asset={asset}
                 assets={[asset]}
-                placeholder={placeholder}
+                placeholder={placeholderAmount}
                 disabled={disabled}
             />
         );

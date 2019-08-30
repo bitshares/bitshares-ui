@@ -62,7 +62,7 @@ class SellReceive extends Component {
                 onAmountChange={onSellAmountChange}
                 onImageError={onSellImageError}
                 imgName={sellImgName}
-                placeholder={"0.0"}
+                placeholder={"exchange.quick_trade_details.placeholder_sell"}
             />
         );
 
@@ -78,10 +78,7 @@ class SellReceive extends Component {
                 onAmountChange={onReceiveAmountChange}
                 onImageError={onReceiveImageError}
                 imgName={receiveImgName}
-                placeholder={"0.0"}
-                tooltipText={counterpart.translate(
-                    "exchange.quick_trade_details.tooltip"
-                )}
+                placeholder={"exchange.quick_trade_details.placeholder_receive"}
             />
         );
 

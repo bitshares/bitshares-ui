@@ -680,9 +680,30 @@ class QuickTrade extends Component {
             "precision"
         );
         const priceSection = this.getPriceSection();
+        const priceExtra = (
+            <React.Fragment>
+                {counterpart.translate(
+                    "exchange.quick_trade_details.effective"
+                )}{" "}
+                <FormattedPrice
+                    base_asset={sellAsset}
+                    quote_asset={receiveAsset}
+                    base_amount={sellAmount * 10 ** sellAssetPrecision}
+                    quote_amount={receiveAmount * 10 ** receiveAssetPrecision}
+                    noPopOver
+                    force_direction={ChainStore.getAsset(receiveAsset).get(
+                        "symbol"
+                    )}
+                    noInvertTip
+                />
+            </React.Fragment>
+        );
         const feeSection = this.getFeeSection();
         const ordersSection = this.getOrdersSection();
-        const totalPercentFee = (this.getTotalPercentFee() * 100).toFixed(2);
+        const totalPercentFee =
+            counterpart.translate("exchange.quick_trade_details.effective") +
+            " " +
+            (this.getTotalPercentFee() * 100).toFixed(2);
         const amountOfOrders = this.state.orders.length;
         const ordersCaption =
             amountOfOrders < 2
@@ -697,21 +718,7 @@ class QuickTrade extends Component {
             >
                 <Collapse.Panel
                     header={counterpart.translate("exchange.price")}
-                    extra={
-                        <FormattedPrice
-                            base_asset={sellAsset}
-                            quote_asset={receiveAsset}
-                            base_amount={sellAmount * 10 ** sellAssetPrecision}
-                            quote_amount={
-                                receiveAmount * 10 ** receiveAssetPrecision
-                            }
-                            noPopOver
-                            force_direction={ChainStore.getAsset(
-                                receiveAsset
-                            ).get("symbol")}
-                            noInvertTip
-                        />
-                    }
+                    extra={priceExtra}
                 >
                     {priceSection}
                 </Collapse.Panel>

@@ -644,6 +644,9 @@
         "quick_deposit_tooltip": "Deposit %(asset)s, click to open options",
         "quick_trade": "Quick trade",
         "quick_trade_details": {
+            "placeholder_sell": "Choose asset to sell",
+            "placeholder_receive": "Choose asset to receive",
+            "effective": "effective",
             "your_price": "Your price",
             "feed_price": "Feed price",
             "last_price": "Last market price",
