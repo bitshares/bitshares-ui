@@ -470,17 +470,22 @@ class QuickTrade extends Component {
             if (!receiveAssets.includes(sellAssetId)) {
                 receiveAssets = [...receiveAssets, receiveAssetId];
             }
-            this.setState({
-                sellAsset: receiveAsset,
-                receiveAsset: sellAsset,
-                sellAssetInput: receiveAssetInput,
-                receiveAssetInput: sellAssetInput,
-                sellImgName: receiveImgName,
-                receiveImgName: sellImgName,
-                sellAmount: "",
-                receiveAmount: "",
-                receiveAssets
-            });
+            this.setState(
+                {
+                    sellAsset: receiveAsset,
+                    receiveAsset: sellAsset,
+                    sellAssetInput: receiveAssetInput,
+                    receiveAssetInput: sellAssetInput,
+                    sellImgName: receiveImgName,
+                    receiveImgName: sellImgName,
+                    sellAmount: "",
+                    receiveAmount: "",
+                    receiveAssets
+                },
+                () => {
+                    this._subToMarket(sellAssetId, receiveAssetId);
+                }
+            );
         }
     }
 
@@ -752,6 +757,25 @@ class QuickTrade extends Component {
         return sellAsset && receiveAsset && +sellAmount && +receiveAmount;
     }
 
+    showFeedPrice() {
+        const {sellAsset, receiveAsset} = this.state;
+        const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
+        const receiveCollateralAsset = receiveAsset.getIn([
+            "bitasset",
+            "options",
+            "short_backing_asset"
+        ]);
+        const sellCollateralAsset = sellAsset.getIn([
+            "bitasset",
+            "options",
+            "short_backing_asset"
+        ]);
+        return (
+            receiveCollateralAsset === sellAssetId ||
+            sellCollateralAsset === receiveAssetId
+        );
+    }
+
     getPriceSection() {
         const {prices, sellAmount, receiveAmount} = this.state;
         const {
@@ -769,11 +793,13 @@ class QuickTrade extends Component {
                             "exchange.quick_trade_details.your_price"
                         )}
                     </div>
-                    <div>
-                        {counterpart.translate(
-                            "exchange.quick_trade_details.feed_price"
-                        )}
-                    </div>
+                    {this.showFeedPrice() && (
+                        <div>
+                            {counterpart.translate(
+                                "exchange.quick_trade_details.feed_price"
+                            )}
+                        </div>
+                    )}
                     <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.last_price"
@@ -794,19 +820,22 @@ class QuickTrade extends Component {
                             noInvertTip
                         />
                     </div>
-                    <div>
-                        <FormattedPrice
-                            base_asset={sellAssetId}
-                            quote_asset={receiveAssetId}
-                            base_amount={1 * 10 ** sellAssetPrecision}
-                            quote_amount={
-                                prices.feedPrice * 10 ** receiveAssetPrecision
-                            }
-                            noPopOver
-                            force_direction={receiveAssetSymbol}
-                            noInvertTip
-                        />
-                    </div>
+                    {this.showFeedPrice() && (
+                        <div>
+                            <FormattedPrice
+                                base_asset={sellAssetId}
+                                quote_asset={receiveAssetId}
+                                base_amount={1 * 10 ** sellAssetPrecision}
+                                quote_amount={
+                                    prices.feedPrice *
+                                    10 ** receiveAssetPrecision
+                                }
+                                noPopOver
+                                force_direction={receiveAssetSymbol}
+                                noInvertTip
+                            />
+                        </div>
+                    )}
                     <div>
                         <FormattedPrice
                             base_asset={sellAssetId}
@@ -860,7 +889,9 @@ class QuickTrade extends Component {
         } else {
             liqidityPenaltyFeed = "-";
         }
-        const liqidityPenalty = `${liqidityPenaltyMarket} / ${liqidityPenaltyFeed}`;
+        const liqidityPenalty = this.showFeedPrice()
+            ? `${liqidityPenaltyMarket} / ${liqidityPenaltyFeed}`
+            : liqidityPenaltyMarket;
 
         return (
             <Row>
