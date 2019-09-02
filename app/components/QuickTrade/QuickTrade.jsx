@@ -105,31 +105,40 @@ class QuickTrade extends Component {
         }
     }
 
-    async _subToMarket(baseAssetId, quoteAssetId) {
-        const {sub} = this.state;
-        const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
-        const {bucketSize, currentGroupOrderLimit} = this.props;
-        if (sub) {
-            let [qa, ba] = sub.split("_");
-            if (qa === quoteAssetId && ba === baseAssetId) {
-                return;
+    async _subToMarket() {
+        const {
+            receiveAsset: baseAsset,
+            sellAsset: quoteAsset,
+            sub
+        } = this.state;
+        if (baseAsset && quoteAsset) {
+            const {
+                receiveAssetId: baseAssetId,
+                sellAssetId: quoteAssetId
+            } = this.getAssetsDetails();
+            const {bucketSize, currentGroupOrderLimit} = this.props;
+            if (sub) {
+                let [qa, ba] = sub.split("_");
+                if (qa === quoteAssetId && ba === baseAssetId) {
+                    return;
+                }
+                await MarketsActions.unSubscribeMarket(qa, ba);
             }
-            await MarketsActions.unSubscribeMarket(sellAssetId, receiveAssetId);
-        }
-        if (baseAssetId && quoteAssetId) {
-            const baseAsset = ChainStore.getAsset(baseAssetId);
-            const quoteAsset = ChainStore.getAsset(quoteAssetId);
             await MarketsActions.subscribeMarket(
                 baseAsset,
                 quoteAsset,
                 bucketSize,
                 currentGroupOrderLimit
             );
-            this.setState({
-                sub: `${quoteAssetId}_${baseAssetId}`
-            });
-            this.getAllPrices();
-            this.getAllFees();
+            this.setState(
+                {
+                    sub: `${quoteAssetId}_${baseAssetId}`
+                },
+                () => {
+                    this.getAllPrices();
+                    this.getAllFees();
+                }
+            );
         }
     }
 
@@ -168,21 +177,22 @@ class QuickTrade extends Component {
 
     _getOrders() {
         const {combinedBids} = this.props.marketData;
-        if (combinedBids && combinedBids.length) {
-            const {
-                sellAsset,
-                receiveAsset,
-                sellAmount,
-                receiveAmount,
-                activeInput
-            } = this.state;
+        const {
+            sellAsset,
+            receiveAsset,
+            sellAmount,
+            receiveAmount,
+            activeInput
+        } = this.state;
+        const {
+            sellAssetPrecision,
+            receiveAssetPrecision
+        } = this.getAssetsDetails();
+        if (combinedBids && combinedBids.length && sellAsset && receiveAsset) {
             if (
                 sellAmount &&
-                sellAsset &&
-                receiveAsset &&
-                activeInput === "sell"
+                (activeInput === "sell" || activeInput === "receiveAsset")
             ) {
-                const {sellAssetPrecision} = this.getAssetsDetails();
                 const orders = getOrders(
                     sellAmount * 10 ** sellAssetPrecision,
                     combinedBids,
@@ -196,11 +206,8 @@ class QuickTrade extends Component {
                 );
             } else if (
                 receiveAmount &&
-                sellAsset &&
-                receiveAsset &&
-                activeInput === "receive"
+                (activeInput === "receive" || activeInput === "sellAsset")
             ) {
-                const {receiveAssetPrecision} = this.getAssetsDetails();
                 const orders = getOrders(
                     receiveAmount * 10 ** receiveAssetPrecision,
                     combinedBids,
@@ -235,20 +242,14 @@ class QuickTrade extends Component {
                         sellAsset: asset,
                         sellImgName: assetImage,
                         sellAmount: "",
-                        receiveAmount: "",
                         receiveAsset: state.sellAsset,
                         receiveAssetInput: state.sellAssetInput,
-                        receiveImgName: state.sellImgName
+                        receiveImgName: state.sellImgName,
+                        activeInput: "sellAsset"
                     };
                 },
                 () => {
-                    const {
-                        sellAssetId,
-                        receiveAssetId
-                    } = this.getAssetsDetails();
-                    if (sellAssetId && receiveAssetId) {
-                        this._subToMarket(receiveAssetId, sellAssetId);
-                    }
+                    this._subToMarket();
                 }
             );
         } else {
@@ -258,16 +259,10 @@ class QuickTrade extends Component {
                     sellAsset: asset,
                     sellImgName: assetImage,
                     sellAmount: "",
-                    receiveAmount: ""
+                    activeInput: "sellAsset"
                 },
                 () => {
-                    const {
-                        sellAssetId,
-                        receiveAssetId
-                    } = this.getAssetsDetails();
-                    if (sellAssetId && receiveAssetId) {
-                        this._subToMarket(receiveAssetId, sellAssetId);
-                    }
+                    this._subToMarket();
                 }
             );
         }
@@ -287,20 +282,14 @@ class QuickTrade extends Component {
                         receiveAsset: asset,
                         receiveImgName: assetImage,
                         receiveAmount: "",
-                        sellAmount: "",
                         sellAsset: state.receiveAsset,
                         sellAssetInput: state.receiveAssetInput,
-                        sellImgName: state.receiveImgName
+                        sellImgName: state.receiveImgName,
+                        activeInput: "receiveAsset"
                     };
                 },
                 () => {
-                    const {
-                        sellAssetId,
-                        receiveAssetId
-                    } = this.getAssetsDetails();
-                    if (sellAssetId && receiveAssetId) {
-                        this._subToMarket(receiveAssetId, sellAssetId);
-                    }
+                    this._subToMarket();
                 }
             );
         } else if (e === sellAssetId) {
@@ -310,19 +299,13 @@ class QuickTrade extends Component {
                     receiveAsset: asset,
                     receiveImgName: assetImage,
                     receiveAmount: "",
-                    sellAmount: "",
                     sellAsset: null,
                     sellAssetInput: "",
-                    sellImgName: "unknown"
+                    sellImgName: "unknown",
+                    activeInput: "receiveAsset"
                 },
                 () => {
-                    const {
-                        sellAssetId,
-                        receiveAssetId
-                    } = this.getAssetsDetails();
-                    if (sellAssetId && receiveAssetId) {
-                        this._subToMarket(receiveAssetId, sellAssetId);
-                    }
+                    this._subToMarket();
                 }
             );
         } else {
@@ -331,17 +314,11 @@ class QuickTrade extends Component {
                     receiveAssetInput: assetId,
                     receiveAsset: asset,
                     receiveImgName: assetImage,
-                    sellAmount: "",
-                    receiveAmount: ""
+                    receiveAmount: "",
+                    activeInput: "receiveAsset"
                 },
                 () => {
-                    const {
-                        sellAssetId,
-                        receiveAssetId
-                    } = this.getAssetsDetails();
-                    if (sellAssetId && receiveAssetId) {
-                        this._subToMarket(receiveAssetId, sellAssetId);
-                    }
+                    this._subToMarket();
                 }
             );
         }
@@ -405,13 +382,7 @@ class QuickTrade extends Component {
                     activeSearch: false
                 },
                 () => {
-                    const {
-                        sellAssetId,
-                        receiveAssetId
-                    } = this.getAssetsDetails();
-                    if (sellAssetId && receiveAssetId) {
-                        this._subToMarket(receiveAssetId, sellAssetId);
-                    }
+                    this._subToMarket();
                 }
             );
         }, 100);
@@ -483,7 +454,7 @@ class QuickTrade extends Component {
                     receiveAssets
                 },
                 () => {
-                    this._subToMarket(sellAssetId, receiveAssetId);
+                    this._subToMarket();
                 }
             );
         }
@@ -646,17 +617,21 @@ class QuickTrade extends Component {
     _getTransactionFee(denominationAssetId) {
         const {fees, prices} = this.state;
         const {sellAssetId} = this.getAssetsDetails();
-        if (!denominationAssetId || denominationAssetId === sellAssetId) {
-            return (
-                fees.transactionFee[sellAssetId].fee.amount /
-                10 ** fees.transactionFee[sellAssetId].fee.precision
-            );
+        if (fees.transactionFee[sellAssetId]) {
+            if (!denominationAssetId || denominationAssetId === sellAssetId) {
+                return (
+                    fees.transactionFee[sellAssetId].fee.amount /
+                    10 ** fees.transactionFee[sellAssetId].fee.precision
+                );
+            } else {
+                return (
+                    (fees.transactionFee[sellAssetId].fee.amount /
+                        10 ** fees.transactionFee[sellAssetId].fee.precision) *
+                    prices.latestPrice
+                );
+            }
         } else {
-            return (
-                (fees.transactionFee[sellAssetId].fee.amount /
-                    10 ** fees.transactionFee[sellAssetId].fee.precision) *
-                prices.latestPrice
-            );
+            return 0;
         }
     }
 
