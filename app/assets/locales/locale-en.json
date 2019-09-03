@@ -660,7 +660,8 @@
             "price": "Price",
             "order": "Order",
             "orders": "Orders",
-            "tooltip": "Enter at least three characters of an asset symbol to search"
+            "tooltip": "Enter at least three characters of an asset symbol to search",
+            "subscribe_to_market": "Subscribe to market"
         },
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",

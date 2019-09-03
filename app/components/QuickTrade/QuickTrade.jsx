@@ -9,7 +9,8 @@ import {
     Row,
     Col,
     Table,
-    Button
+    Button,
+    Switch
 } from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
 import MarketsActions from "actions/MarketsActions";
@@ -30,6 +31,7 @@ import {Asset, LimitOrderCreate} from "common/MarketClasses";
 import {Notification} from "bitshares-ui-style-guide";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
+import Translate from "react-translate-component";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -54,7 +56,8 @@ class QuickTrade extends Component {
             orders: [],
             orderView: "amount",
             fees: null,
-            prices: null
+            prices: null,
+            isSubscribedToMarket: true
         };
         this.onSellAssetInputChange = this.onSellAssetInputChange.bind(this);
         this.onReceiveAssetInputChange = this.onReceiveAssetInputChange.bind(
@@ -66,6 +69,9 @@ class QuickTrade extends Component {
         this.onReceiveImageError = this.onReceiveImageError.bind(this);
         this.onReceiveAssetSearch = this.onReceiveAssetSearch.bind(this);
         this.onSwap = this.onSwap.bind(this);
+        this.handleSubscriptionToggleChange = this.handleSubscriptionToggleChange.bind(
+            this
+        );
         this.hendleOrderView = this.hendleOrderView.bind(this);
         this.handleSell = this.handleSell.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -90,10 +96,7 @@ class QuickTrade extends Component {
                 .filter(a => a.symbol.indexOf(this.state.lookupQuote) !== -1);
             this._checkAndUpdateMarketList(filteredAssets);
         }
-        if (
-            nextProps.marketData.combinedBids !==
-            this.props.marketData.combinedBids
-        ) {
+        if (this.state.isSubscribedToMarket) {
             this._getOrders();
         }
     }
@@ -529,6 +532,14 @@ class QuickTrade extends Component {
                 );
             }
         }
+    }
+
+    handleSubscriptionToggleChange() {
+        this.setState(state => {
+            return {
+                isSubscribedToMarket: !state.isSubscribedToMarket
+            };
+        });
     }
 
     hendleOrderView() {
@@ -1052,19 +1063,22 @@ class QuickTrade extends Component {
             {
                 title: counterpart.translate("exchange.quick_trade_details.id"),
                 dataIndex: "id",
-                key: "id"
+                key: "id",
+                width: "20%"
             },
             {
                 title: counterpart.translate(
                     "exchange.quick_trade_details.seller"
                 ),
                 dataIndex: "seller",
-                key: "seller"
+                key: "seller",
+                width: "20%"
             },
             {
                 title: amount,
                 dataIndex: "amount",
-                key: "amount"
+                key: "amount",
+                width: "30%"
             },
             {
                 title: price,
@@ -1073,18 +1087,33 @@ class QuickTrade extends Component {
             }
         ];
         return (
-            <Table
-                columns={columns}
-                dataSource={dataSource}
-                style={{width: "100%"}}
-                pagination={
-                    dataSource.length > 5
-                        ? {
-                              pageSize: 5
-                          }
-                        : false
-                }
-            />
+            <div>
+                <Switch
+                    style={{marginLeft: "20px"}}
+                    onChange={this.handleSubscriptionToggleChange}
+                    checked={this.state.isSubscribedToMarket}
+                />
+                <Translate
+                    onClick={this.handleSubscriptionToggleChange}
+                    content="exchange.quick_trade_details.subscribe_to_market"
+                    style={{
+                        marginLeft: "10px",
+                        cursor: "pointer"
+                    }}
+                />
+                <Table
+                    columns={columns}
+                    dataSource={dataSource}
+                    style={{width: "100%", marginTop: "10px"}}
+                    pagination={
+                        dataSource.length > 5
+                            ? {
+                                  pageSize: 5
+                              }
+                            : false
+                    }
+                />
+            </div>
         );
     }
 
