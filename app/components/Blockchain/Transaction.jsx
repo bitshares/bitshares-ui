@@ -1993,12 +1993,7 @@ class Transaction extends React.Component {
                                     content="explorer.workers.website"
                                 />
                             </td>
-                            <td>
-                                {sanitize(op[1].url, {
-                                    whiteList: [], // empty, means filter out all tags
-                                    stripIgnoreTag: true // filter out all HTML not in the whilelist
-                                })}
-                            </td>
+                            <td>{utils.sanitize(op[1].url)}</td>
                         </tr>
                     );
 

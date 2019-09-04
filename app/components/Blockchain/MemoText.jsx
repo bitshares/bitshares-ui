@@ -56,10 +56,7 @@ class MemoText extends React.Component {
             );
         }
 
-        text = sanitize(text, {
-            whiteList: [], // empty, means filter out all tags
-            stripIgnoreTag: true // filter out all HTML not in the whilelist
-        });
+        text = utils.sanitize(text);
 
         let full_memo = text;
         if (text && !fullLength && text.length > 35) {
