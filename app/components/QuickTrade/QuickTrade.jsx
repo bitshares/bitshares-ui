@@ -99,6 +99,13 @@ class QuickTrade extends Component {
         if (this.state.isSubscribedToMarket) {
             this._getOrders();
         }
+        if (nextProps.currentAccount !== this.props.currentAccount) {
+            const assets = getAssetsToSell(nextProps.currentAccount);
+            this.setState({
+                sellAssets: assets,
+                receiveAssets: assets
+            });
+        }
     }
 
     componentWillUnmount() {
