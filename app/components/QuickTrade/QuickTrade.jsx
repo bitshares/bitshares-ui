@@ -1152,6 +1152,22 @@ class QuickTrade extends Component {
         return transactionFeePercent + marketFeePercent + liquidityFee;
     }
 
+    hasBalance() {
+        const {sellAmount} = this.state;
+        const {currentAccount} = this.props;
+        const accountBalances = currentAccount.get("balances").toJS();
+        const {sellAssetId, sellAssetPrecision} = this.getAssetsDetails();
+        const balance = ChainStore.getObject(accountBalances[sellAssetId]).get(
+            "balance"
+        );
+        const transactionFee = this._getTransactionFee();
+        return (
+            sellAmount * 10 ** sellAssetPrecision +
+                transactionFee * 10 ** sellAssetPrecision <
+            +balance
+        );
+    }
+
     render() {
         const {
             sellAssetInput,
@@ -1209,7 +1225,9 @@ class QuickTrade extends Component {
                     <Button
                         key="sell"
                         type="primary"
-                        disabled={!this.showDetails() || !sub}
+                        disabled={
+                            !this.showDetails() || !sub || !this.hasBalance()
+                        }
                         onClick={this.handleSell}
                     >
                         {counterpart.translate("exchange.sell")}
