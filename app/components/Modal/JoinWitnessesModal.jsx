@@ -6,7 +6,7 @@ import counterpart from "counterpart";
 import {Modal, Button, Input, Select, Form} from "bitshares-ui-style-guide";
 import Icon from "../Icon/Icon";
 import {PublicKey} from "bitsharesjs";
-import sanitize from "sanitize";
+import utils from "common/utils";
 
 class JoinWitnessesModal extends React.Component {
     constructor(props) {
@@ -58,10 +58,7 @@ class JoinWitnessesModal extends React.Component {
 
     onUrlChanged(e) {
         this.setState({
-            url: sanitize(e.target.value.toLowerCase(), {
-                whiteList: [], // empty, means filter out all tags
-                stripIgnoreTag: true // filter out all HTML not in the whilelist
-            })
+            url: utils.sanitize(e.target.value.toLowerCase())
         });
     }
 

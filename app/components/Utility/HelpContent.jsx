@@ -30,10 +30,7 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
-        text = sanitize(text, {
-            whiteList: [], // empty, means filter out all tags
-            stripIgnoreTag: true // filter out all HTML not in the whilelist
-        });
+        text = utils.sanitize(text);
 
         if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0)
             return `<a href="${text}" onclick="_onClickLink(event)"`;
@@ -111,10 +108,7 @@ class HelpContent extends React.PureComponent {
             let key = text.substr(1, text.length - 2);
             let value = this.props[key] !== undefined ? this.props[key] : text;
             if (value && typeof value === "string")
-                value = sanitize(value, {
-                    whiteList: [], // empty, means filter out all tags
-                    stripIgnoreTag: true // filter out all HTML not in the whilelist
-                });
+                value = utils.sanitize(value);
             if (value.amount && value.asset)
                 value = utils.format_asset(
                     value.amount,

@@ -87,10 +87,7 @@ class Invoice extends React.Component {
 
         try {
             decompress(compressed_data, result => {
-                result = sanitize(result, {
-                    whiteList: [], // empty, means filter out all tags
-                    stripIgnoreTag: true // filter out all HTML not in the whilelist
-                });
+                result = utils.sanitize(result);
                 let invoice = JSON.parse(result);
                 if (this._validateFormat(invoice)) {
                     FetchChainObjects(ChainStore.getAsset, [
