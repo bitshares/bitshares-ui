@@ -36,18 +36,18 @@ import Translate from "react-translate-component";
 class QuickTrade extends Component {
     constructor(props) {
         super(props);
-        const {currentAccount} = props;
+        const accountAssets = getAssetsToSell(props.currentAccount);
         this.state = {
             mounted: false,
             sub: "",
             sellAssetInput: "",
             sellAsset: null,
-            sellAssets: getAssetsToSell(currentAccount),
+            sellAssets: accountAssets,
             sellAmount: "",
             sellImgName: "unknown",
             receiveAssetInput: "",
             receiveAsset: null,
-            receiveAssets: getAssetsToSell(currentAccount),
+            receiveAssets: accountAssets,
             receiveAmount: "",
             receiveImgName: "unknown",
             activeInput: "",
@@ -83,9 +83,58 @@ class QuickTrade extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            mounted: true
-        });
+        const accountAssets = getAssetsToSell(this.props.currentAccount);
+        if (this.props.location.state) {
+            let sellAsset = null,
+                receiveAsset = null;
+            const {
+                preselectedSellAssetId,
+                preselectedReceiveAssetId
+            } = this.props.location.state;
+            if (accountAssets.includes(preselectedSellAssetId)) {
+                sellAsset = ChainStore.getAsset(preselectedSellAssetId);
+                receiveAsset = ChainStore.getAsset(preselectedReceiveAssetId);
+            }
+            this.props.history.replace({
+                pathname: "/quick-trade",
+                state: {}
+            });
+            this.setState(
+                {
+                    mounted: true,
+                    sub: "",
+                    sellAssetInput: preselectedSellAssetId,
+                    sellAsset: sellAsset,
+                    sellAssets: accountAssets,
+                    sellAmount: "",
+                    sellImgName: sellAsset
+                        ? sellAsset.get("symbol")
+                        : "unknown",
+                    receiveAssetInput: preselectedReceiveAssetId,
+                    receiveAsset: receiveAsset,
+                    receiveAssets: accountAssets,
+                    receiveAmount: "",
+                    receiveImgName: receiveAsset
+                        ? receiveAsset.get("symbol")
+                        : "unknown",
+                    activeInput: "",
+                    activeAmountInput: "",
+                    lookupQuote: "",
+                    orders: [],
+                    orderView: "amount",
+                    fees: null,
+                    prices: null,
+                    isSubscribedToMarket: true
+                },
+                () => {
+                    this._subToMarket().then(() => this._getOrders());
+                }
+            );
+        } else {
+            this.setState({
+                mounted: true
+            });
+        }
     }
 
     componentWillReceiveProps(nextProps) {
