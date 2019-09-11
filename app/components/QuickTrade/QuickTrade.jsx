@@ -82,59 +82,24 @@ class QuickTrade extends Component {
         );
     }
 
-    componentDidMount() {
-        const accountAssets = getAssetsToSell(this.props.currentAccount);
-        if (this.props.location.state) {
-            let sellAsset = null,
-                receiveAsset = null;
-            const {
-                preselectedSellAssetId,
-                preselectedReceiveAssetId
-            } = this.props.location.state;
-            if (accountAssets.includes(preselectedSellAssetId)) {
-                sellAsset = ChainStore.getAsset(preselectedSellAssetId);
-                receiveAsset = ChainStore.getAsset(preselectedReceiveAssetId);
-            }
-            this.props.history.replace({
-                pathname: "/quick-trade",
-                state: {}
-            });
-            this.setState(
-                {
-                    mounted: true,
-                    sub: "",
-                    sellAssetInput: preselectedSellAssetId,
-                    sellAsset: sellAsset,
-                    sellAssets: accountAssets,
-                    sellAmount: "",
-                    sellImgName: sellAsset
-                        ? sellAsset.get("symbol")
-                        : "unknown",
-                    receiveAssetInput: preselectedReceiveAssetId,
-                    receiveAsset: receiveAsset,
-                    receiveAssets: accountAssets,
-                    receiveAmount: "",
-                    receiveImgName: receiveAsset
-                        ? receiveAsset.get("symbol")
-                        : "unknown",
-                    activeInput: "",
-                    activeAmountInput: "",
-                    lookupQuote: "",
-                    orders: [],
-                    orderView: "amount",
-                    fees: null,
-                    prices: null,
-                    isSubscribedToMarket: true
-                },
-                () => {
-                    this._subToMarket().then(() => this._getOrders());
-                }
-            );
-        } else {
-            this.setState({
-                mounted: true
-            });
+    _matchRouteAndAssets() {
+        if (this.state.sellImgName !== this.props.match.params.sell) {
+            this.onSellAssetInputChange(this.props.match.params.sell);
         }
+        if (this.state.receiveImgName !== this.props.match.params.receive) {
+            this.onReceiveAssetInputChange(this.props.match.params.receive);
+        }
+    }
+
+    componentDidUpate(prevProps) {
+        this._matchRouteAndAssets();
+    }
+
+    componentDidMount() {
+        this._matchRouteAndAssets();
+        this.setState({
+            mounted: true
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -332,12 +297,23 @@ class QuickTrade extends Component {
         }
     }
 
-    onSellAssetInputChange(e) {
-        const {receiveAssetId} = this.getAssetsDetails();
-        const asset = ChainStore.getAsset(e);
+    onSellAssetInputChange(assetIdOrSymbol) {
+        // if we selected the asset that is currently being received,
+        // switch
+        const {receiveAssetId, receiveAssetSymbol} = this.getAssetsDetails();
+
+        const asset = ChainStore.getAsset(assetIdOrSymbol);
         const assetId = asset.get("id");
         const assetImage = asset.get("symbol");
-        if (e === receiveAssetId) {
+
+        let receiveRoute = "";
+        if (!!receiveAssetSymbol) {
+            receiveRoute = "/" + receiveAssetSymbol;
+        }
+
+        this.props.history.push("/quick-trade/" + assetImage + receiveRoute);
+
+        if (assetIdOrSymbol === receiveAssetId) {
             this.setState(
                 state => {
                     return {
@@ -373,10 +349,22 @@ class QuickTrade extends Component {
 
     onReceiveAssetInputChange(e) {
         const {sellAssets} = this.state;
-        const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
+        const {
+            sellAssetId,
+            receiveAssetId,
+            sellAssetSymbol
+        } = this.getAssetsDetails();
         const asset = ChainStore.getAsset(e);
         const assetId = asset.get("id");
         const assetImage = asset.get("symbol");
+
+        let sellRoute = "/-";
+        if (!!sellAssetSymbol) {
+            sellRoute = "/" + sellAssetSymbol;
+        }
+
+        this.props.history.push("/quick-trade/" + sellRoute + "/" + assetImage);
+
         if (e === sellAssetId && sellAssets.includes(receiveAssetId)) {
             this.setState(
                 state => {

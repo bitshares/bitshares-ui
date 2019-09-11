@@ -535,7 +535,18 @@ class App extends React.Component {
                                     component={PredictionMarketsPage}
                                 />
                                 <Route
+                                    exact
                                     path="/quick-trade"
+                                    component={QuickTrade}
+                                />
+                                <Route
+                                    exact
+                                    path="/quick-trade/:sell"
+                                    component={QuickTrade}
+                                />
+                                <Route
+                                    exact
+                                    path="/quick-trade/:sell/:receive"
                                     component={QuickTrade}
                                 />
                                 <Route path="*" component={Page404} />
