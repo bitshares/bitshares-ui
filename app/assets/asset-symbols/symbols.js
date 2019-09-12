@@ -1,3 +1,6 @@
+//Unknown asset
+require("file-loader?name=asset-symbols/[name].png!./unknown.png");
+
 // Core asset
 require("file-loader?name=asset-symbols/[name].png!./bts.png");
 

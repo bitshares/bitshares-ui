@@ -3,7 +3,7 @@ import {ChainStore} from "bitsharesjs";
 import {checkFeeStatusAsync} from "common/trxHelper";
 
 // Returns a list of dicts with keys id, seller amount and price and respective values
-function getOrdersWithSellAmount(amount, orders) {
+function getOrders(amount, orders, whatAmount) {
     const matchedOrders = [];
     let totalAmount;
     orders.sort((a, b) => {
@@ -13,7 +13,10 @@ function getOrdersWithSellAmount(amount, orders) {
     for (let i = 0; i < orders.length; i++) {
         if (matchedOrders.length) {
             matchedOrders.forEach(({order}) => {
-                totalAmount = order.total_to_receive.getAmount();
+                totalAmount =
+                    whatAmount === "receive"
+                        ? order.total_for_sale.getAmount()
+                        : order.total_to_receive.getAmount();
             });
 
             if (totalAmount >= amount) {
@@ -22,6 +25,7 @@ function getOrdersWithSellAmount(amount, orders) {
                 matchedOrders.push({
                     order: orders[i],
                     amount: orders[i].amountToReceive().amount,
+                    total_amount: orders[i].total_to_receive.amount,
                     price: orders[i].getPrice()
                 });
             }
@@ -29,40 +33,7 @@ function getOrdersWithSellAmount(amount, orders) {
             matchedOrders.push({
                 order: orders[i],
                 amount: orders[i].amountToReceive().amount,
-                price: orders[i].getPrice()
-            });
-        }
-    }
-
-    return matchedOrders;
-}
-
-function getOrdersWithReceiveAmount(amount, orders) {
-    const matchedOrders = [];
-    let totalAmount;
-    orders.sort((a, b) => {
-        return b.getPrice() - a.getPrice(); // getPrice === _real_price
-    });
-
-    for (let i = 0; i < orders.length; i++) {
-        if (matchedOrders.length) {
-            matchedOrders.forEach(({order}) => {
-                totalAmount = order.total_for_sale.getAmount();
-            });
-
-            if (totalAmount >= amount) {
-                break;
-            } else {
-                matchedOrders.push({
-                    order: orders[i],
-                    amount: orders[i].amountToReceive().amount,
-                    price: orders[i].getPrice()
-                });
-            }
-        } else {
-            matchedOrders.push({
-                order: orders[i],
-                amount: orders[i].amountToReceive().amount,
+                total_amount: orders[i].total_to_receive.amount,
                 price: orders[i].getPrice()
             });
         }
@@ -80,7 +51,10 @@ function getPrices(activeMarketHistory, feedPrice) {
         latestPrice = latest.getPrice();
     }
     // feed price === null if not a bitasset market
-    return {latestPrice, feedPrice: feedPrice ? feedPrice.toReal() : feedPrice};
+    return {
+        latestPrice: latestPrice ? latestPrice : null,
+        feedPrice: feedPrice ? feedPrice.toReal() : feedPrice
+    };
 }
 
 // Returns a list of asset ids that the user can sell
@@ -105,21 +79,13 @@ function getAssetsToSell(account) {
 }
 
 // Returns a dict with keys liquidityPenalty, marketFee and transactionFee, input is selected assets and amounts
-async function getFees(
-    baseAsset,
-    quoteAsset,
-    currentAccount,
-    {price, marketPrice, feedPrice} = {}
-) {
-    let liquidityFee1, liquidityFee2;
-    if (price && marketPrice && feedPrice) {
-        liquidityFee1 = 1 - price / marketPrice;
-        liquidityFee2 = 1 - price / feedPrice;
-    }
+async function getFees(baseAsset, quoteAsset, currentAccount) {
     const baseMarketFeePercent =
         baseAsset.getIn(["options", "market_fee_percent"]) / 100 + "%";
     const quoteMarketFeePercent =
         quoteAsset.getIn(["options", "market_fee_percent"]) / 100 + "%";
+    const baseMarketFee = baseAsset.getIn(["options", "market_fee_percent"]);
+    const quoteMarketFee = quoteAsset.getIn(["options", "market_fee_percent"]);
 
     const trxFee = await checkFeeStatus(
         [baseAsset, quoteAsset],
@@ -127,11 +93,12 @@ async function getFees(
     );
 
     return {
-        liquidityPenalty:
-            liquidityFee1 && liquidityFee2
-                ? [liquidityFee1, liquidityFee2]
-                : null,
-        marketFee: {baseMarketFeePercent, quoteMarketFeePercent},
+        marketFee: {
+            baseMarketFeePercent,
+            quoteMarketFeePercent,
+            baseMarketFee,
+            quoteMarketFee
+        },
         transactionFee: trxFee
     };
 }
@@ -161,10 +128,4 @@ async function checkFeeStatus(assets = [], account) {
         });
 }
 
-export {
-    getOrdersWithSellAmount,
-    getOrdersWithReceiveAmount,
-    getPrices,
-    getFees,
-    getAssetsToSell
-};
+export {getOrders, getPrices, getFees, getAssetsToSell};

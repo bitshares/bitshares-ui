@@ -107,6 +107,7 @@ class FormattedPrice extends React.Component {
     render() {
         let {
             base_asset,
+            quote_asset,
             base_amount,
             quote_amount,
             marketDirections,
@@ -203,13 +204,14 @@ class FormattedPrice extends React.Component {
                 );
             }
         }
+        let tipText = "Click to invert the price";
+        if (this.props.noInvertTip) {
+            tipText = "";
+        }
         let symbols = hide_symbols ? (
             ""
         ) : (
-            <Tooltip
-                placement="bottom"
-                title={noPopOver ? "Click to invert the price" : null}
-            >
+            <Tooltip placement="bottom" title={noPopOver ? tipText : null}>
                 <span
                     className={noPopOver ? "clickable inline-block" : ""}
                     onClick={noPopOver ? this.onFlip.bind(this) : null}
@@ -239,7 +241,16 @@ class FormattedPrice extends React.Component {
                     >
                         <Translate content="exchange.to_market" />
                     </div>
-                    <Link to="/quick-trade" className="button">
+                    <Link
+                        className="button"
+                        to={{
+                            pathname: "/quick-trade",
+                            state: {
+                                preselectedSellAssetId: quote_asset.get("id"),
+                                preselectedReceiveAssetId: base_asset.get("id")
+                            }
+                        }}
+                    >
                         <Translate content="exchange.quick_trade" />
                     </Link>
                 </div>

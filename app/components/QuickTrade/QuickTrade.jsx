@@ -9,15 +9,15 @@ import {
     Row,
     Col,
     Table,
-    Button
+    Button,
+    Switch
 } from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
 import MarketsActions from "actions/MarketsActions";
 import {
     getAssetsToSell,
     getPrices,
-    getOrdersWithSellAmount,
-    getOrdersWithReceiveAmount,
+    getOrders,
     getFees
 } from "./QuickTradeHelper";
 import {ChainStore} from "bitsharesjs";
@@ -26,29 +26,38 @@ import AssetActions from "actions/AssetActions";
 import {ChainValidation} from "bitsharesjs";
 import {lookupAssets} from "../Exchange/MarketPickerHelpers";
 import counterpart from "counterpart";
-import FormattedPrice from "../Utility/FormattedPrice";
 import LinkToAccountById from "../Utility/LinkToAccountById";
+import {Asset, LimitOrderCreate} from "common/MarketClasses";
+import {Notification} from "bitshares-ui-style-guide";
+import FormattedPrice from "../Utility/FormattedPrice";
+import AssetName from "../Utility/AssetName";
+import Translate from "react-translate-component";
 
 class QuickTrade extends Component {
     constructor(props) {
         super(props);
+        const accountAssets = getAssetsToSell(props.currentAccount);
         this.state = {
             mounted: false,
             sub: "",
             sellAssetInput: "",
-            sellAsset: "",
-            sellAssets: [],
+            sellAsset: null,
+            sellAssets: accountAssets,
             sellAmount: "",
-            sellImgName: "BTS",
+            sellImgName: "unknown",
             receiveAssetInput: "",
-            receiveAsset: "",
-            receiveAssets: [],
+            receiveAsset: null,
+            receiveAssets: accountAssets,
             receiveAmount: "",
-            receiveImgName: "BTS",
+            receiveImgName: "unknown",
+            activeInput: "",
+            activeAmountInput: "",
             lookupQuote: "",
             orders: [],
+            orderView: "amount",
             fees: null,
-            prices: null
+            prices: null,
+            isSubscribedToMarket: true
         };
         this.onSellAssetInputChange = this.onSellAssetInputChange.bind(this);
         this.onReceiveAssetInputChange = this.onReceiveAssetInputChange.bind(
@@ -58,27 +67,42 @@ class QuickTrade extends Component {
         this.onReceiveAmountChange = this.onReceiveAmountChange.bind(this);
         this.onSellImageError = this.onSellImageError.bind(this);
         this.onReceiveImageError = this.onReceiveImageError.bind(this);
+        this.onReceiveAssetSearch = this.onReceiveAssetSearch.bind(this);
         this.onSwap = this.onSwap.bind(this);
+        this.handleSubscriptionToggleChange = this.handleSubscriptionToggleChange.bind(
+            this
+        );
+        this.hendleOrderView = this.hendleOrderView.bind(this);
         this.handleSell = this.handleSell.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this._subToMarket = this._subToMarket.bind(this);
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
-        this.setState = this.setState.bind(this);
         this._checkAndUpdateMarketList = this._checkAndUpdateMarketList.bind(
             this
         );
     }
 
+    _matchRouteAndAssets() {
+        if (this.state.sellImgName !== this.props.match.params.sell) {
+            this.onSellAssetInputChange(this.props.match.params.sell);
+        }
+        if (this.state.receiveImgName !== this.props.match.params.receive) {
+            this.onReceiveAssetInputChange(this.props.match.params.receive);
+        }
+    }
+
+    componentDidUpate(prevProps) {
+        this._matchRouteAndAssets();
+    }
+
     componentDidMount() {
-        const {currentAccount} = this.props;
+        this._matchRouteAndAssets();
         this.setState({
-            mounted: true,
-            sellAssets: getAssetsToSell(currentAccount)
+            mounted: true
         });
     }
 
     componentWillReceiveProps(nextProps) {
-        //      console.log("nextProps", nextProps)
         if (nextProps.searchAssets !== this.props.searchAssets) {
             this.setState({activeSearch: true});
             let filteredAssets = this.props.searchAssets
@@ -86,47 +110,60 @@ class QuickTrade extends Component {
                 .filter(a => a.symbol.indexOf(this.state.lookupQuote) !== -1);
             this._checkAndUpdateMarketList(filteredAssets);
         }
-        if (
-            nextProps.marketData.combinedBids !==
-            this.props.marketData.combinedBids
-        ) {
-            this.getOrders(); ///CHECK
+        if (this.state.isSubscribedToMarket) {
+            this._getOrders();
+        }
+        if (nextProps.currentAccount !== this.props.currentAccount) {
+            const assets = getAssetsToSell(nextProps.currentAccount);
+            this.setState({
+                sellAssets: assets,
+                receiveAssets: assets
+            });
         }
     }
 
     componentWillUnmount() {
-        const {sub, sellAsset, receiveAsset} = this.state;
+        const {sub} = this.state;
+        const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
         if (sub) {
-            MarketsActions.unSubscribeMarket(sellAsset, receiveAsset);
+            MarketsActions.unSubscribeMarket(sellAssetId, receiveAssetId);
         }
     }
 
-    async _subToMarket(baseAssetId, quoteAssetId) {
-        const {sub, sellAsset, receiveAsset} = this.state;
-        const {bucketSize, currentGroupOrderLimit} = this.props;
-        if (sub) {
-            let [qa, ba] = sub.split("_");
-            if (qa === quoteAssetId && ba === baseAssetId) {
-                return;
+    async _subToMarket() {
+        const {
+            receiveAsset: baseAsset,
+            sellAsset: quoteAsset,
+            sub
+        } = this.state;
+        if (baseAsset && quoteAsset) {
+            const {
+                receiveAssetId: baseAssetId,
+                sellAssetId: quoteAssetId
+            } = this.getAssetsDetails();
+            const {bucketSize, currentGroupOrderLimit} = this.props;
+            if (sub) {
+                let [qa, ba] = sub.split("_");
+                if (qa === quoteAssetId && ba === baseAssetId) {
+                    return;
+                }
+                await MarketsActions.unSubscribeMarket(qa, ba);
             }
-        }
-        if (sub) {
-            await MarketsActions.unSubscribeMarket(sellAsset, receiveAsset);
-        }
-        if (baseAssetId && quoteAssetId) {
-            const baseAsset = ChainStore.getAsset(baseAssetId);
-            const quoteAsset = ChainStore.getAsset(quoteAssetId);
             await MarketsActions.subscribeMarket(
                 baseAsset,
                 quoteAsset,
                 bucketSize,
                 currentGroupOrderLimit
             );
-            this.setState({
-                sub: `${quoteAssetId}_${baseAssetId}`
-            });
-            this.getAllFees();
-            this.getAllPrices();
+            this.setState(
+                {
+                    sub: `${quoteAssetId}_${baseAssetId}`
+                },
+                () => {
+                    this.getAllPrices();
+                    this.getAllFees();
+                }
+            );
         }
     }
 
@@ -134,13 +171,25 @@ class QuickTrade extends Component {
         const {currentAccount} = this.props;
         const {sellAsset, receiveAsset} = this.state;
         if (sellAsset && receiveAsset) {
-            const baseAsset = ChainStore.getAsset(receiveAsset);
-            const quoteAsset = ChainStore.getAsset(sellAsset);
-            const fees = await getFees(baseAsset, quoteAsset, currentAccount);
+            const fees = await getFees(receiveAsset, sellAsset, currentAccount);
             this.setState({
                 fees
             });
         }
+    }
+
+    getAssetsDetails() {
+        const {sellAsset, receiveAsset} = this.state;
+        return {
+            sellAssetId: sellAsset ? sellAsset.get("id") : null,
+            receiveAssetId: receiveAsset ? receiveAsset.get("id") : null,
+            sellAssetPrecision: sellAsset ? sellAsset.get("precision") : null,
+            receiveAssetPrecision: receiveAsset
+                ? receiveAsset.get("precision")
+                : null,
+            sellAssetSymbol: sellAsset ? sellAsset.get("symbol") : null,
+            receiveAssetSymbol: receiveAsset ? receiveAsset.get("symbol") : null
+        };
     }
 
     getAllPrices() {
@@ -151,108 +200,232 @@ class QuickTrade extends Component {
         });
     }
 
-    getOrders() {
+    _getOrders() {
         const {combinedBids} = this.props.marketData;
+        const {
+            sellAsset,
+            receiveAsset,
+            sellAmount,
+            receiveAmount,
+            activeInput
+        } = this.state;
+        const {
+            sellAssetPrecision,
+            receiveAssetPrecision
+        } = this.getAssetsDetails();
         if (combinedBids && combinedBids.length) {
-            const {
-                sellAsset,
-                receiveAsset,
-                sellAmount,
-                receiveAmount
-            } = this.state;
-            if (sellAmount && sellAsset && receiveAsset) {
-                const sellAssetPrecession = ChainStore.getAsset(sellAsset).get(
-                    "precision"
-                );
-                const orders = getOrdersWithSellAmount(
-                    sellAmount * 10 ** sellAssetPrecession,
-                    combinedBids
-                );
-                this.setState(
-                    {
-                        orders
-                    },
-                    () => this.updateReceiveAmount()
-                );
-            } else if (receiveAmount && sellAsset && receiveAsset) {
-                const receiveAssetPrecession = ChainStore.getAsset(
-                    receiveAsset
-                ).get("precision");
-                const orders = getOrdersWithReceiveAmount(
-                    receiveAmount * 10 ** receiveAssetPrecession,
-                    combinedBids
-                );
-                this.setState(
-                    {
-                        orders
-                    },
-                    () => this.updateSellAmount()
-                );
-            } else {
-                this.setState({
-                    orders: []
-                });
+            if (sellAsset && receiveAsset) {
+                switch (activeInput) {
+                    case "receiveAsset":
+                        if (sellAmount) {
+                            const orders = getOrders(
+                                sellAmount * 10 ** sellAssetPrecision,
+                                combinedBids,
+                                "sell"
+                            );
+                            this.setState(
+                                {
+                                    orders
+                                },
+                                () => this.updateReceiveAmount()
+                            );
+                        }
+                        break;
+                    case "sellAsset":
+                        if (receiveAmount) {
+                            const orders = getOrders(
+                                receiveAmount * 10 ** receiveAssetPrecision,
+                                combinedBids,
+                                "receive"
+                            );
+                            this.setState(
+                                {
+                                    orders
+                                },
+                                () => this.updateSellAmount()
+                            );
+                        }
+                        break;
+                    case "sell":
+                        if (sellAmount) {
+                            const orders = getOrders(
+                                sellAmount * 10 ** sellAssetPrecision,
+                                combinedBids,
+                                "sell"
+                            );
+                            this.setState(
+                                {
+                                    orders
+                                },
+                                () => this.updateReceiveAmount()
+                            );
+                        } else {
+                            this.setState({
+                                orders: [],
+                                receiveAmount: ""
+                            });
+                        }
+                        break;
+                    case "receive":
+                        if (receiveAmount) {
+                            const orders = getOrders(
+                                receiveAmount * 10 ** receiveAssetPrecision,
+                                combinedBids,
+                                "receive"
+                            );
+                            this.setState(
+                                {
+                                    orders
+                                },
+                                () => this.updateSellAmount()
+                            );
+                        } else {
+                            this.setState({
+                                orders: [],
+                                sellAmount: ""
+                            });
+                        }
+                        break;
+                }
             }
+        } else {
+            this.setState({
+                orders: [],
+                sellAmount: "",
+                receiveAmount: ""
+            });
         }
     }
 
-    onSellAssetInputChange(e) {
-        const sellAssets = getAssetsToSell(this.props.currentAccount);
-        const filteredSellAssets = sellAssets.filter(item => {
-            return ChainStore.getAsset(item)
-                ? ChainStore.getAsset(item)
-                      .get("symbol")
-                      .includes(e)
-                : false;
-        });
-        let asset = "";
-        if (ChainStore.getAsset(e)) {
-            const assetId = ChainStore.getAsset(e).get("id");
-            if (filteredSellAssets.includes(assetId)) {
-                asset = e;
-            }
+    onSellAssetInputChange(assetIdOrSymbol) {
+        // if we selected the asset that is currently being received,
+        // switch
+        const {receiveAssetId, receiveAssetSymbol} = this.getAssetsDetails();
+
+        const asset = ChainStore.getAsset(assetIdOrSymbol);
+        const assetId = asset.get("id");
+        const assetImage = asset.get("symbol");
+
+        let receiveRoute = "";
+        if (!!receiveAssetSymbol) {
+            receiveRoute = "/" + receiveAssetSymbol;
         }
-        if (filteredSellAssets.length === 1) {
-            asset = filteredSellAssets[0];
-        }
-        const assetImage = asset
-            ? ChainStore.getAsset(asset).get("symbol")
-            : "BTS";
-        this.setState(
-            {
-                sellAsset: asset,
-                sellAssets: filteredSellAssets,
-                sellAssetInput: e,
-                sellImgName: assetImage
-            },
-            () => {
-                const {sellAsset, receiveAsset} = this.state;
-                if (sellAsset && receiveAsset) {
-                    this._subToMarket(receiveAsset, sellAsset);
+
+        this.props.history.push("/quick-trade/" + assetImage + receiveRoute);
+
+        if (assetIdOrSymbol === receiveAssetId) {
+            this.setState(
+                state => {
+                    return {
+                        sellAssetInput: assetId,
+                        sellAsset: asset,
+                        sellImgName: assetImage,
+                        sellAmount: "",
+                        receiveAsset: state.sellAsset,
+                        receiveAssetInput: state.sellAssetInput,
+                        receiveImgName: state.sellImgName,
+                        activeInput: "sellAsset"
+                    };
+                },
+                () => {
+                    this._subToMarket().then(() => this._getOrders());
                 }
-            }
-        );
+            );
+        } else {
+            this.setState(
+                {
+                    sellAssetInput: assetId,
+                    sellAsset: asset,
+                    sellImgName: assetImage,
+                    sellAmount: "",
+                    activeInput: "sellAsset"
+                },
+                () => {
+                    this._subToMarket().then(() => this._getOrders());
+                }
+            );
+        }
     }
 
     onReceiveAssetInputChange(e) {
+        const {sellAssets} = this.state;
+        const {
+            sellAssetId,
+            receiveAssetId,
+            sellAssetSymbol
+        } = this.getAssetsDetails();
+        const asset = ChainStore.getAsset(e);
+        const assetId = asset.get("id");
+        const assetImage = asset.get("symbol");
+
+        let sellRoute = "/-";
+        if (!!sellAssetSymbol) {
+            sellRoute = "/" + sellAssetSymbol;
+        }
+
+        this.props.history.push("/quick-trade/" + sellRoute + "/" + assetImage);
+
+        if (e === sellAssetId && sellAssets.includes(receiveAssetId)) {
+            this.setState(
+                state => {
+                    return {
+                        receiveAssetInput: assetId,
+                        receiveAsset: asset,
+                        receiveImgName: assetImage,
+                        receiveAmount: "",
+                        sellAsset: state.receiveAsset,
+                        sellAssetInput: state.receiveAssetInput,
+                        sellImgName: state.receiveImgName,
+                        activeInput: "receiveAsset"
+                    };
+                },
+                () => {
+                    this._subToMarket().then(() => this._getOrders());
+                }
+            );
+        } else if (e === sellAssetId) {
+            this.setState(
+                {
+                    receiveAssetInput: assetId,
+                    receiveAsset: asset,
+                    receiveImgName: assetImage,
+                    receiveAmount: "",
+                    sellAsset: null,
+                    sellAssetInput: "",
+                    sellImgName: "unknown",
+                    activeInput: "receiveAsset"
+                },
+                () => {
+                    this._subToMarket().then(() => this._getOrders());
+                }
+            );
+        } else {
+            this.setState(
+                {
+                    receiveAssetInput: assetId,
+                    receiveAsset: asset,
+                    receiveImgName: assetImage,
+                    receiveAmount: "",
+                    activeInput: "receiveAsset"
+                },
+                () => {
+                    this._subToMarket().then(() => this._getOrders());
+                }
+            );
+        }
+    }
+
+    onReceiveAssetSearch(e) {
         if (!this.state.mounted) return;
         let isValidName = !ChainValidation.is_valid_symbol_error(e, true);
         if (!isValidName) {
             /* Don't lookup invalid asset names */
             this.setState({
-                receiveAsset: "",
+                receiveAsset: null,
                 receiveAssetInput: e,
-                activeSearch: false,
-                receiveAssets: []
+                activeSearch: false
             });
             return;
-        } else {
-            this.setState({
-                receiveAsset: "",
-                receiveAssetInput: e,
-                activeSearch: true,
-                receiveAssets: []
-            });
         }
 
         if (this.state.receiveAssetInput !== e) {
@@ -265,7 +438,7 @@ class QuickTrade extends Component {
     }
 
     _checkAndUpdateMarketList(marketsList) {
-        const receiveAssets = marketsList.map(asset => asset.id);
+        let receiveAssets = marketsList.map(asset => asset.id);
         clearInterval(this.intervalId);
         const {receiveAssetInput} = this.state;
         let asset = "";
@@ -275,25 +448,26 @@ class QuickTrade extends Component {
                 asset = ChainStore.getAsset(receiveAssetInput).get("id");
             }
         }
-        if (receiveAssets.length === 1) asset = receiveAssets[0];
-        const assetImage = asset
-            ? ChainStore.getAsset(asset).get("symbol")
-            : "BTS";
+        if (receiveAssets.length === 1) {
+            asset = receiveAssets[0];
+            const {currentAccount} = this.props;
+            receiveAssets = getAssetsToSell(currentAccount);
+            receiveAssets.push(asset);
+        }
+        if (receiveAssets.length === 0) {
+            const {currentAccount} = this.props;
+            receiveAssets = getAssetsToSell(currentAccount);
+        }
 
         this.intervalId = setInterval(() => {
             clearInterval(this.intervalId);
             this.setState(
                 {
-                    receiveAsset: asset,
                     receiveAssets,
-                    activeSearch: false,
-                    receiveImgName: assetImage
+                    activeSearch: false
                 },
                 () => {
-                    const {sellAsset, receiveAsset} = this.state;
-                    if (sellAsset && receiveAsset) {
-                        this._subToMarket(receiveAsset, sellAsset);
-                    }
+                    this._subToMarket().then(() => this._getOrders());
                 }
             );
         }, 100);
@@ -301,74 +475,176 @@ class QuickTrade extends Component {
 
     onSellAmountChange(e) {
         if (!this.state.mounted) return;
-        const {amount} = e;
         this.setState(
             {
-                sellAmount: amount,
-                receiveAmount: ""
+                sellAmount: e.amount,
+                activeInput: "sell",
+                activeAmountInput: "sell"
             },
             () => {
-                this.getOrders();
+                this._getOrders();
             }
         );
     }
 
     onReceiveAmountChange(e) {
         if (!this.state.mounted) return;
-        const {amount} = e;
         this.setState(
             {
-                receiveAmount: amount,
-                sellAmount: ""
+                receiveAmount: e.amount,
+                activeInput: "receive",
+                activeAmountInput: "receive"
             },
             () => {
-                this.getOrders();
+                this._getOrders();
             }
         );
     }
 
     onSellImageError() {
         this.setState({
-            sellImgName: "BTS"
+            sellImgName: "unknown"
         });
     }
 
     onReceiveImageError() {
         this.setState({
-            receiveImgName: "BTS"
+            receiveImgName: "unknown"
         });
     }
 
     onSwap() {
         if (this.isSwappable()) {
-            const {
-                sellAsset,
-                receiveAsset,
-                sellImgName,
-                receiveImgName,
-                sellAssetInput,
-                receiveAssetInput,
-                receiveAmount
-            } = this.state;
-            this.setState(
-                {
-                    sellAsset: receiveAsset,
-                    receiveAsset: sellAsset,
-                    sellAssets: [receiveAsset],
-                    receiveAssets: [sellAsset],
-                    sellAssetInput: receiveAssetInput,
-                    receiveAssetInput: sellAssetInput,
-                    sellImgName: receiveImgName,
-                    receiveImgName: sellImgName,
-                    sellAmount: receiveAmount
-                },
-                () => this.updateReceiveAmount()
-            );
+            let {receiveAssets, activeAmountInput} = this.state;
+            const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
+            if (!receiveAssets.includes(sellAssetId)) {
+                receiveAssets = [...receiveAssets, receiveAssetId];
+            }
+            if (activeAmountInput === "sell") {
+                this.setState(
+                    state => {
+                        return {
+                            sellAsset: state.receiveAsset,
+                            receiveAsset: state.sellAsset,
+                            sellAssetInput: state.receiveAssetInput,
+                            receiveAssetInput: state.sellAssetInput,
+                            sellImgName: state.receiveImgName,
+                            receiveImgName: state.sellImgName,
+                            receiveAssets,
+                            receiveAmount: state.sellAmount,
+                            sellAmount: "",
+                            activeInput:
+                                state.activeAmountInput === "sell"
+                                    ? "receive"
+                                    : "sell",
+                            activeAmountInput:
+                                state.activeAmountInput === "sell"
+                                    ? "receive"
+                                    : "sell"
+                        };
+                    },
+                    () => {
+                        this._subToMarket().then(() => this._getOrders());
+                    }
+                );
+            } else {
+                this.setState(
+                    state => {
+                        return {
+                            sellAsset: state.receiveAsset,
+                            receiveAsset: state.sellAsset,
+                            sellAssetInput: state.receiveAssetInput,
+                            receiveAssetInput: state.sellAssetInput,
+                            sellImgName: state.receiveImgName,
+                            receiveImgName: state.sellImgName,
+                            receiveAssets,
+                            sellAmount: state.receiveAmount,
+                            receiveAmount: "",
+                            activeInput:
+                                state.activeAmountInput === "sell"
+                                    ? "receive"
+                                    : "sell",
+                            activeAmountInput:
+                                state.activeAmountInput === "sell"
+                                    ? "receive"
+                                    : "sell"
+                        };
+                    },
+                    () => {
+                        this._subToMarket().then(() => this._getOrders());
+                    }
+                );
+            }
         }
     }
 
+    handleSubscriptionToggleChange() {
+        this.setState(state => {
+            return {
+                isSubscribedToMarket: !state.isSubscribedToMarket
+            };
+        });
+    }
+
+    hendleOrderView() {
+        this.setState(state => {
+            const orderView = state.orderView === "amount" ? "total" : "amount";
+            return {
+                orderView
+            };
+        });
+    }
+
     handleSell() {
-        console.log("Sell"); //TODO
+        const {currentAccount} = this.props;
+        const {sellAmount, receiveAmount} = this.state;
+        const {
+            sellAssetId,
+            receiveAssetId,
+            sellAssetPrecision,
+            receiveAssetPrecision
+        } = this.getAssetsDetails();
+        const forSale = new Asset({
+            asset_id: sellAssetId,
+            precision: sellAssetPrecision,
+            amount: sellAmount * 10 ** sellAssetPrecision
+        });
+        const toReceive = new Asset({
+            asset_id: receiveAssetId,
+            precision: receiveAssetPrecision,
+            amount: receiveAmount * 10 ** receiveAssetPrecision
+        });
+        const expirationTime = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+
+        const order = new LimitOrderCreate({
+            for_sale: forSale,
+            expiration: expirationTime,
+            to_receive: toReceive,
+            seller: currentAccount.get("id"),
+            fee: {
+                asset_id: sellAssetId,
+                amount: 0
+            }
+        });
+
+        return MarketsActions.createLimitOrder2(order)
+            .then(result => {
+                if (result.error) {
+                    if (result.error.message !== "wallet locked")
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_order",
+                                {
+                                    amount: receiveAmount,
+                                    symbol: receiveAssetId
+                                }
+                            )
+                        });
+                }
+            })
+            .catch(e => {
+                console.error("order failed:", e);
+            });
     }
 
     handleCancel() {
@@ -376,30 +652,55 @@ class QuickTrade extends Component {
     }
 
     updateSellAmount() {
-        this.setState({
-            sellAmount: Math.random().toString() //TODO
-        });
-    }
-
-    updateReceiveAmount() {
-        const {orders, sellAmount, sellAsset, receiveAsset} = this.state;
-        const sellAssetPrecession = ChainStore.getAsset(sellAsset).get(
-            "precision"
-        );
-        const receiveAssetPrecession = ChainStore.getAsset(receiveAsset).get(
-            "precision"
-        );
-        if (!orders.length) {
+        const {orders, receiveAmount} = this.state;
+        const {
+            sellAssetPrecision,
+            receiveAssetPrecision
+        } = this.getAssetsDetails();
+        if (orders.length === 1) {
+            const sellAmount = (
+                receiveAmount / orders[0].order.getPrice()
+            ).toFixed(sellAssetPrecision);
             this.setState({
-                receiveAmount: ""
+                sellAmount
             });
             return;
         }
+        if (orders.length > 1) {
+            const lastOrder = orders.slice(-1)[0];
+            const penultimateOrder = orders.slice(
+                orders.length - 2,
+                orders.length - 1
+            )[0];
+            const lastOrderToReceive =
+                receiveAmount * 10 ** receiveAssetPrecision -
+                penultimateOrder.order.total_for_sale.getAmount();
+            const lastOrderForSale =
+                ((lastOrderToReceive / lastOrder.order.getPrice()) *
+                    10 ** sellAssetPrecision) /
+                10 ** receiveAssetPrecision;
+            const sellAmount = (
+                (penultimateOrder.order.total_to_receive.getAmount() +
+                    lastOrderForSale) /
+                10 ** sellAssetPrecision
+            ).toFixed(sellAssetPrecision);
+            this.setState({
+                sellAmount
+            });
+            return;
+        }
+    }
 
+    updateReceiveAmount() {
+        const {orders, sellAmount} = this.state;
+        const {
+            sellAssetPrecision,
+            receiveAssetPrecision
+        } = this.getAssetsDetails();
         if (orders.length === 1) {
             const receiveAmount = (
                 orders[0].order.getPrice() * sellAmount
-            ).toFixed(receiveAssetPrecession);
+            ).toFixed(receiveAssetPrecision);
             this.setState({
                 receiveAmount
             });
@@ -413,18 +714,18 @@ class QuickTrade extends Component {
                 orders.length - 1
             )[0];
             const lastOrderForSale =
-                sellAmount * 10 ** sellAssetPrecession -
+                sellAmount * 10 ** sellAssetPrecision -
                 penultimateOrder.order.total_to_receive.getAmount();
             const lastOrderToReceive =
                 (lastOrderForSale *
                     lastOrder.order.getPrice() *
-                    10 ** receiveAssetPrecession) /
-                10 ** sellAssetPrecession;
+                    10 ** receiveAssetPrecision) /
+                10 ** sellAssetPrecision;
             const receiveAmount = (
                 (penultimateOrder.order.total_for_sale.getAmount() +
                     lastOrderToReceive) /
-                10 ** receiveAssetPrecession
-            ).toFixed(receiveAssetPrecession);
+                10 ** receiveAssetPrecision
+            ).toFixed(receiveAssetPrecision);
             this.setState({
                 receiveAmount
             });
@@ -435,36 +736,122 @@ class QuickTrade extends Component {
     isSwappable() {
         const {sellAsset, receiveAsset} = this.state;
         const sellAssets = getAssetsToSell(this.props.currentAccount);
-        return sellAsset &&
-            receiveAsset &&
-            sellAssets.includes(ChainStore.getAsset(receiveAsset).get("id"))
-            ? true
-            : false;
+        const {receiveAssetId} = this.getAssetsDetails();
+        return sellAsset && receiveAsset && sellAssets.includes(receiveAssetId);
+    }
+
+    _getTransactionFee(denominationAssetId) {
+        const {fees, prices} = this.state;
+        const {sellAssetId} = this.getAssetsDetails();
+        if (fees) {
+            if (fees.transactionFee[sellAssetId]) {
+                if (
+                    !denominationAssetId ||
+                    denominationAssetId === sellAssetId
+                ) {
+                    return (
+                        fees.transactionFee[sellAssetId].fee.amount /
+                        10 ** fees.transactionFee[sellAssetId].fee.precision
+                    );
+                } else {
+                    return (
+                        (fees.transactionFee[sellAssetId].fee.amount /
+                            10 **
+                                fees.transactionFee[sellAssetId].fee
+                                    .precision) *
+                        prices.latestPrice
+                    );
+                }
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    _getMarketFee(denomindatedAssetId) {
+        const {fees, prices, receiveAmount} = this.state;
+        const {receiveAssetId} = this.getAssetsDetails();
+        if (fees) {
+            if (
+                !denomindatedAssetId ||
+                denomindatedAssetId === receiveAssetId
+            ) {
+                return (fees.marketFee.baseMarketFee * receiveAmount) / 10000;
+            } else {
+                return (
+                    (fees.marketFee.baseMarketFee * receiveAmount) /
+                    prices.latestPrice /
+                    10000
+                );
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    _getFeePercent(feeAmount, totalAmount) {
+        return +totalAmount ? (+totalAmount + +feeAmount) / totalAmount - 1 : 0;
     }
 
     getDetails() {
+        const {sub} = this.state;
+        if (!sub) {
+            return;
+        }
+        const {sellAmount, receiveAmount} = this.state;
+        const {
+            sellAssetId,
+            receiveAssetId,
+            sellAssetPrecision,
+            receiveAssetPrecision,
+            receiveAssetSymbol
+        } = this.getAssetsDetails();
         const priceSection = this.getPriceSection();
+        const priceExtra = (
+            <React.Fragment>
+                {counterpart.translate(
+                    "exchange.quick_trade_details.effective"
+                )}{" "}
+                <FormattedPrice
+                    base_asset={sellAssetId}
+                    quote_asset={receiveAssetId}
+                    base_amount={sellAmount * 10 ** sellAssetPrecision}
+                    quote_amount={receiveAmount * 10 ** receiveAssetPrecision}
+                    noPopOver
+                    force_direction={receiveAssetSymbol}
+                    noInvertTip
+                />
+            </React.Fragment>
+        );
         const feeSection = this.getFeeSection();
         const ordersSection = this.getOrdersSection();
-        const yourPrice = this.getYourPrice();
-        const totalPercentFee = this.getTotalPercentFee();
+        const totalPercentFee =
+            counterpart.translate("exchange.quick_trade_details.effective") +
+            " " +
+            (this.getTotalPercentFee() * 100).toFixed(2);
         const amountOfOrders = this.state.orders.length;
-        const ordersCaption = amountOfOrders < 2 ? "order" : "orders";
+        const ordersCaption =
+            amountOfOrders < 2
+                ? counterpart.translate("exchange.quick_trade_details.order")
+                : counterpart.translate("exchange.quick_trade_details.orders");
         return (
             <Collapse
+                className="asset-collapse"
                 style={{
                     marginTop: "1rem"
                 }}
             >
                 <Collapse.Panel
                     header={counterpart.translate("exchange.price")}
-                    extra={yourPrice}
+                    extra={priceExtra}
                 >
                     {priceSection}
                 </Collapse.Panel>
                 <Collapse.Panel
                     header={counterpart.translate("exchange.fee")}
-                    extra={totalPercentFee}
+                    extra={`${totalPercentFee}%`}
                 >
                     {feeSection}
                 </Collapse.Panel>
@@ -484,19 +871,37 @@ class QuickTrade extends Component {
 
     showDetails() {
         const {sellAsset, receiveAsset, sellAmount, receiveAmount} = this.state;
-        return sellAsset && receiveAsset && sellAmount && receiveAmount
-            ? true
-            : false;
+        return sellAsset && receiveAsset && +sellAmount && +receiveAmount;
+    }
+
+    showFeedPrice() {
+        const {sellAsset, receiveAsset} = this.state;
+        const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
+        const receiveCollateralAsset = receiveAsset.getIn([
+            "bitasset",
+            "options",
+            "short_backing_asset"
+        ]);
+        const sellCollateralAsset = sellAsset.getIn([
+            "bitasset",
+            "options",
+            "short_backing_asset"
+        ]);
+        return (
+            receiveCollateralAsset === sellAssetId ||
+            sellCollateralAsset === receiveAssetId
+        );
     }
 
     getPriceSection() {
-        const {prices, sellAmount, receiveAmount, receiveAsset} = this.state;
-        const receiveAssetPrecession = ChainStore.getAsset(receiveAsset).get(
-            "precision"
-        );
-        const yourPrice = (receiveAmount / sellAmount).toFixed(
-            receiveAssetPrecession
-        );
+        const {prices, sellAmount, receiveAmount} = this.state;
+        const {
+            sellAssetId,
+            receiveAssetId,
+            sellAssetPrecision,
+            receiveAssetPrecision,
+            receiveAssetSymbol
+        } = this.getAssetsDetails();
         return (
             <Row>
                 <Col span={12}>
@@ -505,11 +910,13 @@ class QuickTrade extends Component {
                             "exchange.quick_trade_details.your_price"
                         )}
                     </div>
-                    <div>
-                        {counterpart.translate(
-                            "exchange.quick_trade_details.feed_price"
-                        )}
-                    </div>
+                    {this.showFeedPrice() && (
+                        <div>
+                            {counterpart.translate(
+                                "exchange.quick_trade_details.feed_price"
+                            )}
+                        </div>
+                    )}
                     <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.last_price"
@@ -517,15 +924,92 @@ class QuickTrade extends Component {
                     </div>
                 </Col>
                 <Col span={12} style={{textAlign: "right"}}>
-                    <div>{yourPrice || "-"}</div>
-                    <div>{prices.feedPrice || "-"}</div>
-                    <div>{prices.latestPrice || "-"}</div>
+                    <div>
+                        <FormattedPrice
+                            base_asset={sellAssetId}
+                            quote_asset={receiveAssetId}
+                            base_amount={sellAmount * 10 ** sellAssetPrecision}
+                            quote_amount={
+                                receiveAmount * 10 ** receiveAssetPrecision
+                            }
+                            noPopOver
+                            force_direction={receiveAssetSymbol}
+                            noInvertTip
+                        />
+                    </div>
+                    {this.showFeedPrice() && (
+                        <div>
+                            <FormattedPrice
+                                base_asset={sellAssetId}
+                                quote_asset={receiveAssetId}
+                                base_amount={1 * 10 ** sellAssetPrecision}
+                                quote_amount={
+                                    prices.feedPrice *
+                                    10 ** receiveAssetPrecision
+                                }
+                                noPopOver
+                                force_direction={receiveAssetSymbol}
+                                noInvertTip
+                            />
+                        </div>
+                    )}
+                    <div>
+                        <FormattedPrice
+                            base_asset={sellAssetId}
+                            quote_asset={receiveAssetId}
+                            base_amount={1 * 10 ** sellAssetPrecision}
+                            quote_amount={
+                                prices.latestPrice * 10 ** receiveAssetPrecision
+                            }
+                            noPopOver
+                            force_direction={receiveAssetSymbol}
+                            noInvertTip
+                        />
+                    </div>
                 </Col>
             </Row>
         );
     }
 
     getFeeSection() {
+        const {sellAmount, receiveAmount} = this.state;
+        const {
+            sellAssetPrecision,
+            receiveAssetPrecision,
+            sellAssetSymbol,
+            receiveAssetSymbol
+        } = this.getAssetsDetails();
+
+        const transactionFee = this._getTransactionFee().toFixed(
+            sellAssetPrecision
+        );
+        const transactionFeePercent = (
+            this._getFeePercent(this._getTransactionFee(), sellAmount) * 100
+        ).toFixed(2);
+        const marketFee = this._getMarketFee().toFixed(receiveAssetPrecision);
+        const marketFeePercent = (
+            this._getFeePercent(this._getMarketFee(), receiveAmount) * 100
+        ).toFixed(2);
+
+        let [
+            liqidityPenaltyMarket,
+            liqidityPenaltyFeed
+        ] = this.getLiquidityPenalty();
+        if (liqidityPenaltyMarket || liqidityPenaltyMarket === 0) {
+            liqidityPenaltyMarket =
+                (liqidityPenaltyMarket * 100).toFixed(2) + "%";
+        } else {
+            liqidityPenaltyMarket = "-";
+        }
+        if (liqidityPenaltyFeed || liqidityPenaltyFeed === 0) {
+            liqidityPenaltyFeed = (liqidityPenaltyFeed * 100).toFixed(2) + "%";
+        } else {
+            liqidityPenaltyFeed = "-";
+        }
+        const liqidityPenalty = this.showFeedPrice()
+            ? `${liqidityPenaltyMarket} / ${liqidityPenaltyFeed}`
+            : liqidityPenaltyMarket;
+
         return (
             <Row>
                 <Col span={12}>
@@ -538,125 +1022,209 @@ class QuickTrade extends Component {
                         {counterpart.translate(
                             "exchange.quick_trade_details.market_fee"
                         )}
+                        {` ${marketFeePercent}%`}
                     </div>
                     <div>
                         {counterpart.translate(
                             "exchange.quick_trade_details.transaction_fee"
                         )}
+                        {` ${transactionFeePercent}%`}
                     </div>
                 </Col>
                 <Col span={12} style={{textAlign: "right"}}>
-                    <div>53441433143535</div>
-                    <div>1005615136143614</div>
-                    <div>3514313514351351</div>
+                    <div>{liqidityPenalty}</div>
+                    <div>
+                        {marketFee}
+                        &nbsp;
+                        <AssetName name={receiveAssetSymbol} noTip />
+                    </div>
+                    <div>
+                        {transactionFee}
+                        &nbsp;
+                        <AssetName name={sellAssetSymbol} noTip />
+                    </div>
                 </Col>
             </Row>
         );
     }
 
     getOrdersSection() {
-        const {orders, sellAsset} = this.state;
-        const sellAssetPrecession = ChainStore.getAsset(sellAsset).get(
-            "precision"
-        );
+        const {orders, orderView} = this.state;
+        const {
+            sellAssetId,
+            receiveAssetId,
+            sellAssetPrecision,
+            sellAssetSymbol,
+            receiveAssetSymbol
+        } = this.getAssetsDetails();
         const dataSource = orders.map(item => {
             return {
                 key: item.order.id,
                 id: item.order.id,
                 seller: <LinkToAccountById account={item.order.seller} />,
-                amount: item.amount / 10 ** sellAssetPrecession,
+                amount: (
+                    <div onClick={this.hendleOrderView}>
+                        {orderView === "amount"
+                            ? item.amount / 10 ** sellAssetPrecision
+                            : item.total_amount / 10 ** sellAssetPrecision}
+                    </div>
+                ),
                 price: item.price
             };
         });
+
+        const amount = (
+            <span>
+                {orderView === "amount"
+                    ? counterpart.translate(
+                          "exchange.quick_trade_details.amount"
+                      )
+                    : counterpart.translate(
+                          "exchange.quick_trade_details.total"
+                      )}
+                &nbsp;(
+                <AssetName name={sellAssetSymbol} noTip />)
+            </span>
+        );
+
+        const price = (
+            <span>
+                {counterpart.translate("exchange.quick_trade_details.price")}
+                &nbsp;(
+                <FormattedPrice
+                    base_asset={sellAssetId}
+                    quote_asset={receiveAssetId}
+                    noPopOver
+                    force_direction={receiveAssetSymbol}
+                    noInvertTip
+                    hide_value
+                />
+                )
+            </span>
+        );
 
         const columns = [
             {
                 title: counterpart.translate("exchange.quick_trade_details.id"),
                 dataIndex: "id",
-                key: "id"
+                key: "id",
+                width: "20%"
             },
             {
                 title: counterpart.translate(
                     "exchange.quick_trade_details.seller"
                 ),
                 dataIndex: "seller",
-                key: "seller"
+                key: "seller",
+                width: "20%"
             },
             {
-                title: `${counterpart.translate(
-                    "exchange.quick_trade_details.amount"
-                )} (${ChainStore.getAsset(sellAsset).get("symbol")})`,
+                title: amount,
                 dataIndex: "amount",
-                key: "amount"
+                key: "amount",
+                width: "30%"
             },
             {
-                title: counterpart.translate(
-                    "exchange.quick_trade_details.price"
-                ),
+                title: price,
                 dataIndex: "price",
                 key: "price"
             }
         ];
         return (
-            <Table
-                columns={columns}
-                dataSource={dataSource}
-                style={{width: "100%"}}
-                pagination={
-                    dataSource.length > 4
-                        ? {
-                              pageSize: 5
-                          }
-                        : false
-                }
-            />
+            <div>
+                <Switch
+                    style={{marginLeft: "20px"}}
+                    onChange={this.handleSubscriptionToggleChange}
+                    checked={this.state.isSubscribedToMarket}
+                />
+                <Translate
+                    onClick={this.handleSubscriptionToggleChange}
+                    content="exchange.quick_trade_details.subscribe_to_market"
+                    style={{
+                        marginLeft: "10px",
+                        cursor: "pointer"
+                    }}
+                />
+                <Table
+                    columns={columns}
+                    dataSource={dataSource}
+                    style={{width: "100%", marginTop: "10px"}}
+                    pagination={
+                        dataSource.length > 5
+                            ? {
+                                  pageSize: 5
+                              }
+                            : false
+                    }
+                />
+            </div>
         );
     }
 
-    getYourPrice() {
-        const {sellAmount, receiveAmount, sellAsset, receiveAsset} = this.state;
-        const sellAssetPrecession = ChainStore.getAsset(sellAsset).get(
-            "precision"
-        );
-        const receiveAssetPrecession = ChainStore.getAsset(receiveAsset).get(
-            "precision"
-        );
-        return (
-            <FormattedPrice
-                quote_amount={receiveAmount * 10 ** sellAssetPrecession}
-                quote_asset={sellAsset}
-                base_asset={receiveAsset}
-                base_amount={sellAmount * 10 ** receiveAssetPrecession}
-            />
-        );
+    getLiquidityPenalty() {
+        const {prices, sellAmount, receiveAmount} = this.state;
+        const price = receiveAmount / sellAmount;
+        const marketPrice = prices.latestPrice;
+        const feedPrice = prices.feedPrice;
+        let liquidityFee1, liquidityFee2;
+        if (price && marketPrice) {
+            liquidityFee1 = Math.max(
+                1 - price / marketPrice,
+                1 - marketPrice / price
+            );
+        }
+        if (price && feedPrice) {
+            liquidityFee2 = Math.max(
+                1 - price / feedPrice,
+                1 - feedPrice / price
+            );
+        }
+        return [liquidityFee1, liquidityFee2];
     }
 
     getTotalPercentFee() {
-        return "1%"; //TODO
+        const {sellAmount, receiveAmount} = this.state;
+        const transactionFeePercent = this._getFeePercent(
+            this._getTransactionFee(),
+            sellAmount
+        );
+        const marketFeePercent = this._getFeePercent(
+            this._getMarketFee(),
+            receiveAmount
+        );
+        const liquidityFee = this.getLiquidityPenalty()[0];
+        return transactionFeePercent + marketFeePercent + liquidityFee;
+    }
+
+    hasBalance() {
+        const {sellAmount} = this.state;
+        const {currentAccount} = this.props;
+        const accountBalances = currentAccount.get("balances").toJS();
+        const {sellAssetId, sellAssetPrecision} = this.getAssetsDetails();
+        const balance = ChainStore.getObject(accountBalances[sellAssetId]).get(
+            "balance"
+        );
+        const transactionFee = this._getTransactionFee();
+        return (
+            sellAmount * 10 ** sellAssetPrecision +
+                transactionFee * 10 ** sellAssetPrecision <
+            +balance
+        );
     }
 
     render() {
-        //        console.log("PROPS", this.props);
-        //        console.log("STATE", this.state);
         const {
             sellAssetInput,
-            sellAsset,
             sellAssets,
             sellAmount,
             sellImgName,
             receiveAssetInput,
-            receiveAsset,
             receiveAssets,
             receiveAmount,
-            receiveImgName
+            receiveImgName,
+            sub
         } = this.state;
-        // const {
-        //     activeMarketHistory,
-        //     feedPrice,
-        //     marketData,
-        //     searchAssets
-        // } = this.props;
-        //        console.log("in render");
+        const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
 
         const Details = this.showDetails() ? this.getDetails() : null;
 
@@ -672,7 +1240,7 @@ class QuickTrade extends Component {
             >
                 <SellReceive
                     sellAssetInput={sellAssetInput}
-                    sellAsset={sellAsset}
+                    sellAsset={sellAssetId}
                     sellAssets={sellAssets}
                     sellAmount={sellAmount}
                     sellImgName={sellImgName}
@@ -680,13 +1248,14 @@ class QuickTrade extends Component {
                     onSellAmountChange={this.onSellAmountChange}
                     onSellImageError={this.onSellImageError}
                     receiveAssetInput={receiveAssetInput}
-                    receiveAsset={receiveAsset}
+                    receiveAsset={receiveAssetId}
                     receiveAssets={receiveAssets}
                     receiveAmount={receiveAmount}
                     receiveImgName={receiveImgName}
                     onReceiveAssetInputChange={this.onReceiveAssetInputChange}
                     onReceiveAmountChange={this.onReceiveAmountChange}
                     onReceiveImageError={this.onReceiveImageError}
+                    onReceiveAssetSearch={this.onReceiveAssetSearch}
                     onSwap={this.onSwap}
                     isSwappable={this.isSwappable()}
                 />
@@ -700,7 +1269,9 @@ class QuickTrade extends Component {
                     <Button
                         key="sell"
                         type="primary"
-                        disabled={!this.showDetails()}
+                        disabled={
+                            !this.showDetails() || !sub || !this.hasBalance()
+                        }
                         onClick={this.handleSell}
                     >
                         {counterpart.translate("exchange.sell")}

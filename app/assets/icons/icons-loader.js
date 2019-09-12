@@ -70,7 +70,8 @@ let icons = [
     "wallet",
     "prediction",
     "prediction-large",
-    "swap"
+    "swap",
+    "instant-trade"
 ];
 
 let iconsMap = {};

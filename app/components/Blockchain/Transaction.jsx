@@ -8,7 +8,7 @@ import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
-import { Icon as AntIcon } from "bitshares-ui-style-guide";
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";

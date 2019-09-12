@@ -1,9 +1,9 @@
 import React from "react";
 import Translate from "react-translate-component";
 import PropTypes from "prop-types";
-import AmountSelector from "../Utility/AmountSelector";
-import AssetSelector from "../Utility/AssetSelector";
-import {Row, Col} from "bitshares-ui-style-guide";
+import {Row, Col, Tooltip} from "bitshares-ui-style-guide";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
+import AssetSelect from "../Utility/AssetSelect";
 
 class AmountSelector2 extends React.Component {
     static propTypes = {
@@ -16,13 +16,17 @@ class AmountSelector2 extends React.Component {
         onAssetInputChange: PropTypes.func,
         onAmountChange: PropTypes.func,
         onImageError: PropTypes.func,
+        onSearch: PropTypes.func,
         imgName: PropTypes.string,
+        placeholderAmount: PropTypes.string,
         placeholder: PropTypes.string
     };
 
     static defaultProps = {
         disabled: false,
-        imgName: "BTS"
+        imgName: "unknown",
+        placeholderAmount: "0.0",
+        placeholder: ""
     };
 
     render() {
@@ -34,10 +38,13 @@ class AmountSelector2 extends React.Component {
             amount,
             disabled,
             onAssetInputChange,
+            onSearch,
             onAmountChange,
             onImageError,
             imgName,
-            placeholder
+            placeholder,
+            placeholderAmount,
+            tooltipText
         } = this.props;
 
         const labelText = (
@@ -54,23 +61,21 @@ class AmountSelector2 extends React.Component {
         );
 
         const assetSelector = (
-            <AssetSelector
+            <AssetSelect
+                placeholder={placeholder}
+                showSearch={true}
+                value={!!assetInput ? assetInput : undefined}
                 onChange={onAssetInputChange}
-                asset={"1.3.0"} //do not change
                 assets={assets}
-                assetInput={assetInput}
-                style={{width: "100%"}}
-                onFound={() => {}}
-                error={" "} //do not change
-                noLabel
+                onSearch={onSearch}
             />
         );
 
         const image = (
             <img
                 style={{
-                    width: "5rem",
-                    height: "5rem",
+                    width: "3.5rem",
+                    height: "3.5rem",
                     marginTop: "0.5rem"
                 }}
                 onError={onImageError}
@@ -84,22 +89,37 @@ class AmountSelector2 extends React.Component {
                 amount={amount}
                 asset={asset}
                 assets={[asset]}
-                style={{
-                    marginTop: "-0.5rem",
-                    padding: "0"
-                }}
-                placeholder={placeholder}
+                placeholder={placeholderAmount}
                 disabled={disabled}
             />
         );
 
         return (
-            <div className="amount-selector-2">
+            <div
+                className="amount-selector-2"
+                style={{
+                    minWidth: "3.5rem",
+                    width: "100%"
+                }}
+            >
                 {labelText}
-                <Row>
-                    <Col span={9}>{image}</Col>
-                    <Col span={15}>
-                        {assetSelector}
+                <Row
+                    style={{
+                        minWidth: "18rem"
+                    }}
+                >
+                    <Col
+                        style={{
+                            minWidth: "3.5rem"
+                        }}
+                        span={5}
+                    >
+                        {image}
+                    </Col>
+                    <Col span={19}>
+                        <Tooltip placement="top" title={tooltipText}>
+                            {assetSelector}
+                        </Tooltip>
                         {amountSelector}
                     </Col>
                 </Row>

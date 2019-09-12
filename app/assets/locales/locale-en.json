@@ -104,7 +104,8 @@
             "suspected_scammer": "Suspected Scammer",
             "unknown": "Unknown member",
             "upgrade_lifetime": "Buy Lifetime Subscription",
-            "vested": "Vested"
+            "vested": "Vested",
+            "action": "Action"
         },
         "mine": "My account",
         "more": "see more",
@@ -454,6 +455,9 @@
     "assets": {
         "BTS": "BTS is the core token of the BitShares Blockchain"
     },
+    "errors": {
+        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -640,6 +644,9 @@
         "quick_deposit_tooltip": "Deposit %(asset)s, click to open options",
         "quick_trade": "Quick trade",
         "quick_trade_details": {
+            "placeholder_sell": "Choose asset to sell",
+            "placeholder_receive": "Choose asset to receive",
+            "effective": "effective",
             "your_price": "Your price",
             "feed_price": "Feed price",
             "last_price": "Last market price",
@@ -649,7 +656,12 @@
             "id": "Id",
             "seller": "Seller",
             "amount": "Amount",
-            "price": "Price"
+            "total": "Total",
+            "price": "Price",
+            "order": "Order",
+            "orders": "Orders",
+            "tooltip": "Enter at least three characters of an asset symbol to search",
+            "subscribe_to_market": "Subscribe to market"
         },
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
@@ -1732,12 +1744,19 @@
         "create_market_modal": {
             "title": "Create prediction market",
             "symbol": "Symbol",
+            "tooltip_symbol": "A prediction market asset has a symbol just like any other assets. Pick a symbol with 5 or more letters to minimize the creation fee.",
             "condition": "Condition",
+            "tooltip_condition": "The condition is a statement that can be resolved unambiguous to correct or incorrect at the resolution state.",
             "description": "Description",
+            "tooltip_description": "The description gives background information that help the user understand the significance of the prediction.",
             "resolution_date": "Resolution date",
+            "tooltip_resolution_date": "The point in time at which the prediction will be resolved. This needs to be done manually by you as the asset owner.",
             "backing_asset": "Backing asset",
+            "tooltip_backing_asset": "The backing asset will be used to pay the premium, i.e. it is the leverage that participants use.",
             "commission": "Commission",
-            "warning": "Fill all blanks"
+            "tooltip_commission": "Every participant pays the commission when opposing opinions on the prediction are being matched. On the blockchain, the commission is the market fee of this new asset.",
+            "warning": "Fill all blanks",
+            "select_date_and_time": "Select date and time"
         },
         "add_opinion_modal": {
             "title": "Add Prediction Offer",
@@ -2182,6 +2201,10 @@
         "voting": {
             "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
             "title": "Voting"
+        },
+        "instant_trade": {
+            "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+            "title": "Instant trade"
         }
     },
     "sync_fail": {
@@ -2447,7 +2470,8 @@
         "withdraw_permission_create": "Gave withdrawal permission for account",
         "withdraw_permission_delete": "Deleted withdrawal permissions for account",
         "withdraw_permission_update": "Updated withdrawal permission for account",
-        "view_json": "Show raw json"
+        "view_json": "Show raw json",
+        "operations": "Operations"
     },
     "transfer": {
         "again": "MAKE ANOTHER TRANSFER",
@@ -2472,7 +2496,9 @@
             "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
             "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
             "noFunds": "No funds",
+            "unknown": "Unknown error",
             "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+            "noPoolBalanceShort": "Fee pool empty",
             "pos": "Amount must be positive",
             "precision": "Minimum withdraw precision value: %(precision)s",
             "req": "Required field",
@@ -2493,6 +2519,7 @@
         "see": "SEE MY TRANSFERS",
         "send": "Send",
         "total": "Total: ",
+        "to": "To",
         "warn_name_unable_read_memo": "Proposed sender will be unable to read this memo!"
     },
     "trx_error": {
@@ -2762,6 +2789,9 @@
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
         "wallet_password": "Login anywhere using your password",
-        "wallet_types": "wallet types"
+        "wallet_types": "wallet types",
+        "wif_import_error": "Please enter a valid WIF",
+        "wif_length_error": "Incorrect input length",
+        "wif_associated_accounts": "Associated Account(s): "
     }
 }

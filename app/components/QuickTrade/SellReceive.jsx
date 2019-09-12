@@ -3,6 +3,7 @@ import AmountSelector2 from "../Utility/AmountSelector2";
 import PropTypes from "prop-types";
 import Icon from "../Icon/Icon";
 import {Row, Col} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class SellReceive extends Component {
     static propTypes = {
@@ -45,6 +46,7 @@ class SellReceive extends Component {
             onReceiveAssetInputChange,
             onReceiveAmountChange,
             onReceiveImageError,
+            onReceiveAssetSearch,
             onSwap,
             isSwappable
         } = this.props;
@@ -60,7 +62,7 @@ class SellReceive extends Component {
                 onAmountChange={onSellAmountChange}
                 onImageError={onSellImageError}
                 imgName={sellImgName}
-                placeholder={"0.0"}
+                placeholder={"exchange.quick_trade_details.placeholder_sell"}
             />
         );
 
@@ -72,10 +74,11 @@ class SellReceive extends Component {
                 assets={receiveAssets}
                 amount={receiveAmount}
                 onAssetInputChange={onReceiveAssetInputChange}
+                onSearch={onReceiveAssetSearch}
                 onAmountChange={onReceiveAmountChange}
                 onImageError={onReceiveImageError}
                 imgName={receiveImgName}
-                placeholder={"0.0"}
+                placeholder={"exchange.quick_trade_details.placeholder_receive"}
             />
         );
 
@@ -94,9 +97,13 @@ class SellReceive extends Component {
                 <Icon
                     name="swap"
                     size="2x"
-                    style={{
-                        marginTop: "3rem"
-                    }}
+                    style={
+                        !smallScreen
+                            ? {
+                                  marginTop: "3rem"
+                              }
+                            : null
+                    }
                     onClick={onSwap}
                 />
             </div>
