@@ -20,7 +20,7 @@ import {
     getOrders,
     getFees
 } from "./QuickTradeHelper";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 import {debounce} from "lodash-es";
 import AssetActions from "actions/AssetActions";
 import {ChainValidation} from "bitsharesjs";
@@ -82,17 +82,52 @@ class QuickTrade extends Component {
         );
     }
 
-    _matchRouteAndAssets() {
-        if (this.state.sellImgName !== this.props.match.params.sell) {
-            this.onSellAssetInputChange(this.props.match.params.sell);
-        }
-        if (this.state.receiveImgName !== this.props.match.params.receive) {
-            this.onReceiveAssetInputChange(this.props.match.params.receive);
+    _getSellAssetSymbol() {
+        return this.state.sellAsset ? this.state.sellAsset.get("symbol") : "-";
+    }
+
+    _getReceiveAssetSymbol() {
+        return this.state.receiveAsset
+            ? this.state.receiveAsset.get("symbol")
+            : "-";
+    }
+
+    _matchRouteAndAssets(routeIsSet = true) {
+        if (routeIsSet) {
+            if (
+                !!this.props.match.params.sell &&
+                this._getSellAssetSymbol() !== this.props.match.params.sell
+            ) {
+                this.onSellAssetInputChange(this.props.match.params.sell);
+            }
+            if (
+                !!this.props.match.params.receive &&
+                this._getReceiveAssetSymbol() !==
+                    this.props.match.params.receive
+            ) {
+                this.onReceiveAssetInputChange(this.props.match.params.receive);
+            }
+        } else {
+            let sellRoute = "";
+            let receiveRoute = "";
+            if (!!this.state.receiveAsset && !this.state.sellAsset) {
+                sellRoute = "-";
+            }
+            if (!!this.state.sellAsset) {
+                sellRoute = "/" + this._getSellAssetSymbol();
+            }
+            if (!!this.state.receiveAsset) {
+                receiveRoute = "/" + this._getReceiveAssetSymbol();
+            }
+            let pathName = "/quick-trade" + sellRoute + receiveRoute;
+            if (this.props.location.pathname !== pathName) {
+                this.props.history.push(pathName);
+            }
         }
     }
 
-    componentDidUpate(prevProps) {
-        this._matchRouteAndAssets();
+    componentDidUpdate(prevProps) {
+        this._matchRouteAndAssets(false);
     }
 
     componentDidMount() {
@@ -297,121 +332,99 @@ class QuickTrade extends Component {
         }
     }
 
-    onSellAssetInputChange(assetIdOrSymbol) {
-        // if we selected the asset that is currently being received,
-        // switch
-        const {receiveAssetId, receiveAssetSymbol} = this.getAssetsDetails();
+    _assetsHaveChanged() {
+        this._subToMarket().then(() => this._getOrders());
+    }
 
-        const asset = ChainStore.getAsset(assetIdOrSymbol);
-        const assetId = asset.get("id");
-        const assetImage = asset.get("symbol");
-
-        let receiveRoute = "";
-        if (!!receiveAssetSymbol) {
-            receiveRoute = "/" + receiveAssetSymbol;
+    async _setSellAsset(
+        assetObjectIdOrSymbol,
+        activeInput = "sellAsset",
+        fireChanged = true
+    ) {
+        let asset = null;
+        if (typeof assetObjectIdOrSymbol === "string") {
+            asset = await FetchChain("getAsset", assetObjectIdOrSymbol);
+        } else {
+            asset = assetObjectIdOrSymbol;
         }
+        this.setState(
+            {
+                sellAssetInput: asset.get("id"),
+                sellAsset: asset,
+                sellImgName: asset.get("symbol"),
+                sellAmount: "",
+                activeInput: activeInput
+            },
+            () => {
+                if (fireChanged) this._assetsHaveChanged.bind(this);
+            }
+        );
+    }
 
-        this.props.history.push("/quick-trade/" + assetImage + receiveRoute);
+    async _setReceiveAsset(
+        assetObjectIdOrSymbol,
+        activeInput = "receiveAsset",
+        fireChanged = true
+    ) {
+        let asset = null;
+        if (typeof assetObjectIdOrSymbol === "string") {
+            asset = await FetchChain("getAsset", assetObjectIdOrSymbol);
+        } else {
+            asset = assetObjectIdOrSymbol;
+        }
+        this.setState(
+            {
+                receiveAssetInput: asset.get("id"),
+                receiveAsset: asset,
+                receiveImgName: asset.get("symbol"),
+                receiveAmount: "",
+                activeInput: activeInput
+            },
+            () => {
+                if (fireChanged) this._assetsHaveChanged.bind(this);
+            }
+        );
+    }
+
+    async _swapAssets(activeInput, fireChanged = true) {
+        this.setState(
+            {
+                sellAssetInput: this.state.receiveAssetInput,
+                sellAsset: this.state.receiveAsset,
+                sellImgName: this.state.receiveImgName,
+                receiveAsset: this.state.sellAsset,
+                receiveAssetInput: this.state.sellAssetInput,
+                receiveImgName: this.state.sellImgName,
+                sellAmount:
+                    activeInput === "sellAsset" ? "" : this.state.sellAmount,
+                receiveAmount:
+                    activeInput !== "sellAsset" ? "" : this.state.receiveAmount,
+                activeInput: activeInput
+            },
+            () => {
+                if (fireChanged)
+                    this._subToMarket().then(() => this._getOrders());
+            }
+        );
+    }
+
+    async onSellAssetInputChange(assetIdOrSymbol) {
+        const {receiveAssetId} = this.getAssetsDetails();
 
         if (assetIdOrSymbol === receiveAssetId) {
-            this.setState(
-                state => {
-                    return {
-                        sellAssetInput: assetId,
-                        sellAsset: asset,
-                        sellImgName: assetImage,
-                        sellAmount: "",
-                        receiveAsset: state.sellAsset,
-                        receiveAssetInput: state.sellAssetInput,
-                        receiveImgName: state.sellImgName,
-                        activeInput: "sellAsset"
-                    };
-                },
-                () => {
-                    this._subToMarket().then(() => this._getOrders());
-                }
-            );
+            this._swapAssets("sellAsset");
         } else {
-            this.setState(
-                {
-                    sellAssetInput: assetId,
-                    sellAsset: asset,
-                    sellImgName: assetImage,
-                    sellAmount: "",
-                    activeInput: "sellAsset"
-                },
-                () => {
-                    this._subToMarket().then(() => this._getOrders());
-                }
-            );
+            this._setSellAsset(assetIdOrSymbol);
         }
     }
 
-    onReceiveAssetInputChange(e) {
-        const {sellAssets} = this.state;
-        const {
-            sellAssetId,
-            receiveAssetId,
-            sellAssetSymbol
-        } = this.getAssetsDetails();
-        const asset = ChainStore.getAsset(e);
-        const assetId = asset.get("id");
-        const assetImage = asset.get("symbol");
+    async onReceiveAssetInputChange(assetIdOrSymbol) {
+        const {sellAssetId} = this.getAssetsDetails();
 
-        let sellRoute = "/-";
-        if (!!sellAssetSymbol) {
-            sellRoute = "/" + sellAssetSymbol;
-        }
-
-        this.props.history.push("/quick-trade/" + sellRoute + "/" + assetImage);
-
-        if (e === sellAssetId && sellAssets.includes(receiveAssetId)) {
-            this.setState(
-                state => {
-                    return {
-                        receiveAssetInput: assetId,
-                        receiveAsset: asset,
-                        receiveImgName: assetImage,
-                        receiveAmount: "",
-                        sellAsset: state.receiveAsset,
-                        sellAssetInput: state.receiveAssetInput,
-                        sellImgName: state.receiveImgName,
-                        activeInput: "receiveAsset"
-                    };
-                },
-                () => {
-                    this._subToMarket().then(() => this._getOrders());
-                }
-            );
-        } else if (e === sellAssetId) {
-            this.setState(
-                {
-                    receiveAssetInput: assetId,
-                    receiveAsset: asset,
-                    receiveImgName: assetImage,
-                    receiveAmount: "",
-                    sellAsset: null,
-                    sellAssetInput: "",
-                    sellImgName: "unknown",
-                    activeInput: "receiveAsset"
-                },
-                () => {
-                    this._subToMarket().then(() => this._getOrders());
-                }
-            );
+        if (assetIdOrSymbol === sellAssetId) {
+            this._swapAssets("receiveAsset");
         } else {
-            this.setState(
-                {
-                    receiveAssetInput: assetId,
-                    receiveAsset: asset,
-                    receiveImgName: assetImage,
-                    receiveAmount: "",
-                    activeInput: "receiveAsset"
-                },
-                () => {
-                    this._subToMarket().then(() => this._getOrders());
-                }
-            );
+            this._setReceiveAsset(assetIdOrSymbol);
         }
     }
 
