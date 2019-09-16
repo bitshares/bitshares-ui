@@ -137,10 +137,7 @@ class WorkerList extends React.Component {
                                                 ? "visible"
                                                 : "hidden"
                                     }}
-                                    href={sanitize(item.url, {
-                                        whiteList: [], // empty, means filter out all tags
-                                        stripIgnoreTag: true // filter out all HTML not in the whilelist
-                                    })}
+                                    href={utils.sanitize(item.url)}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
@@ -672,13 +669,15 @@ class WorkerList extends React.Component {
                 };
             });
         // fixme: don't call setState in render
-        setWorkersLength(
-            newWorkers.length,
-            activeWorkers.length,
-            polls.length,
-            expiredWorkers.length,
-            voteThreshold
-        );
+        setTimeout(() => {
+            setWorkersLength(
+                newWorkers.length,
+                activeWorkers.length,
+                polls.length,
+                expiredWorkers.length,
+                voteThreshold
+            );
+        }, 0);
         const workers =
             workerTableIndex === 0
                 ? newWorkers

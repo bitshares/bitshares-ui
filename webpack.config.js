@@ -222,7 +222,8 @@ module.exports = function(env) {
             filename: env.prod ? "[name].[chunkhash].js" : "[name].js",
             chunkFilename: env.prod ? "[name].[chunkhash].js" : "[name].js",
             pathinfo: !env.prod,
-            sourceMapFilename: "[name].js.map"
+            sourceMapFilename: "[name].js.map",
+            globalObject: "this"
         },
         optimization: {
             splitChunks: {

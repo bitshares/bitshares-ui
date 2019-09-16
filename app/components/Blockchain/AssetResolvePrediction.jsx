@@ -2,7 +2,6 @@ import React from "react";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
 import counterpart from "counterpart";
 import {Radio, Tooltip, Button, Form} from "bitshares-ui-style-guide";
@@ -54,7 +53,7 @@ class AssetResolvePrediction extends React.Component {
         const {asset, account} = this.props;
 
         let base = new Asset({
-            real: this.state.globalSettlementPrice,
+            real: 1,
             asset_id: this.props.asset.id,
             precision: this.props.asset.precision
         });
@@ -62,7 +61,7 @@ class AssetResolvePrediction extends React.Component {
             asset.bitasset.options.short_backing_asset
         );
         let quote = new Asset({
-            real: 1,
+            real: this.state.globalSettlementPrice,
             asset_id: this.props.asset.bitasset.options.short_backing_asset,
             precision: quoteAsset.get("precision")
         });

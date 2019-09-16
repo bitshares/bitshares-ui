@@ -12,6 +12,28 @@ $border-color: rgba(128, 128, 128, 0.45);
     }
 }
 
+.blue {
+    color: rgb(65, 116, 184) !important;
+    .icon {
+        > svg {
+            > path {
+                fill: rgb(65, 116, 184) !important;
+            }
+        }
+    }
+}
+
+.grey {
+    color: rgb(102, 102, 102) !important;
+    .icon {
+        > svg {
+            > path {
+                fill: rgb(102, 102, 102) !important;
+            }
+        }
+    }
+}
+
 .red {
     color: #e6001f !important;
 

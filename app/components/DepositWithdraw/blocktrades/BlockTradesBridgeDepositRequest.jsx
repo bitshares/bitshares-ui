@@ -31,6 +31,8 @@ const CLIENT_ID = "10ecf048-b982-467b-9965-0b0926330869";
 const REDIRECT_URI = "https://192.168.6.105:9051/deposit-withdraw";
 const SCOPE =
     "offline openid email profile create_new_mappings view_client_transaction_history";
+import SettingsStore from "stores/SettingsStore";
+import {ChainStore} from "bitsharesjs";
 
 class ButtonConversion extends React.Component {
     static propTypes = {
@@ -61,8 +63,13 @@ class ButtonConversion extends React.Component {
     _getFeeID(props = this.props) {
         const balance = this._getCurrentBalance(props);
         const balances = props.account.get("balances");
-        let feeID = balances.has("1.3.0")
-            ? "1.3.0"
+        const defaultFeeAssetId =
+            ChainStore.assets_by_symbol.get(
+                SettingsStore.getState().settings.get("fee_asset")
+            ) || "1.3.0";
+
+        let feeID = balances.has(defaultFeeAssetId)
+            ? defaultFeeAssetId
             : balance
                 ? balance.get("asset_type")
                 : "1.3.0";
@@ -196,7 +203,6 @@ class ButtonConversion extends React.Component {
             confirm_store_state.included &&
             confirm_store_state.broadcasted_transaction
         ) {
-            // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
         } else if (confirm_store_state.closed) {

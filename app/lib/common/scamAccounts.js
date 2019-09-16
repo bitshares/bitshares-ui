@@ -151,8 +151,6 @@ export const scamAccountsOther = [
     "1.2.782094",
     "bitcoinindonesi",
     "1.2.609628",
-    "bitcoinindonesia",
-    "1.2.35250",
     "bitcointrade",
     "1.2.781957",
     "bitfinexdep1",
