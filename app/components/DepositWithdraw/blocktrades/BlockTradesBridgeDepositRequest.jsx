@@ -30,7 +30,7 @@ const AUTHORITY = "https://blocktrades.us/";
 const CLIENT_ID = "10ecf048-b982-467b-9965-0b0926330869";
 const REDIRECT_URI = "https://192.168.6.105:9051/deposit-withdraw";
 const SCOPE =
-    "offline openid email profile create_new_mappings view_client_transaction_history";
+    "offline openid email profile create_new_mappings view_client_transaction_history view_price_estimates";
 import SettingsStore from "stores/SettingsStore";
 import {ChainStore} from "bitsharesjs";
 
@@ -724,8 +724,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                             ) != -1
                         ) {
                             if (
-                                input_coin_info.walletType != "bitshares2" &&
-                                output_coin_info.walletType == "bitshares2"
+                                input_coin_info.walletType != "bitshares" &&
+                                output_coin_info.walletType == "bitshares"
                             ) {
                                 allowed_mappings_for_deposit[
                                     pair.inputCoinType
@@ -737,8 +737,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                     pair.inputCoinType
                                 ].push(pair.outputCoinType);
                             } else if (
-                                input_coin_info.walletType == "bitshares2" &&
-                                output_coin_info.walletType != "bitshares2"
+                                input_coin_info.walletType == "bitshares" &&
+                                output_coin_info.walletType != "bitshares"
                             ) {
                                 allowed_mappings_for_withdraw[
                                     pair.inputCoinType
@@ -750,8 +750,8 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                     pair.inputCoinType
                                 ].push(pair.outputCoinType);
                             } else if (
-                                input_coin_info.walletType == "bitshares2" &&
-                                output_coin_info.walletType == "bitshares2"
+                                input_coin_info.walletType == "bitshares" &&
+                                output_coin_info.walletType == "bitshares"
                             ) {
                                 allowed_mappings_for_conversion[
                                     pair.inputCoinType
