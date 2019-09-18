@@ -3032,7 +3032,9 @@ class Exchange extends React.Component {
                         "small-12 order-5",
                         verticalOrderBook ? "xlarge-order-5" : "",
                         !verticalOrderBook && !verticalOrderForm
-                            ? "xlarge-order-2"
+                            ? centerContainerWidth < 1200
+                                ? "xlarge-order-5"
+                                : "xlarge-order-2"
                             : ""
                     )}
                     style={{paddingRight: 5}}
