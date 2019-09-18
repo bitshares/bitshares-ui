@@ -3,7 +3,7 @@ import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import assetUtils from "common/asset_utils";
 import PropTypes from "prop-types";
-import Popover from "react-popover";
+import {Popover} from "bitshares-ui-style-guide";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
 import Pulsate from "./Pulsate";
@@ -39,7 +39,7 @@ SupplyPercentage = BindToChainState(SupplyPercentage);
 
 class FormattedAsset extends React.Component {
     static propTypes = {
-        amount: PropTypes.any.isRequired,
+        amount: PropTypes.any, // amount could be undefined or null when component is loading
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
         color: PropTypes.string,
@@ -50,7 +50,7 @@ class FormattedAsset extends React.Component {
     };
 
     static defaultProps = {
-        amount: 0,
+        amount: null,
         decimalOffset: 0,
         hide_asset: false,
         hide_amount: false,
@@ -86,6 +86,8 @@ class FormattedAsset extends React.Component {
             asPercentage,
             pulsate
         } = this.props;
+
+        if (amount === undefined || amount == null) return null; // still loading
 
         if (asset && asset.toJS) asset = asset.toJS();
 
@@ -161,21 +163,18 @@ class FormattedAsset extends React.Component {
                         <span>
                             &nbsp;
                             <Popover
-                                isOpen={this.state.isPopoverOpen}
-                                onOuterAction={this.closePopover}
-                                body={currency_popover_body}
+                                trigger="click"
+                                content={currency_popover_body}
+                                mouseEnterDelay={0.5}
                             >
-                                <span
-                                    className="currency click-for-help"
-                                    onClick={this.togglePopover}
-                                >
+                                <span className="currency click-for-help">
                                     <AssetName name={asset.symbol} />
                                 </span>
                             </Popover>
                         </span>
                     ) : (
-                        <span className="currency" onClick={this.togglePopover}>
-                            &nbsp;
+                        <span className="currency">
+                            {!hide_amount ? <span>&nbsp;</span> : null}
                             <AssetName
                                 noTip={this.props.noTip}
                                 noPrefix={this.props.noPrefix}

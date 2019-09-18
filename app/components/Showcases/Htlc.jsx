@@ -136,9 +136,7 @@ class Htlc extends Component {
                     amount: item.transfer.amount,
                     asset_id: item.transfer.asset_id
                 };
-                const expiration = new Date(
-                    item.conditions.time_lock.expiration
-                );
+                const expiration = item.conditions.time_lock.expiration;
                 const asset = ChainStore.getAsset(amount.asset_id, false);
                 const toAccountName = ChainStore.getAccountName(to) || to;
                 const fromAccountName = ChainStore.getAccountName(from) || from;
@@ -173,10 +171,7 @@ class Htlc extends Component {
                             </span>
                         </Tooltip>
                     ),
-                    expires: counterpart.localize(expiration, {
-                        type: "date",
-                        format: "full"
-                    }),
+                    expires: expiration,
                     rawData: {
                         ...item
                     }
@@ -240,6 +235,15 @@ class Htlc extends Component {
                         : a.expires < b.expires
                             ? -1
                             : 0;
+                },
+                render: (text, record) => {
+                    return counterpart.localize(
+                        new Date(utils.makeISODateString(text)),
+                        {
+                            type: "date",
+                            format: "full"
+                        }
+                    );
                 }
             },
             {
@@ -271,7 +275,7 @@ class Htlc extends Component {
                             >
                                 <Button>
                                     {counterpart.translate(
-                                        "showcases.htlc.claim"
+                                        "showcases.htlc.redeem"
                                     )}
                                 </Button>
                             </span>

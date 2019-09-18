@@ -27,7 +27,7 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
-import PaginatedList from "../Utility/PaginatedList";
+import CustomTable from "../Utility/CustomTable";
 import MarketUtils from "common/market_utils";
 import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
@@ -36,7 +36,7 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 class AccountPortfolioList extends React.Component {
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
             isBridgeModalVisible: false,
@@ -334,8 +334,8 @@ class AccountPortfolioList extends React.Component {
                 [action === "bridge_modal"
                     ? "bridgeAsset"
                     : action === "deposit_modal"
-                    ? "depositAsset"
-                    : "withdrawAsset"]: asset,
+                        ? "depositAsset"
+                        : "withdrawAsset"]: asset,
                 fiatModal
             },
             () => {
@@ -483,15 +483,10 @@ class AccountPortfolioList extends React.Component {
 
         return [
             {
-                title: (
-                    <Translate
-                        component="span"
-                        content="account.asset"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="account.asset" />,
                 dataIndex: "asset",
                 align: "left",
+                customizable: false,
                 sorter: this.sortFunctions.alphabetic,
                 sortOrder: portfolioSort === "asset" && portfolioSortDirection,
                 render: item => {
@@ -499,17 +494,10 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="account.qty"
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    />
-                ),
+                title: <Translate content="account.qty" />,
                 dataIndex: "qty",
                 align: "right",
+                customizable: false,
                 sorter: this.sortFunctions.qty,
                 sortOrder: portfolioSort === "qty" && portfolioSortDirection,
                 render: item => {
@@ -519,12 +507,7 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-small",
                 title: (
-                    <span
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    >
+                    <span style={{whiteSpace: "nowrap"}}>
                         <Translate content="exchange.price" /> (
                         <AssetName name={preferredUnit} noTip />)
                     </span>
@@ -539,15 +522,7 @@ class AccountPortfolioList extends React.Component {
             },
             {
                 className: "column-hide-small",
-                title: (
-                    <Translate
-                        content="account.hour_24_short"
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    />
-                ),
+                title: <Translate content="account.hour_24_short" />,
                 dataIndex: "hour24",
                 align: "right",
                 sorter: this.sortFunctions.changeValue,
@@ -559,12 +534,7 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-small",
                 title: (
-                    <span
-                        style={{
-                            marginRight: "5px",
-                            whiteSpace: "nowrap"
-                        }}
-                    >
+                    <span style={{whiteSpace: "nowrap"}}>
                         <TranslateWithLinks
                             noLink
                             string="account.eq_value_header"
@@ -581,37 +551,26 @@ class AccountPortfolioList extends React.Component {
                 ),
                 dataIndex: "value",
                 align: "right",
+                customizable: false,
                 sorter: this.sortFunctions.totalValue,
                 sortOrder: portfolioSort === "value" && portfolioSortDirection,
                 render: item => {
                     return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
                 }
             },
-            showAssetPercent
-                ? {
-                      title: (
-                          <Translate
-                              component="span"
-                              content="account.percent"
-                              style={{whiteSpace: "nowrap"}}
-                          />
-                      ),
-                      dataIndex: "percent",
-                      align: "right",
-                      render: item => {
-                          return (
-                              <span style={{whiteSpace: "nowrap"}}>{item}</span>
-                          );
-                      }
-                  }
-                : {},
             {
-                title: (
-                    <Translate
-                        content="header.payments"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="account.percent" />,
+                dataIndex: "percent",
+                align: "right",
+                customizable: {
+                    default: showAssetPercent
+                },
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
+            },
+            {
+                title: <Translate content="header.payments" />,
                 dataIndex: "payments",
                 align: "center",
                 render: item => {
@@ -619,12 +578,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="exchange.buy"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="exchange.buy" />,
                 dataIndex: "buy",
                 align: "center",
                 render: item => {
@@ -632,12 +586,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="modal.deposit.submit"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="modal.deposit.submit" />,
                 dataIndex: "deposit",
                 align: "center",
                 render: item => {
@@ -645,12 +594,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="modal.withdraw.submit"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="modal.withdraw.submit" />,
                 dataIndex: "withdraw",
                 align: "center",
                 render: item => {
@@ -658,12 +602,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="account.trade"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="account.trade" />,
                 dataIndex: "trade",
                 align: "center",
                 render: item => {
@@ -671,12 +610,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="exchange.borrow_short"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="exchange.borrow_short" />,
                 dataIndex: "borrow",
                 align: "center",
                 render: item => {
@@ -684,12 +618,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                title: (
-                    <Translate
-                        content="account.settle"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="account.settle" />,
                 dataIndex: "settle",
                 align: "center",
                 render: item => {
@@ -698,12 +627,7 @@ class AccountPortfolioList extends React.Component {
             },
             {
                 className: "column-hide-small",
-                title: (
-                    <Translate
-                        content="modal.reserve.submit"
-                        style={{whiteSpace: "nowrap"}}
-                    />
-                ),
+                title: <Translate content="modal.reserve.submit" />,
                 dataIndex: "burn",
                 align: "center",
                 render: item => {
@@ -719,7 +643,6 @@ class AccountPortfolioList extends React.Component {
                                 ? "exchange.hide"
                                 : "account.perm.show"
                         }
-                        style={{whiteSpace: "nowrap"}}
                     />
                 ),
                 dataIndex: "hide",
@@ -836,17 +759,6 @@ class AccountPortfolioList extends React.Component {
                 this.props.account
             );
 
-            /* Popover content */
-            settleLink = (
-                <a onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
-                    <Icon
-                        name="settle"
-                        title="icons.settle"
-                        className="icon-14px"
-                    />
-                </a>
-            );
-
             const includeAsset = !hiddenAssets.includes(asset_type);
             const hasBalance = !!balanceObject.get("balance");
             const hasOnOrder = !!orders[asset_type];
@@ -889,13 +801,38 @@ class AccountPortfolioList extends React.Component {
                 backingAsset
             );
             let settlePriceTitle;
-            if (
-                isBitAsset &&
-                asset.get("bitasset").get("settlement_fund") > 0
-            ) {
-                settlePriceTitle = "tooltip.global_settle";
-            } else {
-                settlePriceTitle = "tooltip.settle";
+
+            if (isBitAsset) {
+                const globally_settled =
+                    asset.get("bitasset").get("settlement_fund") > 0;
+                const isPrediction = asset.getIn([
+                    "bitasset",
+                    "is_prediction_market"
+                ]);
+                if (globally_settled) {
+                    settlePriceTitle = "tooltip.global_settle";
+                } else if (isPrediction) {
+                    settlePriceTitle = "tooltip.settle_market_prediction";
+                } else {
+                    settlePriceTitle = "tooltip.settle";
+                }
+                settleLink =
+                    isPrediction && !globally_settled ? (
+                        <AntIcon type={"question-circle"} />
+                    ) : (
+                        <a
+                            onClick={this._onSettleAsset.bind(
+                                this,
+                                asset.get("id")
+                            )}
+                        >
+                            <Icon
+                                name="settle"
+                                title="icons.settle"
+                                className="icon-14px"
+                            />
+                        </a>
+                    );
             }
 
             let preferredAsset = ChainStore.getAsset(preferredUnit);
@@ -1292,9 +1229,11 @@ class AccountPortfolioList extends React.Component {
                 visible={this.state.isBorrowModalVisible}
                 showModal={this.showBorrowModal}
                 hideModal={this.hideBorrowModal}
-                account={this.state.borrow && this.state.borrow.account}
-                quote_asset={this.state.borrow && this.state.borrow.quoteAsset}
-                backing_asset={
+                accountObj={this.state.borrow && this.state.borrow.account}
+                quoteAssetObj={
+                    this.state.borrow && this.state.borrow.quoteAsset
+                }
+                backingAssetObj={
                     this.state.borrow && this.state.borrow.backingAsset
                 }
             />
@@ -1319,7 +1258,7 @@ class AccountPortfolioList extends React.Component {
 
         return (
             <div>
-                <PaginatedList
+                <CustomTable
                     className="table dashboard-table table-hover"
                     rows={this._renderBalances(
                         this.props.balanceList,
@@ -1332,6 +1271,9 @@ class AccountPortfolioList extends React.Component {
                     extraRow={this.props.extraRow}
                     leftPadding="1.5rem"
                     toggleSortOrder={this.toggleSortOrder}
+                    viewSettings={this.props.viewSettings}
+                    viewSettingsKey="portfolioColumns"
+                    allowCustomization={true}
                 >
                     {this._renderSendModal()}
                     {(this.state.isSettleModalVisible ||
@@ -1392,7 +1334,7 @@ class AccountPortfolioList extends React.Component {
                             }}
                         />
                     )}
-                </PaginatedList>
+                </CustomTable>
             </div>
         );
     }

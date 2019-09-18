@@ -30,11 +30,13 @@ class Settings extends React.Component {
         let general = [
             "locale",
             "unit",
+            "fee_asset",
             "browser_notifications",
             "showSettles",
             "walletLockTimeout",
             "themes",
-            "showAssetPercent"
+            "showAssetPercent",
+            "viewOnlyMode"
         ];
         // disable that the user can change login method if only one is allowed
         if (getAllowedLogins().length > 1) general.push("passwordLogin");
@@ -258,6 +260,7 @@ class Settings extends React.Component {
             case "showSettles":
             case "showAssetPercent":
             case "passwordLogin":
+            case "viewOnlyMode":
                 let reference = defaults[setting][0];
                 if (reference.translate) reference = reference.translate;
                 SettingsActions.changeSetting({
@@ -266,11 +269,13 @@ class Settings extends React.Component {
                 });
                 break;
 
+            case "fee_asset":
             case "unit":
-                let index = findEntry(e.target.value, defaults[setting]);
+                const defaultSettings = defaults["unit"];
+                let index = findEntry(e.target.value, defaultSettings);
                 SettingsActions.changeSetting({
                     setting: setting,
-                    value: defaults[setting][index]
+                    value: defaultSettings[index]
                 });
                 break;
 
@@ -372,7 +377,11 @@ class Settings extends React.Component {
                             key={setting}
                             setting={setting}
                             settings={settings}
-                            defaults={defaults[setting]}
+                            defaults={
+                                defaults[
+                                    setting === "fee_asset" ? "unit" : setting
+                                ]
+                            }
                             onChange={this._handleSettingsEntryChange.bind(
                                 this
                             )}

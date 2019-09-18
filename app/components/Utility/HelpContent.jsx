@@ -30,10 +30,7 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
-        text = sanitize(text, {
-            whiteList: [], // empty, means filter out all tags
-            stripIgnoreTag: true // filter out all HTML not in the whilelist
-        });
+        text = utils.sanitize(text);
 
         if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0)
             return `<a href="${text}" onclick="_onClickLink(event)"`;
@@ -42,16 +39,20 @@ function adjust_links(str) {
         let page = endsWith(text, ".md")
             ? text.substr(0, text.length - 3)
             : text;
-        let res = `<a href="${
+        if (!page.startsWith("/help")) {
+            page = "/help/" + page;
+        } else if (page.startsWith("help")) {
+            page = "/" + page;
+        }
+        return `<a href="${
             __HASH_HISTORY__ ? "#" : ""
-        }/help/${page}" onclick="_onClickLink(event)"`;
-        return res;
+        }${page}" onclick="_onClickLink(event)"`;
     });
 }
 
 // console.log("-- HelpData -->", HelpData);
 
-class HelpContent extends React.Component {
+class HelpContent extends React.PureComponent {
     static propTypes = {
         path: PropTypes.string.isRequired,
         section: PropTypes.string
@@ -107,10 +108,7 @@ class HelpContent extends React.Component {
             let key = text.substr(1, text.length - 2);
             let value = this.props[key] !== undefined ? this.props[key] : text;
             if (value && typeof value === "string")
-                value = sanitize(value, {
-                    whiteList: [], // empty, means filter out all tags
-                    stripIgnoreTag: true // filter out all HTML not in the whilelist
-                });
+                value = utils.sanitize(value);
             if (value.amount && value.asset)
                 value = utils.format_asset(
                     value.amount,

@@ -6,8 +6,10 @@
         "as_collateral": "Teminat",
         "asset": "Dijital Varlık",
         "asset_details": "Aktif detayları",
+        "average_price": "Average price",
         "bittrex_scam": "Bu adres Bittrex'in gerçek adresi değildir. Lütfen alıcıyı bittrex-deposit olarak değiştirin.",
         "bts_market": "Piyasa",
+        "cancel_orders": "Cancel orders",
         "collaterals": "Teminat Pozisyonları",
         "confirm_asset_modal": {
             "are_you_sure": "Are you sure you want to save all changes to these tabs?",
@@ -24,6 +26,7 @@
         "deposit": "Deposit BTS",
         "deposit_address": "Your deposit address is your account name",
         "deposit_withdraw": "Yatır/Çek",
+        "download_history": "Download History",
         "eq_value": "Eş Değeri",
         "eq_value_header": "Value ({asset})",
         "errors": {
@@ -36,8 +39,16 @@
         "estimate_value": "Toplam hesap değeri (yaklaşık)",
         "existing_accounts": "Mevcut hesaplar",
         "existing_user": "Existing user",
+        "export_modal": {
+            "coinbase_report": "CoinTracking.info Report",
+            "description": "Enter your desired elastic search instance and click the report type",
+            "full_report": "Full Report",
+            "title": "History Export",
+            "use_custom": "Use custom wrapper"
+        },
         "filter_orders": "Filter",
         "follow": "Kişi ekle",
+        "group_by_asset": "Group by asset",
         "hidden_accounts_row": "Hidden Accounts",
         "hide_hidden": "Gizle",
         "hide_ignored": "Gizle",
@@ -58,14 +69,18 @@
         "intro_text_title": "Bitshares'e Hoş Geldiniz",
         "login_with": "Login with",
         "market_actions": "Takas işlemleri",
+        "market_orders": "Market orders",
         "market_value": "Piyasa Değeri",
         "member": {
+            "action": "Action",
             "annual": "Yıllık abone",
             "available": "Sahip olunabilecek",
+            "balance_type": "Type",
             "basic": "Normal üye",
             "cashback": "Tutulan bakiye miktarı",
             "claim": "Şimdi iste",
             "coindays": "koin günler",
+            "days": "days",
             "earned": "Kazanılmış koin günü",
             "expires": "bitiş tarihi",
             "fee_allocation": "Ücret Tahsisi",
@@ -102,6 +117,7 @@
             "premium_name_warning": "Premium hesap adı girdiniz. Normal adların içerinde en azından bir tire ya da rakam bulunur, veya hiç sesli harf yoktur."
         },
         "new_user": "New user?",
+        "no_order_history": "No order history",
         "no_orders": "Açık emir yok",
         "no_price": "Fiyat mevcut değil",
         "open_orders": "Açık Emirler",
@@ -151,9 +167,11 @@
             "private": "Özel Anahtar (WIF - Cüzdan İçine Aktarma Formatı)",
             "public": "Açık anahtar",
             "publish": "Değişimleri Duyur",
+            "publish_prediction": "Publish",
             "remove_proxy": "Remove proxy",
             "remove_text": "Kaldır",
             "reset": "Değişiklikleri Sıfırla",
+            "resolve_prediction_disabled_button": "The button will be enabled after resolution date has passed",
             "save": "Save Changes",
             "save_all": "Save All Changes",
             "show": "Göster",
@@ -182,6 +200,7 @@
         "see_open": "Bekleyen emirler",
         "select_placeholder": "Hesap Seç...",
         "settle": "Öde",
+        "settle_orders": "Settle orders",
         "show_hidden": "Göster",
         "show_ignored": "Göster",
         "show_visual": "Visual",
@@ -282,6 +301,10 @@
             "primary": "Ana ayarlar",
             "quote": "Miktar",
             "quote_name": "Dijital Varlık",
+            "resolve_prediction": "Resolve prediction",
+            "resolve_prediction_text": "The asset prediction can be resolved here.",
+            "reward_percent": "Reward percent",
+            "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
             "short": "Kısa ad (maksimum 32 harf)",
             "symbol": "Sembol",
             "to": "Hesaba çıkar",
@@ -298,7 +321,14 @@
             "balance_number": "Bakiye #%(id)s",
             "explain": "Bekletilen bakiyeler tavsiye programlarından yada geliştirici ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı serbest bırakılır.",
             "no_balances": "Bu hesaba ait bekletilen bakiye bulunmamaktadır.",
-            "title": "Tutulan Bakiyeler"
+            "title": "Tutulan Bakiyeler",
+            "type": {
+                "cashback": "Cashback",
+                "market_fee_sharing": "Market fee sharing",
+                "unspecified": "Unspecified",
+                "witness": "Witness",
+                "worker": "Worker"
+            }
         },
         "votes": {
             "about": "About",
@@ -310,6 +340,7 @@
             "add_witness_label": "Tanık",
             "already": "Hesap zaten listede",
             "approve_worker": "Kabul",
+            "cast_votes_through_one_operation": "Cast your votes for witness, committee and workers and broadcast them together.",
             "clear_proxy": "Vekili kaldır",
             "cm_approved_by": "Kurul üyeleri %(account)s tarafından onaylandı",
             "cm_not_approved_by": "Kurul üyeleri %(account)s tarafından onaylanmadı",
@@ -325,12 +356,15 @@
             "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Inactive",
             "info": "Bilgi",
+            "join_committee": "Join committee",
+            "join_witnesses": "Join Witnesses",
             "line": "Line",
             "max_pay": "Maksimum toplam ödeme",
             "missing": "Needed",
             "name": "Ad",
             "new": "Teklif edilen geliştirmeler",
             "no_proxy": "Vekil Yok",
+            "polls": "BSIPs/Polls (%(count)s)",
             "proxy": "Vekil Oy Hesabı",
             "proxy_current": "Your current proxy is",
             "proxy_known": "Bilinen proksiler",
@@ -381,7 +415,8 @@
             "empty_white_by": "%(account)s adlı hesap hiçbir izin listesinde değil.",
             "title": "İzin Listesi",
             "white_by": "İzin listesine alan",
-            "whitelist_authorities": "Whitelist authority"
+            "whitelist_authorities": "Whitelist authority",
+            "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         }
     },
     "account_browsing_mode": {
@@ -433,15 +468,19 @@
         "errors": {
             "below": "Teminat oranı çok düşük, bu pozisyon anında marjin-çağrılır",
             "below_info": "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_mcr_tcr": "Any ratio below %(mr)s will be treated as %(mr)s by chain.",
             "below_ratio_mcr_update": "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close": "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
             "collateral": "Yetersiz teminat seviyesi",
             "increased_debt_on_margin_call": "You increased your debt, which is not allowed when updating a margin called position"
         },
+        "lockedCR": "Locking Collateral Ratio will override other locked fields",
         "maximize_debt_set_ratio_slider": "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "%(asset_symbol)s için geçerli yayın mevcut değil",
         "pay_max_debt": "Pay Max Debt",
         "target_collateral_ratio": "Target Collateral Ratio",
+        "target_collateral_ratio_explanation": "When the position is being margin called, the corresponding order will be just big enough to bring the collateral ratio of the position greater or equal to the target collateral ratio",
+        "target_collateral_ratio_short": "TCR",
         "title": "%(asset_symbol)s Marjin",
         "update": "Güncelle",
         "use_max": "Use Max"
@@ -469,13 +508,20 @@
             }
         }
     },
+    "customizable_table": {
+        "customize_the_columns": "Customize the Columns"
+    },
     "dashboard": {
         "featured_markets": "Featured Markets",
         "starred_markets": "Starred Markets",
         "table_empty": "No market matched",
         "top_markets": "Top Markets"
     },
+    "errors": {
+        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+    },
     "exchange": {
+        "actions": "Actions",
         "add_quote": "Add",
         "asks": "Satış emirleri",
         "atr": "Ortalama Gerçek Fiyat Aralığı",
@@ -490,10 +536,15 @@
         "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
         "call": "Çağrı Fiyatı",
+        "cancel_order_select_all": "Select all orders",
+        "cancel_selected_orders": "Cancel selected order(s)",
         "change": "Değişim",
+        "chart_error": "Chart already exist",
         "chart_height": "Chart height (pixels)",
         "chart_hide": "Hide Charts",
+        "chart_load": "Load",
         "chart_modal": "Chart options",
+        "chart_save": "Save",
         "chart_type": "Chart type",
         "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",
@@ -505,6 +556,7 @@
         "deposit": "Deposit",
         "description": "Description",
         "ema": "Üssel Hareketli Ortalama",
+        "enter_chart_layout_name": "Enter Chart Layout Name",
         "featured": "Öne Çıkan Piyasalar",
         "feed_price": "Feed Price",
         "filter": "Filter...",
@@ -520,7 +572,10 @@
         "invalid_price": "Geçersiz fiyat",
         "invert": "Fiyatı ters çevir",
         "latest": "En Son",
+        "layout_name": "Layout Name",
         "limit": "Limit",
+        "load_chart_layout": "Load Chart Layout",
+        "load_custom_charts": "Load custom charts",
         "lowest_ask": "En düşük",
         "maintenance": "Sürdürme Çağrı Fiyatı",
         "market": "Piyasa",
@@ -539,6 +594,7 @@
             "title": "Market Picker",
             "use": "Use"
         },
+        "modified": "Modified",
         "more": "Piyasa bul",
         "move_down": "Move down",
         "move_up": "Move up",
@@ -590,6 +646,8 @@
         "receive": "Tahsil",
         "remove": "Remove",
         "rsi": "Relatif Güç İndeksi",
+        "save_custom_charts": "Save custom charts",
+        "save_new_chart_layout": "Save New Chart Layout ",
         "scaled": "Scaled",
         "search": "Search for more markets here",
         "sell": "Satış -",
@@ -669,7 +727,10 @@
         "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_offset": "Settlement price offset: %(offset)s%",
         "settle_orders": "Emirleri öde",
+        "settlement_date": "Settlement date",
+        "settlement_description": "Settlement of %(quoteAsset)s %(quoteName)s",
         "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
+        "settlement_of": "Settlement of",
         "short": "Kısa pozisyon",
         "show_all_orders": "Show all %(rowcount)s orders",
         "show_all_trades": "Show all %(rowcount)s trades",
@@ -715,8 +776,15 @@
                 "bid": "Bid Price",
                 "collateral": "Additional Collateral",
                 "debt": "Debt Covered",
+                "empty": "No collateral bids",
+                "included": {
+                    "no": "No",
+                    "partial": "Partially",
+                    "yes": "Yes"
+                },
                 "title": "Collateral Bids"
             },
+            "cumulative": "Σ",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Ücretleri talep et",
@@ -727,18 +795,26 @@
                 "fund_text": "Ücret havuzu %(asset)s olarak ödenen işlem ücretlerini %(core)s'e çevirerek   ödemek için kullanılır. Eğer ücret havuzunda para kalmazsa, ücretler artık %(asset)s olarak ödenemez ve %(core)s kullanılır ",
                 "pool_balance": "Havuz bakiyesi",
                 "pool_text": "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
+                "select_fee_asset": "Select asset to pay fee",
                 "title": "Ücret Havuzu",
-                "unclaimed_issuer_income": "Talep edilmemiş ihraççı geliri"
+                "unclaimed_issuer_income": "Talep edilmemiş ihraççı geliri",
+                "use_asset_as_default_fee": "Make selected asset default for paying fees",
+                "use_selected_asset": "Use selected asset"
             },
             "feed_producer": "Feed producer",
             "feed_producer_text": "Approved feed producers may publish a new feed using the form below:",
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
+                "click_to_switch_to_cumulative": "Click to switch between cumulative and position values",
+                "empty": "No margin positions",
+                "ratio_danger": "Position is below MCR and will be margin called",
+                "ratio_warning": "Position is near MCR and in danger of being margin called",
                 "title": "Margin positions"
             },
             "not_found": "%(name)s diye bir dijital varlık mevcut değil",
             "permissions": {
+                "accounts_in_whitelist_market_fee_sharing": "Accounts included in Market fee sharing whitelist",
                 "blacklist_authorities": "Kara liste yetkilileri",
                 "blacklist_markets": "Kara listeli piyasalar",
                 "max_market_fee": "Maksimum piyasa ücreti",
@@ -747,11 +823,18 @@
                 "whitelist_authorities": "İzin listesi yetkilileri",
                 "whitelist_markets": "İzin listesindeki piyasalar"
             },
+            "prediction_market_asset": {
+                "prediction": "Prediction",
+                "resolution_date": "Resolution date",
+                "tooltip_prediction": "The prediction is a statement defined by the asset owner. If the statement is true, this prediction market asset should be resolved to a settlement price of 1 by the asset owner.",
+                "tooltip_resolution_date": "The resolution date is an informal statement when the asset owner intends to resolve this betting market."
+            },
             "price_feed": {
                 "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
-                "global_settlement_price": "Global settlement happens at price",
+                "global_settlement_price": "Global settlement Price will be",
+                "global_settlement_trigger": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Sürdürme Teminat Oranı (MCR)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maksimum kısa pozisyon sıkıştırma oranı (MSSR)",
@@ -761,6 +844,7 @@
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
+                "empty": "No valid feed producers",
                 "feed_price": "Feed price",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
@@ -796,7 +880,7 @@
                 "current_supply": "Mevcut Arz",
                 "issuer": "İhraç Eden",
                 "market_fee": "Piyasa ücreti",
-                "max_market_fee": "Maksimum piyasa ücreti",
+                "market_fee_referral_reward_percent": "Market fee referral reward",
                 "stealth_supply": "Gizli arz"
             },
             "title": "Aktif",
@@ -804,7 +888,9 @@
                 "blacklist_authorities": "Blacklist authorities",
                 "blacklist_markets": "Market blacklist",
                 "enable_flag": "The whitelist flag must be enabled in order to set whitelist authorities",
+                "market_fee_enable_flag": "The market fee flag must be enabled in order to set whitelist",
                 "whitelist_authorities": "Whitelist authorities",
+                "whitelist_market_fee_sharing": "Market fee sharing whitelist",
                 "whitelist_markets": "Market whitelist"
             }
         },
@@ -825,13 +911,14 @@
             "asset_issue": "Düzenlenecek miktar",
             "asset_update": "Güncellenecek Dijital Varlık",
             "authorizing_account": "Yetki veren hesap ",
-            "call_limit": "Çağrı Sınırı",
+            "call_limit": "Çağrı Sınırı, %(price)s",
             "common_options": "Yaygın seçenekler",
             "count": "İşlem Sayısı",
             "date": "Tarih",
             "fee_payer": "Ücret ödeyen hesap",
-            "feed_price": "Feed price",
+            "feed_price": "Feed price, %(price)s",
             "go_to": "Go to block",
+            "gs_support": "Global settlement limit, %(price)s",
             "id": "Blok Kimlik",
             "key": "Açık anahtar",
             "lifetime": "Asil üyeliğe yükselt",
@@ -889,6 +976,7 @@
             "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
+            "no_reason_available_switch_node": "Reason of failure is available with core release >=3.1.0, please switch your node.",
             "pending": "Pending",
             "pending_approval": "Pending approval.",
             "pending_review": "Approved, review time.",
@@ -1109,6 +1197,7 @@
             "account": "account"
         },
         "help": "Help",
+        "not_found": "Not found",
         "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code",
         "set": "Set"
@@ -1143,6 +1232,18 @@
         "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla.",
         "update_asset": "Dijital Varlık Güncelle",
         "withdraw_legacy": "or Legacy Withdraw"
+    },
+    "htlc": {
+        "claim_period": "Seconds to claim",
+        "claim_period_due": "Claimable until",
+        "id": "HTLC id",
+        "preimage": "Preimage",
+        "preimage_explanation": "The secret preimage was used to calculate the preimage hash and is required to redeem this HTLC",
+        "preimage_hash": "Preimage hash",
+        "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
+        "redeemer": "Redeemer",
+        "seconds_to_add": "Add seconds to claim period",
+        "update_issuer": "Update issuer"
     },
     "icons": {
         "adjust": "Adjust margin position",
@@ -1260,6 +1361,27 @@
         "mode": "Private/Incognito:",
         "warning": "If you close your browser without backing up your wallet, you will lose this account permanently."
     },
+    "invoice": {
+        "amount": "Amount",
+        "date": "Date",
+        "invalid_format": "Invoice has invalid format",
+        "items": "Items",
+        "memo": "Memo",
+        "note": "Note",
+        "paid_by": "Paid by",
+        "pay_button": "Pay %(asset)s to %(name)s",
+        "pay_invoice": "Pay Invoice",
+        "pay_to": "Pay To",
+        "payment_proof": "Payment proof",
+        "payment_request": "Payment request",
+        "print_receipt": "Print receipt",
+        "receipt_total": "Receipt Total",
+        "recipient_name": "Recipient Name",
+        "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
+        "total": "Total",
+        "transaction": "Transaction",
+        "unit": "Unit"
+    },
     "languages": {
         "de": "Deutsch",
         "en": "English",
@@ -1308,6 +1430,14 @@
         },
         "cancel": "cancel",
         "close": "close",
+        "committee": {
+            "confirm": "CONFIRM",
+            "create_committee": "Become a committee member",
+            "from": "From",
+            "text": "After being voted in as active committee you can help set policies and parameters for the BitShares blockchain including: <ul><li>Transaction fees</li><li>Parameters of BitAssets (e.g. market fees)</li><li>Blockchain parameters (e.g. block size & interval)</li><li>Referral and vesting parameters (e.g. cash back percent for life-time-members and vesting period)</li><li>Other governance matters</li></ul> Submit a link to your website or forum post explaining why yo would be a exemplary member to attract enough votes to become active. Committee members should have basic technical understanding of BitShares and bring knowledge and expertise in key aspects of governing an autonomous and self-sustaining blockchain. This is an unpaid position.",
+            "url": "URL",
+            "web_example": "Enter link to your committee proposal post"
+        },
         "confirmation": {
             "accept": "Onayla",
             "cancel": "İptal",
@@ -1326,6 +1456,7 @@
             "close": "Close",
             "header": "Deposit to %(account_name)s",
             "header_short": "Deposit",
+            "no_assets": "No depositable assets available",
             "submit": "Yatır"
         },
         "deposit_withdraw": {
@@ -1389,6 +1520,9 @@
         },
         "settle": {
             "amount": "Ödenecek miktar",
+            "delay": "Estimated delay: %(amount)s hours",
+            "max_volume": "Max. settlement volume: %(amount)s %(asset)s",
+            "remaining_volume": "Remaining settleable volume: %(amount)s %(asset)s",
             "submit": "Öde",
             "title": "%(asset)s ödenmesini talep et"
         },
@@ -1405,11 +1539,23 @@
             "gateway_fee": "Gateway Fee",
             "header": "Withdraw (beta)",
             "memo": "Memo",
+            "no_assets": "No withdrawable assets available",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
             "submit": "Çek",
             "withdraw": "Withdraw"
+        },
+        "witness": {
+            "confirm": "CONFIRM",
+            "create_witness": "Become a witness member",
+            "enter_public_signing_key": "Enter your public signing key",
+            "invalid_key": "Public Key is invalid",
+            "public_signing_key": "Public Signing Key",
+            "text": "After being voted in as an active witness you are added in the rotation of block producers and expected to produce blocks signed by your signing key and you are rewarded in BTS per produced block. Common criteria that help make your case are <ul><li>implementation of fallbacks (e.g. running a hot swap backup server) and appropriate server specifications to ensure a low number of missed blocks (e.g. high connectivity)</li><li>participation in block production and rolling releases of the testnet</li><li>provision of a public node for the community</li><li>publication of price feeds for the BitAssets</li></ul> Submit a link to your website or forum post explaining why you would be a exemplary member to attract enough votes to become active.",
+            "url": "URL",
+            "web_example": "Enter link to your witness proposal post",
+            "witness_account": "Witness Account"
         }
     },
     "news": {
@@ -1476,6 +1622,11 @@
         "committee_member_update_global_parameters": "{account} evrensel kurul parametrelerini güncelledi.",
         "fill_order_buy": "{account} bought {amount} at {price}",
         "fill_order_sell": "{account} sold {amount} at {price}",
+        "htlc_create": "{from} locked {amount} for {to} to redeem until {lock_period}",
+        "htlc_extend": "{update_issuer} added {seconds_to_add} seconds to redeem period of HTLC {htlc_id}",
+        "htlc_redeem": "{redeemer} request to redeem from HTLC {htlc_id}",
+        "htlc_redeemed": "{to} redeemed {amount} from HTLC {htlc_id} of {from}",
+        "htlc_refund": "{to} got refund of HTLC {htlc_id}",
         "lifetime_upgrade_account": "{account} asil üyeliğe yükseltildi.",
         "limit_order_buy": "{account} {amount} alış emri verdi - Fiyat: {price} ",
         "limit_order_cancel": "{account} emir iptal etti: #%(order)s",
@@ -1512,8 +1663,97 @@
         "newer": "Daha yeni",
         "older": "Daha eski"
     },
+    "prediction": {
+        "add_opinion_modal": {
+            "amount": "Amount",
+            "condition": "Condition",
+            "no": "NO",
+            "probability": "Probability (0...1)",
+            "resolution": "Resolution",
+            "symbol": "Symbol",
+            "title": "Add Prediction Offer",
+            "warning": "Set amount",
+            "yes": "YES"
+        },
+        "create_market_modal": {
+            "backing_asset": "Backing asset",
+            "commission": "Commission",
+            "condition": "Condition",
+            "description": "Description",
+            "resolution_date": "Resolution date",
+            "select_date_and_time": "Select date and time",
+            "symbol": "Symbol",
+            "title": "Create prediction market",
+            "tooltip_backing_asset": "The backing asset will be used to pay the premium, i.e. it is the leverage that participants use.",
+            "tooltip_commission": "Every participant pays the commission when opposing opinions on the prediction are being matched. On the blockchain, the commission is the market fee of this new asset.",
+            "tooltip_condition": "The condition is a statement that can be resolved unambiguous to correct or incorrect at the resolution state.",
+            "tooltip_description": "The description gives background information that help the user understand the significance of the prediction.",
+            "tooltip_resolution_date": "The point in time at which the prediction will be resolved. This needs to be done manually by you as the asset owner.",
+            "tooltip_symbol": "A prediction market asset has a symbol just like any other assets. Pick a symbol with 5 or more letters to minimize the creation fee.",
+            "warning": "Fill all blanks"
+        },
+        "details": {
+            "add_prediction": "Add prediction",
+            "all": "All",
+            "amount": "Amount",
+            "cancel": "Cancel",
+            "commission": "Commission",
+            "fee": "Fee",
+            "i_think_that": "I think that the prediction",
+            "incorrect": "Is incorrect",
+            "list_of_current_prediction_offers": "List of current prediction offers",
+            "oppose": "Oppose",
+            "potential_profit": "Potential Winnings",
+            "predicated_likelihood": "Predicated Likelihood",
+            "prediction": "Prediction",
+            "predictor": "Predictor",
+            "premium": "Premium",
+            "proves_true": "Proves true"
+        },
+        "overview": {
+            "action": "Action",
+            "all": "All",
+            "create_market": "Create Prediction Market",
+            "description": "Description",
+            "expiry": "Resolution date",
+            "hide_invalid_asset": "Hide invalid assets",
+            "hide_unknown_houses": "Hide unknown houses",
+            "issuer": "House",
+            "loading": "Loading...",
+            "market_confidence": "Market confidence",
+            "market_predicated_likelihood": "Market predicated likelihood",
+            "no": "No",
+            "odds": "Odds",
+            "open": "Open",
+            "past_resolution_date": "Past Resolution Time",
+            "prediction": "Prediction",
+            "resolve": "Resolve",
+            "yes": "Yes"
+        },
+        "resolve_modal": {
+            "prediction": "Prediction",
+            "proven_true": "... has proven true",
+            "resolution": "Resolution",
+            "symbol": "Symbol",
+            "the_prediction_has": "The prediction ...",
+            "title": "Resolve Prediction Market Asset",
+            "was_incorrect": "... was incorrect"
+        },
+        "tooltips": {
+            "add_prediction": "A prediction is reflected as a limit order on the market of the prediction market asset with its collateral. This lets you create a buy order (you agree with the prediction), or a sell order with previous borrowing of the prediction market asset (you disagree with the prediction). You can also oppose one of the existing predictions listed below, which correlates to matching one of the existing limit orders on the blockchain.",
+            "create_prediction_market_asset": "A prediction market is a special kind of SmartCoin. This lets you create such a prediction market asset with inputs tailored for this purpose.",
+            "hide_invalid_asset": "Per default the table below only shows prediction market assets that meet common standards required for a consistent user experience (prediction and resolution date are given, and reasonable market fee). Uncheck this to show all assets that exist on the blockchain, and make sure you know what you are doing.",
+            "hide_unknown_houses": "Per default the table below only shows prediction market assets of known issuers that meet requirements to increase their trustworthiness. As a participant, you need trust in the asset issuer such that the asset will be resolved according to the real world outcome. Uncheck this to show all issuers that exist on the blockchain, and make sure you know what you are doing. If you are the owner of a prediction market asset and want to be included in the default list, please contact the BitShares community.",
+            "oppose_is_incorrect": "You are opposing someone that thinks the prediction is incorrect. That means, you think the prediction will prove true. On the blockchain that reflects as buying and hodling the prediction market asset.",
+            "oppose_proves_true": "You are opposing someone that thinks the prediction proves true. That means, you think the prediction will be incorrect. On the blockchain that reflects as borrowing and selling the prediction market asset.",
+            "what_is_a_prediction_market_asset": "A prediction market asset is a special kind of asset that allows you to agree or disagree with the prediction statement of the asset and put collateral behind your opinion. It can be created by any user, and if you are participating you need to trust the issuer to properly reflects the real world outcome on the blockchain.",
+            "what_is_a_prediction_offer": "A prediction offer reflects limit orders on the market of the prediction market asset and its collateral. Agreement with the prediction (Prediction proves true) means that you want to buy the prediction market asset, disagreement (Prediction is incorrect) means that you borrow the prediction market asset and sell it"
+        }
+    },
     "proposal": {
         "action": "Hareketler",
+        "add": "Add",
+        "add_vote": "Add vote for",
         "approve": "Onayla",
         "approvers": "Approver(s)",
         "asset_create": "%(asset)s dijital varlığını {account} hesabından oluştur.",
@@ -1522,7 +1762,11 @@
         "asset_settle": "Request a settlement of",
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
+        "changes_to_active": "Changes to active",
+        "changes_to_memo": "Changes to memo",
+        "changes_to_owner": "Changes to owner",
         "committee_member_update_global_parameters": "{account} tarafından kurul genel parametreleri güncellemesi",
+        "danger_operation": "Dangerous operation",
         "delete": "Permanently reject",
         "expires": "Bitiş süresi",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
@@ -1530,8 +1774,12 @@
         "limit_order_create": "%(account)s adlı hesaptan %(sell_amount)s fiyatı üzerinden %(buy_amount)s almak için emir ver",
         "limit_order_sell": "{account} adlı hesaptan {price} fiyatı üzerinden {amount} satmak için bir emir ver",
         "override_transfer": "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "permission_changes": "Permission changes",
         "proposals": "Proposals",
         "reject": "Reddet",
+        "remove": "Remove",
+        "remove_vote": "Remove vote for",
+        "set_threshold": "Set threshold to %(threshold)s",
         "status": "Durum",
         "transfer": "Transfer miktarı: {amount}, gönderen: {from}, alıcı: {to}",
         "update": {
@@ -1551,7 +1799,8 @@
             "owner_approvals_to_add": "Owner approval(s) added",
             "owner_approvals_to_remove": "Owner approval(s) removed"
         },
-        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
+        "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}",
+        "votes": "Votes"
     },
     "proposal_create": {
         "expiration_time": "Bitiş süresi",
@@ -1665,18 +1914,26 @@
         "browser_notifications_additional_transfer_to_me": "Hesabıma yapılan aktarmalar hakkında bilgi ver",
         "browser_notifications_allow": "Bildirimleri etkinleştir",
         "browser_notifications_disabled_by_browser_notify": "Your browser disabled notifications. Click to learn how enable browser notifications",
+        "can_change_default_fee_asset_tooltip": "The default asset used to pay transaction fees can be changed in the settings",
+        "change": "Change",
+        "change_default": "Change default",
+        "change_default_fee_asset": "Change default fee asset",
+        "change_default_fee_asset_tooltip": "Change the default asset that is used to pay the transaction fee",
         "cloud_login": "Cloud Wallet Login",
         "confirmMarketOrder": "Piyasa emirleri için teyit iste",
         "confirm_no": "Hiçbir zaman",
         "confirm_remove": "Are you sure you want to remove %(name)s from your available nodes?",
         "confirm_yes": "Her zaman",
         "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes",
+        "current_fee_asset": "Current fee asset is: ",
+        "custom": "Custom",
         "darkTheme": "Koyu tema",
         "delete_select": "Silinecek cüzdanı seçin",
         "disabled": "Disabled",
         "enable_wallet": "Enable wallet model",
         "faucet_address": "Musluk Adresi",
         "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
+        "fee_asset": "Default fee paying asset",
         "general": "Genel",
         "general_text": "Genel ayarlar",
         "global_settings": "Default Global Settings",
@@ -1732,6 +1989,7 @@
         "themes": "Tema",
         "unit": "Tercih edilen hesap birimi",
         "valid_node_url": "Node URL must begin with ws:// or wss://",
+        "viewOnlyMode": "View only mode",
         "view_keys": "Anahtarları göster",
         "wallet": "Cüzdan",
         "walletLockTimeout": "Otomatik cüzdan kilitlenme süresi (saniye)",
@@ -1858,9 +2116,54 @@
             "update": "Update",
             "update_mandate": "Update existing authorization"
         },
+        "htlc": {
+            "actions": "Actions",
+            "amount": "Amount",
+            "create_htlc": "Create HTLC",
+            "custom": "Custom",
+            "description": "A HTLC locks away funds for given recipient, who can redeem those funds by providing a secret preimage (password) that was used by the sender to create the contract. Disclosing the password happens off-chain.",
+            "enter_secret_preimage": "Enter secret preimage",
+            "expiration": "Expiration",
+            "expiration_date": "Expiration date",
+            "expiration_period": {
+                "one_day": "One day",
+                "one_week": "One week",
+                "two_days": "Two days"
+            },
+            "expires": "Expires",
+            "extend": "Extend",
+            "extend_htlc": "Extend HTLC",
+            "first_stage": "1st stage",
+            "from": "From",
+            "hash": "Hash",
+            "preimage": "Preimage",
+            "preimage_has_been_created": "A random preimage has been created and filled in automatically below",
+            "recipient": "Recipient",
+            "redeem": "Redeem",
+            "redeem_htlc": "Redeem HTLC",
+            "second_stage": "2nd stage",
+            "sender": "Sender",
+            "size": "Size",
+            "title": "Hashed Time-Lock Contracts",
+            "title_short": "HTLC",
+            "to": "To",
+            "tooltip": {
+                "enter_preimage": "Enter the secret preimage that you have obtained from the sender",
+                "new_random": "Roll the dice and create a new random string.",
+                "preimage_button": "Please click to enter secret preimage",
+                "preimage_hash": "The Preimage hash is calculated from the above Preimage using the indicated hashing algorithm. Use the copy button in this row to save the Preimage hash and Preimage size.",
+                "preimage_input": "Field requires a secret preimage",
+                "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
+                "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
+            }
+        },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
             "title": "Paper Wallet"
+        },
+        "prediction_market": {
+            "description": "Create a prediction into the future that others can agree or disagree with, leveraged with collateral.",
+            "title": "Prediction Markets"
         },
         "timed_transfer": {
             "description": "Initiate a transfer that will execute at a specified time.",
@@ -1944,11 +2247,13 @@
         "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
         "own_account": "You hold keys for this account",
+        "print_receipt": "Click here to create pdf receipt",
         "propose_scam": "Bu işlem teklifi bilinen bir dolandırıcı tarafından sunulmuştur, onaylamayın!",
         "propose_tip": "Propose another user to initiate a transaction",
+        "propose_unhide": "Do not uncheck this unless you know what you are doing",
         "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
-        "proxy_search": "Search for an account to be used as your proxy for voting",
+        "proxy_search": "",
         "registration": {
             "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
             "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
@@ -1960,6 +2265,7 @@
         "scam_account": "Account is suspected scammer",
         "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "Sona erdirme işlemi dijital varlıklarınızı %(settleDelay)s saatlik bir gecikme ile o anki fiyat üzerinden %(backingAsset)s'ye dönüştürmenizi sağlar",
+        "settle_market_prediction": "Settling a prediction market asset is only possible after its resolution.",
         "settle_price": "Sona erdirilen emirlerin gerçekleşeceği fiyat",
         "show_asset": "Bu dijital varlığı ana listede göstermek için tıklayın.",
         "show_block": "İşlemin gerçekleşmiş olduğu #%(block)s numaralı bloğa bakmak için buraya tıklayın.",
@@ -2006,6 +2312,7 @@
         "create_key": "Açık anahtar oluşturuldu",
         "csv": ".csv olarak dışa aktar.",
         "csv_tip": "Geçmiş işlemleri virgülle ayrılmış .csv dosyası olarak indir.",
+        "cumulative_borrow_amount": "Cumulative Debt",
         "custom": "Özel işlem oluşturuldu.",
         "delta_collateral": "Teminat değişimi",
         "delta_debt": "Borç değişimi",
@@ -2022,11 +2329,14 @@
             "_none": "Ücretsiz",
             "basic_fee": "Temel Ücret",
             "fee": "Normal İşlem Ücreti",
+            "fee_per_day": "Price per day",
+            "fee_per_kb": "Price per KByte Transaction Size",
             "long_symbol": "Uzun Semboller",
             "membership_annual_fee": "Yıllık Üyelik",
             "membership_lifetime_fee": "Asil Üyelik",
             "premium_fee": "Paralı Adlar İçin Ücret",
             "price_per_kbyte": "KByte'lık İşlem Başına Fiyat",
+            "price_per_output": "Price per recipient",
             "symbol3": "3 Haneli Semboller",
             "symbol4": "4 Haneli Semboller"
         },
@@ -2045,6 +2355,7 @@
         "min_receive": "Alınacak minimum miktar",
         "new_url": "Web sitesi",
         "obtain": "ödendi, ",
+        "operations": "Operations",
         "order_id": "Talimat No.",
         "outputs": "Çıkanlar",
         "paid": "tarafından",
@@ -2090,6 +2401,11 @@
             "execute_bid": "Execute bid",
             "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Gerçekleşen emir",
+            "htlc_create": "HTLC create",
+            "htlc_extend": "HTLC extend",
+            "htlc_redeem": "HTLC redeem",
+            "htlc_redeemed": "HTLC redeemed",
+            "htlc_refund": "HTLC refund",
             "limit_order_cancel": "İptal edilen emir",
             "limit_order_create": "Emir girişi",
             "override_transfer": "Transferi yenileme",
@@ -2111,6 +2427,7 @@
             "worker_create": "Bütçe ögesi oluşturma"
         },
         "vesting_balance_create": "Bekletilen bakiyesi oluşturulan hesap:",
+        "view_json": "Show raw json",
         "waiting": "Onay bekleniyor...",
         "whitelist_states": {
             "black_listed": "Kara listeye alınmış",
@@ -2138,6 +2455,7 @@
         "copy_address": "Copy Address",
         "copy_memo": "Copy Memo",
         "errors": {
+            "asset_unsupported": "Asset %(currency)s is not supported by this blockchain.",
             "balance": "Kalan bakiye 0'dan büyük olmalıdır.",
             "insufficient": "Yetersiz bakiye",
             "memo_error": "The transfer memo parsing error, please try again later.",
@@ -2146,14 +2464,17 @@
             "noFeeBalance": "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
             "noFunds": "No funds",
             "noPoolBalance": "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+            "noPoolBalanceShort": "Fee pool empty",
             "pos": "Miktar pozitif olmak zorundadır.",
             "precision": "Minimum withdraw precision value: %(precision)s",
             "req": "Mecburi alan",
+            "unknown": "Unknown error",
             "valid": "Lütfen geçerli bir değer giriniz."
         },
         "explict_price": "Explict price:",
         "fee": "Ücret",
         "final": "Kalan bakiye",
+        "free": "Free",
         "from": "Gönderen",
         "header": "Transfer detayları",
         "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
@@ -2161,11 +2482,11 @@
         "memo": "Açıklama",
         "memo_unlock": "Açıklamayı görmek için cüzdan kilidini açın.",
         "optional": "Tercihe bağlı",
-        "pay_from": "Ödeyen hesap",
         "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "see": "TRANSFER İŞLEMLERİMİ GÖR",
         "send": "Gönder",
-        "to": "Alıcı",
+        "to": "To",
+        "total": "Total: ",
         "warn_name_unable_read_memo": "Uyarı: %(name)s bu memoyu okuyamayacaktır"
     },
     "trx_error": {
@@ -2225,6 +2546,10 @@
             "urlNamed": "%(name)s should be url"
         }
     },
+    "voting": {
+        "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "title": "Voting"
+    },
     "walkthrough": {
         "buy_form": "Bu formu kullanarak satın alma siparişleri verin.",
         "buy_orders": "Bu pazar için tüm satınalma siparişlerini görüntüleyin.",
@@ -2265,6 +2590,7 @@
         "backup_explain": "Aşağıdaki butona tıkladığınızda .bin uzantılı bir yedekleme dosyası oluşturulacaktır. Bu dosya, cüzdan şifreniz ile şifrelenmiştir, ve kendi şifreniz ile birlikte kullanıldığında cüzdanınıza tam erişim sağlar. Yedekleme dosyasını cüzdanınızı başka bir tarayıcı ya da bilgisayara taşımak için de kullanabilirsiniz.",
         "backup_login": "Backup & login",
         "backup_new_account": "Tebrikler, yeni hesabınız oluşturuldu. Lütfen cüzdanınızı yedekleyin. Cüzdanınıza ya da bilgisayarınıza erişiminizi kaybetseniz bile TekAnahtar ile, ya da .bin dosyası ve şifrenizle hesabınıza tekrar erişebilirsiniz.",
+        "backup_types": "backup types",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Bakiye Arama",
         "balance_claims": "Bakiye Talepleri",
@@ -2374,6 +2700,7 @@
         "password_show": "Şifreyi göster",
         "paste_private": "Özel anahtarı buraya kopyalayın (WIF formatında)",
         "pwd4brainkey": "TekAnahtarı göstermek için şifrenizi girin.",
+        "read_more": "Read more about %(wallet)s and %(backup)s.",
         "ready_to_restore": "Eski Haline Dönmeye Hazır",
         "reenter_brainkey": "TekAnahtarı tekrar gir",
         "remember_me": "Remember me",
@@ -2428,6 +2755,10 @@
         "wallet_model_2": "Cüzdan Sistemi en yüksek güvenlikli yöntemdir, fakat bu sistemi seçtiğinizde bir başka tarayıcı ya da bilgisayardan hesabınıza erişmek için TekAnahtar ya da .bin dosyası gerekmektedir.",
         "wallet_model_3": "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
         "wallet_move": "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
-        "wallet_password": "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz."
+        "wallet_password": "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz.",
+        "wallet_types": "wallet types",
+        "wif_associated_accounts": "Associated Account(s): ",
+        "wif_import_error": "Please enter a valid WIF",
+        "wif_length_error": "Incorrect input length"
     }
 }

@@ -8,8 +8,9 @@ import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
-import {Icon, Input, Table} from "bitshares-ui-style-guide";
-import sanitize from "sanitize";
+import {Table} from "bitshares-ui-style-guide";
+import SearchInput from "../Utility/SearchInput";
+import utils from "common/utils";
 
 class CommitteeMemberList extends React.Component {
     static propTypes = {
@@ -78,10 +79,7 @@ class CommitteeMemberList extends React.Component {
                         rank: ranks[a.get("id")],
                         name: account.get("name"),
                         votes: account_data.get("total_votes"),
-                        url: sanitize(account_data.get("url"), {
-                            whiteList: [], // empty, means filter out all tags
-                            stripIgnoreTag: true // filter out all HTML not in the whilelist
-                        })
+                        url: utils.sanitize(account_data.get("url"))
                     };
                 });
         }
@@ -123,7 +121,7 @@ class CommitteeMemberList extends React.Component {
                 title: "WEBPAGE",
                 dataIndex: "url",
                 render: item => (
-                    <a href={item} target="_blank">
+                    <a href={item} target="_blank" rel="noopener noreferrer">
                         {item}
                     </a>
                 )
@@ -169,7 +167,6 @@ class CommitteeMembers extends React.Component {
     }
 
     _onFilter(e) {
-        e.preventDefault();
         this.setState({filterCommitteeMember: e.target.value.toLowerCase()});
 
         SettingsActions.changeViewSetting({
@@ -195,17 +192,17 @@ class CommitteeMembers extends React.Component {
                 <div className="grid-block vertical medium-horizontal">
                     <div className="grid-block vertical">
                         <div className="grid-content">
-                            <Input
+                            <SearchInput
                                 placeholder={counterpart.translate(
                                     "explorer.witnesses.filter_by_name"
                                 )}
+                                value={this.state.filterCommitteeMember}
                                 onChange={this._onFilter.bind(this)}
                                 style={{
                                     width: "200px",
                                     marginBottom: "12px",
                                     marginTop: "4px"
                                 }}
-                                addonAfter={<Icon type="search" />}
                             />
                             <CommitteeMemberList
                                 filter={this.state.filterCommitteeMember}

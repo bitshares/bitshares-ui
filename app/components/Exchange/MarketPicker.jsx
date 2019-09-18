@@ -22,6 +22,12 @@ class MarketListItem extends Component {
         marketPickerAsset: PropTypes.string
     };
 
+    onKeyPress(linkTo, e) {
+        if (e.key == "Enter") {
+            this.props.history.push(linkTo);
+        }
+    }
+
     render() {
         const {quoteSymbol, baseSymbol, market, marketPickerAsset} = this.props;
         const {onClose} = this.props;
@@ -30,8 +36,14 @@ class MarketListItem extends Component {
             quoteSymbol == marketPickerAsset
                 ? `/market/${marketSymbol}_${baseSymbol}`
                 : `/market/${quoteSymbol}_${marketSymbol}`;
+
         return (
-            <li key={market[0]} style={{height: 40}}>
+            <li
+                key={market[0]}
+                style={{height: 40}}
+                onKeyPress={this.onKeyPress.bind(this, linkTo)}
+                tabIndex={this.props.tabIndex}
+            >
                 <Link style={{display: "flex"}} onClick={onClose} to={linkTo}>
                     <div style={{flex: 2}}>
                         <AssetName name={market[1]["quote"]} />
@@ -58,6 +70,14 @@ class MarketPickerWrapper extends Component {
             lookupQuote: null,
             inputValue: ""
         };
+    }
+
+    componentDidMount() {
+        this.refs.marketPicker_input.focus();
+    }
+
+    componentDidUpdate() {
+        this.refs.marketPicker_input.focus();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -269,6 +289,7 @@ class MarketPickerWrapper extends Component {
                 <Form.Item label={label}>
                     <Input
                         type="text"
+                        ref="marketPicker_input"
                         value={inputValue}
                         onChange={this._onInputName.bind(this, true)}
                         placeholder={counterpart.translate(placeHolderKey)}
@@ -297,10 +318,12 @@ class MarketPickerWrapper extends Component {
                             return (
                                 <MarketListItem
                                     key={index}
+                                    tabIndex={index + 100}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
                                     market={market}
                                     marketPickerAsset={marketPickerAsset}
+                                    history={this.props.history}
                                     onClose={this.props.onClose.bind(this)}
                                 />
                             );

@@ -24,3 +24,11 @@ div.asset-page {
         }
     }
 }
+.asset-collapse {
+    .ant-collapse-item {
+        margin-bottom: 16px;
+        .ant-collapse-header {
+            padding-left: 40px !important;
+        }
+    }
+}

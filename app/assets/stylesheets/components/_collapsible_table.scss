@@ -1,0 +1,78 @@
+.collapsible-table {
+    overflow: hidden;
+
+    // z-index won't work with thead and tbody with applied translateY, so translate3d should be used:
+    // https://stackoverflow.com/a/43059582
+    table {
+        transform-style: preserve-3d;
+    }
+
+    .ant-table-thead {
+        transform: translate3d(0, 0, 1px);
+    }
+
+    .ant-table-tbody {
+        transform: translate3d(0, 0, 0);
+    }
+
+    // animation principle taken from https://gist.github.com/webarthur/0fb22721264562c7aa74b07c7fe0f227
+    @keyframes collapse {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+    }
+
+    @keyframes uncollapse {
+        from {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    &.collapsible-table-collapsed .ant-table-tbody {
+        animation: collapse 0.15s ease-in-out forwards;
+    }
+
+    &.collapsible-table-uncollapsed .ant-table-tbody {
+        animation: uncollapse 0.15s ease-in-out forwards;
+    }
+
+    &.collapsible-table-collapsed-animation-completed .ant-table-tbody {
+        display: none;
+    }
+
+    &.collapsible-table-collapsed {
+        .ant-table-footer,
+        .ant-table-pagination {
+            opacity: 0;
+            transition: 0.15s ease-in-out;
+        }
+    }
+
+    &.collapsible-table-collapsed-animation-completed {
+        .ant-table-footer,
+        .ant-table-pagination {
+            display: none;
+        }
+    }
+
+    .ant-table-thead {
+        opacity: 0.9;
+        cursor: pointer;
+    }
+
+    .ant-table-thead:hover {
+        opacity: 1;
+    }
+}

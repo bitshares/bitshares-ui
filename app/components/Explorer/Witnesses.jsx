@@ -14,6 +14,8 @@ import classNames from "classnames";
 import {withRouter} from "react-router-dom";
 import {Table, Icon, Input, Popover} from "bitshares-ui-style-guide";
 import sanitize from "sanitize";
+import SearchInput from "../Utility/SearchInput";
+import utils from "common/utils";
 
 require("./witnesses.scss");
 
@@ -201,10 +203,7 @@ class WitnessList extends React.Component {
                         rank: ranks[a.get("id")],
                         name: witness.get("name"),
                         signing_key: witness_data.get("signing_key"),
-                        url: sanitize(witness_data.get("url"), {
-                            whiteList: [], // empty, means filter out all tags
-                            stripIgnoreTag: true // filter out all HTML not in the whilelist
-                        }),
+                        url: utils.sanitize(witness_data.get("url")),
                         lastConfirmedBlock: {
                             id: witness_data.get("last_confirmed_block_num"),
                             timestamp: last_aslot_time.getTime()
@@ -224,7 +223,11 @@ class WitnessList extends React.Component {
             return (
                 <Popover
                     content={
-                        <a href={item} target="_blank">
+                        <a
+                            href={item}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             {item}
                         </a>
                     }
@@ -391,7 +394,6 @@ class Witnesses extends React.Component {
     }
 
     _onFilter(e) {
-        e.preventDefault();
         this.setState({filterWitness: e.target.value.toLowerCase()});
 
         SettingsActions.changeViewSetting({
@@ -502,17 +504,17 @@ class Witnesses extends React.Component {
                                 </table>
                             </div>
 
-                            <Input
+                            <SearchInput
                                 placeholder={counterpart.translate(
                                     "explorer.witnesses.filter_by_name"
                                 )}
+                                value={this.state.filterWitness}
                                 onChange={this._onFilter.bind(this)}
                                 style={{
                                     width: "200px",
                                     marginBottom: "12px",
                                     marginTop: "4px"
                                 }}
-                                addonAfter={<Icon type="search" />}
                             />
 
                             <WitnessList

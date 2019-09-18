@@ -137,10 +137,10 @@ class Asset {
             temp = (this.amount * p.quote.amount) / p.base.amount;
             amount = Math.floor(temp);
             /*
-            * Sometimes prices are inexact for the relevant amounts, in the case
-            * of bids this means we need to round up in order to pay 1 sat more
-            * than the floored price, if we don't do this the orders don't match
-            */
+             * Sometimes prices are inexact for the relevant amounts, in the case
+             * of bids this means we need to round up in order to pay 1 sat more
+             * than the floored price, if we don't do this the orders don't match
+             */
             if (isBid && temp !== amount) {
                 amount += 1;
             }
@@ -154,10 +154,10 @@ class Asset {
             temp = (this.amount * p.base.amount) / p.quote.amount;
             amount = Math.floor(temp);
             /*
-            * Sometimes prices are inexact for the relevant amounts, in the case
-            * of bids this means we need to round up in order to pay 1 sat more
-            * than the floored price, if we don't do this the orders don't match
-            */
+             * Sometimes prices are inexact for the relevant amounts, in the case
+             * of bids this means we need to round up in order to pay 1 sat more
+             * than the floored price, if we don't do this the orders don't match
+             */
             if (isBid && temp !== amount) {
                 amount += 1;
             }
@@ -231,10 +231,10 @@ class Price {
     setPriceFromReal(real, base = this.base, quote = this.quote) {
         if (real && typeof real === "number") {
             /*
-            * In order to make large numbers work properly, we assume numbers
-            * larger than 100k do not need more than 5 decimals. Without this we
-            * quickly encounter JavaScript floating point errors for large numbers.
-            */
+             * In order to make large numbers work properly, we assume numbers
+             * larger than 100k do not need more than 5 decimals. Without this we
+             * quickly encounter JavaScript floating point errors for large numbers.
+             */
 
             if (real > 100000) {
                 real = limitByPrecision(real, 5);
@@ -642,10 +642,10 @@ class CallOrder {
             precisionToRatio(assets[this.collateral_id].precision);
 
         /*
-        * The call price is DEBT * MCR / COLLATERAL. 
-        * Since bitshares-core 3.0.0 this is no longer done by the witness_node.
-        * Deal with the MCR (maintenance collateral ratio) here.
-        */
+         * The call price is DEBT * MCR / COLLATERAL.
+         * Since bitshares-core 3.0.0 this is no longer done by the witness_node.
+         * Deal with the MCR (maintenance collateral ratio) here.
+         */
 
         let base = new Asset({
             asset_id: this.collateral_id,
@@ -809,20 +809,20 @@ class CallOrder {
         let max_debt_to_cover = this._getMaxDebtToCover(),
             max_debt_to_cover_int;
         /*
-        * We may calculate like this: if max_debt_to_cover has no fractional
-        * component (e.g. 5.00 as opposed to 5.23), plus it by one Satoshi;
-        * otherwise, round it up. An effectively same approach is to round
-        * down then add one Satoshi onto the result:
-        */
+         * We may calculate like this: if max_debt_to_cover has no fractional
+         * component (e.g. 5.00 as opposed to 5.23), plus it by one Satoshi;
+         * otherwise, round it up. An effectively same approach is to round
+         * down then add one Satoshi onto the result:
+         */
         if (Math.round(max_debt_to_cover) !== max_debt_to_cover) {
             max_debt_to_cover_int = Math.floor(max_debt_to_cover) + 1;
         }
 
         /*
-        * With max_debt_to_cover_int in integer, max_amount_to_sell_int in
-        * integer can be calculated as: max_amount_to_sell_int =
-        * round_up(max_debt_to_cover_int / match_price)
-        */
+         * With max_debt_to_cover_int in integer, max_amount_to_sell_int in
+         * integer can be calculated as: max_amount_to_sell_int =
+         * round_up(max_debt_to_cover_int / match_price)
+         */
         let max_collateral_to_sell_int = Math.ceil(
             max_debt_to_cover_int / match_price
         );
@@ -842,12 +842,12 @@ class CallOrder {
     }
 
     /*
-    * Assume a USD:BTS market
-    * The call order will always be selling BTS in order to buy USD
-    * The asset being sold is always the collateral, which is call_price.base.asset_id.
-    * The amount being sold depends on how big the debt is, only enough
-    * collateral will be sold to cover the debt
-    */
+     * Assume a USD:BTS market
+     * The call order will always be selling BTS in order to buy USD
+     * The asset being sold is always the collateral, which is call_price.base.asset_id.
+     * The amount being sold depends on how big the debt is, only enough
+     * collateral will be sold to cover the debt
+     */
     amountForSale(isBid = this.isBid()) {
         /*
         BSIP38:

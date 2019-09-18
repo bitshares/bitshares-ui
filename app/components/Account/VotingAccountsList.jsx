@@ -1,5 +1,4 @@
 import React from "react";
-import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs";
@@ -9,7 +8,8 @@ import BindToChainState from "../Utility/BindToChainState";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
-import sanitize from "sanitize";
+import PaginatedList from "components/Utility/PaginatedList";
+import utils from "common/utils";
 
 function getWitnessOrCommittee(type, acct) {
     let url = "",
@@ -22,10 +22,7 @@ function getWitnessOrCommittee(type, acct) {
     }
 
     url = account ? account.get("url") : url;
-    url = sanitize(url, {
-        whiteList: [], // empty, means filter out all tags
-        stripIgnoreTag: true // filter out all HTML not in the whilelist
-    });
+    url = utils.sanitize(url);
     votes = account ? account.get("total_votes") : votes;
     return {
         url,
@@ -34,104 +31,34 @@ function getWitnessOrCommittee(type, acct) {
     };
 }
 
-class AccountItemRow extends React.Component {
-    static propTypes = {
-        account: PropTypes.object.isRequired,
-        onAction: PropTypes.func.isRequired
+const accountItemRow = props => {
+    let {account, type, action, isActive, idx, proxy, onAction, key} = props;
+    let item_id = account.get("id");
+
+    let {url, votes} = getWitnessOrCommittee(type, account);
+
+    let link =
+        url && url.length > 0 && url.indexOf("http") === -1
+            ? "http://" + url
+            : url;
+    const isSupported = action === "remove";
+
+    return {
+        key,
+        num: idx + 1,
+        name: account.get("id"),
+        about: link && link.indexOf(".") !== -1 ? link : null,
+        votes,
+        title: `account.votes.${isActive ? "active_short" : "inactive"}`,
+        supported: {
+            translate: `settings.${isSupported ? "yes" : "no"}`,
+            proxy,
+            item_id,
+            onAction
+        },
+        toggle: {proxy, isSupported, item_id, onAction}
     };
-
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.account !== this.props.account ||
-            nextProps.action !== this.props.action ||
-            nextProps.isActive !== this.props.isActive ||
-            nextProps.idx !== this.props.idx ||
-            nextProps.proxy !== this.props.proxy
-        );
-    }
-
-    onAction(item_id) {
-        this.props.onAction(item_id);
-    }
-
-    render() {
-        let {account, type, action, isActive} = this.props;
-        let item_id = account.get("id");
-
-        let {url, votes} = getWitnessOrCommittee(type, account);
-
-        let link =
-            url && url.length > 0 && url.indexOf("http") === -1
-                ? "http://" + url
-                : url;
-        const isSupported = action === "remove";
-
-        return (
-            <tr className={isSupported ? "" : "unsupported"}>
-                <td style={{textAlign: "right"}}>{this.props.idx + 1}</td>
-                <td style={{textAlign: "left"}}>
-                    <LinkToAccountById account={account.get("id")} />
-                </td>
-                <td>
-                    {link && link.indexOf(".") !== -1 ? (
-                        <a
-                            href={link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <Icon name="share" title="icons.share" />
-                        </a>
-                    ) : null}
-                </td>
-                <td>
-                    <FormattedAsset
-                        amount={votes}
-                        asset="1.3.0"
-                        decimalOffset={5}
-                        hide_asset
-                    />
-                </td>
-                <td>
-                    <Translate
-                        content={`account.votes.${
-                            isActive ? "active_short" : "inactive"
-                        }`}
-                    />
-                </td>
-                <td style={{textAlign: "center"}}>
-                    <Translate
-                        content={`settings.${isSupported ? "yes" : "no"}`}
-                    />
-                </td>
-                <td
-                    className={this.props.proxy ? "" : "clickable"}
-                    onClick={
-                        this.props.proxy
-                            ? () => {}
-                            : this.onAction.bind(this, item_id)
-                    }
-                >
-                    {!this.props.proxy ? (
-                        <Icon
-                            name={
-                                isSupported
-                                    ? "checkmark-circle"
-                                    : "minus-circle"
-                            }
-                            title={
-                                isSupported
-                                    ? "icons.checkmark_circle.yes"
-                                    : "icons.minus_circle.no"
-                            }
-                        />
-                    ) : (
-                        <Icon name="locked" title="icons.locked.action" />
-                    )}
-                </td>
-            </tr>
-        );
-    }
-}
+};
 
 class VotingAccountsList extends React.Component {
     static propTypes = {
@@ -143,13 +70,12 @@ class VotingAccountsList extends React.Component {
         placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
         action: PropTypes.string,
-        withSelector: PropTypes.bool
+        filterSearch: PropTypes.string
     };
 
     static defaultProps = {
         action: "remove",
-        withSelector: true,
-        autosubscribe: false
+        filterSearch: null
     };
 
     constructor(props) {
@@ -189,13 +115,203 @@ class VotingAccountsList extends React.Component {
         this.props.onAddItem(item.get("id"));
     }
 
+    getHeader() {
+        let cw = ["10%", "20%", "40%", "20%", "10%"];
+        return [
+            {
+                title: "#",
+                dataIndex: "num",
+                align: "right",
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            {item}
+                        </span>
+                    );
+                }
+            },
+            {
+                title: <Translate content="account.votes.name" />,
+                dataIndex: "name",
+                align: "left",
+                sorter: (a, b) => {
+                    return a.key > b.key ? 1 : a.key < b.key ? -1 : 0;
+                },
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                maxWidth: cw[1],
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <LinkToAccountById account={item} />
+                        </span>
+                    );
+                }
+            },
+            {
+                title: <Translate content="account.votes.about" />,
+                dataIndex: "about",
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                maxWidth: cw[2],
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <a
+                                href={item}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Icon name="share" title="icons.share" />
+                            </a>
+                        </span>
+                    );
+                }
+            },
+            {
+                title: <Translate content="account.votes.votes" />,
+                dataIndex: "votes",
+                sorter: (a, b) => a.votes - b.votes,
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                maxWidth: cw[3],
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <FormattedAsset
+                                amount={item}
+                                asset="1.3.0"
+                                decimalOffset={5}
+                                hide_asset
+                            />
+                        </span>
+                    );
+                }
+            },
+            {
+                title: <Translate content="account.votes.status.title" />,
+                dataIndex: "title",
+                sorter: (a, b) => {
+                    return a.title > b.title ? 1 : a.title < b.title ? -1 : 0;
+                },
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                maxWidth: cw[4],
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            <Translate content={item} />
+                        </span>
+                    );
+                }
+            },
+            {
+                title: <Translate content="account.votes.supported" />,
+                dataIndex: "supported",
+                align: "center",
+                sorter: (a, b) => {
+                    return a.supported.translate > b.supported.translate
+                        ? 1
+                        : a.supported.translate < b.supported.translate
+                            ? -1
+                            : 0;
+                },
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                maxWidth: cw[0],
+                                whiteSpace: "nowrap"
+                            }}
+                            className={item.proxy ? "" : "clickable"}
+                            onClick={
+                                item.proxy
+                                    ? () => {}
+                                    : item.onAction.bind(this, item.item_id)
+                            }
+                        >
+                            <Translate content={item.translate} />
+                        </span>
+                    );
+                }
+            },
+            {
+                title: <Translate content="account.votes.toggle" />,
+                dataIndex: "toggle",
+                render: item => {
+                    return (
+                        <span
+                            style={{
+                                maxWidth: cw[5],
+                                whiteSpace: "nowrap"
+                            }}
+                            className={item.proxy ? "" : "clickable"}
+                            onClick={
+                                item.proxy
+                                    ? () => {}
+                                    : item.onAction.bind(this, item.item_id)
+                            }
+                        >
+                            {!item.proxy ? (
+                                <Icon
+                                    name={
+                                        item.isSupported
+                                            ? "checkmark-circle"
+                                            : "minus-circle"
+                                    }
+                                    title={
+                                        item.isSupported
+                                            ? "icons.checkmark_circle.yes"
+                                            : "icons.minus_circle.no"
+                                    }
+                                />
+                            ) : (
+                                <Icon
+                                    name="locked"
+                                    title="icons.locked.action"
+                                />
+                            )}
+                        </span>
+                    );
+                }
+            }
+        ];
+    }
+
+    _decideRowClassName(row, index) {
+        return row.toggle.isSupported ? "" : "unsupported";
+    }
+
     render() {
         if (!this.props.items) return null;
+
+        const header = this.getHeader();
 
         let item_rows = this.props.items
             .filter(i => {
                 if (!i) return false;
-                //if (this.state.item_name_input) return i.get("name").indexOf(this.state.item_name_input) !== -1;
+                if (this.props.filterSearch) {
+                    if (
+                        i.get("name").indexOf(this.props.filterSearch) !== -1 ||
+                        i.get("id").indexOf(this.props.filterSearch) !== -1
+                    ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
                 return true;
             })
             .sort((a, b) => {
@@ -226,23 +342,20 @@ class VotingAccountsList extends React.Component {
                 let isActive = this.props.active.includes(
                     getWitnessOrCommittee(this.props.type, i).id
                 );
-                return (
-                    <AccountItemRow
-                        idx={idx}
-                        key={i.get("name")}
-                        account={i}
-                        type={this.props.type}
-                        onAction={
-                            action === "add"
-                                ? this.props.onAddItem
-                                : this.props.onRemoveItem
-                        }
-                        isSelected={this.props.items.indexOf(i) !== -1}
-                        action={action}
-                        isActive={isActive}
-                        proxy={this.props.proxy}
-                    />
-                );
+                return accountItemRow({
+                    idx,
+                    key: i.get("name"),
+                    account: i,
+                    type: this.props.type,
+                    onAction:
+                        action === "add"
+                            ? this.props.onAddItem
+                            : this.props.onRemoveItem,
+                    isSelected: this.props.items.indexOf(i) !== -1,
+                    action,
+                    isActive,
+                    proxy: this.props.proxy
+                });
             });
 
         let error = this.state.error;
@@ -254,57 +367,18 @@ class VotingAccountsList extends React.Component {
             error = counterpart.translate("account.votes.already");
         }
 
-        let cw = ["10%", "20%", "40%", "20%", "10%"];
-
         return (
             <div>
-                {this.props.withSelector ? (
-                    <AccountSelector
-                        style={{maxWidth: "600px"}}
-                        label={this.props.label}
-                        error={error}
-                        placeholder={this.props.placeholder}
-                        account={this.state.item_name_input}
-                        accountName={this.state.item_name_input}
-                        onChange={this.onItemChange}
-                        onAccountChanged={this.onItemAccountChange}
-                        onAction={this.onAddItem}
-                        action_label="account.votes.add_witness"
-                        tabIndex={this.props.tabIndex}
-                    />
-                ) : null}
-                {this.props.title && item_rows.length ? (
-                    <h4>{this.props.title}</h4>
-                ) : null}
                 {item_rows.length ? (
-                    <table className="table dashboard-table table-hover">
-                        <thead>
-                            <tr>
-                                <th style={{textAlign: "right"}}>#</th>
-                                <th
-                                    style={{textAlign: "left", maxWidth: cw[1]}}
-                                >
-                                    <Translate content="account.votes.name" />
-                                </th>
-                                <th style={{maxWidth: cw[2]}}>
-                                    <Translate content="account.votes.about" />
-                                </th>
-                                <th style={{maxWidth: cw[3]}}>
-                                    <Translate content="account.votes.votes" />
-                                </th>
-                                <th style={{maxWidth: cw[4]}}>
-                                    <Translate content="account.votes.status.title" />
-                                </th>
-                                <th style={{maxWidth: cw[0]}}>
-                                    <Translate content="account.votes.supported" />
-                                </th>
-                                <th style={{maxWidth: cw[5]}}>
-                                    <Translate content="account.votes.toggle" />
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>{item_rows}</tbody>
-                    </table>
+                    <PaginatedList
+                        className="table dashboard-table table-hover"
+                        rowClassName={this._decideRowClassName.bind(this)}
+                        rows={item_rows}
+                        header={header}
+                        pageSize={20}
+                        label="utility.total_x_assets"
+                        leftPadding="1.5rem"
+                    />
                 ) : null}
             </div>
         );
