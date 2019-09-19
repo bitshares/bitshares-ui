@@ -92,68 +92,124 @@ class QuickTrade extends Component {
             : "-";
     }
 
-    _matchRouteAndAssets(routeIsSet = true) {
-        if (routeIsSet) {
-            if (
-                !!this.props.match.params.sell &&
-                this._getSellAssetSymbol() !== this.props.match.params.sell
-            ) {
-                this.onSellAssetInputChange(this.props.match.params.sell);
-            }
-            if (
-                !!this.props.match.params.receive &&
-                this._getReceiveAssetSymbol() !==
-                    this.props.match.params.receive
-            ) {
-                this.onReceiveAssetInputChange(this.props.match.params.receive);
-            }
-        } else {
-            let sellRoute = "";
-            let receiveRoute = "";
-            if (!!this.state.receiveAsset && !this.state.sellAsset) {
-                sellRoute = "-";
-            }
-            if (!!this.state.sellAsset) {
-                sellRoute = "/" + this._getSellAssetSymbol();
-            }
-            if (!!this.state.receiveAsset) {
-                receiveRoute = "/" + this._getReceiveAssetSymbol();
-            }
-            let pathName = "/quick-trade" + sellRoute + receiveRoute;
-            if (this.props.location.pathname !== pathName) {
-                this.props.history.push(pathName);
-            }
+    _routeTo(assetToSell, assetToReceive) {
+        let sellRoute = assetToSell;
+        let receiveRoute = assetToReceive;
+        if (!assetToSell) {
+            sellRoute = "";
+        }
+        if (!assetToReceive) {
+            receiveRoute = "";
+        }
+        let pathName = "/quick-trade/" + sellRoute + "_" + receiveRoute;
+        if (__DEV__) {
+            console.log(
+                "_routeTo: ",
+                pathName,
+                " old: ",
+                this.props.location.pathname
+            );
+        }
+        if (this.props.location.pathname !== pathName) {
+            this.props.history.push(pathName);
         }
     }
 
+    static getDerivedStateFromProps(props, state) {
+        let newState = {};
+        if (props.assetToSell) {
+            newState = {
+                sellAssetInput: props.assetToSell.get("id"),
+                sellAsset: props.assetToSell,
+                sellImgName: props.assetToSell.get("symbol")
+            };
+        }
+        if (props.assetToReceive) {
+            newState = {
+                ...newState,
+                ...{
+                    receiveAssetInput: props.assetToReceive.get("id"),
+                    receiveAsset: props.assetToReceive,
+                    receiveImgName: props.assetToReceive.get("symbol")
+                }
+            };
+        }
+        return newState;
+    }
+
+    _areEqualAssets(asset1, asset2) {
+        return (
+            this._isLoadedAsset(asset1) &&
+            this._isLoadedAsset(asset2) &&
+            asset1.get("id") === asset2.get("id")
+        );
+    }
+
+    _isLoadedAsset(asset) {
+        return asset && asset.toJS;
+    }
+
+    _areAssetsGiven() {
+        return (
+            this._isLoadedAsset(this.props.assetToSell) &&
+            this._isLoadedAsset(this.props.assetToReceive)
+        );
+    }
+
+    _haveAssetsChanged(prevProps) {
+        if (
+            this._isLoadedAsset(this.props.assetToSell) !==
+            this._isLoadedAsset(prevProps.assetToSell)
+        ) {
+            return true;
+        }
+        if (
+            this._isLoadedAsset(this.props.assetToReceive) !==
+            this._isLoadedAsset(prevProps.assetToReceive)
+        ) {
+            return true;
+        }
+        if (
+            !this._areEqualAssets(
+                this.props.assetToSell,
+                prevProps.assetToSell
+            ) ||
+            !this._areEqualAssets(
+                this.props.assetToReceive,
+                prevProps.assetToReceive
+            )
+        ) {
+            return true;
+        }
+        return false;
+    }
+
     componentDidUpdate(prevProps) {
-        this._matchRouteAndAssets(false);
-    }
-
-    componentDidMount() {
-        this._matchRouteAndAssets();
-        this.setState({
-            mounted: true
-        });
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.searchAssets !== this.props.searchAssets) {
+        if (this._haveAssetsChanged(prevProps)) {
+            this._assetsHaveChanged();
+        }
+        if (this.props.searchAssets !== prevProps.searchAssets) {
             this.setState({activeSearch: true});
             let filteredAssets = this.props.searchAssets
                 .toArray()
                 .filter(a => a.symbol.indexOf(this.state.lookupQuote) !== -1);
             this._checkAndUpdateMarketList(filteredAssets);
         }
-        if (this.state.isSubscribedToMarket) {
-            this._getOrders();
-        }
-        if (nextProps.currentAccount !== this.props.currentAccount) {
-            const assets = getAssetsToSell(nextProps.currentAccount);
+        if (this.props.currentAccount !== prevProps.currentAccount) {
+            const assets = getAssetsToSell(this.props.currentAccount);
             this.setState({
                 sellAssets: assets,
                 receiveAssets: assets
             });
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            mounted: true
+        });
+        if (this._areAssetsGiven()) {
+            this._assetsHaveChanged();
         }
     }
 
@@ -171,6 +227,7 @@ class QuickTrade extends Component {
             sellAsset: quoteAsset,
             sub
         } = this.state;
+        console.log("_subToMarket");
         if (baseAsset && quoteAsset) {
             const {
                 receiveAssetId: baseAssetId,
@@ -187,8 +244,8 @@ class QuickTrade extends Component {
             await MarketsActions.subscribeMarket(
                 baseAsset,
                 quoteAsset,
-                bucketSize,
-                currentGroupOrderLimit
+                3600,
+                0
             );
             this.setState(
                 {
@@ -323,12 +380,6 @@ class QuickTrade extends Component {
                         break;
                 }
             }
-        } else {
-            this.setState({
-                orders: [],
-                sellAmount: "",
-                receiveAmount: ""
-            });
         }
     }
 
@@ -347,16 +398,21 @@ class QuickTrade extends Component {
         } else {
             asset = assetObjectIdOrSymbol;
         }
+        if (__DEV__) {
+            console.log("_setSellAsset", assetObjectIdOrSymbol, asset);
+        }
+
         this.setState(
             {
-                sellAssetInput: asset.get("id"),
-                sellAsset: asset,
-                sellImgName: asset.get("symbol"),
-                sellAmount: "",
                 activeInput: activeInput
             },
             () => {
-                if (fireChanged) this._assetsHaveChanged.bind(this);
+                this._routeTo(
+                    asset.get("symbol"),
+                    !!this.props.assetToReceive
+                        ? this.props.assetToReceive.get("symbol")
+                        : ""
+                );
             }
         );
     }
@@ -372,16 +428,20 @@ class QuickTrade extends Component {
         } else {
             asset = assetObjectIdOrSymbol;
         }
+        if (__DEV__) {
+            console.log("_setReceiveAsset", assetObjectIdOrSymbol, asset);
+        }
         this.setState(
             {
-                receiveAssetInput: asset.get("id"),
-                receiveAsset: asset,
-                receiveImgName: asset.get("symbol"),
-                receiveAmount: "",
                 activeInput: activeInput
             },
             () => {
-                if (fireChanged) this._assetsHaveChanged.bind(this);
+                this._routeTo(
+                    !!this.props.assetToSell
+                        ? this.props.assetToSell.get("symbol")
+                        : "",
+                    asset.get("symbol")
+                );
             }
         );
     }
@@ -1312,7 +1372,8 @@ QuickTrade = connect(
                 activeMarketHistory: MarketsStore.getState()
                     .activeMarketHistory,
                 bucketSize: MarketsStore.getState().bucketSize,
-                currentGroupOrderLimit: MarketsStore.getState().bucketSize,
+                currentGroupOrderLimit: MarketsStore.getState()
+                    .currentGroupOrderLimit,
                 feedPrice: MarketsStore.getState().feedPrice,
                 marketLimitOrders: MarketsStore.getState().marketLimitOrders
             };
