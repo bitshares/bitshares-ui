@@ -1886,6 +1886,7 @@
         "total": "Всего"
     },
     "settings": {
+        "showProposedTx": "Показывать предложенные транзакции",
         "access": "Узлы",
         "access_text": "",
         "accounts": "Аккаунты",
