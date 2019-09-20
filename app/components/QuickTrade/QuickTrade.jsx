@@ -76,20 +76,32 @@ class QuickTrade extends Component {
         this.handleSell = this.handleSell.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this._subToMarket = this._subToMarket.bind(this);
-        this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
         this._checkAndUpdateMarketList = this._checkAndUpdateMarketList.bind(
             this
         );
+        this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
     }
 
-    _getSellAssetSymbol() {
-        return this.state.sellAsset ? this.state.sellAsset.get("symbol") : "-";
-    }
-
-    _getReceiveAssetSymbol() {
-        return this.state.receiveAsset
-            ? this.state.receiveAsset.get("symbol")
-            : "-";
+    static getDerivedStateFromProps(props, state) {
+        let newState = {};
+        if (props.assetToSell) {
+            newState = {
+                sellAssetInput: props.assetToSell.get("id"),
+                sellAsset: props.assetToSell,
+                sellImgName: props.assetToSell.get("symbol")
+            };
+        }
+        if (props.assetToReceive) {
+            newState = {
+                ...newState,
+                ...{
+                    receiveAssetInput: props.assetToReceive.get("id"),
+                    receiveAsset: props.assetToReceive,
+                    receiveImgName: props.assetToReceive.get("symbol")
+                }
+            };
+        }
+        return newState;
     }
 
     _routeTo(assetToSell, assetToReceive) {
@@ -113,28 +125,6 @@ class QuickTrade extends Component {
         if (this.props.location.pathname !== pathName) {
             this.props.history.push(pathName);
         }
-    }
-
-    static getDerivedStateFromProps(props, state) {
-        let newState = {};
-        if (props.assetToSell) {
-            newState = {
-                sellAssetInput: props.assetToSell.get("id"),
-                sellAsset: props.assetToSell,
-                sellImgName: props.assetToSell.get("symbol")
-            };
-        }
-        if (props.assetToReceive) {
-            newState = {
-                ...newState,
-                ...{
-                    receiveAssetInput: props.assetToReceive.get("id"),
-                    receiveAsset: props.assetToReceive,
-                    receiveImgName: props.assetToReceive.get("symbol")
-                }
-            };
-        }
-        return newState;
     }
 
     _areEqualAssets(asset1, asset2) {
@@ -449,21 +439,17 @@ class QuickTrade extends Component {
     async _swapAssets(activeInput, fireChanged = true) {
         this.setState(
             {
-                sellAssetInput: this.state.receiveAssetInput,
-                sellAsset: this.state.receiveAsset,
-                sellImgName: this.state.receiveImgName,
-                receiveAsset: this.state.sellAsset,
-                receiveAssetInput: this.state.sellAssetInput,
-                receiveImgName: this.state.sellImgName,
                 sellAmount:
-                    activeInput === "sellAsset" ? "" : this.state.sellAmount,
+                    activeInput === "sellAsset" ? "" : this.state.receiveAmount,
                 receiveAmount:
-                    activeInput !== "sellAsset" ? "" : this.state.receiveAmount,
+                    activeInput === "receiveAsset" ? "" : this.state.sellAmount,
                 activeInput: activeInput
             },
             () => {
-                if (fireChanged)
-                    this._subToMarket().then(() => this._getOrders());
+                this._routeTo(
+                    this.state.receiveAsset.get("symbol"),
+                    this.state.sellAsset.get("symbol")
+                );
             }
         );
     }
@@ -588,66 +574,7 @@ class QuickTrade extends Component {
 
     onSwap() {
         if (this.isSwappable()) {
-            let {receiveAssets, activeAmountInput} = this.state;
-            const {sellAssetId, receiveAssetId} = this.getAssetsDetails();
-            if (!receiveAssets.includes(sellAssetId)) {
-                receiveAssets = [...receiveAssets, receiveAssetId];
-            }
-            if (activeAmountInput === "sell") {
-                this.setState(
-                    state => {
-                        return {
-                            sellAsset: state.receiveAsset,
-                            receiveAsset: state.sellAsset,
-                            sellAssetInput: state.receiveAssetInput,
-                            receiveAssetInput: state.sellAssetInput,
-                            sellImgName: state.receiveImgName,
-                            receiveImgName: state.sellImgName,
-                            receiveAssets,
-                            receiveAmount: state.sellAmount,
-                            sellAmount: "",
-                            activeInput:
-                                state.activeAmountInput === "sell"
-                                    ? "receive"
-                                    : "sell",
-                            activeAmountInput:
-                                state.activeAmountInput === "sell"
-                                    ? "receive"
-                                    : "sell"
-                        };
-                    },
-                    () => {
-                        this._subToMarket().then(() => this._getOrders());
-                    }
-                );
-            } else {
-                this.setState(
-                    state => {
-                        return {
-                            sellAsset: state.receiveAsset,
-                            receiveAsset: state.sellAsset,
-                            sellAssetInput: state.receiveAssetInput,
-                            receiveAssetInput: state.sellAssetInput,
-                            sellImgName: state.receiveImgName,
-                            receiveImgName: state.sellImgName,
-                            receiveAssets,
-                            sellAmount: state.receiveAmount,
-                            receiveAmount: "",
-                            activeInput:
-                                state.activeAmountInput === "sell"
-                                    ? "receive"
-                                    : "sell",
-                            activeAmountInput:
-                                state.activeAmountInput === "sell"
-                                    ? "receive"
-                                    : "sell"
-                        };
-                    },
-                    () => {
-                        this._subToMarket().then(() => this._getOrders());
-                    }
-                );
-            }
+            this._swapAssets("neither");
         }
     }
 
@@ -807,6 +734,7 @@ class QuickTrade extends Component {
     }
 
     isSwappable() {
+        return this._areAssetsGiven();
         const {sellAsset, receiveAsset} = this.state;
         const sellAssets = getAssetsToSell(this.props.currentAccount);
         const {receiveAssetId} = this.getAssetsDetails();
@@ -1308,7 +1236,8 @@ class QuickTrade extends Component {
                     align: "center",
                     display: "flex",
                     justifyContent: "center",
-                    minWidth: "300px"
+                    minWidth: "300px",
+                    marginTop: "1rem"
                 }}
             >
                 <SellReceive
@@ -1319,7 +1248,6 @@ class QuickTrade extends Component {
                     sellImgName={sellImgName}
                     onSellAssetInputChange={this.onSellAssetInputChange}
                     onSellAmountChange={this.onSellAmountChange}
-                    onSellImageError={this.onSellImageError}
                     receiveAssetInput={receiveAssetInput}
                     receiveAsset={receiveAssetId}
                     receiveAssets={receiveAssets}
@@ -1327,7 +1255,6 @@ class QuickTrade extends Component {
                     receiveImgName={receiveImgName}
                     onReceiveAssetInputChange={this.onReceiveAssetInputChange}
                     onReceiveAmountChange={this.onReceiveAmountChange}
-                    onReceiveImageError={this.onReceiveImageError}
                     onReceiveAssetSearch={this.onReceiveAssetSearch}
                     onSwap={this.onSwap}
                     isSwappable={this.isSwappable()}

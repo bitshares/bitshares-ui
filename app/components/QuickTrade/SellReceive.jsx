@@ -19,10 +19,8 @@ class SellReceive extends Component {
         receiveImgName: PropTypes.string,
         onSellAssetInputChange: PropTypes.func.isRequired,
         onSellAmountChange: PropTypes.func.isRequired,
-        onSellImageError: PropTypes.func.isRequired,
         onReceiveAssetInputChange: PropTypes.func.isRequired,
         onReceiveAmountChange: PropTypes.func.isRequired,
-        onReceiveImageError: PropTypes.func.isRequired,
         onSwap: PropTypes.func.isRequired,
         isSwappable: PropTypes.bool
     };
@@ -42,10 +40,8 @@ class SellReceive extends Component {
             receiveImgName,
             onSellAssetInputChange,
             onSellAmountChange,
-            onSellImageError,
             onReceiveAssetInputChange,
             onReceiveAmountChange,
-            onReceiveImageError,
             onReceiveAssetSearch,
             onSwap,
             isSwappable
@@ -60,7 +56,6 @@ class SellReceive extends Component {
                 amount={sellAmount}
                 onAssetInputChange={onSellAssetInputChange}
                 onAmountChange={onSellAmountChange}
-                onImageError={onSellImageError}
                 imgName={sellImgName}
                 placeholder={"exchange.quick_trade_details.placeholder_sell"}
             />
@@ -76,7 +71,6 @@ class SellReceive extends Component {
                 onAssetInputChange={onReceiveAssetInputChange}
                 onSearch={onReceiveAssetSearch}
                 onAmountChange={onReceiveAmountChange}
-                onImageError={onReceiveImageError}
                 imgName={receiveImgName}
                 placeholder={"exchange.quick_trade_details.placeholder_receive"}
             />

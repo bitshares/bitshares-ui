@@ -29,8 +29,33 @@ class AmountSelector2 extends React.Component {
         placeholder: ""
     };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            imageError: false
+        };
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            !!this.props.imgName &&
+            this.props.imgName !== prevProps.imgName &&
+            this.props.imgName !== "unknown"
+        ) {
+            this.setState({
+                imageError: false
+            });
+        }
+    }
+
+    onImageError() {
+        this.setState({
+            imageError: true
+        });
+    }
+
     render() {
-        const {
+        let {
             label,
             assetInput,
             asset,
@@ -46,6 +71,10 @@ class AmountSelector2 extends React.Component {
             placeholderAmount,
             tooltipText
         } = this.props;
+
+        if (this.state.imageError) {
+            imgName = "unknown";
+        }
 
         const labelText = (
             <Translate
@@ -78,7 +107,7 @@ class AmountSelector2 extends React.Component {
                     height: "3.5rem",
                     marginTop: "0.5rem"
                 }}
-                onError={onImageError}
+                onError={this.onImageError.bind(this)}
                 src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`}
             />
         );
