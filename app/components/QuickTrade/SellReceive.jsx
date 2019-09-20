@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import AmountSelector2 from "../Utility/AmountSelector2";
+import AmountSelector3 from "../Utility/AmountSelector3";
 import PropTypes from "prop-types";
 import Icon from "../Icon/Icon";
 import {Row, Col} from "bitshares-ui-style-guide";
@@ -48,7 +48,7 @@ class SellReceive extends Component {
         } = this.props;
 
         const sellSelector = (
-            <AmountSelector2
+            <AmountSelector3
                 label={"exchange.sell"}
                 assetInput={sellAssetInput}
                 asset={sellAsset}
@@ -62,7 +62,7 @@ class SellReceive extends Component {
         );
 
         const receiveSelector = (
-            <AmountSelector2
+            <AmountSelector3
                 label={"exchange.receive"}
                 assetInput={receiveAssetInput}
                 asset={receiveAsset}

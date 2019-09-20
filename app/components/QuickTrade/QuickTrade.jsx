@@ -534,6 +534,9 @@ class QuickTrade extends Component {
 
     onSellAmountChange(e) {
         if (!this.state.mounted) return;
+        if (e.asset !== this.state.sellAssetInput) {
+            this.onSellAssetInputChange(e.asset);
+        }
         this.setState(
             {
                 sellAmount: e.amount,
@@ -548,6 +551,9 @@ class QuickTrade extends Component {
 
     onReceiveAmountChange(e) {
         if (!this.state.mounted) return;
+        if (e.asset !== this.state.receiveAssetInput) {
+            this.onReceiveAssetInputChange(e.asset);
+        }
         this.setState(
             {
                 receiveAmount: e.amount,
