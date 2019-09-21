@@ -476,8 +476,7 @@ class AccountOverview extends React.Component {
                             </Tab>
 
                             {account.get("proposals") &&
-                            account.get("proposals").size &&
-                            this.props.settings.get("showProposedTx") ? (
+                            account.get("proposals").size ? (
                                 <Tab
                                     title="explorer.proposals.title"
                                     subText={String(

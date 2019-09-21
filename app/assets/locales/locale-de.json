@@ -1886,7 +1886,6 @@
         "total": "Total"
     },
     "settings": {
-        "showProposedTx": "Show proposed transactions in dashboard",
         "access": "Verbindungsknoten",
         "access_text": "",
         "accounts": "Konten",

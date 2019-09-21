@@ -123,8 +123,7 @@ class SettingsStore {
                 }
             },
             rememberMe: true,
-            viewOnlyMode: true,
-            showProposedTx: false
+            viewOnlyMode: true
         };
     }
 
@@ -150,7 +149,6 @@ class SettingsStore {
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
             unit: getUnits(),
             fee_asset: getUnits(),
-            showProposedTx: [{translate: "yes"}, {translate: "no"}],
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
             themes: ["darkTheme", "lightTheme", "midnightTheme"],

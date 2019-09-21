@@ -1880,7 +1880,6 @@
         "total": "Total"
     },
     "settings": {
-        "showProposedTx": "Show proposed transactions in dashboard",
         "access": "Nodes",
         "access_text": "",
         "accounts": "Accounts",
