@@ -69,6 +69,7 @@
         "intro_text_title": "Welcome to %(wallet_name)s",
         "inOrders": "In Orders",
         "inCollateral": "In Collateral",
+        "inVestingBalances": "In Vesting Balances",
         "login_with": "Login with",
         "market_actions": "Market actions",
         "market_orders": "Market orders",
