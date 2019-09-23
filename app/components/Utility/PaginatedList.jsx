@@ -1,84 +1,61 @@
 import React from "react";
-import {Pagination} from "antd";
 import counterpart from "counterpart";
 import {Table} from "bitshares-ui-style-guide";
 import "./paginated-list.scss";
-
 export default class PaginatedList extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            page: 1,
             pageSize: props.pageSize
         };
     }
 
     static defaultProps = {
         rows: [],
-        pageSize: 15,
+        pageSize: 20,
         label: "utility.total_x_items",
         className: "table",
         extraRow: null,
-        style: {paddingBottom: "1rem"}
+        style: {paddingBottom: "1rem"},
+        loading: false
     };
 
-    onChange(page, pageSize) {
-        this.setState({page, pageSize});
-    }
-
     render() {
-        const {page, pageSize} = this.state;
-        const {header, rows, extraRow} = this.props;
-        const total = rows.length;
+        const {pageSize} = this.state;
+        const {header, rows, extraRow, loading} = this.props;
 
-        let currentRows = getRows(page, pageSize);
-
-        function getRows(page, pageSize) {
-            let r = [];
-            for (
-                var i = (page - 1) * pageSize;
-                i < Math.min(total, page * pageSize);
-                i++
-            ) {
-                r.push(rows[i]);
-            }
-            return r;
-        }
-
-        /* Paginated too far or filtered out options without changing the page */
-        if (!currentRows.length && total) {
-            currentRows = getRows(1, pageSize);
-        }
-
+        const pageSizeOptions = [10, 20, 30, 40, 50, 100].filter(
+            item => item < rows.length
+        );
+        pageSizeOptions.push(rows.length);
         return (
             <div className="paginated-list" style={this.props.style}>
                 <Table
-                    dataSource={currentRows}
+                    loading={loading}
+                    dataSource={rows}
+                    uns
                     columns={Array.isArray(header) ? header : []}
-                    footer={() => extraRow}
+                    footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
                     onChange={this.props.toggleSortOrder}
-                    pagination={false}
-                />
-                {total > pageSize ? (
-                    <Pagination
-                        style={{
-                            paddingTop: "1rem",
-                            paddingBottom: "1rem",
-                            paddingLeft: this.props.leftPadding || null
-                        }}
-                        total={total}
-                        showTotal={total =>
+                    pagination={{
+                        showSizeChanger: true,
+                        hideOnSinglePage: false,
+                        defaultPageSize: pageSize,
+                        pageSizeOptions,
+                        showTotal: (total, range) =>
                             counterpart.translate(this.props.label, {
                                 count: total
                             })
-                        }
-                        pageSize={pageSize}
-                        current={page}
-                        onChange={this.onChange.bind(this)}
-                    />
-                ) : null}
-
+                    }}
+                    rowClassName={
+                        this.props.rowClassName == null
+                            ? undefined
+                            : (record, index) =>
+                                  this.props.rowClassName(record, index)
+                    }
+                    rowSelection={this.props.rowSelection}
+                />
                 {this.props.children}
             </div>
         );

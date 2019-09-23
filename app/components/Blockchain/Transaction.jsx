@@ -8,6 +8,7 @@ import classNames from "classnames";
 import {FormattedDate} from "react-intl";
 import Inspector from "react-json-inspector";
 import utils from "common/utils";
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import FormattedPrice from "../Utility/FormattedPrice";
@@ -20,17 +21,11 @@ import {ChainTypes} from "bitsharesjs";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
-import {
-    Link,
-    DirectLink,
-    Element,
-    Events,
-    animateScroll as scroll,
-    scrollSpy,
-    scroller
-} from "react-scroll";
+import {Link, DirectLink} from "react-scroll";
 import {Tooltip} from "bitshares-ui-style-guide";
+import JSONModal from "components/Modal/JSONModal";
 import asset_utils from "../../lib/common/asset_utils";
+import sanitize from "sanitize";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -69,7 +64,10 @@ class OpType extends React.Component {
                         {trxTypes[ops[this.props.type]]}
                     </span>
                 </td>
-                <td />
+                <td className="json-link" onClick={this.props.openJSONModal}>
+                    <AntIcon type="file-search" />
+                    <Translate component="a" content="transaction.view_json" />
+                </td>
             </tr>
         );
     }
@@ -82,19 +80,44 @@ class NoLinkDecorator extends React.Component {
 }
 
 class OperationTable extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            visible: false
+        };
+    }
+
+    openJSONModal = () => {
+        this.setState({visible: true});
+    };
+
+    closeJSONModal = () => {
+        this.setState({visible: false});
+    };
+
     render() {
+        const {operation} = this.props;
         let fee_row = (
             <tr>
                 <td>
                     <Translate component="span" content="transfer.fee" />
                 </td>
                 <td>
-                    {this.props.fee.amount > 0 ? (
-                        <FormattedAsset
-                            color="fee"
-                            amount={this.props.fee.amount}
-                            asset={this.props.fee.asset_id}
-                        />
+                    {operation[1].fee.amount > 0 ? (
+                        <span>
+                            <FormattedAsset
+                                color="fee"
+                                amount={operation[1].fee.amount}
+                                asset={operation[1].fee.asset_id}
+                                style={{marginRight: "10px"}}
+                            />
+                            &nbsp;&nbsp;
+                            <Icon
+                                name="question-circle"
+                                title="settings.can_change_default_fee_asset_tooltip"
+                            />
+                        </span>
                     ) : (
                         <label>
                             <Translate content="transfer.free" />
@@ -103,6 +126,7 @@ class OperationTable extends React.Component {
                 </td>
             </tr>
         );
+        const trxTypes = counterpart.translate("transaction.trxTypes");
 
         return (
             <div>
@@ -112,19 +136,31 @@ class OperationTable extends React.Component {
                     <tbody>
                         <OpType
                             txIndex={this.props.txIndex}
-                            type={this.props.type}
+                            type={operation[0]}
                             color={this.props.color}
+                            openJSONModal={this.openJSONModal}
                         />
                         {this.props.children}
                         {fee_row}
                     </tbody>
                 </table>
+                <JSONModal
+                    visible={this.state.visible}
+                    operation={operation}
+                    title={trxTypes[ops[operation[0]] || ""]}
+                    hideModal={this.closeJSONModal}
+                />
             </div>
         );
     }
 }
 
 class Transaction extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
     componentDidMount() {
         ReactTooltip.rebuild();
     }
@@ -1723,6 +1759,7 @@ class Transaction extends React.Component {
                                 hideOpLabel={true}
                                 hideDate={true}
                                 proposal={true}
+                                collapsed={true}
                             />
                         );
                     });
@@ -1999,7 +2036,7 @@ class Transaction extends React.Component {
                                     content="explorer.workers.website"
                                 />
                             </td>
-                            <td>{op[1].url}</td>
+                            <td>{utils.sanitize(op[1].url)}</td>
                         </tr>
                     );
 
@@ -2169,9 +2206,11 @@ class Transaction extends React.Component {
                     break;
                 case "htlc_create":
                     // add claim period to block time
+                    const block_time = this.props.block
+                        ? this.props.block.timestamp.getTime()
+                        : new Date().getTime();
                     let claim_due = new Date(
-                        this.props.block.timestamp.getTime() +
-                            op[1].claim_period_seconds * 1000
+                        block_time + op[1].claim_period_seconds * 1000
                     );
 
                     rows.push(
@@ -2365,8 +2404,7 @@ class Transaction extends React.Component {
                     opCount={opCount}
                     index={opIndex}
                     color={color}
-                    type={op[0]}
-                    fee={op[1].fee}
+                    operation={op}
                 >
                     {rows}
                 </OperationTable>

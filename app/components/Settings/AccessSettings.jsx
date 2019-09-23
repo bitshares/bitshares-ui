@@ -227,11 +227,9 @@ class ApiNode extends React.Component {
         let location =
             !!node.location &&
             typeof node.location === "object" &&
-            "translate" in node.location ? (
-                <Translate component="span" content={node.location.translate} />
-            ) : (
-                node.location
-            );
+            "translate" in node.location
+                ? counterpart.translate(node.location.translate)
+                : node.location;
 
         let title = !!location ? location : "";
         if (!!node.country) {
@@ -393,18 +391,13 @@ class AccessSettings extends React.Component {
     }
 
     _getConnectedNode() {
-        let connectedURL = null;
-        if (!this.props.connectedNode) {
-            connectedURL = autoSelectionUrl;
-        } else {
-            connectedURL = this.props.nodes.find(
-                node => node.url == this.props.connectedNode
-            );
-        }
-        if (!connectedURL) {
-            connectedURL = autoSelectionUrl;
-        }
-        return this.getNode(connectedURL);
+        let connectedURL = this.props.connectedNode || autoSelectionUrl;
+
+        const connectedNode = this.props.nodes.find(
+            node => node.url == connectedURL
+        );
+
+        return connectedNode ? this.getNode(connectedNode) : null;
     }
 
     _connectedNodeIsPersonal() {

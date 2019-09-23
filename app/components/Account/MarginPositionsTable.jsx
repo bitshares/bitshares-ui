@@ -243,7 +243,7 @@ const MarginPositionsTable = ({
                             <Translate content="borrow.target_collateral_ratio_short" />
                         </Popover>
                     </th>
-                    <th>
+                    <th style={alignRight}>
                         <TranslateWithLinks
                             noLink
                             string="account.total"

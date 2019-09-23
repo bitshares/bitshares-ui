@@ -1,15 +1,17 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Translate from "react-translate-component";
 import {saveAs} from "file-saver";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
+import JSONModal from "components/Modal/JSONModal";
+import { Icon as AntIcon } from "bitshares-ui-style-guide";
 import {
     ChainTypes as grapheneChainTypes,
     FetchChain,
     ChainStore
 } from "bitsharesjs";
-import ps from "perfect-scrollbar";
+//import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
@@ -26,6 +28,8 @@ import BlockTime from "../Blockchain/BlockTime";
 import OperationAnt from "../Blockchain/OperationAnt";
 import SettingsStore from "stores/SettingsStore";
 import {connect} from "alt-react";
+import PendingBlock from "../Utility/PendingBlock";
+
 const operation = new OperationAnt();
 
 const Option = Select.Option;
@@ -79,14 +83,14 @@ class RecentTransactions extends React.Component {
             rows: [],
             showModal: false,
             esNodeCustom: false,
-            esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
+            esNode: settingsAPIs.ES_WRAPPER_LIST[0].url,
+            visibleId: ""
         };
         this.getDataSource = this.getDataSource.bind(this);
 
         this.useCustom = counterpart.translate(
             "account.export_modal.use_custom"
         );
-
         // https://eswrapper.bitshares.eu/ is not alive
         // https://wrapper.elasticsearch.bitshares.ws/ is not alive
         // http://bts-es.clockwork.gr:5000/ is alive
@@ -101,7 +105,7 @@ class RecentTransactions extends React.Component {
     componentDidMount() {
         if (!this.props.fullHeight) {
             let t = this.refs.transactions;
-            ps.initialize(t);
+            //ps.initialize(t);
 
             this._setHeaderHeight();
         }
@@ -190,6 +194,7 @@ class RecentTransactions extends React.Component {
         if (this.state.showModal !== nextState.showModal) return true;
         if (this.state.esNode !== nextState.esNode) return true;
         if (this.state.esNodeCustom !== nextState.esNodeCustom) return true;
+        if (this.state.visibleId !== nextState.visibleId) return true;
         return false;
     }
 
@@ -285,6 +290,14 @@ class RecentTransactions extends React.Component {
         });
     }
 
+    openJSONModal(id) {
+        this.setState({ visibleId: id });
+    }
+
+    closeJSONModal = () => {
+        this.setState({ visibleId: "" });
+    };
+
     getDataSource(o, current_account_id) {
         let fee = o.op[1].fee;
         let trxTypes = counterpart.translate("transaction.trxTypes");
@@ -297,25 +310,27 @@ class RecentTransactions extends React.Component {
         );
         fee.amount = parseInt(fee.amount, 10);
         const dynGlobalObject = ChainStore.getObject("2.1.0");
-        let last_irreversible_block_num = dynGlobalObject.get(
+        const lastIrreversibleBlockNum = dynGlobalObject.get(
             "last_irreversible_block_num"
         );
-        let pending = null;
-        if (o.block_num > last_irreversible_block_num) {
-            pending = (
-                <span>
-                    (
-                    <Translate
-                        content="operation.pending"
-                        blocks={o.block_num - last_irreversible_block_num}
-                    />
-                    )
-                </span>
-            );
-        }
         return {
             key: o.id,
-            id: o.id,
+            id: (
+                <Fragment>
+                    <span
+                        className="cursor-pointer"
+                        onClick={() => this.openJSONModal(o.id)}
+                    >
+                        {o.id} <AntIcon type="file-search" />
+                    </span>
+                    <JSONModal
+                        visible={this.state.visibleId === o.id}
+                        operation={o.op}
+                        title={trxTypes[ops[o.op[0]] || ""]}
+                        hideModal={this.closeJSONModal}
+                    />
+                </Fragment>
+            ),
             type: (
                 <Link
                     className="inline-block"
@@ -336,7 +351,9 @@ class RecentTransactions extends React.Component {
                         <span>{info.column}</span>
                     </div>
                     <div style={{fontSize: 14, paddingTop: 5}}>
-                        {pending ? <span> - {pending}</span> : null}
+                        {o.block_num > lastIrreversibleBlockNum ? (
+                            <PendingBlock blockNumber={o.block_num} />
+                        ) : null}
                     </div>
                 </div>
             ),
@@ -400,13 +417,9 @@ class RecentTransactions extends React.Component {
               })
             : [];
         let action = (
-            <tr className="total-value" key="total_value">
-                <td style={{textAlign: "center"}}>&nbsp;</td>
-                <td />
-                <td />
-                <td />
-                <td />
-            </tr>
+            <div className="total-value" key="total_value">
+                <span style={{textAlign: "center"}}>&nbsp;</span>
+            </div>
         );
 
         const footer = (
@@ -502,7 +515,7 @@ class RecentTransactions extends React.Component {
                                 </Tooltip>
                             ) : null}
 
-                            {historyCount > 0 ? (
+                            {historyCount > 0 && this.props.dashboard ? (
                                 <Tooltip
                                     placement="bottom"
                                     title={counterpart.translate(

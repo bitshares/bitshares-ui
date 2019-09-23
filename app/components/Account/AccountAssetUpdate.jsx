@@ -21,9 +21,15 @@ import {BitAssetOptions} from "./AccountAssetCreate";
 import assetConstants from "chain/asset_constants";
 import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {withRouter} from "react-router-dom";
-import {Modal, Button, Notification, Switch} from "bitshares-ui-style-guide";
+import {
+    Modal,
+    Button,
+    Notification,
+    Switch,
+    Tooltip
+} from "bitshares-ui-style-guide";
+import Immutable from "immutable";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
@@ -110,6 +116,13 @@ class AccountAssetUpdate extends React.Component {
         );
         asset.options.market_fee_percent /= 100;
 
+        if (
+            asset.options.extensions !== null &&
+            asset.options.extensions.reward_percent !== null
+        ) {
+            asset.options.extensions.reward_percent /= 100;
+        }
+
         let coreRateQuoteAssetName = ChainStore.getAsset(
             core_exchange_rate.quote.asset_id
         ).get("symbol");
@@ -117,11 +130,27 @@ class AccountAssetUpdate extends React.Component {
             core_exchange_rate.base.asset_id
         ).get("symbol");
 
+        // maybe undefined (extensions may be empty
+        let whitelist_market_fee_sharing_val = props.asset.getIn([
+            "options",
+            "extensions",
+            "whitelist_market_fee_sharing"
+        ]);
+        let reward_percent = props.asset.getIn([
+            "options",
+            "extensions",
+            "reward_percent"
+        ]);
+
         return {
             isAssetUpdateConfirmationModalVisible: false,
             update: {
                 max_supply: max_supply,
                 max_market_fee: max_market_fee,
+                reward_percent:
+                    reward_percent === undefined
+                        ? undefined
+                        : asset.options.extensions.reward_percent,
                 market_fee_percent: asset.options.market_fee_percent,
                 description: assetUtils.parseDescription(
                     asset.options.description
@@ -163,6 +192,7 @@ class AccountAssetUpdate extends React.Component {
                 "options",
                 "whitelist_markets"
             ]),
+            whitelist_market_fee_sharing: whitelist_market_fee_sharing_val,
             blacklist_markets: props.asset.getIn([
                 "options",
                 "blacklist_markets"
@@ -216,7 +246,9 @@ class AccountAssetUpdate extends React.Component {
             JSON.stringify(s.whitelist_markets) !==
                 JSON.stringify(p.whitelist_markets) ||
             JSON.stringify(s.blacklist_markets) !==
-                JSON.stringify(p.blacklist_markets)
+                JSON.stringify(p.blacklist_markets) ||
+            JSON.stringify(s.whitelist_market_fee_sharing) !==
+                JSON.stringify(p.whitelist_market_fee_sharing)
         );
     }
 
@@ -251,7 +283,9 @@ class AccountAssetUpdate extends React.Component {
             JSON.stringify(s.whitelist_markets) !==
                 JSON.stringify(p.whitelist_markets) ||
             JSON.stringify(s.blacklist_markets) !==
-                JSON.stringify(p.blacklist_markets)
+                JSON.stringify(p.blacklist_markets) ||
+            JSON.stringify(s.whitelist_market_fee_sharing) !==
+                JSON.stringify(p.whitelist_market_fee_sharing)
         )
             tabUpdateIndex["1"] = true;
 
@@ -279,10 +313,12 @@ class AccountAssetUpdate extends React.Component {
             tabUpdateIndex["4"] = true;
 
         /* Flags */
+
         if (
             JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
             s.update.market_fee_percent !== p.update.market_fee_percent ||
-            s.update.max_market_fee !== p.update.max_market_fee
+            s.update.max_market_fee !== p.update.max_market_fee ||
+            s.update.reward_percent !== p.update.reward_percent
         )
             tabUpdateIndex["5"] = true;
 
@@ -358,7 +394,9 @@ class AccountAssetUpdate extends React.Component {
             whitelist_authorities: this.state.whitelist_authorities,
             blacklist_authorities: this.state.blacklist_authorities,
             whitelist_markets: this.state.whitelist_markets,
-            blacklist_markets: this.state.blacklist_markets
+            blacklist_markets: this.state.blacklist_markets,
+            whitelist_market_fee_sharing: this.state
+                .whitelist_market_fee_sharing
         };
 
         let feedProducersJS = isBitAsset ? feedProducers.toJS() : null;
@@ -496,7 +534,9 @@ class AccountAssetUpdate extends React.Component {
             case "market_fee_percent":
                 update[value] = this._forcePositive(e.target.value);
                 break;
-
+            case "reward_percent":
+                update[value] = this._forcePositive(e.target.value);
+                break;
             case "max_market_fee":
                 let marketFee = e.amount.replace(/,/g, "");
                 if (
@@ -757,6 +797,9 @@ class AccountAssetUpdate extends React.Component {
 
     onChangeList(key, action = "add", id) {
         let current = this.state[key];
+        if (current === undefined) {
+            current = new Immutable.List([]);
+        }
         if (action === "add" && !current.includes(id)) {
             current = current.push(id);
         } else if (action === "remove" && current.includes(id)) {
@@ -830,7 +873,7 @@ class AccountAssetUpdate extends React.Component {
                                 />
                                 :
                             </td>
-                            <td style={{border: "none"}}>
+                            <td style={{border: "none", textAlign: "right"}}>
                                 <Switch
                                     checked={isChecked}
                                     onChange={onClick}
@@ -1181,6 +1224,9 @@ class AccountAssetUpdate extends React.Component {
                                     whiteListEnabled={
                                         flagBooleans["white_list"]
                                     }
+                                    marketFeeEnabled={
+                                        flagBooleans["charge_market_fee"]
+                                    }
                                     whitelist_authorities={
                                         this.state.whitelist_authorities
                                     }
@@ -1189,6 +1235,14 @@ class AccountAssetUpdate extends React.Component {
                                     }
                                     whitelist_markets={
                                         this.state.whitelist_markets
+                                    }
+                                    whitelist_market_fee_sharing={
+                                        this.state
+                                            .whitelist_market_fee_sharing ===
+                                        undefined
+                                            ? new Immutable.List([])
+                                            : this.state
+                                                  .whitelist_market_fee_sharing
                                     }
                                     blacklist_markets={
                                         this.state.blacklist_markets
@@ -1399,44 +1453,32 @@ class AccountAssetUpdate extends React.Component {
                                         "charge_market_fee"
                                     ] ? (
                                         <div>
-                                            <Translate
-                                                component="h3"
-                                                content="account.user_issued_assets.market_fee"
-                                            />
-                                            <table className="table">
-                                                <tbody>
-                                                    <tr>
-                                                        <td
-                                                            style={{
-                                                                border: "none",
-                                                                width: "80%"
-                                                            }}
-                                                        >
-                                                            <Translate content="account.user_issued_assets.charge_market_fee" />
-                                                            :
-                                                        </td>
-                                                        <td
-                                                            style={{
-                                                                border: "none"
-                                                            }}
-                                                        >
-                                                            <Switch
-                                                                checked={
-                                                                    flagBooleans.charge_market_fee
-                                                                }
-                                                                onChange={this._onFlagChange.bind(
-                                                                    this,
-                                                                    "charge_market_fee"
-                                                                )}
-                                                            />
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <h3>
+                                                <Translate
+                                                    component="span"
+                                                    content="account.user_issued_assets.market_fee"
+                                                    style={{
+                                                        paddingRight: "20px"
+                                                    }}
+                                                />
+                                                <Switch
+                                                    checked={
+                                                        flagBooleans.charge_market_fee
+                                                    }
+                                                    onChange={this._onFlagChange.bind(
+                                                        this,
+                                                        "charge_market_fee"
+                                                    )}
+                                                />
+                                            </h3>
                                             <div
                                                 className={cnames({
                                                     disabled: !flagBooleans.charge_market_fee
                                                 })}
+                                                style={{
+                                                    marginTop: "10px",
+                                                    marginLeft: "30px"
+                                                }}
                                             >
                                                 <label>
                                                     <Translate content="account.user_issued_assets.market_fee" />{" "}
@@ -1452,7 +1494,6 @@ class AccountAssetUpdate extends React.Component {
                                                         )}
                                                     />
                                                 </label>
-
                                                 <label>
                                                     <AmountSelector
                                                         label="account.user_issued_assets.max_market_fee"
@@ -1471,6 +1512,28 @@ class AccountAssetUpdate extends React.Component {
                                                         tabIndex={1}
                                                     />
                                                 </label>
+                                                <div>
+                                                    <label>
+                                                        <Tooltip
+                                                            title={counterpart.translate(
+                                                                "account.user_issued_assets.reward_percent_tooltip"
+                                                            )}
+                                                        >
+                                                            <Translate content="account.user_issued_assets.reward_percent" />{" "}
+                                                            (%)
+                                                        </Tooltip>
+                                                        <input
+                                                            type="number"
+                                                            value={
+                                                                update.reward_percent
+                                                            }
+                                                            onChange={this._onUpdateInput.bind(
+                                                                this,
+                                                                "reward_percent"
+                                                            )}
+                                                        />
+                                                    </label>
+                                                </div>
                                                 {errors.max_market_fee ? (
                                                     <p className="grid-content has-error">
                                                         {errors.max_market_fee}
@@ -1479,7 +1542,6 @@ class AccountAssetUpdate extends React.Component {
                                             </div>
                                         </div>
                                     ) : null}
-
                                     <h3>
                                         <Translate content="account.user_issued_assets.flags" />
                                     </h3>
@@ -1556,17 +1618,6 @@ AccountAssetUpdate = AssetWrapper(AccountAssetUpdate, {
 class ConfirmModal extends React.Component {
     constructor() {
         super();
-        this.state = {open: false};
-    }
-
-    show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
-        });
-    }
-
-    onClose() {
-        this.setState({open: false});
     }
 
     render() {
@@ -1648,7 +1699,7 @@ class ConfirmModal extends React.Component {
 
 class AssetUpdateWrapper extends React.Component {
     render() {
-        let asset = this.props.match.params.asset;
+        let asset = this.props.match.params.asset.toUpperCase();
         return <AccountAssetUpdate asset={asset} {...this.props} />;
     }
 }

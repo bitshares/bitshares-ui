@@ -123,3 +123,44 @@ div.bordered-header {
     height: 16px;
     display: inline-block;
 }
+
+.git-info {
+    text-align: center;
+    position: relative;
+
+    .ant-alert .ant-alert-icon {
+        position: static !important;
+        margin-right: 10px;
+    }
+    .close-icon {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        overflow: hidden;
+        font-size: 12px;
+        line-height: 22px !important;
+        cursor: pointer;
+        color: black !important;
+    }
+}
+
+.search-input {
+    .ant-input-suffix {
+        right: 0px !important;
+        .anticon {
+            width: 32px;
+            height: 32px;
+            svg {
+                margin: 9px;
+            }
+        }
+    }
+}
+
+.json-link {
+    cursor: pointer;
+
+    .anticon {
+        padding-right: 5px;
+    }
+}

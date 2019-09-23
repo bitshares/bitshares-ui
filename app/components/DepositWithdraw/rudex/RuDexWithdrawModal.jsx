@@ -8,6 +8,8 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import {validateAddress, WithdrawAddresses} from "common/RuDexMethods";
+import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
 import {ChainStore} from "bitsharesjs";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Price, Asset} from "common/MarketClasses";
@@ -51,7 +53,9 @@ class RuDexWithdrawModal extends React.Component {
             withdraw_address_first: true,
             empty_withdraw_value: false,
             from_account: props.account,
-            fee_asset_id: "1.3.0",
+            fee_asset_id:
+                ChainStore.assets_by_symbol.get(props.fee_asset_symbol) ||
+                "1.3.0",
             feeStatus: {}
         };
 
@@ -83,7 +87,6 @@ class RuDexWithdrawModal extends React.Component {
                 {
                     from_account: np.account,
                     feeStatus: {},
-                    fee_asset_id: "1.3.0",
                     feeAmount: new Asset({amount: 0})
                 },
                 () => {
@@ -326,7 +329,7 @@ class RuDexWithdrawModal extends React.Component {
                 });
                 let asset = this.props.asset;
 
-                const {feeAmount} = this.state;
+                const {feeAmount, fee_asset_id} = this.state;
 
                 let amount = parseFloat(
                     String.prototype.replace.call(
@@ -353,7 +356,7 @@ class RuDexWithdrawModal extends React.Component {
                             ? ":" + new Buffer(this.state.memo, "utf-8")
                             : ""),
                     null,
-                    feeAmount ? feeAmount.asset_id : "1.3.0"
+                    feeAmount ? feeAmount.asset_id : fee_asset_id
                 );
 
                 this.setState({
@@ -401,7 +404,7 @@ class RuDexWithdrawModal extends React.Component {
             ""
         );
 
-        const {feeAmount} = this.state;
+        const {feeAmount, fee_asset_id} = this.state;
 
         AccountActions.transfer(
             this.props.account.get("id"),
@@ -415,7 +418,7 @@ class RuDexWithdrawModal extends React.Component {
                     ? ":" + new Buffer(this.state.memo, "utf-8")
                     : ""),
             null,
-            feeAmount ? feeAmount.asset_id : "1.3.0"
+            feeAmount ? feeAmount.asset_id : fee_asset_id
         );
     }
 
@@ -870,4 +873,20 @@ class RuDexWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(RuDexWithdrawModal);
+export default BindToChainState(
+    connect(
+        RuDexWithdrawModal,
+        {
+            listenTo() {
+                return [SettingsStore];
+            },
+            getProps(props) {
+                return {
+                    fee_asset_symbol: SettingsStore.getState().settings.get(
+                        "fee_asset"
+                    )
+                };
+            }
+        }
+    )
+);

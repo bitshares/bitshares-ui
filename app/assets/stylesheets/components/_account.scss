@@ -237,30 +237,13 @@ a.action-button > span {
     text-transform: lowercase;
 }
 
-div.header-selector {
-    > .filter {
-        margin-right: 1rem;
-        input {
-            margin: 0;
-            height: 2rem;
-            padding: 0 10px;
-        }
+div.voting {
+    div.header-selector {
+        padding: 1rem;
     }
-    > .selector div {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-        cursor: pointer;
-        &:nth-of-type(n + 1) {
-            padding-left: 10px;
-            padding-right: 10px;
-            border-right: 1px solid white; // TODO: FIX
-        }
-        &:hover.inactive {
-            color: inherit;
-        }
-    }
-    > .selector div:last-of-type {
-        border-right: 0px;
+
+    span.search-input {
+        width: 220px;
     }
 }
 
@@ -387,6 +370,30 @@ table.table.dashboard-table {
                 text-align: right;
             }
         }
+    }
+}
+
+.grid-wrapper {
+    margin-bottom: 20px;
+}
+
+.groupColumn {
+    // !important used to override theme styles
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+
+    // "Fit to content" hack: https://stackoverflow.com/questions/11267154/fit-cell-width-to-content
+    width: 1%;
+    white-space: nowrap;
+}
+
+.ant-table-content .ant-table-footer .total-value {
+    text-align: right;
+
+    .text {
+        margin-right: 20px;
+        text-transform: uppercase;
+        @include RobotoMedium;
     }
 }
 

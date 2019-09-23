@@ -573,10 +573,10 @@ function BindToChainState(Component, options = {}) {
             let stateChanged = false;
 
             /*
-            * are_equal_shallow won't correctly compare null to undefined, so
-            * we need to work around it by assigning a non-falsy value instead
-            * of null before making the comparison
-            */
+             * are_equal_shallow won't correctly compare null to undefined, so
+             * we need to work around it by assigning a non-falsy value instead
+             * of null before making the comparison
+             */
             function replaceNull(state) {
                 let temp = {};
                 for (let key in state) {
@@ -618,13 +618,29 @@ function BindToChainState(Component, options = {}) {
             const props = omit(this.props, this.all_chain_props);
             for (let prop of this.required_props) {
                 if (this.state[prop] === undefined) {
-                    if (typeof options !== "undefined" && options.show_loader) {
-                        return <LoadingIndicator />;
-                    } else if (this.hasErrored) {
+                    if (this.hasErrored) {
                         return (
-                            <span>
-                                Error rendering component, please report
+                            <span style={{color: "red"}}>
+                                Error rendering component, please report (see
+                                browser console for details)
                             </span>
+                        );
+                    } else if (
+                        typeof options !== "undefined" &&
+                        options.show_loader
+                    ) {
+                        console.error(
+                            "Required prop " +
+                                prop +
+                                " isn't given, but still loading, this indicates that the rendering transitions are not well defined"
+                        );
+                        return (
+                            <React.Fragment>
+                                <LoadingIndicator />
+                                <span cassName="text-center">
+                                    Component re-rendering ...
+                                </span>
+                            </React.Fragment>
                         );
                     } else {
                         // returning a temp component of the desired type prevents invariant violation errors, notably when rendering tr components

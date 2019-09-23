@@ -19,6 +19,7 @@ import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
 import {Input, Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
+import SearchInput from "../Utility/SearchInput";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -43,7 +44,6 @@ class AccountOverview extends React.Component {
     }
 
     _handleFilterInput(e) {
-        e.preventDefault();
         this.setState({
             filterValue: e.target.value
         });
@@ -78,7 +78,8 @@ class AccountOverview extends React.Component {
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
             !utils.are_equal_shallow(nextState, this.state) ||
-            this.state.filterValue !== nextState.filterValue
+            this.state.filterValue !== nextState.filterValue ||
+            this.state.enabledColumns !== nextState.enabledColumns
         );
     }
 
@@ -296,12 +297,13 @@ class AccountOverview extends React.Component {
                 balances={this.props.balances}
                 extraRow={hiddenPortfolioBalance}
                 viewSettings={this.props.viewSettings}
+                enabledColumns={this.state.enabledColumns}
             />
         );
 
         // add unicode non-breaking space as subtext to Activity Tab to ensure that all titles are aligned
         // horizontally
-        const hiddenSubText = "\u00a0 ";
+        const hiddenSubText = "\u00a0";
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
@@ -320,18 +322,16 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="header-selector">
                                     <div className="filter inline-block">
-                                        <Input
-                                            type="text"
-                                            placeholder="Filter..."
+                                        <SearchInput
+                                            value={this.state.filterValue}
                                             onChange={this._handleFilterInput}
-                                            addonAfter={<Icon type="search" />}
                                         />
                                     </div>
                                     <div
                                         className="selector inline-block"
                                         style={{
                                             position: "relative",
-                                            top: "6px"
+                                            top: "8px"
                                         }}
                                     >
                                         <div
@@ -410,13 +410,14 @@ class AccountOverview extends React.Component {
                                 subText={ordersValue}
                             >
                                 <AccountOrders {...this.props}>
-                                    <span
-                                        className="total-value"
-                                        style={{textAlign: "left"}}
-                                    >
-                                        {totalValueText}
-                                        {ordersValue}
-                                    </span>
+                                    <div className="total-value">
+                                        <span className="text">
+                                            {totalValueText}
+                                        </span>
+                                        <span className="value">
+                                            {ordersValue}
+                                        </span>
+                                    </div>
                                 </AccountOrders>
                             </Tab>
 
