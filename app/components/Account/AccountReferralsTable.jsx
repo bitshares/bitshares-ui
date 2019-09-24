@@ -17,7 +17,8 @@ class AccountReferralsTable extends React.Component {
 
         this.state = {
             referralsIndex: [],
-            referralsCount: null
+            referralsCount: null,
+            errorLoading: null
         };
     }
 
@@ -44,99 +45,100 @@ class AccountReferralsTable extends React.Component {
         }
     }
 
-    _getReferrals(page = 0, isAccountChanged = false) {
+    async _getReferrals(page = 0, isAccountChanged = false) {
         let {myHiddenAccounts, myActiveAccounts} = this.props;
         let {referralsIndex, referralsCount} = this.state;
-        const esNode = settingsAPIs.ES_WRAPPER_LIST[1].url;
+        const esNode = settingsAPIs.ES_WRAPPER_LIST[3].url;
 
         if (isAccountChanged) {
             referralsCount = null;
             referralsIndex = [];
         }
 
-        if (!referralsCount) {
-            // console.log("ES Call: /referrer_count?account_id=" + this.props.account.get("id"));
-            new Promise((resolve, reject) => {
-                fetch(
+        try {
+            if (!referralsCount) {
+                let referralsCountResponse = await fetch(
                     esNode +
                         "/referrer_count?account_id=" +
                         this.props.account.get("id")
-                )
-                    .then(res => res.json())
-                    .then(results => {
-                        this.setState({
-                            referralsCount: results
-                        });
-                    })
-                    .catch(err => {
-                        reject("ES Node - referrer_count failed", err);
-                    });
-            });
-        }
+                );
+                if (!referralsCountResponse.ok) {
+                    throw new Error(
+                        "Could not reach referrer_count endpoint on ES wrapper" +
+                            esNode
+                    );
+                }
+                this.setState({
+                    referralsCount: await referralsCountResponse.json()
+                });
+            }
 
-        new Promise((resolve, reject) => {
-            fetch(
+            let referralsIndexResponse = await fetch(
                 esNode +
                     "/all_referrers?account_id=" +
                     this.props.account.get("id") +
                     "&page=" +
                     page
-            )
-                .then(res => res.json())
-                .then(results => {
-                    // console.log("ES Call: all_referrers?account_id=" + this.props.account.get("id") + "&page=" + page, results);
-                    let objectsToFetch = [];
-                    results.map(ref => {
-                        objectsToFetch.push(ref.account_id);
-                    });
-                    // Fetch Account Data
-                    // console.log("Fetch Chain", objectsToFetch);
-                    objectsToFetch.forEach(id_to_fetch => {
-                        FetchChain("getAccount", id_to_fetch).then(account => {
-                            account = account.toJS();
+            );
+            if (!referralsIndexResponse.ok) {
+                throw new Error(
+                    "Could not reach all_referrers endpoint on ES wrapper" +
+                        esNode
+                );
+            }
+            let results = await referralsIndexResponse.json();
 
-                            let network_fee =
-                                account.network_fee_percentage / 100;
-                            let lifetime_fee =
-                                account.lifetime_referrer_fee_percentage / 100;
-                            let referrer_total_fee =
-                                100 - network_fee - lifetime_fee;
-                            let referrer_fee =
-                                (referrer_total_fee *
-                                    account.referrer_rewards_percentage) /
-                                10000;
-                            let registrar_fee =
-                                100 - referrer_fee - lifetime_fee - network_fee;
+            let objectsToFetch = [];
+            results.map(ref => {
+                objectsToFetch.push(ref.account_id);
+            });
+            // Fetch Account Data
+            // console.log("Fetch Chain", objectsToFetch);
+            objectsToFetch.forEach(id_to_fetch => {
+                FetchChain("getAccount", id_to_fetch).then(account => {
+                    account = account.toJS();
 
-                            referralsIndex.push({
-                                id: account.id,
-                                name: account.name,
-                                lifetime_ref: {
-                                    name: account.lifetime_referrer_name,
-                                    value: lifetime_fee
-                                },
-                                registrar_ref: {
-                                    name: account.registrar_name,
-                                    value: registrar_fee
-                                },
-                                affiliate_ref: {
-                                    name: account.referrer_name,
-                                    value: referrer_fee
-                                },
-                                network: network_fee,
-                                statistics: account.statistics,
-                                membership_expiration: null
-                            });
-                            this.setState({
-                                referralsIndex: referralsIndex
-                            });
-                        });
+                    let network_fee = account.network_fee_percentage / 100;
+                    let lifetime_fee =
+                        account.lifetime_referrer_fee_percentage / 100;
+                    let referrer_total_fee = 100 - network_fee - lifetime_fee;
+                    let referrer_fee =
+                        (referrer_total_fee *
+                            account.referrer_rewards_percentage) /
+                        10000;
+                    let registrar_fee =
+                        100 - referrer_fee - lifetime_fee - network_fee;
+
+                    referralsIndex.push({
+                        id: account.id,
+                        name: account.name,
+                        lifetime_ref: {
+                            name: account.lifetime_referrer_name,
+                            value: lifetime_fee
+                        },
+                        registrar_ref: {
+                            name: account.registrar_name,
+                            value: registrar_fee
+                        },
+                        affiliate_ref: {
+                            name: account.referrer_name,
+                            value: referrer_fee
+                        },
+                        network: network_fee,
+                        statistics: account.statistics,
+                        membership_expiration: null
                     });
-                })
-                .catch(err => {
-                    reject("ES Node - all_referrers failed", err);
+                    this.setState({
+                        referralsIndex: referralsIndex
+                    });
                 });
-        });
+            });
+        } catch (err) {
+            console.error(err);
+            this.setState({
+                errorLoading: true
+            });
+        }
     }
 
     onPaginationChange(page) {
@@ -152,22 +154,6 @@ class AccountReferralsTable extends React.Component {
         if (ref) account.referrer_name = ref.get("name");
         let reg = ChainStore.getAccount(account.registrar, false);
         if (reg) account.registrar_name = reg.get("name");
-
-        let member_status = ChainStore.getAccountMemberStatus(
-            this.props.account
-        );
-        if (member_status === "annual")
-            expiration = (
-                <span>
-                    (<Translate content="account.member.expires" />{" "}
-                    <TimeAgo time={account.membership_expiration_date} />)
-                </span>
-            );
-        let expiration_date = account.membership_expiration_date;
-        if (expiration_date === "1969-12-31T23:59:59")
-            expiration_date = "Never";
-        else if (expiration_date === "1970-01-01T00:00:00")
-            expiration_date = "N/A";
 
         let refData = this.state.referralsIndex;
 
@@ -256,7 +242,9 @@ class AccountReferralsTable extends React.Component {
                 }
             }
         ];
-
+        if (this.state.errorLoading) {
+            return <Translate content="errors.loading_from_es" />;
+        }
         return (
             <Table
                 rowKey="accountReferrals"

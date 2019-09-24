@@ -536,7 +536,8 @@
         "top_markets": "Top Markets"
     },
     "errors": {
-        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+        "loading_from_blockchain": "Error fetching from the blockchain, please retry.",
+        "loading_from_es": "Error fetching from elastic search database."
     },
     "exchange": {
         "actions": "Actions",
