@@ -15,6 +15,7 @@ import {withRouter} from "react-router-dom";
 import {Table, Icon, Input, Popover} from "bitshares-ui-style-guide";
 import sanitize from "sanitize";
 import SearchInput from "../Utility/SearchInput";
+import utils from "common/utils";
 
 require("./witnesses.scss");
 
@@ -202,10 +203,7 @@ class WitnessList extends React.Component {
                         rank: ranks[a.get("id")],
                         name: witness.get("name"),
                         signing_key: witness_data.get("signing_key"),
-                        url: sanitize(witness_data.get("url"), {
-                            whiteList: [], // empty, means filter out all tags
-                            stripIgnoreTag: true // filter out all HTML not in the whilelist
-                        }),
+                        url: utils.sanitize(witness_data.get("url")),
                         lastConfirmedBlock: {
                             id: witness_data.get("last_confirmed_block_num"),
                             timestamp: last_aslot_time.getTime()
