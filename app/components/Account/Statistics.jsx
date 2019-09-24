@@ -11,7 +11,13 @@ class Statistics extends React.Component {
 
     render() {
         let stat_object = this.props.stat_object.toJS();
-        return (
+
+        return this.props.plainText ? (
+            <FormattedAsset
+                amount={parseFloat(stat_object.lifetime_fees_paid)}
+                asset="1.3.0"
+            />
+        ) : (
             <tbody>
                 <tr>
                     <td>

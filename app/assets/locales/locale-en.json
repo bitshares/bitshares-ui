@@ -86,17 +86,32 @@
             "days": "days",
             "earned": "Coin days earned",
             "expires": "expires",
+            "fee_division_text": {
+                "paragraph_1": "Every time %(account)s pays a transaction fee, that fee is divided among several different accounts. The network takes %(fee_share_network)s%. The Lifetime Member who referred %(account)s takes %(fee_share_ltm)s%.",
+                "paragraph_2": "The registrar is the account that paid the transaction fee to register %(account)s with the network and decide how to divide the remaining %(fee_share_registrar)s% between themselves and their own Affiliate Referrer program. %(account)s's registrar chose to share %(fee_share_affiliate)s% of the total fee with the Affiliate Referrer.",
+                "paragraph_3": "Fee shares, market rewards and other rewards is found on the Vesting Balances page"
+            },
+            "fee_pending_text": "Fees paid by %(account)s are divided among the network, referrers, and registrars once every maintenance interval (%(maintenanceInterval)s seconds). The next maintenance time is %(nextMaintenanceTime)s.",
+            "fee_vesting_text": "Most fees are made available immediately, but fees over %(vestingThresholdAmount)s %(vestingThresholdAsset)s (such as those paid to upgrade your membership or register a premium account name) must vest for a total of %(vestingPeriod)s days.",
+            "ref_distribution": "Referral Fee Distribution",
+            "fee_division": "Fee Division",
+            "fee_pending": "Pending Fees",
+            "fee_vesting": "Vesting Fees",
+            "referal_fees": "Referral Fee Distribution",
             "fee_allocation": "Fee Allocation",
             "fees_cashback": "Fee statistics",
             "fees_paid": "Total fees paid",
             "join": "Joined on",
             "lifetime": "Lifetime member",
+            "lifetime_title": "Earn cashback",
             "lifetime_referrer": "Lifetime Referrer",
             "membership": "Membership",
             "membership_expiration": "Membership Expiration",
             "network_percentage": "Network",
-            "referral_link": "Your referral link",
-            "referral_text": "Give this to link to people you want to refer to %(wallet_name)s",
+            "total_ref": "Total referred %(total)s",
+            "referral_link": "Your personal referral link",
+            "referral_text": "Give this link to people you want to refer to %(wallet_name)s",
+            "referral_info": "As a lifetime member (LTM) you are eligable for a %(feesCashback)s% cashback on all your fees. You will also recieve cashback from markets with a referral reward. The referral reward is based on your own and your referred members market orders.",
             "referrals": "Referrals",
             "referrer": "Affiliate Referrer",
             "registrar": "Registrar",
@@ -521,7 +536,8 @@
         "top_markets": "Top Markets"
     },
     "errors": {
-        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+        "loading_from_blockchain": "Error fetching from the blockchain, please retry.",
+        "loading_from_es": "Error fetching from elastic search database."
     },
     "exchange": {
         "actions": "Actions",
