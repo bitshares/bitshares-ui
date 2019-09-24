@@ -8,10 +8,36 @@ import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import ReactTooltip from "react-tooltip";
 import MarketStatsCheck from "./MarketStatsCheck";
 import MarketUtils from "common/market_utils";
 import {Tooltip} from "bitshares-ui-style-guide";
+import PropTypes from "prop-types";
+import {ChainStore} from "bitsharesjs";
+
+const getEquivalentValue = function(
+    amount,
+    toAsset,
+    fromAsset,
+    fullPrecision = null,
+    coreAsset = null,
+    allMarketStats = null
+) {
+    console.log("asdas");
+    try {
+        return MarketUtils.convertValue(
+            amount,
+            toAsset,
+            fromAsset,
+            allMarketStats
+                ? allMarketStats
+                : MarketsStore.getState().allMarketStats,
+            coreAsset ? coreAsset : ChainStore.getAsset("1.3.0"),
+            fullPrecision ? fullPrecision : true
+        );
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -22,7 +48,6 @@ import {Tooltip} from "bitshares-ui-style-guide";
  *  -'amount' which is the amount to convert
  *  -'fullPrecision' boolean to tell if the amount uses the full precision of the asset
  */
-
 class ValueComponent extends MarketStatsCheck {
     static defaultProps = {
         fullPrecision: true,
@@ -35,10 +60,6 @@ class ValueComponent extends MarketStatsCheck {
         super(props);
     }
 
-    componentDidMount() {
-        ReactTooltip.rebuild();
-    }
-
     shouldComponentUpdate(np) {
         return (
             super.shouldComponentUpdate(np) ||
@@ -49,36 +70,26 @@ class ValueComponent extends MarketStatsCheck {
         );
     }
 
-    getValue() {
+    render() {
         let {
             amount,
             toAsset,
             fromAsset,
             fullPrecision,
-            allMarketStats,
-            coreAsset
-        } = this.props;
-        return MarketUtils.convertValue(
-            amount,
-            toAsset,
-            fromAsset,
-            allMarketStats,
             coreAsset,
-            fullPrecision
-        );
-    }
-
-    render() {
-        let {amount, toAsset, fromAsset, fullPrecision, ...others} = this.props;
+            ...others
+        } = this.props;
 
         let toID = toAsset.get("id");
         let toSymbol = toAsset.get("symbol");
 
-        if (!fullPrecision) {
-            amount = utils.get_asset_amount(amount, fromAsset);
-        }
-
-        let eqValue = this.getValue();
+        let eqValue = getEquivalentValue(
+            amount,
+            toAsset,
+            fromAsset,
+            fullPrecision,
+            coreAsset
+        );
 
         if (!eqValue && eqValue !== 0) {
             return (
@@ -145,29 +156,49 @@ EquivalentValueComponent = connect(
     }
 );
 
+const balanceToAsset = function(balance) {
+    const isBalanceObject = !!balance.getIn(["balance", "amount"]);
+    if (isBalanceObject) {
+        return {
+            asset_id: balance.getIn(["balance", "asset_id"]),
+            amount: Number(balance.getIn(["balance", "amount"]))
+        };
+    } else {
+        return {
+            asset_id: balance.get("asset_type"),
+            amount: Number(balance.get("balance"))
+        };
+    }
+};
+
 class BalanceValueComponent extends React.Component {
     static propTypes = {
-        balance: ChainTypes.ChainObject.isRequired
+        balance: ChainTypes.ChainObject.isRequired,
+        satoshis: PropTypes.number
+    };
+
+    static defaultProps = {
+        satoshis: null
     };
 
     render() {
         const {balance, ...others} = this.props;
-        const isBalanceObject = !!balance.getIn(["balance", "amount"]);
-
-        let amount = Number(
-            isBalanceObject
-                ? balance.getIn(["balance", "amount"])
-                : balance.get("balance")
-        );
-        let fromAsset = isBalanceObject
-            ? balance.getIn(["balance", "asset_id"])
-            : balance.get("asset_type");
+        const balanceAsset = balanceToAsset(balance);
+        let amount = balanceAsset.amount;
+        // override amount if desired
+        if (!!this.props.satoshis) {
+            amount = this.props.satoshis;
+        }
+        let fromAsset = balanceAsset.asset_id;
         if (isNaN(amount)) return <span>--</span>;
         return (
             <EquivalentValueComponent
                 amount={amount}
                 fromAsset={fromAsset}
                 noDecimals={true}
+                fullPrecision={
+                    !!this.props.satoshis ? false : this.props.fullPrecision
+                }
                 {...others}
             />
         );
@@ -176,4 +207,10 @@ class BalanceValueComponent extends React.Component {
 BalanceValueComponent = BindToChainState(BalanceValueComponent, {
     keep_updating: true
 });
-export {EquivalentValueComponent, BalanceValueComponent};
+
+export {
+    EquivalentValueComponent,
+    BalanceValueComponent,
+    balanceToAsset,
+    getEquivalentValue
+};
