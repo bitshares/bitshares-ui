@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import assetUtils from "common/asset_utils";
 import AssetActions from "actions/AssetActions";
+import AssetStore from "stores/AssetStore";
 import MarketsActions from "actions/MarketsActions";
 import counterpart from "counterpart";
 import PredictionMarketsOverviewTable from "./PredictionMarketsOverviewTable";
@@ -10,30 +11,23 @@ import HelpContent from "../Utility/HelpContent";
 import AddOpinionModal from "./AddOpinionModal";
 import CreateMarketModal from "./CreateMarketModal";
 import ResolveModal from "./ResolveModal";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import {Switch, Button, Radio, Icon, Tooltip} from "bitshares-ui-style-guide";
 import {Asset, Price} from "../../lib/common/MarketClasses";
 import Translate from "react-translate-component";
-import LoadingIndicator from "../LoadingIndicator";
 import {bindToCurrentAccount} from "../Utility/BindToCurrentAccount";
-import AssetStore from "../../stores/AssetStore";
 import MarketsStore from "../../stores/MarketsStore";
 import {connect} from "alt-react";
-
-const ISSUERS_WHITELIST = ["1.2.1634961"]; // "iamredbar1", "sports-owner", "twat123"
 
 class PredictionMarkets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            lastAssetSymbol: null,
-            predictionMarkets: [],
-            isFetchingFinished: false,
+            loading: false,
             searchTerm: "",
             detailsSearchTerm: "",
             selectedPredictionMarket: null,
             opinions: [],
-            fetchedAssets: [],
             preselectedOpinion: "yes",
             preselectedAmount: 0,
             preselectedProbability: 0,
@@ -68,74 +62,14 @@ class PredictionMarkets extends Component {
         );
     }
 
-    componentWillMount() {
-        this._checkAssets(this.props.assets);
-    }
-
-    componentWillReceiveProps(np) {
-        if (np.assets !== this.props.assets) {
-            this._checkAssets(np.assets);
-        }
-
-        if (np.marketLimitOrders !== this.props.marketLimitOrders) {
-            this._updateOpinionsList(np.marketLimitOrders);
-        }
-    }
-
-    _checkAssets(fetchedAssets) {
-        let searchAsset = this.state.lastAssetSymbol
-            ? this.state.lastAssetSymbol
-            : "A";
-
-        if (fetchedAssets) {
-            const lastAsset = fetchedAssets
-                .sort((a, b) => {
-                    if (a.symbol > b.symbol) {
-                        return 1;
-                    } else if (a.symbol < b.symbol) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                })
-                .last();
-            searchAsset = lastAsset ? lastAsset.symbol : "A";
-
-            // parse flags and description
-            fetchedAssets.forEach(item => {
-                if (!item.forPredictions) {
-                    item.forPredictions = {
-                        description: assetUtils.parseDescription(
-                            item.options.description
-                        ),
-                        flagBooleans: assetUtils.getFlagBooleans(
-                            item.options.flags,
-                            true
-                        )
-                    };
-                }
-            });
-
-            this._updatePredictionMarketsList(fetchedAssets);
-        }
-        if (
-            !this.state.lastAssetSymbol ||
-            this.state.lastAssetSymbol !== searchAsset
-        ) {
-            AssetActions.getAssetList.defer(searchAsset, 100);
-            this.setState({
-                lastAssetSymbol: searchAsset
-            });
-        } else {
-            this.setState({
-                isFetchingFinished: true,
-                fetchedAssets
-            });
+    componentDidUpdate(prevProps) {
+        if (prevProps.marketLimitOrders !== this.props.marketLimitOrders) {
+            this._updateOpinionsList(this.props.marketLimitOrders);
         }
     }
 
     _isKnownIssuer(asset) {
-        return ISSUERS_WHITELIST.includes(asset.issuer);
+        return this.props.whitelistedIssuers.includes(asset.issuer);
     }
 
     _isValidPredictionMarketAsset(asset) {
@@ -165,78 +99,6 @@ class PredictionMarkets extends Component {
             return false;
         }
         return true;
-    }
-
-    _updatePredictionMarketsList(fetchedAssets = null) {
-        if (fetchedAssets == null) {
-            fetchedAssets = this.state.fetchedAssets;
-        }
-        const filter = this.state.predictionMarketAssetFilter;
-        const assets = fetchedAssets.filter(asset => {
-            if (
-                asset.bitasset_data &&
-                asset.bitasset_data.is_prediction_market
-            ) {
-                if (
-                    this.state.isHideUnknownHousesChecked &&
-                    !this._isKnownIssuer(asset)
-                ) {
-                    return false;
-                } else if (
-                    this.state.isHideInvalidAssetsChecked &&
-                    !this._isValidPredictionMarketAsset(asset)
-                ) {
-                    return false;
-                } else {
-                    if (filter && !(filter === "all")) {
-                        const resolutionDate = new Date(
-                            asset.forPredictions.description.expiry
-                        );
-                        const isExpiredOrResolved =
-                            asset.bitasset_data.settlement_fund > 0 ||
-                            resolutionDate < new Date();
-                        if (filter === "open") {
-                            return !isExpiredOrResolved;
-                        } else if (filter === "past_resolution_date") {
-                            return isExpiredOrResolved;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return true;
-                    }
-                }
-            } else {
-                return false;
-            }
-        });
-        let predictionMarkets = [...assets].map(item => {
-            let market_fee = 0;
-            let max_market_fee = 0;
-            if (item[1].forPredictions.flagBooleans["charge_market_fee"]) {
-                market_fee = item[1].options.market_fee_percent;
-                max_market_fee = item[1].options.max_market_fee;
-            }
-            let predictionMarketTableRow = {
-                asset: item,
-                asset_id: item[1].id,
-                issuer: item[1].issuer,
-                description: item[1].forPredictions.description.main,
-                symbol: item[1].symbol,
-                condition: item[1].forPredictions.description.condition,
-                expiry: item[1].forPredictions.description.expiry,
-                options: item[1].options,
-                marketConfidence: 0,
-                marketLikelihood: 0,
-                market_fee,
-                max_market_fee
-            };
-            return predictionMarketTableRow;
-        });
-
-        this.setState({
-            predictionMarkets
-        });
     }
 
     _updateOpinionsList(fetchedOpinions) {
@@ -304,12 +166,13 @@ class PredictionMarkets extends Component {
                 this.state.subscribedMarket.base.get("id")
             );
         }
-        const base = ChainStore.getAsset(
+        const base = ChainStore.getObject(
             market.options.core_exchange_rate.base.asset_id
         );
         const quote = ChainStore.getAsset(
             market.options.core_exchange_rate.quote.asset_id
         );
+
         await MarketsActions.subscribeMarket(
             base,
             quote,
@@ -447,20 +310,15 @@ class PredictionMarkets extends Component {
                 isHideUnknownHousesChecked,
                 selectedPredictionMarket: null
             },
-            () => this._updatePredictionMarketsList()
+            () => this.props.fetchAllAssets()
         );
     }
 
     handleInvalidAssetsChecked() {
-        const isHideInvalidAssetsChecked = !this.state
-            .isHideInvalidAssetsChecked;
-        this.setState(
-            {
-                isHideInvalidAssetsChecked,
-                selectedPredictionMarket: null
-            },
-            () => this._updatePredictionMarketsList()
-        );
+        this.setState({
+            isHideInvalidAssetsChecked: !this.state.isHideInvalidAssetsChecked,
+            selectedPredictionMarket: null
+        });
     }
 
     onOppose = opinion => {
@@ -473,30 +331,11 @@ class PredictionMarkets extends Component {
     };
 
     onCancelOpinion = opinion => {
-        this._cancelLimitOrders([opinion.order_id]);
-    };
-
-    _cancelLimitOrders(orderid) {
-        MarketsActions.cancelLimitOrders(
-            this.props.currentAccount.get("id"),
-            orderid
-        ).catch(err => {
+        MarketsActions.cancelLimitOrders(this.props.currentAccount.get("id"), [
+            opinion.order_id
+        ]).catch(err => {
             console.log("cancel orders error:", err);
         });
-    }
-
-    onSubmitNewOpinion = value => {
-        if (this.state.opinions) {
-            this.setState({
-                opinions: [...this.state.opinions, value],
-                isAddOpinionModalOpen: false
-            });
-        } else {
-            this.setState({
-                opinions: [value],
-                isAddOpinionModalOpen: false
-            });
-        }
     };
 
     onResolveMarket = market => {
@@ -523,7 +362,7 @@ class PredictionMarkets extends Component {
 
         AssetActions.assetGlobalSettle(asset, account, price).then(() => {
             let pause = new Promise(resolve => setTimeout(resolve, 1000));
-            pause.then(result => {
+            pause.then(() => {
                 this.updateAsset(asset.symbol);
             });
         });
@@ -536,15 +375,72 @@ class PredictionMarkets extends Component {
         AssetActions.getAssetList.defer(symbol, 1);
     }
 
+    _filterMarkets() {
+        const filter = this.state.predictionMarketAssetFilter;
+        const markets = this.props.predictionMarkets.filter(assetInfo => {
+            const asset = assetInfo.asset;
+            if (!asset) {
+                return false;
+            }
+            const bitassetData = asset.bitasset_data || asset.bitasset || {};
+            if (
+                this.state.isHideUnknownHousesChecked &&
+                !this._isKnownIssuer(asset)
+            ) {
+                return false;
+            } else if (
+                this.state.isHideInvalidAssetsChecked &&
+                !this._isValidPredictionMarketAsset(asset)
+            ) {
+                return false;
+            } else {
+                let accountName = ChainStore.getAccount(asset.issuer)
+                    ? ChainStore.getAccount(asset.issuer).get("name")
+                    : null;
+                if (accountName && this.state.searchTerm) {
+                    let noMatch =
+                        (
+                            accountName +
+                            "\0" +
+                            asset.condition +
+                            "\0" +
+                            asset.description
+                        )
+                            .toUpperCase()
+                            .indexOf(this.state.searchTerm) !== -1;
+                    if (noMatch) {
+                        return false;
+                    }
+                }
+                if (filter && filter !== "all") {
+                    const resolutionDate = new Date(
+                        asset.forPredictions.description.expiry
+                    );
+                    const settlementFund = bitassetData.settlement_fund || 0;
+                    const isExpiredOrResolved =
+                        settlementFund > 0 || resolutionDate < new Date();
+                    if (filter === "open") {
+                        return !isExpiredOrResolved;
+                    } else if (filter === "past_resolution_date") {
+                        return isExpiredOrResolved;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        });
+        return markets;
+    }
+
     getOverviewSection() {
         const setPredictionMarketAssetFilter = e => {
-            this.setState(
-                {
-                    predictionMarketAssetFilter: e.target.value
-                },
-                this._updatePredictionMarketsList
-            );
+            this.setState({
+                predictionMarketAssetFilter: e.target.value
+            });
         };
+        const predictionMarketsToShow = this._filterMarkets();
         return (
             <div>
                 <div
@@ -579,7 +475,7 @@ class PredictionMarkets extends Component {
                         </Radio.Group>
                         <span>
                             <Switch
-                                style={{marginLeft: "20px"}}
+                                style={{marginLeft: "20px", cursor: "pointer"}}
                                 onChange={this.handleUnknownHousesToggleChange}
                                 checked={this.state.isHideUnknownHousesChecked}
                             />
@@ -605,7 +501,7 @@ class PredictionMarkets extends Component {
                                 />
                             </Tooltip>
                             <Switch
-                                style={{marginLeft: "20px"}}
+                                style={{marginLeft: "20px", cursor: "pointer"}}
                                 onChange={this.handleInvalidAssetsChecked}
                                 checked={this.state.isHideInvalidAssetsChecked}
                             />
@@ -632,6 +528,23 @@ class PredictionMarkets extends Component {
                             </Tooltip>
                         </span>
                     </div>
+                    <div className="filter-status">
+                        {counterpart.translate("utility.x_assets_hidden", {
+                            count:
+                                this.props.predictionMarkets.length -
+                                predictionMarketsToShow.length,
+                            total: this.props.predictionMarkets.length
+                        })}
+                    </div>
+                </div>
+                <div
+                    className="header-selector"
+                    style={{
+                        display: "inline-block",
+                        width: "100%",
+                        paddingTop: "0rem"
+                    }}
+                >
                     <span className="action-buttons">
                         <Tooltip
                             title={counterpart.translate(
@@ -657,14 +570,13 @@ class PredictionMarkets extends Component {
                     </span>
                 </div>
                 <PredictionMarketsOverviewTable
-                    predictionMarkets={this.state.predictionMarkets}
+                    predictionMarkets={predictionMarketsToShow}
                     currentAccount={this.props.currentAccount}
                     onMarketAction={this.onMarketAction}
-                    searchTerm={this.state.searchTerm.toUpperCase()}
                     selectedPredictionMarket={
                         this.state.selectedPredictionMarket
                     }
-                    hideUnknownHouses={this.state.isHideUnknownHousesChecked}
+                    loading={this.props.loading}
                 />
             </div>
         );
@@ -770,7 +682,6 @@ class PredictionMarkets extends Component {
 
     render() {
         const symbols = [...this.props.assets].map(item => item[1].symbol);
-
         return (
             <div
                 className="prediction-markets grid-block vertical"
@@ -790,7 +701,7 @@ class PredictionMarkets extends Component {
                     <CreateMarketModal
                         visible={this.state.isCreateMarketModalOpen}
                         onClose={this.onCreatePredictionMarketModalClose}
-                        currentAccount={this.props.currentAccount}
+                        currentAccount={this.props.currentAccount.get("id")}
                         symbols={symbols}
                         onMarketCreated={this.updateAsset}
                     />
@@ -802,7 +713,6 @@ class PredictionMarkets extends Component {
                         predictionMarket={this.state.selectedPredictionMarket}
                         opinion={this.state.initialOpinion}
                         currentAccount={this.props.currentAccount}
-                        submitNewOpinion={this.onSubmitNewOpinion}
                         preselectedOpinion={this.state.preselectedOpinion}
                         preselectedAmount={this.state.preselectedAmount}
                         preselectedProbability={
@@ -820,13 +730,6 @@ class PredictionMarkets extends Component {
                         onResolveMarket={this.onResolveMarket}
                     />
                 ) : null}
-                {!this.state.isFetchingFinished ? (
-                    <LoadingIndicator
-                        loadingText={counterpart.translate(
-                            "prediction.overview.loading"
-                        )}
-                    />
-                ) : null}
             </div>
         );
     }
@@ -841,7 +744,6 @@ PredictionMarkets = connect(
         getProps() {
             return {
                 assets: AssetStore.getState().assets,
-                markets: MarketsStore.getState().marketData,
                 bucketSize: MarketsStore.getState().bucketSize,
                 currentGroupOrderLimit: MarketsStore.getState()
                     .currentGroupLimit,

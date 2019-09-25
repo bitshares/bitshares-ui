@@ -1710,6 +1710,7 @@
             "symbol": "Symbol",
             "title": "Create prediction market",
             "tooltip_backing_asset": "The backing asset will be used to pay the premium, i.e. it is the leverage that participants use.",
+            "commission": "Commission (in %)",
             "tooltip_commission": "Every participant pays the commission when opposing opinions on the prediction are being matched. On the blockchain, the commission is the market fee of this new asset.",
             "tooltip_condition": "The condition is a statement that can be resolved unambiguous to correct or incorrect at the resolution state.",
             "tooltip_description": "The description gives background information that help the user understand the significance of the prediction.",
@@ -2522,8 +2523,10 @@
         "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_items_y_hidden": "Total of %(totelCount)s items loaded, %(count)s of those shown in pagination",
         "total_x_markets": "Total of %(count)s markets",
-        "total_x_operations": "Total of %(count)s operations"
+        "total_x_operations": "Total of %(count)s operations",
+        "x_assets_hidden": "%(count)s of %(total)s assets filtered out"
     },
     "validation": {
         "messages": {
