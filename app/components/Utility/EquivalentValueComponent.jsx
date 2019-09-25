@@ -22,7 +22,6 @@ const getEquivalentValue = function(
     coreAsset = null,
     allMarketStats = null
 ) {
-    console.log("asdas");
     try {
         return MarketUtils.convertValue(
             amount,

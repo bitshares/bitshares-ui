@@ -976,9 +976,6 @@ class AccountPortfolioList extends React.Component {
                 currentMarketStats && currentMarketStats.change
                     ? currentMarketStats.change
                     : 0;
-            if (asset.get("symbol") === "USD") {
-                console.log(balance);
-            }
             balances.push({
                 key: asset.get("symbol"),
                 adds: {

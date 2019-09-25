@@ -134,7 +134,6 @@ class InvoicePay extends React.Component {
                         [invoice.to]: false
                     }
                 );
-                console.log("asdasd");
                 this.setState(
                     {
                         invoice,

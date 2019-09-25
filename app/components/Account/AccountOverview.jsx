@@ -113,6 +113,9 @@ class AccountOverview extends React.Component {
             collateral = {},
             debt = {};
 
+        // Request all balance objects for dashboard view
+        ChainStore.requestAllDataForAccount(account.toJS().id, "balance");
+
         if (account.toJS && account.has("call_orders"))
             call_orders = account.get("call_orders").toJS();
         let includedPortfolioList, hiddenPortfolioList;
