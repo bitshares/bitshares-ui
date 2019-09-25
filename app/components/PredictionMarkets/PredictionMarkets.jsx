@@ -475,7 +475,7 @@ class PredictionMarkets extends Component {
                         </Radio.Group>
                         <span>
                             <Switch
-                                style={{marginLeft: "20px"}}
+                                style={{marginLeft: "20px", cursor: "pointer"}}
                                 onChange={this.handleUnknownHousesToggleChange}
                                 checked={this.state.isHideUnknownHousesChecked}
                             />
@@ -501,7 +501,7 @@ class PredictionMarkets extends Component {
                                 />
                             </Tooltip>
                             <Switch
-                                style={{marginLeft: "20px"}}
+                                style={{marginLeft: "20px", cursor: "pointer"}}
                                 onChange={this.handleInvalidAssetsChecked}
                                 checked={this.state.isHideInvalidAssetsChecked}
                             />

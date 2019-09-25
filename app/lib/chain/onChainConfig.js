@@ -48,7 +48,7 @@ const getNotifications = async function() {
 
 const getPredictionMarketIssuers = async function() {
     const onChainConfig = await _fetchOnChainConfig();
-    return onChainConfig.predictionMarketIssuers;
+    return onChainConfig.predictionMarketIssuers || [];
 };
 
 const isGatewayTemporarilyDisabled = async function(gatewayKey) {

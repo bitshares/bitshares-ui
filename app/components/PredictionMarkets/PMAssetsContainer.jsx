@@ -150,8 +150,17 @@ class PMAssetsContainer extends React.Component {
     }
 
     fetchAllAssets() {
-        this.setState({fetching: true, fetchAllAssets: true});
-        AssetActions.getAssetList.defer("", 100);
+        this.setState(
+            {
+                fetching: true,
+                fetchAllAssets: true
+            },
+            () => {
+                // wait for 150ms to make sure loading is displayed
+                // (BindToCurrentAccount and PredictioMarketsOverviewTable are both debounced)
+                setTimeout(() => AssetActions.getAssetList("", 100), 300);
+            }
+        );
     }
 
     render() {
