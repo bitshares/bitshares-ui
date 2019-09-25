@@ -1,7 +1,7 @@
 import alt from "alt-instance";
 import iDB from "idb-instance";
-import {key} from "bitsharesjs";
-import {ChainConfig} from "bitsharesjs-ws";
+import {key} from "tuscjs";
+import {ChainConfig} from "tuscjs-ws";
 import Immutable from "immutable";
 import BaseStore from "stores/BaseStore";
 

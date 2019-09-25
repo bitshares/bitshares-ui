@@ -1,7 +1,7 @@
 import alt from "alt-instance";
 import iDB from "idb-instance";
 import {compress, decompress} from "lzma";
-import {PrivateKey, PublicKey, Aes, key} from "bitsharesjs";
+import {PrivateKey, PublicKey, Aes, key} from "tuscjs";
 import WalletActions from "actions/WalletActions";
 
 class BackupActions {

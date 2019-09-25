@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import ApplicationApi from "api/ApplicationApi";
 import WalletApi from "api/WalletApi";
 import DebugApi from "api/DebugApi";

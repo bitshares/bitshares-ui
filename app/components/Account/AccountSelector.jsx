@@ -5,7 +5,7 @@ import AccountImage from "../Account/AccountImage";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
-import {ChainStore, PublicKey, ChainValidation, FetchChain} from "bitsharesjs";
+import {ChainStore, PublicKey, ChainValidation, FetchChain} from "tuscjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import counterpart from "counterpart";
@@ -241,8 +241,8 @@ class AccountSelector extends React.Component {
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
                     : account.accountType === "id"
-                        ? account.get("name")
-                        : null;
+                    ? account.get("name")
+                    : null;
         }
 
         // Without Typeahead Error Handling
@@ -400,13 +400,13 @@ class AccountSelector extends React.Component {
         let editableInput = !!lockedState
             ? false
             : this.props.editable != null
-                ? this.props.editable
-                : undefined;
+            ? this.props.editable
+            : undefined;
         let disabledInput = !!lockedState
             ? true
             : this.props.disabled != null
-                ? this.props.disabled
-                : undefined;
+            ? this.props.disabled
+            : undefined;
 
         return (
             <Tooltip
@@ -439,7 +439,8 @@ class AccountSelector extends React.Component {
                                     className={cnames(
                                         "right-label",
                                         account &&
-                                        (account.isFavorite || account.isOwn)
+                                            (account.isFavorite ||
+                                                account.isOwn)
                                             ? "positive"
                                             : null,
                                         account && account.isKnownScammer

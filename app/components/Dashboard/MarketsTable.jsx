@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "alt-react";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import Translate from "react-translate-component";
 import cnames from "classnames";
 import MarketsStore from "stores/MarketsStore";
@@ -230,8 +230,8 @@ class MarketsTable extends React.Component {
                         parseFloat(record.hour_24) > 0
                             ? "change-up"
                             : parseFloat(record.hour_24) < 0
-                                ? "change-down"
-                                : "";
+                            ? "change-down"
+                            : "";
                     return (
                         <span
                             style={{whiteSpace: "nowrap", textAlign: "right"}}

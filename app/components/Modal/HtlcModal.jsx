@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore, key} from "bitsharesjs";
+import {ChainStore, key} from "tuscjs";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import cnames from "classnames";
 import AccountSelector from "../Account/AccountSelector";
@@ -207,8 +207,8 @@ class Preimage extends React.Component {
                                     hashMatch == null
                                         ? undefined
                                         : hashMatch
-                                            ? "green"
-                                            : "red"
+                                        ? "green"
+                                        : "red"
                             }}
                             name="preimage"
                             id="preimage"
@@ -575,8 +575,8 @@ class HtlcModal extends React.Component {
                         operation && operation.type === "create"
                             ? "htlc_create"
                             : operation && operation.type === "redeem"
-                                ? "htlc_redeem"
-                                : "htlc_extend",
+                            ? "htlc_redeem"
+                            : "htlc_extend",
                     data: {
                         type: "memo",
                         content: null
@@ -679,27 +679,23 @@ class HtlcModal extends React.Component {
                 operation && operation.type === "create"
                     ? "htlc_create"
                     : operation && operation.type === "redeem"
-                        ? "htlc_redeem"
-                        : "htlc_extend",
+                    ? "htlc_redeem"
+                    : "htlc_extend",
             data: {
                 type: "memo",
                 content: null
             }
         }).then(({fee, hasBalance, hasPoolBalance}) => {
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {fee_asset_id: asset_id},
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should =>
+                should
+                    ? this.setState({fee_asset_id: asset_id}, this._updateFee)
+                    : this.setState({
+                          feeAmount: fee,
+                          fee_asset_id: fee.asset_id,
+                          hasBalance,
+                          hasPoolBalance,
+                          error: !hasBalance || !hasPoolBalance
+                      })
             );
         });
     }
@@ -945,8 +941,8 @@ class HtlcModal extends React.Component {
             operation && operation.type === "create"
                 ? counterpart.translate("showcases.htlc.create_htlc")
                 : isExtend
-                    ? counterpart.translate("showcases.htlc.extend_htlc")
-                    : counterpart.translate("showcases.htlc.redeem_htlc");
+                ? counterpart.translate("showcases.htlc.extend_htlc")
+                : counterpart.translate("showcases.htlc.redeem_htlc");
         let sendButtonText =
             operation && operation.type === "create"
                 ? counterpart.translate("showcases.direct_debit.create")
@@ -1045,8 +1041,8 @@ class HtlcModal extends React.Component {
                                     asset_types.length > 0 && asset
                                         ? asset.get("id")
                                         : asset_id
-                                            ? asset_id
-                                            : asset_types[0]
+                                        ? asset_id
+                                        : asset_types[0]
                                 }
                                 assets={asset_types}
                                 display_balance={
@@ -1135,10 +1131,10 @@ class HtlcModal extends React.Component {
                                                         ? feeAmount.asset_id
                                                         : fee_asset_types.length ===
                                                           1
-                                                            ? fee_asset_types[0]
-                                                            : fee_asset_id
-                                                                ? fee_asset_id
-                                                                : fee_asset_types[0]
+                                                        ? fee_asset_types[0]
+                                                        : fee_asset_id
+                                                        ? fee_asset_id
+                                                        : fee_asset_types[0]
                                                 }
                                                 assets={fee_asset_types}
                                                 display_balance={balance_fee}

@@ -6,7 +6,7 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
-import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "tuscjs";
 // import account_constants from "chain/account_constants";
 const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
@@ -64,19 +64,18 @@ class Row extends React.Component {
                         </span>
                     )}
                 </span>
-                {!hideExpiration &&
-                    this.props.expiration && (
-                        <TransactionIDAndExpiry
-                            id={id}
-                            expiration={expiration}
-                            style={{
-                                paddingTop: 5,
-                                fontSize: "0.85rem",
-                                paddingBottom: "0.5rem",
-                                display: "block"
-                            }}
-                        />
-                    )}
+                {!hideExpiration && this.props.expiration && (
+                    <TransactionIDAndExpiry
+                        id={id}
+                        expiration={expiration}
+                        style={{
+                            paddingTop: 5,
+                            fontSize: "0.85rem",
+                            paddingBottom: "0.5rem",
+                            display: "block"
+                        }}
+                    />
+                )}
             </div>
         );
     }

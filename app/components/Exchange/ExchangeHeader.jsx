@@ -7,7 +7,7 @@ import SettingsActions from "actions/SettingsActions";
 import PriceStatWithLabel from "./PriceStatWithLabel";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
 import {Icon as AntIcon} from "bitshares-ui-style-guide";
 import {Asset, Price} from "common/MarketClasses";
@@ -94,15 +94,15 @@ export default class ExchangeHeader extends React.Component {
             parseFloat(dayChange) === 0 || isNaN(dayChange)
                 ? ""
                 : parseFloat(dayChange) < 0
-                    ? "negative"
-                    : "positive";
+                ? "negative"
+                : "positive";
         const volumeBase = marketStats.get("volumeBase");
         const volumeQuote = marketStats.get("volumeQuote");
         const dayChangeWithSign = isNaN(dayChange)
             ? undefined
             : dayChange > 0
-                ? "+" + dayChange
-                : dayChange;
+            ? "+" + dayChange
+            : dayChange;
 
         const volume24h = this.state.volumeShowQuote ? volumeQuote : volumeBase;
         const volume24hAsset = this.state.volumeShowQuote
@@ -154,8 +154,8 @@ export default class ExchangeHeader extends React.Component {
                 baseId == "1.3.0"
                     ? quoteAsset
                     : quoteId == "1.3.0"
-                        ? baseAsset
-                        : quoteAsset;
+                    ? baseAsset
+                    : quoteAsset;
 
             // globally settled
             if (possibleBitAsset.get("bitasset").get("settlement_fund") > 0) {
@@ -276,8 +276,7 @@ export default class ExchangeHeader extends React.Component {
                                 </div>
                             ) : (
                                 <a className="market-symbol">
-                                    <span
-                                    >{`${quoteSymbol} : ${baseSymbol}`}</span>
+                                    <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
                                 </a>
                             )}
                             <div className="label-actions">

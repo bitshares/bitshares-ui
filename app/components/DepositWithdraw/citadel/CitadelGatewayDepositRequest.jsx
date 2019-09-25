@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "tuscjs/es";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalCitadel from "./WithdrawModalCitadel";

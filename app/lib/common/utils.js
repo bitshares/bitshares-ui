@@ -3,7 +3,7 @@ import asset_utils from "./asset_utils";
 var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
-import {ChainTypes} from "bitsharesjs";
+import {ChainTypes} from "tuscjs";
 var {object_type} = ChainTypes;
 
 import {getAssetNamespaces, getAssetHideNamespaces} from "../../branding";

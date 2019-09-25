@@ -3,7 +3,7 @@ import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {key} from "bitsharesjs";
+import {key} from "tuscjs";
 
 export default class AccountPermissionsMigrate extends React.Component {
     constructor() {
@@ -76,8 +76,8 @@ export default class AccountPermissionsMigrate extends React.Component {
                 role === "active"
                     ? "onAddActive"
                     : role === "owner"
-                        ? "onAddOwner"
-                        : "onSetMemo"
+                    ? "onAddOwner"
+                    : "onSetMemo"
             ](this.props[role], weights[role]);
         }
     }

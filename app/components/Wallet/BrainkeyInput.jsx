@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import cname from "classnames";
-import {hash, key} from "bitsharesjs";
+import {hash, key} from "tuscjs";
 
 var dictionary_set;
 

@@ -1,5 +1,5 @@
 import alt from "alt-instance";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 
 let latestBlocks = {};
 

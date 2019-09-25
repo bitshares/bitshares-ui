@@ -4,7 +4,7 @@ import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
 import marketUtils from "common/market_utils";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";

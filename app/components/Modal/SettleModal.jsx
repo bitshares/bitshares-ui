@@ -8,7 +8,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import withWorthLessSettlementFlag from "../Utility/withWorthLessSettlementFlag";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";

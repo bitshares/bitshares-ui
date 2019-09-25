@@ -54,23 +54,22 @@ class MarketStatsCheck extends React.Component {
     }
 
     componentWillMount() {
-        this._startUpdates(this.props);
+        //this._startUpdates(this.props);
     }
 
     componentWillReceiveProps(np) {
-        const currentDirectMarkets = this._checkDirectMarkets(this.props);
-        const newDirectMarkets = this._checkDirectMarkets(np);
-        if (!utils.are_equal_shallow(currentDirectMarkets, newDirectMarkets)) {
-            this._startUpdates(np);
-        }
-
-        if (
-            np.toAsset &&
-            this.props.asset &&
-            this.props.toAsset.get("symbol") !== np.asset.get("symbol")
-        ) {
-            this._startUpdates(np);
-        }
+        // const currentDirectMarkets = this._checkDirectMarkets(this.props);
+        // const newDirectMarkets = this._checkDirectMarkets(np);
+        // if (!utils.are_equal_shallow(currentDirectMarkets, newDirectMarkets)) {
+        //     this._startUpdates(np);
+        // }
+        // if (
+        //     np.toAsset &&
+        //     this.props.asset &&
+        //     this.props.toAsset.get("symbol") !== np.asset.get("symbol")
+        // ) {
+        //     this._startUpdates(np);
+        // }
     }
 
     _startUpdates(props) {

@@ -18,7 +18,7 @@ import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
 import ChoiceModal from "../Modal/ChoiceModal";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import ifvisible from "ifvisible";
 import {getWalletName} from "branding";
 import {Tooltip} from "bitshares-ui-style-guide";
@@ -613,12 +613,11 @@ class Footer extends React.Component {
                                         }}
                                     >
                                         <div className="footer-status">
-                                            {connected &&
-                                                activeNode.testNet && (
-                                                    <span className="testnet">
-                                                        <Translate content="settings.testnet_nodes" />{" "}
-                                                    </span>
-                                                )}
+                                            {connected && activeNode.testNet && (
+                                                <span className="testnet">
+                                                    <Translate content="settings.testnet_nodes" />{" "}
+                                                </span>
+                                            )}
                                             {!connected ? (
                                                 <span className="warning">
                                                     <Translate content="footer.disconnected" />
@@ -638,10 +637,10 @@ class Footer extends React.Component {
                                                 {!connected
                                                     ? "-"
                                                     : !activeNode.ping
-                                                        ? "-"
-                                                        : parseInt(
-                                                              activeNode.ping
-                                                          ) + "ms"}
+                                                    ? "-"
+                                                    : parseInt(
+                                                          activeNode.ping
+                                                      ) + "ms"}
                                                 &nbsp;/&nbsp;
                                                 <span className="footer-block-title">
                                                     <Translate content="footer.block" />

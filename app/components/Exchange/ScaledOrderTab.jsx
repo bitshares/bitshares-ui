@@ -13,7 +13,7 @@ import {
 import AssetNameWrapper from "../Utility/AssetName";
 import {SCALED_ORDER_ACTION_TYPES} from "../../services/Exchange";
 import {Asset} from "../../lib/common/MarketClasses";
-import ChainStore from "bitsharesjs/es/chain/src/ChainStore";
+import ChainStore from "tuscjs/es/chain/src/ChainStore";
 import counterpart from "counterpart";
 import {Validation} from "../../services/Validation/Validation";
 import assetUtils from "../../lib/common/asset_utils";

@@ -12,6 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "coffee-script": "^1.12.2",
-    "bitsharesjs": "^0.4.10"
+    "tuscjs": "^0.4.10"
   }
 }

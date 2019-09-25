@@ -9,7 +9,7 @@ import Icon from "../Icon/Icon";
 import WalletDb from "stores/WalletDb";
 import AccountStore from "stores/AccountStore";
 import AccountSelect from "components/Forms/AccountSelect";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import utils from "common/utils";
 import Operation from "components/Blockchain/Operation";
 import notify from "actions/NotificationActions";
@@ -232,9 +232,7 @@ class TransactionConfirm extends React.Component {
                                 message={counterpart.translate(
                                     "transaction.transaction_confirmed"
                                 )}
-                                description={`#${this.props.trx_id}@${
-                                    this.props.trx_block_num
-                                }`}
+                                description={`#${this.props.trx_id}@${this.props.trx_block_num}`}
                             />
                         ) : null}
 

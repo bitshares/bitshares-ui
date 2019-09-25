@@ -1,8 +1,8 @@
 import alt from "alt-instance";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore} from "bitsharesjs";
-import {Apis} from "bitsharesjs-ws";
+import {ChainStore} from "tuscjs";
+import {Apis} from "tuscjs-ws";
 import marketUtils from "common/market_utils";
 import accountUtils from "common/account_utils";
 import Immutable from "immutable";
@@ -131,10 +131,10 @@ class MarketsActions {
 
     subscribeMarket(base, quote, bucketSize, groupedOrderLimit) {
         /*
-        * DataFeed will call subscribeMarket with undefined groupedOrderLimit,
-        * so we keep track of the last value used and use that instead in that
-        * case
-        */
+         * DataFeed will call subscribeMarket with undefined groupedOrderLimit,
+         * so we keep track of the last value used and use that instead in that
+         * case
+         */
         if (typeof groupedOrderLimit === "undefined")
             groupedOrderLimit = currentGroupedOrderLimit;
         else currentGroupedOrderLimit = groupedOrderLimit;
@@ -152,16 +152,16 @@ class MarketsActions {
         return dispatch => {
             let subscription = (marketId, subResult) => {
                 /*
-                ** When switching markets rapidly we might receive sub notifications
-                ** from the previous markets, in that case disregard them
-                */
+                 ** When switching markets rapidly we might receive sub notifications
+                 ** from the previous markets, in that case disregard them
+                 */
                 if (marketId !== currentMarket) {
                     return;
                 }
                 /* In the case of many market notifications arriving at the same time,
-                * we queue them in a batch here and dispatch them all at once at a frequency
-                * defined by "subBatchTime"
-                */
+                 * we queue them in a batch here and dispatch them all at once at a frequency
+                 * defined by "subBatchTime"
+                 */
                 if (!dispatchSubTimeout) {
                     subBatchResults = subBatchResults.concat(subResult);
 
@@ -216,26 +216,26 @@ class MarketsActions {
 
                         let groupedOrdersBidsPromise = [];
                         let groupedOrdersAsksPromise = [];
-                        if (currentGroupLimit !== 0) {
-                            groupedOrdersBidsPromise = Apis.instance()
-                                .orders_api()
-                                .exec("get_grouped_limit_orders", [
-                                    base.get("id"),
-                                    quote.get("id"),
-                                    currentGroupLimit, // group
-                                    null, // price start
-                                    100 // limit must not exceed 101
-                                ]);
-                            groupedOrdersAsksPromise = Apis.instance()
-                                .orders_api()
-                                .exec("get_grouped_limit_orders", [
-                                    quote.get("id"),
-                                    base.get("id"),
-                                    currentGroupLimit, // group
-                                    null, // price start
-                                    100 // limit must not exceed 101
-                                ]);
-                        }
+                        // if (currentGroupLimit !== 0) {
+                        //     groupedOrdersBidsPromise = Apis.instance()
+                        //         .orders_api()
+                        //         .exec("get_grouped_limit_orders", [
+                        //             base.get("id"),
+                        //             quote.get("id"),
+                        //             currentGroupLimit, // group
+                        //             null, // price start
+                        //             100 // limit must not exceed 101
+                        //         ]);
+                        //     groupedOrdersAsksPromise = Apis.instance()
+                        //         .orders_api()
+                        //         .exec("get_grouped_limit_orders", [
+                        //             quote.get("id"),
+                        //             base.get("id"),
+                        //             currentGroupLimit, // group
+                        //             null, // price start
+                        //             100 // limit must not exceed 101
+                        //         ]);
+                        // }
 
                         let startDate = new Date();
                         let startDate2 = new Date();
@@ -374,26 +374,26 @@ class MarketsActions {
 
                 let groupedOrdersBidsPromise = [];
                 let groupedOrdersAsksPromise = [];
-                if (currentGroupLimit !== 0) {
-                    groupedOrdersBidsPromise = Apis.instance()
-                        .orders_api()
-                        .exec("get_grouped_limit_orders", [
-                            base.get("id"),
-                            quote.get("id"),
-                            currentGroupLimit, // group
-                            null, // price start
-                            100 // limit must not exceed 101
-                        ]);
-                    groupedOrdersAsksPromise = Apis.instance()
-                        .orders_api()
-                        .exec("get_grouped_limit_orders", [
-                            quote.get("id"),
-                            base.get("id"),
-                            currentGroupLimit, // group
-                            null, // price start
-                            100 // limit must not exceed 101
-                        ]);
-                }
+                // if (currentGroupLimit !== 0) {
+                //     groupedOrdersBidsPromise = Apis.instance()
+                //         .orders_api()
+                //         .exec("get_grouped_limit_orders", [
+                //             base.get("id"),
+                //             quote.get("id"),
+                //             currentGroupLimit, // group
+                //             null, // price start
+                //             100 // limit must not exceed 101
+                //         ]);
+                //     groupedOrdersAsksPromise = Apis.instance()
+                //         .orders_api()
+                //         .exec("get_grouped_limit_orders", [
+                //             quote.get("id"),
+                //             base.get("id"),
+                //             currentGroupLimit, // group
+                //             null, // price start
+                //             100 // limit must not exceed 101
+                //         ]);
+                // }
 
                 let startDate = new Date();
                 let startDate2 = new Date();
@@ -737,9 +737,9 @@ class MarketsActions {
     cancelLimitOrderSuccess(ids) {
         return dispatch => {
             /* In the case of many cancel orders being issued at the same time,
-            * we batch them here and dispatch them all at once at a frequency
-            * defined by "dispatchCancelTimeout"
-            */
+             * we batch them here and dispatch them all at once at a frequency
+             * defined by "dispatchCancelTimeout"
+             */
             if (!dispatchCancelTimeout) {
                 cancelBatchIDs = cancelBatchIDs.concat(ids);
                 dispatchCancelTimeout = setTimeout(() => {
@@ -783,24 +783,25 @@ class MarketsActions {
     }
 
     getTrackedGroupsConfig() {
-        return dispatch => {
-            Apis.instance()
-                .orders_api()
-                .exec("get_tracked_groups", [])
-                .then(result => {
-                    dispatch({
-                        trackedGroupsConfig: result
-                    });
-                })
-                .catch(err => {
-                    console.log(
-                        "current node api does not support grouped orders."
-                    );
-                    dispatch({
-                        trackedGroupsConfig: []
-                    });
-                });
-        };
+        return;
+        // return dispatch => {
+        //     Apis.instance()
+        //         .orders_api()
+        //         .exec("get_tracked_groups", [])
+        //         .then(result => {
+        //             dispatch({
+        //                 trackedGroupsConfig: result
+        //             });
+        //         })
+        //         .catch(err => {
+        //             console.log(
+        //                 "current node api does not support grouped orders."
+        //             );
+        //             dispatch({
+        //                 trackedGroupsConfig: []
+        //             });
+        //         });
+        // };
     }
 
     changeCurrentGroupLimit(groupLimit) {

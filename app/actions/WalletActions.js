@@ -2,8 +2,8 @@ import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import CachedPropertyActions from "actions/CachedPropertyActions";
 import ApplicationApi from "api/ApplicationApi";
-import {TransactionBuilder, FetchChain} from "bitsharesjs";
-import {Apis} from "bitsharesjs-ws";
+import {TransactionBuilder, FetchChain} from "tuscjs";
+import {Apis} from "tuscjs-ws";
 import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";
 
@@ -260,10 +260,10 @@ class WalletActions {
                 })
                 .catch(error => {
                     /*
-                * Since the account creation failed, we need to decrement the
-                * sequence used to generate private keys from the brainkey. Three
-                * keys were generated, so we decrement three times.
-                */
+                     * Since the account creation failed, we need to decrement the
+                     * sequence used to generate private keys from the brainkey. Three
+                     * keys were generated, so we decrement three times.
+                     */
                     WalletDb.decrementBrainKeySequence();
                     WalletDb.decrementBrainKeySequence();
                     WalletDb.decrementBrainKeySequence();

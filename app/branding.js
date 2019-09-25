@@ -1,4 +1,4 @@
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 /** This file centralized customization and branding efforts throughout the whole wallet and is meant to facilitate
  *  the process.
  *
@@ -24,7 +24,7 @@ function _isTestnet() {
  * @returns {string}
  */
 export function getWalletName() {
-    return "BitShares";
+    return "TUSC";
 }
 
 /**
@@ -32,7 +32,7 @@ export function getWalletName() {
  * @returns {string}
  */
 export function getWalletURL() {
-    return "https://wallet.bitshares.org";
+    return "https://wallet.tusc.network";
 }
 
 /**
@@ -42,7 +42,7 @@ export function getWalletURL() {
  */
 export function getFaucet() {
     return {
-        url: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
+        url: "http://test.swap.tusc.network:5071/",
         show: true,
         editable: false
     };
@@ -81,9 +81,9 @@ export function getDefaultLogin() {
  */
 export function getUnits() {
     if (_isTestnet()) {
-        return ["TEST"];
+        return ["TUSC"];
     } else {
-        return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
+        return ["TUSC"];
     }
 }
 
@@ -94,7 +94,7 @@ export function getUnits() {
  */
 
 export function getMyMarketsBases() {
-    return ["BTC", "ETH", "BTS", "USD", "CNY"];
+    return ["TUSC"];
 }
 
 /**
@@ -106,7 +106,7 @@ export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
             "BTC",
-            "BTS",
+            "TUSC",
             "CNY",
             "EUR",
             "GOLD",
@@ -242,7 +242,7 @@ export function getMyMarketsQuotes() {
  */
 export function getFeaturedMarkets(quotes = []) {
     return [
-        ["USD", "BTS"],
+        ["USD", "TUSC"],
         ["USD", "OPEN.BTC"],
         ["USD", "OPEN.USDT"],
         ["USD", "OPEN.ETH"],
@@ -257,7 +257,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "RUDEX.BTC"],
         ["USD", "RUDEX.STEEM"],
         ["USD", "RUDEX.EOS"],
-        ["CNY", "BTS"],
+        ["CNY", "TUSC"],
         ["CNY", "OPEN.BTC"],
         ["CNY", "USD"],
         ["CNY", "OPEN.ETH"],
@@ -276,61 +276,61 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "RUDEX.GBG"],
         ["CNY", "RUDEX.BTC"],
         ["CNY", "RUDEX.EOS"],
-        ["OPEN.BTC", "BTS"],
+        ["OPEN.BTC", "TUSC"],
         ["OPEN.BTC", "OPEN.ETH"],
         ["OPEN.BTC", "OPEN.DASH"],
         ["OPEN.BTC", "OPEN.DGD"],
         ["OPEN.BTC", "OPEN.STEEM"],
-        ["BTS", "OPEN.ETH"],
-        ["BTS", "OPEN.EOS"],
-        ["BTS", "PPY"],
-        ["BTS", "OPEN.STEEM"],
-        ["BTS", "OBITS"],
-        ["BTS", "RUBLE"],
-        ["BTS", "HERO"],
-        ["BTS", "OCT"],
-        ["BTS", "SILVER"],
-        ["BTS", "GOLD"],
-        ["BTS", "BTWTY"],
-        ["BTS", "SMOKE"],
-        ["BTS", "GDEX.BTC"],
-        ["BTS", "GDEX.ETH"],
-        ["BTS", "GDEX.EOS"],
-        ["BTS", "GDEX.BTO"],
-        ["BTS", "GDEX.USDT"],
-        ["BTS", "OPEN.EOSDAC"],
+        ["TUSC", "OPEN.ETH"],
+        ["TUSC", "OPEN.EOS"],
+        ["TUSC", "PPY"],
+        ["TUSC", "OPEN.STEEM"],
+        ["TUSC", "OBITS"],
+        ["TUSC", "RUBLE"],
+        ["TUSC", "HERO"],
+        ["TUSC", "OCT"],
+        ["TUSC", "SILVER"],
+        ["TUSC", "GOLD"],
+        ["TUSC", "BTWTY"],
+        ["TUSC", "SMOKE"],
+        ["TUSC", "GDEX.BTC"],
+        ["TUSC", "GDEX.ETH"],
+        ["TUSC", "GDEX.EOS"],
+        ["TUSC", "GDEX.BTO"],
+        ["TUSC", "GDEX.USDT"],
+        ["TUSC", "OPEN.EOSDAC"],
         ["USD", "OPEN.STEEM"],
         ["USD", "OPEN.MAID"],
         ["OPEN.USDT", "OPEN.BTC"],
         ["OPEN.BTC", "OPEN.MAID"],
-        ["BTS", "OPEN.MAID"],
-        ["BTS", "OPEN.HEAT"],
-        ["BTS", "OPEN.INCENT"],
+        ["TUSC", "OPEN.MAID"],
+        ["TUSC", "OPEN.HEAT"],
+        ["TUSC", "OPEN.INCENT"],
         ["RUB", "RUDEX.GOLOS"],
         ["RUB", "RUDEX.GBG"],
-        ["BTS", "RUDEX.STEEM"],
-        ["BTS", "RUDEX.SBD"],
-        ["BTS", "RUDEX.KRM"],
-        ["BTS", "RUDEX.EOS"],
-        ["BTS", "RUDEX.BTC"],
-        ["BTS", "RUDEX.ETH"],
-        ["BTS", "RUDEX.WLS"],
-        ["BTS", "RUDEX.SMOKE"],
-        ["BTS", "RUDEX.GRC"],
-        ["BTS", "XBTSX.STH"],
-        ["BTS", "XBTSX.WAVES"],
-        ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"],
-        ["BTS", "SPARKDEX.BTC"],
-        ["BTS", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.HKD"],
+        ["TUSC", "RUDEX.STEEM"],
+        ["TUSC", "RUDEX.SBD"],
+        ["TUSC", "RUDEX.KRM"],
+        ["TUSC", "RUDEX.EOS"],
+        ["TUSC", "RUDEX.BTC"],
+        ["TUSC", "RUDEX.ETH"],
+        ["TUSC", "RUDEX.WLS"],
+        ["TUSC", "RUDEX.SMOKE"],
+        ["TUSC", "RUDEX.GRC"],
+        ["TUSC", "XBTSX.STH"],
+        ["TUSC", "XBTSX.WAVES"],
+        ["TUSC", "ZEPH"],
+        ["TUSC", "HERTZ"],
+        ["TUSC", "SPARKDEX.BTC"],
+        ["TUSC", "SPARKDEX.ETH"],
+        ["TUSC", "SPARKDEX.HKD"],
         ["SPARKDEX.HKD", "SPARKDEX.BTC"],
         ["SPARKDEX.HKD", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.SGD"],
-        ["BTS", "SPARKDEX.AUD"],
-        ["BTS", "SPARKDEX.EUR"],
-        ["BTS", "SPARKDEX.GBP"],
-        ["BTS", "PEG.PHP"]
+        ["TUSC", "SPARKDEX.SGD"],
+        ["TUSC", "SPARKDEX.AUD"],
+        ["TUSC", "SPARKDEX.EUR"],
+        ["TUSC", "SPARKDEX.GBP"],
+        ["TUSC", "PEG.PHP"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -394,14 +394,14 @@ export function getAllowedLogins() {
 export function getConfigurationAsset() {
     let assetSymbol = null;
     if (_isTestnet()) {
-        assetSymbol = "NOTIFICATIONS";
+        assetSymbol = "TUSC";
     } else {
-        assetSymbol = "TEST";
+        assetSymbol = "TUSC";
     }
     // explanation will be parsed out of the asset description (via split)
     return {
         symbol: assetSymbol,
         explanation:
-            "This asset is used for decentralized configuration of the BitShares UI placed under bitshares.org."
+            "This asset is used for decentralized configuration of the TUSC UI placed under bitshares.org."
     };
 }

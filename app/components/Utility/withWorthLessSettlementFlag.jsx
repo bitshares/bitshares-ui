@@ -1,5 +1,5 @@
 import React, {PureComponent} from "react";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 
 import AssetWrapper from "./AssetWrapper";
 import {Asset, Price} from "common/MarketClasses";
@@ -35,11 +35,10 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                 const realMarketPricePromise = Apis.instance()
                     .db_api()
                     .exec("get_order_book", [shortBackingAssetId, assetId, 1])
-                    .then(
-                        orderBook =>
-                            orderBook.bids.length === 0
-                                ? 0
-                                : Number(orderBook.bids[0].price)
+                    .then(orderBook =>
+                        orderBook.bids.length === 0
+                            ? 0
+                            : Number(orderBook.bids[0].price)
                     );
 
                 let feedPrice = null;

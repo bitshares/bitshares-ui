@@ -8,7 +8,7 @@ import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import {validateAddress, WithdrawAddresses} from "common/XbtsxMethods";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "tuscjs/es";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Price, Asset} from "common/MarketClasses";
 import {debounce} from "lodash-es";

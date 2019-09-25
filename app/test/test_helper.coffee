@@ -5,7 +5,7 @@ WalletDb = require "../app/stores/WalletDb"
 AccountActions = require "../app/actions/AccountActions"
 PrivateKeyStore = require "../app/stores/PrivateKeyStore"
 
-PrivateKey = require("bitsharesjs").PrivateKey;
+PrivateKey = require("tuscjs").PrivateKey;
 
 # register listener
 require "../app/stores/WalletUnlockStore"

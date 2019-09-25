@@ -1,5 +1,5 @@
 import alt from "alt-instance";
-import {ChainConfig} from "bitsharesjs-ws";
+import {ChainConfig} from "tuscjs-ws";
 import counterpart from "counterpart";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 

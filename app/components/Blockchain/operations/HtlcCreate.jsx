@@ -1,7 +1,7 @@
 import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 import {Tooltip} from "bitshares-ui-style-guide";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import utils from "common/utils";
 import counterpart from "counterpart";
 

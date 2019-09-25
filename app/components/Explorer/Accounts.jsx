@@ -11,7 +11,7 @@ import AccountStore from "stores/AccountStore";
 import LoadingIndicator from "../LoadingIndicator";
 import {Table, Select, Icon as IconStyleGuide} from "bitshares-ui-style-guide";
 import SearchInput from "../Utility/SearchInput";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 
 class Accounts extends React.Component {
     constructor(props) {
@@ -103,8 +103,8 @@ class Accounts extends React.Component {
                     return a.accountId > b.accountId
                         ? 1
                         : a.accountId < b.accountId
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: id => {
                     return <div>{id}</div>;
@@ -150,8 +150,8 @@ class Accounts extends React.Component {
                     return a.accountName > b.accountName
                         ? 1
                         : a.accountName < b.accountName
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: name => {
                     return (
@@ -174,8 +174,8 @@ class Accounts extends React.Component {
                         ? 1
                         : this.balanceObjects[a.accountBalance] <
                           this.balanceObjects[b.accountBalance]
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: balance => {
                     return (
@@ -202,8 +202,8 @@ class Accounts extends React.Component {
                         ? 1
                         : this.balanceObjects[a.accountBalance] <
                           this.balanceObjects[b.accountBalance]
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: balance => {
                     return (

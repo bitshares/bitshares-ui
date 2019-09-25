@@ -5,7 +5,7 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import MarginPositionsTable from "./MarginPositionsTable";
 import {RecentTransactions} from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import SettingsActions from "actions/SettingsActions";
 import utils from "common/utils";
 import {Tabs, Tab} from "../Utility/Tabs";
@@ -27,7 +27,7 @@ class AccountOverview extends React.Component {
         this.state = {
             shownAssets: props.viewSettings.get("shownAssets", "active"),
             alwaysShowAssets: [
-                "BTS"
+                "TUSC"
                 // "USD",
                 // "CNY",
                 // "OPEN.BTC",

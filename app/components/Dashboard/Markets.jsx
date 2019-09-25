@@ -1,5 +1,5 @@
 import React from "react";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import {connect} from "alt-react";
 
 import utils from "common/utils";
@@ -56,7 +56,7 @@ class FeaturedMarkets extends React.Component {
             return props.markets;
         } else {
             // assume testnet
-            return [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]];
+            return [["TUSC", "PEG.FAKEUSD"], ["TEST", "BTWTY"]];
         }
     }
 

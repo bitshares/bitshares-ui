@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Input, Form, Select} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
-import ChainStore from "bitsharesjs/es/chain/src/ChainStore";
+import ChainStore from "tuscjs/es/chain/src/ChainStore";
 import accountUtils from "../../lib/common/account_utils";
 
 class AccountInputStyleGuide extends Component {

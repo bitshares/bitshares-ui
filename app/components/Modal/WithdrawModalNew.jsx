@@ -39,7 +39,7 @@ import {
 import AmountSelector from "components/Utility/AmountSelectorStyleGuide";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 const gatewayBoolCheck = "withdrawalAllowed";
 
 import {getAssetAndGateway, getIntermediateAccount} from "common/gatewayUtils";
@@ -332,7 +332,7 @@ class WithdrawModalNew extends React.Component {
         let isBTS = false;
         if (coreAsset) {
             if (selectedAsset == coreAsset.get("symbol")) isBTS = true;
-        } else if (selectedAsset == "BTS") {
+        } else if (selectedAsset == "TUSC") {
             isBTS = true;
         }
 
@@ -566,7 +566,7 @@ class WithdrawModalNew extends React.Component {
 
         let stateObj = {};
 
-        if (value == "BTS") {
+        if (value == "TUSC") {
             stateObj = {isBTS: true};
         }
 

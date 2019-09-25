@@ -3,7 +3,7 @@ import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
 import Immutable, {fromJS} from "immutable";
 import ls from "common/localStorage";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import {settingsAPIs} from "api/apiConfig";
 import {
     getDefaultTheme,
@@ -13,7 +13,7 @@ import {
     getUnits
 } from "branding";
 
-const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
+const CORE_ASSET = "TUSC"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
@@ -435,15 +435,15 @@ class SettingsStore {
                 markets_4018d784: getMyMarketsBases(),
                 markets_39f5e2ed: [
                     // TESTNET
-                    "TEST"
+                    "TUSC"
                 ]
             };
 
             let coreAssets = {
-                markets_4018d784: "BTS",
-                markets_39f5e2ed: "TEST"
+                markets_4018d784: "TUSC",
+                markets_39f5e2ed: "TUSC"
             };
-            let coreAsset = coreAssets[this.starredKey] || "BTS";
+            let coreAsset = coreAssets[this.starredKey] || "TUSC";
             /*
              * Update units depending on the chain, also make sure the 0 index
              * asset is always the correct CORE asset name

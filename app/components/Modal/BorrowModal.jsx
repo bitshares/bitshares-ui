@@ -19,7 +19,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import {List} from "immutable";
 import Icon from "../Icon/Icon";
 import {Checkbox, Modal, Button, Tooltip} from "bitshares-ui-style-guide";
@@ -528,12 +528,14 @@ class BorrowModalContent extends React.Component {
         };
 
         if (props && props.hasCallOrders && props.call_orders) {
-            currentPosition = props.call_orders.filter(a => !!a).find(a => {
-                return (
-                    a.getIn(["call_price", "quote", "asset_id"]) ===
-                    props.quote_asset.get("id")
-                );
-            });
+            currentPosition = props.call_orders
+                .filter(a => !!a)
+                .find(a => {
+                    return (
+                        a.getIn(["call_price", "quote", "asset_id"]) ===
+                        props.quote_asset.get("id")
+                    );
+                });
 
             currentPosition = !!currentPosition
                 ? currentPosition.toJS()
@@ -855,8 +857,8 @@ class BorrowModalContent extends React.Component {
                                                 (errors.below_maintenance
                                                     ? "has-error"
                                                     : errors.close_maintenance
-                                                        ? "has-warning"
-                                                        : "")
+                                                    ? "has-warning"
+                                                    : "")
                                             }
                                         >
                                             <span className="borrow-price-label">

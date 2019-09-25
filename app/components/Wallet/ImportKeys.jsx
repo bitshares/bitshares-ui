@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {connect} from "alt-react";
 import cname from "classnames";
-import {PrivateKey, Aes, PublicKey, hash} from "bitsharesjs";
-import {ChainConfig} from "bitsharesjs-ws";
+import {PrivateKey, Aes, PublicKey, hash} from "tuscjs";
+import {ChainConfig} from "tuscjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import {WalletCreate} from "components/Wallet/WalletCreate";
@@ -277,7 +277,7 @@ class ImportKeys extends Component {
                 pubkey
             ).toAddressString();
             let addresses = account_addresses[account_name] || [];
-            address = "BTS" + address.substring(3);
+            address = "TUSC" + address.substring(3);
             //DEBUG console.log("... address",address,account_name)
             addresses.push(address);
             account_addresses[account_name] = addresses;
@@ -400,9 +400,7 @@ class ImportKeys extends Component {
         let format_error1_once = true;
         for (let account of this.state.account_keys) {
             if (!account.encrypted_private_keys) {
-                let error = `Account ${
-                    account.account_name
-                } missing encrypted_private_keys`;
+                let error = `Account ${account.account_name} missing encrypted_private_keys`;
                 console.error(error);
                 if (format_error1_once) {
                     Notification.error({

@@ -5,7 +5,7 @@ import AccountActions from "actions/AccountActions";
 import counterpart from "counterpart";
 import {Modal, Button, Input, Select, Form} from "bitshares-ui-style-guide";
 import Icon from "../Icon/Icon";
-import {PublicKey} from "bitsharesjs";
+import {PublicKey} from "tuscjs";
 import sanitize from "sanitize";
 
 class JoinWitnessesModal extends React.Component {

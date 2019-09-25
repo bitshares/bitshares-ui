@@ -1,14 +1,11 @@
 {
-    "name": "BitShares2-light",
-    "version": "3.1.190618.1",
-    "description": "Reference UI to showcase all features of the BitShares blockchain.",
-    "homepage": "https://github.com/bitshares/bitshares-ui",
-    "author": "BitShares UI Worker <ui-dev@bitshares.org>",
+    "name": "TUSC-light",
+    "version": "0.0.1",
+    "description": "Reference UI to showcase all features of the TUSC blockchain.",
+    "homepage": "https://github.com/TUSCNetwork/tusc-ui",
+    "author": "TUSC UI Worker",
     "contributors": [
-        "Sigve Kvalsvik",
-        "James Calfee",
-        "Dan Larimer",
-        "Valentine Zavgorodnev"
+        "RarelyCharles"
     ],
     "license": "MIT",
     "engines": {
@@ -18,7 +15,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/bitshares/bitshares-ui"
+        "url": "git://github.com/TUSCNetwork/tusc-ui"
     },
     "main": "build/electron/index.js",
     "scripts": {
@@ -87,8 +84,8 @@
     },
     "browsersList": "electron 1.7",
     "build": {
-        "productName": "BitShares",
-        "appId": "org.bitshares.graphene",
+        "productName": "TUSC",
+        "appId": "tusc.network",
         "files": [
             "build/electron",
             "!node_modules"
@@ -128,7 +125,7 @@
                 "AppImage",
                 "snap"
             ],
-            "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
+            "synopsis": "TUSC: The Universal Settlement Coin"
         },
         "directories": {
             "buildResources": "resources",
@@ -140,9 +137,9 @@
         "alt-container": "git+https://github.com/bitshares/alt-container.git#cf4e2c690a54e49fc9fe2dc99ab8816e6c3e5a86",
         "alt-react": "git+https://github.com/bitshares/alt-react.git#d91addef51f58e41e9857ebb0dd9177cfbd3b583",
         "bignumber.js": "^4.0.0",
-        "bitshares-report": "^0.2.0",
+        "tusc-report": "^0.0.6",
         "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#83b82d056ca134b08521e8eca541438b7b4783f6",
-        "bitsharesjs": "^3.1.0",
+        "tuscjs": "^0.0.6",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
         "cookies-js": "^1.2.1",

@@ -24,7 +24,7 @@ import AltContainer from "alt-container";
 import BindToChainState from "components/Utility/BindToChainState";
 import AccountStore from "../../stores/AccountStore";
 import ChainTypes from "../Utility/ChainTypes";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import PropTypes from "prop-types";
 import AssetNameWrapper from "../Utility/AssetName";
 import assetUtils from "lib/common/asset_utils";

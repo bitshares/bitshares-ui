@@ -1,10 +1,10 @@
 import React from "react";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import {Tabs, Tab} from "../Utility/Tabs";
 
 class VestingBalance extends React.Component {

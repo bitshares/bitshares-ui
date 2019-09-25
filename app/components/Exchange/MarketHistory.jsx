@@ -11,7 +11,7 @@ import SettingsStore from "stores/SettingsStore";
 import {connect} from "alt-react";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
-import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
+import {ChainTypes as grapheneChainTypes} from "tuscjs";
 const {operations} = grapheneChainTypes;
 import BlockDate from "../Utility/BlockDate";
 import counterpart from "counterpart";

@@ -316,7 +316,7 @@ New features
 - #1379: Add Market Picker
 - #1276: Enable GDEX gateway
 - #1463: Handle non-existant assets in exchange and asset pages
-- Update bitsharesjs to enable new orders api
+- Update tuscjs to enable new orders api
 - #1288 - Extract FundFeePool from AccountAssetUpdate and use it in Asset
 - Added titles to all areas of the app to improve history navigation
 
@@ -438,7 +438,7 @@ Bug fixes and improvements
 - #984: Enable header menu items for all accounts
 - Fix #1272: Workaround for routerTransition being called multiple times
 - Fix #1281 and other references to bit assets
-- Update bitsharesjs for better handling of incoming proposed transactions
+- Update tuscjs for better handling of incoming proposed transactions
 - #1243: Translation fixes
 - Fix broken asset/gateway logic
 - #1278: Tab subtext disappears when collapsed
@@ -789,7 +789,7 @@ Bug fixes
 - Fix MyMarkets console errors
 - Fix 'span cannot appear as child of tbody' error
 - Fix warning in header (td in a) (#338)
-- Update bitsharesjs, #346, fix #304
+- Update tuscjs, #346, fix #304
 - Update apiLatencies after connection
 - Fix API nodes sorting #346
 
@@ -841,7 +841,7 @@ Bug fixes
 - Change positioning of some tooltips
 - Fix password score checker freezing on very long passwords
 - Hide 'something for nothing order history items
-- Update bitsharesjs to fix proposals array undefined error
+- Update tuscjs to fix proposals array undefined error
 - Fix 'Cannot use 'in' operator to search for 'translate'' error in api dropdown
 - Fix order rounding when modifying the 'Total' after clicking an order from the orderbook
 - Improve first-time brainkey lookup to check at least 10 positions
@@ -998,7 +998,7 @@ Bug fixes
 - Scroll orderbook to top when changing markets
 - Don't set feed price in MarketStore for markets without call orders
 - Fix setting of highestBid in MarketStore
-- Update bitsharesjs, fixes vesting balances not loading properly
+- Update tuscjs, fixes vesting balances not loading properly
 - Fix persistence of indicator settings
 - Fix PriceChart resize on switching to/from left orderbook
 - Update Dashboard markets, add loading indication until accounts are ready
@@ -1061,7 +1061,7 @@ Bug fixes
 - Fix market flipping for UIAs
 - Fix several bugs related to hash-history react router config
 - Change Graphene to BitShares
-- Replace graphenejs-lib with bitsharesjs
+- Replace graphenejs-lib with tuscjs
 - Fix npm errors
 - Fix line breaks for memos with very long words
 - Make sure asset actions render properly in AccountOverview

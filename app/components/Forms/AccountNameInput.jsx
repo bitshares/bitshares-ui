@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
-import {ChainValidation} from "bitsharesjs";
+import {ChainValidation} from "tuscjs";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import AltContainer from "alt-container";

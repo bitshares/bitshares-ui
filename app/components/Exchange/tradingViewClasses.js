@@ -1,5 +1,5 @@
 import MarketsStore from "stores/MarketsStore";
-import {FetchChain} from "bitsharesjs";
+import {FetchChain} from "tuscjs";
 import moment from "moment-timezone";
 import MarketsActions from "actions/MarketsActions";
 import {getGatewayName} from "common/gatewayUtils";
@@ -16,10 +16,10 @@ class SymbolInfo {
             quoteGateway === baseGateway
                 ? quoteGateway
                 : quoteGateway && !baseGateway
-                    ? quoteGateway
-                    : !quoteGateway && baseGateway
-                        ? baseGateway
-                        : `${quoteGateway} / ${baseGateway}`;
+                ? quoteGateway
+                : !quoteGateway && baseGateway
+                ? baseGateway
+                : `${quoteGateway} / ${baseGateway}`;
 
         let {name: baseSymbol, prefix: basePrefix} = utils.replaceName(
             options.baseAsset
@@ -313,12 +313,12 @@ class DataFeed {
 
     unsubscribeBars() {
         /*
-        * This is ALWAYS called after subscribeBars for some reason, but
-        * sometimes it executes BEFORE the subscribe call in subscribeBars and
-        * sometimes AFTER. This causes the callback to be cleared and we stop
-        * receiving updates from the MarketStore. Unless we find it causes bugs,
-        * it's best to just not use this.
-        */
+         * This is ALWAYS called after subscribeBars for some reason, but
+         * sometimes it executes BEFORE the subscribe call in subscribeBars and
+         * sometimes AFTER. This causes the callback to be cleared and we stop
+         * receiving updates from the MarketStore. Unless we find it causes bugs,
+         * it's best to just not use this.
+         */
         // MarketsStore.unsubscribe("subscribeBars");
         // this.latestBar = null;
     }
@@ -393,9 +393,7 @@ function getTVTimezone() {
             if (zoneTime.format() === actual) {
                 if (__DEV__)
                     console.log(
-                        `Found a match for ${current} timezone, using ${
-                            supportedTimeZones[i]
-                        }`
+                        `Found a match for ${current} timezone, using ${supportedTimeZones[i]}`
                     );
                 // Found a match, return that zone
                 return supportedTimeZones[i];

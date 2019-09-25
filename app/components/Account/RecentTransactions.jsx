@@ -4,11 +4,7 @@ import {saveAs} from "file-saver";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {
-    ChainTypes as grapheneChainTypes,
-    FetchChain,
-    ChainStore
-} from "bitsharesjs";
+import {ChainTypes as grapheneChainTypes, FetchChain, ChainStore} from "tuscjs";
 //import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
@@ -16,7 +12,7 @@ import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
-import report from "bitshares-report";
+import report from "tusc-report";
 import LoadingIndicator from "../LoadingIndicator";
 import {Tooltip, Modal, Button, Select, Input} from "bitshares-ui-style-guide";
 const ops = Object.keys(operations);

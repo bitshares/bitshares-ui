@@ -4,7 +4,7 @@ const path = require("path");
 const util = require("util");
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
-const {ChainStore} = require("bitsharesjs");
+const {ChainStore} = require("tuscjs");
 
 readFile(path.resolve(scamAccounts), "utf8")
     .then(str => {

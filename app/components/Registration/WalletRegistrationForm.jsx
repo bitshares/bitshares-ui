@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
-import {ChainStore, FetchChain} from "bitsharesjs/es";
+import {ChainStore, FetchChain} from "tuscjs/es";
 import counterpart from "counterpart";
 import AccountActions from "actions/AccountActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";

@@ -433,7 +433,7 @@
         "ws_status": "웹소켓 연결 상태"
     },
     "assets": {
-        "BTS": "BTS is the core token of the BitShares Blockchain"
+        "TUSC": "BTS is the core token of the BitShares Blockchain"
     },
     "boolean": {
         "false": "False",

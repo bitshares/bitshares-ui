@@ -13,7 +13,7 @@ import BackupActions, {
 } from "actions/BackupActions";
 import {saveAs} from "file-saver";
 import Translate from "react-translate-component";
-import {PrivateKey} from "bitsharesjs";
+import {PrivateKey} from "tuscjs";
 import SettingsActions from "actions/SettingsActions";
 import {backupName} from "common/backupUtils";
 import {getWalletName} from "branding";

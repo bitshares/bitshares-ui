@@ -15,7 +15,7 @@ import {
 import AccountSelector from "../Account/AccountSelector";
 import counterpart from "counterpart";
 import AccountStore from "stores/AccountStore";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import AmountSelector from "../Utility/AmountSelector";
 import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
@@ -1053,8 +1053,8 @@ export default class Barter extends Component {
                                 from_asset_types.length > 0 && item.from_asset
                                     ? item.from_asset.get("id")
                                     : item.from_asset_id
-                                        ? item.from_asset_id
-                                        : from_asset_types[0]
+                                    ? item.from_asset_id
+                                    : from_asset_types[0]
                             }
                             assets={from_asset_types}
                             display_balance={balance(
@@ -1117,8 +1117,8 @@ export default class Barter extends Component {
                                 to_asset_types.length > 0 && item.to_asset
                                     ? item.to_asset.get("id")
                                     : item.to_asset_id
-                                        ? item.to_asset_id
-                                        : to_asset_types[0]
+                                    ? item.to_asset_id
+                                    : to_asset_types[0]
                             }
                             assets={to_asset_types}
                             display_balance={balance(
@@ -1421,7 +1421,7 @@ export default class Barter extends Component {
                             className="left-label"
                             component="label"
                             fee={fee(true) + this.state.proposal_fee}
-                            asset={"BTS"}
+                            asset={"TUSC"}
                         />
                     </span>
                 </Tooltip>

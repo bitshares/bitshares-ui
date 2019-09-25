@@ -1,13 +1,13 @@
 import React from "react";
 import {Alert, Icon} from "bitshares-ui-style-guide";
-import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import {ChainStore, FetchChainObjects} from "tuscjs";
 import asset_utils from "../../lib/common/asset_utils";
 import {Carousel} from "antd";
 import SettingsActions from "actions/SettingsActions";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import {getConfigurationAsset} from "../../branding";
-import {hash} from "bitsharesjs";
+import {hash} from "tuscjs";
 
 const getNewsItemHash = news => {
     return hash

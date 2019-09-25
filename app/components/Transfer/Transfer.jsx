@@ -12,7 +12,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {RecentTransactions} from "../Account/RecentTransactions";
 import Immutable from "immutable";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import {connect} from "alt-react";
 import {
     checkFeeStatusAsync,
@@ -213,20 +213,16 @@ class Transfer extends React.Component {
                 content: state.memo
             }
         }).then(({fee, hasBalance, hasPoolBalance}) =>
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {fee_asset_id: asset_id},
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should =>
+                should
+                    ? this.setState({fee_asset_id: asset_id}, this._updateFee)
+                    : this.setState({
+                          feeAmount: fee,
+                          fee_asset_id: fee.asset_id,
+                          hasBalance,
+                          hasPoolBalance,
+                          error: !hasBalance || !hasPoolBalance
+                      })
             )
         );
     }
@@ -587,8 +583,8 @@ class Transfer extends React.Component {
                                     asset_types.length > 0 && asset
                                         ? asset.get("id")
                                         : asset_id
-                                            ? asset_id
-                                            : asset_types[0]
+                                        ? asset_id
+                                        : asset_types[0]
                                 }
                                 assets={asset_types}
                                 display_balance={balance}
@@ -661,10 +657,10 @@ class Transfer extends React.Component {
                                     fee_asset_types.length && feeAmount
                                         ? feeAmount.asset_id
                                         : fee_asset_types.length === 1
-                                            ? fee_asset_types[0]
-                                            : fee_asset_id
-                                                ? fee_asset_id
-                                                : fee_asset_types[0]
+                                        ? fee_asset_types[0]
+                                        : fee_asset_id
+                                        ? fee_asset_id
+                                        : fee_asset_types[0]
                                 }
                                 assets={fee_asset_types}
                                 tabIndex={tabIndex++}

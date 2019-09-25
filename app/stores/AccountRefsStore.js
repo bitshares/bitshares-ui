@@ -2,8 +2,8 @@ import alt from "alt-instance";
 import iDB from "idb-instance";
 import Immutable from "immutable";
 import BaseStore from "./BaseStore";
-import {ChainStore} from "bitsharesjs";
-import {Apis} from "bitsharesjs-ws";
+import {ChainStore} from "tuscjs";
+import {Apis} from "tuscjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import chainIds from "chain/chainIds";
@@ -130,10 +130,10 @@ class AccountRefsStore extends BaseStore {
 export default alt.createStore(AccountRefsStore, "AccountRefsStore");
 
 /*
-*  Performance optimization for large wallets, no_account_refs tracks pubkeys
-*  that do not have a corresponding account and excludes them from future api calls
-*  to get_account_refs. The arrays are stored in the indexed db, one per chain id
-*/
+ *  Performance optimization for large wallets, no_account_refs tracks pubkeys
+ *  that do not have a corresponding account and excludes them from future api calls
+ *  to get_account_refs. The arrays are stored in the indexed db, one per chain id
+ */
 function loadNoAccountRefs() {
     let chain_id = Apis.instance().chain_id;
     let refKey = `no_account_refs${

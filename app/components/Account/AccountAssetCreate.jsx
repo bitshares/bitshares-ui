@@ -4,7 +4,7 @@ import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
-import {ChainStore, ChainValidation} from "bitsharesjs";
+import {ChainStore, ChainValidation} from "tuscjs";
 import FormattedAsset from "../Utility/FormattedAsset";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
@@ -561,10 +561,10 @@ class AccountAssetCreate extends React.Component {
                     : new big(new_state.max_supply)
                           .times(Math.pow(10, new_state.precision))
                           .gt(GRAPHENE_MAX_SHARE_SUPPLY)
-                        ? counterpart.translate(
-                              "account.user_issued_assets.too_large"
-                          )
-                        : null;
+                    ? counterpart.translate(
+                          "account.user_issued_assets.too_large"
+                      )
+                    : null;
         } catch (err) {
             console.log("err:", err);
             errors.max_supply = counterpart.translate(
@@ -783,8 +783,8 @@ class AccountAssetCreate extends React.Component {
                 update.description.visible
                     ? false
                     : update.description.visible === false
-                        ? true
-                        : false
+                    ? true
+                    : false
             )
         );
 

@@ -1,5 +1,5 @@
 import {connect} from "alt-react";
-import {ChainStore, ChainValidation} from "bitsharesjs";
+import {ChainStore, ChainValidation} from "tuscjs";
 import counterpart from "counterpart";
 import {debounce} from "lodash-es";
 import React, {Component} from "react";

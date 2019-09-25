@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import DisableCopyText from "../DisableCopyText";

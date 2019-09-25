@@ -5,7 +5,7 @@ import {Button, Card, Steps, Tooltip} from "bitshares-ui-style-guide";
 import debounceRender from "react-debounce-render";
 import AssetWrapper from "../Utility/AssetWrapper";
 import {connect} from "alt-react";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 
 import BorrowModal from "../Modal/BorrowModal";
@@ -351,20 +351,19 @@ class Borrow extends Component {
                         )}
                     </div>
                 </Card>
-                {accountLoaded &&
-                    !!selectedAssetObject && (
-                        <BorrowModal
-                            visible={this.state.isBorrowBaseModalVisible}
-                            hideModal={this.hideBorrowModal}
-                            quote_asset={selectedAssetObject.get("id")}
-                            backing_asset={selectedAssetObject.getIn([
-                                "bitasset",
-                                "options",
-                                "short_backing_asset"
-                            ])}
-                            account={currentAccount}
-                        />
-                    )}
+                {accountLoaded && !!selectedAssetObject && (
+                    <BorrowModal
+                        visible={this.state.isBorrowBaseModalVisible}
+                        hideModal={this.hideBorrowModal}
+                        quote_asset={selectedAssetObject.get("id")}
+                        backing_asset={selectedAssetObject.getIn([
+                            "bitasset",
+                            "options",
+                            "short_backing_asset"
+                        ])}
+                        account={currentAccount}
+                    />
+                )}
             </div>
         );
     }

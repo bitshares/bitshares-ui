@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Statistics from "./Statistics";
@@ -185,9 +185,7 @@ class AccountMembership extends React.Component {
                                                         :
                                                         <h5>
                                                             {getWalletURL() +
-                                                                `/?r=${
-                                                                    account.name
-                                                                }`}
+                                                                `/?r=${account.name}`}
                                                         </h5>
                                                     </div>
                                                 ) : null}
@@ -209,9 +207,7 @@ class AccountMembership extends React.Component {
                                                                 <Translate content="account.member.lifetime_referrer" />{" "}
                                                                 &nbsp; (
                                                                 <Link
-                                                                    to={`/account/${
-                                                                        account.lifetime_referrer_name
-                                                                    }`}
+                                                                    to={`/account/${account.lifetime_referrer_name}`}
                                                                 >
                                                                     {
                                                                         account.lifetime_referrer_name
@@ -228,9 +224,7 @@ class AccountMembership extends React.Component {
                                                                 <Translate content="account.member.registrar" />{" "}
                                                                 &nbsp; (
                                                                 <Link
-                                                                    to={`/account/${
-                                                                        account.registrar_name
-                                                                    }`}
+                                                                    to={`/account/${account.registrar_name}`}
                                                                 >
                                                                     {
                                                                         account.registrar_name
@@ -247,9 +241,7 @@ class AccountMembership extends React.Component {
                                                                 <Translate content="account.member.referrer" />{" "}
                                                                 &nbsp; (
                                                                 <Link
-                                                                    to={`/account/${
-                                                                        account.referrer_name
-                                                                    }`}
+                                                                    to={`/account/${account.referrer_name}`}
                                                                 >
                                                                     {
                                                                         account.referrer_name

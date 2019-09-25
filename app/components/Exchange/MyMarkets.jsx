@@ -18,7 +18,7 @@ import {debounce} from "lodash-es";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
-import {ChainValidation, ChainStore} from "bitsharesjs";
+import {ChainValidation, ChainStore} from "tuscjs";
 import debounceRender from "react-debounce-render";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {getPossibleGatewayPrefixes, gatewayPrefixes} from "common/gateways";
@@ -746,9 +746,7 @@ class MyMarkets extends React.Component {
                     let gatewayMarkets = activeMarkets
                         .map(m => {
                             if (m.quote === m.base) return null;
-                            let newID = `${
-                                m.quote
-                            }_${possibleGatewayAssetName}`;
+                            let newID = `${m.quote}_${possibleGatewayAssetName}`;
                             if (activeMarkets.has(newID)) return null;
                             return {
                                 base: possibleGatewayAssetName,

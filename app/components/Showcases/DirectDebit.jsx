@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import {
     Input,
     Card,
@@ -12,7 +12,7 @@ import {
     Table
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import utils from "common/utils";
 import DirectDebitModal from "../Modal/DirectDebitModal";
 import DirectDebitClaimModal from "../Modal/DirectDebitClaimModal";
@@ -305,8 +305,8 @@ class DirectDebit extends Component {
                     return a.expires > b.expires
                         ? 1
                         : a.expires < b.expires
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 }
             },
             {

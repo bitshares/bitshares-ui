@@ -433,7 +433,7 @@
         "ws_status": "Estado de conexión de nodo completo"
     },
     "assets": {
-        "BTS": " BTS es el token principal de la cadena de bloques de BitShares"
+        "TUSC": " BTS es el token principal de la cadena de bloques de BitShares"
     },
     "boolean": {
         "false": "Falso",

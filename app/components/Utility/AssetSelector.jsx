@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainValidation} from "bitsharesjs";
+import {ChainValidation} from "tuscjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import counterpart from "counterpart";

@@ -3,7 +3,7 @@ import React from "react";
 import Immutable from "immutable";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
 import TimeAgo from "../Utility/TimeAgo";
@@ -298,8 +298,8 @@ class WitnessList extends React.Component {
                         ? -1
                         : a.lastConfirmedBlock.timestamp <
                           b.lastConfirmedBlock.timestamp
-                            ? 1
-                            : 0;
+                        ? 1
+                        : 0;
                 }
             },
             {
@@ -322,8 +322,8 @@ class WitnessList extends React.Component {
                     return a.blocksMissed > b.blocksMissed
                         ? 1
                         : a.blocksMissed < b.blocksMissed
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 }
             },
             {

@@ -1,9 +1,9 @@
 import alt from "alt-instance";
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import utils from "common/utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore, hash, FetchChainObjects} from "bitsharesjs";
+import {ChainStore, hash, FetchChainObjects} from "tuscjs";
 import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
 let inProgress = {};

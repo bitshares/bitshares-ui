@@ -433,7 +433,7 @@
         "ws_status": "全节点连接状态"
     },
     "assets": {
-        "BTS": "BTS是比特股区块链的核心代币."
+        "TUSC": "BTS是比特股区块链的核心代币."
     },
     "boolean": {
         "false": "假",

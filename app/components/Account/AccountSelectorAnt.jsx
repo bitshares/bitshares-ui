@@ -3,7 +3,7 @@ import utils from "common/utils";
 import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
-import {ChainStore, PublicKey, ChainValidation, FetchChain} from "bitsharesjs";
+import {ChainStore, PublicKey, ChainValidation, FetchChain} from "tuscjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
@@ -247,8 +247,8 @@ class AccountSelector extends React.Component {
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
                     : account.accountType === "id"
-                        ? account.get("name")
-                        : null;
+                    ? account.get("name")
+                    : null;
         }
 
         // Without Typeahead Error Handling
@@ -334,8 +334,8 @@ class AccountSelector extends React.Component {
         });
 
         let linked_status = !this.props.account ? null : myActiveAccounts.has(
-            account.get("name")
-        ) || contacts.has(account.get("name")) ? (
+              account.get("name")
+          ) || contacts.has(account.get("name")) ? (
             <Tooltip
                 placement="top"
                 title={counterpart.translate("tooltip.follow_user")}

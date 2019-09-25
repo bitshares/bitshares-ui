@@ -1,4 +1,4 @@
-import {hash, key} from "bitsharesjs";
+import {hash, key} from "tuscjs";
 
 var bts_genesiskeys_bloom_url = undefined;
 try {
@@ -131,9 +131,9 @@ export default class GenesisFilter {
                         }
                         var currentKey = keys.public_keys[k];
                         if (/^GPH/.test(currentKey))
-                            currentKey = "BTS" + currentKey.substring(3);
+                            currentKey = "TUSC" + currentKey.substring(3);
                         if (this.inGenesis(currentKey)) continue;
-                        var addresses = key.addresses(currentKey, "BTS");
+                        var addresses = key.addresses(currentKey, "TUSC");
                         var addy_found = false;
                         for (var i = 0; i < addresses.length; i++) {
                             if (this.inGenesis(addresses[i])) {

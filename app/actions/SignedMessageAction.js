@@ -1,6 +1,6 @@
 import alt from "alt-instance";
 import counterpart from "counterpart";
-import {Signature, ChainStore, PublicKey} from "bitsharesjs";
+import {Signature, ChainStore, PublicKey} from "tuscjs";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletDb from "stores/WalletDb";
 

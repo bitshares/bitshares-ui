@@ -9,7 +9,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import AccountActions from "actions/AccountActions";
 import SettingsActions from "actions/SettingsActions";
 import utils from "common/utils";
-import ChainStore from "bitsharesjs/es/chain/src/ChainStore";
+import ChainStore from "tuscjs/es/chain/src/ChainStore";
 import AccountInputStyleGuide from "../Account/AccountInputStyleGuide";
 import {Button, Input, Form} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";

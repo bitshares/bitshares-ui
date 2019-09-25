@@ -7,7 +7,7 @@ import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {ChainTypes as grapheneChainTypes, ChainStore} from "bitsharesjs";
+import {ChainTypes as grapheneChainTypes, ChainStore} from "tuscjs";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import ProposedOperation from "./ProposedOperation";
@@ -292,8 +292,8 @@ class Operation {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                            ? "whitelisted_by"
-                            : "blacklisted_by";
+                        ? "whitelisted_by"
+                        : "blacklisted_by";
                 column = (
                     <span>
                         <TranslateWithLinks

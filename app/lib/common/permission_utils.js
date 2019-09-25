@@ -1,4 +1,4 @@
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import Immutable from "immutable";
 
 let KeyAuth = function(auth) {

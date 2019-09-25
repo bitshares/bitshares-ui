@@ -1,7 +1,7 @@
 import Immutable from "immutable";
 import alt from "alt-instance";
 import BlockchainActions from "actions/BlockchainActions";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 // import {Block} from "./tcomb_structs";
 
 class BlockchainStore {

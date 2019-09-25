@@ -1,4 +1,4 @@
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import idb_helper from "idb-helper";
 import iDBRoot from "idb-root";
 import chainIds from "chain/chainIds";

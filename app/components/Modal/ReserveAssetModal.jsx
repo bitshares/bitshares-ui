@@ -3,7 +3,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import AssetActions from "actions/AssetActions";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import {Asset} from "common/MarketClasses";
 import AssetWrapper from "../Utility/AssetWrapper";
 import {Modal, Button, Form, Alert} from "bitshares-ui-style-guide";

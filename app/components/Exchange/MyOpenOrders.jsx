@@ -10,7 +10,7 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
 const leftAlign = {textAlign: "left !important"};
 const rightAlign = {textAlign: "right"};
@@ -94,8 +94,8 @@ class ExchangeOrderRow extends React.Component {
         let tdClass = isCall
             ? "orderHistoryCall"
             : isBid
-                ? "orderHistoryBid"
-                : "orderHistoryAsk";
+            ? "orderHistoryBid"
+            : "orderHistoryAsk";
 
         return (
             <tr key={order.id}>

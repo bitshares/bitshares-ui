@@ -1,5 +1,5 @@
-import {Apis, Manager} from "bitsharesjs-ws";
-import {ChainStore} from "bitsharesjs";
+import {Apis, Manager} from "tuscjs-ws";
+import {ChainStore} from "tuscjs";
 import hirestime from "hirestime";
 
 // Stores
@@ -688,10 +688,10 @@ class RouterTransitioner {
         this.updateTransitionTarget(counterpart.translate("app_init.database"));
         this._connectInProgress = true;
         if (Apis.instance()) {
-            if (!Apis.instance().orders_api())
-                console.log(
-                    `${Apis.instance().url} does not support the orders api`
-                );
+            // if (!Apis.instance().orders_api())
+            //     console.log(
+            //         `${Apis.instance().url} does not support the orders api`
+            //     );
             let currentUrl = Apis.instance().url;
             if (!this.isAutoSelection()) this._setLastNode(currentUrl);
 
@@ -783,7 +783,7 @@ export default routerTransitioner.willTransitionTo.bind(routerTransitioner);
  */
 class Pinger {
     /**
-     * @param connectionManager bitsharesjs connectionmanager
+     * @param connectionManager tuscjs connectionmanager
      * @param updateLatencies callback to update the settings object
      * @param updateTransitionTarget callback to update the message displayed to the user
      * @param pingAll if true, resolve after pinging all

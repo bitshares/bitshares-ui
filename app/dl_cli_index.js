@@ -3,8 +3,8 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import AccountStore from "stores/AccountStore";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 
-import {ChainStore, PrivateKey, PublicKey, Aes, key} from "bitsharesjs";
-import {Apis, ChainConfig} from "bitsharesjs-ws";
+import {ChainStore, PrivateKey, PublicKey, Aes, key} from "tuscjs";
+import {Apis, ChainConfig} from "tuscjs-ws";
 import BackupActions from "actions/BackupActions";
 import WalletActions from "actions/WalletActions";
 

@@ -10,7 +10,7 @@ import {
     Tooltip
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
-import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import {ChainStore, FetchChainObjects} from "tuscjs";
 import utils from "common/utils";
 import HtlcModal from "../Modal/HtlcModal";
 import LinkToAssetById from "../Utility/LinkToAssetById";
@@ -238,8 +238,8 @@ class Htlc extends Component {
                     return a.expires > b.expires
                         ? 1
                         : a.expires < b.expires
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 }
             },
             {

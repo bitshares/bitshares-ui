@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Showcase from "./Showcase";
 import {connect} from "alt-react";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import AccountStore from "../../stores/AccountStore";
 import {createPaperWalletAsPDF} from "common/paperWallet";
 

@@ -5,7 +5,7 @@ import AssetWrapper from "./AssetWrapper";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import {Popover} from "bitshares-ui-style-guide";
-import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import {ChainStore, FetchChainObjects} from "tuscjs";
 
 class AssetName extends React.Component {
     static propTypes = {
@@ -112,8 +112,8 @@ class AssetName extends React.Component {
                 prefix && prefix === "bit"
                     ? prefix
                     : !!prefix
-                        ? prefix.toUpperCase()
-                        : prefix;
+                    ? prefix.toUpperCase()
+                    : prefix;
             let assetDiv = (
                 <div
                     className={
@@ -169,7 +169,7 @@ class AssetName extends React.Component {
                 return assetDiv;
             } else {
                 let desc = null;
-                if (replacedName == "BTS") {
+                if (replacedName == "TUSC") {
                     desc = {main: counterpart.translate("assets.BTS")};
                 } else {
                     desc = asset_utils.parseDescription(

@@ -1,4 +1,4 @@
-import {Apis} from "bitsharesjs-ws";
+import {Apis} from "tuscjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import availableGateways, {gatewayPrefixes} from "common/gateways";
 import counterpart from "counterpart";

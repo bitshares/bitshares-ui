@@ -9,7 +9,7 @@ import WalletDb from "stores/WalletDb";
 import WalletApi from "api/WalletApi";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import {Modal, Button} from "bitshares-ui-style-guide";
 
 export const finalRequiredPerms = (

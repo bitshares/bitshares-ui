@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore, FetchChain} from "bitsharesjs";
+import {ChainStore, FetchChain} from "tuscjs";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
@@ -290,20 +290,16 @@ class DirectDebitClaimModal extends React.Component {
                 content: state.memo
             }
         }).then(({fee, hasBalance, hasPoolBalance}) => {
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {fee_asset_id: asset_id},
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+            shouldPayFeeWithAssetAsync(from_account, fee).then(should =>
+                should
+                    ? this.setState({fee_asset_id: asset_id}, this._updateFee)
+                    : this.setState({
+                          feeAmount: fee,
+                          fee_asset_id: fee.asset_id,
+                          hasBalance,
+                          hasPoolBalance,
+                          error: !hasBalance || !hasPoolBalance
+                      })
             );
         });
     }
@@ -643,10 +639,10 @@ class DirectDebitClaimModal extends React.Component {
                                             fee_asset_types.length && feeAmount
                                                 ? feeAmount.asset_id
                                                 : fee_asset_types.length === 1
-                                                    ? fee_asset_types[0]
-                                                    : fee_asset_id
-                                                        ? fee_asset_id
-                                                        : fee_asset_types[0]
+                                                ? fee_asset_types[0]
+                                                : fee_asset_id
+                                                ? fee_asset_id
+                                                : fee_asset_types[0]
                                         }
                                         assets={fee_asset_types}
                                         display_balance={balance_fee}

@@ -7,7 +7,7 @@ import {Popover} from "bitshares-ui-style-guide";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
 import Pulsate from "./Pulsate";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "tuscjs";
 import AssetWrapper from "./AssetWrapper";
 import BindToChainState from "./BindToChainState";
 import ChainTypes from "./ChainTypes";
@@ -117,23 +117,22 @@ class FormattedAsset extends React.Component {
             asset.options.description
         );
 
-        const currency_popover_body = !hide_asset &&
-            this.props.assetInfo && (
-                <div>
-                    <HelpContent
-                        path={"assets/Asset"}
-                        section="summary"
-                        symbol={asset.symbol}
-                        description={
-                            description.short_name
-                                ? description.short_name
-                                : description.main
-                        }
-                        issuer={issuerName}
-                    />
-                    {this.props.assetInfo}
-                </div>
-            );
+        const currency_popover_body = !hide_asset && this.props.assetInfo && (
+            <div>
+                <HelpContent
+                    path={"assets/Asset"}
+                    section="summary"
+                    symbol={asset.symbol}
+                    description={
+                        description.short_name
+                            ? description.short_name
+                            : description.main
+                    }
+                    issuer={issuerName}
+                />
+                {this.props.assetInfo}
+            </div>
+        );
 
         let formattedValue = null;
         if (!hide_amount) {
