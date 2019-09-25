@@ -343,7 +343,7 @@ class PredictionMarkets extends Component {
         const globalSettlementPrice = market.result === "yes" ? 1 : 0;
         const asset = ChainStore.getAsset(market.asset_id).toJS();
         let base = new Asset({
-            real: globalSettlementPrice,
+            real: 1,
             asset_id: asset.id,
             precision: asset.precision
         });
@@ -351,7 +351,7 @@ class PredictionMarkets extends Component {
             asset.bitasset.options.short_backing_asset
         );
         let quote = new Asset({
-            real: 1,
+            real: globalSettlementPrice,
             asset_id: asset.bitasset.options.short_backing_asset,
             precision: quoteAsset.get("precision")
         });

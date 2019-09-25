@@ -673,6 +673,22 @@ export const settingsAPIs = {
             location: "Paris",
             operator: "Witness: zapata42-witness",
             contact: "telegram:Zapata_42"
+        },
+        {
+            url: "wss://frankfurt.testnet.api.bitshares.org/ws",
+            region: "TESTNET - Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://chicago.testnet.api.bitshares.org/ws",
+            region: "TESTNET - Northern America",
+            country: "U.S.A.",
+            location: "Chicago",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
         }
     ],
     ES_WRAPPER_LIST: [

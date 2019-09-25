@@ -10,7 +10,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import MarketsActions from "../../actions/MarketsActions";
 import debounceRender from "react-debounce-render";
 import FormattedAsset from "../Utility/FormattedAsset";
-import utils from "../../lib/common/utils";
+import utils from "common/utils";
 
 require("./prediction.scss");
 

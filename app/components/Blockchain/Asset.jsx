@@ -378,7 +378,6 @@ class Asset extends React.Component {
                     section="summary"
                     symbol={(prefix || "") + name}
                     description={desc}
-                    prediction={"asdsad"}
                     issuer={issuerName}
                     hide_issuer="true"
                 />
