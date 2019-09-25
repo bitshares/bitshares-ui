@@ -69,6 +69,7 @@ let icons = [
     "paperclip",
     "wallet",
     "prediction",
+    "prediction-large",
     "merchant"
 ];
 

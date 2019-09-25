@@ -17,13 +17,13 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
+import {Input, Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import SearchInput from "../Utility/SearchInput";
 
 class AccountOverview extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             shownAssets: props.viewSettings.get("shownAssets", "active"),
             alwaysShowAssets: [
@@ -78,7 +78,8 @@ class AccountOverview extends React.Component {
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
             !utils.are_equal_shallow(nextState, this.state) ||
-            this.state.filterValue !== nextState.filterValue
+            this.state.filterValue !== nextState.filterValue ||
+            this.state.enabledColumns !== nextState.enabledColumns
         );
     }
 
@@ -275,6 +276,7 @@ class AccountOverview extends React.Component {
                 balances={this.props.balances}
                 extraRow={includedPortfolioBalance}
                 viewSettings={this.props.viewSettings}
+                callOrders={call_orders}
             />
         );
 
@@ -295,6 +297,7 @@ class AccountOverview extends React.Component {
                 balances={this.props.balances}
                 extraRow={hiddenPortfolioBalance}
                 viewSettings={this.props.viewSettings}
+                enabledColumns={this.state.enabledColumns}
             />
         );
 
