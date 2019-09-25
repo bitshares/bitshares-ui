@@ -3,7 +3,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import AccountActions from "actions/AccountActions";
 import AccountSelector from "../Account/AccountSelector";
 import BalanceComponent from "../Utility/BalanceComponent";
-import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
+import {ChainStore, FetchChain, FetchChainObjects} from "bitsharesjs/es";
 import NotificationActions from "actions/NotificationActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {decompress, compress} from "lzma";
@@ -84,7 +84,7 @@ class InvoicePay extends React.Component {
         TransactionConfirmStore.listen(this.onBroadcastAndConfirm);
         try {
             const data = await this.decompressRawData(compressed_data);
-            this.parseInvoiceData(data);
+            await this.parseInvoiceData(data);
         } catch (e) {
             this.setState({isRawDataInputVisible: true});
         }
@@ -114,7 +114,7 @@ class InvoicePay extends React.Component {
         });
     };
 
-    parseInvoiceData = data => {
+    async parseInvoiceData(data) {
         try {
             data = sanitize(data, {
                 whiteList: [], // empty, means filter out all tags
@@ -123,21 +123,28 @@ class InvoicePay extends React.Component {
 
             let invoice = JSON.parse(data);
             if (this.props.validateFormat(invoice)) {
-                FetchChainObjects(ChainStore.getAsset, [invoice.currency]).then(
-                    assets_array => {
-                        this.setState(
-                            {
-                                invoice,
-                                asset: assets_array[0],
-                                pay_from_name: this.props.currentAccount.get(
-                                    "name"
-                                ),
-                                error: null,
-                                isRawDataInputVisible: false
-                            },
-                            this.getTotal
-                        );
+                let assetsArray = await FetchChainObjects(ChainStore.getAsset, [
+                    invoice.currency
+                ]);
+                let pay_to_account = await FetchChain(
+                    "getAccount",
+                    invoice.to,
+                    undefined,
+                    {
+                        [invoice.to]: false
                     }
+                );
+                console.log("asdasd");
+                this.setState(
+                    {
+                        invoice,
+                        asset: assetsArray[0],
+                        pay_to_account,
+                        pay_from_name: this.props.currentAccount.get("name"),
+                        error: null,
+                        isRawDataInputVisible: false
+                    },
+                    this.getTotal
                 );
             } else {
                 this.setState({
@@ -147,7 +154,7 @@ class InvoicePay extends React.Component {
         } catch (error) {
             this.setState({error: error.message});
         }
-    };
+    }
 
     handleRawInvoiceDataChange = e => {
         const value = e.target.value.replace(/\s/g, "");
@@ -188,7 +195,7 @@ class InvoicePay extends React.Component {
         if (
             hasLoaded(this.props.currentAccount) &&
             this.state.total_amount &&
-            this.state.pay_to_accoun
+            this.state.pay_to_account
         ) {
             const find_to = this.state.pay_to_account.get("id");
             const find_asset_id = this.state.asset.get("id");
@@ -307,7 +314,7 @@ class InvoicePay extends React.Component {
     }
 
     onToAccountChanged(pay_to_account) {
-        this.setState({pay_to_account: pay_to_account.get("name")});
+        this.setState({pay_to_account: pay_to_account});
     }
 
     render() {
@@ -426,10 +433,21 @@ class InvoicePay extends React.Component {
         const invoiceData =
             data !== "pay" ? data : this.state.rawDataInputValue;
 
-        const qrcode = this.state.invoiceQr
-            ? invoiceData
-            : `bitshares:operation/transfer?to=${this.state.pay_to_account}&from=${this.state.pay_from_name}&asset=${asset}&amount=${total_amount}` +
-              (invoice.memo ? `&memo=${invoice.memo}` : "");
+        let qrcode = null;
+        if (this.state.invoiceQr) {
+            qrcode = invoiceData;
+        } else {
+            if (
+                this.state.pay_from_name &&
+                invoice.to !== this.state.pay_from_name
+            ) {
+                qrcode =
+                    `bitshares:operation/transfer?to=${invoice.to}&from=${
+                        this.state.pay_from_name
+                    }&asset=${asset}&amount=${total_amount}` +
+                    (invoice.memo ? `&memo=${invoice.memo}` : "");
+            }
+        }
 
         return (
             <div className="merchant-protocol--pay">
@@ -500,7 +518,11 @@ class InvoicePay extends React.Component {
                                 />
                             </Button>
                         </div>
-                        <QRCode size={180} value={qrcode} />
+                        <QRCode
+                            size={180}
+                            value={qrcode ? qrcode : ""}
+                            bgColor={qrcode ? undefined : "#000000"}
+                        />
                     </Col>
                 </Row>
                 {invoice.to_name && (
