@@ -27,12 +27,12 @@ class DropdownMenuItem extends React.Component {
         }
 
         // Default icon title if not set
-        if (!actualIcon.title) {
+        if (actualIcon && !actualIcon.title) {
             actualIcon.title = "icons." + actualIcon.name;
         }
 
         // Default icon size if not set
-        if (!actualIcon.size) {
+        if (actualIcon && !actualIcon.size) {
             actualIcon.size = "2x";
         }
 
@@ -111,13 +111,15 @@ class DropdownMenuItem extends React.Component {
                 )}
                 onClick={disabled ? emptyClickHandler : target}
             >
-                <div className="table-cell">
-                    <Icon
-                        size={actualIcon.size}
-                        name={actualIcon.name}
-                        title={actualIcon.title}
-                    />
-                </div>
+                {actualIcon && (
+                    <div className="table-cell">
+                        <Icon
+                            size={actualIcon.size}
+                            name={actualIcon.name}
+                            title={actualIcon.title}
+                        />
+                    </div>
+                )}
                 <div className="table-cell">
                     <Translate content={text} />
 

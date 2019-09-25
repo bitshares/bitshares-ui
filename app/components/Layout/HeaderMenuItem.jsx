@@ -36,12 +36,12 @@ class HeaderMenuItem extends React.Component {
         }
 
         // Default icon title if not set
-        if (!actualIcon.title) {
+        if (actualIcon && !actualIcon.title) {
             actualIcon.title = "icons." + actualIcon.name;
         }
 
         // Default icon size if not set
-        if (!actualIcon.size) {
+        if (actualIcon && !actualIcon.size) {
             actualIcon.size = "1_5x";
         }
 
@@ -119,16 +119,18 @@ class HeaderMenuItem extends React.Component {
                     onClick={clickHandler}
                     href={href}
                 >
-                    <Icon
-                        size={actualIcon.size}
-                        style={{
-                            position: "relative",
-                            top: 0,
-                            left: -8
-                        }}
-                        name={actualIcon.name}
-                        title={actualIcon.title}
-                    />
+                    {actualIcon && (
+                        <Icon
+                            size={actualIcon.size}
+                            style={{
+                                position: "relative",
+                                top: 0,
+                                left: -8
+                            }}
+                            name={actualIcon.name}
+                            title={actualIcon.title}
+                        />
+                    )}
                     <Translate
                         className="column-hide-small"
                         component="span"

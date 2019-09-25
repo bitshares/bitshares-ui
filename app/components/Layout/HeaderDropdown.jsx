@@ -83,7 +83,6 @@ export default class DropDownMenu extends React.Component {
 
         let renderingProps = {
             isAccountLocked: locked,
-            passwordLogin: passwordLogin,
             currentAccount: currentAccount,
             isContact: isContact,
             isMyAccount: isMyAccount,
@@ -212,11 +211,12 @@ export default class DropDownMenu extends React.Component {
                 {this.state.dropdownSubmenuActiveItem.submenu.map(
                     (submenuItem, index) => {
                         return (
-                            <SubmenuItem
+                            <DropdownMenuItem
                                 key={index}
                                 target={submenuItem.target}
                                 text={submenuItem.text}
                                 hidden={submenuItem.hidden}
+                                icon={submenuItem.icon}
                             />
                         );
                     }

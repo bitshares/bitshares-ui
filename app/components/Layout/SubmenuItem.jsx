@@ -3,7 +3,7 @@ import Translate from "react-translate-component";
 
 class SubmenuItem extends React.Component {
     render() {
-        const {target, text, hidden} = this.props;
+        const {target, text, hidden, icon} = this.props;
 
         return hidden ? null : (
             <li onClick={target}>
