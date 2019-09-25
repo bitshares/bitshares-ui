@@ -1,5 +1,6 @@
 import assetConstants from "../chain/asset_constants";
 import sanitize from "sanitize";
+import utils from "./utils";
 
 export default class AssetUtils {
     static getFlagBooleans(mask, isBitAsset = false) {
@@ -79,18 +80,12 @@ export default class AssetUtils {
 
     static parseDescription(description) {
         let parsed;
-        description = sanitize(description, {
-            whiteList: [], // empty, means filter out all tags
-            stripIgnoreTag: true // filter out all HTML not in the whilelist
-        });
+        description = utils.sanitize(description);
         try {
             parsed = JSON.parse(description);
         } catch (error) {}
         for (let key in parsed) {
-            parsed[key] = sanitize(parsed[key], {
-                whiteList: [], // empty, means filter out all tags
-                stripIgnoreTag: true // filter out all HTML not in the whilelist
-            });
+            parsed[key] = utils.sanitize(parsed[key]);
         }
         return parsed ? parsed : {main: description};
     }

@@ -7,6 +7,13 @@ div.prediction-markets {
 
     div.header-selector {
         padding: 1rem;
+
+        .filter-status {
+            color: darkgray;
+            float: right;
+            font-size: 14px;
+            line-height: 2rem;
+        }
     }
 
     span.search-input {
@@ -34,6 +41,13 @@ div.prediction-markets {
             left: 2px;
             top: 3px;
         }
+    }
+}
+
+div.prediction-markets--create-prediction-market {
+    .ant-form-item {
+        padding-bottom: 0px;
+        margin-bottom: 0px;
     }
 }
 
