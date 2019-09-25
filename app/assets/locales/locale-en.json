@@ -1394,6 +1394,12 @@
         "memo": "Memo",
         "note": "Note",
         "paid_by": "Paid by",
+        "pay": {
+            "title": "Pay",
+            "barcode": "Barcode",
+            "invoice_qr_code": "Invoice QR code",
+            "payment_qr_code": "Payment QR code"
+        },
         "pay_button": "Pay %(asset)s to %(name)s",
         "pay_invoice": "Pay Invoice",
         "pay_to": "Pay To",
@@ -1401,11 +1407,32 @@
         "payment_request": "Payment request",
         "print_receipt": "Print receipt",
         "receipt_total": "Receipt Total",
-        "recipient_name": "Recipient Name",
+        "request": {
+            "title": "Request",
+            "submit": "Submit",
+            "create_invoice_string": "Create invoice string",
+            "identifier": "Identifier",
+            "identifier_tooltip": "The identifier needs to be used as the memo/message when the request is paid.",
+            "items": "Items",
+            "currency": "Currency",
+            "action": "Action",
+            "quantity": "Quantity",
+            "price": "Price",
+            "recipient_account": "Recipient Account",
+            "recipient_name": "Recipient Name",
+            "recipient_name_tooltip": "You can define an arbitrary plaintext name for yourself to indicate who is being paid. Must not be a BitShares account name.",
+            "payment_asset": "Payment Asset",
+            "payment_asset_tooltip": "This payment request will be paid with one transfer, and will be requesting to be paid in the indicated asset.",
+            "note": "Note",
+            "note_tooltip": "You can attach a note to this payment request, this can be any additional information."
+        },
         "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
         "total": "Total",
         "transaction": "Transaction",
-        "unit": "Unit"
+        "unit": "Unit",
+        "raw_invoice_data": "raw invoice data",
+        "use_invoice_data": "Use invoice data",
+        "invoice_data_found": "Invoice data found"
     },
     "languages": {
         "de": "Deutsch",
@@ -2182,6 +2209,10 @@
                 "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
                 "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
             }
+        },
+        "merchant_protocol": {
+            "description": "Create, view and pay remittance requests or invoices",
+            "title": "Merchant Protocol"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
