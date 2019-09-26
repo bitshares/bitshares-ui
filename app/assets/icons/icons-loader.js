@@ -70,6 +70,9 @@ let icons = [
     "wallet",
     "prediction",
     "prediction-large",
+    "merchant",
+    "insight",
+    "create_account",
     "swap",
     "instant-trade"
 ];

@@ -72,6 +72,7 @@
         "market_orders": "Market orders",
         "market_value": "Valor de Mercado",
         "member": {
+            "action": "Action",
             "annual": "Suscriptor anual",
             "available": "Disponible para reclamar",
             "balance_type": "Type",
@@ -507,11 +508,17 @@
             }
         }
     },
+    "customizable_table": {
+        "customize_the_columns": "Customize the Columns"
+    },
     "dashboard": {
         "featured_markets": "Mercados destacados",
         "starred_markets": "Mercados favoritos",
         "table_empty": "Ningún mercado encontrado",
         "top_markets": "Mejores mercados"
+    },
+    "errors": {
+        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
     },
     "exchange": {
         "actions": "Actions",
@@ -1662,6 +1669,93 @@
         "newer": "Más reciente",
         "older": "Anterior"
     },
+    "prediction": {
+        "add_opinion_modal": {
+            "amount": "Amount",
+            "condition": "Condition",
+            "no": "NO",
+            "probability": "Probability (0...1)",
+            "resolution": "Resolution",
+            "symbol": "Symbol",
+            "title": "Add Prediction Offer",
+            "warning": "Set amount",
+            "yes": "YES"
+        },
+        "create_market_modal": {
+            "backing_asset": "Backing asset",
+            "commission": "Commission",
+            "condition": "Condition",
+            "description": "Description",
+            "resolution_date": "Resolution date",
+            "select_date_and_time": "Select date and time",
+            "symbol": "Symbol",
+            "title": "Create prediction market",
+            "tooltip_backing_asset": "The backing asset will be used to pay the premium, i.e. it is the leverage that participants use.",
+            "tooltip_commission": "Every participant pays the commission when opposing opinions on the prediction are being matched. On the blockchain, the commission is the market fee of this new asset.",
+            "tooltip_condition": "The condition is a statement that can be resolved unambiguous to correct or incorrect at the resolution state.",
+            "tooltip_description": "The description gives background information that help the user understand the significance of the prediction.",
+            "tooltip_resolution_date": "The point in time at which the prediction will be resolved. This needs to be done manually by you as the asset owner.",
+            "tooltip_symbol": "A prediction market asset has a symbol just like any other assets. Pick a symbol with 5 or more letters to minimize the creation fee.",
+            "warning": "Fill all blanks"
+        },
+        "details": {
+            "add_prediction": "Add prediction",
+            "all": "All",
+            "amount": "Amount",
+            "cancel": "Cancel",
+            "commission": "Commission",
+            "fee": "Fee",
+            "i_think_that": "I think that the prediction",
+            "incorrect": "Is incorrect",
+            "list_of_current_prediction_offers": "List of current prediction offers",
+            "oppose": "Oppose",
+            "potential_profit": "Potential Winnings",
+            "predicated_likelihood": "Predicated Likelihood",
+            "prediction": "Prediction",
+            "predictor": "Predictor",
+            "premium": "Premium",
+            "proves_true": "Proves true"
+        },
+        "overview": {
+            "action": "Action",
+            "all": "All",
+            "create_market": "Create Prediction Market",
+            "description": "Description",
+            "expiry": "Resolution date",
+            "hide_invalid_asset": "Hide invalid assets",
+            "hide_unknown_houses": "Hide unknown houses",
+            "issuer": "House",
+            "loading": "Loading...",
+            "market_confidence": "Market confidence",
+            "market_predicated_likelihood": "Market predicated likelihood",
+            "no": "No",
+            "odds": "Odds",
+            "open": "Open",
+            "past_resolution_date": "Past Resolution Time",
+            "prediction": "Prediction",
+            "resolve": "Resolve",
+            "yes": "Yes"
+        },
+        "resolve_modal": {
+            "prediction": "Prediction",
+            "proven_true": "... has proven true",
+            "resolution": "Resolution",
+            "symbol": "Symbol",
+            "the_prediction_has": "The prediction ...",
+            "title": "Resolve Prediction Market Asset",
+            "was_incorrect": "... was incorrect"
+        },
+        "tooltips": {
+            "add_prediction": "A prediction is reflected as a limit order on the market of the prediction market asset with its collateral. This lets you create a buy order (you agree with the prediction), or a sell order with previous borrowing of the prediction market asset (you disagree with the prediction). You can also oppose one of the existing predictions listed below, which correlates to matching one of the existing limit orders on the blockchain.",
+            "create_prediction_market_asset": "A prediction market is a special kind of SmartCoin. This lets you create such a prediction market asset with inputs tailored for this purpose.",
+            "hide_invalid_asset": "Per default the table below only shows prediction market assets that meet common standards required for a consistent user experience (prediction and resolution date are given, and reasonable market fee). Uncheck this to show all assets that exist on the blockchain, and make sure you know what you are doing.",
+            "hide_unknown_houses": "Per default the table below only shows prediction market assets of known issuers that meet requirements to increase their trustworthiness. As a participant, you need trust in the asset issuer such that the asset will be resolved according to the real world outcome. Uncheck this to show all issuers that exist on the blockchain, and make sure you know what you are doing. If you are the owner of a prediction market asset and want to be included in the default list, please contact the BitShares community.",
+            "oppose_is_incorrect": "You are opposing someone that thinks the prediction is incorrect. That means, you think the prediction will prove true. On the blockchain that reflects as buying and hodling the prediction market asset.",
+            "oppose_proves_true": "You are opposing someone that thinks the prediction proves true. That means, you think the prediction will be incorrect. On the blockchain that reflects as borrowing and selling the prediction market asset.",
+            "what_is_a_prediction_market_asset": "A prediction market asset is a special kind of asset that allows you to agree or disagree with the prediction statement of the asset and put collateral behind your opinion. It can be created by any user, and if you are participating you need to trust the issuer to properly reflects the real world outcome on the blockchain.",
+            "what_is_a_prediction_offer": "A prediction offer reflects limit orders on the market of the prediction market asset and its collateral. Agreement with the prediction (Prediction proves true) means that you want to buy the prediction market asset, disagreement (Prediction is incorrect) means that you borrow the prediction market asset and sell it"
+        }
+    },
     "proposal": {
         "action": "Acciones",
         "add": "Add",
@@ -2177,6 +2271,7 @@
         "scam_account": "Se sospecha de cuenta estafador",
         "self_help": "Dependiendo del panel visible actualmente, esto abre una guía de ayuda con explicaciones sobre lo que ve actualmente o la sección de ayuda general de la billetera",
         "settle": "El settling te permitirá de convertir tus propriedades de %(asset)s en %(backingAsset)s después de un retraso de %(settleDelay)s horas, a un precio igual al precio dado en ese momento.",
+        "settle_market_prediction": "Settling a prediction market asset is only possible after its resolution.",
         "settle_price": "Este es el precio al que se ejecutarán los pedidos colocados.",
         "show_asset": "Haga clic aquí para mostrar este activo en la lista principal.",
         "show_block": "Haga clic aquí para mostrar el bloque #%(block)s donde ocurrió esta transacción.",
@@ -2266,6 +2361,7 @@
         "min_receive": "Monto mínimo a recibir",
         "new_url": "Pagina",
         "obtain": "para obtener",
+        "operations": "Operations",
         "order_id": "ID de la Orden",
         "outputs": "Salidas",
         "paid": "pagado",
@@ -2337,6 +2433,7 @@
             "worker_create": "Crear presupuesto de trabajo"
         },
         "vesting_balance_create": "ha creado el fondo de consolidación de",
+        "view_json": "Show raw json",
         "waiting": "esperando confirmación..",
         "whitelist_states": {
             "black_listed": "En la lista negra",
@@ -2373,9 +2470,11 @@
             "noFeeBalance": "Su saldo es insuficiente para pagar tarifas usando este activo, elija otro activo para pagar sus tarifas con",
             "noFunds": "No fondos",
             "noPoolBalance": "Ese activo tiene un saldo de comisión de tarifas insuficiente para pagar las tarifas con. Por favor, informe al propietario del activo o seleccione otro activo para pagar las tarifas.",
+            "noPoolBalanceShort": "Fee pool empty",
             "pos": "El monto debe ser positivo",
             "precision": "Valor mínimo de precisión de retirada: %(precision)s",
             "req": "Campo requerido",
+            "unknown": "Unknown error",
             "valid": "Por favor ingresar un número positivo válido"
         },
         "explict_price": "Precio explícito:",
@@ -2392,6 +2491,7 @@
         "phase_out_warning": "Recomendamos usar el nuevo {modal_link} modal ya que esta página será eliminada",
         "see": "VER MIS TRANSFERENCIAS",
         "send": "Enviar",
+        "to": "To",
         "total": "Total: ",
         "warn_name_unable_read_memo": "El remitente propuesto no podrá leer esta nota!"
     },
@@ -2662,6 +2762,9 @@
         "wallet_model_3": "<li>Multiples cuentas</li><li>Se requiere una copia de seguridad del archivo Wallet</li><li>Alta seguridad</li>",
         "wallet_move": "Este archivo de respaldo también se puede usar para mover su billetera local a diferentes computadoras o navegadores diferentes. ¡Para restaurar su billetera local usando esta copia de seguridad <strong>, también necesitará su contraseña </strong>",
         "wallet_password": "Inicie sesión en cualquier lugar con su contraseña",
-        "wallet_types": "wallet types"
+        "wallet_types": "wallet types",
+        "wif_associated_accounts": "Associated Account(s): ",
+        "wif_import_error": "Please enter a valid WIF",
+        "wif_length_error": "Incorrect input length"
     }
 }

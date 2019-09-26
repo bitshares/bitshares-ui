@@ -1,3 +1,4 @@
+import sanitize from "xss";
 import asset_utils from "./asset_utils";
 
 var numeral = require("numeral");
@@ -486,6 +487,20 @@ var Utils = {
             prefix,
             isBitAsset: !!isBitAsset
         };
+    },
+
+    sanitize(string) {
+        // sanitize with package
+        string = sanitize(string, {
+            whiteList: [], // empty, means filter out all tags
+            stripIgnoreTag: true // remove all tags instead of escaping
+        });
+        string = string.replace(/%3A/gi, ":"); // resolve to : to not break links
+        string = string.replace(/javascript:/gi, "");
+        string = string.replace(/vbscript:/gi, "");
+        string = string.replace(/data:/gi, "");
+        string = string.replace(/tcl:/gi, "");
+        return string;
     }
 };
 
