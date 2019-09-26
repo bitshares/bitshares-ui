@@ -205,6 +205,30 @@ module.exports = function(env) {
         )
     );
 
+    if (env.hash)
+        plugins.push(
+            new CopyWebpackPlugin(
+                [
+                    {
+                        from: path.join(
+                            root_dir,
+                            "app",
+                            "components",
+                            "DepositWithdraw",
+                            "blocktrades",
+                            "index.html"
+                        ),
+                        to: path.join(
+                            outputPath,
+                            "deposit-withdraw",
+                            "index.html"
+                        ),
+                        toType: "file"
+                    }
+                ],
+                {}
+            )
+        );
     var config = {
         mode: env.noUgly ? "none" : env.prod ? "production" : "development",
         entry: {

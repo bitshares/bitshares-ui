@@ -26,10 +26,13 @@ let oidcStorage = new ls(
 );
 
 const POST_LOGOUT_REDIRECT_URI =
-    "https://wallet.bitshares.org/deposit-withdraw";
+    window.location.protocol +
+    "//" +
+    window.location.host +
+    "/deposit-withdraw";
 const AUTHORITY = "https://blocktrades.us/";
 const CLIENT_ID = "10ecf048-b982-467b-9965-0b0926330869";
-const REDIRECT_URI = "https://wallet.bitshares.org/deposit-withdraw";
+const REDIRECT_URI = POST_LOGOUT_REDIRECT_URI;
 const SCOPE =
     "offline openid email profile create_new_mappings view_client_transaction_history view_price_estimates";
 import SettingsStore from "stores/SettingsStore";
