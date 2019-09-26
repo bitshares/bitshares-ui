@@ -85,19 +85,18 @@ class Row extends React.Component {
                         </span>
                     )}
                 </span>
-                {!hideExpiration &&
-                    this.props.expiration && (
-                        <TransactionIDAndExpiry
-                            id={id}
-                            expiration={expiration}
-                            style={{
-                                paddingTop: 5,
-                                fontSize: "0.85rem",
-                                paddingBottom: "0.5rem",
-                                display: "block"
-                            }}
-                        />
-                    )}
+                {!hideExpiration && this.props.expiration && (
+                    <TransactionIDAndExpiry
+                        id={id}
+                        expiration={expiration}
+                        style={{
+                            paddingTop: 5,
+                            fontSize: "0.85rem",
+                            paddingBottom: "0.5rem",
+                            display: "block"
+                        }}
+                    />
+                )}
             </div>
         );
     }
@@ -176,22 +175,23 @@ class ProposedOperation extends React.Component {
             changeColor: this.changeColor
         });
 
-        if (!!proposer && index == 0) {
+        if (!!proposer) {
             column = (
                 <div className="inline-block">
-                    <div style={{paddingBottom: "0.5rem"}}>
-                        <TranslateWithLinks
-                            string="operation.proposal_create"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: proposer,
-                                    arg: "account"
-                                }
-                            ]}
-                        />
-                        :
-                    </div>
+                    {index == 0 ? (
+                        <div style={{paddingBottom: "0.5rem"}}>
+                            <TranslateWithLinks
+                                string="operation.proposal_create"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: proposer,
+                                        arg: "account"
+                                    }
+                                ]}
+                            />
+                        </div>
+                    ) : null}
                     <div style={{marginLeft: "0.5rem"}}>{column}</div>
                 </div>
             );

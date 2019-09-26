@@ -4,7 +4,7 @@ import AccountSelector from "../Account/AccountSelector";
 import AccountActions from "actions/AccountActions";
 import counterpart from "counterpart";
 import {Modal, Button, Input, Select, Form} from "bitshares-ui-style-guide";
-import sanitize from "xss";
+import utils from "common/utils";
 
 class JoinCommitteeModal extends React.Component {
     constructor(props) {
@@ -44,10 +44,7 @@ class JoinCommitteeModal extends React.Component {
 
     onUrlChanged(e) {
         this.setState({
-            url: sanitize(e.target.value.toLowerCase(), {
-                whiteList: [], // empty, means filter out all tags
-                stripIgnoreTag: true // filter out all HTML not in the whilelist
-            })
+            url: utils.sanitize(e.target.value.toLowerCase())
         });
     }
 

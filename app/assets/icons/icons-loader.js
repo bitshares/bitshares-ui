@@ -69,7 +69,10 @@ let icons = [
     "paperclip",
     "wallet",
     "prediction",
-    "prediction-large"
+    "prediction-large",
+    "merchant",
+    "insight",
+    "create_account"
 ];
 
 let iconsMap = {};

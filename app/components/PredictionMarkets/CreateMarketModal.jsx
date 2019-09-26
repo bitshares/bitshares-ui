@@ -42,7 +42,7 @@ export default class CreateMarketModal extends Modal {
                     amount: 1
                 },
                 base: {
-                    asset_id: "1.3.0", //TODO
+                    asset_id: "1.3.0",
                     amount: 1
                 }
             },
@@ -65,41 +65,34 @@ export default class CreateMarketModal extends Modal {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    _getPermissions() {
+    _getPermissionsAndFlags() {
         let flagBooleans = assetUtils.getFlagBooleans(0, IS_BITASSET);
         let permissionBooleans = assetUtils.getFlagBooleans("all", IS_BITASSET);
 
         flagBooleans["charge_market_fee"] = true;
-
+        let flags = assetUtils.getFlags(flagBooleans, IS_BITASSET);
         return {
-            flagBooleans,
-            permissionBooleans
+            flags,
+            permissions: assetUtils.getPermissions(
+                permissionBooleans,
+                IS_BITASSET
+            )
         };
     }
 
-    _createAsset(e) {
-        if (e) {
-            e.preventDefault();
-        }
-        const {flagBooleans, permissionBooleans} = this._getPermissions();
-
+    _createAsset() {
         let {marketOptions, core_exchange_rate, bitasset_opts} = this.state;
 
-        const accountId = ChainStore.getAccount(this.props.currentAccount).get(
-            "id"
-        );
-
-        let flags = assetUtils.getFlags(flagBooleans, IS_BITASSET);
-        let permissions = assetUtils.getPermissions(
-            permissionBooleans,
-            IS_BITASSET
-        );
-
+        const {permissions, flags} = this._getPermissionsAndFlags();
         const description = JSON.stringify(
             this.state.marketOptions.description
         );
+
         this.setState({inProgress: true});
-        const creationPromise = AssetActions.createAsset(
+        const accountId = ChainStore.getAccount(this.props.currentAccount).get(
+            "id"
+        );
+        AssetActions.createAsset(
             accountId,
             marketOptions,
             flags,
@@ -109,8 +102,7 @@ export default class CreateMarketModal extends Modal {
             true,
             bitasset_opts,
             description
-        );
-        creationPromise
+        )
             .then(result => {
                 this.setState({inProgress: false});
                 console.log(
@@ -129,7 +121,7 @@ export default class CreateMarketModal extends Modal {
     }
 
     handleChange(event) {
-        let newMarket = this.state.marketOptions;
+        let marketOptions = this.state.marketOptions;
         if (event instanceof moment) {
             event.set("milliseconds", 0);
             event = {
@@ -141,18 +133,21 @@ export default class CreateMarketModal extends Modal {
         }
         switch (event.target.name) {
             case "symbol":
-                newMarket[event.target.name] = event.target.value.toUpperCase();
+                marketOptions[
+                    event.target.name
+                ] = event.target.value.toUpperCase();
                 break;
             case "main":
             case "condition":
             case "expiry":
-                newMarket.description[event.target.name] = event.target.value;
+                marketOptions.description[event.target.name] =
+                    event.target.value;
                 break;
             default:
-                newMarket[event.target.name] = event.target.value;
+                marketOptions[event.target.name] = event.target.value;
                 break;
         }
-        this.setState({marketOptions: newMarket});
+        this.setState({marketOptions});
     }
 
     handleAssetChange(asset) {
@@ -217,7 +212,10 @@ export default class CreateMarketModal extends Modal {
 
     onSubmit(e) {
         if (this._isFormValid()) {
-            this._createAsset.call(this, e);
+            if (e) {
+                e.preventDefault();
+            }
+            this._createAsset().call(this);
         } else {
             this.setState({showWarning: true});
         }
@@ -255,7 +253,7 @@ export default class CreateMarketModal extends Modal {
                 closable={!this.state.inProgress}
                 footer={footer}
             >
-                <div>
+                <div className="prediction-markets--create-prediction-market">
                     <Form className="full-width" layout="vertical">
                         <Form.Item>
                             <span
