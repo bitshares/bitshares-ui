@@ -16,7 +16,6 @@ import {List} from "immutable";
 import {Link} from "react-router-dom";
 import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import asset_utils from "../../lib/common/asset_utils";
-import MarketsActions from "actions/MarketsActions";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
