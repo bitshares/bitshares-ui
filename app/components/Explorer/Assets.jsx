@@ -17,7 +17,6 @@ import {Apis} from "bitsharesjs-ws";
 import {Radio, Table, Select, Icon} from "bitshares-ui-style-guide";
 import {List} from "antd";
 import SearchInput from "../Utility/SearchInput";
-import MarketsActions from "actions/MarketsActions";
 
 let accountStorage = new ls("__graphene__");
 
