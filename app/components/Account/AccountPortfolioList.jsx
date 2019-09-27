@@ -923,8 +923,10 @@ class AccountPortfolioList extends React.Component {
                     vestingObject.getIn(["balance", "asset_id"]) ===
                     asset.get("id")
                 ) {
-                    hasVestingBalance = true;
-                    vestingBalance = vestingObject;
+                    if (+vestingObject.getIn(["balance", "amount"]) > 0) {
+                        hasVestingBalance = true;
+                        vestingBalance = vestingObject;
+                    }
                 }
             });
 
@@ -941,8 +943,10 @@ class AccountPortfolioList extends React.Component {
                         "asset_id"
                     ]) === asset.get("id")
                 ) {
-                    hasCollateral = true;
-                    collateralBalance = collateralObject.get("collateral");
+                    if (+collateralObject.get("collateral") > 0) {
+                        hasCollateral = true;
+                        collateralBalance = +collateralObject.get("collateral");
+                    }
                 }
             });
 
@@ -1017,6 +1021,12 @@ class AccountPortfolioList extends React.Component {
                 currentMarketStats && currentMarketStats.change
                     ? currentMarketStats.change
                     : 0;
+            const totalValue =
+                balanceToAsset(balanceObject).amount +
+                (orders[asset.get("id")] ? orders[asset.get("id")] : 0) +
+                (vestingBalance ? balanceToAsset(vestingBalance).amount : 0) +
+                (collateralBalance ? collateralBalance : 0);
+
             balances.push({
                 key: asset.get("symbol"),
                 adds: {
@@ -1038,13 +1048,7 @@ class AccountPortfolioList extends React.Component {
                         hide_symbols
                     />
                 ),
-                value:
-                    balanceToAsset(balanceObject).amount +
-                    (orders[asset.get("id")] ? orders[asset.get("id")] : 0) +
-                    (vestingBalance
-                        ? balanceToAsset(vestingBalance).amount
-                        : 0) +
-                    (collateralBalance ? collateralBalance : 0),
+                value: totalValue,
                 percent: hasBalance ? (
                     <BalanceComponent balance={balance} asPercentage={true} />
                 ) : null,
