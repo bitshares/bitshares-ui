@@ -39,6 +39,7 @@ import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import MarketsActions from "actions/MarketsActions";
 
 class AccountPortfolioList extends React.Component {
     constructor(props) {
@@ -875,7 +876,10 @@ class AccountPortfolioList extends React.Component {
 
             /* Table content */
             directMarketLink = notCore ? (
-                <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}>
+                <Link
+                    to={`/market/${asset.get("symbol")}_${preferredMarket}`}
+                    onClick={() => MarketsActions.switchMarket()}
+                >
                     <Icon
                         name="trade"
                         title="icons.trade.trade"
@@ -883,7 +887,10 @@ class AccountPortfolioList extends React.Component {
                     />
                 </Link>
             ) : notCorePrefUnit ? (
-                <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}>
+                <Link
+                    to={`/market/${asset.get("symbol")}_${preferredUnit}`}
+                    onClick={() => MarketsActions.switchMarket()}
+                >
                     <Icon
                         name="trade"
                         title="icons.trade.trade"
@@ -1222,6 +1229,7 @@ class AccountPortfolioList extends React.Component {
                                 to={`/market/${asset.get(
                                     "symbol"
                                 )}_${preferredMarket}`}
+                                onClick={() => MarketsActions.switchMarket()}
                             >
                                 <Icon
                                     name="trade"
