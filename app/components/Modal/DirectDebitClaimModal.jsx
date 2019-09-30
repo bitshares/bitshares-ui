@@ -524,7 +524,7 @@ class DirectDebitClaimModal extends React.Component {
                                 {/*  F E E  */}
                                 <FeeAssetSelector
                                     account={from_account}
-                                    transaction={{
+                                    trxInfo={{
                                         type: "withdraw_permission_claim",
                                         options: ["price_per_kbyte"],
                                         data: {

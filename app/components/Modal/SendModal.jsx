@@ -674,7 +674,6 @@ class SendModal extends React.Component {
                                 </Form.Item>
 
                                 <FeeAssetSelector
-                                    label="transfer.fee"
                                     account={from_account}
                                     transaction={{
                                         type: "transfer",

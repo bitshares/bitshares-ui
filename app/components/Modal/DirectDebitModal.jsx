@@ -524,8 +524,8 @@ class DirectDebitModal extends React.Component {
                                         asset_types.length > 0 && asset
                                             ? asset.get("id")
                                             : asset_id
-                                            ? asset_id
-                                            : asset_types[0]
+                                                ? asset_id
+                                                : asset_types[0]
                                     }
                                     assets={asset_types}
                                     display_balance={balance}
@@ -616,7 +616,6 @@ class DirectDebitModal extends React.Component {
                                 {/*  F E E  */}
 
                                 <FeeAssetSelector
-                                    label="transfer.fee"
                                     account={from_account}
                                     trxInfo={{
                                         type:
