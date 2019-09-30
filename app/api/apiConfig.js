@@ -135,7 +135,7 @@ export const settingsAPIs = {
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "ws://18.220.127.200:8090",
+            url: "ws://18.220.127.200:8091",
             location: "Virginia",
             region: "Northern America",
             country: "U.S.A."
