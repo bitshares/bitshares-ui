@@ -689,6 +689,14 @@ export const settingsAPIs = {
             location: "Chicago",
             operator: "'Exotic flavors' infra worker",
             contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://api.1hour.win/ws",
+            region: "North America",
+            country: "U.S.A.",
+            location: "Fremont, CA",
+            operator: "Witness: gbac-ety001",
+            contact: "email:work@domyself.me"
         }
     ],
     ES_WRAPPER_LIST: [
