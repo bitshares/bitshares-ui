@@ -999,7 +999,7 @@ class HtlcModal extends React.Component {
                                     <div className="no-margin no-padding">
                                         <FeeAssetSelector
                                             account={from_account}
-                                            trxInfo={{
+                                            transaction={{
                                                 type: "htlc_create",
                                                 options: ["price_per_kbyte"],
                                                 data: {

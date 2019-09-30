@@ -415,7 +415,7 @@ class DepositWithdrawContent extends DecimalChecker {
                     <FeeAssetSelector
                         label="showcases.barter.fee_when_proposal_executes"
                         account={account}
-                        trxInfo={{
+                        transaction={{
                             type: "transfer",
                             options: ["price_per_kbyte"],
                             data: {

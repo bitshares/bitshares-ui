@@ -13,6 +13,8 @@ import {connect} from "alt-react";
 import SettingsStore from "../../stores/SettingsStore";
 import {checkFeeStatusAsync} from "common/trxHelper";
 
+const DEBUG = __DEV__ && false;
+
 class FeeAssetSelector extends React.Component {
     static propTypes = {
         // injected
@@ -111,14 +113,39 @@ class FeeAssetSelector extends React.Component {
         }
     }
 
-    shouldComponentUpdate(np, ns) {
-        const accountChanged =
-            np.account &&
-            this.props.account &&
-            np.account.get("id") !== this.props.account.get("id");
+    _accountChanges(oldProps, newProps) {
+        return (
+            newProps.account &&
+            (!oldProps.account ||
+                newProps.account.get("id") !== oldProps.account.get("id"))
+        );
+    }
+
+    _feeNeedCalculation(oldProps, newProps, oldState, newState) {
+        const accountChanged = this._accountChanges(oldProps, newProps);
         const transactionChanged =
-            JSON.stringify(np.transaction) !==
-            JSON.stringify(this.props.transaction);
+            newProps.transaction &&
+            JSON.stringify(newProps.transaction) !==
+                JSON.stringify(oldProps.transaction);
+        const feeAssetChanged =
+            newState.feeAsset &&
+            (!oldState.feeAsset ||
+                newState.feeAsset.get("id") !== oldState.feeAsset.get("id"));
+        let calculationIsPossible =
+            newProps.account && newProps.transaction && newState.feeAsset;
+        return (
+            calculationIsPossible &&
+            (accountChanged || transactionChanged || feeAssetChanged)
+        );
+    }
+
+    shouldComponentUpdate(np, ns) {
+        if (DEBUG)
+            console.log(
+                "FeeAssetSelector.shouldComponentUpdate",
+                this.props,
+                np
+            );
         if (ns.assets) {
             if (!this.state.assets) {
                 return true;
@@ -127,17 +154,8 @@ class FeeAssetSelector extends React.Component {
                 return true;
             }
         }
-        if (ns.feeAsset) {
-            if (!this.state.feeAsset) {
-                return true;
-            }
-            if (ns.feeAsset.get("id") !== this.state.feeAsset.get("id")) {
-                return true;
-            }
-        }
         return (
-            accountChanged ||
-            transactionChanged ||
+            this._feeNeedCalculation(this.props, np, this.state, ns) ||
             ns.calculatedFeeAmount !== this.state.calculatedFeeAmount ||
             ns.assetsLoading !== this.state.assetsLoading ||
             ns.isModalVisible !== this.state.isModalVisible ||
@@ -161,6 +179,12 @@ class FeeAssetSelector extends React.Component {
     }
 
     async _syncAvailableAssets(opened, account = this.props.account) {
+        if (DEBUG)
+            console.log(
+                "FeeAssetSelector.syncAvailableAssets",
+                opened,
+                account
+            );
         if (this.state.assets) {
             return this.state.assets;
         }
@@ -175,18 +199,32 @@ class FeeAssetSelector extends React.Component {
                 "getObject",
                 accountBalances[key]
             );
-            const requiredForFee = await this._calculateFee(key);
-            if (
-                balanceObject &&
-                balanceObject.get("balance") >=
-                    requiredForFee.fee.getAmount() &&
-                !possibleAssets.includes(key)
-            ) {
-                possibleAssets.push(key);
-                possibleAssets = possibleAssets.sort(utils.sortID);
-                this.setState({
-                    assets: possibleAssets
-                });
+            try {
+                const requiredForFee = await this._calculateFee(key);
+                if (DEBUG) {
+                    console.log(
+                        "FeeAssetSelector.syncAvailableAssets: Checking " +
+                            key +
+                            " ... ",
+                        requiredForFee
+                    );
+                }
+                if (
+                    balanceObject &&
+                    balanceObject.get("balance") >=
+                        requiredForFee.fee.getAmount() &&
+                    !possibleAssets.includes(key)
+                ) {
+                    possibleAssets.push(key);
+                    possibleAssets = possibleAssets.sort(utils.sortID);
+                    this.setState({
+                        assets: possibleAssets
+                    });
+                }
+            } catch (err) {
+                if (DEBUG) {
+                    console.log(" ... not possible");
+                }
             }
         }
 
@@ -196,22 +234,37 @@ class FeeAssetSelector extends React.Component {
     }
 
     componentDidMount() {
-        this._calculateFee();
+        if (
+            this._feeNeedCalculation({}, this.props, {}, this.state) &&
+            !this.state.calculatedFeeAmount
+        ) {
+            this._calculateFee();
+        }
+        if (DEBUG) {
+            console.log("FeeAssetSelector.componentDidMount", this.props);
+        }
     }
 
-    componentDidUpdate(prevProps) {
-        const {calculatedFeeAmount} = this.state;
-        const accountChanged =
-            this.props.account &&
-            prevProps.account.get("id") !== this.props.account.get("id");
-        const transactionChanged =
-            JSON.stringify(prevProps.transaction) !==
-            JSON.stringify(this.props.transaction);
-        const noFeeSetYet = !calculatedFeeAmount;
-        if (accountChanged) {
+    componentDidUpdate(prevProps, prevState) {
+        if (DEBUG) {
+            console.log(
+                "FeeAssetSelector.componentDidUpdate",
+                prevProps,
+                this.props
+            );
+        }
+        if (this._accountChanges(prevProps, this.props)) {
             this.setState({assets: null});
         }
-        if (transactionChanged || accountChanged || noFeeSetYet) {
+        if (
+            this._feeNeedCalculation(
+                prevProps,
+                this.props,
+                prevState,
+                this.state
+            ) &&
+            !this.state.calculatedFeeAmount
+        ) {
             this._calculateFee();
         }
     }

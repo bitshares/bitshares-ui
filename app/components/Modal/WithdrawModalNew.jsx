@@ -1191,7 +1191,7 @@ class WithdrawModalNew extends React.Component {
                                 >
                                     <FeeAssetSelector
                                         account={this.props.account}
-                                        trxInfo={{
+                                        transaction={{
                                             type: "transfer",
                                             options: ["price_per_kbyte"],
                                             data: {

@@ -1245,7 +1245,7 @@ export default class Barter extends Component {
                                     : "showcases.barter.fee_when_proposal_executes"
                             }
                             account={from_account}
-                            trxInfo={{
+                            transaction={{
                                 type: "transfer",
                                 options: ["price_per_kbyte"],
                                 data: {
@@ -1271,7 +1271,7 @@ export default class Barter extends Component {
                         <FeeAssetSelector
                             label="showcases.barter.proposal_fee"
                             account={from_account}
-                            trxInfo={{
+                            transaction={{
                                 type: "proposal_create",
                                 options: ["price_per_kbyte"],
                                 data: {
@@ -1316,7 +1316,7 @@ export default class Barter extends Component {
                         <FeeAssetSelector
                             label="showcases.barter.fee_when_proposal_executes"
                             account={to_account}
-                            trxInfo={{
+                            transaction={{
                                 type: "transfer",
                                 options: ["price_per_kbyte"],
                                 data: {
@@ -1347,7 +1347,7 @@ export default class Barter extends Component {
                             <FeeAssetSelector
                                 label="showcases.barter.fee_when_proposal_executes"
                                 account={this.state.escrow_account}
-                                trxInfo={{
+                                transaction={{
                                     type: "transfer",
                                     options: ["price_per_kbyte"],
                                     data: {

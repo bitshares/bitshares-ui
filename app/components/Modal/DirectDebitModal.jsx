@@ -447,6 +447,11 @@ class DirectDebitModal extends React.Component {
             !period.amount ||
             !num_of_periods ||
             !period_start_time;
+
+        if (__DEV__) {
+            console.log("DirectDebitModal.render", from_account);
+        }
+
         return (
             <Modal
                 title={
@@ -617,7 +622,7 @@ class DirectDebitModal extends React.Component {
 
                                 <FeeAssetSelector
                                     account={from_account}
-                                    trxInfo={{
+                                    transaction={{
                                         type:
                                             operation &&
                                             operation.type === "update"

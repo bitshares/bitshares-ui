@@ -393,6 +393,11 @@ class DirectDebitClaimModal extends React.Component {
             payerBalanceWarning ||
             !current_period_expires_date ||
             from_account.get("id") == to_account.get("id");
+
+        if (__DEV__) {
+            console.log("DirectDebitClaimModal.render", from_account);
+        }
+
         return (
             <Modal
                 title={counterpart.translate(
@@ -429,11 +434,11 @@ class DirectDebitClaimModal extends React.Component {
                                 <AccountSelector
                                     label="showcases.direct_debit.authorizing_account"
                                     accountName={
-                                        !!from_account
-                                            ? from_account.get("name")
+                                        !!to_account
+                                            ? to_account.get("name")
                                             : ""
                                     }
-                                    account={from_account}
+                                    account={to_account}
                                     size={60}
                                     hideImage
                                     disabled
@@ -523,8 +528,8 @@ class DirectDebitClaimModal extends React.Component {
                             <div className="no-margin no-padding">
                                 {/*  F E E  */}
                                 <FeeAssetSelector
-                                    account={from_account}
-                                    trxInfo={{
+                                    account={to_account}
+                                    transaction={{
                                         type: "withdraw_permission_claim",
                                         options: ["price_per_kbyte"],
                                         data: {
