@@ -552,12 +552,10 @@ export default connect(
     DirectDebitClaimModal,
     {
         listenTo() {
-            return [AccountStore, SettingsStore];
+            return [SettingsStore];
         },
         getProps() {
             return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
                 fee_asset_symbol: SettingsStore.getState().settings.get(
                     "fee_asset"
                 )
