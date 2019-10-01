@@ -18,7 +18,8 @@ import {
     Button,
     Icon as AIcon,
     Alert,
-    Switch
+    Switch,
+    Input
 } from "bitshares-ui-style-guide";
 
 class TransactionConfirm extends React.Component {
@@ -188,7 +189,7 @@ class TransactionConfirm extends React.Component {
             ({error: error_message, error_code, error_data} = this.props);
             error_data = (
                 <div>
-                    <pre>{JSON.stringify(error_data, null, 1)}</pre>
+                    <pre>{error_data}</pre>
                 </div>
             );
             if (error_code) {

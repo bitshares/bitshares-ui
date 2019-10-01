@@ -44,14 +44,50 @@ class TransactionConfirmActions {
                     clearTimeout(broadcast_timeout);
                     // messages of length 1 are local exceptions (use the 1st line)
                     // longer messages are remote API exceptions (use the 1st line)
+                    let code = null;
+                    let data = error;
+                    let message = "An error occured while broadcasting";
+                    // try to break down the error in human readable pieces
                     let splitError = error.message.split("\n");
-                    let message = splitError[0];
-                    let code = splitError[2];
-                    let data;
-                    try {
-                        data = JSON.parse(splitError[3]);
-                    } catch (e) {
-                        console.log(e);
+                    if (splitError.length > 1) {
+                        // try to convert to JSON
+                        splitError = splitError.map(text => {
+                            try {
+                                let json_part = JSON.stringify(
+                                    JSON.parse(
+                                        text.substring(
+                                            text.indexOf("{"),
+                                            text.lastIndexOf("}") + 1
+                                        )
+                                    ),
+                                    null,
+                                    4
+                                );
+                                return (
+                                    text.substring(0, text.indexOf("{")) +
+                                    "\n" +
+                                    json_part +
+                                    "\n" +
+                                    text.substring(
+                                        text.lastIndexOf("}") + 1,
+                                        text.length
+                                    )
+                                );
+                            } catch (err) {
+                                // nuthin
+                                return text;
+                            }
+                        });
+                        if (splitError.length >= 4) {
+                            // assume JSON error
+                            data = splitError[3];
+                            code = splitError[2];
+                        } else {
+                            message = splitError[0];
+                            data = splitError
+                                .slice(1, splitError.length)
+                                .join("\n");
+                        }
                     }
                     dispatch({
                         broadcast: false,
