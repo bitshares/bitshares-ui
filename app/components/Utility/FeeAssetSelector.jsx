@@ -234,10 +234,7 @@ class FeeAssetSelector extends React.Component {
     }
 
     componentDidMount() {
-        if (
-            this._feeNeedCalculation({}, this.props, {}, this.state) &&
-            !this.state.calculatedFeeAmount
-        ) {
+        if (this._feeNeedCalculation({}, this.props, {}, this.state)) {
             this._calculateFee();
         }
         if (DEBUG) {
@@ -262,8 +259,7 @@ class FeeAssetSelector extends React.Component {
                 this.props,
                 prevState,
                 this.state
-            ) &&
-            !this.state.calculatedFeeAmount
+            )
         ) {
             this._calculateFee();
         }
