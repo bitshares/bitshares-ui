@@ -70,7 +70,7 @@ class DirectDebitClaimModal extends React.Component {
             asset_id,
             utils.convert_typed_to_satoshi(amount, asset),
             memo ? new Buffer(memo, "utf-8") : memo,
-            feeAsset.get("id")
+            feeAsset.asset_id
         )
             .then(result => {
                 this.props.hideModal();
