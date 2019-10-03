@@ -641,9 +641,10 @@ class Header extends React.Component {
                         style={{position: "relative", top: 0, left: -8}}
                         name="assets"
                         title="icons.assets"
+                        className="hidden"
                     />
                     <Translate
-                        className="column-hide-small"
+                        className="column-hide-small hidden"
                         component="span"
                         content="explorer.assets.title"
                     />
@@ -1048,9 +1049,9 @@ class Header extends React.Component {
                         ) : null}
 
                         <ul className="menu-bar">
-                            <li>{dashboard}</li>
+                            <li className="hide">{dashboard}</li>
                             {!currentAccount || !!createAccountLink ? null : (
-                                <li>
+                                <li className="hide">
                                     <Link
                                         style={{flexFlow: "row"}}
                                         to={`/account/${currentAccount}`}
@@ -1060,8 +1061,8 @@ class Header extends React.Component {
                                                     -1 &&
                                                 active.indexOf("/account/") !==
                                                     -1 &&
-                                                active.indexOf("/assets") ===
-                                                    -1 &&
+                                                // active.indexOf("/assets") ===
+                                                // -1 &&
                                                 active.indexOf("/voting") ===
                                                     -1 &&
                                                 active.indexOf(
@@ -1096,7 +1097,7 @@ class Header extends React.Component {
                                     </Link>
                                 </li>
                             )}
-                            <li>
+                            <li className="hide">
                                 <a
                                     style={{flexFlow: "row"}}
                                     className={cnames(

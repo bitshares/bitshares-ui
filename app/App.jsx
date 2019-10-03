@@ -423,9 +423,9 @@ class App extends React.Component {
                         <div className="grid-block vertical">
                             <Switch>
                                 <Route
-                                    path="/"
+                                    path="/explorer/:tab"
                                     exact
-                                    component={DashboardPage}
+                                    component={Explorer}
                                 />
                                 <Route
                                     path="/account/:account_name"

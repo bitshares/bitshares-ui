@@ -369,27 +369,6 @@ export default class DropDownMenu extends React.Component {
                         <Translate content="account.voting" />
                     </div>
                 </li>
-
-                <li
-                    className={cnames({
-                        active:
-                            active.indexOf("/assets") !== -1 &&
-                            active.indexOf("/account/") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/assets`
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="assets" title="icons.assets" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="explorer.assets.title" />
-                    </div>
-                </li>
-
                 <li
                     className={cnames({
                         active: active.indexOf("/signedmessages") !== -1,
