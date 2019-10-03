@@ -422,8 +422,11 @@ class App extends React.Component {
                     <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">
                             <Switch>
-                                <Route
-                                    path="/explorer/:tab"
+                                <Redirect
+                                    path="/"
+                                    to={{
+                                        pathname: `/explorer/blocks`
+                                    }}
                                     exact
                                     component={Explorer}
                                 />
