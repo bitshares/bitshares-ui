@@ -315,7 +315,8 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h2>
-                                #{utils.format_number(
+                                #
+                                {utils.format_number(
                                     dynGlobalObject.get("head_block_number"),
                                     0
                                 )}
@@ -477,27 +478,6 @@ class Blocks extends React.Component {
                                     "head_block_number"
                                 )}
                             />
-                        </div>
-                    </div>
-                    <div className="grid-block text-center small-12 medium-3">
-                        <div className="grid-content no-overflow clear-fix">
-                            <span className="txtlabel">
-                                <Translate
-                                    component="span"
-                                    content="explorer.asset.summary.stealth_supply"
-                                />
-                            </span>
-                            <h3 className="txtlabel">
-                                {dynamicObject ? (
-                                    <FormattedAsset
-                                        amount={dynamicObject.get(
-                                            "confidential_supply"
-                                        )}
-                                        asset={coreAsset.get("id")}
-                                        decimalOffset={5}
-                                    />
-                                ) : null}
-                            </h3>
                         </div>
                     </div>
                 </div>
