@@ -691,7 +691,7 @@ export const settingsAPIs = {
             contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
         },
         {
-            url: "wss://api.1hour.win/ws",
+            url: "wss://api.gbacenter.org/ws",
             region: "North America",
             country: "U.S.A.",
             location: "Fremont, CA",
