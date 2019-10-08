@@ -16,7 +16,6 @@ import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
-import report from "bitshares-report";
 import LoadingIndicator from "../LoadingIndicator";
 import {Tooltip, Modal, Button, Select, Input} from "bitshares-ui-style-guide";
 const ops = Object.keys(operations);

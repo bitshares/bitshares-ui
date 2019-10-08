@@ -3,7 +3,7 @@ import counterpart from "counterpart";
 import {api} from "steem-js-api";
 import Translate from "react-translate-component";
 import LoadingIndicator from "./LoadingIndicator";
-import sanitize from "sanitize";
+import utils from "common/utils";
 
 const query = {tag: "bitshares.fdn", limit: 20};
 
@@ -35,10 +35,7 @@ const ReusableLink = ({data, url, isLink = false}) => (
         style={{display: "block"}}
         className={!isLink ? "primary-text" : "external-link"}
     >
-        {sanitize(data, {
-            whiteList: [], // empty, means filter out all tags
-            stripIgnoreTag: true // filter out all HTML not in the whilelist
-        })}
+        {utils.sanitize(data)}
     </a>
 );
 
