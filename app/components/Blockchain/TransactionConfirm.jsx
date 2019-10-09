@@ -187,14 +187,18 @@ class TransactionConfirm extends React.Component {
                 : counterpart.translate("transaction.transaction_confirmed");
 
             ({error: error_message, error_code, error_data} = this.props);
+
+            if (error_code) {
+                error_message = error_code + " - " + error_message;
+            }
+            if (error_data instanceof Object) {
+                error_data = JSON.stringify(error_data, null, 4);
+            }
             error_data = (
                 <div>
                     <pre>{error_data}</pre>
                 </div>
             );
-            if (error_code) {
-                error_message = `${error_code} - ${error_message}`;
-            }
             if (error_data) {
                 error_message = (
                     <div>

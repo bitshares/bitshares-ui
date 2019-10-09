@@ -44,46 +44,48 @@ class TransactionConfirmActions {
                     clearTimeout(broadcast_timeout);
                     // messages of length 1 are local exceptions (use the 1st line)
                     // longer messages are remote API exceptions (use the 1st line)
-                    let code = null;
-                    let data = error;
                     let message = "An error occured while broadcasting";
+                    let jsonError = {};
+
                     // try to break down the error in human readable pieces
                     let splitError = error.message.split("\n");
+                    let data, code;
                     if (splitError.length > 1) {
-                        // try to convert to JSON
-                        splitError = splitError.map(text => {
-                            try {
-                                let json_part = JSON.stringify(
-                                    JSON.parse(
+                        try {
+                            jsonError = JSON.parse(splitError[1]);
+                            data = jsonError.data;
+                            code = jsonError.code;
+                            message = jsonError.message;
+                        } catch (err) {
+                            // try to convert to JSON what's possible
+                            splitError = splitError.map(text => {
+                                try {
+                                    let json_part = JSON.stringify(
+                                        JSON.parse(
+                                            text.substring(
+                                                text.indexOf("{"),
+                                                text.lastIndexOf("}") + 1
+                                            )
+                                        ),
+                                        null,
+                                        4
+                                    );
+                                    return (
+                                        text.substring(0, text.indexOf("{")) +
+                                        "\n" +
+                                        json_part +
+                                        "\n" +
                                         text.substring(
-                                            text.indexOf("{"),
-                                            text.lastIndexOf("}") + 1
+                                            text.lastIndexOf("}") + 1,
+                                            text.length
                                         )
-                                    ),
-                                    null,
-                                    4
-                                );
-                                return (
-                                    text.substring(0, text.indexOf("{")) +
-                                    "\n" +
-                                    json_part +
-                                    "\n" +
-                                    text.substring(
-                                        text.lastIndexOf("}") + 1,
-                                        text.length
-                                    )
-                                );
-                            } catch (err) {
-                                // nuthin
-                                return text;
-                            }
-                        });
-                        if (splitError.length >= 4) {
-                            // assume JSON error
-                            data = splitError[3];
-                            code = splitError[2];
-                        } else {
-                            message = splitError[0];
+                                    );
+                                } catch (err) {
+                                    // nuthin
+                                    return text;
+                                }
+                            });
+                            code = splitError[0];
                             data = splitError
                                 .slice(1, splitError.length)
                                 .join("\n");
