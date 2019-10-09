@@ -2407,6 +2407,7 @@
         "fund_pool": "funded %(asset)s fee pool with",
         "funding_account": "Funding account",
         "global_parameters_update": "Updated global parameters",
+        "hide": "Hide",
         "inputs": "Inputs",
         "market_fee": "Market fee",
         "max_market_fee": "Maximum market fee",
@@ -2422,6 +2423,7 @@
         "seller": "Seller",
         "sent": "sent",
         "settlement_date": "Settlement date",
+        "show_more": "Show more",
         "to": "to",
         "transaction_confirmed": "Transaction confirmed",
         "trxTypes": {

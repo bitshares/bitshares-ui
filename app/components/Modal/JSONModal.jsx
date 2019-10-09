@@ -25,7 +25,7 @@ export default function JSONModal({operation, visible, hideModal, title}) {
 JSONModal.propTypes = {
     visible: PropTypes.bool.isRequired,
     hideModal: PropTypes.func.isRequired,
-    operation: PropTypes.array,
+    operation: PropTypes.any,
     title: PropTypes.string
 };
 
