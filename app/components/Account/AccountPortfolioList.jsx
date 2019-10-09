@@ -12,6 +12,7 @@ import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import {Link} from "react-router-dom";
 import EquivalentPrice from "../Utility/EquivalentPrice";
+import {getFinalPrice} from "../Utility/EquivalentPrice";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
@@ -38,6 +39,7 @@ import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import MarketsActions from "actions/MarketsActions";
 
 class AccountPortfolioList extends React.Component {
     constructor(props) {
@@ -65,16 +67,11 @@ class AccountPortfolioList extends React.Component {
             portfolioSort: props.viewSettings.get("portfolioSort", "value"),
             portfolioSortDirection: props.viewSettings.get(
                 "portfolioSortDirection",
-                "ascend"
-            ) // alphabetical A -> B, numbers high to low
+                "descend"
+            )
         };
 
-        this.qtyRefs = {};
-        this.priceRefs = {};
         this.changeRefs = {};
-        this.ordersRefs = {};
-        this.vestingRefs = {};
-        this.collateralRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
@@ -115,7 +112,7 @@ class AccountPortfolioList extends React.Component {
          * this here and update the state to trigger a rerender
          */
         if (!this.state.allRefsAssigned) {
-            let refKeys = ["qtyRefs", "priceRefs", "changeRefs"];
+            let refKeys = ["changeRefs"];
             const allRefsAssigned = refKeys.reduce((a, b) => {
                 if (a === undefined) return !!Object.keys(this[b]).length;
                 return !!Object.keys(this[b]).length && a;
@@ -141,8 +138,6 @@ class AccountPortfolioList extends React.Component {
             np.visible !== this.props.visible ||
             np.settings !== this.props.settings ||
             np.hiddenAssets !== this.props.hiddenAssets ||
-            ns.portfolioSort !== this.state.portfolioSort ||
-            ns.portfolioSortDirection !== this.state.portfolioSortDirection ||
             np.allMarketStats.reduce((a, value, key) => {
                 return (
                     utils.check_market_stats(
@@ -239,31 +234,77 @@ class AccountPortfolioList extends React.Component {
     }
 
     sortFunctions = {
-        qty: function(a, b, force) {
-            if (Number(this.qtyRefs[a.key]) < Number(this.qtyRefs[b.key]))
-                return this.state.portfolioSortDirection || force ? -1 : 1;
-
-            if (Number(this.qtyRefs[a.key]) > Number(this.qtyRefs[b.key]))
-                return this.state.portfolioSortDirection || force ? 1 : -1;
+        byKey: function(a, b) {
+            return a.key > b.key;
         },
-        alphabetic: function(a, b, force) {
-            if (a.key > b.key)
-                return this.state.portfolioSortDirection || force ? 1 : -1;
-            if (a.key < b.key)
-                return this.state.portfolioSortDirection || force ? -1 : 1;
-            return 0;
+        byInCollateral: function(a, b) {
+            return this.sortFunctions.byTypedValue(
+                a,
+                b,
+                a.inCollateral,
+                b.inCollateral
+            );
         },
-        priceValue: function(a, b) {
-            let aPrice = this.priceRefs[a.key];
-            let bPrice = this.priceRefs[b.key];
+        byBalance: function(a, b) {
+            return this.sortFunctions.byTypedValue(
+                a,
+                b,
+                balanceToAsset(a.balance).amount,
+                balanceToAsset(b.balance).amount
+            );
+        },
+        byVestingBalance: function(a, b) {
+            return this.sortFunctions.byTypedValue(
+                a,
+                b,
+                a.inVesting ? balanceToAsset(a.inVesting).amount : null,
+                b.inVesting ? balanceToAsset(b.inVesting).amount : null
+            );
+        },
+        byInOrders: function(a, b) {
+            return this.sortFunctions.byTypedValue(
+                a,
+                b,
+                a.inOrders,
+                b.inOrders
+            );
+        },
+        byTypedValue(a, b, aValue, bValue) {
+            aValue = utils.convert_satoshi_to_typed(aValue, a.asset);
+            bValue = utils.convert_satoshi_to_typed(bValue, b.asset);
+            if (aValue && bValue) {
+                return aValue - bValue;
+            } else if (!aValue && bValue) {
+                return -1;
+            } else if (aValue && !bValue) {
+                return 1;
+            } else {
+                return this.sortFunctions.byKey(a, b);
+            }
+        },
+        byEquivalentPrice: function(a, b) {
+            let aPrice = getFinalPrice(
+                a.asset,
+                a.adds.preferredAsset,
+                this.props.coreAsset,
+                null,
+                true
+            );
+            let bPrice = getFinalPrice(
+                b.asset,
+                b.adds.preferredAsset,
+                this.props.coreAsset,
+                null,
+                true
+            );
             if (aPrice && bPrice) {
                 return aPrice - bPrice;
-            } else if (aPrice === null && bPrice !== null) {
-                return 1;
-            } else if (aPrice !== null && bPrice === null) {
+            } else if (!aPrice && bPrice) {
                 return -1;
+            } else if (aPrice && !bPrice) {
+                return 1;
             } else {
-                return this.sortFunctions.alphabetic(a, b, true);
+                return this.sortFunctions.byKey(a, b);
             }
         },
         totalValue: function(a, b) {
@@ -280,13 +321,13 @@ class AccountPortfolioList extends React.Component {
                 false
             );
             if (aValue && bValue) {
-                return bValue - aValue;
+                return aValue - bValue;
             } else if (!aValue && bValue) {
-                return 1;
-            } else if (aValue && !bValue) {
                 return -1;
+            } else if (aValue && !bValue) {
+                return 1;
             } else {
-                return this.sortFunctions.alphabetic(a, b, true);
+                return this.sortFunctions.byKey(a, b);
             }
         },
         changeValue: function(a, b) {
@@ -298,46 +339,14 @@ class AccountPortfolioList extends React.Component {
                     parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
                 let bChange =
                     parseFloat(bValue) != "NaN" ? parseFloat(bValue) : bValue;
-                let direction =
-                    typeof this.state.portfolioSortDirection !== "undefined"
-                        ? this.state.portfolioSortDirection
-                        : true;
-
-                return direction ? aChange - bChange : bChange - aChange;
+                return aChange - bChange;
+            } else if (!aValue && bValue) {
+                return -1;
+            } else if (aValue && !bValue) {
+                return 1;
+            } else {
+                return this.sortFunctions.byKey(a, b);
             }
-        },
-        inOrders: function(a, b, force = false) {
-            if (Number(this.ordersRefs[a.key]) < Number(this.ordersRefs[b.key]))
-                return this.props.sortDirection || force ? -1 : 1;
-
-            if (Number(this.ordersRefs[a.key]) > Number(this.ordersRefs[b.key]))
-                return this.props.sortDirection || force ? 1 : -1;
-        },
-        inVesting: function(a, b, force = false) {
-            if (
-                Number(this.vestingRefs[a.key]) <
-                Number(this.vestingRefs[b.key])
-            )
-                return this.props.sortDirection || force ? -1 : 1;
-
-            if (
-                Number(this.vestingRefs[a.key]) >
-                Number(this.vestingRefs[b.key])
-            )
-                return this.props.sortDirection || force ? 1 : -1;
-        },
-        inCollateral: function(a, b, force = false) {
-            if (
-                Number(this.collateralRefs[a.key]) <
-                Number(this.collateralRefs[b.key])
-            )
-                return this.props.sortDirection || force ? -1 : 1;
-
-            if (
-                Number(this.collateralRefs[a.key]) >
-                Number(this.collateralRefs[b.key])
-            )
-                return this.props.sortDirection || force ? 1 : -1;
         }
     };
 
@@ -513,10 +522,6 @@ class AccountPortfolioList extends React.Component {
             portfolioSortDirection: sorter.order,
             portfolioSort: sorter.columnKey
         });
-        this.setState({
-            portfolioSortDirection: sorter.order,
-            portfolioSort: sorter.columnKey
-        });
     }
 
     getHeader() {
@@ -527,52 +532,99 @@ class AccountPortfolioList extends React.Component {
             settings.get("unit") || this.props.core_asset.get("symbol");
         const showAssetPercent = settings.get("showAssetPercent", false);
 
-        return [
+        let headerItems = [
             {
                 title: <Translate content="account.asset" />,
                 dataIndex: "asset",
                 align: "left",
                 customizable: false,
-                sorter: this.sortFunctions.alphabetic,
+                sorter: this.sortFunctions.byKey,
                 render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                    return (
+                        <span style={{whiteSpace: "nowrap"}}>
+                            <LinkToAssetById asset={item.get("id")} />
+                        </span>
+                    );
                 }
             },
             {
                 title: <Translate content="account.qty" />,
-                dataIndex: "qty",
+                dataIndex: "balance",
                 align: "right",
                 customizable: false,
-                sorter: this.sortFunctions.qty,
+                sorter: this.sortFunctions.byBalance,
                 render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                    return (
+                        <span style={{whiteSpace: "nowrap"}}>
+                            <BalanceComponent
+                                balance={item.get("id")}
+                                hide_asset
+                            />
+                        </span>
+                    );
                 }
             },
             {
+                className: "column-hide-small",
                 title: <Translate content="account.inOrders" />,
                 dataIndex: "inOrders",
                 align: "right",
-                sorter: this.sortFunctions.inOrders,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                sorter: this.sortFunctions.byInOrders,
+                render: (item, row) => {
+                    if (!item) {
+                        return "--";
+                    }
+                    return (
+                        <span style={{whiteSpace: "nowrap"}}>
+                            <FormattedAsset
+                                amount={item}
+                                asset={row.asset.get("id")}
+                                hide_asset
+                            />
+                        </span>
+                    );
                 }
             },
             {
+                className: "column-hide-small",
                 title: <Translate content="account.inVestingBalances" />,
                 dataIndex: "inVesting",
                 align: "right",
-                sorter: this.sortFunctions.inVesting,
-                render: item => {
-                    return <span style={{whiteSpace: "noWrap"}}>{item}</span>;
+                sorter: this.sortFunctions.byVestingBalance,
+                render: (item, row) => {
+                    if (!item) {
+                        return "--";
+                    }
+                    return (
+                        <span style={{whiteSpace: "noWrap"}}>
+                            <FormattedAsset
+                                amount={item.getIn(["balance", "amount"])}
+                                asset={row.asset.get("id")}
+                                hide_asset
+                            />
+                        </span>
+                    );
                 }
             },
             {
+                className: "column-hide-small",
                 title: <Translate content="account.inCollateral" />,
                 dataIndex: "inCollateral",
                 align: "right",
-                sorter: this.sortFunctions.inCollateral,
-                render: item => {
-                    return <span style={{whiteSpace: "noWrap"}}>{item}</span>;
+                sorter: this.sortFunctions.byInCollateral,
+                render: (item, row) => {
+                    if (!item) {
+                        return "--";
+                    }
+                    return (
+                        <span style={{whiteSpace: "noWrap"}}>
+                            <FormattedAsset
+                                amount={item}
+                                asset={row.asset.get("id")}
+                                hide_asset
+                            />
+                        </span>
+                    );
                 }
             },
             {
@@ -585,9 +637,17 @@ class AccountPortfolioList extends React.Component {
                 ),
                 dataIndex: "price",
                 align: "right",
-                sorter: this.sortFunctions.priceValue,
-                render: item => {
-                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                sorter: this.sortFunctions.byEquivalentPrice,
+                render: (item, row) => {
+                    return (
+                        <span style={{whiteSpace: "nowrap"}}>
+                            <EquivalentPrice
+                                fromAsset={row.asset.get("id")}
+                                pulsate={{reverse: true, fill: "forwards"}}
+                                hide_symbols
+                            />
+                        </span>
+                    );
                 }
             },
             {
@@ -628,7 +688,7 @@ class AccountPortfolioList extends React.Component {
                         <span style={{whiteSpace: "nowrap"}}>
                             <BalanceValueComponent
                                 balance={row.adds.balanceObject.get("id")}
-                                satoshis={row.value}
+                                satoshis={item}
                                 toAsset={preferredUnit}
                                 hide_asset
                             />
@@ -656,6 +716,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-medium",
                 title: <Translate content="exchange.buy" />,
                 dataIndex: "buy",
                 align: "center",
@@ -664,6 +725,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-medium",
                 title: <Translate content="modal.deposit.submit" />,
                 dataIndex: "deposit",
                 align: "center",
@@ -672,6 +734,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-medium",
                 title: <Translate content="modal.withdraw.submit" />,
                 dataIndex: "withdraw",
                 align: "center",
@@ -680,6 +743,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-medium",
                 title: <Translate content="account.trade" />,
                 dataIndex: "trade",
                 align: "center",
@@ -688,6 +752,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-medium",
                 title: <Translate content="exchange.borrow_short" />,
                 dataIndex: "borrow",
                 align: "center",
@@ -696,6 +761,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-medium",
                 title: <Translate content="account.settle" />,
                 dataIndex: "settle",
                 align: "center",
@@ -704,7 +770,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                className: "column-hide-small",
+                className: "column-hide-medium",
                 title: <Translate content="modal.reserve.submit" />,
                 dataIndex: "burn",
                 align: "center",
@@ -713,7 +779,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
-                className: "column-hide-small",
+                className: "column-hide-medium",
                 title: (
                     <Translate
                         content={
@@ -730,6 +796,12 @@ class AccountPortfolioList extends React.Component {
                 }
             }
         ];
+        headerItems.forEach(item => {
+            if (item.dataIndex == this.state.portfolioSort) {
+                item.defaultSortOrder = this.state.portfolioSortDirection;
+            }
+        });
+        return headerItems;
     }
 
     _renderBalances(balanceList, optionalAssets, visible) {
@@ -804,7 +876,10 @@ class AccountPortfolioList extends React.Component {
 
             /* Table content */
             directMarketLink = notCore ? (
-                <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}>
+                <Link
+                    to={`/market/${asset.get("symbol")}_${preferredMarket}`}
+                    onClick={() => MarketsActions.switchMarket()}
+                >
                     <Icon
                         name="trade"
                         title="icons.trade.trade"
@@ -812,7 +887,10 @@ class AccountPortfolioList extends React.Component {
                     />
                 </Link>
             ) : notCorePrefUnit ? (
-                <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}>
+                <Link
+                    to={`/market/${asset.get("symbol")}_${preferredUnit}`}
+                    onClick={() => MarketsActions.switchMarket()}
+                >
                     <Icon
                         name="trade"
                         title="icons.trade.trade"
@@ -843,23 +921,25 @@ class AccountPortfolioList extends React.Component {
 
             // Vesting balances
             let hasVestingBalance = false;
-            let vestingBalance = 0;
-            const vbs = this.props.account.get("vesting_balances");
+            let vestingBalance = null;
 
+            const vbs = this.props.account.get("vesting_balances");
             vbs.forEach(vb => {
                 let vestingObject = ChainStore.getObject(vb);
                 if (
                     vestingObject.getIn(["balance", "asset_id"]) ===
                     asset.get("id")
                 ) {
-                    hasVestingBalance = true;
-                    vestingBalance = vestingObject.getIn(["balance", "amount"]);
+                    if (+vestingObject.getIn(["balance", "amount"]) > 0) {
+                        hasVestingBalance = true;
+                        vestingBalance = vestingObject;
+                    }
                 }
             });
 
             // Collateral
             let hasCollateral = false;
-            let collateralBalance = 0;
+            let collateralBalance = null;
 
             this.props.callOrders.forEach(order => {
                 let collateralObject = ChainStore.getObject(order);
@@ -870,8 +950,10 @@ class AccountPortfolioList extends React.Component {
                         "asset_id"
                     ]) === asset.get("id")
                 ) {
-                    hasCollateral = true;
-                    collateralBalance = collateralObject.get("collateral");
+                    if (+collateralObject.get("collateral") > 0) {
+                        hasCollateral = true;
+                        collateralBalance = +collateralObject.get("collateral");
+                    }
                 }
             });
 
@@ -889,28 +971,8 @@ class AccountPortfolioList extends React.Component {
                 (hasBalance && balanceObject.get("balance") != 0);
 
             const canBuy = !!this.props.bridgeCoins.get(symbol);
-            const assetAmount = balanceObject.get("balance");
 
-            /* Sorting refs */
-            this.qtyRefs[asset.get("symbol")] = utils.get_asset_amount(
-                assetAmount,
-                asset
-            );
-
-            this.ordersRefs[asset.get("symbol")] = hasOnOrder
-                ? orders[asset.get("id")]
-                : 0;
-
-            this.vestingRefs[asset.get("symbol")] = hasVestingBalance
-                ? vestingBalance
-                : 0;
-
-            this.collateralRefs[asset.get("symbol")] = hasCollateral
-                ? collateralBalance
-                : 0;
-            {
-                /* Asset and Backing Asset Prefixes */
-            }
+            /* Asset and Backing Asset Prefixes */
             let options =
                 asset && asset.getIn(["bitasset", "options"])
                     ? asset.getIn(["bitasset", "options"]).toJS()
@@ -960,22 +1022,18 @@ class AccountPortfolioList extends React.Component {
 
             let preferredAsset = ChainStore.getAsset(preferredUnit);
 
-            this.priceRefs[asset.get("symbol")] = !preferredAsset
-                ? null
-                : MarketUtils.getFinalPrice(
-                      this.props.coreAsset,
-                      asset,
-                      preferredAsset,
-                      this.props.allMarketStats,
-                      true
-                  );
-
             let marketId = asset.get("symbol") + "_" + preferredUnit;
             let currentMarketStats = this.props.allMarketStats.get(marketId);
             this.changeRefs[asset.get("symbol")] =
                 currentMarketStats && currentMarketStats.change
                     ? currentMarketStats.change
                     : 0;
+            const totalValue =
+                balanceToAsset(balanceObject).amount +
+                (orders[asset.get("id")] ? orders[asset.get("id")] : 0) +
+                (vestingBalance ? balanceToAsset(vestingBalance).amount : 0) +
+                (collateralBalance ? collateralBalance : 0);
+
             balances.push({
                 key: asset.get("symbol"),
                 adds: {
@@ -983,45 +1041,12 @@ class AccountPortfolioList extends React.Component {
                     preferredAsset: preferredAsset,
                     asset: asset
                 },
-                asset: <LinkToAssetById asset={asset.get("id")} />,
-                qty:
-                    hasBalance || hasOnOrder ? (
-                        <BalanceComponent balance={balance} hide_asset />
-                    ) : null,
-                price: (
-                    <EquivalentPrice
-                        fromAsset={asset.get("id")}
-                        pulsate={{reverse: true, fill: "forwards"}}
-                        hide_symbols
-                    />
-                ),
-                inOrders: hasOnOrder ? (
-                    <FormattedAsset
-                        amount={orders[asset.get("id")]}
-                        asset={asset.get("id")}
-                        hide_asset
-                    />
-                ) : (
-                    "--"
-                ),
-                inVesting: hasVestingBalance ? (
-                    <FormattedAsset
-                        amount={vestingBalance}
-                        asset={asset.get("id")}
-                        hide_asset
-                    />
-                ) : (
-                    "--"
-                ),
-                inCollateral: hasCollateral ? (
-                    <FormattedAsset
-                        amount={collateralBalance}
-                        asset={asset.get("id")}
-                        hide_asset
-                    />
-                ) : (
-                    "--"
-                ),
+                asset: asset,
+                balance: balanceObject,
+                price: "dummy",
+                inOrders: orders[asset.get("id")],
+                inVesting: vestingBalance,
+                inCollateral: collateralBalance,
                 hour24: (
                     <Market24HourChangeComponent
                         base={asset.get("id")}
@@ -1030,29 +1055,7 @@ class AccountPortfolioList extends React.Component {
                         hide_symbols
                     />
                 ),
-                value:
-                    hasBalance || hasOnOrder
-                        ? balanceToAsset(balanceObject).amount +
-                          (orders[asset.get("id")]
-                              ? orders[asset.get("id")]
-                              : 0) +
-                          vestingBalance +
-                          collateralBalance
-                        : null,
-                valueEquivalent:
-                    hasBalance || hasOnOrder
-                        ? getEquivalentValue(
-                              balanceToAsset(balanceObject).amount +
-                                  (orders[asset.get("id")]
-                                      ? orders[asset.get("id")]
-                                      : 0) +
-                                  vestingBalance +
-                                  collateralBalance,
-                              preferredAsset,
-                              asset,
-                              false
-                          )
-                        : null,
+                value: totalValue,
                 percent: hasBalance ? (
                     <BalanceComponent balance={balance} asPercentage={true} />
                 ) : null,
@@ -1226,6 +1229,7 @@ class AccountPortfolioList extends React.Component {
                                 to={`/market/${asset.get(
                                     "symbol"
                                 )}_${preferredMarket}`}
+                                onClick={() => MarketsActions.switchMarket()}
                             >
                                 <Icon
                                     name="trade"
@@ -1246,10 +1250,8 @@ class AccountPortfolioList extends React.Component {
                         )
                             balances.push({
                                 key: asset.get("symbol"),
-                                asset: (
-                                    <LinkToAssetById asset={asset.get("id")} />
-                                ),
-                                qty: emptyCell,
+                                asset: asset,
+                                balance: emptyCell,
                                 price: emptyCell,
                                 hour24: emptyCell,
                                 value: emptyCell,
@@ -1428,6 +1430,7 @@ class AccountPortfolioList extends React.Component {
                     extraRow={this.props.extraRow}
                     viewSettingsKey="portfolioColumns"
                     allowCustomization={true}
+                    toggleSortOrder={this.toggleSortOrder}
                 >
                     {this._renderSendModal()}
                     {(this.state.isSettleModalVisible ||

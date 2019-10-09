@@ -1249,6 +1249,7 @@
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
         "settings": "Settings",
+        "insight": "Insight",
         "showcases": "Spotlight",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",

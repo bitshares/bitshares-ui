@@ -741,6 +741,8 @@
                 }
                 &.divider {
                     border-bottom: 1px solid $account-border;
+                    height: 0;
+                    padding: 0;
                 }
             }
         }
@@ -1759,8 +1761,7 @@
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
     li.stat.clickable {
-        color: $secondary-text-color; // &:hover{ // @include button-focus($primary-text-color, $panel-bg-color, 10);
-        // }
+        color: $secondary-text-color; // &:hover{ // @include button-focus($primary-text-color, $panel-bg-color, 10); // }
     }
     .mymarkets-tabs {
         > li {
@@ -2277,6 +2278,8 @@
             background-color: $panel-bg-color;
             li.divider {
                 border-bottom: 1px solid $dark-text-color;
+                height: 0;
+                padding: 0;
             }
             > li:hover {
                 background-color: $super-light-panel-bg-color;
@@ -2446,6 +2449,7 @@
                 background: transparent;
             }
         }
+
         &-divider {
             margin: 24px 0;
             height: 1px;
