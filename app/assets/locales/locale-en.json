@@ -101,7 +101,8 @@
             "suspected_scammer": "Suspected Scammer",
             "unknown": "Unknown member",
             "upgrade_lifetime": "Buy Lifetime Subscription",
-            "vested": "Vested"
+            "vested": "Vested",
+            "action": "Action"
         },
         "mine": "My account",
         "more": "see more",
@@ -434,6 +435,9 @@
     },
     "assets": {
         "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
+    "errors": {
+        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
     },
     "boolean": {
         "false": "False",
