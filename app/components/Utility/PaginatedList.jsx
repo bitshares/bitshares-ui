@@ -3,6 +3,23 @@ import counterpart from "counterpart";
 import {Table} from "bitshares-ui-style-guide";
 import "./paginated-list.scss";
 export default class PaginatedList extends React.Component {
+    static defaultProps = {
+        rows: [],
+        pageSize: 20,
+
+        className: "table",
+        extraRow: null,
+        style: {paddingBottom: "1rem"},
+        loading: false,
+
+        // can be a string (assumes the translation has one argument, total count),
+        // or an object, which allows a custom label
+        totalLabel: "utility.total_x_items",
+
+        // @deprecated, use totalLabel
+        label: null
+    };
+
     constructor(props) {
         super(props);
 
@@ -11,19 +28,36 @@ export default class PaginatedList extends React.Component {
         };
     }
 
-    static defaultProps = {
-        rows: [],
-        pageSize: 15,
-        label: "utility.total_x_items",
-        className: "table",
-        extraRow: null,
-        style: {paddingBottom: "1rem"},
-        loading: false
-    };
-
     render() {
         const {pageSize} = this.state;
         const {header, rows, extraRow, loading} = this.props;
+
+        const pageSizeOptions = [10, 20, 30, 40, 50, 100].filter(
+            item => item < Math.max(this.props.pageSize, rows.length)
+        );
+        pageSizeOptions.push(Math.max(this.props.pageSize, rows.length));
+
+        let totalColumnsLabel = null;
+        if (this.props.label !== null) {
+            totalColumnsLabel = total => {
+                return counterpart.translate(this.props.label, {
+                    count: total
+                });
+            };
+        } else if (typeof this.props.totalLabel === "string") {
+            totalColumnsLabel = total => {
+                return counterpart.translate(this.props.totalLabel, {
+                    count: total
+                });
+            };
+        } else if (typeof this.props.totalLabel === "object") {
+            totalColumnsLabel = total => {
+                return counterpart.translate(this.props.totalLabel.key, {
+                    count: total,
+                    ...this.props.totalLabel.args
+                });
+            };
+        }
 
         return (
             <div className="paginated-list" style={this.props.style}>
@@ -35,12 +69,11 @@ export default class PaginatedList extends React.Component {
                     footer={() => (extraRow ? extraRow : <span>&nbsp;</span>)}
                     onChange={this.props.toggleSortOrder}
                     pagination={{
-                        hideOnSinglePage: true,
-                        pageSize: pageSize,
-                        showTotal: (total, range) =>
-                            counterpart.translate(this.props.label, {
-                                count: total
-                            })
+                        showSizeChanger: true,
+                        hideOnSinglePage: false,
+                        defaultPageSize: pageSize,
+                        pageSizeOptions: pageSizeOptions.map(o => o.toString()),
+                        showTotal: (total, range) => totalColumnsLabel(total)
                     }}
                     rowClassName={
                         this.props.rowClassName == null

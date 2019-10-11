@@ -673,15 +673,52 @@ export const settingsAPIs = {
             location: "Paris",
             operator: "Witness: zapata42-witness",
             contact: "telegram:Zapata_42"
+        },
+        {
+            url: "wss://frankfurt.testnet.api.bitshares.org/ws",
+            region: "TESTNET - Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
+        },
+        {
+            url: "wss://chicago.testnet.api.bitshares.org/ws",
+            region: "TESTNET - Northern America",
+            country: "U.S.A.",
+            location: "Chicago",
+            operator: "'Exotic flavors' infra worker",
+            contact: "telegram:murda_ra;email:hostmaster@bitshares.org"
         }
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "https://wrapper.elasticsearch.bitshares.ws",
+            url: "https://eu.wrapper.elasticsearch.bitshares.ws",
             region: "Western Europe",
             country: "Germany",
             operator: "Infrastructure Worker",
             contact: "email:info@blockchainprojectsbv.com"
+        },
+        {
+            url: "https://us.wrapper.elasticsearch.bitshares.ws",
+            region: "North America",
+            country: "U.S.A.",
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
+        },
+        {
+            url: "https://hk.wrapper.elasticsearch.bitshares.ws",
+            region: "Hong Kong",
+            country: "China",
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
+        },
+        {
+            url: "https://explorer.bitshares-kibana.info",
+            region: "N/A",
+            country: "N/A",
+            operator: "N/A",
+            contact: "N/A"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,

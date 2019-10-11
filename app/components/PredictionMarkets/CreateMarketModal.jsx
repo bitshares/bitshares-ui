@@ -1,14 +1,22 @@
 import React from "react";
-import {Modal, Input, Form, Button} from "bitshares-ui-style-guide";
+import {
+    Modal,
+    Input,
+    Form,
+    Button,
+    Tooltip,
+    Icon,
+    DatePicker
+} from "bitshares-ui-style-guide";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import AssetSelect from "../Utility/AssetSelect";
-import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import counterpart from "counterpart";
 import AssetActions from "actions/AssetActions";
 import assetUtils from "common/asset_utils";
 import assetConstants from "chain/asset_constants";
 import {ChainStore} from "bitsharesjs";
+import moment from "moment";
 
 const IS_BITASSET = true;
 
@@ -34,7 +42,7 @@ export default class CreateMarketModal extends Modal {
                     amount: 1
                 },
                 base: {
-                    asset_id: "1.3.0", //TODO
+                    asset_id: "1.3.0",
                     amount: 1
                 }
             },
@@ -57,41 +65,34 @@ export default class CreateMarketModal extends Modal {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    _getPermissions() {
+    _getPermissionsAndFlags() {
         let flagBooleans = assetUtils.getFlagBooleans(0, IS_BITASSET);
         let permissionBooleans = assetUtils.getFlagBooleans("all", IS_BITASSET);
 
         flagBooleans["charge_market_fee"] = true;
-
+        let flags = assetUtils.getFlags(flagBooleans, IS_BITASSET);
         return {
-            flagBooleans,
-            permissionBooleans
+            flags,
+            permissions: assetUtils.getPermissions(
+                permissionBooleans,
+                IS_BITASSET
+            )
         };
     }
 
-    _createAsset(e) {
-        if (e) {
-            e.preventDefault();
-        }
-        const {flagBooleans, permissionBooleans} = this._getPermissions();
-
+    _createAsset() {
         let {marketOptions, core_exchange_rate, bitasset_opts} = this.state;
 
-        const accountId = ChainStore.getAccount(this.props.currentAccount).get(
-            "id"
-        );
-
-        let flags = assetUtils.getFlags(flagBooleans, IS_BITASSET);
-        let permissions = assetUtils.getPermissions(
-            permissionBooleans,
-            IS_BITASSET
-        );
-
+        const {permissions, flags} = this._getPermissionsAndFlags();
         const description = JSON.stringify(
             this.state.marketOptions.description
         );
+
         this.setState({inProgress: true});
-        const creationPromise = AssetActions.createAsset(
+        const accountId = ChainStore.getAccount(this.props.currentAccount).get(
+            "id"
+        );
+        AssetActions.createAsset(
             accountId,
             marketOptions,
             flags,
@@ -101,8 +102,7 @@ export default class CreateMarketModal extends Modal {
             true,
             bitasset_opts,
             description
-        );
-        creationPromise
+        )
             .then(result => {
                 this.setState({inProgress: false});
                 console.log(
@@ -121,21 +121,33 @@ export default class CreateMarketModal extends Modal {
     }
 
     handleChange(event) {
-        let newMarket = this.state.marketOptions;
+        let marketOptions = this.state.marketOptions;
+        if (event instanceof moment) {
+            event.set("milliseconds", 0);
+            event = {
+                target: {
+                    name: "expiry",
+                    value: event.toISOString()
+                }
+            };
+        }
         switch (event.target.name) {
             case "symbol":
-                newMarket[event.target.name] = event.target.value.toUpperCase();
+                marketOptions[
+                    event.target.name
+                ] = event.target.value.toUpperCase();
                 break;
             case "main":
             case "condition":
             case "expiry":
-                newMarket.description[event.target.name] = event.target.value;
+                marketOptions.description[event.target.name] =
+                    event.target.value;
                 break;
             default:
-                newMarket[event.target.name] = event.target.value;
+                marketOptions[event.target.name] = event.target.value;
                 break;
         }
-        this.setState({marketOptions: newMarket});
+        this.setState({marketOptions});
     }
 
     handleAssetChange(asset) {
@@ -200,7 +212,10 @@ export default class CreateMarketModal extends Modal {
 
     onSubmit(e) {
         if (this._isFormValid()) {
-            this._createAsset.call(this, e);
+            if (e) {
+                e.preventDefault();
+            }
+            this._createAsset().call(this);
         } else {
             this.setState({showWarning: true});
         }
@@ -238,7 +253,7 @@ export default class CreateMarketModal extends Modal {
                 closable={!this.state.inProgress}
                 footer={footer}
             >
-                <div>
+                <div className="prediction-markets--create-prediction-market">
                     <Form className="full-width" layout="vertical">
                         <Form.Item>
                             <span
@@ -250,7 +265,21 @@ export default class CreateMarketModal extends Modal {
                                 }
                             >
                                 <label className="left-label">
-                                    <Translate content="prediction.create_market_modal.symbol" />
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "prediction.create_market_modal.tooltip_symbol"
+                                        )}
+                                        placement="topLeft"
+                                    >
+                                        <Translate content="prediction.create_market_modal.symbol" />
+                                        <Icon
+                                            style={{
+                                                marginLeft: "0.5rem"
+                                            }}
+                                            theme="filled"
+                                            type="question-circle"
+                                        />
+                                    </Tooltip>
                                     <Input
                                         name="symbol"
                                         type="text"
@@ -271,7 +300,21 @@ export default class CreateMarketModal extends Modal {
                                 }
                             >
                                 <label className="left-label">
-                                    <Translate content="prediction.create_market_modal.condition" />
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "prediction.create_market_modal.tooltip_condition"
+                                        )}
+                                        placement="topLeft"
+                                    >
+                                        <Translate content="prediction.create_market_modal.condition" />
+                                        <Icon
+                                            style={{
+                                                marginLeft: "0.5rem"
+                                            }}
+                                            theme="filled"
+                                            type="question-circle"
+                                        />
+                                    </Tooltip>
                                     <Input
                                         name="condition"
                                         type="text"
@@ -291,7 +334,21 @@ export default class CreateMarketModal extends Modal {
                                 }
                             >
                                 <label className="left-label">
-                                    <Translate content="prediction.create_market_modal.description" />
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "prediction.create_market_modal.tooltip_description"
+                                        )}
+                                        placement="topLeft"
+                                    >
+                                        <Translate content="prediction.create_market_modal.description" />
+                                        <Icon
+                                            style={{
+                                                marginLeft: "0.5rem"
+                                            }}
+                                            theme="filled"
+                                            type="question-circle"
+                                        />
+                                    </Tooltip>
                                     <Input.TextArea
                                         name="main"
                                         onChange={this.handleChange}
@@ -311,19 +368,56 @@ export default class CreateMarketModal extends Modal {
                                 }
                             >
                                 <label className="left-label">
-                                    <Translate content="prediction.create_market_modal.resolution_date" />
-                                    <Input
-                                        name="expiry"
-                                        type="date"
-                                        onChange={this.handleChange}
-                                        tabIndex={4}
-                                    />
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "prediction.create_market_modal.tooltip_resolution_date"
+                                        )}
+                                        placement="topLeft"
+                                    >
+                                        <Translate content="prediction.create_market_modal.resolution_date" />
+                                        <Icon
+                                            style={{
+                                                marginLeft: "0.5rem"
+                                            }}
+                                            theme="filled"
+                                            type="question-circle"
+                                        />
+                                    </Tooltip>
+                                    <div>
+                                        <DatePicker
+                                            style={{
+                                                width: "100%"
+                                            }}
+                                            name="expiry"
+                                            showTime
+                                            placeholder={counterpart.translate(
+                                                "prediction.create_market_modal.select_date_and_time"
+                                            )}
+                                            onChange={this.handleChange}
+                                            onOk={this.handleChange}
+                                            tabIndex={4}
+                                        />
+                                    </div>
                                 </label>
                             </span>
                         </Form.Item>
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.create_market_modal.backing_asset" />
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "prediction.create_market_modal.tooltip_backing_asset"
+                                    )}
+                                    placement="topLeft"
+                                >
+                                    <Translate content="prediction.create_market_modal.backing_asset" />
+                                    <Icon
+                                        style={{
+                                            marginLeft: "0.5rem"
+                                        }}
+                                        theme="filled"
+                                        type="question-circle"
+                                    />
+                                </Tooltip>
                                 <AssetSelect
                                     assets={[
                                         "1.3.0",
@@ -342,7 +436,21 @@ export default class CreateMarketModal extends Modal {
                         </Form.Item>
                         <Form.Item>
                             <label className="left-label">
-                                <Translate content="prediction.create_market_modal.commission" />
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "prediction.create_market_modal.tooltip_commission"
+                                    )}
+                                    placement="topLeft"
+                                >
+                                    <Translate content="prediction.create_market_modal.commission" />
+                                    <Icon
+                                        style={{
+                                            marginLeft: "0.5rem"
+                                        }}
+                                        theme="filled"
+                                        type="question-circle"
+                                    />
+                                </Tooltip>
                                 <Input
                                     tabIndex={6}
                                     type="number"

@@ -571,7 +571,7 @@ class MarketsTable extends React.Component {
                     className="table dashboard-table table-hover"
                     header={this.getHeader()}
                     rows={marketRows.length ? marketRows : []}
-                    pageSize={25}
+                    pageSize={20}
                     label="utility.total_x_markets"
                     leftPadding="1.5rem"
                 />

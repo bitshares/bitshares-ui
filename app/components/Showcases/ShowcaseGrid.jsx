@@ -118,6 +118,15 @@ class ShowcaseGrid extends Component {
                     : "Please login to use this functionality"
             },
             {
+                title: "showcases.merchant_protocol.title",
+                target: event => {
+                    thiz.props.history.push("/invoice/request");
+                },
+                description: "showcases.merchant_protocol.description",
+                icon: "merchant",
+                disabled: false
+            },
+            {
                 title: "showcases.timed_transfer.title",
                 target: () => {},
                 description: "showcases.timed_transfer.description",

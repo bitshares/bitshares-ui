@@ -23,7 +23,7 @@ import SearchInput from "../Utility/SearchInput";
 
 class AccountOverview extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             shownAssets: props.viewSettings.get("shownAssets", "active"),
             alwaysShowAssets: [
@@ -276,6 +276,7 @@ class AccountOverview extends React.Component {
                 balances={this.props.balances}
                 extraRow={includedPortfolioBalance}
                 viewSettings={this.props.viewSettings}
+                callOrders={call_orders}
             />
         );
 

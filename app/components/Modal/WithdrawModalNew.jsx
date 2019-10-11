@@ -1022,7 +1022,7 @@ class WithdrawModalNew extends React.Component {
                                 {canCoverWithdrawal &&
                                 minWithdraw &&
                                 quantity &&
-                                quantity < minWithdraw ? (
+                                +quantity < +minWithdraw ? (
                                     <Translate
                                         component="div"
                                         className="error-msg"
@@ -1044,7 +1044,7 @@ class WithdrawModalNew extends React.Component {
                                 {canCoverWithdrawal &&
                                 maxWithdraw &&
                                 quantity &&
-                                quantity > maxWithdraw ? (
+                                +quantity > +maxWithdraw ? (
                                     <Translate
                                         component="div"
                                         className="error-msg"
@@ -1142,6 +1142,14 @@ class WithdrawModalNew extends React.Component {
                                                 label="Scan"
                                                 onSuccess={
                                                     this.handleQrScanSuccess
+                                                }
+                                                submitBtnText={counterpart.translate(
+                                                    "qr_address_scanner.use_address"
+                                                )}
+                                                dataFoundText={
+                                                    counterpart.translate(
+                                                        "qr_address_scanner.address_found"
+                                                    ) + ":"
                                                 }
                                             />
                                         </span>

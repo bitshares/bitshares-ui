@@ -135,8 +135,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
-        max-width: calc((450px + 32px) * 3);
-        // 450px + 32px padding * 3 cells
+        max-width: calc((450px + 32px) * 3); // 450px + 32px padding * 3 cells
     }
     .showcases-grid--wrapper--item {
         color: $secondary-text-color;
@@ -742,6 +741,8 @@
                 }
                 &.divider {
                     border-bottom: 1px solid $account-border;
+                    height: 0;
+                    padding: 0;
                 }
             }
         }
@@ -1278,7 +1279,6 @@
         > p:first-of-type {
             color: $light-text-color;
         }
-
         .account-title {
             &.flash {
                 color: white;
@@ -1761,7 +1761,9 @@
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
     li.stat.clickable {
-        color: $secondary-text-color; // &:hover{ // @include button-focus($primary-text-color, $panel-bg-color, 10);
+        color: $secondary-text-color;
+        // &:hover{
+        // @include button-focus($primary-text-color, $panel-bg-color, 10);
         // }
     }
     .mymarkets-tabs {
@@ -1963,7 +1965,6 @@
             background-color: lighten($positive-color, 5%);
         }
     }
-
     div.ok-indicator {
         color: $secondary-text-color;
         &.success {
@@ -2053,6 +2054,7 @@
                         color: $account-dimmed;
                     }
                 }
+
                 .icon.locked > svg > path {
                     fill: $button-bg-color;
                 }
@@ -2279,6 +2281,8 @@
             background-color: $panel-bg-color;
             li.divider {
                 border-bottom: 1px solid $dark-text-color;
+                height: 0;
+                padding: 0;
             }
             > li:hover {
                 background-color: $super-light-panel-bg-color;
@@ -2448,6 +2452,7 @@
                 background: transparent;
             }
         }
+
         &-divider {
             margin: 24px 0;
             height: 1px;
@@ -2756,7 +2761,6 @@
             top: 12px;
         }
     }
-
     .dropdown.header-menu {
         top: 65px;
     }
@@ -2821,14 +2825,19 @@
         }
     }
 }
-.customizable-column--selector {
+div.customizable-column--selector {
     position: absolute;
     right: 1rem;
     top: -3rem;
+    > .customizable-column--selector--option {
+        padding: 10px;
+        .ant-checkbox-wrapper {
+            width: 100%;
+        }
+    }
 }
-.customizable-column--selector--option {
-    padding: 10px;
-    .ant-checkbox-wrapper {
-        width: 100%;
+div.customizable-column--selector--dropdown {
+    ul.ant-select-dropdown-menu-vertical {
+        max-height: 100% !important;
     }
 }
