@@ -223,6 +223,7 @@ class AccountMembership extends React.Component {
                                                                                 {
                                                                                     network_fee
                                                                                 }
+
                                                                                 %
                                                                             </td>
                                                                         </tr>
@@ -247,6 +248,7 @@ class AccountMembership extends React.Component {
                                                                                 {
                                                                                     lifetime_fee
                                                                                 }
+
                                                                                 %
                                                                             </td>
                                                                         </tr>
@@ -271,6 +273,7 @@ class AccountMembership extends React.Component {
                                                                                 {
                                                                                     registrar_fee
                                                                                 }
+
                                                                                 %
                                                                             </td>
                                                                         </tr>
@@ -295,6 +298,7 @@ class AccountMembership extends React.Component {
                                                                                 {
                                                                                     referrer_fee
                                                                                 }
+
                                                                                 %
                                                                             </td>
                                                                         </tr>

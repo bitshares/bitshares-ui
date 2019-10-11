@@ -2150,6 +2150,7 @@
             "create": "Create",
             "create_new_mandate": "Create authorization",
             "current_period_expires": "Current period ends",
+            "payer_balance_not_sufficient": "There are not enough funds in the payer's account to claim the full limit amount of {limit}. The limit has been adjusted to reflect the currently available balance!",
             "delete": "Delete",
             "description": "Setup a direct debit authorization for recurring payments. The authorization allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
             "expires": "Expires",

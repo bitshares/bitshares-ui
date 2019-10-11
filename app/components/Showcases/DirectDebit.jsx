@@ -305,8 +305,8 @@ class DirectDebit extends Component {
                     return a.expires > b.expires
                         ? 1
                         : a.expires < b.expires
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 }
             },
             {
@@ -413,16 +413,20 @@ class DirectDebit extends Component {
                         </Col>
                     </Row>
 
-                    <DirectDebitModal
-                        isModalVisible={isModalVisible}
-                        hideModal={this.hideModal}
-                        operation={operationData}
-                    />
-                    <DirectDebitClaimModal
-                        isModalVisible={isClaimModalVisible}
-                        hideModal={this.hideClaimModal}
-                        operation={operationClaimData}
-                    />
+                    {isModalVisible ? (
+                        <DirectDebitModal
+                            isModalVisible={isModalVisible}
+                            hideModal={this.hideModal}
+                            operation={operationData}
+                        />
+                    ) : null}
+                    {isClaimModalVisible ? (
+                        <DirectDebitClaimModal
+                            isModalVisible={isClaimModalVisible}
+                            hideModal={this.hideClaimModal}
+                            operation={operationClaimData}
+                        />
+                    ) : null}
                 </Card>
             </div>
         );

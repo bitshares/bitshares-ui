@@ -85,18 +85,19 @@ class Row extends React.Component {
                         </span>
                     )}
                 </span>
-                {!hideExpiration && this.props.expiration && (
-                    <TransactionIDAndExpiry
-                        id={id}
-                        expiration={expiration}
-                        style={{
-                            paddingTop: 5,
-                            fontSize: "0.85rem",
-                            paddingBottom: "0.5rem",
-                            display: "block"
-                        }}
-                    />
-                )}
+                {!hideExpiration &&
+                    this.props.expiration && (
+                        <TransactionIDAndExpiry
+                            id={id}
+                            expiration={expiration}
+                            style={{
+                                paddingTop: 5,
+                                fontSize: "0.85rem",
+                                paddingBottom: "0.5rem",
+                                display: "block"
+                            }}
+                        />
+                    )}
             </div>
         );
     }
