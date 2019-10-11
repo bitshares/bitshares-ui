@@ -763,7 +763,6 @@ class XbtsxWithdrawModal extends React.Component {
                         <div className="content-block gate_fee">
                             <AmountSelector
                                 refCallback={this.setNestedRef.bind(this)}
-                                label="transfer.fee"
                                 disabled={true}
                                 amount={this.state.feeAmount.getAmount({
                                     real: true

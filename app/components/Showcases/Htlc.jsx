@@ -340,12 +340,14 @@ class Htlc extends Component {
                         </Col>
                     </Row>
 
-                    <HtlcModal
-                        isModalVisible={isModalVisible}
-                        hideModal={this.hideModal}
-                        operation={operationData}
-                        fromAccount={this.props.currentAccount}
-                    />
+                    {isModalVisible ? (
+                        <HtlcModal
+                            isModalVisible={isModalVisible}
+                            hideModal={this.hideModal}
+                            operation={operationData}
+                            fromAccount={this.props.currentAccount}
+                        />
+                    ) : null}
                 </Card>
             </div>
         );

@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import ChainTypes from "./ChainTypes";
 import AssetWrapper from "./AssetWrapper";
 import AssetName from "./AssetName";
+import MarketsActions from "actions/MarketsActions";
 
 /**
  *  Given a base and quote asset, render a link to that market
@@ -26,7 +27,14 @@ class MarketLink extends React.Component {
                 <AssetName name={base.get("symbol")} />
             </span>
         );
-        return <Link to={`/market/${marketID}`}>{marketName}</Link>;
+        return (
+            <Link
+                to={`/market/${marketID}`}
+                onClick={() => MarketsActions.switchMarket()}
+            >
+                {marketName}
+            </Link>
+        );
     }
 }
 

@@ -2,8 +2,10 @@ import React from "react";
 import Translate from "react-translate-component";
 import BindToChainState from "../../Utility/BindToChainState";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
+import account_constants from "chain/account_constants";
 
 export const AccountWhitelist = ({op, fromComponent}) => {
+    let listings = account_constants.account_listing;
     let label =
         op[1].new_listing === listings.no_listing
             ? "unlisted_by"

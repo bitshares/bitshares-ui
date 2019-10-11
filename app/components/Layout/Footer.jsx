@@ -382,9 +382,8 @@ class Footer extends React.Component {
                 activeNode = this.getNode(nodes[0]);
             }
         }
-
         let block_height = this.props.dynGlobalObject.get("head_block_number");
-        let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
+        let version_match = APP_VERSION.match(/\d\.\d\.(\d{6}.{0,1}\d{0,1})/);
         let version = version_match
             ? `.${version_match[1]}`
             : ` ${APP_VERSION}`;

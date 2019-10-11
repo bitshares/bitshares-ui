@@ -156,8 +156,8 @@ EquivalentValueComponent = connect(
 );
 
 const balanceToAsset = function(balance) {
-    const isBalanceObject = !!balance.getIn(["balance", "amount"]);
-    if (isBalanceObject) {
+    const isBalanceObject = balance.getIn(["balance", "amount"]);
+    if (isBalanceObject || isBalanceObject === 0) {
         return {
             asset_id: balance.getIn(["balance", "asset_id"]),
             amount: Number(balance.getIn(["balance", "amount"]))

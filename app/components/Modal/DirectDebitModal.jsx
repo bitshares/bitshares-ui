@@ -3,23 +3,20 @@ import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
 import PeriodSelector from "../Utility/PeriodSelector";
+import FeeAssetSelector from "components/Utility/FeeAssetSelector";
 
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {Asset} from "common/MarketClasses";
-import {debounce, isNaN} from "lodash-es";
-import {
-    checkFeeStatusAsync,
-    checkBalance,
-    shouldPayFeeWithAssetAsync
-} from "common/trxHelper";
+import {isNaN} from "lodash-es";
+import {checkBalance} from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
-import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import {Modal, Button, Tooltip, Form} from "bitshares-ui-style-guide";
 import {DatePicker} from "antd";
 import ApplicationApi from "../../api/ApplicationApi";
 import moment from "moment";
@@ -29,8 +26,6 @@ class DirectDebitModal extends React.Component {
         super(props);
         this.state = this.getInitialState(props);
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
-        this._updateFee = debounce(this._updateFee.bind(this), 250);
-        this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
         this._isMounted = false;
     }
@@ -44,7 +39,6 @@ class DirectDebitModal extends React.Component {
             asset_id: null,
             asset: null,
             error: null,
-            feeAsset: null,
             fee_asset_id:
                 ChainStore.assets_by_symbol.get(this.props.fee_asset_symbol) ||
                 "1.3.0",
@@ -62,8 +56,6 @@ class DirectDebitModal extends React.Component {
     onSubmit = e => {
         e.preventDefault();
         let {
-            feeAsset,
-            feeAmount,
             from_account,
             to_account,
             amount,
@@ -88,7 +80,7 @@ class DirectDebitModal extends React.Component {
                 period.type.seconds * Number(period.amount),
                 num_of_periods,
                 period_start_time.valueOf(),
-                feeAsset ? feeAsset.get("id") : fee_asset_id
+                fee_asset_id
             )
                 .then(result => {
                     this.props.hideModal();
@@ -107,7 +99,7 @@ class DirectDebitModal extends React.Component {
                 period.type.seconds * Number(period.amount),
                 num_of_periods,
                 period_start_time.valueOf(),
-                feeAsset ? feeAsset.get("id") : fee_asset_id
+                fee_asset_id
             )
                 .then(result => {
                     this.props.hideModal();
@@ -124,27 +116,14 @@ class DirectDebitModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const {operation} = this.props;
+        const {operation, currentAccount} = this.props;
         if (
-            this.props.isModalVisible &&
-            prevProps.isModalVisible !== this.props.isModalVisible
+            currentAccount !== prevProps.currentAccount ||
+            this.state.from_account == null
         ) {
-            this.setState(
-                {
-                    from_account: ChainStore.getAccount(
-                        this.props.currentAccount
-                    )
-                },
-                () => {
-                    this._updateFee();
-                    this._checkFeeStatus(this.state);
-                }
-            );
-        } else if (
-            !this.props.isModalVisible &&
-            prevProps.isModalVisible !== this.props.isModalVisible
-        ) {
-            this.setState(this.getInitialState()); // reset state
+            this.setState({
+                from_account: ChainStore.getAccount(currentAccount)
+            });
         }
 
         // Update operation
@@ -229,7 +208,6 @@ class DirectDebitModal extends React.Component {
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
         if (!asset || !from_account) return;
-        this._updateFee();
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn([
             "balances",
@@ -242,10 +220,7 @@ class DirectDebitModal extends React.Component {
             ? ChainStore.getObject(feeBalanceID)
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this.setState(
-                {fee_asset_id: this.state.fee_asset_id},
-                this._updateFee
-            );
+            this.setState({fee_asset_id: this.state.fee_asset_id});
         }
         if (!balanceObject || !feeAmount) return;
         if (!amount) return this.setState({balanceError: false});
@@ -257,50 +232,6 @@ class DirectDebitModal extends React.Component {
         );
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
-    }
-
-    _checkFeeStatus(state = this.state) {
-        const {from_account} = state;
-        const {isModalVisible, operation} = this.props;
-        if (!from_account || !isModalVisible) return;
-
-        const assets = Object.keys(from_account.get("balances").toJS()).sort(
-            utils.sortID
-        );
-        let feeStatus = {};
-        let p = [];
-        assets.forEach(a => {
-            p.push(
-                checkFeeStatusAsync({
-                    accountID: from_account.get("id"),
-                    feeID: a,
-                    type:
-                        operation && operation.type === "update"
-                            ? "withdraw_permission_update"
-                            : "withdraw_permission_create",
-
-                    data: {
-                        type: "memo",
-                        content: null
-                    }
-                })
-            );
-        });
-        Promise.all(p)
-            .then(status => {
-                assets.forEach((a, idx) => {
-                    feeStatus[a] = status[idx];
-                });
-                if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
-                    this.setState({
-                        feeStatus
-                    });
-                }
-                this._checkBalance();
-            })
-            .catch(err => {
-                console.error(err);
-            });
     }
 
     _setTotal(asset_id, balance_id) {
@@ -326,16 +257,6 @@ class DirectDebitModal extends React.Component {
     }
 
     _getAvailableAssets(state = this.state) {
-        const {feeStatus} = this.state;
-        function hasFeePoolBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasPoolBalance;
-        }
-
-        function hasBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasBalance;
-        }
         const {from_account} = state;
         let asset_types = [],
             fee_asset_types = [];
@@ -354,54 +275,7 @@ class DirectDebitModal extends React.Component {
                 }
             }
         }
-
-        fee_asset_types = fee_asset_types.filter(a => {
-            return hasFeePoolBalance(a) && hasBalance(a);
-        });
-
         return {asset_types, fee_asset_types};
-    }
-
-    _updateFee(state = this.state) {
-        if (!this.props.isModalVisible) return;
-        const {operation} = this.props;
-        let {fee_asset_id, from_account, asset_id} = state;
-        const {fee_asset_types} = this._getAvailableAssets(state);
-        if (
-            fee_asset_types.length === 1 &&
-            fee_asset_types[0] !== fee_asset_id
-        ) {
-            fee_asset_id = fee_asset_types[0];
-        }
-        if (!from_account) return null;
-        checkFeeStatusAsync({
-            accountID: from_account.get("id"),
-            feeID: fee_asset_id,
-            type:
-                operation && operation.type === "update"
-                    ? "withdraw_permission_update"
-                    : "withdraw_permission_create",
-            data: {
-                type: "memo",
-                content: null
-            }
-        }).then(({fee, hasBalance, hasPoolBalance}) => {
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {fee_asset_id: asset_id},
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
-            );
-        });
     }
 
     onToAccountChanged = to_account => {
@@ -429,11 +303,8 @@ class DirectDebitModal extends React.Component {
         this.setState({to_name, error: null});
     };
 
-    onFeeChanged({asset}) {
-        this.setState(
-            {feeAsset: asset, fee_asset_id: asset.get("id"), error: null},
-            this._updateFee
-        );
+    onFeeChanged(asset) {
+        this.setState({fee_asset_id: asset.asset_id, error: null});
     }
 
     onTrxIncluded(confirm_store_state) {
@@ -480,11 +351,8 @@ class DirectDebitModal extends React.Component {
             to_account,
             asset,
             asset_id,
-            feeAmount,
             amount,
-            error,
             to_name,
-            feeAsset,
             fee_asset_id,
             balanceError,
             num_of_periods,
@@ -494,10 +362,9 @@ class DirectDebitModal extends React.Component {
 
         const {operation} = this.props;
 
-        let {asset_types, fee_asset_types} = this._getAvailableAssets();
+        let {asset_types} = this._getAvailableAssets();
 
         let balance = null;
-        let balance_fee = null;
 
         // Estimate fee
         let fee = this.state.feeAmount.getAmount({real: true});
@@ -509,7 +376,7 @@ class DirectDebitModal extends React.Component {
                 asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                let feeID = feeAsset ? feeAsset.get("id") : fee_asset_id;
+                let feeID = fee_asset_id;
 
                 balance = (
                     <span>
@@ -580,6 +447,11 @@ class DirectDebitModal extends React.Component {
             !period.amount ||
             !num_of_periods ||
             !period_start_time;
+
+        if (__DEV__) {
+            console.log("DirectDebitModal.render", from_account);
+        }
+
         return (
             <Modal
                 title={
@@ -616,7 +488,7 @@ class DirectDebitModal extends React.Component {
                 ]}
             >
                 <div className="grid-block vertical no-overflow">
-                    <form noValidate>
+                    <Form className="full-width" layout="vertical">
                         <div>
                             {/* AUTHORIZED ACCOUNT */}
                             <Tooltip
@@ -747,35 +619,26 @@ class DirectDebitModal extends React.Component {
                         <div className="content-block transfer-input">
                             <div className="no-margin no-padding">
                                 {/*  F E E  */}
-                                <div id="txFeeSelector" className="small-12">
-                                    <AmountSelector
-                                        label="transfer.fee"
-                                        disabled={true}
-                                        amount={fee}
-                                        onChange={this.onFeeChanged.bind(this)}
-                                        asset={
-                                            fee_asset_types.length && feeAmount
-                                                ? feeAmount.asset_id
-                                                : fee_asset_types.length === 1
-                                                    ? fee_asset_types[0]
-                                                    : fee_asset_id
-                                                        ? fee_asset_id
-                                                        : fee_asset_types[0]
+
+                                <FeeAssetSelector
+                                    account={from_account}
+                                    transaction={{
+                                        type:
+                                            operation &&
+                                            operation.type === "update"
+                                                ? "withdraw_permission_update"
+                                                : "withdraw_permission_create",
+                                        options: ["price_per_kbyte"],
+                                        data: {
+                                            type: "memo",
+                                            content: null
                                         }
-                                        assets={fee_asset_types}
-                                        display_balance={balance_fee}
-                                        // tabIndex={tabIndex++}
-                                        error={
-                                            this.state.hasPoolBalance === false
-                                                ? "transfer.errors.insufficient"
-                                                : null
-                                        }
-                                        scroll_length={2}
-                                    />
-                                </div>
+                                    }}
+                                    onChange={this.onFeeChanged.bind(this)}
+                                />
                             </div>
                         </div>
-                    </form>
+                    </Form>
                 </div>
             </Modal>
         );

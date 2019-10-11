@@ -56,7 +56,8 @@ class AccountSelector extends React.Component {
         disabled: PropTypes.bool,
         editable: PropTypes.bool,
         locked: PropTypes.bool,
-        requireActiveSelect: PropTypes.bool
+        requireActiveSelect: PropTypes.bool,
+        noForm: PropTypes.bool
     };
 
     static defaultProps = {
@@ -65,7 +66,8 @@ class AccountSelector extends React.Component {
         disabled: null,
         editable: null,
         locked: false,
-        requireActiveSelect: true // Should not be set to false, required for fallback
+        requireActiveSelect: true, // Should not be set to false, required for fallback
+        noForm: false
     };
 
     constructor(props) {
@@ -80,18 +82,17 @@ class AccountSelector extends React.Component {
     componentDidMount() {
         let {account, accountName} = this.props;
 
+        // Populate account search array, fetch only once
         if (accountName) {
-            this._addToIndex(accountName, true);
+            this._addThisToIndex(accountName);
         }
-
-        // Populate account search array
         this.props.myActiveAccounts.map(a => {
-            this._addToIndex(a, true);
+            this._addThisToIndex(a);
         });
-
         this.props.contacts.map(a => {
-            this._addToIndex(a, true);
+            this._addThisToIndex(a);
         });
+        this._fetchAccounts();
 
         if (this.props.onAccountChanged && account)
             this.props.onAccountChanged(account);
@@ -684,17 +685,22 @@ class AccountSelector extends React.Component {
                 </div>
             );
 
+        const FormWrapper = this.props.noForm ? React.Fragment : Form;
+        const formWrapperProps = this.props.noForm
+            ? {}
+            : {
+                  className: "full-width",
+                  layout: "vertical",
+                  style: this.props.style
+              };
+
         return (
             <Tooltip
                 className="input-area"
                 title={this.props.tooltip}
                 mouseEnterDelay={0.5}
             >
-                <Form
-                    className="full-width"
-                    layout="vertical"
-                    style={this.props.style}
-                >
+                <FormWrapper {...formWrapperProps}>
                     <Form.Item
                         label={
                             this.props.label
@@ -738,7 +744,7 @@ class AccountSelector extends React.Component {
                             ) : null}
                         </div>
                     </Form.Item>
-                </Form>
+                </FormWrapper>
             </Tooltip>
         );
     }

@@ -319,6 +319,7 @@ class AccountOrders extends React.Component {
                             to={`/market/${dataItem.quote.get(
                                 "symbol"
                             )}_${dataItem.base.get("symbol")}`}
+                            onClick={() => MarketsActions.switchMarket()}
                         >
                             <Icon type="bar-chart" />
                         </Link>
