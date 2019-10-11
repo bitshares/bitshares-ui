@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "3.1.191011-rc1",
+    "version": "3.1.191011-rc2",
     "description": "Reference UI to showcase all features of the BitShares blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Worker <ui-dev@bitshares.org>",
