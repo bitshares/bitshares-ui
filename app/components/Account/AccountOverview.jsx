@@ -134,8 +134,9 @@ class AccountOverview extends React.Component {
             return null;
         }
 
-        const preferredUnit =
-            settings.get("unit") || this.props.core_asset.get("symbol");
+        const preferredUnit = !settings.get("unit")
+            ? this.props.core_asset.get("symbol")
+            : settings.get("unit");
 
         let call_orders = [],
             collateral = {},
