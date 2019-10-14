@@ -68,22 +68,25 @@ class AccountHistoryExporter {
                 const type = ops[record.op.type];
                 const data = record.op.data;
 
-                switch (type) {
-                    case "vesting_balance_withdraw":
-                        data.amount = data.amount_;
-                        break;
+                // Data is sometimes null
+                if (data) {
+                    switch (type) {
+                        case "vesting_balance_withdraw":
+                            data.amount = data.amount_;
+                            break;
 
-                    case "transfer":
-                        data.amount = data.amount_;
-                        break;
-                }
-                switch (type) {
-                    default:
-                        recordData[trx_id] = {
-                            timestamp: new Date(record.block_time),
-                            type,
-                            data
-                        };
+                        case "transfer":
+                            data.amount = data.amount_;
+                            break;
+                    }
+                    switch (type) {
+                        default:
+                            recordData[trx_id] = {
+                                timestamp: new Date(record.block_time),
+                                type,
+                                data
+                            };
+                    }
                 }
             });
             start += res.length;

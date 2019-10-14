@@ -1,6 +1,5 @@
 import React, {Fragment} from "react";
 import Translate from "react-translate-component";
-import {saveAs} from "file-saver";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
@@ -18,7 +17,6 @@ import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
-import report from "bitshares-report";
 import LoadingIndicator from "../LoadingIndicator";
 import {Tooltip, Modal, Button, Select, Input} from "bitshares-ui-style-guide";
 const ops = Object.keys(operations);
@@ -275,6 +273,7 @@ class RecentTransactions extends React.Component {
                 accountHistoryError: null
             });
         } catch (err) {
+            console.log("ES Node error: " + err);
             this.setState({
                 fetchingAccountHistory: false,
                 accountHistoryError: err,
