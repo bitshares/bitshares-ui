@@ -60,6 +60,9 @@
         "id": "ID Account",
         "identicon": "Identicon",
         "ignore": "Nascondi",
+        "inCollateral": "In Collateral",
+        "inOrders": "In Orders",
+        "inVestingBalances": "In Vesting Balances",
         "in_open": "Questa è la quantità di %(asset)s che hai in ordini correntemente aperti.",
         "in_open_value": "Questo è il valore stimato di %(asset)s che hai in ordini correntemente aperti.",
         "intro_text_1": "Il tuo Platform decentralizzato",
@@ -84,14 +87,28 @@
             "earned": "Coin days raggiunti",
             "expires": "scade",
             "fee_allocation": "Allocazione commissioni",
+            "fee_division": "Fee Division",
+            "fee_division_text": {
+                "paragraph_1": "Every time %(account)s pays a transaction fee, that fee is divided among several different accounts. The network takes %(fee_share_network)s%. The Lifetime Member who referred %(account)s takes %(fee_share_ltm)s%.",
+                "paragraph_2": "The registrar is the account that paid the transaction fee to register %(account)s with the network and decide how to divide the remaining %(fee_share_registrar)s% between themselves and their own Affiliate Referrer program. %(account)s's registrar chose to share %(fee_share_affiliate)s% of the total fee with the Affiliate Referrer.",
+                "paragraph_3": "Fee shares, market rewards and other rewards is found on the Vesting Balances page"
+            },
+            "fee_pending": "Pending Fees",
+            "fee_pending_text": "Fees paid by %(account)s are divided among the network, referrers, and registrars once every maintenance interval (%(maintenanceInterval)s seconds). The next maintenance time is %(nextMaintenanceTime)s.",
+            "fee_vesting": "Vesting Fees",
+            "fee_vesting_text": "Most fees are made available immediately, but fees over %(vestingThresholdAmount)s %(vestingThresholdAsset)s (such as those paid to upgrade your membership or register a premium account name) must vest for a total of %(vestingPeriod)s days.",
             "fees_cashback": "Commissioni e cashback",
             "fees_paid": "Commissioni membership a vita pagate",
             "join": "Iscritto il",
             "lifetime": "Membro a vita",
             "lifetime_referrer": "Lifetime Referrer",
+            "lifetime_title": "Earn cashback",
             "membership": "Membership",
             "membership_expiration": "Scadenza Membership",
             "network_percentage": "Rete",
+            "ref_distribution": "Referral Fee Distribution",
+            "referal_fees": "Referral Fee Distribution",
+            "referral_info": "As a lifetime member (LTM) you are eligable for a %(feesCashback)s% cashback on all your fees. You will also recieve cashback from markets with a referral reward. The referral reward is based on your own and your referred members market orders.",
             "referral_link": "Il tuo referral link",
             "referral_text": "Comunica questo link alle persone a cui vuoi segnalare BitShares",
             "referrals": "Referral",
@@ -103,6 +120,7 @@
             "stats": "Membership",
             "subscribe": "Compra iscrizione annuale",
             "suspected_scammer": "Suspected Scammer",
+            "total_ref": "Total referred %(total)s",
             "unknown": "Membro sconosciuto",
             "upgrade_lifetime": "Compra iscrizione a vita",
             "vested": "Vested"
@@ -191,6 +209,14 @@
         "polo_scam": "Questo non è il vero account Poloniex, per favore invia al seguente account: poloniexwallet.",
         "portfolio": "Il mio Portfolio",
         "propose_from": "Proponi da",
+        "proposed_transactions": {
+            "advanced_feature": "This is an advanced feature. Please answer the following questions",
+            "answered_no": "If your answer to any of the questions above is no, do NOT continue. You can also turn this on and off in Settings.",
+            "question1": "Do you know what a proposal is?",
+            "question2": "Are you expecting a proposal?",
+            "question3": "Are you aware that a proposal can steal your funds or lock you out of the account?",
+            "show_me_proposals": "Show me Proposals"
+        },
         "qty": "Qtà",
         "quote": "Quote",
         "recent": "Attività recente",
@@ -518,7 +544,8 @@
         "top_markets": "Top Markets"
     },
     "errors": {
-        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+        "loading_from_blockchain": "Error fetching form the blockchain, please retry.",
+        "loading_from_es": "Error fetching from elastic search database."
     },
     "exchange": {
         "actions": "Actions",
@@ -1217,6 +1244,7 @@
         "exchange": "Exchange",
         "explorer": "Esplora",
         "help": "Aiuto",
+        "insight": "Insight",
         "lock": "Log out (blocca il portafoglio)",
         "lock_short": "Log out",
         "locked_tip": "<br/>Clicca per fare il login e sbloccare il tuo portafoglio.<br/><br/>Chiudere la finestra del browser effettuerà automaticamente il log out.",
@@ -1365,22 +1393,49 @@
         "amount": "Amount",
         "date": "Date",
         "invalid_format": "Invoice has invalid format",
+        "invoice_data_found": "Invoice data found",
         "items": "Items",
         "memo": "Memo",
         "note": "Note",
         "paid_by": "Paid by",
+        "pay": {
+            "barcode": "Barcode",
+            "invoice_qr_code": "Invoice QR code",
+            "payment_qr_code": "Payment QR code",
+            "title": "Pay"
+        },
         "pay_button": "Pay %(asset)s to %(name)s",
         "pay_invoice": "Pay Invoice",
         "pay_to": "Pay To",
         "payment_proof": "Payment proof",
         "payment_request": "Payment request",
         "print_receipt": "Print receipt",
+        "raw_invoice_data": "raw invoice data",
         "receipt_total": "Receipt Total",
-        "recipient_name": "Recipient Name",
+        "request": {
+            "action": "Action",
+            "create_invoice_string": "Create invoice string",
+            "currency": "Currency",
+            "identifier": "Identifier",
+            "identifier_tooltip": "The identifier needs to be used as the memo/message when the request is paid.",
+            "items": "Items",
+            "note": "Note",
+            "note_tooltip": "You can attach a note to this payment request, this can be any additional information.",
+            "payment_asset": "Payment Asset",
+            "payment_asset_tooltip": "This payment request will be paid with one transfer, and will be requesting to be paid in the indicated asset.",
+            "price": "Price",
+            "quantity": "Quantity",
+            "recipient_account": "Recipient Account",
+            "recipient_name": "Recipient Name",
+            "recipient_name_tooltip": "You can define an arbitrary plaintext name for yourself to indicate who is being paid. Must not be a BitShares account name.",
+            "submit": "Submit",
+            "title": "Request"
+        },
         "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
         "total": "Total",
         "transaction": "Transaction",
-        "unit": "Unit"
+        "unit": "Unit",
+        "use_invoice_data": "Use invoice data"
     },
     "languages": {
         "de": "Deutsch",
@@ -1880,7 +1935,6 @@
         "total": "Total"
     },
     "settings": {
-        "showProposedTx": "Show proposed transactions in dashboard",
         "access": "Accesso",
         "access_text": "",
         "accounts": "Account",
@@ -1982,6 +2036,7 @@
         "scrollbars_hide": "Reduce scroll bars",
         "show": "mostra",
         "showAssetPercent": "Mostra percentuali asset nella pagina Account",
+        "showProposedTx": "Show proposed transactions in dashboard",
         "showSettles": "Mostra settlement nel depth chart",
         "skipped": "Skipped",
         "switch": "Switch Node",
@@ -2104,6 +2159,7 @@
             "limit": "limit",
             "limit_per_period": "Maximum amount per period",
             "num_of_periods": "Number of periods",
+            "payer_balance_not_sufficient": "There are not enough funds in the payer's account to claim the full limit amount of {limit}. The limit has been adjusted to reflect the currently available balance!",
             "period": "Specify period",
             "start_date": "First period starts on",
             "title": "Direct debit",
@@ -2157,6 +2213,10 @@
                 "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
                 "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
             }
+        },
+        "merchant_protocol": {
+            "description": "Create, view and pay remittance requests or invoices",
+            "title": "Merchant Protocol"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
@@ -2350,6 +2410,7 @@
         "fund_pool": "ha finanziato il fee pool di %(asset)s con",
         "funding_account": "Account sorgente",
         "global_parameters_update": "Parametri globali aggiornati",
+        "hide": "Hide",
         "inputs": "Input",
         "market_fee": "Commissione di mercato",
         "max_market_fee": "Commissione di mercato massima",
@@ -2365,6 +2426,7 @@
         "seller": "Venditore",
         "sent": "inviato",
         "settlement_date": "Data settlement",
+        "show_more": "Show more",
         "to": "a",
         "transaction_confirmed": "Transazione confermata",
         "trxTypes": {
@@ -2498,8 +2560,10 @@
         "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_items_y_hidden": "Total of %(totelCount)s items loaded, %(count)s of those shown in pagination",
         "total_x_markets": "Total of %(count)s markets",
-        "total_x_operations": "Total of %(count)s operations"
+        "total_x_operations": "Total of %(count)s operations",
+        "x_assets_hidden": "%(count)s of %(total)s assets filtered out"
     },
     "validation": {
         "messages": {

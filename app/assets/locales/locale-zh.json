@@ -60,6 +60,9 @@
         "id": "账户ID",
         "identicon": "身份标识图形",
         "ignore": "隐藏",
+        "inCollateral": "In Collateral",
+        "inOrders": "In Orders",
+        "inVestingBalances": "In Vesting Balances",
         "in_open": "这是你在所有挂单中的 %(asset)s 资产的数量。",
         "in_open_value": "这是你在所有挂单中的 %(asset)s 资产的估算价值。",
         "intro_text_1": "一个属于你的去中心化平台",
@@ -84,14 +87,28 @@
             "earned": "已获得币天",
             "expires": "到期时间",
             "fee_allocation": "手续费分配",
+            "fee_division": "Fee Division",
+            "fee_division_text": {
+                "paragraph_1": "Every time %(account)s pays a transaction fee, that fee is divided among several different accounts. The network takes %(fee_share_network)s%. The Lifetime Member who referred %(account)s takes %(fee_share_ltm)s%.",
+                "paragraph_2": "The registrar is the account that paid the transaction fee to register %(account)s with the network and decide how to divide the remaining %(fee_share_registrar)s% between themselves and their own Affiliate Referrer program. %(account)s's registrar chose to share %(fee_share_affiliate)s% of the total fee with the Affiliate Referrer.",
+                "paragraph_3": "Fee shares, market rewards and other rewards is found on the Vesting Balances page"
+            },
+            "fee_pending": "Pending Fees",
+            "fee_pending_text": "Fees paid by %(account)s are divided among the network, referrers, and registrars once every maintenance interval (%(maintenanceInterval)s seconds). The next maintenance time is %(nextMaintenanceTime)s.",
+            "fee_vesting": "Vesting Fees",
+            "fee_vesting_text": "Most fees are made available immediately, but fees over %(vestingThresholdAmount)s %(vestingThresholdAsset)s (such as those paid to upgrade your membership or register a premium account name) must vest for a total of %(vestingPeriod)s days.",
             "fees_cashback": "手续费统计",
             "fees_paid": "手续费总支出",
             "join": "加入于",
             "lifetime": "终身会员",
             "lifetime_referrer": "终身会员推荐人",
+            "lifetime_title": "Earn cashback",
             "membership": "会员",
             "membership_expiration": "会员有效期",
             "network_percentage": "网络收取",
+            "ref_distribution": "Referral Fee Distribution",
+            "referal_fees": "Referral Fee Distribution",
+            "referral_info": "As a lifetime member (LTM) you are eligable for a %(feesCashback)s% cashback on all your fees. You will also recieve cashback from markets with a referral reward. The referral reward is based on your own and your referred members market orders.",
             "referral_link": "你的推荐链接",
             "referral_text": "分享此链接给你的朋友参与%(wallet_name)s引荐计划",
             "referrals": "被推荐人",
@@ -103,6 +120,7 @@
             "stats": "会员信息",
             "subscribe": "购买年度会员",
             "suspected_scammer": "疑似诈骗者",
+            "total_ref": "Total referred %(total)s",
             "unknown": "未知会员",
             "upgrade_lifetime": "购买终身会员",
             "vested": "待解冻"
@@ -191,6 +209,14 @@
         "polo_scam": "注意：这个账户不是交易所 Poloniex 的存款账户，请发送至 poloniexwallet。",
         "portfolio": "资产清单",
         "propose_from": "提议来自",
+        "proposed_transactions": {
+            "advanced_feature": "This is an advanced feature. Please answer the following questions",
+            "answered_no": "If your answer to any of the questions above is no, do NOT continue. You can also turn this on and off in Settings.",
+            "question1": "Do you know what a proposal is?",
+            "question2": "Are you expecting a proposal?",
+            "question3": "Are you aware that a proposal can steal your funds or lock you out of the account?",
+            "show_me_proposals": "Show me Proposals"
+        },
         "qty": "数量",
         "quote": "标价",
         "recent": "近期活动",
@@ -518,7 +544,8 @@
         "top_markets": "热门市场"
     },
     "errors": {
-        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+        "loading_from_blockchain": "Error fetching form the blockchain, please retry.",
+        "loading_from_es": "Error fetching from elastic search database."
     },
     "exchange": {
         "actions": "Actions",
@@ -1223,6 +1250,7 @@
         "exchange": "交易中心",
         "explorer": "区块浏览",
         "help": "帮助",
+        "insight": "Insight",
         "lock": "登出（锁定钱包）",
         "lock_short": "登出",
         "locked_tip": "<br/>点击登录，<br/><br/>关闭浏览器将登出。",
@@ -1371,22 +1399,49 @@
         "amount": "Amount",
         "date": "Date",
         "invalid_format": "Invoice has invalid format",
+        "invoice_data_found": "Invoice data found",
         "items": "Items",
         "memo": "Memo",
         "note": "Note",
         "paid_by": "Paid by",
+        "pay": {
+            "barcode": "Barcode",
+            "invoice_qr_code": "Invoice QR code",
+            "payment_qr_code": "Payment QR code",
+            "title": "Pay"
+        },
         "pay_button": "Pay %(asset)s to %(name)s",
         "pay_invoice": "Pay Invoice",
         "pay_to": "Pay To",
         "payment_proof": "Payment proof",
         "payment_request": "Payment request",
         "print_receipt": "Print receipt",
+        "raw_invoice_data": "raw invoice data",
         "receipt_total": "Receipt Total",
-        "recipient_name": "Recipient Name",
+        "request": {
+            "action": "Action",
+            "create_invoice_string": "Create invoice string",
+            "currency": "Currency",
+            "identifier": "Identifier",
+            "identifier_tooltip": "The identifier needs to be used as the memo/message when the request is paid.",
+            "items": "Items",
+            "note": "Note",
+            "note_tooltip": "You can attach a note to this payment request, this can be any additional information.",
+            "payment_asset": "Payment Asset",
+            "payment_asset_tooltip": "This payment request will be paid with one transfer, and will be requesting to be paid in the indicated asset.",
+            "price": "Price",
+            "quantity": "Quantity",
+            "recipient_account": "Recipient Account",
+            "recipient_name": "Recipient Name",
+            "recipient_name_tooltip": "You can define an arbitrary plaintext name for yourself to indicate who is being paid. Must not be a BitShares account name.",
+            "submit": "Submit",
+            "title": "Request"
+        },
         "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
         "total": "Total",
         "transaction": "Transaction",
-        "unit": "Unit"
+        "unit": "Unit",
+        "use_invoice_data": "Use invoice data"
     },
     "languages": {
         "de": "Deutsch",
@@ -1886,7 +1941,6 @@
         "total": "交易额"
     },
     "settings": {
-        "showProposedTx": "Show proposed transactions in dashboard",
         "access": "接入点",
         "access_text": "",
         "accounts": "账户",
@@ -1988,6 +2042,7 @@
         "scrollbars_hide": "缩减滚动栏",
         "show": "显示",
         "showAssetPercent": "在账户页上显示资产/供应量占比",
+        "showProposedTx": "Show proposed transactions in dashboard",
         "showSettles": "在深度图中显示强清挂单",
         "skipped": "略过",
         "switch": "切换接入点",
@@ -2110,6 +2165,7 @@
             "limit": "限额",
             "limit_per_period": "每期最大数量",
             "num_of_periods": "周期数",
+            "payer_balance_not_sufficient": "There are not enough funds in the payer's account to claim the full limit amount of {limit}. The limit has been adjusted to reflect the currently available balance!",
             "period": "指定周期",
             "start_date": "第一期开始时间",
             "title": "直接借记",
@@ -2163,6 +2219,10 @@
                 "preimage_random": "秘密原像最好的选择是随机字符串。如果你秘密原像易于被猜出或者太短，你可能会丢失你的资产。在此行使用复制按钮来保存原像及使用的哈希算法",
                 "preimage_size": "原像大小是指以上原像的长度。此值也会写入链。在此行使用复制按钮来保存原像哈希及原像大小。"
             }
+        },
+        "merchant_protocol": {
+            "description": "Create, view and pay remittance requests or invoices",
+            "title": "Merchant Protocol"
         },
         "paper_wallet": {
             "description": "创建一个包含有你账户密钥的PDF文件(明文与二维码)。\n钱包未解锁将仅在PDF中添加公钥，不含私钥。\n钱包解锁后将会在PDF中添加公钥与私钥。",
@@ -2356,6 +2416,7 @@
         "fund_pool": "转入到资产 %(asset)s 的手续费池，共",
         "funding_account": "出资账户",
         "global_parameters_update": "更新全局参数",
+        "hide": "Hide",
         "inputs": "输入",
         "market_fee": "市场手续费",
         "max_market_fee": "市场手续费上限",
@@ -2371,6 +2432,7 @@
         "seller": "卖家",
         "sent": "发送",
         "settlement_date": "强清时间",
+        "show_more": "Show more",
         "to": " 提取到",
         "transaction_confirmed": "交易已确认",
         "trxTypes": {
@@ -2504,8 +2566,10 @@
         "asset_select_placeholder": "选择资产",
         "total_x_assets": "总计 %(count)s 资产",
         "total_x_items": "总计 %(count)s 条目",
+        "total_x_items_y_hidden": "Total of %(totelCount)s items loaded, %(count)s of those shown in pagination",
         "total_x_markets": "总计%(count)s市场",
-        "total_x_operations": "总计 %(count)s 操作"
+        "total_x_operations": "总计 %(count)s 操作",
+        "x_assets_hidden": "%(count)s of %(total)s assets filtered out"
     },
     "validation": {
         "messages": {
