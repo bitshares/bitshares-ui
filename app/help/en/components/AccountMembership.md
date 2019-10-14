@@ -1,18 +1,18 @@
 [# lifetime]
 ### Get {feesCashback}% Cashback on Fees
 
-Lifetime Members get {feesCashback}% cashback on every transaction fee they pay and
-qualify to earn referral income from users they register with or refer to the network. A Lifetime Membership is just {price}.
+Every transaction on the BitShares network is divided between the network and referrers. By registering to a Lifetime Membership the account will receive {feesCashback}% cashback on every transaction fee paid. As a bonus it will also qualify to earn referral income from users registered  with or refered to the network. 
+
+A Lifetime Membership price will change over time, right now it is only {price}.
 
 [# fee-division]
 #### Fee Division
-Every time {account} pays a transaction fee, that fee is divided among several different accounts.  The network takes
+Every time {account} pays a transaction fee, that fee is divided among several different accounts. The network takes
 a {networkFee}% cut, and the Lifetime Member who referred {account} gets a {lifetimeFee}% cut.
 
-The _registrar_ is the account that paid the transaction fee to register {account} with the network.  The registrar gets to decide how to
-divide the remaining {referrerTotalFee}% between themselves and their own _Affiliate Referrer_ program.
+The registrar is the account that paid the transaction fee to register {account} with the network. The registrar gets to decide how to divide the remaining {referrerTotalFee}% between themselves and their own Affiliate Referrer program.
 
-{account}'s registrar chose to share {referrerFee}% of the total fee with the _Affiliate Referrer_ and keep {registrarFee}% of the total fee for themselves.
+{account}'s registrar chose to share {referrerFee}% of the total fee with the Affiliate Referrer and keep {registrarFee}% of the total fee for themselves.
 
 
 #### Pending Fees

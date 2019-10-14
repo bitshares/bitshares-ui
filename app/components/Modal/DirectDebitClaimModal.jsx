@@ -1,56 +1,49 @@
 import React from "react";
 import Translate from "react-translate-component";
 import {ChainStore, FetchChain} from "bitsharesjs";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
+import debounceRender from "react-debounce-render";
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
-import {Asset} from "common/MarketClasses";
-import {debounce, isNaN} from "lodash-es";
-import {
-    checkFeeStatusAsync,
-    shouldPayFeeWithAssetAsync
-} from "common/trxHelper";
+import {isNaN} from "lodash-es";
 import LimitToWithdraw from "../Utility/LimitToWithdraw";
 import utils from "common/utils";
 import counterpart from "counterpart";
-import {connect} from "alt-react";
-import SettingsStore from "stores/SettingsStore";
-import {Modal, Button, Tooltip, Icon} from "bitshares-ui-style-guide";
-import moment from "moment";
+import {
+    Modal,
+    Button,
+    Tooltip,
+    Icon,
+    Form,
+    Input
+} from "bitshares-ui-style-guide";
 import ApplicationApi from "../../api/ApplicationApi";
+import FeeAssetSelector from "components/Utility/FeeAssetSelector";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 class DirectDebitClaimModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
-        this._updateFee = debounce(this._updateFee.bind(this), 250);
-        this._checkFeeStatus = this._checkFeeStatus.bind(this);
-        this._checkBalance = this._checkBalance.bind(this);
     }
 
     getInitialState() {
         return {
             to_name: "",
             from_account: null,
+            from_account_balance: null,
             to_account: null,
             amount: "",
             asset_id: null,
             asset: null,
             memo: "",
             error: null,
-            feeAsset: null,
-            fee_asset_id:
-                ChainStore.assets_by_symbol.get(this.props.fee_asset_symbol) ||
-                "1.3.0",
-            feeAmount: new Asset({amount: 0}),
-            feeStatus: {},
+            feeAsset: null, // will be filled by FeeAssetSelector
             maxAmount: false,
             permissionId: "",
-            balanceError: false,
-            limitError: false,
             firstPeriodError: false,
             payerBalanceWarning: false,
-            withdrawal_limit: null,
+            withdrawal_limit: this.props.operation.payload.withdrawal_limit,
             current_period_expires: "",
             claimedAmount: "",
             errorMessage: null
@@ -63,13 +56,13 @@ class DirectDebitClaimModal extends React.Component {
             from_account,
             to_account,
             feeAsset,
-            fee_asset_id,
             permissionId,
             amount,
             asset,
             asset_id,
             memo
         } = this.state;
+
         ApplicationApi.claimWithdrawPermission(
             permissionId,
             from_account,
@@ -77,7 +70,7 @@ class DirectDebitClaimModal extends React.Component {
             asset_id,
             utils.convert_typed_to_satoshi(amount, asset),
             memo ? new Buffer(memo, "utf-8") : memo,
-            feeAsset ? feeAsset.get("id") : fee_asset_id
+            feeAsset.asset_id
         )
             .then(result => {
                 this.props.hideModal();
@@ -87,7 +80,7 @@ class DirectDebitClaimModal extends React.Component {
             });
     };
 
-    componentDidUpdate(prevProps, prevState) {
+    async componentDidUpdate(prevProps, prevState) {
         const {operation, isModalVisible} = this.props;
 
         if (
@@ -112,386 +105,176 @@ class DirectDebitClaimModal extends React.Component {
                 currentPeriodExpires = timeStart + periodMs * currentPeriodNum;
             }
 
-            const to = ChainStore.getAccount(
-                operation.payload.authorized_account,
-                false
+            const to = await FetchChain(
+                "getAccount",
+                operation.payload.authorized_account
             );
-            const from = ChainStore.getAccount(
-                operation.payload.withdraw_from_account,
-                false
+            const from = await FetchChain(
+                "getAccount",
+                operation.payload.withdraw_from_account
             );
-
-            this.setState(
-                {
-                    to_account: to,
-                    from_account: from,
-                    permissionId: operation.payload.id,
-                    withdrawal_limit: operation.payload.withdrawal_limit,
-                    claimedAmount: operation.payload.claimed_this_period,
-                    current_period_expires_date: currentPeriodExpires,
-                    asset: ChainStore.getAsset(
-                        operation.payload.withdrawal_limit.asset_id
-                    )
-                },
-                this._checkFeeStatus
+            const asset = await FetchChain(
+                "getAsset",
+                operation.payload.withdrawal_limit.asset_id
             );
-        }
-    }
-
-    _checkBalance() {
-        const {feeAmount, from_account, asset} = this.state;
-        if (!asset || !from_account) return;
-        this._updateFee();
-        const balanceID = from_account.getIn(["balances", asset.get("id")]);
-        const feeBalanceID = from_account.getIn([
-            "balances",
-            feeAmount.asset_id
-        ]);
-        if (!asset || !from_account) return;
-        if (!balanceID) return this.setState({balanceError: true});
-        let balanceObject = ChainStore.getObject(balanceID);
-        let feeBalanceObject = feeBalanceID
-            ? ChainStore.getObject(feeBalanceID)
-            : null;
-        if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
-        }
-        if (!balanceObject || !feeAmount) return;
-
-        const balanceAmount = new Asset({
-            real: balanceObject.get("balance"),
-            asset_id: asset.get("id"),
-            precision: asset.get("precision")
-        });
-        balanceAmount.minus(feeAmount);
-        const hasBalance = balanceAmount.getAmount({real: true}) > 0;
-        if (hasBalance === null) return;
-        this.setState({balanceError: !hasBalance});
-    }
-
-    _checkFeeStatus(state = this.state) {
-        const {from_account} = state;
-        const {isModalVisible} = this.props;
-        if (!from_account || !isModalVisible) return;
-
-        const assets = Object.keys(from_account.get("balances").toJS()).sort(
-            utils.sortID
-        );
-        let feeStatus = {};
-        let p = [];
-        assets.forEach(a => {
-            p.push(
-                checkFeeStatusAsync({
-                    accountID: from_account.get("id"),
-                    feeID: a,
-                    type: "withdraw_permission_claim",
-                    options: ["price_per_kbyte"],
-                    data: {
-                        type: "memo",
-                        content: state.memo
-                    }
-                })
+            const from_account_balance = await this._checkBalance(
+                from,
+                operation.payload.withdrawal_limit
             );
-        });
-        Promise.all(p)
-            .then(status => {
-                assets.forEach((a, idx) => {
-                    feeStatus[a] = status[idx];
-                });
-                if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
-                    this.setState({
-                        feeStatus
-                    });
-                }
-                this._checkBalance();
-            })
-            .catch(err => {
-                console.error(err);
+            this.setState({
+                to_account: to,
+                from_account: from,
+                permissionId: operation.payload.id,
+                withdrawal_limit: operation.payload.withdrawal_limit,
+                claimedAmount: operation.payload.claimed_this_period,
+                current_period_expires_date: currentPeriodExpires,
+                asset: asset,
+                from_account_balance
             });
+        }
     }
 
     setTotalLimit = limit => () => {
         const {asset, claimedAmount} = this.state;
         let amount = utils.get_asset_amount(limit - claimedAmount, asset);
-        this.setState({maxAmount: true, amount}, this.checkLimit);
+        this.setState({maxAmount: true, amount});
     };
-
-    checkLimit() {
-        const {
-            withdrawal_limit,
-            amount,
-            limitError,
-            asset,
-            claimedAmount
-        } = this.state;
-        const limit = utils.get_asset_amount(
-            withdrawal_limit.amount - claimedAmount,
-            asset
-        );
-
-        if (amount > limit && !limitError) {
-            this.setState({limitError: true});
-        } else if (amount <= limit && limitError) {
-            this.setState({limitError: false});
-        }
-    }
-
-    _getAvailableAssets(state = this.state) {
-        const {feeStatus} = this.state;
-        function hasFeePoolBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasPoolBalance;
-        }
-
-        function hasBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasBalance;
-        }
-        const {from_account} = state;
-        let asset_types = [],
-            fee_asset_types = [];
-        if (!(from_account && from_account.get("balances"))) {
-            return {asset_types, fee_asset_types};
-        }
-        let account_balances = state.from_account.get("balances").toJS();
-        asset_types = Object.keys(account_balances).sort(utils.sortID);
-        fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
-        for (let key in account_balances) {
-            let balanceObject = ChainStore.getObject(account_balances[key]);
-            if (balanceObject && balanceObject.get("balance") === 0) {
-                asset_types.splice(asset_types.indexOf(key), 1);
-                if (fee_asset_types.indexOf(key) !== -1) {
-                    fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                }
-            }
-        }
-
-        fee_asset_types = fee_asset_types.filter(a => {
-            return hasFeePoolBalance(a) && hasBalance(a);
-        });
-
-        return {asset_types, fee_asset_types};
-    }
-
-    _updateFee(state = this.state) {
-        if (!this.props.isModalVisible) return;
-        let {fee_asset_id, from_account, asset_id} = state;
-        const {fee_asset_types} = this._getAvailableAssets(state);
-        if (
-            fee_asset_types.length === 1 &&
-            fee_asset_types[0] !== fee_asset_id
-        ) {
-            fee_asset_id = fee_asset_types[0];
-        }
-        if (!from_account) return null;
-        checkFeeStatusAsync({
-            accountID: from_account.get("id"),
-            feeID: fee_asset_id,
-            type: "withdraw_permission_claim",
-            options: ["price_per_kbyte"],
-            data: {
-                type: "memo",
-                content: state.memo
-            }
-        }).then(({fee, hasBalance, hasPoolBalance}) => {
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {fee_asset_id: asset_id},
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
-            );
-        });
-    }
 
     onAmountChanged = ({amount, asset}) => {
         if (!asset) {
             return;
         }
 
-        this.setState(
-            {
-                amount,
-                asset,
-                asset_id: asset.get("id"),
-                error: null,
-                maxAmount: false
-            },
-            this.checkLimit
-        );
+        this.setState({
+            amount,
+            asset,
+            asset_id: asset.get("id"),
+            error: null,
+            maxAmount: false
+        });
     };
 
-    onFeeChanged({asset}) {
-        this.setState(
-            {feeAsset: asset, fee_asset_id: asset.get("id"), error: null},
-            this._updateFee
-        );
+    onFeeChanged(asset) {
+        this.setState({feeAsset: asset});
     }
 
     onMemoChanged(e) {
-        this.setState({memo: e.target.value}, this._checkBalance);
+        this.setState({memo: e.target.value});
     }
 
-    isPayerBalanceWarning() {
-        const {
-            withdrawal_limit,
-            asset,
-            to_account,
-            payerBalanceWarning,
-            claimedAmount
-        } = this.state;
-        const limitAmount = utils.get_asset_amount(
-            withdrawal_limit.amount,
-            asset
-        );
-
-        const balanceID = to_account.getIn([
+    async _checkBalance(from_account = null, withdrawal_limit = null) {
+        let setState = false;
+        if (from_account == null) {
+            from_account = this.state.from_account;
+            setState = true;
+        }
+        if (withdrawal_limit == null) {
+            withdrawal_limit = this.state.withdrawal_limit;
+            setState = true;
+        }
+        const balanceID = from_account.getIn([
             "balances",
             withdrawal_limit.asset_id
         ]);
-        if (!balanceID) {
-            if (!payerBalanceWarning) {
-                this.setState({payerBalanceWarning: true});
-            }
-            return;
-        }
-        const payerBalance = ChainStore.getObject(balanceID).get("balance");
 
-        if (
-            payerBalance < limitAmount - claimedAmount &&
-            !payerBalanceWarning
-        ) {
-            this.setState({payerBalanceWarning: true});
-        } else if (
-            payerBalance >= limitAmount - claimedAmount &&
-            payerBalanceWarning
-        ) {
-            this.setState({payerBalanceWarning: false});
+        let from_account_balance = 0;
+        if (!!balanceID) {
+            from_account_balance = (await FetchChain(
+                "getObject",
+                balanceID
+            )).get("balance");
         }
+        if (setState) {
+            this.setState({from_account_balance});
+        }
+        return from_account_balance;
     }
 
     render() {
         let {
             from_account,
+            from_account_balance,
             to_account,
             asset,
-            asset_id,
-            feeAmount,
             amount,
-            error,
             memo,
-            feeAsset,
-            fee_asset_id,
-            balanceError,
-            limitError,
             payerBalanceWarning,
             withdrawal_limit,
-            current_period_expires_date,
-            claimedAmount
+            current_period_expires_date
         } = this.state;
 
-        let {asset_types, fee_asset_types} = this._getAvailableAssets();
+        let enteredMoreThanAvailable = false;
+        let balanceError = false;
+        let maximumToClaim = 0;
+        if (withdrawal_limit) {
+            maximumToClaim =
+                from_account_balance !== null
+                    ? Math.min(from_account_balance, withdrawal_limit.amount)
+                    : withdrawal_limit.amount;
+            if (asset && amount)
+                enteredMoreThanAvailable =
+                    utils.convert_typed_to_satoshi(amount, asset) >
+                    maximumToClaim;
+            if (
+                from_account_balance !== null &&
+                from_account_balance < withdrawal_limit.amount
+            ) {
+                balanceError = true;
+            }
+        }
 
         let balance = null;
-        let balance_fee = null;
-
-        // Estimate fee
-        let fee = this.state.feeAmount.getAmount({real: true});
 
         // balance
         if (from_account && from_account.get("balances")) {
-            let _error = this.state.balanceError ? "has-error" : "";
-            if (asset_types.length === 1)
-                asset = ChainStore.getAsset(asset_types[0]);
-            if (asset_types.length > 0) {
-                let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                let feeID = feeAsset ? feeAsset.get("id") : fee_asset_id;
-                // const assetToWithdraw =
-                //     withdrawal_limit &&
-                //     ChainStore.getAsset(withdrawal_limit.asset_id);
-                // const assetToWithdrawPrecision = assetToWithdraw.get(
-                //     "precision"
-                // );
-                // const limitAmount =
-                //     withdrawal_limit &&
-                //     Math.pow(10, assetToWithdrawPrecision) *
-                //         withdrawal_limit.amount;
-                this.isPayerBalanceWarning();
-
-                balance = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="showcases.direct_debit.limit"
+            balance = (
+                <span>
+                    <Translate
+                        component="span"
+                        content="showcases.direct_debit.limit"
+                    />
+                    :{" "}
+                    <span
+                        className={enteredMoreThanAvailable ? "has-error" : ""}
+                        style={{
+                            borderBottom: "#A09F9F 1px dotted",
+                            cursor: "pointer"
+                        }}
+                        onClick={this.setTotalLimit(maximumToClaim)}
+                    >
+                        <LimitToWithdraw
+                            amount={maximumToClaim}
+                            assetId={
+                                withdrawal_limit && withdrawal_limit.asset_id
+                            }
                         />
-                        :{" "}
-                        <span
-                            className={limitError ? "has-error" : ""}
-                            style={{
-                                borderBottom: "#A09F9F 1px dotted",
-                                cursor: "pointer"
-                            }}
-                            onClick={this.setTotalLimit(
-                                withdrawal_limit.amount
-                            )}
-                        >
-                            <LimitToWithdraw
-                                amount={withdrawal_limit.amount - claimedAmount}
-                                assetId={
-                                    withdrawal_limit &&
-                                    withdrawal_limit.asset_id
-                                }
-                            />
-                        </span>
-                        &nbsp;
-                        {payerBalanceWarning && (
-                            <Tooltip
-                                placement="top"
-                                title="Limit > payer balance!"
-                            >
-                                <Icon
-                                    type="exclamation-circle"
-                                    theme="filled"
-                                    style={{color: "#fe8c00"}}
+                    </span>
+                    &nbsp;
+                    {balanceError && (
+                        <Tooltip
+                            placement="topRight"
+                            title={
+                                <TranslateWithLinks
+                                    string="showcases.direct_debit.payer_balance_not_sufficient"
+                                    keys={[
+                                        {
+                                            type: "amount",
+                                            value: withdrawal_limit,
+                                            arg: "limit"
+                                        }
+                                    ]}
                                 />
-                            </Tooltip>
-                        )}
-                    </span>
-                );
-
-                if (feeID == current_asset_id && this.state.balanceError) {
-                    balance_fee = (
-                        <span>
-                            <span className={_error}>
-                                <Translate content="transfer.errors.insufficient" />
-                            </span>
-                        </span>
-                    );
-                }
-            } else {
-                balance = (
-                    <span>
-                        <span className={_error}>
-                            <Translate content="transfer.errors.noFunds" />
-                        </span>
-                    </span>
-                );
-                balance_fee = (
-                    <span>
-                        <span className={_error}>
-                            <Translate content="transfer.errors.noFunds" />
-                        </span>
-                    </span>
-                );
-            }
+                            }
+                        >
+                            <Icon
+                                type="exclamation-circle"
+                                theme="filled"
+                                style={{color: "#fe8c00"}}
+                            />
+                        </Tooltip>
+                    )}
+                </span>
+            );
         }
 
         const amountValue = parseFloat(
@@ -504,10 +287,15 @@ class DirectDebitClaimModal extends React.Component {
             !isAmountValid ||
             !asset ||
             balanceError ||
-            limitError ||
+            enteredMoreThanAvailable ||
             payerBalanceWarning ||
             !current_period_expires_date ||
             from_account.get("id") == to_account.get("id");
+
+        if (__DEV__) {
+            console.log("DirectDebitClaimModal.render", this.props, this.state);
+        }
+
         return (
             <Modal
                 title={counterpart.translate(
@@ -537,32 +325,24 @@ class DirectDebitClaimModal extends React.Component {
                 ]}
             >
                 <div className="grid-block vertical no-overflow">
-                    <form noValidate>
-                        <div>
-                            {/* AUTHORIZED ACCOUNT */}
-                            <div className="content-block">
-                                <AccountSelector
-                                    label="showcases.direct_debit.authorizing_account"
-                                    accountName={
-                                        !!from_account
-                                            ? from_account.get("name")
-                                            : ""
-                                    }
-                                    account={from_account}
-                                    size={60}
-                                    hideImage
-                                    disabled
-                                />
-                            </div>
-                        </div>
-                        <div className="content-block transfer-input">
-                            {/*  CURRENT PERIOD EXPIRES  */}
-                            <label className="left-label">
-                                {counterpart.translate(
-                                    "showcases.direct_debit.current_period_expires"
-                                )}
-                            </label>
-                            <input
+                    <Form className="full-width" layout="vertical">
+                        <AccountSelector
+                            label="showcases.direct_debit.authorizing_account"
+                            accountName={
+                                !!to_account ? to_account.get("name") : ""
+                            }
+                            account={to_account}
+                            size={60}
+                            hideImage
+                            disabled
+                            noForm
+                        />
+                        <Form.Item
+                            label={counterpart.translate(
+                                "showcases.direct_debit.current_period_expires"
+                            )}
+                        >
+                            <Input
                                 type="text"
                                 value={
                                     current_period_expires_date
@@ -586,106 +366,59 @@ class DirectDebitClaimModal extends React.Component {
                                         : "error-area"
                                 }
                             />
-                        </div>
-                        <div className="content-block transfer-input">
-                            {/*  AMOUNT TO WITHDRAW */}
-                            <AmountSelector
-                                label="showcases.direct_debit.amount_to_withdraw"
-                                amount={amount}
-                                onChange={this.onAmountChanged}
-                                asset={
-                                    withdrawal_limit &&
-                                    withdrawal_limit.asset_id
-                                }
-                                assets={
-                                    withdrawal_limit && [
-                                        withdrawal_limit.asset_id
-                                    ]
-                                }
-                                display_balance={balance}
-                                allowNaN={true}
-                            />
-                        </div>
-
-                        {/*  M E M O  */}
-                        <div className="content-block transfer-input">
-                            {memo && memo.length ? (
-                                <label className="right-label">
-                                    {memo.length}
-                                </label>
-                            ) : null}
-                            <Tooltip
-                                placement="top"
-                                title={counterpart.translate(
-                                    "tooltip.memo_tip"
-                                )}
-                            >
-                                <Translate
-                                    className="left-label tooltip"
-                                    component="label"
-                                    content="transfer.memo"
-                                />
-                            </Tooltip>
-                            <textarea
+                        </Form.Item>
+                        <AmountSelector
+                            label="showcases.direct_debit.amount_to_withdraw"
+                            amount={amount}
+                            onChange={this.onAmountChanged}
+                            asset={
+                                withdrawal_limit && withdrawal_limit.asset_id
+                            }
+                            assets={
+                                withdrawal_limit && [withdrawal_limit.asset_id]
+                            }
+                            display_balance={balance}
+                            allowNaN={true}
+                        />
+                        {memo && memo.length ? (
+                            <label className="right-label">{memo.length}</label>
+                        ) : null}
+                        <Form.Item
+                            label={
+                                <Tooltip
+                                    placement="top"
+                                    title={counterpart.translate(
+                                        "tooltip.memo_tip"
+                                    )}
+                                >
+                                    {counterpart.translate("transfer.memo")}
+                                </Tooltip>
+                            }
+                        >
+                            <Input.TextArea
                                 style={{marginBottom: 0}}
                                 rows="3"
                                 value={memo}
                                 onChange={this.onMemoChanged.bind(this)}
                             />
-                        </div>
-
-                        <div className="content-block transfer-input">
-                            <div className="no-margin no-padding">
-                                {/*  F E E  */}
-                                <div id="txFeeSelector" className="small-12">
-                                    <AmountSelector
-                                        label="transfer.fee"
-                                        disabled={true}
-                                        amount={fee}
-                                        onChange={this.onFeeChanged.bind(this)}
-                                        asset={
-                                            fee_asset_types.length && feeAmount
-                                                ? feeAmount.asset_id
-                                                : fee_asset_types.length === 1
-                                                    ? fee_asset_types[0]
-                                                    : fee_asset_id
-                                                        ? fee_asset_id
-                                                        : fee_asset_types[0]
-                                        }
-                                        assets={fee_asset_types}
-                                        display_balance={balance_fee}
-                                        // tabIndex={tabIndex++}
-                                        error={
-                                            this.state.hasPoolBalance === false
-                                                ? "transfer.errors.insufficient"
-                                                : null
-                                        }
-                                        scroll_length={1}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                        </Form.Item>
+                        <FeeAssetSelector
+                            account={to_account}
+                            transaction={{
+                                type: "withdraw_permission_claim",
+                                options: ["price_per_kbyte"],
+                                data: {
+                                    type: "memo",
+                                    content: memo
+                                }
+                            }}
+                            onChange={this.onFeeChanged.bind(this)}
+                        />
+                    </Form>
                 </div>
             </Modal>
         );
     }
 }
 
-export default connect(
-    DirectDebitClaimModal,
-    {
-        listenTo() {
-            return [AccountStore, SettingsStore];
-        },
-        getProps() {
-            return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
-                fee_asset_symbol: SettingsStore.getState().settings.get(
-                    "fee_asset"
-                )
-            };
-        }
-    }
-);
+export default DirectDebitClaimModal;

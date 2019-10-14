@@ -3569,13 +3569,9 @@ class Exchange extends React.Component {
                         ref="deposit_modal"
                         action="deposit"
                         fiatModal={false}
-                        account={currentAccount.get("name")}
-                        sender={currentAccount.get("id")}
-                        asset={
-                            depositModalType === "bid"
-                                ? base.get("id")
-                                : quote.get("id")
-                        }
+                        account={currentAccount}
+                        sender={currentAccount}
+                        asset={depositModalType === "bid" ? base : quote}
                         modalId={
                             "simple_deposit_modal" +
                             (depositModalType === "bid" ? "" : "_ask")

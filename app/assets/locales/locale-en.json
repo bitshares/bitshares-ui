@@ -67,6 +67,9 @@
         "intro_text_3": "<b>The DEX</b> also enables creation of user-issued assets (UIAs), which can be traded against any other UIAs or trustless assets on the platform.  One well-known issuer on The DEX is <b>OpenLedger</b>, offering a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more",
         "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
         "intro_text_title": "Welcome to %(wallet_name)s",
+        "inOrders": "In Orders",
+        "inCollateral": "In Collateral",
+        "inVestingBalances": "In Vesting Balances",
         "login_with": "Login with",
         "market_actions": "Market actions",
         "market_orders": "Market orders",
@@ -83,17 +86,32 @@
             "days": "days",
             "earned": "Coin days earned",
             "expires": "expires",
+            "fee_division_text": {
+                "paragraph_1": "Every time %(account)s pays a transaction fee, that fee is divided among several different accounts. The network takes %(fee_share_network)s%. The Lifetime Member who referred %(account)s takes %(fee_share_ltm)s%.",
+                "paragraph_2": "The registrar is the account that paid the transaction fee to register %(account)s with the network and decide how to divide the remaining %(fee_share_registrar)s% between themselves and their own Affiliate Referrer program. %(account)s's registrar chose to share %(fee_share_affiliate)s% of the total fee with the Affiliate Referrer.",
+                "paragraph_3": "Fee shares, market rewards and other rewards is found on the Vesting Balances page"
+            },
+            "fee_pending_text": "Fees paid by %(account)s are divided among the network, referrers, and registrars once every maintenance interval (%(maintenanceInterval)s seconds). The next maintenance time is %(nextMaintenanceTime)s.",
+            "fee_vesting_text": "Most fees are made available immediately, but fees over %(vestingThresholdAmount)s %(vestingThresholdAsset)s (such as those paid to upgrade your membership or register a premium account name) must vest for a total of %(vestingPeriod)s days.",
+            "ref_distribution": "Referral Fee Distribution",
+            "fee_division": "Fee Division",
+            "fee_pending": "Pending Fees",
+            "fee_vesting": "Vesting Fees",
+            "referal_fees": "Referral Fee Distribution",
             "fee_allocation": "Fee Allocation",
             "fees_cashback": "Fee statistics",
             "fees_paid": "Total fees paid",
             "join": "Joined on",
             "lifetime": "Lifetime member",
+            "lifetime_title": "Earn cashback",
             "lifetime_referrer": "Lifetime Referrer",
             "membership": "Membership",
             "membership_expiration": "Membership Expiration",
             "network_percentage": "Network",
-            "referral_link": "Your referral link",
-            "referral_text": "Give this to link to people you want to refer to %(wallet_name)s",
+            "total_ref": "Total referred %(total)s",
+            "referral_link": "Your personal referral link",
+            "referral_text": "Give this link to people you want to refer to %(wallet_name)s",
+            "referral_info": "As a lifetime member (LTM) you are eligable for a %(feesCashback)s% cashback on all your fees. You will also recieve cashback from markets with a referral reward. The referral reward is based on your own and your referred members market orders.",
             "referrals": "Referrals",
             "referrer": "Affiliate Referrer",
             "registrar": "Registrar",
@@ -138,7 +156,7 @@
         "pay": "Send to",
         "pay_from": "Pay with account",
         "payees": "Payees",
-        "percent": "Percent of total supply",
+        "percent": "% total supply",
         "perm": {
             "account_name_or_key": "Account name or key",
             "acct_or_key": "Account / Key / Address",
@@ -518,7 +536,8 @@
         "top_markets": "Top Markets"
     },
     "errors": {
-        "loading_from_blockchain": "Error fetching form the blockchain, please retry."
+        "loading_from_blockchain": "Error fetching from the blockchain, please retry.",
+        "loading_from_es": "Error fetching from elastic search database."
     },
     "exchange": {
         "actions": "Actions",
@@ -1230,6 +1249,7 @@
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
         "settings": "Settings",
+        "insight": "Insight",
         "showcases": "Spotlight",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
@@ -1375,6 +1395,12 @@
         "memo": "Memo",
         "note": "Note",
         "paid_by": "Paid by",
+        "pay": {
+            "title": "Pay",
+            "barcode": "Barcode",
+            "invoice_qr_code": "Invoice QR code",
+            "payment_qr_code": "Payment QR code"
+        },
         "pay_button": "Pay %(asset)s to %(name)s",
         "pay_invoice": "Pay Invoice",
         "pay_to": "Pay To",
@@ -1382,11 +1408,32 @@
         "payment_request": "Payment request",
         "print_receipt": "Print receipt",
         "receipt_total": "Receipt Total",
-        "recipient_name": "Recipient Name",
+        "request": {
+            "title": "Request",
+            "submit": "Submit",
+            "create_invoice_string": "Create invoice string",
+            "identifier": "Identifier",
+            "identifier_tooltip": "The identifier needs to be used as the memo/message when the request is paid.",
+            "items": "Items",
+            "currency": "Currency",
+            "action": "Action",
+            "quantity": "Quantity",
+            "price": "Price",
+            "recipient_account": "Recipient Account",
+            "recipient_name": "Recipient Name",
+            "recipient_name_tooltip": "You can define an arbitrary plaintext name for yourself to indicate who is being paid. Must not be a BitShares account name.",
+            "payment_asset": "Payment Asset",
+            "payment_asset_tooltip": "This payment request will be paid with one transfer, and will be requesting to be paid in the indicated asset.",
+            "note": "Note",
+            "note_tooltip": "You can attach a note to this payment request, this can be any additional information."
+        },
         "tooltip_payment_proof": "Your account history has been searched for a match of sender, recipient and asset. This is an educated guess, but there is no direct link between this transfer and the shown invoice written on-chain.",
         "total": "Total",
         "transaction": "Transaction",
-        "unit": "Unit"
+        "unit": "Unit",
+        "raw_invoice_data": "raw invoice data",
+        "use_invoice_data": "Use invoice data",
+        "invoice_data_found": "Invoice data found"
     },
     "languages": {
         "de": "Deutsch",
@@ -1691,6 +1738,7 @@
             "symbol": "Symbol",
             "title": "Create prediction market",
             "tooltip_backing_asset": "The backing asset will be used to pay the premium, i.e. it is the leverage that participants use.",
+            "commission": "Commission (in %)",
             "tooltip_commission": "Every participant pays the commission when opposing opinions on the prediction are being matched. On the blockchain, the commission is the market fee of this new asset.",
             "tooltip_condition": "The condition is a statement that can be resolved unambiguous to correct or incorrect at the resolution state.",
             "tooltip_description": "The description gives background information that help the user understand the significance of the prediction.",
@@ -2102,6 +2150,7 @@
             "create": "Create",
             "create_new_mandate": "Create authorization",
             "current_period_expires": "Current period ends",
+            "payer_balance_not_sufficient": "There are not enough funds in the payer's account to claim the full limit amount of {limit}. The limit has been adjusted to reflect the currently available balance!",
             "delete": "Delete",
             "description": "Setup a direct debit authorization for recurring payments. The authorization allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
             "expires": "Expires",
@@ -2162,6 +2211,10 @@
                 "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
                 "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
             }
+        },
+        "merchant_protocol": {
+            "description": "Create, view and pay remittance requests or invoices",
+            "title": "Merchant Protocol"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
@@ -2355,6 +2408,7 @@
         "fund_pool": "funded %(asset)s fee pool with",
         "funding_account": "Funding account",
         "global_parameters_update": "Updated global parameters",
+        "hide": "Hide",
         "inputs": "Inputs",
         "market_fee": "Market fee",
         "max_market_fee": "Maximum market fee",
@@ -2370,6 +2424,7 @@
         "seller": "Seller",
         "sent": "sent",
         "settlement_date": "Settlement date",
+        "show_more": "Show more",
         "to": "to",
         "transaction_confirmed": "Transaction confirmed",
         "trxTypes": {
@@ -2503,8 +2558,10 @@
         "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_items_y_hidden": "Total of %(totelCount)s items loaded, %(count)s of those shown in pagination",
         "total_x_markets": "Total of %(count)s markets",
-        "total_x_operations": "Total of %(count)s operations"
+        "total_x_operations": "Total of %(count)s operations",
+        "x_assets_hidden": "%(count)s of %(total)s assets filtered out"
     },
     "validation": {
         "messages": {
