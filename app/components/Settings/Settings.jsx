@@ -36,7 +36,8 @@ class Settings extends React.Component {
             "walletLockTimeout",
             "themes",
             "showAssetPercent",
-            "viewOnlyMode"
+            "viewOnlyMode",
+            "showProposedTx"
         ];
         // disable that the user can change login method if only one is allowed
         if (getAllowedLogins().length > 1) general.push("passwordLogin");
@@ -257,6 +258,7 @@ class Settings extends React.Component {
                 });
                 break;
 
+            case "showProposedTx":
             case "showSettles":
             case "showAssetPercent":
             case "passwordLogin":
