@@ -23,6 +23,14 @@
         "create_account": "Create account",
         "create_new": "Create A New Account",
         "deactivate_suspicious_proposals": "Hide approve for suspicious proposals",
+        "proposed_transactions": {
+            "advanced_feature": "This is an advanced feature. Please answer the following questions",
+            "question1": "Do you know what a proposal is?",
+            "question2": "Are you expecting a proposal?",
+            "question3": "Are you aware that a proposal can steal your funds or lock you out of the account?",
+            "answered_no": "If your answer to any of the questions above is no, do NOT continue. You can also turn this on and off in Settings.",
+            "show_me_proposals": "Show me Proposals"
+        },
         "deposit": "Deposit BTS",
         "deposit_address": "Your deposit address is your account name",
         "deposit_withdraw": "Deposit/Withdraw",
