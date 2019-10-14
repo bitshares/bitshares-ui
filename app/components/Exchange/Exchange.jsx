@@ -2535,13 +2535,12 @@ class Exchange extends React.Component {
                 />
             );
 
-        // if (this.refs.order_book) {
-        // Doesn't scale backwards
-        // panelWidth = this.refs.order_book.refs.vertical_sticky_table.scrollData.scrollWidth;
-        // panelWidth = 350;
-        // }
-
         panelWidth = 350;
+
+        if (this.refs.order_book && this.refs.order_book.verticalStickyTable) {
+            panelWidth = this.refs.order_book.verticalStickyTable.current
+                .scrollData.scrollWidth;
+        }
 
         let marketHistory =
             tinyScreen &&
@@ -3032,7 +3031,9 @@ class Exchange extends React.Component {
                         "small-12 order-5",
                         verticalOrderBook ? "xlarge-order-5" : "",
                         !verticalOrderBook && !verticalOrderForm
-                            ? "xlarge-order-2"
+                            ? centerContainerWidth < 1200
+                                ? "xlarge-order-5"
+                                : "xlarge-order-2"
                             : ""
                     )}
                     style={{paddingRight: 5}}

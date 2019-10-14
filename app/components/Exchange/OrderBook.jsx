@@ -1388,7 +1388,10 @@ class OrderBook extends React.Component {
                                         )}
                                     </span>
                                 </div>
-                                <div className="cell">
+                                <div
+                                    className="cell"
+                                    style={{textAlign: "center"}}
+                                >
                                     {!!this.props.latest && (
                                         <span className="right">
                                             <span
