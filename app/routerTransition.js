@@ -406,7 +406,23 @@ class RouterTransitioner {
      * @returns list of dictionaries with keys: url, hidden, location
      */
     getAllApiServers() {
-        return SettingsStore.getState().defaults.apiServer;
+        return SettingsStore.getState().defaults.apiServer.filter(item => {
+            // Remove all but the whitelisted ones
+            let filteredApiServers = SettingsStore.getState().settings.get(
+                "filteredApiServers",
+                []
+            );
+            if (filteredApiServers.length > 0) {
+                // list may contain urls or regions
+                if (filteredApiServers.indexOf(item.url) !== -1) return true;
+                if (
+                    !!item.region &&
+                    filteredApiServers.indexOf(item.region) !== -1
+                )
+                    return true;
+                return false;
+            }
+        });
     }
 
     /**
@@ -1104,27 +1120,31 @@ class PingStrategy {
         function ping_all_from_one_region(region = null) {
             if (region == null) {
                 let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
-                region = bestOne[0].region;
+                region = bestOne && bestOne[0].region;
             }
-            this._pinger.addNodes(
-                this.getFromRegion(region).map(a => a.url),
-                false,
-                "app_init.check_latency_feedback_region"
-            );
+            if (region) {
+                this._pinger.addNodes(
+                    this.getFromRegion(region).map(a => a.url),
+                    false,
+                    "app_init.check_latency_feedback_region"
+                );
+            }
             this._pinger.pingNodes(ping_the_rest.bind(this));
         }
 
         function ping_all_from_one_country(region = null, country = null) {
             if (region == null) {
                 let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
-                region = bestOne[0].region;
-                country = bestOne[0].country;
+                region = bestOne && bestOne[0].region;
+                country = bestOne && bestOne[0].country;
             }
-            this._pinger.addNodes(
-                this.getFromRegion(region, country).map(a => a.url),
-                false,
-                "app_init.check_latency_feedback_country"
-            );
+            if (region && country) {
+                this._pinger.addNodes(
+                    this.getFromRegion(region, country).map(a => a.url),
+                    false,
+                    "app_init.check_latency_feedback_country"
+                );
+            }
             this._pinger.pingNodes(ping_all_from_one_region.bind(this));
         }
 
@@ -1199,6 +1219,15 @@ class PingStrategy {
         }
 
         countryKeys.forEach(_countryKey => {
+            if (
+                !(
+                    !!this._nodeTree[regionKey] &&
+                    !!this._nodeTree[regionKey][_countryKey]
+                )
+            ) {
+                return;
+            }
+
             let allFromRegion = this._nodeTree[regionKey][_countryKey];
 
             let shuffled = randomOrder

@@ -95,8 +95,7 @@ export const nodeRegions = [
     "Eastern Asia",
     "Central Asia",
     "Southeastern Asia",
-    "Australia",
-    "New Zealand",
+    "Australia and New Zealand",
     "Melanesia",
     "Polynesia",
     "Micronesia",
@@ -205,7 +204,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://kc-us-dex.xeldal.com/ws",
-            region: "North America",
+            region: "Northern America",
             country: "U.S.A.",
             location: "Kansas City",
             operator: "Witness: xeldal",
@@ -247,7 +246,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://blockzms.xyz/ws ",
-            region: "North America",
+            region: "Northern America",
             country: "U.S.A.",
             location: "New Jersey",
             operator: "Witness: delegate-zhaomu",
@@ -262,15 +261,15 @@ export const settingsAPIs = {
         },
         {
             url: "wss://us.nodes.bitshares.ws",
-            region: "North America",
+            region: "Northern America",
             country: "U.S.A.",
             operator: "Infrastructure Worker",
             contact: "email:info@blockchainprojectsbv.com"
         },
         {
-            url: "wss://sg.nodes.bitshares.ws",
-            region: "Southeastern Asia",
-            country: "Singapore",
+            url: "wss://hk.nodes.bitshares.ws",
+            region: "Eastern Asia",
+            country: "Hong Kong",
             operator: "Infrastructure Worker",
             contact: "email:info@blockchainprojectsbv.com"
         },
@@ -292,7 +291,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://api.bts.network/",
-            region: "North America",
+            region: "Northern America",
             country: "U.S.A.",
             location: "Virginia",
             operator: "Witness: fox",
@@ -323,7 +322,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://kimziv.com/ws",
-            region: "North America",
+            region: "Northern America",
             country: "U.S.A.",
             location: "New Jersey",
             operator: "Witness: witness.yao",
@@ -331,18 +330,10 @@ export const settingsAPIs = {
         },
         {
             url: "wss://api.btsgo.net/ws",
-            region: "Asia",
+            region: "Southeastern Asia",
             location: "Singapore",
             operator: "Witness: xn-delegate",
             contact: "wechat:Necklace"
-        },
-        {
-            url: "wss://bts.proxyhosts.info/wss",
-            region: "Western Europe",
-            country: "Germany",
-            location: "",
-            operator: "Witness: verbaltech2",
-            contact: "keybase:jgaltman"
         },
         {
             url: "wss://bts.open.icowallet.net/ws",
@@ -354,7 +345,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://crazybit.online",
-            region: "Asia",
+            region: "Eastern Asia",
             country: "China",
             location: "Shenzhen",
             operator: "Witness: crazybit",
@@ -362,7 +353,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://freedom.bts123.cc:15138/",
-            region: "South China",
+            region: "Eastern Asia",
             country: "China",
             location: "Changsha",
             operator: "Witness: delegate.freedom",
@@ -370,7 +361,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://bitshares.bts123.cc:15138/",
-            region: "North China",
+            region: "Eastern Asia",
             country: "China",
             location: "Hangzhou",
             operator: "Witness: delegate.freedom",
@@ -458,7 +449,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://ap-northeast-1.bts.crypto-bridge.org",
-            region: "Southeastern Asia",
+            region: "Eastern Asia",
             country: "Japan",
             location: "Tokyo",
             operator: "CryptoBridge",
@@ -474,7 +465,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://ap-southeast-2.bts.crypto-bridge.org",
-            region: "Australia",
+            region: "Australia and New Zealand",
             country: "Australia",
             location: "Sydney",
             operator: "CryptoBridge",
@@ -562,7 +553,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://toronto.ca.api.bitshares.org/ws",
-            region: "Canada",
+            region: "Northern America",
             country: "Canada",
             location: "Toronto",
             operator: "'Exotic flavors' infra worker",
@@ -570,7 +561,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://toronto2.ca.api.bitshares.org/ws",
-            region: "Canada",
+            region: "Northern America",
             country: "Canada",
             location: "Toronto",
             operator: "'Exotic flavors' infra worker",
@@ -618,7 +609,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://sydney.au.api.bitshares.org/ws",
-            region: "Oceania",
+            region: "Australia and New Zealand",
             country: "Australia",
             location: "Sydney",
             operator: "'Exotic flavors' infra worker",
@@ -626,7 +617,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://sydney2.au.api.bitshares.org/ws",
-            region: "Oceania",
+            region: "Australia and New Zealand",
             country: "Australia",
             location: "Sydney",
             operator: "'Exotic flavors' infra worker",
@@ -634,7 +625,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://singapore.asia.api.bitshares.org/ws",
-            region: "Asia",
+            region: "Southeastern Asia",
             country: "Singapore",
             location: "Singapore",
             operator: "'Exotic flavors' infra worker",
@@ -642,7 +633,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://tokyo.eu.api.bitshares.org/ws",
-            region: "Asia",
+            region: "Eastern Asia",
             country: "Japan",
             location: "Tokyo",
             operator: "'Exotic flavors' infra worker",
@@ -692,7 +683,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://api.gbacenter.org/ws",
-            region: "North America",
+            region: "Northern America",
             country: "U.S.A.",
             location: "Fremont, CA",
             operator: "Witness: gbac-ety001",
@@ -709,7 +700,7 @@ export const settingsAPIs = {
         },
         {
             url: "https://us.wrapper.elasticsearch.bitshares.ws",
-            region: "North America",
+            region: "Northern America",
             country: "U.S.A.",
             operator: "Infrastructure Worker",
             contact: "email:info@blockchainprojectsbv.com"

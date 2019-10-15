@@ -9,6 +9,7 @@ import cnames from "classnames";
 import Icon from "../Icon/Icon";
 import LoadingButton from "../Utility/LoadingButton";
 import {Switch, Button} from "bitshares-ui-style-guide";
+import NodeSelector from "../Utility/NodeSelector";
 
 const autoSelectionUrl = "wss://fake.automatic-selection.com";
 
@@ -101,6 +102,9 @@ class AutoSelectionNode extends React.Component {
                             content="settings.automatic"
                             totalNodes={totalNodes}
                         />
+                    </div>
+                    <div style={{float: "right", minWidth: "200px"}}>
+                        <NodeSelector />
                     </div>
                 </div>
             );
