@@ -2380,7 +2380,7 @@
         "import_private_key": "Import a private key",
         "invalid_format": "Invalid Format",
         "key_file": "Key file",
-        "key_file_bin": "Key file or .bin-file",
+        "key_file_bin": "Key-file or .bin-file",
         "last_backup": "Last backup",
         "link_account": "Account",
         "link_deposit": "Deposits",
