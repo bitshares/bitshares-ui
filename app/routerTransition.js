@@ -421,6 +421,8 @@ class RouterTransitioner {
                 )
                     return true;
                 return false;
+            } else {
+                return true;
             }
         });
     }
@@ -576,6 +578,11 @@ class RouterTransitioner {
         if (this.isAutoSelection()) {
             tryThisNode = urls[0];
             console.log("auto selecting to " + tryThisNode);
+        }
+
+        if (!tryThisNode) {
+            // something went horribly wrong, no node to connect to
+            throw "No node to connect to found, this should not happen.";
         }
 
         // ... if insecure websocket url is used when using secure protocol
