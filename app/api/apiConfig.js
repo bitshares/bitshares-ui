@@ -147,28 +147,12 @@ export const settingsAPIs = {
             contact: "telegram:mtopenledger"
         },
         {
-            url: "wss://na.openledger.info/ws",
-            location: "Quebec",
-            region: "Northern America",
-            country: "Canada",
-            operator: "Witness: openledger-dc",
-            contact: "telegram:mtopenledger"
-        },
-        {
             url: "wss://bit.btsabc.org/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Hong Kong",
             operator: "Witness: abc123",
             contact: "QQ:58291;email:58291@qq.com"
-        },
-        {
-            url: "wss://bitshares.crypto.fans/ws", // check
-            region: "Western Europe",
-            country: "Germany",
-            location: "Munich",
-            operator: "Witness: sc-ol",
-            contact: "telegram:startail"
         },
         {
             url: "wss://ws.gdex.top",
