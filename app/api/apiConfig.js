@@ -163,7 +163,7 @@ export const settingsAPIs = {
             contact: "QQ:58291;email:58291@qq.com"
         },
         {
-            url: "wss://bitshares.crypto.fans/ws",
+            url: "wss://bitshares.crypto.fans/ws", // check
             region: "Western Europe",
             country: "Germany",
             location: "Munich",
@@ -203,7 +203,7 @@ export const settingsAPIs = {
             contact: "telegram:Sahkan_bitshares"
         },
         {
-            url: "wss://kc-us-dex.xeldal.com/ws",
+            url: "wss://kc-us-dex.xeldal.com/ws", // check
             region: "Northern America",
             country: "U.S.A.",
             location: "Kansas City",
@@ -211,7 +211,7 @@ export const settingsAPIs = {
             contact: "telegram:xeldal"
         },
         {
-            url: "wss://api.bts.blckchnd.com",
+            url: "wss://api.bts.blckchnd.com", // remove
             region: "Western Europe",
             country: "Germany",
             location: "Falkenstein",
@@ -220,7 +220,7 @@ export const settingsAPIs = {
                 "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
         },
         {
-            url: "wss://api-ru.bts.blckchnd.com",
+            url: "wss://api-ru.bts.blckchnd.com", // remove
             region: "Eastern Europe",
             country: "Russia",
             location: "Moscow",
@@ -229,23 +229,7 @@ export const settingsAPIs = {
                 "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
         },
         {
-            url: "wss://api.bitsharesdex.com",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Kansas City",
-            operator: "Witness: delegate.ihashfury",
-            contact: "telegram:ihashfury"
-        },
-        {
-            url: "wss://api.fr.bitsharesdex.com",
-            region: "Western Europe",
-            country: "France",
-            location: "Paris",
-            operator: "Witness: delegate.ihashfury",
-            contact: "telegram:ihashfury"
-        },
-        {
-            url: "wss://blockzms.xyz/ws ",
+            url: "wss://blockzms.xyz/ws",
             region: "Northern America",
             country: "U.S.A.",
             location: "New Jersey",
@@ -281,22 +265,14 @@ export const settingsAPIs = {
             operator: "Witness: in.abit",
             contact: "telegram:abitmore"
         },
-        {
-            url: "wss://api.btsxchng.com",
-            region: "Multiple",
-            country: "Worldwide",
-            location: "Singapore / N. Virginia / London",
-            operator: "Witness: elmato",
-            contact: "telegram:elmato"
-        },
-        {
-            url: "wss://api.bts.network/",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Virginia",
-            operator: "Witness: fox",
-            contact: "telegram:ryanRfox"
-        },
+        // {
+        //     url: "wss://api.bts.network/", // check
+        //     region: "Northern America",
+        //     country: "U.S.A.",
+        //     location: "Virginia",
+        //     operator: "Witness: fox",
+        //     contact: "telegram:ryanRfox"
+        // },
         {
             url: "wss://btsws.roelandp.nl/ws",
             region: "Northern Europe",
@@ -344,14 +320,6 @@ export const settingsAPIs = {
             contact: "telegram:plus_wave"
         },
         {
-            url: "wss://crazybit.online",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Shenzhen",
-            operator: "Witness: crazybit",
-            contact: "telegram:crazybits;wechat:JamesCai"
-        },
-        {
             url: "wss://freedom.bts123.cc:15138/",
             region: "Eastern Asia",
             country: "China",
@@ -376,20 +344,12 @@ export const settingsAPIs = {
             contact: "telegram:vianull;wechat:strugglingl"
         },
         {
-            url: "wss://ws.hellobts.com",
+            url: "wss://ws.hellobts.com", // check
             region: "Eastern Asia",
             country: "Japan",
             location: "Tokyo",
             operator: "Witness: xman",
             contact: "wechat:hidpos;email:hellobts@qq.com"
-        },
-        {
-            url: "wss://bitshares.cyberit.io",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Hong Kong",
-            operator: "Witness: witness.still",
-            contact: "telegram:gordoor;wechat:overyard"
         },
         {
             url: "wss://bts-seoul.clockwork.gr",
