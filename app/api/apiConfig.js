@@ -188,7 +188,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://dex.rnglab.org",
-            region: "Northern Europe",
+            region: "Western Europe",
             country: "Netherlands",
             location: "Amsterdam",
             operator: "Witness: rnglab",
@@ -529,7 +529,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://master.eu.api.bitshares.org/ws",
-            region: "Northern Europe",
+            region: "Western Europe",
             country: "Germany",
             location: "Frankfurt",
             operator: "'Exotic flavors' infra worker",
@@ -537,7 +537,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://amsterdam.eu.api.bitshares.org/ws",
-            region: "Northern Europe",
+            region: "Western Europe",
             country: "Netherlands",
             location: "Amsterdam",
             operator: "'Exotic flavors' infra worker",
