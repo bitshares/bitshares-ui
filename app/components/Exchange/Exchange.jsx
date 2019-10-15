@@ -2537,7 +2537,12 @@ class Exchange extends React.Component {
 
         panelWidth = 350;
 
-        if (this.refs.order_book && this.refs.order_book.verticalStickyTable) {
+        if (
+            this.refs.order_book &&
+            this.refs.order_book.verticalStickyTable &&
+            this.refs.order_book.verticalStickyTable.current &&
+            this.refs.order_book.verticalStickyTable.current.scrollData
+        ) {
             panelWidth = this.refs.order_book.verticalStickyTable.current
                 .scrollData.scrollWidth;
         }

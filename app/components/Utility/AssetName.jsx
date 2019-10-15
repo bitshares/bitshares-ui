@@ -23,9 +23,7 @@ class AssetName extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            assetIssuerName: ChainStore.getAccountName(
-                props.asset.get("issuer")
-            )
+            assetIssuerName: null
         };
         this._load();
     }

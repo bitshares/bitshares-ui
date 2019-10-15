@@ -55,7 +55,8 @@ class AppInit extends React.Component {
             syncError: null,
             status: "",
             extendeLogText: [], // used to cache logs when not mounted
-            nodeFilterHasChanged: false
+            nodeFilterHasChanged: false,
+            showNodeFilter: false
         };
         this.mounted = true;
         this.persistentLogEnabled = false;
@@ -158,6 +159,11 @@ class AppInit extends React.Component {
         if (!__DEV__) {
             this._enablePersistingLog();
         }
+        setTimeout(() => {
+            this.setState({
+                showNodeFilter: true
+            });
+        }, 5000);
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
                 this.setState({
@@ -224,16 +230,18 @@ class AppInit extends React.Component {
                         })
                     }
                 >
-                    <div className="padding">
-                        <NodeSelector
-                            onChange={this._onNodeFilterChange.bind(this)}
-                        />
-                        {this.state.nodeFilterHasChanged && (
-                            <div style={{marginTop: "1rem"}}>
-                                Please reload for the changes to take effect
-                            </div>
-                        )}
-                    </div>
+                    {this.state.showNodeFilter && (
+                        <div className="padding">
+                            <NodeSelector
+                                onChange={this._onNodeFilterChange.bind(this)}
+                            />
+                            {this.state.nodeFilterHasChanged && (
+                                <div style={{marginTop: "1rem"}}>
+                                    Please reload for the changes to take effect
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </LoadingIndicator>
             </React.Fragment>
         );

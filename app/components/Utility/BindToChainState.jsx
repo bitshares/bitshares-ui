@@ -637,7 +637,7 @@ function BindToChainState(Component, options = {}) {
                         return (
                             <React.Fragment>
                                 <LoadingIndicator />
-                                <span cassName="text-center">
+                                <span className="text-center">
                                     Component re-rendering ...
                                 </span>
                             </React.Fragment>
