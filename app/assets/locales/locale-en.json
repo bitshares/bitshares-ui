@@ -1251,6 +1251,7 @@
         "explorer": "Explore",
         "help": "Help",
         "insight": "Insight",
+        "advanced": "Advanced",
         "lock": "Log out (lock the local wallet)",
         "lock_short": "Log out",
         "locked_tip": "<br/>Click to login.<br/><br/>Closing the browser window will also log you out.",

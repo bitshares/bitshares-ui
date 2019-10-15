@@ -294,7 +294,7 @@ class MenuDataStructure {
             insight: state => ({
                 includePattern: "/account",
                 icon: "insight",
-                text: "header.insight",
+                text: "header.advanced",
                 inHeaderBehavior: MenuItemType.Never,
                 inDropdownBehavior: MenuItemType.WhenAccount
             }),
