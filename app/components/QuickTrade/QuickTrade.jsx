@@ -228,7 +228,6 @@ class QuickTrade extends Component {
             sellAsset: quoteAsset,
             sub
         } = this.state;
-        console.log("_subToMarket");
         if (baseAsset && quoteAsset) {
             const {
                 receiveAssetId: baseAssetId,

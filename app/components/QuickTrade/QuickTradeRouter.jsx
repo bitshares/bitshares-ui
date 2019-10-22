@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import Page404 from "../Page404/Page404";
 import QuickTrade from "./QuickTrade";
-import AssetWrapper from "../Utility/AssetWrapper";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 
@@ -15,30 +14,6 @@ class QuickTradeSubscriber extends Component {
         assetToSell: "CNY",
         assetToReceive: "BTS"
     };
-
-    constructor(props) {
-        super();
-    }
-
-    componentDidMount() {
-        if (__DEV__) {
-            console.log(
-                "QuickTradeRouter",
-                this.props.assetToSell,
-                this.props.assetToReceive
-            );
-        }
-    }
-
-    componentDidUpdate() {
-        if (__DEV__) {
-            console.log(
-                "QuickTradeRouter",
-                this.props.assetToSell,
-                this.props.assetToReceive
-            );
-        }
-    }
 
     render() {
         if (!!this.props.assetToReceive.get && !!this.props.assetToSell.get) {
