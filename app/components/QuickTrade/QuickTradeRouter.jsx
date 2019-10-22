@@ -12,8 +12,8 @@ class QuickTradeSubscriber extends Component {
     };
 
     static defaultProps = {
-        assetToSell: "",
-        assetToReceive: ""
+        assetToSell: "CNY",
+        assetToReceive: "BTS"
     };
 
     constructor(props) {
@@ -41,7 +41,11 @@ class QuickTradeSubscriber extends Component {
     }
 
     render() {
-        return <QuickTrade {...this.props} />;
+        if (!!this.props.assetToReceive.get && !!this.props.assetToSell.get) {
+            return <QuickTrade {...this.props} />;
+        } else {
+            return null;
+        }
     }
 }
 

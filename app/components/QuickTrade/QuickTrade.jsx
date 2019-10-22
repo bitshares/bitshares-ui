@@ -10,7 +10,8 @@ import {
     Col,
     Table,
     Button,
-    Switch
+    Switch,
+    Tooltip
 } from "bitshares-ui-style-guide";
 import SellReceive from "components/QuickTrade/SellReceive";
 import MarketsActions from "actions/MarketsActions";
@@ -74,7 +75,6 @@ class QuickTrade extends Component {
         );
         this.hendleOrderView = this.hendleOrderView.bind(this);
         this.handleSell = this.handleSell.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
         this._subToMarket = this._subToMarket.bind(this);
         this._checkAndUpdateMarketList = this._checkAndUpdateMarketList.bind(
             this
@@ -136,7 +136,7 @@ class QuickTrade extends Component {
     }
 
     _isLoadedAsset(asset) {
-        return asset && asset.toJS;
+        return !!asset && !!asset.toJS;
     }
 
     _areAssetsGiven() {
@@ -174,9 +174,20 @@ class QuickTrade extends Component {
         return false;
     }
 
+    _hasMarketChanged(prevProps) {
+        return (
+            JSON.stringify(prevProps.marketData) !==
+            JSON.stringify(this.props.marketData)
+        );
+    }
+
     componentDidUpdate(prevProps) {
         if (this._haveAssetsChanged(prevProps)) {
             this._assetsHaveChanged();
+        } else {
+            if (this._hasMarketChanged(prevProps)) {
+                this._getOrders();
+            }
         }
         if (this.props.searchAssets !== prevProps.searchAssets) {
             this.setState({activeSearch: true});
@@ -283,6 +294,11 @@ class QuickTrade extends Component {
     }
 
     _getOrders() {
+        if (!this.state.isSubscribedToMarket) {
+            console.log(this.props.marketData);
+            // if the user wants to inspect current orders, pause updating
+            return;
+        }
         const {combinedBids} = this.props.marketData;
         const {
             sellAsset,
@@ -295,6 +311,9 @@ class QuickTrade extends Component {
             sellAssetPrecision,
             receiveAssetPrecision
         } = this.getAssetsDetails();
+        if (__DEV__) {
+            console.log("_getOrders", this.props.marketData);
+        }
         if (combinedBids && combinedBids.length) {
             if (sellAsset && receiveAsset) {
                 switch (activeInput) {
@@ -307,7 +326,8 @@ class QuickTrade extends Component {
                             );
                             this.setState(
                                 {
-                                    orders
+                                    orders,
+                                    ordersUpdated: new Date()
                                 },
                                 () => this.updateReceiveAmount()
                             );
@@ -322,7 +342,8 @@ class QuickTrade extends Component {
                             );
                             this.setState(
                                 {
-                                    orders
+                                    orders,
+                                    ordersUpdated: new Date()
                                 },
                                 () => this.updateSellAmount()
                             );
@@ -337,7 +358,8 @@ class QuickTrade extends Component {
                             );
                             this.setState(
                                 {
-                                    orders
+                                    orders,
+                                    ordersUpdated: new Date()
                                 },
                                 () => this.updateReceiveAmount()
                             );
@@ -357,7 +379,8 @@ class QuickTrade extends Component {
                             );
                             this.setState(
                                 {
-                                    orders
+                                    orders,
+                                    ordersUpdated: new Date()
                                 },
                                 () => this.updateSellAmount()
                             );
@@ -374,7 +397,7 @@ class QuickTrade extends Component {
     }
 
     _assetsHaveChanged() {
-        this._subToMarket().then(() => this._getOrders());
+        this._subToMarket();
     }
 
     async _setSellAsset(
@@ -526,7 +549,7 @@ class QuickTrade extends Component {
                     activeSearch: false
                 },
                 () => {
-                    this._subToMarket().then(() => this._getOrders());
+                    this._subToMarket();
                 }
             );
         }, 100);
@@ -628,9 +651,10 @@ class QuickTrade extends Component {
             to_receive: toReceive,
             seller: currentAccount.get("id"),
             fee: {
-                asset_id: sellAssetId,
+                asset_id: "1.3.0",
                 amount: 0
-            }
+            },
+            fill_or_kill: true
         });
 
         return MarketsActions.createLimitOrder2(order)
@@ -651,10 +675,6 @@ class QuickTrade extends Component {
             .catch(e => {
                 console.error("order failed:", e);
             });
-    }
-
-    handleCancel() {
-        this.props.history.goBack();
     }
 
     updateSellAmount() {
@@ -741,10 +761,6 @@ class QuickTrade extends Component {
 
     isSwappable() {
         return this._areAssetsGiven();
-        const {sellAsset, receiveAsset} = this.state;
-        const sellAssets = getAssetsToSell(this.props.currentAccount);
-        const {receiveAssetId} = this.getAssetsDetails();
-        return sellAsset && receiveAsset && sellAssets.includes(receiveAssetId);
     }
 
     _getTransactionFee(denominationAssetId) {
@@ -1140,10 +1156,15 @@ class QuickTrade extends Component {
         return (
             <div>
                 <Switch
-                    style={{marginLeft: "20px"}}
+                    style={{marginLeft: "0px"}}
                     onChange={this.handleSubscriptionToggleChange}
                     checked={this.state.isSubscribedToMarket}
                 />
+                {this.state.ordersUpdated && (
+                    <div style={{float: "right"}}>
+                        {counterpart.localize(this.state.ordersUpdated)}
+                    </div>
+                )}
                 <Translate
                     onClick={this.handleSubscriptionToggleChange}
                     content="exchange.quick_trade_details.subscribe_to_market"
@@ -1272,19 +1293,26 @@ class QuickTrade extends Component {
                         textAlign: "center"
                     }}
                 >
-                    <Button
-                        key="sell"
-                        type="primary"
-                        disabled={
-                            !this.showDetails() || !sub || !this.hasBalance()
+                    <Tooltip
+                        title={
+                            !this.hasBalance()
+                                ? counterpart.translate("exchange.no_balance")
+                                : null
                         }
-                        onClick={this.handleSell}
                     >
-                        {counterpart.translate("exchange.sell")}
-                    </Button>
-                    <Button key="cancel" onClick={this.handleCancel}>
-                        {counterpart.translate("global.cancel")}
-                    </Button>
+                        <Button
+                            key="sell"
+                            type="primary"
+                            disabled={
+                                !this.showDetails() ||
+                                !sub ||
+                                !this.hasBalance()
+                            }
+                            onClick={this.handleSell}
+                        >
+                            {counterpart.translate("exchange.sell")}
+                        </Button>
+                    </Tooltip>
                 </div>
             </Card>
         );
