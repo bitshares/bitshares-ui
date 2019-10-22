@@ -16,7 +16,6 @@ class AmountSelector extends DecimalChecker {
         onChange: PropTypes.func,
         tabIndex: PropTypes.number,
         error: PropTypes.string,
-        scroll_length: PropTypes.number,
         selectDisabled: PropTypes.bool
     };
 
@@ -31,7 +30,7 @@ class AmountSelector extends DecimalChecker {
     }
 
     formatAmount(v) {
-        /*// TODO: use asset's precision to format the number*/
+        // TODO: use asset's precision to format the number
         if (!v && typeof v !== "number") v = "";
         if (typeof v === "number") v = v.toString();
         let value = v.trim().replace(/,/g, "");
@@ -103,6 +102,7 @@ class AmountSelector extends DecimalChecker {
                 onChange={this.onAssetChange.bind(this)}
                 disabled={this.props.selectDisabled ? true : undefined}
                 tabIndex={this.props.tabIndex + 1}
+                onSearch={this.props.onSearch}
             />
         );
 

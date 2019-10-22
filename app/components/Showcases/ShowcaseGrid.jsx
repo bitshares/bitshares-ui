@@ -133,6 +133,17 @@ class ShowcaseGrid extends Component {
                 icon: "alarm",
                 disabled: true,
                 comingSoon: true
+            },
+            {
+                title: "showcases.instant_trade.title",
+                target: event => {
+                    thiz.props.history.push("/quick-trade");
+                },
+                description: "showcases.instant_trade.description",
+                icon: "instant-trade",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             }
             // .... even more tiles in this list
         ];

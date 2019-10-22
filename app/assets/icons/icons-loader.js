@@ -72,7 +72,9 @@ let icons = [
     "prediction-large",
     "merchant",
     "insight",
-    "create_account"
+    "create_account",
+    "swap",
+    "instant-trade"
 ];
 
 let iconsMap = {};

@@ -494,6 +494,26 @@ class AssetActions {
             });
     }
 
+    async loadAssets() {
+        let start = "A";
+        const count = 10;
+
+        let assets = [];
+        let newAssets = null;
+        while (
+            assets.length == 0 ||
+            newAssets == null ||
+            newAssets.length > 0
+        ) {
+            newAssets = await Apis.instance()
+                .db_api()
+                .exec("list_assets", [start, count]);
+            assets = assets.concat(newAssets);
+            start = assets[assets.length - 1].symbol + ".";
+        }
+        console.log("Assets loaded: ", assets.length);
+    }
+
     getAssetList(start, count, includeGateways = false) {
         let id = start + "_" + count;
         return dispatch => {

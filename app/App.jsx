@@ -146,6 +146,12 @@ const DirectDebit = Loadable({
     loading: LoadingIndicator
 });
 
+const QuickTrade = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "QuickTrade" */ "./components/QuickTrade/QuickTradeRouter"),
+    loading: LoadingIndicator
+});
+
 import LoginSelector from "./components/LoginSelector";
 import Login from "./components/Login/Login";
 import RegistrationSelector from "./components/Registration/RegistrationSelector";
@@ -527,6 +533,16 @@ class App extends React.Component {
                                 <Route
                                     path="/prediction"
                                     component={PredictionMarketsPage}
+                                />
+                                <Route
+                                    exact
+                                    path="/quick-trade"
+                                    component={QuickTrade}
+                                />
+                                <Route
+                                    exact
+                                    path="/quick-trade/:marketID"
+                                    component={QuickTrade}
                                 />
                                 <Route path="*" component={Page404} />
                             </Switch>

@@ -1,5 +1,5 @@
 import {connect} from "alt-react";
-import {ChainStore, ChainValidation} from "bitsharesjs";
+import {ChainValidation} from "bitsharesjs";
 import counterpart from "counterpart";
 import {debounce} from "lodash-es";
 import React, {Component} from "react";
@@ -7,11 +7,15 @@ import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import {Link} from "react-router-dom";
 import AssetActions from "actions/AssetActions";
-import {hasGatewayPrefix} from "common/gatewayUtils";
 import utils from "common/utils";
 import AssetStore from "stores/AssetStore";
 import {Form, Input, Modal, Icon as AntIcon} from "bitshares-ui-style-guide";
 import AssetName from "../Utility/AssetName";
+import {
+    lookupAssets,
+    assetFilter,
+    fetchIssuerName
+} from "./MarketPickerHelpers";
 
 class MarketListItem extends Component {
     static propTypes = {
@@ -62,6 +66,10 @@ class MarketPickerWrapper extends Component {
         this.state = this.initialState();
 
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
+        this.setState = this.setState.bind(this);
+        this._checkAndUpdateMarketList = this._checkAndUpdateMarketList.bind(
+            this
+        );
     }
 
     initialState() {
@@ -85,7 +93,20 @@ class MarketPickerWrapper extends Component {
             this.setState(this.initialState());
 
         if (nextProps.searchAssets !== this.props.searchAssets)
-            this.assetFilter();
+            assetFilter(
+                {
+                    searchAssets: this.props.searchAssets,
+                    marketPickerAsset: this.props.marketPickerAsset,
+                    baseAsset: this.props.baseAsset,
+                    quoteAsset: this.props.quoteAsset
+                },
+                {
+                    inputValue: this.state.inputValue,
+                    lookupQuote: this.state.lookupQuote
+                },
+                this.setState,
+                this._checkAndUpdateMarketList
+            );
     }
 
     shouldComponentUpdate(np, ns) {
@@ -129,76 +150,13 @@ class MarketPickerWrapper extends Component {
         }
 
         this.timer = setTimeout(() => {
-            this._lookupAssets(toFind, getBackedAssets);
+            lookupAssets(
+                toFind,
+                getBackedAssets,
+                this.getAssetList,
+                this.setState
+            );
         }, 1500);
-    }
-
-    _lookupAssets(value, gatewayAssets = false) {
-        if (!value && value !== "") return;
-
-        let quote = value.toUpperCase();
-
-        if (quote.startsWith("BIT") && quote.length >= 6) {
-            quote = value.substr(3, quote.length - 1);
-        }
-
-        this.getAssetList(quote, 10, gatewayAssets);
-
-        this.setState({lookupQuote: quote});
-    }
-
-    _fetchIssuerName(issuerId) {
-        let issuer = ChainStore.getObject(issuerId, false, false);
-        if (!issuer) {
-            return;
-        } else {
-            return issuer.get("name");
-        }
-    }
-
-    _getMarketSortComponents(market) {
-        const weight = {};
-        const quote = market.quote;
-        if (quote.indexOf(".") !== -1) {
-            const [gateway, asset] = quote.split(".");
-            weight.gateway = gateway;
-            weight.asset = asset;
-        } else {
-            weight.asset = quote;
-        }
-        if (market.issuerId === "1.2.0") weight.isCommittee = true;
-        return weight;
-    }
-
-    _sortMarketsList(allMarkets, inputValue) {
-        if (inputValue.startsWith("BIT") && inputValue.length >= 6) {
-            inputValue = inputValue.substr(3, inputValue.length - 1);
-        }
-        return allMarkets.sort(([, marketA], [, marketB]) => {
-            const weightA = this._getMarketSortComponents(marketA);
-            const weightB = this._getMarketSortComponents(marketB);
-
-            if (weightA.asset !== weightB.asset) {
-                if (weightA.asset === inputValue) return -1;
-                if (weightB.asset === inputValue) return 1;
-                if (weightA.asset > weightB.asset) return -1;
-                if (weightA.asset < weightB.asset) return 1;
-            }
-
-            if (weightA.isCommittee ^ weightB.isCommittee) {
-                if (weightA.isCommittee) return -1;
-                if (weightB.isCommittee) return 1;
-            }
-
-            const aIsKnownGateway = hasGatewayPrefix(marketA.quote);
-            const bIsKnownGateway = hasGatewayPrefix(marketB.quote);
-            if (aIsKnownGateway && !bIsKnownGateway) return -1;
-            if (bIsKnownGateway && !aIsKnownGateway) return 1;
-
-            if (weightA.gateway > weightB.gateway) return 1;
-            if (weightA.gateway < weightB.gateway) return -1;
-            return 0;
-        });
     }
 
     _checkAndUpdateMarketList(marketsList) {
@@ -207,7 +165,7 @@ class MarketPickerWrapper extends Component {
             let needFetchIssuer = 0;
             for (let [, market] of marketsList) {
                 if (!market.issuer) {
-                    market.issuer = this._fetchIssuerName(market.issuerId);
+                    market.issuer = fetchIssuerName(market.issuerId);
                     if (!market.issuer) needFetchIssuer++;
                 }
             }
@@ -218,64 +176,6 @@ class MarketPickerWrapper extends Component {
                 activeSearch: false
             });
         }, 300);
-    }
-
-    assetFilter() {
-        let {searchAssets, marketPickerAsset} = this.props;
-        let {inputValue, lookupQuote} = this.state;
-
-        this.setState({activeSearch: true});
-
-        let assetCount = 0;
-        let allMarkets = [];
-
-        let baseSymbol = this.props.baseAsset.get("symbol");
-        let quoteSymbol = this.props.quoteAsset.get("symbol");
-
-        if (searchAssets.size && !!inputValue && inputValue.length > 2) {
-            searchAssets
-                .filter(a => {
-                    try {
-                        if (a.options.description) {
-                            let description = JSON.parse(a.options.description);
-                            if ("visible" in description) {
-                                if (!description.visible) return false;
-                            }
-                        }
-                    } catch (e) {}
-
-                    return a.symbol.indexOf(lookupQuote) !== -1;
-                })
-                .forEach(asset => {
-                    if (assetCount > 100) return;
-                    assetCount++;
-
-                    let issuerName = this._fetchIssuerName(asset.issuer);
-
-                    let base = this.props.baseAsset.get("symbol");
-                    let marketID = asset.symbol + "_" + base;
-
-                    let isQuoteAsset = quoteSymbol == marketPickerAsset;
-                    let includeAsset =
-                        (isQuoteAsset && asset.symbol != baseSymbol) ||
-                        (!isQuoteAsset && asset.symbol != quoteSymbol);
-
-                    if (includeAsset) {
-                        allMarkets.push([
-                            marketID,
-                            {
-                                quote: asset.symbol,
-                                base: base,
-                                issuerId: asset.issuer,
-                                issuer: issuerName
-                            }
-                        ]);
-                    }
-                });
-        }
-
-        const marketsList = this._sortMarketsList(allMarkets, inputValue);
-        this._checkAndUpdateMarketList(marketsList);
     }
 
     renderSearchBar() {

@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
 import {Tooltip} from "bitshares-ui-style-guide";
 import MarketsActions from "actions/MarketsActions";
+import {Link} from "react-router-dom";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -41,7 +42,12 @@ class FormattedPrice extends React.Component {
             this.props.quote_asset
         );
 
-        this.state = {isPopoverOpen: false, marketName, first, second};
+        this.state = {
+            isPopoverOpen: false,
+            marketName,
+            first,
+            second
+        };
         this.togglePopover = this.togglePopover.bind(this);
         this.closePopover = this.closePopover.bind(this);
     }
@@ -103,6 +109,7 @@ class FormattedPrice extends React.Component {
     render() {
         let {
             base_asset,
+            quote_asset,
             base_amount,
             quote_amount,
             marketDirections,
@@ -199,13 +206,14 @@ class FormattedPrice extends React.Component {
                 );
             }
         }
+        let tipText = "Click to invert the price";
+        if (this.props.noInvertTip) {
+            tipText = "";
+        }
         let symbols = hide_symbols ? (
             ""
         ) : (
-            <Tooltip
-                placement="bottom"
-                title={noPopOver ? "Click to invert the price" : null}
-            >
+            <Tooltip placement="bottom" title={noPopOver ? tipText : null}>
                 <span
                     className={noPopOver ? "clickable inline-block" : ""}
                     onClick={noPopOver ? this.onFlip.bind(this) : null}
@@ -235,6 +243,18 @@ class FormattedPrice extends React.Component {
                     >
                         <Translate content="exchange.to_market" />
                     </div>
+                    <Link
+                        className="button"
+                        to={{
+                            pathname: "/quick-trade",
+                            state: {
+                                preselectedSellAssetId: quote_asset.get("id"),
+                                preselectedReceiveAssetId: base_asset.get("id")
+                            }
+                        }}
+                    >
+                        <Translate content="exchange.quick_trade" />
+                    </Link>
                 </div>
             ) : null;
 
