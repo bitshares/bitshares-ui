@@ -1276,8 +1276,7 @@
         "preimage_hash": "原像哈希",
         "preimage_hash_explanation": "原像哈希从秘密原像计算而来，对HTLCs非常重要。拥有秘密原像, HTLC就可以履行。你所见内容为：'(<preimage size>, <hash algorithm type>): <preimage hash>'",
         "redeemer": "兑换者",
-        "seconds_to_add": "添加秒数到申领周期",
-        "update_issuer": "更新发行者"
+        "seconds_to_add": "添加秒数到申领周期"
     },
     "icons": {
         "adjust": "调整债仓",

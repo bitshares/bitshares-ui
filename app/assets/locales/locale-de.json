@@ -1276,8 +1276,7 @@
         "preimage_hash": "Preimage hash",
         "preimage_hash_explanation": "The preimage hash is calculated from the secret preimage and is imperative to HTLCs. With the secret preimage the HTLC can be redeemed. The content you see is: '(<preimage size>, <hash algorithm type>): <preimage hash>'",
         "redeemer": "Redeemer",
-        "seconds_to_add": "Add seconds to claim period",
-        "update_issuer": "Update issuer"
+        "seconds_to_add": "Add seconds to claim period"
     },
     "icons": {
         "adjust": "Stelle eine Sicherheitenpostion ein.",
