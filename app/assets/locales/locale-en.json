@@ -1141,6 +1141,12 @@
         "fiat_text": "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "Gateway",
+        "gateway_deposit": {
+            "confirmations": {
+                "last_irreversible": "Your deposit will be deposited after transaction will become irreversible",
+                "n_blocks": "Your deposit will be deposited after %(blocks)s confirmations from the network"
+            }
+        },
         "gateway_text": "Choose whether you want to make a deposit or withdrawal here",
         "generate": "Generate",
         "generate_new": "Get new address",

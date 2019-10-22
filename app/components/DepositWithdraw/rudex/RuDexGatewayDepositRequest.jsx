@@ -7,6 +7,7 @@ import DisableCopyText from "../DisableCopyText";
 import RuDexWithdrawModal from "./RuDexWithdrawModal";
 import AccountBalance from "../../Account/AccountBalance";
 import RuDexDepositAddressCache from "common/RuDexDepositAddressCache";
+import {requestDepositAddress} from "lib/common/RuDexMethods";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import utils from "common/utils";
@@ -14,6 +15,7 @@ import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import CopyToClipboard from "react-copy-to-clipboard";
 import {Modal} from "bitshares-ui-style-guide";
+import {availableGateways} from "lib/common/gateways";
 
 class RuDexGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -31,7 +33,10 @@ class RuDexGatewayDepositRequest extends React.Component {
         deprecated_message: PropTypes.string,
         action: PropTypes.string,
         supports_output_memos: PropTypes.bool.isRequired,
+        memoType: PropTypes.string,
         min_amount: PropTypes.number,
+        gateFee: PropTypes.number,
+        confirmations: PropTypes.object,
         asset_precision: PropTypes.number
     };
 
@@ -85,6 +90,7 @@ class RuDexGatewayDepositRequest extends React.Component {
             receive_address.address,
             receive_address.memo
         );
+        this.setState({account_name});
         this.setState({receive_address});
     }
 
@@ -151,10 +157,24 @@ class RuDexGatewayDepositRequest extends React.Component {
             );
         }
 
-        // if( !receive_address ) {
-        //     requestDepositAddress(this._getDepositObject());
-        //     return emptyRow;
-        // }
+        let depositConfirmation = null;
+        if (this.props.confirmations && this.props.confirmations.type) {
+            if (this.props.confirmations.type === "irreversible") {
+                depositConfirmation = (
+                    <Translate content="gateway.gateway_deposit.confirmations.last_irreversible" />
+                );
+            } else if (
+                this.props.confirmations.type === "blocks" &&
+                this.props.confirmations.value
+            ) {
+                depositConfirmation = (
+                    <Translate
+                        content="gateway.gateway_deposit.confirmations.n_blocks"
+                        blocks={this.props.confirmations.value}
+                    />
+                );
+            }
+        }
 
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
@@ -167,15 +187,38 @@ class RuDexGatewayDepositRequest extends React.Component {
         // {
         let clipboardText = "";
         let memoText;
-        if (this.props.deposit_account) {
+        let withdraw_memo_prefix;
+        let currentGateway = "RUDEX";
+        if (
+            !!availableGateways[currentGateway].simpleAssetGateway &&
+            this.props.deposit_account
+        ) {
             deposit_address_fragment = (
                 <span>{this.props.deposit_account}</span>
             );
             clipboardText = this.props.deposit_account;
-            memoText = "dex:" + this.props.account.get("name");
+            if (!!this.props.memoType && this.props.memoType === "btsid") {
+                memoText =
+                    availableGateways[currentGateway].fixedMemo[
+                        "prepend_btsid"
+                    ] +
+                    this.props.account.get("id").replace("1.2.", "") +
+                    availableGateways[currentGateway].fixedMemo["append"];
+            } else {
+                memoText =
+                    availableGateways[currentGateway].fixedMemo[
+                        "prepend_default"
+                    ] +
+                    this.props.account.get("name") +
+                    availableGateways[currentGateway].fixedMemo["append"];
+            }
             deposit_memo = <span>{memoText}</span>;
-            var withdraw_memo_prefix = this.props.deposit_coin_type + ":";
+            withdraw_memo_prefix = this.props.deposit_coin_type + ":";
         } else {
+            if (!receive_address && !this.props.supportsMemos) {
+                requestDepositAddress(this._getDepositObject());
+                return emptyRow;
+            }
             if (receive_address.memo) {
                 // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
                 memoText = receive_address.memo;
@@ -191,7 +234,7 @@ class RuDexGatewayDepositRequest extends React.Component {
                     <span>{receive_address.address}</span>
                 );
             }
-            var withdraw_memo_prefix = "";
+            withdraw_memo_prefix = "";
         }
 
         if (this.props.action === "deposit") {
@@ -333,6 +376,11 @@ class RuDexGatewayDepositRequest extends React.Component {
                                 />
                             </b>
                         </label>
+                        {depositConfirmation ? (
+                            <span>
+                                (<i>{depositConfirmation}</i>)
+                            </span>
+                        ) : null}
                         <div style={{padding: "10px 0", fontSize: "1.1rem"}}>
                             <table className="table">
                                 <tbody>
@@ -527,6 +575,7 @@ class RuDexGatewayDepositRequest extends React.Component {
                             memo_prefix={withdraw_memo_prefix}
                             modal_id={withdraw_modal_id}
                             min_amount={this.props.min_amount}
+                            gateFee={this.props.gateFee}
                             asset_precision={this.props.asset_precision}
                             balance={
                                 this.props.account.get("balances").toJS()[
