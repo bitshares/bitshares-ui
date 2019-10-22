@@ -2256,7 +2256,7 @@
             "title": "Voting"
         },
         "instant_trade": {
-            "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+            "description": "Instantly execute market orders in a simplified interface.",
             "title": "Instant trade"
         }
     },
