@@ -1141,6 +1141,12 @@
         "fiat_text": "Hinweis: Fiat Gateways sind geschlossen, bis auf einen weiteren Hinweis. Entschuldigung für die Unannehmlichkeit. Bitte folgen Sie unsere letzten Neuigkeiten und Aktualisierung hier <a target='_blank' rel='noopener noreferrer' href='https://blog.openledger.info/'>blog.openledger.info</a>!",
         "frozen": "Das Benutzerkonto %(account)s war eingefroren.",
         "gateway": "Gateway",
+        "gateway_deposit": {
+            "confirmations": {
+                "last_irreversible": "Your deposit will be deposited after transaction will become irreversible",
+                "n_blocks": "Your deposit will be deposited after %(blocks)s confirmations from the network"
+            }
+        },
         "gateway_text": "Auswahl für Einzahlung oder Auszahlung hier:",
         "generate": "Generieren",
         "generate_new": "Neue Adresse anfordern",
@@ -1240,6 +1246,7 @@
         "account_notify": "Das aktive Konto ist jetzt %(account)s",
         "account_value": "Kontowert",
         "accounts_manage": "Konten verwalten",
+        "advanced": "Advanced",
         "collateral_ratio": "Sicherheiten-Ratio",
         "create_account": "Konto erstellen",
         "create_asset": "Anlage erstellen",
@@ -1803,10 +1810,10 @@
             "add_prediction": "A prediction is reflected as a limit order on the market of the prediction market asset with its collateral. This lets you create a buy order (you agree with the prediction), or a sell order with previous borrowing of the prediction market asset (you disagree with the prediction). You can also oppose one of the existing predictions listed below, which correlates to matching one of the existing limit orders on the blockchain.",
             "create_prediction_market_asset": "A prediction market is a special kind of SmartCoin. This lets you create such a prediction market asset with inputs tailored for this purpose.",
             "hide_invalid_asset": "Per default the table below only shows prediction market assets that meet common standards required for a consistent user experience (prediction and resolution date are given, and reasonable market fee). Uncheck this to show all assets that exist on the blockchain, and make sure you know what you are doing.",
-            "hide_unknown_houses": "Per default the table below only shows prediction market assets of known issuers that meet requirements to increase their trustworthiness. As a participant, you need trust in the asset issuer such that the asset will be resolved according to the real world outcome. Uncheck this to show all issuers that exist on the blockchain, and make sure you know what you are doing. If you are the owner of a prediction market asset and want to be included in the default list, please contact the BitShares community.",
+            "hide_unknown_houses": "Per default the table below only shows prediction market assets of known asset owners that meet requirements to increase their trustworthiness. As a participant, you need trust in the asset owner such that the asset will be resolved according to the real world outcome. Uncheck this to show all asset owners that exist on the blockchain, and make sure you know what you are doing. If you are the owner of a prediction market asset and want to be included in the default list, please contact the BitShares community.",
             "oppose_is_incorrect": "You are opposing someone that thinks the prediction is incorrect. That means, you think the prediction will prove true. On the blockchain that reflects as buying and hodling the prediction market asset.",
             "oppose_proves_true": "You are opposing someone that thinks the prediction proves true. That means, you think the prediction will be incorrect. On the blockchain that reflects as borrowing and selling the prediction market asset.",
-            "what_is_a_prediction_market_asset": "A prediction market asset is a special kind of asset that allows you to agree or disagree with the prediction statement of the asset and put collateral behind your opinion. It can be created by any user, and if you are participating you need to trust the issuer to properly reflects the real world outcome on the blockchain.",
+            "what_is_a_prediction_market_asset": "A prediction market asset is a special kind of asset that allows you to agree or disagree with the prediction statement of the asset and put collateral behind your opinion. It can be created by any user, and if you are participating you need to trust the asset owner to properly reflects the real world outcome on the blockchain.",
             "what_is_a_prediction_offer": "A prediction offer reflects limit orders on the market of the prediction market asset and its collateral. Agreement with the prediction (Prediction proves true) means that you want to buy the prediction market asset, disagreement (Prediction is incorrect) means that you borrow the prediction market asset and sell it"
         }
     },
