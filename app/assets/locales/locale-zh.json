@@ -519,7 +519,10 @@
     "connection": {
         "automatic_reconnect": "%(reconnect_in_seconds)s 秒后，将会自动尝试重新连接。 ",
         "manual_ping": "开始 ping 节点",
+        "manual_ping_and_narrow_down": "Narrow down nodes and ping",
         "manual_reconnect": "正在尝试重新连接",
+        "narrow_down_nodes": "Narrow down nodes",
+        "narrow_down_nodes_tooltip": "Restrict the ping and automatic selection process of the wallet to only the selected nodes/regions. Choose nodes/regions close to your geolocation, this may significantly increase your felt connectivity. Leave empty to consider all.",
         "out_of_sync": "你的连接已经失去同步 %(out_of_sync_seconds)s 秒.",
         "title_out_of_sync": "连接失去同步",
         "want_to_reconnect": "如果连接恢复，此消息会自动消失。"
@@ -585,6 +588,7 @@
         "ema": "指数移动平均线(EMA)",
         "enter_chart_layout_name": "Enter Chart Layout Name",
         "featured": "热门市场",
+        "fee": "Fee",
         "feed_price": "喂价",
         "filter": "筛选...",
         "flip": "浏览",
@@ -639,6 +643,7 @@
         "order_book": "订单簿",
         "order_depth": "市场深度",
         "order_grouping": "挂单分组 %(orderlimit)s%",
+        "orders": "Orders",
         "others": "其他",
         "overbought": "超买",
         "oversold": "超卖",
@@ -667,6 +672,27 @@
         "quick_deposit_gateway": "使用网关来充值真实的%(asset)s以获取IOUs，IOUs由不同的网关背书。",
         "quick_deposit_gateway_button": "使用网关",
         "quick_deposit_tooltip": "充值 %(asset)s，点击开启选项",
+        "quick_trade": "Quick trade",
+        "quick_trade_details": {
+            "amount": "Amount",
+            "effective": "effective",
+            "feed_price": "Feed price",
+            "id": "Id",
+            "last_price": "Last market price",
+            "liquidity_penalty": "Liquidity penalty",
+            "market_fee": "Market fee",
+            "order": "Order",
+            "orders": "Orders",
+            "placeholder_receive": "Choose asset to receive",
+            "placeholder_sell": "Choose asset to sell",
+            "price": "Price",
+            "seller": "Seller",
+            "subscribe_to_market": "Subscribe to market",
+            "tooltip": "Enter at least three characters of an asset symbol to search",
+            "total": "Total",
+            "transaction_fee": "Transaction fee",
+            "your_price": "Your price"
+        },
         "quote": "标价币种：",
         "quote_selection": "调整标价选项",
         "quote_supply": "标价资产供应量",
@@ -2225,6 +2251,10 @@
                 "preimage_random": "秘密原像最好的选择是随机字符串。如果你秘密原像易于被猜出或者太短，你可能会丢失你的资产。在此行使用复制按钮来保存原像及使用的哈希算法",
                 "preimage_size": "原像大小是指以上原像的长度。此值也会写入链。在此行使用复制按钮来保存原像哈希及原像大小。"
             }
+        },
+        "instant_trade": {
+            "description": "Instantly execute market orders in a simplified interface.",
+            "title": "Instant trade"
         },
         "merchant_protocol": {
             "description": "Create, view and pay remittance requests or invoices",

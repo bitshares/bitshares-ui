@@ -519,7 +519,10 @@
     "connection": {
         "automatic_reconnect": " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
         "manual_ping": "Go to ping nodes",
+        "manual_ping_and_narrow_down": "Narrow down nodes and ping",
         "manual_reconnect": "Reconnect now",
+        "narrow_down_nodes": "Narrow down nodes",
+        "narrow_down_nodes_tooltip": "Restrict the ping and automatic selection process of the wallet to only the selected nodes/regions. Choose nodes/regions close to your geolocation, this may significantly increase your felt connectivity. Leave empty to consider all.",
         "out_of_sync": "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
         "title_out_of_sync": "Connection out of sync",
         "want_to_reconnect": "If the connection can be recovered this message will disappear automatically."
@@ -585,6 +588,7 @@
         "ema": "Üssel Hareketli Ortalama",
         "enter_chart_layout_name": "Enter Chart Layout Name",
         "featured": "Öne Çıkan Piyasalar",
+        "fee": "Fee",
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
@@ -639,6 +643,7 @@
         "order_book": "Order Book",
         "order_depth": "Piyasa Derinliği",
         "order_grouping": "Order Grouping %(orderlimit)s%",
+        "orders": "Orders",
         "others": "Diğerleri",
         "overbought": "Aşırı Talep",
         "oversold": "Aşırı Arz",
@@ -667,6 +672,27 @@
         "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
         "quick_deposit_gateway_button": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s",
+        "quick_trade": "Quick trade",
+        "quick_trade_details": {
+            "amount": "Amount",
+            "effective": "effective",
+            "feed_price": "Feed price",
+            "id": "Id",
+            "last_price": "Last market price",
+            "liquidity_penalty": "Liquidity penalty",
+            "market_fee": "Market fee",
+            "order": "Order",
+            "orders": "Orders",
+            "placeholder_receive": "Choose asset to receive",
+            "placeholder_sell": "Choose asset to sell",
+            "price": "Price",
+            "seller": "Seller",
+            "subscribe_to_market": "Subscribe to market",
+            "tooltip": "Enter at least three characters of an asset symbol to search",
+            "total": "Total",
+            "transaction_fee": "Transaction fee",
+            "your_price": "Your price"
+        },
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "Karşıt arzı",
@@ -2219,6 +2245,10 @@
                 "preimage_random": "The best choice for the secret is a random string. If your secret can be guessed or is too short, you risk losing your funds. Use the copy button in this row to save the Preimage and hashing algorithm.",
                 "preimage_size": "The Preimage size is the length of the above Preimage. This value will also be written to the chain. Use the copy button in this row to save the Preimage hash and Preimage size."
             }
+        },
+        "instant_trade": {
+            "description": "Instantly execute market orders in a simplified interface.",
+            "title": "Instant trade"
         },
         "merchant_protocol": {
             "description": "Create, view and pay remittance requests or invoices",

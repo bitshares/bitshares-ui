@@ -519,7 +519,10 @@
     "connection": {
         "automatic_reconnect": " Повторная попытка соединения будет совершена автоматически через %(reconnect_in_seconds)s секунд.",
         "manual_ping": "Пинговать узлы",
+        "manual_ping_and_narrow_down": "Narrow down nodes and ping",
         "manual_reconnect": "Попробуйте присоединиться повторно",
+        "narrow_down_nodes": "Narrow down nodes",
+        "narrow_down_nodes_tooltip": "Restrict the ping and automatic selection process of the wallet to only the selected nodes/regions. Choose nodes/regions close to your geolocation, this may significantly increase your felt connectivity. Leave empty to consider all.",
         "out_of_sync": "Ваше соединение рассинхронизировано %(out_of_sync_seconds)s секунд.",
         "title_out_of_sync": "Соединение рассинхронизировано",
         "want_to_reconnect": "Если соединение восстановится, данное сообщение исчезнет автоматически."
@@ -585,6 +588,7 @@
         "ema": "Экспоненциальная скользящая средняя",
         "enter_chart_layout_name": "Enter Chart Layout Name",
         "featured": "Лучшие рынки",
+        "fee": "Fee",
         "feed_price": "Цена котировок",
         "filter": "Фильтрация...",
         "flip": "Инвертировать",
@@ -639,6 +643,7 @@
         "order_book": "Биржевой стакан",
         "order_depth": "Глубина рынка",
         "order_grouping": "Группировка ордеров %(orderlimit)s%",
+        "orders": "Orders",
         "others": "Другие",
         "overbought": "Перекуплен",
         "oversold": "Перепродан",
@@ -667,6 +672,27 @@
         "quick_deposit_gateway": "Разместите депозит в реальных %(asset)s с помощью шлюза, чтобы получить долговые расписки, которые обеспечиваются средствами соответствующего шлюза",
         "quick_deposit_gateway_button": "Использовать шлюз",
         "quick_deposit_tooltip": "Разместить депозит %(asset)s, нажмите для показа опций",
+        "quick_trade": "Quick trade",
+        "quick_trade_details": {
+            "amount": "Amount",
+            "effective": "effective",
+            "feed_price": "Feed price",
+            "id": "Id",
+            "last_price": "Last market price",
+            "liquidity_penalty": "Liquidity penalty",
+            "market_fee": "Market fee",
+            "order": "Order",
+            "orders": "Orders",
+            "placeholder_receive": "Choose asset to receive",
+            "placeholder_sell": "Choose asset to sell",
+            "price": "Price",
+            "seller": "Seller",
+            "subscribe_to_market": "Subscribe to market",
+            "tooltip": "Enter at least three characters of an asset symbol to search",
+            "total": "Total",
+            "transaction_fee": "Transaction fee",
+            "your_price": "Your price"
+        },
         "quote": "Котируемая валюта:",
         "quote_selection": "Изменить тикер валюты",
         "quote_supply": "Котируемое предложение",
@@ -2225,6 +2251,10 @@
                 "preimage_random": "Наиболее секретный выбор – это случайная строка. Если ваш секрет может быть угадан или слишком короток, вы рискуете потерять свои средства. Используйте кнопку копирования в этой строке, чтобы сохранить прообраз и алгоритм хеширования.",
                 "preimage_size": "Размер прообраза – это длина указанного выше прообраза. Это значение также будет записано в блокчейн. Используйте кнопку копирования в этой строке, чтобы сохранить хеш и размер прообраза."
             }
+        },
+        "instant_trade": {
+            "description": "Instantly execute market orders in a simplified interface.",
+            "title": "Instant trade"
         },
         "merchant_protocol": {
             "description": "Create, view and pay remittance requests or invoices",
