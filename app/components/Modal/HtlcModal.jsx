@@ -4,19 +4,17 @@ import {ChainStore, key} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import cnames from "classnames";
 import AccountSelector from "../Account/AccountSelector";
+import AccountStore from "stores/AccountStore";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {Asset} from "common/MarketClasses";
-import {debounce, isNaN} from "lodash-es";
-import {
-    checkFeeStatusAsync,
-    checkBalance,
-    shouldPayFeeWithAssetAsync
-} from "common/trxHelper";
+import {isNaN} from "lodash-es";
+import {checkBalance} from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import CopyButton from "../Utility/CopyButton";
-
+import {connect} from "alt-react";
+import SettingsStore from "stores/SettingsStore";
 import {
     Form,
     Modal,
@@ -34,6 +32,10 @@ import "../../assets/stylesheets/components/_htlc.scss";
 import ChainTypes from "../Utility/ChainTypes";
 import PropTypes from "prop-types";
 import {hasLoaded} from "../Utility/BindToCurrentAccount";
+import FeeAssetSelector from "../Utility/FeeAssetSelector";
+
+const getUninitializedFeeAmount = () =>
+    new Asset({amount: 0, asset_id: "1.3.0"});
 
 class Preimage extends React.Component {
     static propTypes = {
@@ -335,8 +337,6 @@ class HtlcModal extends React.Component {
         super(props);
         this.state = this.getInitialState(props);
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
-        this._updateFee = debounce(this._updateFee.bind(this), 250);
-        this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
     }
 
@@ -351,10 +351,7 @@ class HtlcModal extends React.Component {
             asset_id: null,
             asset: null,
             error: null,
-            feeAsset: null,
-            fee_asset_id: "1.3.0",
-            feeAmount: new Asset({amount: 0}),
-            feeStatus: {},
+            feeAmount: getUninitializedFeeAmount(),
             maxAmount: false,
             num_of_periods: "",
             period_start_time: now,
@@ -384,7 +381,8 @@ class HtlcModal extends React.Component {
             preimage_size,
             preimage_hash,
             preimage_cipher,
-            claim_period
+            claim_period,
+            feeAmount
         } = this.state;
         const {
             operation: {type: operationType}
@@ -400,7 +398,8 @@ class HtlcModal extends React.Component {
                 preimage,
                 preimage_size,
                 preimage_hash,
-                preimage_cipher
+                preimage_cipher,
+                fee_asset: feeAmount
             })
                 .then(result => {
                     this.props.hideModal();
@@ -477,7 +476,16 @@ class HtlcModal extends React.Component {
                     preimage_hash:
                         operation.payload.conditions.hash_lock.preimage_hash[1],
                     preimage_size:
-                        operation.payload.conditions.hash_lock.preimage_hash[0]
+                        operation.payload.conditions.hash_lock.preimage_hash[0],
+                    expirationDate: moment(
+                        new Date(
+                            utils.makeISODateString(
+                                operation.payload.conditions.time_lock
+                                    .expiration
+                            )
+                        )
+                    ),
+                    period: null
                 });
             } else {
                 this.setState({
@@ -485,7 +493,16 @@ class HtlcModal extends React.Component {
                     preimage_hash:
                         operation.payload.conditions.hash_lock.preimage_hash[1],
                     preimage_size:
-                        operation.payload.conditions.hash_lock.preimage_hash[0]
+                        operation.payload.conditions.hash_lock.preimage_hash[0],
+                    expirationDate: moment(
+                        new Date(
+                            utils.makeISODateString(
+                                operation.payload.conditions.time_lock
+                                    .expiration
+                            )
+                        )
+                    ),
+                    period: null
                 });
             }
         } else {
@@ -510,16 +527,10 @@ class HtlcModal extends React.Component {
         ) {
             // refesh balances and fee
             // write props to state
-            this.setState(
-                {
-                    from_account: this.props.fromAccount,
-                    from_name: this.props.fromAccount.get("name")
-                },
-                () => {
-                    this._updateFee();
-                    this._checkFeeStatus(this.state);
-                }
-            );
+            this.setState({
+                from_account: this.props.fromAccount,
+                from_name: this.props.fromAccount.get("name")
+            });
         }
         if (prevProps.operation !== this.props.operation) {
             this._syncOperation(operation);
@@ -529,7 +540,6 @@ class HtlcModal extends React.Component {
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
         if (!asset || !from_account) return;
-        this._updateFee();
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn([
             "balances",
@@ -542,7 +552,7 @@ class HtlcModal extends React.Component {
             ? ChainStore.getObject(feeBalanceID)
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
+            this.setState({feeAmount: getUninitializedFeeAmount()});
         }
         if (!balanceObject || !feeAmount) return;
         if (!amount) return this.setState({balanceError: false});
@@ -554,51 +564,6 @@ class HtlcModal extends React.Component {
         );
         if (hasBalance === null) return;
         this.setState({balanceError: !hasBalance});
-    }
-
-    _checkFeeStatus(state = this.state) {
-        const {from_account} = state;
-        const {isModalVisible, operation} = this.props;
-        if (!from_account || !isModalVisible) return;
-
-        const assets = Object.keys(from_account.get("balances").toJS()).sort(
-            utils.sortID
-        );
-        let feeStatus = {};
-        let p = [];
-        assets.forEach(a => {
-            p.push(
-                checkFeeStatusAsync({
-                    accountID: from_account.get("id"),
-                    feeID: a,
-                    type:
-                        operation && operation.type === "create"
-                            ? "htlc_create"
-                            : operation && operation.type === "redeem"
-                                ? "htlc_redeem"
-                                : "htlc_extend",
-                    data: {
-                        type: "memo",
-                        content: null
-                    }
-                })
-            );
-        });
-        Promise.all(p)
-            .then(status => {
-                assets.forEach((a, idx) => {
-                    feeStatus[a] = status[idx];
-                });
-                if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
-                    this.setState({
-                        feeStatus
-                    });
-                }
-                this._checkBalance();
-            })
-            .catch(err => {
-                console.error(err);
-            });
     }
 
     _setTotal(asset_id, balance_id) {
@@ -624,84 +589,20 @@ class HtlcModal extends React.Component {
     }
 
     _getAvailableAssets(state = this.state) {
-        const {feeStatus} = this.state;
-        function hasFeePoolBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasPoolBalance;
-        }
-
-        function hasBalance(id) {
-            if (feeStatus[id] === undefined) return true;
-            return feeStatus[id] && feeStatus[id].hasBalance;
-        }
-        const {from_account} = state;
-        let asset_types = [],
-            fee_asset_types = [];
-        if (!(from_account && from_account.get("balances"))) {
-            return {asset_types, fee_asset_types};
+        const {from_account, from_error} = state;
+        let asset_types = [];
+        if (!(from_account && from_account.get("balances") && !from_error)) {
+            return {asset_types};
         }
         let account_balances = state.from_account.get("balances").toJS();
         asset_types = Object.keys(account_balances).sort(utils.sortID);
-        fee_asset_types = Object.keys(account_balances).sort(utils.sortID);
         for (let key in account_balances) {
             let balanceObject = ChainStore.getObject(account_balances[key]);
             if (balanceObject && balanceObject.get("balance") === 0) {
                 asset_types.splice(asset_types.indexOf(key), 1);
-                if (fee_asset_types.indexOf(key) !== -1) {
-                    fee_asset_types.splice(fee_asset_types.indexOf(key), 1);
-                }
             }
         }
-
-        fee_asset_types = fee_asset_types.filter(a => {
-            return hasFeePoolBalance(a) && hasBalance(a);
-        });
-
-        return {asset_types, fee_asset_types};
-    }
-
-    _updateFee(state = this.state) {
-        if (!this.props.isModalVisible) return;
-        const {operation} = this.props;
-        let {fee_asset_id, from_account, asset_id} = state;
-        const {fee_asset_types} = this._getAvailableAssets(state);
-        if (
-            fee_asset_types.length === 1 &&
-            fee_asset_types[0] !== fee_asset_id
-        ) {
-            fee_asset_id = fee_asset_types[0];
-        }
-        if (!from_account) return null;
-        checkFeeStatusAsync({
-            accountID: from_account.get("id"),
-            feeID: fee_asset_id,
-            type:
-                operation && operation.type === "create"
-                    ? "htlc_create"
-                    : operation && operation.type === "redeem"
-                        ? "htlc_redeem"
-                        : "htlc_extend",
-            data: {
-                type: "memo",
-                content: null
-            }
-        }).then(({fee, hasBalance, hasPoolBalance}) => {
-            shouldPayFeeWithAssetAsync(from_account, fee).then(
-                should =>
-                    should
-                        ? this.setState(
-                              {fee_asset_id: asset_id},
-                              this._updateFee
-                          )
-                        : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
-            );
-        });
+        return {asset_types};
     }
 
     onToAccountChanged = to_account => {
@@ -733,13 +634,14 @@ class HtlcModal extends React.Component {
         this.setState({to_name, error: null});
     };
 
-    onFeeChanged({asset}) {
-        if (typeof asset !== "object") {
-            asset = ChainStore.getAsset(asset);
-        }
+    onFeeChanged(fee) {
+        if (!fee) return;
         this.setState(
-            {feeAsset: asset, fee_asset_id: asset.get("id"), error: null},
-            this._updateFee
+            {
+                feeAmount: fee,
+                error: null
+            },
+            this._checkBalance
         );
     }
 
@@ -748,7 +650,6 @@ class HtlcModal extends React.Component {
             confirm_store_state.included &&
             confirm_store_state.broadcasted_transaction
         ) {
-            // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
         } else if (confirm_store_state.closed) {
@@ -838,8 +739,6 @@ class HtlcModal extends React.Component {
             amount,
             from_name,
             to_name,
-            feeAsset,
-            fee_asset_id,
             balanceError,
             preimage,
             preimage_cipher,
@@ -849,28 +748,26 @@ class HtlcModal extends React.Component {
             period_start_time,
             expirationDate
         } = this.state;
+        let from_my_account =
+            AccountStore.isMyAccount(from_account) ||
+            from_name === this.props.passwordAccount;
+        let from_error = from_account && !from_my_account ? true : false;
 
         const {operation} = this.props;
 
         const isExtend = operation && operation.type === "extend";
         const isRedeem = operation && operation.type === "redeem";
 
-        let {asset_types, fee_asset_types} = this._getAvailableAssets();
-
+        let {asset_types} = this._getAvailableAssets();
         let balance = null;
-        let balance_fee = null;
 
-        // Estimate fee
-        let fee = this.state.feeAmount.getAmount({real: true});
-
-        if (from_account && from_account.get("balances")) {
+        if (from_account && from_account.get("balances") && !from_error) {
             let account_balances = from_account.get("balances").toJS();
             let _error = this.state.balanceError ? "has-error" : "";
             if (asset_types.length === 1)
                 asset = ChainStore.getAsset(asset_types[0]);
             if (asset_types.length > 0) {
                 let current_asset_id = asset ? asset.get("id") : asset_types[0];
-                let feeID = feeAsset ? feeAsset.get("id") : "1.3.0";
 
                 balance = (
                     <span>
@@ -889,8 +786,8 @@ class HtlcModal extends React.Component {
                                 this,
                                 current_asset_id,
                                 account_balances[current_asset_id],
-                                fee,
-                                feeID
+                                feeAmount.getAmount({real: true}),
+                                feeAmount.asset_id
                             )}
                         >
                             <BalanceComponent
@@ -899,25 +796,8 @@ class HtlcModal extends React.Component {
                         </span>
                     </span>
                 );
-
-                if (feeID == current_asset_id && this.state.balanceError) {
-                    balance_fee = (
-                        <span>
-                            <span className={_error}>
-                                <Translate content="transfer.errors.insufficient" />
-                            </span>
-                        </span>
-                    );
-                }
             } else {
                 balance = (
-                    <span>
-                        <span className={_error}>
-                            <Translate content="transfer.errors.noFunds" />
-                        </span>
-                    </span>
-                );
-                balance_fee = (
                     <span>
                         <span className={_error}>
                             <Translate content="transfer.errors.noFunds" />
@@ -1117,42 +997,20 @@ class HtlcModal extends React.Component {
                                 </Form.Item>
                                 <div className="content-block transfer-input">
                                     <div className="no-margin no-padding">
-                                        {/*  F E E  */}
-                                        <div
-                                            id="txFeeSelector"
-                                            className="small-12"
-                                        >
-                                            <AmountSelector
-                                                label="transfer.fee"
-                                                disabled={true}
-                                                amount={fee}
-                                                onChange={this.onFeeChanged.bind(
-                                                    this
-                                                )}
-                                                asset={
-                                                    fee_asset_types.length &&
-                                                    feeAmount
-                                                        ? feeAmount.asset_id
-                                                        : fee_asset_types.length ===
-                                                          1
-                                                            ? fee_asset_types[0]
-                                                            : fee_asset_id
-                                                                ? fee_asset_id
-                                                                : fee_asset_types[0]
+                                        <FeeAssetSelector
+                                            account={from_account}
+                                            transaction={{
+                                                type: "htlc_create",
+                                                options: ["price_per_kbyte"],
+                                                data: {
+                                                    type: "memo",
+                                                    content: null
                                                 }
-                                                assets={fee_asset_types}
-                                                display_balance={balance_fee}
-                                                // tabIndex={tabIndex++}
-                                                error={
-                                                    this.state
-                                                        .hasPoolBalance ===
-                                                    false
-                                                        ? "transfer.errors.insufficient"
-                                                        : null
-                                                }
-                                                scroll_length={2}
-                                            />
-                                        </div>
+                                            }}
+                                            onChange={this.onFeeChanged.bind(
+                                                this
+                                            )}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -1164,4 +1022,18 @@ class HtlcModal extends React.Component {
     }
 }
 
-export default HtlcModal;
+export default connect(
+    HtlcModal,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps(props) {
+            return {
+                fee_asset_symbol: SettingsStore.getState().settings.get(
+                    "fee_asset"
+                )
+            };
+        }
+    }
+);

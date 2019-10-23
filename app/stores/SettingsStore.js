@@ -56,7 +56,9 @@ class SettingsStore {
             onUpdateLatencies: SettingsActions.updateLatencies,
             onModifyPreferedBases: SettingsActions.modifyPreferedBases,
             onUpdateUnits: SettingsActions.updateUnits,
-            onHideNewsHeadline: SettingsActions.hideNewsHeadline
+            onHideNewsHeadline: SettingsActions.hideNewsHeadline,
+            onAddChartLayout: SettingsActions.addChartLayout,
+            onDeleteChartLayout: SettingsActions.deleteChartLayout
         });
 
         this.initDone = false;
@@ -93,6 +95,8 @@ class SettingsStore {
         this.hiddenNewsHeadline = Immutable.List(
             ss.get("hiddenNewsHeadline", [])
         );
+
+        this.chartLayouts = Immutable.List(ss.get("chartLayouts", []));
     }
 
     /**
@@ -104,8 +108,10 @@ class SettingsStore {
         return {
             locale: "en",
             apiServer: settingsAPIs.DEFAULT_WS_NODE,
+            filteredApiServers: [],
             faucet_address: settingsAPIs.DEFAULT_FAUCET,
             unit: CORE_ASSET,
+            fee_asset: CORE_ASSET,
             showSettles: false,
             showAssetPercent: false,
             walletLockTimeout: 60 * 10,
@@ -118,7 +124,8 @@ class SettingsStore {
                 }
             },
             rememberMe: true,
-            viewOnlyMode: true
+            viewOnlyMode: true,
+            showProposedTx: false
         };
     }
 
@@ -142,7 +149,10 @@ class SettingsStore {
                 "ja"
             ],
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
+            filteredApiServers: [],
             unit: getUnits(),
+            fee_asset: getUnits(),
+            showProposedTx: [{translate: "yes"}, {translate: "no"}],
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
             themes: ["darkTheme", "lightTheme", "midnightTheme"],
@@ -203,8 +213,10 @@ class SettingsStore {
                 }
                 // must be of same type to be compatible
                 if (typeof settings[key] === typeof defaultSettings[key]) {
-                    // incompatible settings, dont store
-                    if (typeof settings[key] == "object") {
+                    if (
+                        !(settings[key] instanceof Array) &&
+                        typeof settings[key] == "object"
+                    ) {
                         let newSetting = this._replaceDefaults(
                             "saving",
                             settings[key],
@@ -228,7 +240,10 @@ class SettingsStore {
                     if (typeof settings[key] !== typeof defaultSettings[key]) {
                         // incompatible types, use default
                         setDefaults = true;
-                    } else if (typeof settings[key] == "object") {
+                    } else if (
+                        !(settings[key] instanceof Array) &&
+                        typeof settings[key] == "object"
+                    ) {
                         // check all subkeys
                         returnSettings[key] = this._replaceDefaults(
                             "loading",
@@ -520,7 +535,6 @@ class SettingsStore {
             default:
                 break;
         }
-
         // check current settings
         if (this.settings.get(payload.setting) !== payload.value) {
             this.settings = this.settings.set(payload.setting, payload.value);
@@ -528,15 +542,6 @@ class SettingsStore {
                 this._saveSettings();
             }
         }
-        // else {
-        //     console.warn(
-        //         "Trying to save unchanged value (" +
-        //             payload.setting +
-        //             ": " +
-        //             payload.value +
-        //             "), consider refactoring to avoid this"
-        //     );
-        // }
     }
 
     onChangeViewSetting(payload) {
@@ -763,6 +768,10 @@ class SettingsStore {
         this.defaults.unit = getUnits();
         if (this.defaults.unit.indexOf(this.settings.get("unit")) === -1) {
             this.settings = this.settings.set("unit", this.defaults.unit[0]);
+            this.settings = this.settings.set(
+                "fee_asset",
+                this.defaults.unit[0]
+            );
         }
     }
 
@@ -770,6 +779,36 @@ class SettingsStore {
         if (payload && this.hiddenNewsHeadline.indexOf(payload)) {
             this.hiddenNewsHeadline = this.hiddenNewsHeadline.push(payload);
             ss.set("hiddenNewsHeadline", this.hiddenNewsHeadline.toJS());
+        }
+    }
+
+    onAddChartLayout(value) {
+        if (value.name) {
+            value.enabled = true;
+            const index = this.chartLayouts.findIndex(
+                item => item.name === value.name && item.symbol === value.symbol
+            );
+            if (index !== -1) {
+                this.chartLayouts = this.chartLayouts.delete(index);
+            }
+            this.chartLayouts = this.chartLayouts.map(item => {
+                if (item.symbol === value.symbol) item.enabled = false;
+                return item;
+            });
+            this.chartLayouts = this.chartLayouts.push(value);
+            ss.set("chartLayouts", this.chartLayouts.toJS());
+        }
+    }
+
+    onDeleteChartLayout(name) {
+        if (name) {
+            const index = this.chartLayouts.findIndex(
+                item => item.name === name
+            );
+            if (index !== -1) {
+                this.chartLayouts = this.chartLayouts.delete(index);
+            }
+            ss.set("chartLayouts", this.chartLayouts.toJS());
         }
     }
 }

@@ -444,7 +444,7 @@ export function validateAddress({
 }
 
 let _conversionCache = {};
-export function getConversionJson(inputs) {
+export function getConversionJson(inputs, userAccessToken = null) {
     const {input_coin_type, output_coin_type, url, account_name} = inputs;
     if (!input_coin_type || !output_coin_type) return Promise.reject();
     const body = JSON.stringify({
@@ -463,12 +463,20 @@ export function getConversionJson(inputs) {
     return new Promise((resolve, reject) => {
         if (_conversionCache[_cacheString])
             return resolve(_conversionCache[_cacheString]);
+        let headers = {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        };
+        if (userAccessToken) {
+            headers = {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userAccessToken}`
+            };
+        }
         fetch(url + "/simple-api/initiate-trade", {
             method: "post",
-            headers: new Headers({
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            }),
+            headers,
             body: body
         })
             .then(reply => {

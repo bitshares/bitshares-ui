@@ -13,7 +13,7 @@ function checkAndAssignKeys(object, template) {
     templateKeys.forEach(key => {
         if (typeof object[key] === "object") {
             object[key] = checkAndAssignKeys(object[key], template[key]);
-        } else if (!(key in object)) {
+        } else if (!(key in object) || object[key] == "") {
             object[key] = template[key];
         }
     });

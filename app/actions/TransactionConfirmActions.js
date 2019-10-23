@@ -44,13 +44,60 @@ class TransactionConfirmActions {
                     clearTimeout(broadcast_timeout);
                     // messages of length 1 are local exceptions (use the 1st line)
                     // longer messages are remote API exceptions (use the 1st line)
+                    let message = "An error occured while broadcasting";
+                    let jsonError = {};
+
+                    // try to break down the error in human readable pieces
                     let splitError = error.message.split("\n");
-                    let message = splitError[0];
+                    let data, code;
+                    if (splitError.length > 1) {
+                        try {
+                            jsonError = JSON.parse(splitError[1]);
+                            data = jsonError.data;
+                            code = jsonError.code;
+                            message = jsonError.message;
+                        } catch (err) {
+                            // try to convert to JSON what's possible
+                            splitError = splitError.map(text => {
+                                try {
+                                    let json_part = JSON.stringify(
+                                        JSON.parse(
+                                            text.substring(
+                                                text.indexOf("{"),
+                                                text.lastIndexOf("}") + 1
+                                            )
+                                        ),
+                                        null,
+                                        4
+                                    );
+                                    return (
+                                        text.substring(0, text.indexOf("{")) +
+                                        "\n" +
+                                        json_part +
+                                        "\n" +
+                                        text.substring(
+                                            text.lastIndexOf("}") + 1,
+                                            text.length
+                                        )
+                                    );
+                                } catch (err) {
+                                    // nuthin
+                                    return text;
+                                }
+                            });
+                            code = splitError[0];
+                            data = splitError
+                                .slice(1, splitError.length)
+                                .join("\n");
+                        }
+                    }
                     dispatch({
                         broadcast: false,
                         broadcasting: false,
                         error: message,
-                        closed: false
+                        closed: false,
+                        error_code: code,
+                        error_data: data
                     });
                     if (reject) reject();
                 });
@@ -65,7 +112,8 @@ class TransactionConfirmActions {
         return res;
     }
 
-    close() {
+    close(reject) {
+        reject();
         ZfApi.publish("transaction_confirm_actions", "close");
         return true;
     }

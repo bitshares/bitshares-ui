@@ -113,8 +113,18 @@ class ShowcaseGrid extends Component {
                 },
                 description: "showcases.prediction_market.description",
                 icon: "prediction",
-                disabled: "Visit bitshares-ui issue #2717 to check progress",
-                comingSoon: true
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
+            },
+            {
+                title: "showcases.merchant_protocol.title",
+                target: event => {
+                    thiz.props.history.push("/invoice/request");
+                },
+                description: "showcases.merchant_protocol.description",
+                icon: "merchant",
+                disabled: false
             },
             {
                 title: "showcases.timed_transfer.title",
@@ -123,6 +133,17 @@ class ShowcaseGrid extends Component {
                 icon: "alarm",
                 disabled: true,
                 comingSoon: true
+            },
+            {
+                title: "showcases.instant_trade.title",
+                target: event => {
+                    thiz.props.history.push("/quick-trade");
+                },
+                description: "showcases.instant_trade.description",
+                icon: "instant-trade",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             }
             // .... even more tiles in this list
         ];

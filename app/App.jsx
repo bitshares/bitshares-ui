@@ -28,6 +28,12 @@ import {Route, Switch, Redirect} from "react-router-dom";
 // Nested route components
 import Page404 from "./components/Page404/Page404";
 
+const Invoice = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "exchange" */ "./components/Transfer/Invoice"),
+    loading: LoadingIndicator
+});
+
 const Exchange = Loadable({
     loader: () =>
         import(/* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"),
@@ -40,15 +46,15 @@ const Explorer = Loadable({
     loading: LoadingIndicator
 });
 
-const AccountPage = Loadable({
+const PredictionMarketsPage = Loadable({
     loader: () =>
-        import(/* webpackChunkName: "account" */ "./components/Account/AccountPage"),
+        import(/* webpackChunkName: "pm" */ "./components/PredictionMarkets/PMAssetsContainer"),
     loading: LoadingIndicator
 });
 
-const Transfer = Loadable({
+const AccountPage = Loadable({
     loader: () =>
-        import(/* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"),
+        import(/* webpackChunkName: "account" */ "./components/Account/AccountPage"),
     loading: LoadingIndicator
 });
 
@@ -137,6 +143,12 @@ const Htlc = Loadable({
 const DirectDebit = Loadable({
     loader: () =>
         import(/* webpackChunkName: "settings" */ "./components/Showcases/DirectDebit"),
+    loading: LoadingIndicator
+});
+
+const QuickTrade = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "QuickTrade" */ "./components/QuickTrade/QuickTradeRouter"),
     loading: LoadingIndicator
 });
 
@@ -412,11 +424,9 @@ class App extends React.Component {
                                     component={Settings}
                                 />
                                 <Route path="/settings" component={Settings} />
-
                                 <Route
-                                    path="/transfer"
-                                    exact
-                                    component={Transfer}
+                                    path="/invoice/:data"
+                                    component={Invoice}
                                 />
                                 <Route
                                     path="/deposit-withdraw"
@@ -520,6 +530,20 @@ class App extends React.Component {
                                     component={Help}
                                 />
                                 <Route path="/htlc" component={Htlc} />
+                                <Route
+                                    path="/prediction"
+                                    component={PredictionMarketsPage}
+                                />
+                                <Route
+                                    exact
+                                    path="/quick-trade"
+                                    component={QuickTrade}
+                                />
+                                <Route
+                                    exact
+                                    path="/quick-trade/:marketID"
+                                    component={QuickTrade}
+                                />
                                 <Route path="*" component={Page404} />
                             </Switch>
                         </div>

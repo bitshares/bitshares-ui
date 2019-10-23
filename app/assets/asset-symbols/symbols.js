@@ -1,3 +1,6 @@
+//Unknown asset
+require("file-loader?name=asset-symbols/[name].png!./unknown.png");
+
 // Core asset
 require("file-loader?name=asset-symbols/[name].png!./bts.png");
 
@@ -78,6 +81,8 @@ require("file-loader?name=asset-symbols/[name].png!./mdl.png");
 require("file-loader?name=asset-symbols/[name].png!./cof.png");
 require("file-loader?name=asset-symbols/[name].png!./exr.png");
 require("file-loader?name=asset-symbols/[name].png!./lcrt.png");
+require("file-loader?name=asset-symbols/[name].png!./nvc.png");
+require("file-loader?name=asset-symbols/[name].png!./nmc.png");
 
 // 3rd party assets (RuDEX)
 require("file-loader?name=asset-symbols/[name].png!./ppy.png");

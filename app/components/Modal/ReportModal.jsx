@@ -104,6 +104,7 @@ class ReportModal extends React.Component {
                         <a
                             href="https://github.com/bitshares/bitshares-ui/issues"
                             target="_blank"
+                            rel="noopener noreferrer"
                             style={{textAlign: "center", width: "100%"}}
                             className="external-link"
                         >
@@ -119,6 +120,7 @@ class ReportModal extends React.Component {
                         <a
                             href="https://hackthedex.io"
                             target="_blank"
+                            rel="noopener noreferrer"
                             style={{textAlign: "center", width: "100%"}}
                             className="external-link"
                         >

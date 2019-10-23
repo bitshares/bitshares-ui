@@ -92,6 +92,11 @@ class LoadingIndicator extends React.Component {
                                 <span>{this.state.progress}</span>
                             </div>
                         </div>
+                        {!!this.props.children && (
+                            <div className="loading-panel--child">
+                                {this.props.children}
+                            </div>
+                        )}
                     </div>
                 );
         }
