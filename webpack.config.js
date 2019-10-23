@@ -205,6 +205,34 @@ module.exports = function(env) {
         )
     );
 
+    /* Workaround in which the github pages server will find a file when it looks
+    for /deposit-withdraw that will redirect to the hash router's equivalent
+    /#/deposit-withdraw */
+
+    if (env.hash)
+        plugins.push(
+            new CopyWebpackPlugin(
+                [
+                    {
+                        from: path.join(
+                            root_dir,
+                            "app",
+                            "components",
+                            "DepositWithdraw",
+                            "blocktrades",
+                            "index.html"
+                        ),
+                        to: path.join(
+                            outputPath,
+                            "deposit-withdraw",
+                            "index.html"
+                        ),
+                        toType: "file"
+                    }
+                ],
+                {}
+            )
+        );
     var config = {
         mode: env.noUgly ? "none" : env.prod ? "production" : "development",
         entry: {

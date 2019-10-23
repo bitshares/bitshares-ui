@@ -448,6 +448,7 @@ class AccountDepositWithdraw extends React.Component {
                             initial_conversion_input_coin_type="bts"
                             initial_conversion_output_coin_type="bitbtc"
                             initial_conversion_estimated_input_amount="1000"
+                            params={this.props.location}
                         />
                     </div>
                     <div className="content-block" />
