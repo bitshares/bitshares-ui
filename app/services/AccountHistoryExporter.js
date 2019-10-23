@@ -72,11 +72,15 @@ class AccountHistoryExporter {
                 if (data) {
                     switch (type) {
                         case "vesting_balance_withdraw":
-                            data.amount = data.amount_;
+                            if (!data.amount) {
+                                data.amount = data.amount_;
+                            }
                             break;
 
                         case "transfer":
-                            data.amount = data.amount_;
+                            if (!data.amount) {
+                                data.amount = data.amount_;
+                            }
                             break;
                     }
                     switch (type) {
@@ -124,6 +128,7 @@ class AccountHistoryExporter {
                 ("0" + today.getMinutes()).slice(-2) +
                 ".csv"
         );
+        console.log("Export file generated");
     }
 
     _getAccountHistoryES(account_id, limit, start, esNode) {
@@ -152,11 +157,17 @@ class AccountHistoryExporter {
                 .then(res => res.json())
                 .then(result => {
                     let opHistory = result.map(r => {
+                        // the answer might differ if op_opject is filled or not
+                        let op_data = r.operation_history.op_object;
+                        if (!op_data) {
+                            op_data = JSON.parse(r.operation_history.op)[1];
+                        }
+
                         return {
                             id: r.account_history.operation_id,
                             op: {
                                 type: r.operation_type,
-                                data: r.operation_history.op_object
+                                data: op_data
                             },
                             result: JSON.parse(
                                 r.operation_history.operation_result

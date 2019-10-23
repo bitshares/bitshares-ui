@@ -273,7 +273,7 @@ class RecentTransactions extends React.Component {
                 accountHistoryError: null
             });
         } catch (err) {
-            console.log("ES Node error: " + err);
+            console.error(err);
             this.setState({
                 fetchingAccountHistory: false,
                 accountHistoryError: err,
