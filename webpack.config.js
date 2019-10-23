@@ -205,6 +205,23 @@ module.exports = function(env) {
         )
     );
 
+    /* blocktrades uses oauth for its logins. oauth requires you to
+       specify a redirect uri where you get returned after successfully
+       logging in/out. blocktrades uses the deposit/withdrawal page as
+       that redirect uri. when using the browser router, this url is
+       /deposit-withdraw; when using the hash router, it is /#/deposit-withdraw.
+       according to the oauth spec, this uri cannot contain any hash fragments, so
+       we cannot register the redirect uri understood by the hash router with our
+       oauth server. instead, we register /deposit-withdraw for our redirect uri
+       which will work when using the browser router. when using the hash router
+       (github pages), it would normally fail because the server does not
+       automatically rewrite this request to load index.html. instead, github
+       pages tries to load the file /deposit-withdraw which doesn't exist, then
+       returns a 404 not found, causing blocktrades login to fail. to work around
+       this, we create a file the github pages server will find when it looks
+       for /deposit-withdraw that will redirect to the hash router's equivalent
+       /#/deposit-withdraw
+    */
     if (env.hash)
         plugins.push(
             new CopyWebpackPlugin(
