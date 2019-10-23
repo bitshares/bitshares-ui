@@ -132,28 +132,25 @@ class AccountHistoryExporter {
     }
 
     _getAccountHistoryES(account_id, limit, start, esNode) {
-        console.log(
-            "query",
+        let endpoint = "get_account_history";
+        if (esNode.indexOf("explorer") !== -1 || esNode.indexOf("api") !== -1) {
+            endpoint = "es/account_history";
+        }
+        let queryUrl =
             esNode +
-                "/get_account_history?account_id=" +
-                account_id +
-                "&from_=" +
-                start +
-                "&size=" +
-                limit +
-                "&sort_by=block_data.block_time&type=data&agg_field=operation_type"
-        );
+            "/" +
+            endpoint +
+            "?account_id=" +
+            account_id +
+            "&from_=" +
+            start +
+            "&size=" +
+            limit +
+            "&sort_by=block_data.block_time&type=data&agg_field=operation_type";
+
+        console.log("query", queryUrl);
         return new Promise((resolve, reject) => {
-            fetch(
-                esNode +
-                    "/get_account_history?account_id=" +
-                    account_id +
-                    "&from_=" +
-                    start +
-                    "&size=" +
-                    limit +
-                    "&sort_by=block_data.block_time&type=data&agg_field=operation_type"
-            )
+            fetch(queryUrl)
                 .then(res => res.json())
                 .then(result => {
                     let opHistory = result.map(r => {

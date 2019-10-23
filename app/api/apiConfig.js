@@ -655,13 +655,6 @@ export const settingsAPIs = {
             country: "China",
             operator: "Infrastructure Worker",
             contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
-            url: "https://explorer.bitshares-kibana.info",
-            region: "N/A",
-            country: "N/A",
-            operator: "N/A",
-            contact: "N/A"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
