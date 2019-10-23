@@ -1186,6 +1186,7 @@
         "limit_withdraw_asset_max": "Retiro maximo: %(min)s %(coin)s",
         "limit_withdraw_asset_min": "Retiro minimo: %(min)s %(coin)s",
         "limit_withdraw_asset_none": "Ninguna",
+        "logout_now": "Logout now",
         "memo": "Memorándum",
         "meta": {
             "open_website": "Abrir sitio web"

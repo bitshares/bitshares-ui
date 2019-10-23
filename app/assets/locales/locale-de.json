@@ -1186,6 +1186,7 @@
         "limit_withdraw_asset_max": "Maximale Auszahlung: %(min)s %(coin)s",
         "limit_withdraw_asset_min": "Minimale Auszahlung: %(min)s %(coin)s",
         "limit_withdraw_asset_none": "Keine",
+        "logout_now": "Logout now",
         "memo": "Notitz",
         "meta": {
             "open_website": "Webseite öffnen"

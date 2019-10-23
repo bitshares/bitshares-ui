@@ -1180,6 +1180,7 @@
         "limit_withdraw_asset_max": "Maximum withdraw: %(min)s %(coin)s",
         "limit_withdraw_asset_min": "Minimum withdraw: %(min)s %(coin)s",
         "limit_withdraw_asset_none": "None",
+        "logout_now": "Logout now",
         "memo": "Memo",
         "meta": {
             "open_website": "ウェブサイトを開く"

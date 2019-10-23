@@ -1143,7 +1143,6 @@
         "convert": "Internal conversion",
         "convert_coin": "Convert to %(coin)s (%(symbol)s)",
         "convert_now": "Convert now",
-        "logout_now": "Logout now",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
         "deposit": "Deposit",
@@ -1187,6 +1186,7 @@
         "limit_withdraw_asset_max": "Maximum withdraw: %(min)s %(coin)s",
         "limit_withdraw_asset_min": "Minimum withdraw: %(min)s %(coin)s",
         "limit_withdraw_asset_none": "None",
+        "logout_now": "Logout now",
         "memo": "Memo",
         "meta": {
             "open_website": "Open Website"

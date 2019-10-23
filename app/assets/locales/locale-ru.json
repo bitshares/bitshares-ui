@@ -1186,6 +1186,7 @@
         "limit_withdraw_asset_max": "Максимальная сумма вывода: %(min)s %(coin)s",
         "limit_withdraw_asset_min": "Минимальная сумма вывода: %(min)s %(coin)s",
         "limit_withdraw_asset_none": "Нет",
+        "logout_now": "Logout now",
         "memo": "Мемо",
         "meta": {
             "open_website": "Открыть веб-сайт"

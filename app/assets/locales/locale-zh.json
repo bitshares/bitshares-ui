@@ -1186,6 +1186,7 @@
         "limit_withdraw_asset_max": "最大可提现: %(min)s %(coin)s",
         "limit_withdraw_asset_min": "最小可提现: %(min)s %(coin)s",
         "limit_withdraw_asset_none": "无",
+        "logout_now": "Logout now",
         "memo": "备注Memo",
         "meta": {
             "open_website": "访问官网"
