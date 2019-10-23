@@ -460,7 +460,6 @@ export function getConversionJson(inputs, userAccessToken = null) {
 
     const _cacheString =
         url + input_coin_type + output_coin_type + account_name;
-    +input_coin_type + output_coin_type + account_name;
     return new Promise((resolve, reject) => {
         if (_conversionCache[_cacheString])
             return resolve(_conversionCache[_cacheString]);
