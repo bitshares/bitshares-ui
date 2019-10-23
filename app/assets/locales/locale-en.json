@@ -519,6 +519,9 @@
     "connection": {
         "automatic_reconnect": " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
         "manual_ping": "Go to ping nodes",
+        "manual_ping_and_narrow_down": "Narrow down nodes and ping",
+        "narrow_down_nodes": "Narrow down nodes",
+        "narrow_down_nodes_tooltip": "Restrict the ping and automatic selection process of the wallet to only the selected nodes/regions. Choose nodes/regions close to your geolocation, this may significantly increase your felt connectivity. Leave empty to consider all.",
         "manual_reconnect": "Try reconnecting now",
         "out_of_sync": "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
         "title_out_of_sync": "Connection out of sync",

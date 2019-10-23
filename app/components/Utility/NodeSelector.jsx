@@ -5,16 +5,20 @@ import PropTypes from "prop-types";
 import {connect} from "alt-react";
 import SettingsStore from "../../stores/SettingsStore";
 import SettingsActions from "../../actions/SettingsActions";
+import counterpart from "counterpart";
+import {Icon as AntIcon, Icon, Tooltip} from "bitshares-ui-style-guide";
 
 const {SHOW_PARENT} = TreeSelect;
 
 class NodeSelector extends React.Component {
     static propTypes = {
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        size: PropTypes.string
     };
 
     static defaultProps = {
-        onChange: null
+        onChange: null,
+        size: undefined
     };
 
     state = {
@@ -92,9 +96,12 @@ class NodeSelector extends React.Component {
             onChange: this.onChange,
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,
-            searchPlaceholder: "Click to narrow node search",
+            searchPlaceholder: counterpart.translate(
+                "connection.narrow_down_nodes"
+            ), // narrow_down_nodes_tooltip
+            size: this.props.size,
             style: {
-                width: "100%"
+                width: "88%"
             },
             key: "nodeSelector",
             getPopupContainer: node => {
@@ -103,18 +110,39 @@ class NodeSelector extends React.Component {
         };
         return (
             <React.Fragment>
-                <TreeSelect
-                    {...tProps}
-                    dropdownPopupAlign={{
-                        points: ["tl", "bl"],
-                        offset: [0, 4],
-                        overflow: false
-                    }}
-                />
                 <div
-                    id="node-selector--drop-down"
-                    className="node-selector--drop-down"
-                />
+                    style={{
+                        width: "100%",
+                        minWidth: "250px"
+                    }}
+                >
+                    <TreeSelect
+                        {...tProps}
+                        dropdownPopupAlign={{
+                            points: ["tl", "bl"],
+                            offset: [0, 4],
+                            overflow: false
+                        }}
+                    />
+                    <Tooltip
+                        title={counterpart.translate(
+                            "connection.narrow_down_nodes_tooltip"
+                        )}
+                    >
+                        <Icon
+                            style={{
+                                fontSize: "1.3rem",
+                                marginLeft: "0.5rem",
+                                marginTop: "0.3rem"
+                            }}
+                            type={"question-circle"}
+                        />
+                    </Tooltip>
+                    <div
+                        id="node-selector--drop-down"
+                        className="node-selector--drop-down"
+                    />
+                </div>
             </React.Fragment>
         );
     }
