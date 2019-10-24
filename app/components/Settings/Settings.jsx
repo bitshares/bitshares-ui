@@ -31,6 +31,7 @@ class Settings extends React.Component {
             "locale",
             "unit",
             "fee_asset",
+            "filteredServiceProviders",
             "browser_notifications",
             "showSettles",
             "walletLockTimeout",
@@ -271,6 +272,8 @@ class Settings extends React.Component {
                 });
                 break;
 
+            case "filteredServiceProviders":
+                break;
             case "fee_asset":
             case "unit":
                 const defaultSettings = defaults["unit"];

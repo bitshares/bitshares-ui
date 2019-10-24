@@ -14,38 +14,78 @@ import {
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 import {isGatewayTemporarilyDisabled} from "../chain/onChainConfig";
+import SettingsStore from "stores/SettingsStore";
 
 const _isEnabled = gatewayKey => {
     return async function() {
-        const allowed = allowedGateway(gatewayKey);
-        if (allowed) {
-            const temporarilyDisabled = await isGatewayTemporarilyDisabled(
-                gatewayKey
-            );
-            if (temporarilyDisabled) {
-                return false;
-            }
-            return true;
+        if (__DEV__) {
+            console.log("Checking " + gatewayKey + " gateway ...");
         }
-        return false;
+        // is the gateway configured in branding?
+        const setInBranding = allowedGateway(gatewayKey);
+        if (!setInBranding) {
+            if (__DEV__) {
+                console.log("  ... disabled in branding.js");
+            }
+            return false;
+        }
+        // is it deactivated on-chain?
+        const temporarilyDisabled = await isGatewayTemporarilyDisabled(
+            gatewayKey
+        );
+        if (temporarilyDisabled) {
+            if (__DEV__) {
+                console.log("  ... disabled on-chain");
+            }
+            return false;
+        }
+        // has the user filtered it out?
+        let filteredServiceProviders = SettingsStore.getState().settings.get(
+            "filteredServiceProviders",
+            []
+        );
+        if (!filteredServiceProviders) {
+            filteredServiceProviders = [];
+        }
+        let userAllowed = false;
+        if (
+            filteredServiceProviders.length == 1 &&
+            filteredServiceProviders[0] == "all"
+        ) {
+            userAllowed = true;
+        } else {
+            userAllowed = filteredServiceProviders.indexOf(gatewayKey) >= 0;
+        }
+        if (!userAllowed) {
+            if (__DEV__) {
+                console.log("  ... disabled by user");
+            }
+            return false;
+        }
+        if (__DEV__) {
+            console.log("  ... may be used!");
+        }
+        return true;
     };
 };
 
 export const availableGateways = {
     OPEN: {
         id: "OPEN",
-        name: "OPENLEDGER",
+        name: "Open Ledger",
         baseAPI: openledgerAPIs,
-        isEnabled: () => false,
+        isEnabled: _isEnabled("OPEN"),
         selected: false,
         options: {
             enabled: false,
             selected: false
-        }
+        },
+        landing: "http://dex.openledger.io",
+        wallet: "https://openledger.io/"
     },
     RUDEX: {
         id: "RUDEX",
-        name: "RUDEX",
+        name: "RuDEX",
         baseAPI: rudexAPIs,
         isEnabled: _isEnabled("RUDEX"),
         isSimple: true,
@@ -60,22 +100,26 @@ export const availableGateways = {
         options: {
             enabled: false,
             selected: false
-        }
+        },
+        landing: "https://rudex.org/",
+        wallet: "https://market.rudex.org/"
     },
     SPARKDEX: {
         id: "SPARKDEX",
-        name: "SPARKDEX",
+        name: "BitSpark",
         baseAPI: bitsparkAPIs,
         isEnabled: _isEnabled("SPARKDEX"),
         selected: false,
         options: {
             enabled: false,
             selected: false
-        }
+        },
+        landing: "https://www.bitspark.io/for-traders",
+        wallet: "https://dex.bitspark.io/"
     },
     BRIDGE: {
         id: "BRIDGE",
-        name: "CRYPTO-BRIDGE",
+        name: "CryptoBridge",
         baseAPI: cryptoBridgeAPIs,
         isEnabled: _isEnabled("BRIDGE"),
         selected: false,
@@ -86,7 +130,9 @@ export const availableGateways = {
         options: {
             enabled: false,
             selected: false
-        }
+        },
+        landing: "https://crypto-bridge.org/",
+        wallet: "https://wallet.crypto-bridge.org/"
     },
     GDEX: {
         id: "GDEX",
@@ -96,11 +142,12 @@ export const availableGateways = {
         options: {
             enabled: false,
             selected: false
-        }
+        },
+        wallet: "https://www.gdex.io/"
     },
     XBTSX: {
         id: "XBTSX",
-        name: "XBTSX",
+        name: "XBTS",
         baseAPI: xbtsxAPIs,
         isEnabled: _isEnabled("XBTSX"),
         isSimple: true,
@@ -109,11 +156,13 @@ export const availableGateways = {
         options: {
             enabled: false,
             selected: false
-        }
+        },
+        landing: "https://xbts.io/",
+        wallet: "https://ex.xbts.io/"
     },
     CITADEL: {
         id: "CITADEL",
-        name: "CITADEL",
+        name: "Citadel",
         baseAPI: citadelAPIs,
         isEnabled: _isEnabled("CITADEL"),
         selected: false,
@@ -121,7 +170,18 @@ export const availableGateways = {
         options: {
             enabled: false,
             selected: false
-        }
+        },
+        landing: "https://citadel.li/",
+        wallet: "https://citadel.li/wallet/"
+    }
+};
+
+export const availableBridges = {
+    TRADE: {
+        id: "TRADE",
+        name: "Blocktrades",
+        isEnabled: _isEnabled("TRADE"),
+        landing: "https://blocktrades.us"
     }
 };
 

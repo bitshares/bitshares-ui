@@ -5,7 +5,8 @@ import AssetName from "../Utility/AssetName";
 import Notify from "notifyjs";
 import FeeAssetSettings from "./FeeAssetSettings";
 
-import {Checkbox, Select, Input, Form} from "bitshares-ui-style-guide";
+import {Checkbox, Select, Input, Form, Button} from "bitshares-ui-style-guide";
+import GatewaySelectorModal from "../Gateways/GatewaySelectorModal";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -15,12 +16,25 @@ export default class SettingsEntry extends React.Component {
         super();
 
         this.state = {
-            message: null
+            message: null,
+            isGatewaySelectorModalVisible: false
         };
 
         this.handleNotificationChange = this.handleNotificationChange.bind(
             this
         );
+    }
+
+    hideGatewaySelectorModal() {
+        this.setState({
+            isGatewaySelectorModalVisible: false
+        });
+    }
+
+    showGatewaySelectorModal() {
+        this.setState({
+            isGatewaySelectorModalVisible: true
+        });
     }
 
     _setMessage(key) {
@@ -147,6 +161,24 @@ export default class SettingsEntry extends React.Component {
                 options = null;
                 value = true;
                 component = <FeeAssetSettings key="fee_asset_component" />;
+                break;
+
+            case "filteredServiceProviders":
+                options = null;
+                value = true;
+                component = (
+                    <React.Fragment>
+                        <Button
+                            onClick={this.showGatewaySelectorModal.bind(this)}
+                        >
+                            Choose external Service Providers
+                        </Button>
+                        <GatewaySelectorModal
+                            visible={this.state.isGatewaySelectorModalVisible}
+                            hideModal={this.hideGatewaySelectorModal.bind(this)}
+                        />
+                    </React.Fragment>
+                );
                 break;
 
             case "defaultMarkets":
