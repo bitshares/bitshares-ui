@@ -160,6 +160,8 @@ import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
 import PriceAlertNotifications from "./components/PriceAlertNotifications";
+import GatewaySelectorModal from "./components/Gateways/GatewaySelectorModal";
+import SettingsStore from "./stores/SettingsStore";
 
 class App extends React.Component {
     constructor() {
@@ -173,6 +175,7 @@ class App extends React.Component {
                 : false;
         this.state = {
             isBrowserSupportModalVisible: false,
+            isGatewaySelectorModalVisible: false,
             loading: false,
             synced: this._syncStatus(),
             syncFail,
@@ -188,6 +191,9 @@ class App extends React.Component {
 
         this.showBrowserSupportModal = this.showBrowserSupportModal.bind(this);
         this.hideBrowserSupportModal = this.hideBrowserSupportModal.bind(this);
+        this.hideGatewaySelectorModal = this.hideGatewaySelectorModal.bind(
+            this
+        );
 
         Notification.config({
             duration: DEFAULT_NOTIFICATION_DURATION,
@@ -240,6 +246,12 @@ class App extends React.Component {
     hideBrowserSupportModal() {
         this.setState({
             isBrowserSupportModalVisible: false
+        });
+    }
+
+    hideGatewaySelectorModal() {
+        this.setState({
+            isGatewaySelectorModalVisible: false
         });
     }
 
@@ -298,7 +310,20 @@ class App extends React.Component {
                 this.setState({incognito});
             }.bind(this)
         );
-        updateGatewayBackers();
+        setTimeout(() => {
+            if (
+                SettingsStore.getState().viewSettings.get(
+                    "hasSeenExternalServices",
+                    false
+                )
+            ) {
+                updateGatewayBackers();
+            } else {
+                this.setState({
+                    isGatewaySelectorModalVisible: true
+                });
+            }
+        }, 1000);
     }
 
     componentDidUpdate(prevProps) {
@@ -596,6 +621,10 @@ class App extends React.Component {
                             visible={this.state.isBrowserSupportModalVisible}
                             hideModal={this.hideBrowserSupportModal}
                             showModal={this.showBrowserSupportModal}
+                        />
+                        <GatewaySelectorModal
+                            visible={this.state.isGatewaySelectorModalVisible}
+                            hideModal={this.hideGatewaySelectorModal}
                         />
                     </div>
                 </BodyClassName>

@@ -109,6 +109,7 @@ class SettingsStore {
             locale: "en",
             apiServer: settingsAPIs.DEFAULT_WS_NODE,
             filteredApiServers: [],
+            filteredServiceProviders: ["all"],
             faucet_address: settingsAPIs.DEFAULT_FAUCET,
             unit: CORE_ASSET,
             fee_asset: CORE_ASSET,
@@ -149,7 +150,8 @@ class SettingsStore {
                 "ja"
             ],
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
-            filteredApiServers: [],
+            filteredApiServers: [[]],
+            filteredServiceProviders: [[]],
             unit: getUnits(),
             fee_asset: getUnits(),
             showProposedTx: [{translate: "yes"}, {translate: "no"}],
@@ -227,7 +229,17 @@ class SettingsStore {
                         }
                     } else if (settings[key] !== defaultSettings[key]) {
                         // only save if its not the default
-                        returnSettings[key] = settings[key];
+                        if (settings[key] instanceof Array) {
+                            if (
+                                JSON.stringify(settings[key]) !==
+                                JSON.stringify(defaultSettings[key])
+                            ) {
+                                returnSettings[key] = settings[key];
+                            }
+                        } else {
+                            // only save if its not the default
+                            returnSettings[key] = settings[key];
+                        }
                     }
                 }
                 // all other cases are defaults, do not put the value in local storage
@@ -535,6 +547,7 @@ class SettingsStore {
             default:
                 break;
         }
+        console.log("asdsad");
         // check current settings
         if (this.settings.get(payload.setting) !== payload.value) {
             this.settings = this.settings.set(payload.setting, payload.value);

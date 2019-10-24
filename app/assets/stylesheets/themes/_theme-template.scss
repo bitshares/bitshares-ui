@@ -2841,3 +2841,6 @@ div.customizable-column--selector--dropdown {
         max-height: 100% !important;
     }
 }
+.ant-table-tbody > tr.ant-table-row-selected td {
+    background-color: #4f596688 !important;
+}
