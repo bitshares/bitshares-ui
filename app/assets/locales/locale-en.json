@@ -1097,6 +1097,14 @@
         "update_available": "UPDATE AVAILABLE"
     },
     "external_service_provider": {
+        "welcome": {
+            "hello": "Dear BitShares' User",
+            "first_line": "today, we want to give you some insight on the BitShares Blockchain and services around it.",
+            "explanation_dex": "BitShares offers a native decentralized exchange, the BitShares DEX. It is running completely on the blockchain with no need for centralized services, even the order matching is transparently on-chain.",
+            "explanation_service_providers": "You can trade anything against everything, as long as the asset (token) is available on the BitShares Blockchain. For tokens that are not native to it there exist external service providers (so called Gateways and Bridges), that allow you to trade tokens like BTC on the BitShares DEX by providing you their own IOU ('I owe you') of it.",
+            "explanation_what_to_do": "You may choose which of those service providers you want to see readily available in the BitShares UI. To do so, click 'Choose Services'. If you want to keep using the BitShares UI just like before, lick 'Not now'.",
+            "explanation_later": "If you want to adjust this later on, you can also choose the external service providers in the Settings."
+        },
         "selector": {
             "use_selected": "Use selected",
             "use_none": "Use none",
@@ -1105,7 +1113,10 @@
             "name": "Name",
             "landing": "Landing Page",
             "wallet": "Wallet",
-            "type": "Type"
+            "type": "Type",
+            "not_now": "Not now",
+            "choose_services": "Choose Services",
+            "cancel": "Cancel"
         },
         "gateway": {
             "short": "Gateway",
