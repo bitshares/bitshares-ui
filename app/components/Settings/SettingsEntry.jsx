@@ -17,7 +17,8 @@ export default class SettingsEntry extends React.Component {
 
         this.state = {
             message: null,
-            isGatewaySelectorModalVisible: false
+            isGatewaySelectorModalVisible: false,
+            isGatewaySelectorModalRendered: false
         };
 
         this.handleNotificationChange = this.handleNotificationChange.bind(
@@ -33,6 +34,7 @@ export default class SettingsEntry extends React.Component {
 
     showGatewaySelectorModal() {
         this.setState({
+            isGatewaySelectorModalRendered: true,
             isGatewaySelectorModalVisible: true
         });
     }
@@ -55,6 +57,17 @@ export default class SettingsEntry extends React.Component {
         return evt => {
             this.props.onNotificationChange(path, !!evt.target.checked);
         };
+    }
+
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (nextProps.setting === "filteredServiceProviders") {
+            // only rerender for the modal, not when settings changed (visualized in the modal!)
+            return (
+                nextState.isGatewaySelectorModalVisible !==
+                this.state.isGatewaySelectorModalVisible
+            );
+        }
+        return true;
     }
 
     render() {
@@ -173,10 +186,16 @@ export default class SettingsEntry extends React.Component {
                         >
                             Choose external Service Providers
                         </Button>
-                        <GatewaySelectorModal
-                            visible={this.state.isGatewaySelectorModalVisible}
-                            hideModal={this.hideGatewaySelectorModal.bind(this)}
-                        />
+                        {this.state.isGatewaySelectorModalRendered && (
+                            <GatewaySelectorModal
+                                visible={
+                                    this.state.isGatewaySelectorModalVisible
+                                }
+                                hideModal={this.hideGatewaySelectorModal.bind(
+                                    this
+                                )}
+                            />
+                        )}
                     </React.Fragment>
                 );
                 break;

@@ -547,7 +547,6 @@ class SettingsStore {
             default:
                 break;
         }
-        console.log("asdsad");
         // check current settings
         if (this.settings.get(payload.setting) !== payload.value) {
             this.settings = this.settings.set(payload.setting, payload.value);
