@@ -1066,6 +1066,40 @@
             "website": "Website"
         }
     },
+    "external_service_provider": {
+        "bridge": {
+            "description": "Bridges are external service providers that allow you to swap assets in and out of the BitShares Blockchain. For example, you can send your BTC on the Bitcoin Blockchain to a Bridge, who will swap it and give you an equivalent amount of BTS or another Gateways UIA on the BitShares Blockchain (for a fee of course). Normally, a Bridge does not hold your funds, but trust is required that they send you back the proper amount of the target asset. As it is an external service providers you implicitly agree to their Terms and Conditions by using any of their services or assets.",
+            "short": "Bridge",
+            "what_is": "What is a Bridge?"
+        },
+        "gateway": {
+            "description": "Gateways are external service providers that allow you to deposit, trade and withdraw assets into the BitShares Blockchain that are not native to it. For example, you can send your BTC on the Bitcoin Blockchain to a Gateway, who will in turn give you an UIA (user issued asset) on the BitShares Blockchain, with the promise that you can withdraw it again (for a fee of course). While you are holding such an UIA on the BitShares Blockchain, the Gateway becomes the custodian of your funds. As it is external service providers you implicitly agree to their Terms and Conditions by using any of their services or assets.",
+            "prefix": "Prefix",
+            "short": "Gateway",
+            "what_is": "What is a Gateway?"
+        },
+        "selector": {
+            "cancel": "Cancel",
+            "choose_services": "Choose Services",
+            "landing": "Landing Page",
+            "name": "Name",
+            "not_now": "Not now",
+            "table_description": "The table below lists all Gateways and Bridges that are currently integrated with the BitShares UI, this does not reflect any kind of endorsement. It lists the Name (sorted alphabetically), the type (Bridge or Gateway, and if Gateway the asset prefix, e.g. RUDEX.BTC), a link to their landing page with further information and an affiliate link to the Gateways wallet (if exists, usually a branded version of this UI). Please do your own due dilligence.",
+            "title": "Choose your preferred Service Providers",
+            "type": "Type",
+            "use_none": "Use none",
+            "use_selected": "Use selected",
+            "wallet": "Wallet"
+        },
+        "welcome": {
+            "explanation_dex": "BitShares offers a native decentralized exchange, the BitShares DEX. It is running completely on the blockchain with no need for centralized services, even the order matching is transparently on-chain.",
+            "explanation_later": "If you want to adjust this later on, you can also choose the external service providers in the Settings.",
+            "explanation_service_providers": "You can trade anything against everything, as long as the asset (token) is available on the BitShares Blockchain. For tokens that are not native to it there exist external service providers (so called Gateways and Bridges), that allow you to trade tokens like BTC on the BitShares DEX by providing you their own IOU ('I owe you') of it.",
+            "explanation_what_to_do": "You may choose which of those service providers you want to see readily available in the BitShares UI. To do so, click 'Choose Services'. If you want to keep using the BitShares UI just like before, lick 'Not now'.",
+            "first_line": "today, we want to give you some insight on the BitShares Blockchain and services around it.",
+            "hello": "Dear BitShares' User"
+        }
+    },
     "fees": {
         "title": "Fee Schedule"
     },
@@ -2022,6 +2056,7 @@
         "faucet_address": "Faucet Address",
         "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
         "fee_asset": "Default fee paying asset",
+        "filteredServiceProviders": "External service providers (Gateways, Bridges)",
         "general": "General",
         "general_text": "Adjust the basic settings.",
         "global_settings": "Default Global Settings",
