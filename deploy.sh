@@ -15,7 +15,7 @@ echo TRAVIS_TAG=$TRAVIS_TAG
 echo TRAVIS_BRANCH=$TRAVIS_BRANCH
 echo TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
 
-if [[ ""$unamestr" == 'Linux' && $TRAVIS_BRANCH = 'develop' && -z $TRAVIS_PULL_REQUEST_BRANCH ]]
+if [[ "$unamestr" == 'Linux' && $TRAVIS_BRANCH = 'develop' && -z $TRAVIS_PULL_REQUEST_BRANCH ]]
 then
     ## develop.bitshares.org subdomain (independent repo)
     echo "Pushing new develop subdomain repo"
