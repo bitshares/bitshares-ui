@@ -175,7 +175,7 @@ class GatewaySelectorModal extends React.Component {
     }
 
     _getReferrerLink() {
-        return !!getFaucet().referrer ? "r=" + getFaucet().referrer : "";
+        return !!getFaucet().referrer ? "?r=" + getFaucet().referrer : "";
     }
 
     async _checkOnChainConfig() {
