@@ -17,17 +17,26 @@ import {isGatewayTemporarilyDisabled} from "../chain/onChainConfig";
 import SettingsStore from "stores/SettingsStore";
 
 const _isEnabled = gatewayKey => {
-    return async function() {
+    return async function(options = {}) {
         if (__DEV__) {
             console.log("Checking " + gatewayKey + " gateway ...");
         }
-        // is the gateway configured in branding?
-        const setInBranding = allowedGateway(gatewayKey);
-        if (!setInBranding) {
-            if (__DEV__) {
-                console.log("  ... disabled in branding.js");
+        if (!options.onlyOnChainConfig) {
+            // is the gateway configured in branding?
+            const setInBranding = allowedGateway(gatewayKey);
+            if (!setInBranding) {
+                if (__DEV__) {
+                    console.log("  ... disabled in branding.js");
+                }
+                return false;
+            } else {
+                if (!!options.onlyBranding) {
+                    if (__DEV__) {
+                        console.log("  ... may be used!");
+                    }
+                    return true;
+                }
             }
-            return false;
         }
         // is it deactivated on-chain?
         const temporarilyDisabled = await isGatewayTemporarilyDisabled(
@@ -38,6 +47,13 @@ const _isEnabled = gatewayKey => {
                 console.log("  ... disabled on-chain");
             }
             return false;
+        } else {
+            if (!!options.onlyOnChainConfig) {
+                if (__DEV__) {
+                    console.log("  ... may be used!");
+                }
+                return true;
+            }
         }
         // has the user filtered it out?
         let filteredServiceProviders = SettingsStore.getState().settings.get(

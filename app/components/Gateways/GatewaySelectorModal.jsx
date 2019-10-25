@@ -9,17 +9,24 @@ import {
     Radio,
     Modal,
     Checkbox,
-    Collapse
+    Collapse,
+    Tooltip,
+    Icon
 } from "bitshares-ui-style-guide";
 import SettingsStore from "stores/SettingsStore";
 import {availableGateways, availableBridges} from "common/gateways";
-import {getFaucet} from "../../branding";
+import {getFaucet, allowedGateway} from "../../branding";
 import SettingsActions from "../../actions/SettingsActions";
 import {updateGatewayBackers} from "common/gatewayUtils";
+import ServiceProviderExplanation from "./ServiceProviderExplanation";
 
 class GatewaySelectorModal extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            showIntroduction: true,
+            onChainDisabled: {}
+        };
     }
 
     onSubmit() {
@@ -34,13 +41,12 @@ class GatewaySelectorModal extends React.Component {
         this.onClose();
     }
 
+    next() {
+        this.setState({showIntroduction: false});
+    }
+
     onClose() {
-        if (
-            !SettingsStore.getState().viewSettings.get(
-                "hasSeenExternalServices",
-                false
-            )
-        ) {
+        if (!this.props.hasSeenExternalServices) {
             SettingsActions.changeViewSetting({
                 hasSeenExternalServices: true
             });
@@ -57,6 +63,25 @@ class GatewaySelectorModal extends React.Component {
                     "external_service_provider.selector.name"
                 ),
                 render: row => {
+                    if (!!this.state.onChainDisabled[row.key]) {
+                        return (
+                            <Tooltip
+                                title={
+                                    "This gateway has been deactivated. This can be due to several reasons. If you are the operator of this gateway, please contact us."
+                                }
+                            >
+                                <span style={{whiteSpace: "nowrap"}}>
+                                    {row.name}
+                                    <Icon
+                                        style={{
+                                            marginLeft: "0.5rem"
+                                        }}
+                                        type="question-circle"
+                                    />
+                                </span>
+                            </Tooltip>
+                        );
+                    }
                     return row.name;
                 }
             },
@@ -153,6 +178,23 @@ class GatewaySelectorModal extends React.Component {
         return !!getFaucet().referrer ? "r=" + getFaucet().referrer : "";
     }
 
+    async _checkOnChainConfig() {
+        const all = this._getRows();
+        let onChainDisabled = {};
+        for (let i = 0; i < all.length; i++) {
+            if (!(await all[i].isEnabled({onlyOnChainConfig: true})))
+                onChainDisabled[all[i].key] = true;
+        }
+        this.setState({onChainDisabled});
+    }
+
+    _getEnabledRowKeys() {
+        return this._getRows().map(
+            item =>
+                this.state.onChainDisabled[item.key] ? undefined : item.key
+        );
+    }
+
     _getRows() {
         const gateways = Object.values(availableGateways).map(item => {
             return {
@@ -163,7 +205,8 @@ class GatewaySelectorModal extends React.Component {
                 landing: !!item.landing ? item.landing : undefined,
                 wallet: !!item.wallet
                     ? item.wallet + this._getReferrerLink()
-                    : undefined
+                    : undefined,
+                isEnabled: item.isEnabled
             };
         });
         const bridges = Object.values(availableBridges).map(item => {
@@ -174,18 +217,42 @@ class GatewaySelectorModal extends React.Component {
                 landing: !!item.landing ? item.landing : undefined,
                 wallet: !!item.wallet
                     ? item.wallet + this._getReferrerLink()
-                    : undefined
+                    : undefined,
+                isEnabled: item.isEnabled
             };
         });
         return gateways
             .concat(bridges)
+            .filter(item => {
+                return allowedGateway(item.key);
+            })
             .sort((a, b) => a.name.localeCompare(b.name));
     }
 
+    componentDidMount() {
+        this._checkOnChainConfig();
+    }
+
     render() {
-        const footer = (
+        const footer = !this.state.showIntroduction ? (
             <div key="buttons" style={{position: "relative", left: "0px"}}>
-                <Button key="cancel" onClick={this.onNone.bind(this)}>
+                <Tooltip
+                    title={counterpart.translate(
+                        "external_service_provider.welcome.explanation_later"
+                    )}
+                >
+                    <Button key="cancel" onClick={this.onClose.bind(this)}>
+                        <Translate
+                            component="span"
+                            content="external_service_provider.selector.cancel"
+                        />
+                    </Button>
+                </Tooltip>
+                <Button
+                    key="none"
+                    onClick={this.onNone.bind(this)}
+                    type="primary"
+                >
                     <Translate
                         component="span"
                         content="external_service_provider.selector.use_none"
@@ -199,6 +266,25 @@ class GatewaySelectorModal extends React.Component {
                     <Translate
                         component="span"
                         content="external_service_provider.selector.use_selected"
+                    />
+                </Button>
+            </div>
+        ) : (
+            <div key="buttons" style={{position: "relative", left: "0px"}}>
+                <Button key="cancel" onClick={this.onClose.bind(this)}>
+                    <Translate
+                        component="span"
+                        content="external_service_provider.selector.not_now"
+                    />
+                </Button>
+                <Button
+                    key="submit"
+                    type="primary"
+                    onClick={this.next.bind(this)}
+                >
+                    <Translate
+                        component="span"
+                        content="external_service_provider.selector.choose_services"
                     />
                 </Button>
             </div>
@@ -217,11 +303,17 @@ class GatewaySelectorModal extends React.Component {
                     });
                 }
             },
+            getCheckboxProps: record => {
+                return {
+                    disabled: this.state.onChainDisabled[record.key],
+                    key: record.key
+                };
+            },
             // Required in order resetSelected to work
             selectedRowKeys:
                 this.props.filteredServiceProviders.length == 1 &&
                 this.props.filteredServiceProviders[0] == "all"
-                    ? this._getRows().map(item => item.key)
+                    ? this._getEnabledRowKeys()
                     : this.props.filteredServiceProviders
         };
         return (
@@ -235,42 +327,50 @@ class GatewaySelectorModal extends React.Component {
                 footer={[footer]}
                 width={640}
             >
-                <Collapse>
-                    <Collapse.Panel
-                        header="What is a Gateway?"
-                        showArrow={false}
-                    >
-                        <Translate
-                            component="p"
-                            content="external_service_provider.gateway.description"
+                {this.state.showIntroduction ? (
+                    <ServiceProviderExplanation
+                        showSalutation={!this.props.hasSeenExternalServices}
+                    />
+                ) : (
+                    <React.Fragment>
+                        <Collapse>
+                            <Collapse.Panel
+                                header="What is a Gateway?"
+                                showArrow={false}
+                            >
+                                <Translate
+                                    component="p"
+                                    content="external_service_provider.gateway.description"
+                                />
+                            </Collapse.Panel>
+                        </Collapse>
+                        <Collapse style={{marginTop: "1rem"}}>
+                            <Collapse.Panel
+                                header="What is a Bridge?"
+                                showArrow={false}
+                            >
+                                <Translate
+                                    component="p"
+                                    content="external_service_provider.bridge.description"
+                                />
+                            </Collapse.Panel>
+                        </Collapse>
+                        <div style={{marginTop: "1rem"}}>
+                            <Translate content="external_service_provider.selector.table_description" />
+                        </div>
+                        <Table
+                            style={{marginTop: "1rem"}}
+                            columns={this._getRowHeaders()}
+                            pagination={{
+                                hideOnSinglePage: true,
+                                pageSize: 20
+                            }}
+                            dataSource={this._getRows()}
+                            footer={null}
+                            rowSelection={rowSelection}
                         />
-                    </Collapse.Panel>
-                </Collapse>
-                <Collapse style={{marginTop: "1rem"}}>
-                    <Collapse.Panel
-                        header="What is a Bridge?"
-                        showArrow={false}
-                    >
-                        <Translate
-                            component="p"
-                            content="external_service_provider.bridge.description"
-                        />
-                    </Collapse.Panel>
-                </Collapse>
-                <div style={{marginTop: "1rem"}}>
-                    <Translate content="external_service_provider.selector.table_description" />
-                </div>
-                <Table
-                    style={{marginTop: "1rem"}}
-                    columns={this._getRowHeaders()}
-                    pagination={{
-                        hideOnSinglePage: true,
-                        pageSize: 20
-                    }}
-                    dataSource={this._getRows()}
-                    footer={null}
-                    rowSelection={rowSelection}
-                />
+                    </React.Fragment>
+                )}
             </Modal>
         );
     }
@@ -287,6 +387,10 @@ GatewaySelectorModal = connect(
                 filteredServiceProviders: SettingsStore.getState().settings.get(
                     "filteredServiceProviders",
                     []
+                ),
+                hasSeenExternalServices: SettingsStore.getState().viewSettings.get(
+                    "hasSeenExternalServices",
+                    false
                 )
             };
         }
