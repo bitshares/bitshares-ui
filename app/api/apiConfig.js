@@ -328,14 +328,6 @@ export const settingsAPIs = {
             contact: "telegram:vianull;wechat:strugglingl"
         },
         {
-            url: "wss://ws.hellobts.com", // check
-            region: "Eastern Asia",
-            country: "Japan",
-            location: "Tokyo",
-            operator: "Witness: xman",
-            contact: "wechat:hidpos;email:hellobts@qq.com"
-        },
-        {
             url: "wss://bts-seoul.clockwork.gr",
             region: "Southeastern Asia",
             country: "Korea",
