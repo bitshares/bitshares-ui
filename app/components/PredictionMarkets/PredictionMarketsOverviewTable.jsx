@@ -41,7 +41,7 @@ class PredictionMarketsOverviewTable extends Component {
             this.props.currentAccount.get("id") === id;
         return [
             {
-                title: "#",
+                title: counterpart.translate("account.asset"),
                 dataIndex: "asset_id",
                 align: "left",
                 defaultSortOrder: "ascend",
