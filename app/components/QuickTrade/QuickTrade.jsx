@@ -1228,6 +1228,9 @@ class QuickTrade extends Component {
         const {currentAccount} = this.props;
         const accountBalances = currentAccount.get("balances").toJS();
         const {sellAssetId, sellAssetPrecision} = this.getAssetsDetails();
+        if (!accountBalances[sellAssetId]) {
+            return false;
+        }
         const balance = ChainStore.getObject(accountBalances[sellAssetId]).get(
             "balance"
         );
