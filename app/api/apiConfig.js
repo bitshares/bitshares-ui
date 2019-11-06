@@ -368,14 +368,6 @@ export const settingsAPIs = {
             contact: "email:citadel.li;support"
         },
         {
-            url: "wss://us-west-2.bts.crypto-bridge.org",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "North California",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
             url: "wss://eu-central-1.bts.crypto-bridge.org",
             region: "Western Europe",
             country: "Netherlands",
@@ -392,22 +384,6 @@ export const settingsAPIs = {
             contact: "email:support@crypto-bridge.org"
         },
         {
-            url: "wss://ap-southeast-1.bts.crypto-bridge.org",
-            region: "Southeastern Asia",
-            country: "Singapore",
-            location: "Singapore",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://ap-southeast-2.bts.crypto-bridge.org",
-            region: "Australia and New Zealand",
-            country: "Australia",
-            location: "Sydney",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
             url: "wss://ap-southeast-3.bts.crypto-bridge.org",
             region: "Southeastern Asia",
             country: "Singapore",
@@ -415,7 +391,7 @@ export const settingsAPIs = {
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
         },
-        
+
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
