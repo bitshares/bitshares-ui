@@ -124,7 +124,9 @@ class ShowcaseGrid extends Component {
                 },
                 description: "showcases.merchant_protocol.description",
                 icon: "merchant",
-                disabled: false
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.timed_transfer.title",
