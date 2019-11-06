@@ -272,14 +272,14 @@ export const settingsAPIs = {
             operator: "Witness: bhuz",
             contact: "telegram:bhuzor"
         },
-        {
-            url: "wss://bts-api.lafona.net/ws",
-            region: "Northern America",
-            country: "Canada",
-            location: "Montreal",
-            operator: "Witness: delegate-1.lafona",
-            contact: "telegram:lafona"
-        },
+        //{
+        //    url: "wss://bts-api.lafona.net/ws",
+        //    region: "Northern America",
+        //    country: "Canada",
+        //    location: "Montreal",
+        //    operator: "Witness: delegate-1.lafona",
+        //    contact: "telegram:lafona"
+        //},
         {
             url: "wss://kimziv.com/ws",
             region: "Northern America",
