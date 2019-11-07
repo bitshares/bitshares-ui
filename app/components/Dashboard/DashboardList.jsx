@@ -504,9 +504,9 @@ class DashboardList extends React.Component {
                                 >
                                     <Translate content="header.account" />
                                 </th>
-                                <th style={{textAlign: "right"}}>
+                                {/* <th style={{textAlign: "right"}}>
                                     <Translate content="account.open_orders" />
-                                </th>
+                                </th> */}
                                 {width >= 750 ? (
                                     <th style={{textAlign: "right"}}>
                                         <Translate content="account.as_collateral" />
