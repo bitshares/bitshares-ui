@@ -38,12 +38,12 @@ deploy:
           secure: HV4BRj0Nn4+3AGC5U2LxFQ3qr6bbwcs2SR7BIEKXdHcIAshvL52Qn9R2pXFjeJhj/FqGMRc6o1E54q4+QpzzlnoZquZkJoSv4x4EW306KVXNxaBQmwjNLs6gO09/s8j3IlZ0pudANmH2WQvT264ldGCqq0mC1vCMpHfxetdGsskfqdboFgyaUSDtRBER9FH23cM22Ro3oPJmRxn/dzZSctiB05e1i8CD6VZm8HeGuWKXyKOuhzBFzEgaSkSQWa6u5YsvAKkQ4c6rAAxUWJOH9+8WoqUVN/Pem56mnA0HYtqAoX/cShLuZfsHRJUVdE5Wt9YfEOBRQy954QmZgPhQbp7OKcIBAQyAkMSR1AEKCYd2QjPBBM5ek44Pbz0AsDSd1qsSgKUJs4urpOTLbFi2KfDmaXiO+ciaIDvyh0QiUPykVdRtDKacdrHCWUUuJajc465KRE8LGheOGThj+s9vPmy9Eubn7Zzsdzy1q0Xjwjd57bz8G5aTbBWpJJ4sk096trJqGX1iQMKEpnEU/KwmRS9XX65s6gBjuO8/2ZhoE8HQCDBS0whiJi+eHggu6wch6SfTvATkQ9ivex6T/T/eYHGF+sbShkXrzmUs0sbsq1TrjgFyIA/x23y+0k59mZ8xfkRLHT3L1EjgW6MahwPCPESumomq3PDJrKPVpd7n/04=
       file_glob: true
       file:
-          - build/binaries/BitShares*
+          - build/binaries/TUSC*
           - build/release-checksums-*
       skip_cleanup: true
       draft: true
       on:
-          repo: bitshares/bitshares-ui
+          repo: TUSCNetwork/tusc-ui
           tags: true
 before_install:
     - openssl aes-256-cbc -K $encrypted_844f3e8bd137_key -iv $encrypted_844f3e8bd137_iv
