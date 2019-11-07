@@ -422,7 +422,7 @@ class CreateAccountPassword extends React.Component {
                                         padding: "0px",
                                         marginBottom: "0px"
                                     }}
-                                    rows="3"
+                                    rows="5"
                                     value={this.state.keyPhrase}
                                     readOnly
                                     disabled
