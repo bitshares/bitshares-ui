@@ -125,7 +125,7 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
-            url: "ws://18.220.127.200:8090",
+            url: "wss://test2.api.tusc.network:8091",
             location: "Virginia",
             region: "Northern America",
             country: "U.S.A."
@@ -135,7 +135,7 @@ export const settingsAPIs = {
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "ws://18.220.127.200:8090",
+            url: "ws://test2.api.tusc.network:8090",
             location: "Virginia",
             region: "Northern America",
             country: "U.S.A."

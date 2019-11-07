@@ -16,7 +16,7 @@ To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
 nvm install v9
-nvm use v9
+nvm alias default v9
 ```
 
 Once you have Node installed, you can clone the repo:
