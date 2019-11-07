@@ -294,7 +294,7 @@ export default class DropDownMenu extends React.Component {
                     </div>
                 </li>
 
-                <li
+                {/* <li
                     className={cnames(
                         {
                             active: active.indexOf("/spotlight") !== -1
@@ -313,7 +313,7 @@ export default class DropDownMenu extends React.Component {
                     <div className="table-cell">
                         <Translate content="header.showcases" />
                     </div>
-                </li>
+                </li> */}
 
                 <li
                     className={cnames(
@@ -333,7 +333,7 @@ export default class DropDownMenu extends React.Component {
                         <Translate content="header.settings" />{" "}
                     </div>
                 </li>
-
+                {/* 
                 <li
                     className={cnames({
                         active: active.indexOf("/news") !== -1
@@ -346,7 +346,7 @@ export default class DropDownMenu extends React.Component {
                     <div className="table-cell">
                         <Translate content="news.news" />
                     </div>
-                </li>
+                </li> */}
 
                 <li
                     className={cnames({
