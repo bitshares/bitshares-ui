@@ -422,10 +422,13 @@ class App extends React.Component {
                     <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">
                             <Switch>
-                                <Route
+                                <Redirect
                                     path="/"
+                                    to={{
+                                        pathname: `/explorer/blocks`
+                                    }}
                                     exact
-                                    component={DashboardPage}
+                                    component={Explorer}
                                 />
                                 <Route
                                     path="/account/:account_name"

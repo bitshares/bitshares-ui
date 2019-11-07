@@ -6,6 +6,7 @@ import {TransactionBuilder, FetchChain} from "tuscjs";
 import {Apis} from "tuscjs-ws";
 import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";
+import CreateAccountPassword from "../components/Account/CreateAccountPassword";
 
 class WalletActions {
     /** Restore and make active a new wallet_object. */

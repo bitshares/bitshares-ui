@@ -9,7 +9,7 @@ export default class Login extends React.Component {
     constructor() {
         super();
         this.state = {
-            activeWalletModel: true
+            activeWalletModel: false
         };
     }
 
@@ -29,43 +29,6 @@ export default class Login extends React.Component {
                     />
                     <div>
                         <div className="v-align login-page-selector">
-                            <div
-                                className={`${
-                                    !activeWalletModel
-                                        ? "inactive-model-block"
-                                        : ""
-                                } selection-block align-center plate`}
-                            >
-                                <div className="small-horizontal small-only-block">
-                                    <WalletHeaderSelection
-                                        active={activeWalletModel}
-                                        onChangeActive={() =>
-                                            this.changeActiveModel(true)
-                                        }
-                                        loginPage
-                                    />
-                                    <AccountHeaderSelection
-                                        active={!activeWalletModel}
-                                        onChangeActive={() =>
-                                            this.changeActiveModel(false)
-                                        }
-                                        forSmall
-                                        loginPage
-                                    />
-                                </div>
-                                <WalletLogin
-                                    active={activeWalletModel}
-                                    onChangeActive={() =>
-                                        !activeWalletModel
-                                            ? this.changeActiveModel(true)
-                                            : null
-                                    }
-                                    goToAccountModel={() =>
-                                        this.changeActiveModel(false)
-                                    }
-                                    history={this.props.history}
-                                />
-                            </div>
                             <div
                                 className={`${
                                     activeWalletModel
@@ -101,6 +64,43 @@ export default class Login extends React.Component {
                                     goToWalletModel={() =>
                                         this.changeActiveModel(true)
                                     }
+                                />
+                            </div>
+                            <div
+                                className={`${
+                                    !activeWalletModel
+                                        ? "inactive-model-block"
+                                        : ""
+                                } selection-block align-center plate`}
+                            >
+                                <div className="small-horizontal small-only-block">
+                                    <WalletHeaderSelection
+                                        active={activeWalletModel}
+                                        onChangeActive={() =>
+                                            this.changeActiveModel(true)
+                                        }
+                                        loginPage
+                                    />
+                                    <AccountHeaderSelection
+                                        active={!activeWalletModel}
+                                        onChangeActive={() =>
+                                            this.changeActiveModel(false)
+                                        }
+                                        forSmall
+                                        loginPage
+                                    />
+                                </div>
+                                <WalletLogin
+                                    active={activeWalletModel}
+                                    onChangeActive={() =>
+                                        !activeWalletModel
+                                            ? this.changeActiveModel(true)
+                                            : null
+                                    }
+                                    goToAccountModel={() =>
+                                        this.changeActiveModel(false)
+                                    }
+                                    history={this.props.history}
                                 />
                             </div>
                         </div>

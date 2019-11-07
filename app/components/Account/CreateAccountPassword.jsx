@@ -21,11 +21,16 @@ import CopyButton from "../Utility/CopyButton";
 import {withRouter} from "react-router-dom";
 import {scroller} from "react-scroll";
 import {Notification, Tooltip} from "bitshares-ui-style-guide";
+import AccountLoginContainer from "../Login/AccountLogin";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
         super();
         this.state = {
+            res: {},
+            wif_priv_key: "",
+            keyPhrase: "",
+            pub_key: "",
             validAccountName: false,
             accountName: "",
             validPassword: false,
@@ -52,17 +57,42 @@ class CreateAccountPassword extends React.Component {
     }
 
     componentWillMount() {
+        // const script = document.createElement("script");
+
+        // script.src = "https://www.google.com/recaptcha/api.js";
+        // script.async = true;
+
+        // document.body.appendChild(script);
+
         if (!WalletDb.getWallet()) {
             SettingsActions.changeSetting({
                 setting: "passwordLogin",
                 value: true
             });
         }
-    }
-
-    componentDidMount() {
         ReactTooltip.rebuild();
         this.scrollToInput();
+
+        fetch("https://faucet.tusc.network/tusc/api/wallet/suggest_brain_key", {
+            method: "get",
+            headers: {
+                Accept: "application/json"
+            }
+        }).then(r =>
+            r.json().then(res => {
+                if (res) {
+                    this.setState({
+                        data: res.result,
+                        keyPhrase: res.result.brain_priv_key,
+                        pub_key: res.result.pub_key,
+                        wif_priv_key: res.result.wif_priv_key
+                    });
+                } else if (!res || (res && res.error)) {
+                    // console.log(res.error);
+                    reject(res.error);
+                }
+            })
+        );
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -121,7 +151,6 @@ class CreateAccountPassword extends React.Component {
             setting: "passwordLogin",
             value: true
         });
-
         WalletDb.validatePassword(password, true, name);
         WalletUnlockActions.checkLock.defer();
     }
@@ -131,6 +160,7 @@ class CreateAccountPassword extends React.Component {
         let referralAccount = AccountStore.getState().referralAccount;
         this.setState({loading: true});
 
+        this.setState({loading: false});
         AccountActions.createAccountWithPassword(
             name,
             password,
@@ -191,11 +221,35 @@ class CreateAccountPassword extends React.Component {
         e.preventDefault();
         if (!this.isValid()) return;
         let account_name = this.accountNameInput.getValue();
+        let publics_key = this.state.pub_key;
         // if (WalletDb.getWallet()) {
         //     this.createAccount(account_name);
         // } else {
-        let password = this.state.generatedPassword;
-        this.createAccount(account_name, password);
+        let password = this.state.wif_priv_key;
+        fetch("https://faucet.tusc.network/tusc/api/wallet/register_account", {
+            method: "post",
+            headers: {
+                Accept: "application/json",
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                account_name: this.state.accountName,
+                public_key: this.state.pub_key
+            })
+        }).then(r =>
+            r.json().then(res => {
+                if (res && !res.error) {
+                    console.log(res.result);
+                    alert("Successfully Created!");
+                    this.props.history.push("/login");
+                } else if (!res || (res && res.error)) {
+                    alert(res.error);
+                    console.log(res.error);
+                    reject(res.error);
+                }
+            })
+        );
+        //this.createAccount(account_name, password);
     }
 
     onRegistrarAccountChange(registrar_account) {
@@ -215,7 +269,7 @@ class CreateAccountPassword extends React.Component {
                     : !this.state[value],
             validPassword:
                 value === "confirm_password"
-                    ? e.target.value === this.state.generatedPassword
+                    ? e.target.value === this.state.wif_priv_key
                     : this.state.validPassword
         });
     }
@@ -264,11 +318,11 @@ class CreateAccountPassword extends React.Component {
 
                     <section className="form-group">
                         <label className="left-label">
-                            <Translate content="wallet.generated" />
+                            <Translate content="wallet.generated_private" />
                             &nbsp;&nbsp;
                             <Tooltip
                                 title={counterpart.translate(
-                                    "tooltip.generate"
+                                    "tooltip.generate_private"
                                 )}
                             >
                                 <span className="tooltip">
@@ -287,19 +341,103 @@ class CreateAccountPassword extends React.Component {
                                         marginBottom: "0px"
                                     }}
                                     rows="3"
+                                    value={this.state.wif_priv_key}
                                     readOnly
                                     disabled
                                 >
-                                    {this.state.generatedPassword}
+                                    {this.state.wif_priv_key}
                                 </textarea>
                                 <CopyButton
-                                    text={this.state.generatedPassword}
+                                    text={this.state.wif_priv_key}
                                     tip="tooltip.copy_password"
                                     dataPlace="top"
                                 />
                             </span>
                         </div>
                     </section>
+                    {/* ^Generated Private Key  */}
+
+                    <section className="form-group">
+                        <label className="left-label">
+                            <Translate content="wallet.generated_public" />
+                            &nbsp;&nbsp;
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "tooltip.generate_public"
+                                )}
+                            >
+                                <span className="tooltip">
+                                    <Icon
+                                        name="question-circle"
+                                        title="icons.question_circle"
+                                    />
+                                </span>
+                            </Tooltip>
+                        </label>
+                        <div style={{paddingBottom: "0.5rem"}}>
+                            <span className="inline-label">
+                                <textarea
+                                    style={{
+                                        padding: "0px",
+                                        marginBottom: "0px"
+                                    }}
+                                    rows="3"
+                                    value={this.state.pub_key}
+                                    readOnly
+                                    disabled
+                                >
+                                    {this.state.pub_key}
+                                </textarea>
+                                <CopyButton
+                                    text={this.state.pub_key}
+                                    tip="tooltip.copy_password"
+                                    dataPlace="top"
+                                />
+                            </span>
+                        </div>
+                    </section>
+                    {/* ^Generated Public Key  */}
+
+                    <section className="form-group">
+                        <label className="left-label">
+                            <Translate content="wallet.generated_phrase" />
+                            &nbsp;&nbsp;
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "tooltip.generate_phrase"
+                                )}
+                            >
+                                <span className="tooltip">
+                                    <Icon
+                                        name="question-circle"
+                                        title="icons.question_circle"
+                                    />
+                                </span>
+                            </Tooltip>
+                        </label>
+                        <div style={{paddingBottom: "0.5rem"}}>
+                            <span className="inline-label">
+                                <textarea
+                                    style={{
+                                        padding: "0px",
+                                        marginBottom: "0px"
+                                    }}
+                                    rows="5"
+                                    value={this.state.keyPhrase}
+                                    readOnly
+                                    disabled
+                                >
+                                    {this.state.keyPhrase}
+                                </textarea>
+                                <CopyButton
+                                    text={this.state.keyPhrase}
+                                    tip="tooltip.copy_password"
+                                    dataPlace="top"
+                                />
+                            </span>
+                        </div>
+                    </section>
+                    {/* ^Generated  Key Phrase */}
 
                     <section>
                         <label className="left-label">
@@ -317,7 +455,7 @@ class CreateAccountPassword extends React.Component {
                         />
                         {this.state.confirm_password &&
                         this.state.confirm_password !==
-                            this.state.generatedPassword ? (
+                            this.state.wif_priv_key ? (
                             <div className="has-error">
                                 <Translate content="wallet.confirm_error" />
                             </div>
@@ -402,6 +540,7 @@ class CreateAccountPassword extends React.Component {
                             </div>
                         </label>
                     </div>
+                    {/* <div className="g-recaptcha" data-sitekey="6LdYIrgUAAAAAIkHkfB0sYOJ5-DXnZMDhhPC9DUs"></div> */}
                     {/* If this is not the first account, show dropdown for fee payment account */}
                     {firstAccount ? null : (
                         <div
@@ -539,7 +678,7 @@ class CreateAccountPassword extends React.Component {
                                     textAlign: "center"
                                 }}
                             >
-                                {this.state.generatedPassword}
+                                {this.state.wif_priv_key}
                             </p>
                         </div>
                     )}
