@@ -34,7 +34,6 @@ import WithdrawModal from "../Modal/WithdrawModalNew";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
 import CustomTable from "../Utility/CustomTable";
-import MarketUtils from "common/market_utils";
 import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
@@ -241,8 +240,8 @@ class AccountPortfolioList extends React.Component {
             return this.sortFunctions.byTypedValue(
                 a,
                 b,
-                a.inCollateral,
-                b.inCollateral
+                this._sumCollateralBalances(a.inCollateral),
+                this._sumCollateralBalances(b.inCollateral)
             );
         },
         byBalance: function(a, b) {
@@ -257,8 +256,8 @@ class AccountPortfolioList extends React.Component {
             return this.sortFunctions.byTypedValue(
                 a,
                 b,
-                a.inVesting ? balanceToAsset(a.inVesting).amount : null,
-                b.inVesting ? balanceToAsset(b.inVesting).amount : null
+                this._sumVestingBalances(a.inVesting),
+                this._sumVestingBalances(b.inVesting)
             );
         },
         byInOrders: function(a, b) {
@@ -592,13 +591,13 @@ class AccountPortfolioList extends React.Component {
                 align: "right",
                 sorter: this.sortFunctions.byVestingBalance,
                 render: (item, row) => {
-                    if (!item) {
+                    if (!item || item.length == 0) {
                         return "--";
                     }
                     return (
                         <span style={{whiteSpace: "noWrap"}}>
                             <FormattedAsset
-                                amount={item.getIn(["balance", "amount"])}
+                                amount={this._sumVestingBalances(item)}
                                 asset={row.asset.get("id")}
                                 hide_asset
                             />
@@ -613,13 +612,13 @@ class AccountPortfolioList extends React.Component {
                 align: "right",
                 sorter: this.sortFunctions.byInCollateral,
                 render: (item, row) => {
-                    if (!item) {
+                    if (!item || item.length == 0) {
                         return "--";
                     }
                     return (
                         <span style={{whiteSpace: "noWrap"}}>
                             <FormattedAsset
-                                amount={item}
+                                amount={this._sumCollateralBalances(item)}
                                 asset={row.asset.get("id")}
                                 hide_asset
                             />
@@ -804,6 +803,24 @@ class AccountPortfolioList extends React.Component {
         return headerItems;
     }
 
+    _sumCollateralBalances(balances) {
+        if (!balances || balances.length == 0) return 0;
+        let sum = 0;
+        balances.forEach(item => {
+            sum = sum + +item.get("collateral");
+        });
+        return sum;
+    }
+
+    _sumVestingBalances(balances) {
+        if (!balances || balances.length == 0) return 0;
+        let sum = 0;
+        balances.forEach(item => {
+            sum = sum + balanceToAsset(item).amount;
+        });
+        return sum;
+    }
+
     _renderBalances(balanceList, optionalAssets, visible) {
         const {
             coreSymbol,
@@ -917,11 +934,9 @@ class AccountPortfolioList extends React.Component {
 
             const includeAsset = !hiddenAssets.includes(asset_type);
             const hasBalance = !!balanceObject.get("balance");
-            const hasOnOrder = !!orders[asset_type];
 
             // Vesting balances
-            let hasVestingBalance = false;
-            let vestingBalance = null;
+            let vestingBalances = [];
 
             const vbs = this.props.account.get("vesting_balances");
             vbs.forEach(vb => {
@@ -931,15 +946,13 @@ class AccountPortfolioList extends React.Component {
                     asset.get("id")
                 ) {
                     if (+vestingObject.getIn(["balance", "amount"]) > 0) {
-                        hasVestingBalance = true;
-                        vestingBalance = vestingObject;
+                        vestingBalances.push(vestingObject);
                     }
                 }
             });
 
             // Collateral
-            let hasCollateral = false;
-            let collateralBalance = null;
+            let collateralBalances = [];
 
             this.props.callOrders.forEach(order => {
                 let collateralObject = ChainStore.getObject(order);
@@ -951,8 +964,7 @@ class AccountPortfolioList extends React.Component {
                     ]) === asset.get("id")
                 ) {
                     if (+collateralObject.get("collateral") > 0) {
-                        hasCollateral = true;
-                        collateralBalance = +collateralObject.get("collateral");
+                        collateralBalances.push(collateralObject);
                     }
                 }
             });
@@ -1031,8 +1043,8 @@ class AccountPortfolioList extends React.Component {
             const totalValue =
                 balanceToAsset(balanceObject).amount +
                 (orders[asset.get("id")] ? orders[asset.get("id")] : 0) +
-                (vestingBalance ? balanceToAsset(vestingBalance).amount : 0) +
-                (collateralBalance ? collateralBalance : 0);
+                this._sumVestingBalances(vestingBalances) +
+                this._sumCollateralBalances(collateralBalances);
 
             balances.push({
                 key: asset.get("symbol"),
@@ -1045,8 +1057,8 @@ class AccountPortfolioList extends React.Component {
                 balance: balanceObject,
                 price: "dummy",
                 inOrders: orders[asset.get("id")],
-                inVesting: vestingBalance,
-                inCollateral: collateralBalance,
+                inVesting: vestingBalances,
+                inCollateral: collateralBalances,
                 hour24: (
                     <Market24HourChangeComponent
                         base={asset.get("id")}
