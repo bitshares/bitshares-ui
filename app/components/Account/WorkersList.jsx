@@ -489,10 +489,6 @@ class WorkerList extends React.Component {
         let remainingDailyPayout = maxDailyPayout;
         let voteThreshold = undefined;
         let mapped = workers
-            .filter(a => {
-                const name = a.get("name").toLowerCase();
-                return a && name.indexOf(filterSearch) !== -1;
-            })
             .sort((a, b) => {
                 // first sort by votes so payout order is correct
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -522,6 +518,10 @@ class WorkerList extends React.Component {
                     worker.remainingPayout = 0;
                 }
                 return worker;
+            })
+            .filter(a => {
+                const name = a.get("name").toLowerCase();
+                return a && name.indexOf(filterSearch) !== -1;
             })
             .sort((a, b) => {
                 // sort out expired
