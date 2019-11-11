@@ -370,9 +370,9 @@ export function allowedGateway(gateway) {
     return (
         [
             "TRADE",
-            // "OPEN",
+            "OPEN",
             "RUDEX",
-            // "BRIDGE",
+            "BRIDGE",
             "GDEX",
             "XBTSX",
             "SPARKDEX",
