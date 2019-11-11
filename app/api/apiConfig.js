@@ -336,12 +336,12 @@ export const settingsAPIs = {
             contact: "telegram:clockworkgr"
         },
         {
-            url: "wss://bts.liuye.tech:4443/ws",
+            url: "wss://api.61bts.com",
             region: "Eastern Asia",
             country: "China",
             location: "Shandong",
             operator: "Witness: liuye",
-            contact: "email:work@liuye.tech"
+            contact: "email:work@domyself.me"
         },
         {
             url: "wss://btsfullnode.bangzi.info/ws",
