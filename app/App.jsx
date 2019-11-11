@@ -323,7 +323,7 @@ class App extends React.Component {
                     isGatewaySelectorModalVisible: true
                 });
             }
-        }, 1000);
+        }, 1500);
     }
 
     componentDidUpdate(prevProps) {

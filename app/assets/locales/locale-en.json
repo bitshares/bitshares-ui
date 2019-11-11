@@ -1073,6 +1073,7 @@
         }
     },
     "external_service_provider": {
+        "is_down": "The external provider that offers this service is currently not working correctly. You can check the status in the Settings (General > External Service Provider).",
         "bridge": {
             "description": "Bridges are external service providers that allow you to swap assets in and out of the BitShares Blockchain. For example, you can send your BTC on the Bitcoin Blockchain to a Bridge, who will swap it and give you an equivalent amount of BTS or another Gateways UIA on the BitShares Blockchain (for a fee of course). Normally, a Bridge does not hold your funds, but trust is required that they send you back the proper amount of the target asset. As it is an external service providers you implicitly agree to their Terms and Conditions by using any of their services or assets.",
             "short": "Bridge",

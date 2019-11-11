@@ -7,6 +7,11 @@ const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
 
 class GatewayStore {
+    static isDown(backer) {
+        // call another static method with this
+        return !!this.getState().down.get(backer);
+    }
+
     constructor() {
         this.backedCoins = Immutable.Map(ss.get("backedCoins", {}));
         this.bridgeCoins = Immutable.Map(
