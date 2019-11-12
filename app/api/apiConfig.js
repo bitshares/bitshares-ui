@@ -171,14 +171,6 @@ export const settingsAPIs = {
             contact: "telegram:btsplusplus"
         },
         {
-            url: "wss://dex.rnglab.org",
-            region: "Western Europe",
-            country: "Netherlands",
-            location: "Amsterdam",
-            operator: "Witness: rnglab",
-            contact: "keybase:rnglab"
-        },
-        {
             url: "wss://dexnode.net/ws",
             region: "Northern America",
             country: "U.S.A.",
@@ -195,16 +187,7 @@ export const settingsAPIs = {
             contact: "telegram:xeldal"
         },
         {
-            url: "wss://api.bts.blckchnd.com", // remove
-            region: "Western Europe",
-            country: "Germany",
-            location: "Falkenstein",
-            operator: "Witness: blckchnd",
-            contact:
-                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
-        },
-        {
-            url: "wss://api-ru.bts.blckchnd.com", // remove
+            url: "wss://api-ru.bts.blckchnd.com",
             region: "Eastern Europe",
             country: "Russia",
             location: "Moscow",
