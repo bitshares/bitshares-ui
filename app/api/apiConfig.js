@@ -121,10 +121,6 @@ export const settingsAPIs = {
             location: {translate: "settings.api_closest"}
         },
         {
-            url: "ws://127.0.0.1:8090",
-            location: "Locally hosted"
-        },
-        {
             url: "wss://test2.api.tusc.network:8091",
             location: "Virginia",
             region: "Northern America",
