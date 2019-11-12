@@ -10,7 +10,7 @@ const compareKeys = (prev, next) => {
 };
 
 const getVotesName = item => {
-    if (item.id.startsWith("1.14")) {
+    if (item.id.startsWith("1.11")) {
         // worker
         let worker_account = ChainStore.getAccountName(item.worker_account);
         return (
@@ -20,7 +20,7 @@ const getVotesName = item => {
                 ? " of " + worker_account
                 : " account " + item.worker_account)
         );
-    } else if (item.id.startsWith("1.6.")) {
+    } else if (item.id.startsWith("1.5.")) {
         let witness_account = ChainStore.getAccountName(item.witness_account);
         return (
             "Witness " +

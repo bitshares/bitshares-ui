@@ -685,7 +685,7 @@ class SettingsStore {
     }
 
     getLastBudgetObject() {
-        return ss.get(this._getChainKey("lastBudgetObject"), "2.13.1");
+        return ss.get(this._getChainKey("lastBudgetObject"), "2.12.1");
     }
 
     setLastBudgetObject(value) {

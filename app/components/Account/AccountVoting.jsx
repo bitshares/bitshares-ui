@@ -229,10 +229,10 @@ class AccountVoting extends React.Component {
                         parseInt(b.split(".")[2], 10)
                     );
                 });
-            const lastActive = active.last() || `1.${isWitness ? "6" : "5"}.1`;
+            const lastActive = active.last() || `1.${isWitness ? "5" : "4"}.1`;
             lastIdx = parseInt(lastActive.split(".")[2], 10);
             for (var i = 1; i <= lastIdx + 10; i++) {
-                vote_ids.push(`1.${isWitness ? "6" : "5"}.${i}`);
+                vote_ids.push(`1.${isWitness ? "5" : "4"}.${i}`);
             }
         } else {
             lastIdx = parseInt(vote_ids[vote_ids.length - 1].split(".")[2], 10);
@@ -256,7 +256,7 @@ class AccountVoting extends React.Component {
                     // there are more valid vote objs, fetch 10 more
                     vote_ids = [];
                     for (var i = lastIdx + 11; i <= lastIdx + 20; i++) {
-                        vote_ids.push(`1.${isWitness ? "6" : "5"}.${i}`);
+                        vote_ids.push(`1.${isWitness ? "5" : "4"}.${i}`);
                     }
                     return this._getVoteObjects(type, vote_ids);
                 }
@@ -510,7 +510,7 @@ class AccountVoting extends React.Component {
                 ) -
                 1;
             if (idIndex >= currentID) return;
-            let newID = "2.13." + Math.max(idIndex, currentID);
+            let newID = "2.12." + Math.max(idIndex, currentID);
             let newIDInt = parseInt(newID.split(".")[2], 10);
             FetchChainObjects(
                 ChainStore.getObject,
@@ -522,7 +522,7 @@ class AccountVoting extends React.Component {
                 if (lbo === null) {
                     // The object does not exist, the id was too high
                     this.setState(
-                        {lastBudgetObject: `2.13.${newIDInt - 1}`},
+                        {lastBudgetObject: `2.12.${newIDInt - 1}`},
                         this.getBudgetObject
                     );
                 } else {
@@ -533,7 +533,7 @@ class AccountVoting extends React.Component {
             });
         } else {
             // The object does not exist, decrement the ID
-            let newID = `2.13.${idIndex - 1}`;
+            let newID = `2.12.${idIndex - 1}`;
             FetchChainObjects(
                 ChainStore.getObject,
                 [newID],
@@ -544,7 +544,7 @@ class AccountVoting extends React.Component {
                 if (lbo === null) {
                     // The object does not exist, the id was too high
                     this.setState(
-                        {lastBudgetObject: `2.13.${idIndex - 2}`},
+                        {lastBudgetObject: `2.12.${idIndex - 2}`},
                         this.getBudgetObject
                     );
                 } else {
