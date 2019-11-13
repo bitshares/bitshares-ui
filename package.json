@@ -198,7 +198,8 @@
         "tcomb": "2.5.2",
         "whatwg-fetch": "^2.0.1",
         "xss": "^1.0.3",
-        "zxcvbn-async": "0.0.5"
+        "zxcvbn-async": "0.0.5",
+        "react-google-recaptcha": "^2.0.1"
     },
     "devDependencies": {
         "autoprefixer": "^9.5.1",

@@ -21,7 +21,10 @@ import CopyButton from "../Utility/CopyButton";
 import {withRouter} from "react-router-dom";
 import {scroller} from "react-scroll";
 import {Notification, Tooltip} from "bitshares-ui-style-guide";
+import ReCAPTCHA from "react-google-recaptcha";
 import AccountLoginContainer from "../Login/AccountLogin";
+
+const grecaptchaObject = window.grecaptcha;
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -45,6 +48,7 @@ class CreateAccountPassword extends React.Component {
                 45
             ),
             confirm_password: "",
+            recaptcha: "",
             understand_1: false,
             understand_2: false,
             understand_3: false
@@ -57,13 +61,6 @@ class CreateAccountPassword extends React.Component {
     }
 
     componentWillMount() {
-        // const script = document.createElement("script");
-
-        // script.src = "https://www.google.com/recaptcha/api.js";
-        // script.async = true;
-
-        // document.body.appendChild(script);
-
         if (!WalletDb.getWallet()) {
             SettingsActions.changeSetting({
                 setting: "passwordLogin",
@@ -85,7 +82,8 @@ class CreateAccountPassword extends React.Component {
                         data: res.result,
                         keyPhrase: res.result.brain_priv_key,
                         pub_key: res.result.pub_key,
-                        wif_priv_key: res.result.wif_priv_key
+                        wif_priv_key: res.result.wif_priv_key,
+                        recaptcha: res.result.recaptcha
                     });
                 } else if (!res || (res && res.error)) {
                     // console.log(res.error);
@@ -220,12 +218,7 @@ class CreateAccountPassword extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         if (!this.isValid()) return;
-        let account_name = this.accountNameInput.getValue();
-        let publics_key = this.state.pub_key;
-        // if (WalletDb.getWallet()) {
-        //     this.createAccount(account_name);
-        // } else {
-        let password = this.state.wif_priv_key;
+
         fetch("https://faucet.tusc.network/tusc/api/wallet/register_account", {
             method: "post",
             headers: {
@@ -234,7 +227,8 @@ class CreateAccountPassword extends React.Component {
             },
             body: JSON.stringify({
                 account_name: this.state.accountName,
-                public_key: this.state.pub_key
+                public_key: this.state.pub_key,
+                recaptcha_response: this.state.recaptcha
             })
         }).then(r =>
             r.json().then(res => {
@@ -249,7 +243,6 @@ class CreateAccountPassword extends React.Component {
                 }
             })
         );
-        //this.createAccount(account_name, password);
     }
 
     onRegistrarAccountChange(registrar_account) {
@@ -262,16 +255,20 @@ class CreateAccountPassword extends React.Component {
     // }
 
     _onInput(value, e) {
-        this.setState({
-            [value]:
-                value === "confirm_password"
-                    ? e.target.value
-                    : !this.state[value],
-            validPassword:
-                value === "confirm_password"
-                    ? e.target.value === this.state.wif_priv_key
-                    : this.state.validPassword
-        });
+        if (value === "recaptcha") {
+            this.setState({[value]: e});
+        } else {
+            this.setState({
+                [value]:
+                    value === "confirm_password"
+                        ? e.target.value
+                        : !this.state[value],
+                validPassword:
+                    value === "confirm_password"
+                        ? e.target.value === this.state.wif_priv_key
+                        : this.state.validPassword
+            });
+        }
     }
 
     _renderAccountCreateForm() {
@@ -461,7 +458,14 @@ class CreateAccountPassword extends React.Component {
                             </div>
                         ) : null}
                     </section>
-
+                    <br />
+                    <section>
+                        <ReCAPTCHA
+                            grecaptcha={grecaptchaObject}
+                            sitekey="6LdYIrgUAAAAAJd1PkRtOdCvZv2jrV8UmQXgtiAr"
+                            onChange={this._onInput.bind(this, "recaptcha")}
+                        />
+                    </section>
                     <br />
 
                     <div
@@ -540,7 +544,7 @@ class CreateAccountPassword extends React.Component {
                             </div>
                         </label>
                     </div>
-                    {/* <div className="g-recaptcha" data-sitekey="6LdYIrgUAAAAAIkHkfB0sYOJ5-DXnZMDhhPC9DUs"></div> */}
+
                     {/* If this is not the first account, show dropdown for fee payment account */}
                     {firstAccount ? null : (
                         <div
