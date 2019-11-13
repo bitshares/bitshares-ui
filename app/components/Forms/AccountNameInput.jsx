@@ -95,24 +95,40 @@ class AccountNameInput extends React.Component {
         return error;
     }
 
-    validateAccountName(value) {
-        this.state.error =
-            value === ""
-                ? "Please enter valid account name"
-                : ChainValidation.is_account_name_error(value);
+    isAccountNameValid(value) {
+        let validChars = "0123456789-abcdefghijklmnopqrstuvwxyz";
 
-        this.state.warning = null;
-        if (this.props.cheapNameOnly) {
-            if (!this.state.error && !ChainValidation.is_cheap_name(value))
-                this.state.error = counterpart.translate(
-                    "account.name_input.premium_name_faucet"
-                );
-        } else {
-            if (!this.state.error && !ChainValidation.is_cheap_name(value))
-                this.state.warning = counterpart.translate(
-                    "account.name_input.premium_name_warning"
-                );
+        if (value.length < 8 || value.length > 63) {
+            return false;
         }
+
+        for (var i = 0; i < value.length; i++) {
+            if (!validChars.includes(value.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    validateAccountName(value) {
+        this.state.error = null;
+        if (value === "") {
+            this.state.error = "Please enter valid account name";
+        }
+
+        if (!this.isAccountNameValid(value)) {
+            if (!this.state.error) {
+                this.state.error = counterpart.translate(
+                    "account.name_input.account_name_invalid"
+                );
+            }
+        } else {
+            if (!this.state.error) {
+                this.state.error = ChainValidation.is_account_name_error(value);
+            }
+        }
+
         this.setState({
             value: value,
             error: this.state.error,
@@ -129,7 +145,7 @@ class AccountNameInput extends React.Component {
         e.stopPropagation();
         // Simplify the rules (prevent typing of invalid characters)
         var account_name = e.target.value.toLowerCase();
-        account_name = account_name.match(/[a-z0-9\.-]+/);
+        account_name = account_name.match(/[a-z0-9-]+/);
         account_name = account_name ? account_name[0] : "";
         this.setState({account_name});
         this.validateAccountName(account_name);

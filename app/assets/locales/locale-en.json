@@ -109,8 +109,7 @@
         "name_input": {
             "name_is_taken": "Account name is already taken.",
             "not_found": "Account not found.",
-            "premium_name_faucet": "This is a premium name which is not supported by this faucet. Please enter a regular name containing least one dash, a number or no vowels.",
-            "premium_name_warning": "This is a premium name which is more expensive than a name containing a dash (-) or a number."
+            "account_name_invalid": "Account names must be more than 7 and less than 64 characters. They must consist of lower case characters, numbers, and dashes '-'"
         },
         "new_user": "New user?",
         "no_orders": "No open orders",
