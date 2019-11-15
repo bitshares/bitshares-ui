@@ -18,9 +18,9 @@ import counterpart from "counterpart";
 import LogsActions from "actions/LogsActions";
 
 /*
-* Electron does not support browserHistory, so we need to use hashHistory.
-* The same is true for servers without configuration options, such as Github Pages
-*/
+ * Electron does not support browserHistory, so we need to use hashHistory.
+ * The same is true for servers without configuration options, such as Github Pages
+ */
 import {HashRouter, BrowserRouter} from "react-router-dom";
 const Router = __HASH_HISTORY__ ? HashRouter : BrowserRouter;
 
@@ -36,7 +36,7 @@ class RootIntl extends React.Component {
                 formats={intlData.formats}
                 initialNow={Date.now()}
             >
-                <Router>
+                <Router basename="/wallet/">
                     <App {...this.props} />
                 </Router>
             </IntlProvider>
