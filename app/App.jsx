@@ -310,20 +310,35 @@ class App extends React.Component {
                 this.setState({incognito});
             }.bind(this)
         );
+        this._ensureExternalServices();
+    }
+
+    _ensureExternalServices() {
         setTimeout(() => {
-            if (
-                SettingsStore.getState().viewSettings.get(
-                    "hasSeenExternalServices",
-                    false
-                )
-            ) {
-                updateGatewayBackers();
+            let hasLoggedIn =
+                AccountStore.getState().myActiveAccounts.length > 0 ||
+                !!AccountStore.getState().passwordAccount;
+            if (!hasLoggedIn) {
+                this._ensureExternalServices();
             } else {
-                this.setState({
-                    isGatewaySelectorModalVisible: true
-                });
+                this._checkExternalServices();
             }
-        }, 1500);
+        }, 5000);
+    }
+
+    _checkExternalServices() {
+        if (
+            SettingsStore.getState().viewSettings.get(
+                "hasSeenExternalServices",
+                false
+            )
+        ) {
+            updateGatewayBackers();
+        } else {
+            this.setState({
+                isGatewaySelectorModalVisible: true
+            });
+        }
     }
 
     componentDidUpdate(prevProps) {
