@@ -523,7 +523,7 @@ class AccountPortfolioList extends React.Component {
         });
     }
 
-    getHeader() {
+    getHeader(atLeastOneHas) {
         let {settings} = this.props;
         let {shownAssets} = this.state;
 
@@ -717,6 +717,11 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-medium",
                 title: <Translate content="exchange.buy" />,
+                customizable: atLeastOneHas.buy
+                    ? undefined
+                    : {
+                          default: false
+                      },
                 dataIndex: "buy",
                 align: "center",
                 render: item => {
@@ -725,7 +730,26 @@ class AccountPortfolioList extends React.Component {
             },
             {
                 className: "column-hide-medium",
-                title: <Translate content="modal.deposit.submit" />,
+                title: atLeastOneHas.depositOnlyBTS ? (
+                    <React.Fragment>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "external_service_provider.expect_more"
+                            )}
+                        >
+                            <Translate content="modal.deposit.submit" />
+                            &nbsp;
+                            <AntIcon type="question-circle" />
+                        </Tooltip>
+                    </React.Fragment>
+                ) : (
+                    <Translate content="modal.deposit.submit" />
+                ),
+                customizable: atLeastOneHas.deposit
+                    ? undefined
+                    : {
+                          default: false
+                      },
                 dataIndex: "deposit",
                 align: "center",
                 render: item => {
@@ -735,6 +759,11 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-medium",
                 title: <Translate content="modal.withdraw.submit" />,
+                customizable: atLeastOneHas.withdraw
+                    ? undefined
+                    : {
+                          default: false
+                      },
                 dataIndex: "withdraw",
                 align: "center",
                 render: item => {
@@ -1428,16 +1457,35 @@ class AccountPortfolioList extends React.Component {
         const currentBridges =
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
+        const balanceRows = this._renderBalances(
+            this.props.balanceList,
+            this.props.optionalAssets,
+            this.props.visible
+        );
+        const atLeastOneHas = {};
+        balanceRows.forEach(_item => {
+            console.log(_item);
+            if (!!_item.buy && _item.buy !== "-") {
+                atLeastOneHas.buy = true;
+            }
+            if (!!_item.deposit && _item.deposit !== "-") {
+                if (_item.key == "BTS" && GatewayStore.anyAllowed()) {
+                    atLeastOneHas.depositOnlyBTS =
+                        _item.key == "BTS" && !atLeastOneHas.deposit;
+                    atLeastOneHas.deposit = true;
+                }
+            }
+            if (!!_item.withdraw && _item.withdraw !== "-") {
+                atLeastOneHas.withdraw = true;
+            }
+        });
+
         return (
             <div>
                 <CustomTable
                     className="table dashboard-table table-hover"
-                    rows={this._renderBalances(
-                        this.props.balanceList,
-                        this.props.optionalAssets,
-                        this.props.visible
-                    )}
-                    header={this.getHeader()}
+                    rows={balanceRows}
+                    header={this.getHeader(atLeastOneHas)}
                     label="utility.total_x_assets"
                     extraRow={this.props.extraRow}
                     viewSettingsKey="portfolioColumns"

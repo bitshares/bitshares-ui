@@ -88,7 +88,7 @@ const _isEnabled = gatewayKey => {
 export const availableGateways = {
     OPEN: {
         id: "OPEN",
-        name: "Open Ledger",
+        name: "OpenLedger",
         baseAPI: openledgerAPIs,
         isEnabled: _isEnabled("OPEN"),
         selected: false,
