@@ -72,6 +72,8 @@ export default class Workers extends React.Component {
             });
         };
 
+        // fixme the way WorkersList is injected with workerslist is a complete design fail. use proper controlled component
+
         return (
             <div>
                 <div className="header-selector">
@@ -178,13 +180,23 @@ export default class Workers extends React.Component {
                         _expiredWorkersLength,
                         _voteThreshold
                     ) => {
-                        this.setState({
-                            newWorkersLength: _newWorkersLength,
-                            activeWorkersLength: _activeWorkersLength,
-                            pollsLength: _pollsLength,
-                            expiredWorkersLength: _expiredWorkersLength,
-                            voteThreshold: _voteThreshold
-                        });
+                        if (
+                            _newWorkersLength !== this.state.newWorkersLength ||
+                            _activeWorkersLength !==
+                                this.state.activeWorkersLength ||
+                            _pollsLength !== this.state.pollsLength ||
+                            _expiredWorkersLength !==
+                                this.state.expiredWorkersLength ||
+                            _voteThreshold !== this.state.voteThreshold
+                        ) {
+                            this.setState({
+                                newWorkersLength: _newWorkersLength,
+                                activeWorkersLength: _activeWorkersLength,
+                                pollsLength: _pollsLength,
+                                expiredWorkersLength: _expiredWorkersLength,
+                                voteThreshold: _voteThreshold
+                            });
+                        }
                     }}
                     workerBudget={workerBudget}
                     hideLegacyProposals={hideLegacyProposals}

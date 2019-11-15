@@ -39,7 +39,9 @@ function adjust_links(str) {
         let page = endsWith(text, ".md")
             ? text.substr(0, text.length - 3)
             : text;
-        if (!page.startsWith("/help")) {
+        if (page.startsWith("/borrow")) {
+            // pass
+        } else if (!page.startsWith("/help")) {
             page = "/help/" + page;
         } else if (page.startsWith("help")) {
             page = "/" + page;

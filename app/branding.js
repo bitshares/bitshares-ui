@@ -367,18 +367,21 @@ export function getAssetHideNamespaces() {
  * @returns {boolean}
  */
 export function allowedGateway(gateway) {
-    return (
-        [
-            "TRADE",
-            "OPEN",
-            "RUDEX",
-            "BRIDGE",
-            "GDEX",
-            "XBTSX",
-            "SPARKDEX",
-            "CITADEL"
-        ].indexOf(gateway) >= 0
-    );
+    const allowedGateways = [
+        "TRADE",
+        "OPEN",
+        "RUDEX",
+        "BRIDGE",
+        "GDEX",
+        "XBTSX",
+        "SPARKDEX",
+        "CITADEL"
+    ];
+    if (!gateway) {
+        // answers the question: are any allowed?
+        return allowedGateways.length > 0;
+    }
+    return allowedGateways.indexOf(gateway) >= 0;
 }
 
 export function getSupportedLanguages() {

@@ -34,7 +34,6 @@ import WithdrawModal from "../Modal/WithdrawModalNew";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
 import CustomTable from "../Utility/CustomTable";
-import MarketUtils from "common/market_utils";
 import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
@@ -241,8 +240,8 @@ class AccountPortfolioList extends React.Component {
             return this.sortFunctions.byTypedValue(
                 a,
                 b,
-                a.inCollateral,
-                b.inCollateral
+                this._sumCollateralBalances(a.inCollateral),
+                this._sumCollateralBalances(b.inCollateral)
             );
         },
         byBalance: function(a, b) {
@@ -257,8 +256,8 @@ class AccountPortfolioList extends React.Component {
             return this.sortFunctions.byTypedValue(
                 a,
                 b,
-                a.inVesting ? balanceToAsset(a.inVesting).amount : null,
-                b.inVesting ? balanceToAsset(b.inVesting).amount : null
+                this._sumVestingBalances(a.inVesting),
+                this._sumVestingBalances(b.inVesting)
             );
         },
         byInOrders: function(a, b) {
@@ -524,7 +523,7 @@ class AccountPortfolioList extends React.Component {
         });
     }
 
-    getHeader() {
+    getHeader(atLeastOneHas) {
         let {settings} = this.props;
         let {shownAssets} = this.state;
 
@@ -592,13 +591,13 @@ class AccountPortfolioList extends React.Component {
                 align: "right",
                 sorter: this.sortFunctions.byVestingBalance,
                 render: (item, row) => {
-                    if (!item) {
+                    if (!item || item.length == 0) {
                         return "--";
                     }
                     return (
                         <span style={{whiteSpace: "noWrap"}}>
                             <FormattedAsset
-                                amount={item.getIn(["balance", "amount"])}
+                                amount={this._sumVestingBalances(item)}
                                 asset={row.asset.get("id")}
                                 hide_asset
                             />
@@ -613,13 +612,13 @@ class AccountPortfolioList extends React.Component {
                 align: "right",
                 sorter: this.sortFunctions.byInCollateral,
                 render: (item, row) => {
-                    if (!item) {
+                    if (!item || item.length == 0) {
                         return "--";
                     }
                     return (
                         <span style={{whiteSpace: "noWrap"}}>
                             <FormattedAsset
-                                amount={item}
+                                amount={this._sumCollateralBalances(item)}
                                 asset={row.asset.get("id")}
                                 hide_asset
                             />
@@ -718,6 +717,11 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-medium",
                 title: <Translate content="exchange.buy" />,
+                customizable: atLeastOneHas.buy
+                    ? undefined
+                    : {
+                          default: false
+                      },
                 dataIndex: "buy",
                 align: "center",
                 render: item => {
@@ -726,7 +730,26 @@ class AccountPortfolioList extends React.Component {
             },
             {
                 className: "column-hide-medium",
-                title: <Translate content="modal.deposit.submit" />,
+                title: atLeastOneHas.depositOnlyBTS ? (
+                    <React.Fragment>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "external_service_provider.expect_more"
+                            )}
+                        >
+                            <Translate content="modal.deposit.submit" />
+                            &nbsp;
+                            <AntIcon type="question-circle" />
+                        </Tooltip>
+                    </React.Fragment>
+                ) : (
+                    <Translate content="modal.deposit.submit" />
+                ),
+                customizable: atLeastOneHas.deposit
+                    ? undefined
+                    : {
+                          default: false
+                      },
                 dataIndex: "deposit",
                 align: "center",
                 render: item => {
@@ -736,6 +759,11 @@ class AccountPortfolioList extends React.Component {
             {
                 className: "column-hide-medium",
                 title: <Translate content="modal.withdraw.submit" />,
+                customizable: atLeastOneHas.withdraw
+                    ? undefined
+                    : {
+                          default: false
+                      },
                 dataIndex: "withdraw",
                 align: "center",
                 render: item => {
@@ -802,6 +830,24 @@ class AccountPortfolioList extends React.Component {
             }
         });
         return headerItems;
+    }
+
+    _sumCollateralBalances(balances) {
+        if (!balances || balances.length == 0) return 0;
+        let sum = 0;
+        balances.forEach(item => {
+            sum = sum + +item.get("collateral");
+        });
+        return sum;
+    }
+
+    _sumVestingBalances(balances) {
+        if (!balances || balances.length == 0) return 0;
+        let sum = 0;
+        balances.forEach(item => {
+            sum = sum + balanceToAsset(item).amount;
+        });
+        return sum;
     }
 
     _renderBalances(balanceList, optionalAssets, visible) {
@@ -917,11 +963,9 @@ class AccountPortfolioList extends React.Component {
 
             const includeAsset = !hiddenAssets.includes(asset_type);
             const hasBalance = !!balanceObject.get("balance");
-            const hasOnOrder = !!orders[asset_type];
 
             // Vesting balances
-            let hasVestingBalance = false;
-            let vestingBalance = null;
+            let vestingBalances = [];
 
             const vbs = this.props.account.get("vesting_balances");
             vbs.forEach(vb => {
@@ -931,15 +975,13 @@ class AccountPortfolioList extends React.Component {
                     asset.get("id")
                 ) {
                     if (+vestingObject.getIn(["balance", "amount"]) > 0) {
-                        hasVestingBalance = true;
-                        vestingBalance = vestingObject;
+                        vestingBalances.push(vestingObject);
                     }
                 }
             });
 
             // Collateral
-            let hasCollateral = false;
-            let collateralBalance = null;
+            let collateralBalances = [];
 
             this.props.callOrders.forEach(order => {
                 let collateralObject = ChainStore.getObject(order);
@@ -951,8 +993,7 @@ class AccountPortfolioList extends React.Component {
                     ]) === asset.get("id")
                 ) {
                     if (+collateralObject.get("collateral") > 0) {
-                        hasCollateral = true;
-                        collateralBalance = +collateralObject.get("collateral");
+                        collateralBalances.push(collateralObject);
                     }
                 }
             });
@@ -1031,8 +1072,8 @@ class AccountPortfolioList extends React.Component {
             const totalValue =
                 balanceToAsset(balanceObject).amount +
                 (orders[asset.get("id")] ? orders[asset.get("id")] : 0) +
-                (vestingBalance ? balanceToAsset(vestingBalance).amount : 0) +
-                (collateralBalance ? collateralBalance : 0);
+                this._sumVestingBalances(vestingBalances) +
+                this._sumCollateralBalances(collateralBalances);
 
             balances.push({
                 key: asset.get("symbol"),
@@ -1045,8 +1086,8 @@ class AccountPortfolioList extends React.Component {
                 balance: balanceObject,
                 price: "dummy",
                 inOrders: orders[asset.get("id")],
-                inVesting: vestingBalance,
-                inCollateral: collateralBalance,
+                inVesting: vestingBalances,
+                inCollateral: collateralBalances,
                 hour24: (
                     <Market24HourChangeComponent
                         base={asset.get("id")}
@@ -1416,16 +1457,35 @@ class AccountPortfolioList extends React.Component {
         const currentBridges =
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
+        const balanceRows = this._renderBalances(
+            this.props.balanceList,
+            this.props.optionalAssets,
+            this.props.visible
+        );
+        const atLeastOneHas = {};
+        balanceRows.forEach(_item => {
+            console.log(_item);
+            if (!!_item.buy && _item.buy !== "-") {
+                atLeastOneHas.buy = true;
+            }
+            if (!!_item.deposit && _item.deposit !== "-") {
+                if (_item.key == "BTS" && GatewayStore.anyAllowed()) {
+                    atLeastOneHas.depositOnlyBTS =
+                        _item.key == "BTS" && !atLeastOneHas.deposit;
+                    atLeastOneHas.deposit = true;
+                }
+            }
+            if (!!_item.withdraw && _item.withdraw !== "-") {
+                atLeastOneHas.withdraw = true;
+            }
+        });
+
         return (
             <div>
                 <CustomTable
                     className="table dashboard-table table-hover"
-                    rows={this._renderBalances(
-                        this.props.balanceList,
-                        this.props.optionalAssets,
-                        this.props.visible
-                    )}
-                    header={this.getHeader()}
+                    rows={balanceRows}
+                    header={this.getHeader(atLeastOneHas)}
                     label="utility.total_x_assets"
                     extraRow={this.props.extraRow}
                     viewSettingsKey="portfolioColumns"

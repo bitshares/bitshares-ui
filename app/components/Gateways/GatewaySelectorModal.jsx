@@ -320,10 +320,10 @@ class GatewaySelectorModal extends React.Component {
             <Modal
                 visible={this.props.visible}
                 overlay={true}
-                onCancel={this.onClose.bind(this)}
                 title={
                     <Translate content="external_service_provider.selector.title" />
                 }
+                closable={false}
                 footer={[footer]}
                 width={640}
             >

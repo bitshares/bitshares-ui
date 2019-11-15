@@ -57,7 +57,7 @@ const printReceipt = ({data, parsePrice}) => {
     pdf.setFontStyle("bold");
     pdf.setFontSize(fontSize);
     pdf.text(
-        counterpart.translate("invoice.pay_to").toUpperCase(),
+        counterpart.translate("invoice.pay_to", {locale: "en"}).toUpperCase(),
         marginLeft,
         (height += marginUp)
     );
@@ -67,26 +67,26 @@ const printReceipt = ({data, parsePrice}) => {
 
     pdf.autoTable({
         body: [
-            ["", counterpart.translate("invoice.memo"), memo],
+            ["", counterpart.translate("invoice.memo", {locale: "en"}), memo],
             [
                 {
                     content: counterpart
-                        .translate("invoice.paid_by")
+                        .translate("invoice.paid_by", {locale: "en"})
                         .toUpperCase(),
                     styles: {fontStyle: "bold"}
                 },
-                counterpart.translate("invoice.date"),
+                counterpart.translate("invoice.date", {locale: "en"}),
                 timestamp
             ],
             [
                 fromName,
-                counterpart.translate("invoice.transaction"),
+                counterpart.translate("invoice.transaction", {locale: "en"}),
                 transactionId
             ],
             [
                 {
                     content: counterpart
-                        .translate("invoice.note")
+                        .translate("invoice.note", {locale: "en"})
                         .toUpperCase(),
                     styles: {fontStyle: "bold"}
                 },
@@ -115,7 +115,9 @@ const printReceipt = ({data, parsePrice}) => {
 
     pdf.setFontSize(totalFontSize);
     pdf.text(
-        counterpart.translate("invoice.receipt_total").toUpperCase(),
+        counterpart
+            .translate("invoice.receipt_total", {locale: "en"})
+            .toUpperCase(),
         marginLeft,
         (height += rowHeight)
     );
