@@ -14,8 +14,7 @@ import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import utils from "common/utils";
 import HtlcModal from "../Modal/HtlcModal";
 import LinkToAssetById from "../Utility/LinkToAssetById";
-import {bindToCurrentAccount, hasLoaded} from "../Utility/BindToCurrentAccount";
-import HtlcActions from "../../actions/HtlcActions";
+import {bindToCurrentAccount} from "../Utility/BindToCurrentAccount";
 
 class Htlc extends Component {
     constructor(props) {
@@ -30,45 +29,38 @@ class Htlc extends Component {
         this.hasLoadedOnce = null;
     }
 
+    shouldComponentUpdate(np, ns) {
+        return (
+            this.props.currentAccount !== np.currentAccount ||
+            JSON.stringify(this.state.htlc_list) !==
+                JSON.stringify(ns.htlc_list) ||
+            this.state.isModalVisible !== ns.isModalVisible ||
+            this.state.tableIsLoading !== ns.tableIsLoading ||
+            this.state.filterString !== ns.filterString
+        );
+    }
+
     async _update() {
         let currentAccount = this.props.currentAccount;
+        const accountId = currentAccount.get("id");
 
-        if (
-            hasLoaded(currentAccount) &&
-            this.hasLoadedOnce !== currentAccount.get("id")
-        ) {
-            if (__DEV__) {
-                console.log("Loading HTLC table for", currentAccount.get("id"));
-            }
-            this.hasLoadedOnce = currentAccount.get("id");
-            this.setState({
-                tableIsLoading: true
-            });
-            let htlc_list = await HtlcActions.getHTLCs(
-                currentAccount.get("id")
-            );
-
-            for (let i = 0; i < htlc_list.length; i++) {
-                let item = htlc_list[i];
-                try {
-                    await FetchChainObjects(
-                        ChainStore.getObject,
-                        [item.transfer.asset_id],
-                        undefined,
-                        {}
-                    );
-                    await FetchChainObjects(ChainStore.getAccountName, [
-                        item.transfer.from,
-                        item.transfer.to
-                    ]);
-                } catch (err) {}
-            }
-
-            this.setState({
-                htlc_list,
-                tableIsLoading: false
-            });
+        if (__DEV__) {
+            console.log("Loading HTLC table for", accountId);
         }
+        this.hasLoadedOnce = currentAccount.get("id");
+        this.setState({
+            tableIsLoading: true
+        });
+        const htlc_from =
+            this.props.currentAccount.get("htlcs_from").toJS() || [];
+        const htlc_to = this.props.currentAccount.get("htlcs_to").toJS() || [];
+        this.setState({
+            htlc_list: htlc_from
+                .concat(htlc_to)
+                .map(_item => ChainStore.getObject(_item))
+                .map(_item => (!!_item.toJS ? _item.toJS() : undefined)),
+            tableIsLoading: false
+        });
     }
 
     componentDidMount() {
