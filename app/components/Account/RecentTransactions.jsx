@@ -72,6 +72,8 @@ class RecentTransactions extends React.Component {
     constructor(props) {
         super();
 
+        // fixme access to ES could be wrapped in a store or something else
+
         this.state = {
             limit: props.limit,
             fetchingAccountHistory: false,
@@ -81,7 +83,10 @@ class RecentTransactions extends React.Component {
             rows: [],
             showModal: false,
             esNodeCustom: false,
-            esNode: settingsAPIs.ES_WRAPPER_LIST[0].url,
+            esNode:
+                settingsAPIs.ES_WRAPPER_LIST.length > 0
+                    ? settingsAPIs.ES_WRAPPER_LIST[0].url
+                    : null,
             visibleId: ""
         };
         this.getDataSource = this.getDataSource.bind(this);
@@ -514,7 +519,9 @@ class RecentTransactions extends React.Component {
                                 </Tooltip>
                             ) : null}
 
-                            {historyCount > 0 && this.props.dashboard ? (
+                            {historyCount > 0 &&
+                            this.props.dashboard &&
+                            this.state.esNode !== null ? (
                                 <Tooltip
                                     placement="bottom"
                                     title={counterpart.translate(

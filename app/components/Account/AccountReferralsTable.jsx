@@ -48,6 +48,10 @@ class AccountReferralsTable extends React.Component {
     async _getReferrals(page = 0, isAccountChanged = false) {
         let {myHiddenAccounts, myActiveAccounts} = this.props;
         let {referralsIndex, referralsCount} = this.state;
+
+        if (settingsAPIs.ES_WRAPPER_LIST.length == 0) return;
+
+        // fixme access to ES could be wrapped in a store or something else
         const esNode = settingsAPIs.ES_WRAPPER_LIST[3].url;
 
         if (isAccountChanged) {
@@ -146,6 +150,9 @@ class AccountReferralsTable extends React.Component {
     }
 
     render() {
+        // fixme access to ES could be wrapped in a store or something else
+        if (settingsAPIs.ES_WRAPPER_LIST.length == 0) return null;
+
         let account = this.props.account.toJS();
 
         let ltr = ChainStore.getAccount(account.lifetime_referrer, false);
