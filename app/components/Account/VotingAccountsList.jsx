@@ -1,5 +1,4 @@
 import React from "react";
-import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs";
@@ -9,8 +8,8 @@ import BindToChainState from "../Utility/BindToChainState";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
-import sanitize from "sanitize";
 import PaginatedList from "components/Utility/PaginatedList";
+import utils from "common/utils";
 
 function getWitnessOrCommittee(type, acct) {
     let url = "",
@@ -23,10 +22,7 @@ function getWitnessOrCommittee(type, acct) {
     }
 
     url = account ? account.get("url") : url;
-    url = sanitize(url, {
-        whiteList: [], // empty, means filter out all tags
-        stripIgnoreTag: true // filter out all HTML not in the whilelist
-    });
+    url = utils.sanitize(url);
     votes = account ? account.get("total_votes") : votes;
     return {
         url,
@@ -74,13 +70,12 @@ class VotingAccountsList extends React.Component {
         placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
         action: PropTypes.string,
-        withSelector: PropTypes.bool
+        filterSearch: PropTypes.string
     };
 
     static defaultProps = {
         action: "remove",
-        withSelector: true,
-        autosubscribe: false
+        filterSearch: null
     };
 
     constructor(props) {
@@ -307,7 +302,16 @@ class VotingAccountsList extends React.Component {
         let item_rows = this.props.items
             .filter(i => {
                 if (!i) return false;
-                //if (this.state.item_name_input) return i.get("name").indexOf(this.state.item_name_input) !== -1;
+                if (this.props.filterSearch) {
+                    if (
+                        i.get("name").indexOf(this.props.filterSearch) !== -1 ||
+                        i.get("id").indexOf(this.props.filterSearch) !== -1
+                    ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
                 return true;
             })
             .sort((a, b) => {
@@ -365,24 +369,6 @@ class VotingAccountsList extends React.Component {
 
         return (
             <div>
-                {this.props.withSelector ? (
-                    <AccountSelector
-                        style={{maxWidth: "600px"}}
-                        label={this.props.label}
-                        error={error}
-                        placeholder={this.props.placeholder}
-                        account={this.state.item_name_input}
-                        accountName={this.state.item_name_input}
-                        onChange={this.onItemChange}
-                        onAccountChanged={this.onItemAccountChange}
-                        onAction={this.onAddItem}
-                        action_label="account.votes.add_witness"
-                        tabIndex={this.props.tabIndex}
-                    />
-                ) : null}
-                {this.props.title && item_rows.length ? (
-                    <h4>{this.props.title}</h4>
-                ) : null}
                 {item_rows.length ? (
                     <PaginatedList
                         className="table dashboard-table table-hover"

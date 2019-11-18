@@ -338,18 +338,21 @@ class ModalContent extends React.Component {
               3600
             : 0;
 
-        return (
-            <Modal
-                title={counterpart.translate("modal.settle.title", {
-                    asset: assetFullName
-                })}
-                visible={this.props.visible}
-                id={this.props.modalId}
-                footer={footer}
-                onCancel={this.props.hideModal}
-                overlay={true}
-                ref="settlement_modal"
-            >
+        const isPredictionMarket = asset.getIn([
+            "bitasset",
+            "is_prediction_market"
+        ]);
+
+        let modalContent = isPredictionMarket ? (
+            <Alert
+                message={counterpart.translate(
+                    "tooltip.settle_market_prediction"
+                )}
+                type="info"
+                showIcon
+            />
+        ) : (
+            <React.Fragment>
                 {isGlobalSettled ? (
                     <Alert
                         message={counterpart.translate(
@@ -420,6 +423,22 @@ class ModalContent extends React.Component {
                         </Fragment>
                     ) : null}
                 </Form>
+            </React.Fragment>
+        );
+
+        return (
+            <Modal
+                title={counterpart.translate("modal.settle.title", {
+                    asset: assetFullName
+                })}
+                visible={this.props.visible}
+                id={this.props.modalId}
+                footer={!isPredictionMarket ? footer : null}
+                onCancel={this.props.hideModal}
+                overlay={true}
+                ref="settlement_modal"
+            >
+                {modalContent}
             </Modal>
         );
     }

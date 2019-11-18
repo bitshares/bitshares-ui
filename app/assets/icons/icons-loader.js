@@ -68,7 +68,13 @@ let icons = [
     "checkmark",
     "paperclip",
     "wallet",
-    "prediction"
+    "prediction",
+    "prediction-large",
+    "merchant",
+    "insight",
+    "create_account",
+    "swap",
+    "instant-trade"
 ];
 
 let iconsMap = {};

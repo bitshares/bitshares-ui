@@ -1,0 +1,66 @@
+div.prediction-markets {
+    tr.selected-row {
+        a {
+            color: white;
+        }
+    }
+
+    div.header-selector {
+        padding: 1rem;
+
+        .filter-status {
+            color: darkgray;
+            float: right;
+            font-size: 14px;
+            line-height: 2rem;
+        }
+    }
+
+    span.search-input {
+        width: 220px;
+    }
+
+    div.ant-table-selection {
+        display: none;
+    }
+
+    span.supsub {
+        position: absolute;
+
+        .subscript {
+            color: red;
+            display: block;
+            position: relative;
+            left: 2px;
+            top: 1rem;
+        }
+        .superscript {
+            color: green;
+            display: block;
+            position: relative;
+            left: 2px;
+            top: 3px;
+        }
+    }
+}
+
+div.prediction-markets--create-prediction-market {
+    .ant-form-item {
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+    }
+}
+
+div.prediction-markets--add-prediction-offer {
+    .ant-form-item {
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+    }
+}
+
+div.prediction-markets--resolve-prediction-market-asset {
+    .ant-form-item {
+        padding-bottom: 0px;
+        margin-bottom: 0px;
+    }
+}

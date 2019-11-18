@@ -44,7 +44,8 @@ export function getFaucet() {
     return {
         url: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
         show: true,
-        editable: false
+        editable: false,
+        referrer: "onboarding.bitshares.foundation"
     };
 }
 
@@ -94,7 +95,7 @@ export function getUnits() {
  */
 
 export function getMyMarketsBases() {
-    return ["BTC", "ETH", "BTS", "USD", "CNY"];
+    return ["BTS", "BTC", "ETH", "USD", "CNY"];
 }
 
 /**
@@ -196,22 +197,19 @@ export function getMyMarketsQuotes() {
             "XBTSX.POST",
             "XBTSX.DOGE",
             "XBTSX.BTC",
+            "XBTSX.BTG",
+            "XBTSX.BCH",
             "XBTSX.LTC",
             "XBTSX.DASH",
-            "XBTSX.BTG",
             "XBTSX.XSPEC",
             "XBTSX.NVC",
             "XBTSX.UNI",
             "XBTSX.NMC",
             "XBTSX.WAVES",
             "XBTSX.COF",
-            "XBTSX.XRUP",
-            "XBTSX.P2P",
-            "XBTSX.STEEP",
             "XBTSX.MDL",
             "XBTSX.ETH",
-            "XBTSX.EXR",
-            "XBTSX.LCRT"
+            "XBTSX.EXR"
         ],
         otherTokens: [
             "BTWTY",
@@ -369,17 +367,21 @@ export function getAssetHideNamespaces() {
  * @returns {boolean}
  */
 export function allowedGateway(gateway) {
-    return (
-        [
-            "OPEN",
-            "RUDEX",
-            "BRIDGE",
-            "GDEX",
-            "XBTSX",
-            "SPARKDEX",
-            "CITADEL"
-        ].indexOf(gateway) >= 0
-    );
+    const allowedGateways = [
+        "TRADE",
+        "OPEN",
+        "RUDEX",
+        "BRIDGE",
+        "GDEX",
+        "XBTSX",
+        "SPARKDEX",
+        "CITADEL"
+    ];
+    if (!gateway) {
+        // answers the question: are any allowed?
+        return allowedGateways.length > 0;
+    }
+    return allowedGateways.indexOf(gateway) >= 0;
 }
 
 export function getSupportedLanguages() {

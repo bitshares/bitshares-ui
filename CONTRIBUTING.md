@@ -1,3 +1,10 @@
+## Funding update September 1st
+The BitShares UI worker is not funded, and all bounty rewards must be considered paused.
+
+Please [check here](https://github.com/bitshares/bitshares-ui/issues/3044) for more details and updates.
+
+ ------
+
 Please work off the develop branch and make pull requests to that branch. The master branch will only be updated for new releases.
 
 The Bitshares UI team is supported by this [worker proposal](https://www.bitshares.foundation/workers/2019-02-bitshares-ui). It provides the funds needed to pay for the development team and the community bounties.

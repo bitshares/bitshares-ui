@@ -94,7 +94,11 @@ class MarketStatsCheck extends React.Component {
                     allMarketStats: props.allMarketStats
                 });
 
-                if (useDirectMarket && toAsset.get("id") !== asset.get("id")) {
+                if (
+                    useDirectMarket &&
+                    toAsset &&
+                    toAsset.get("id") !== asset.get("id")
+                ) {
                     if (!this.directStatsIntervals[directMarket]) {
                         setTimeout(() => {
                             this.directStatsIntervals[

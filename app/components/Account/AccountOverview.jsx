@@ -17,13 +17,13 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Icon, Switch, Tooltip} from "bitshares-ui-style-guide";
+import {Input, Icon, Switch, Tooltip, Button} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import SearchInput from "../Utility/SearchInput";
 
 class AccountOverview extends React.Component {
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             shownAssets: props.viewSettings.get("shownAssets", "active"),
             alwaysShowAssets: [
@@ -37,7 +37,10 @@ class AccountOverview extends React.Component {
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
             ],
-            hideFishingProposals: true
+            hideFishingProposals: true,
+            question1: false,
+            question2: false,
+            question3: false
         };
 
         this._handleFilterInput = this._handleFilterInput.bind(this);
@@ -78,7 +81,8 @@ class AccountOverview extends React.Component {
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
             !utils.are_equal_shallow(nextState, this.state) ||
-            this.state.filterValue !== nextState.filterValue
+            this.state.filterValue !== nextState.filterValue ||
+            this.state.enabledColumns !== nextState.enabledColumns
         );
     }
 
@@ -97,6 +101,31 @@ class AccountOverview extends React.Component {
         });
     }
 
+    _toggleQ1() {
+        this.setState({
+            question1: !this.state.question1
+        });
+    }
+
+    _toggleQ2() {
+        this.setState({
+            question2: !this.state.question2
+        });
+    }
+
+    _toggleQ3() {
+        this.setState({
+            question3: !this.state.question3
+        });
+    }
+
+    _showProposals() {
+        SettingsActions.changeSetting({
+            setting: "showProposedTx",
+            value: true
+        });
+    }
+
     render() {
         let {account, hiddenAssets, settings, orders} = this.props;
         let {shownAssets} = this.state;
@@ -105,12 +134,16 @@ class AccountOverview extends React.Component {
             return null;
         }
 
-        const preferredUnit =
-            settings.get("unit") || this.props.core_asset.get("symbol");
+        const preferredUnit = !settings.get("unit")
+            ? this.props.core_asset.get("symbol")
+            : settings.get("unit");
 
         let call_orders = [],
             collateral = {},
             debt = {};
+
+        // Request all balance objects for dashboard view
+        ChainStore.requestAllDataForAccount(account.toJS().id, "balance");
 
         if (account.toJS && account.has("call_orders"))
             call_orders = account.get("call_orders").toJS();
@@ -275,6 +308,7 @@ class AccountOverview extends React.Component {
                 balances={this.props.balances}
                 extraRow={includedPortfolioBalance}
                 viewSettings={this.props.viewSettings}
+                callOrders={call_orders}
             />
         );
 
@@ -295,6 +329,7 @@ class AccountOverview extends React.Component {
                 balances={this.props.balances}
                 extraRow={hiddenPortfolioBalance}
                 viewSettings={this.props.viewSettings}
+                enabledColumns={this.state.enabledColumns}
             />
         );
 
@@ -474,49 +509,147 @@ class AccountOverview extends React.Component {
                             </Tab>
 
                             {account.get("proposals") &&
-                            account.get("proposals").size ? (
-                                <Tab
-                                    title="explorer.proposals.title"
-                                    subText={String(
-                                        account.get("proposals")
-                                            ? account.get("proposals").size
-                                            : 0
-                                    )}
-                                >
-                                    <div
-                                        onClick={this._toggleHideProposal.bind(
-                                            this
+                                account.get("proposals").size && (
+                                    <Tab
+                                        title="explorer.proposals.title"
+                                        subText={String(
+                                            account.get("proposals")
+                                                ? account.get("proposals").size
+                                                : 0
                                         )}
-                                        style={{cursor: "pointer"}}
                                     >
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "tooltip.propose_unhide"
-                                            )}
-                                            placement="bottom"
-                                        >
-                                            <Switch
-                                                style={{margin: 16}}
-                                                checked={
+                                        {this.props.settings.get(
+                                            "showProposedTx"
+                                        ) && (
+                                            <div
+                                                onClick={this._toggleHideProposal.bind(
+                                                    this
+                                                )}
+                                                style={{cursor: "pointer"}}
+                                            >
+                                                <Tooltip
+                                                    title={counterpart.translate(
+                                                        "tooltip.propose_unhide"
+                                                    )}
+                                                    placement="bottom"
+                                                >
+                                                    <Switch
+                                                        style={{margin: 16}}
+                                                        checked={
+                                                            this.state
+                                                                .hideFishingProposals
+                                                        }
+                                                        onChange={this._toggleHideProposal.bind(
+                                                            this
+                                                        )}
+                                                    />
+                                                    <Translate content="account.deactivate_suspicious_proposals" />
+                                                </Tooltip>
+                                            </div>
+                                        )}
+                                        {this.props.settings.get(
+                                            "showProposedTx"
+                                        ) && (
+                                            <Proposals
+                                                className="dashboard-table"
+                                                account={account}
+                                                hideFishingProposals={
                                                     this.state
                                                         .hideFishingProposals
                                                 }
-                                                onChange={this._toggleHideProposal.bind(
-                                                    this
-                                                )}
                                             />
-                                            <Translate content="account.deactivate_suspicious_proposals" />
-                                        </Tooltip>
-                                    </div>
-                                    <Proposals
-                                        className="dashboard-table"
-                                        account={account}
-                                        hideFishingProposals={
-                                            this.state.hideFishingProposals
-                                        }
-                                    />
-                                </Tab>
-                            ) : null}
+                                        )}
+                                        {!this.props.settings.get(
+                                            "showProposedTx"
+                                        ) && (
+                                            <div className="padding">
+                                                <div>
+                                                    <Translate content="account.proposed_transactions.advanced_feature" />
+                                                    :
+                                                </div>
+                                                <br />
+                                                <br />
+                                                <div>
+                                                    <Translate content="account.proposed_transactions.question1" />
+                                                    <Switch
+                                                        style={{margin: 16}}
+                                                        checked={
+                                                            this.state.question1
+                                                        }
+                                                        onChange={this._toggleQ1.bind(
+                                                            this
+                                                        )}
+                                                        checkedChildren={"Yes"}
+                                                        unCheckedChildren={"No"}
+                                                    />
+                                                </div>
+                                                {this.state.question1 && (
+                                                    <div>
+                                                        <Translate content="account.proposed_transactions.question2" />
+                                                        <Switch
+                                                            style={{margin: 16}}
+                                                            checked={
+                                                                this.state
+                                                                    .question2
+                                                            }
+                                                            onChange={this._toggleQ2.bind(
+                                                                this
+                                                            )}
+                                                            checkedChildren={
+                                                                "Yes"
+                                                            }
+                                                            unCheckedChildren={
+                                                                "No"
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
+                                                {this.state.question2 && (
+                                                    <div>
+                                                        <Translate content="account.proposed_transactions.question3" />
+                                                        <Switch
+                                                            style={{margin: 16}}
+                                                            checked={
+                                                                this.state
+                                                                    .question3
+                                                            }
+                                                            onChange={this._toggleQ3.bind(
+                                                                this
+                                                            )}
+                                                            checkedChildren={
+                                                                "Yes"
+                                                            }
+                                                            unCheckedChildren={
+                                                                "No"
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
+                                                <br />
+                                                {this.state.question3 && (
+                                                    <div
+                                                        style={{
+                                                            marginTop: 16,
+                                                            marginBottom: 16
+                                                        }}
+                                                    >
+                                                        <Translate content="account.proposed_transactions.answered_no" />
+                                                        <Button
+                                                            style={{
+                                                                marginLeft: 16
+                                                            }}
+                                                            onClick={this._showProposals.bind(
+                                                                this
+                                                            )}
+                                                        >
+                                                            <Translate content="account.proposed_transactions.show_me_proposals" />
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </Tab>
+                                )}
                         </Tabs>
                     </div>
                 </div>

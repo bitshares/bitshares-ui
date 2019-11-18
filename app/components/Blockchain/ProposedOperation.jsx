@@ -12,24 +12,45 @@ const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
 import opComponents from "./operations";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 
 require("./operations.scss");
 
 let ops = Object.keys(operations);
 // let listings = account_constants.account_listing;
 
-export const TransactionIDAndExpiry = ({id, expiration, style}) => {
+export const TransactionIDAndExpiry = ({
+    id,
+    expiration,
+    style,
+    openJSONModal
+}) => {
     const endDate = counterpart.localize(new Date(expiration), {
         format: "short"
     });
     return (
         <b style={style}>
-            <span>{id} | </span>
+            {openJSONModal ? (
+                <span className="cursor-pointer" onClick={openJSONModal}>
+                    {id} <AntIcon type="file-search" />
+                    {" | "}
+                </span>
+            ) : (
+                <span>{id} | </span>
+            )}
             <span>
                 <Translate content="proposal.expires" />: {endDate}
             </span>
         </b>
     );
+};
+
+TransactionIDAndExpiry.propTypes = {
+    openJSONModal: PropTypes.func
+};
+
+TransactionIDAndExpiry.defaultProps = {
+    openJSONModal: null
 };
 
 class Row extends React.Component {
@@ -155,22 +176,23 @@ class ProposedOperation extends React.Component {
             changeColor: this.changeColor
         });
 
-        if (!!proposer && index == 0) {
+        if (!!proposer) {
             column = (
                 <div className="inline-block">
-                    <div style={{paddingBottom: "0.5rem"}}>
-                        <TranslateWithLinks
-                            string="operation.proposal_create"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: proposer,
-                                    arg: "account"
-                                }
-                            ]}
-                        />
-                        :
-                    </div>
+                    {index == 0 ? (
+                        <div style={{paddingBottom: "0.5rem"}}>
+                            <TranslateWithLinks
+                                string="operation.proposal_create"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: proposer,
+                                        arg: "account"
+                                    }
+                                ]}
+                            />
+                        </div>
+                    ) : null}
                     <div style={{marginLeft: "0.5rem"}}>{column}</div>
                 </div>
             );

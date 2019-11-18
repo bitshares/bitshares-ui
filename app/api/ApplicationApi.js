@@ -285,7 +285,13 @@ const ApplicationApi = {
         });
     },
 
-    transfer_list(list_of_transfers) {
+    transfer_list(list_of_transfers, proposal_fee = null) {
+        if (!proposal_fee) {
+            proposal_fee = "1.3.0";
+        }
+        if (typeof proposal_fee !== "string") {
+            proposal_fee = proposal_fee.get("id");
+        }
         return WalletUnlockActions.unlock().then(() => {
             let proposer = null;
             let transfers = [];
@@ -309,6 +315,10 @@ const ApplicationApi = {
                             }
                         });
                         tr.add_type_operation("proposal_create", {
+                            fee: {
+                                amount: 0,
+                                asset_id: proposal_fee
+                            },
                             proposed_ops: propose,
                             fee_paying_account: proposer.get("id")
                         });

@@ -16,12 +16,13 @@ import InitError from "./components/InitError";
 import SyncError from "./components/SyncError";
 import counterpart from "counterpart";
 import LogsActions from "actions/LogsActions";
-
+import NodeSelector from "./components/Utility/NodeSelector";
 /*
 * Electron does not support browserHistory, so we need to use hashHistory.
 * The same is true for servers without configuration options, such as Github Pages
 */
 import {HashRouter, BrowserRouter} from "react-router-dom";
+
 const Router = __HASH_HISTORY__ ? HashRouter : BrowserRouter;
 
 class RootIntl extends React.Component {
@@ -53,7 +54,9 @@ class AppInit extends React.Component {
             apiError: false,
             syncError: null,
             status: "",
-            extendeLogText: [] // used to cache logs when not mounted
+            extendeLogText: [], // used to cache logs when not mounted
+            nodeFilterHasChanged: false,
+            showNodeFilter: false
         };
         this.mounted = true;
         this.persistentLogEnabled = false;
@@ -156,7 +159,11 @@ class AppInit extends React.Component {
         if (!__DEV__) {
             this._enablePersistingLog();
         }
-
+        setTimeout(() => {
+            this.setState({
+                showNodeFilter: true
+            });
+        }, 5000);
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
                 this.setState({
@@ -202,15 +209,49 @@ class AppInit extends React.Component {
         this.setState({status});
     }
 
+    _onNodeFilterChange() {
+        this.setState({
+            nodeFilterHasChanged: true
+        });
+    }
+
+    _renderLoadingScreen() {
+        let server = this.props.apiServer;
+        if (!!!server) {
+            server = "";
+        }
+        return (
+            <React.Fragment>
+                <LoadingIndicator
+                    loadingText={
+                        this.state.status ||
+                        counterpart.translate("app_init.connecting", {
+                            server: server
+                        })
+                    }
+                >
+                    {this.state.showNodeFilter && (
+                        <div className="padding">
+                            <NodeSelector
+                                onChange={this._onNodeFilterChange.bind(this)}
+                            />
+                            {this.state.nodeFilterHasChanged && (
+                                <div style={{marginTop: "1rem"}}>
+                                    Please reload for the changes to take effect
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </LoadingIndicator>
+            </React.Fragment>
+        );
+    }
+
     render() {
-        const {theme, apiServer} = this.props;
-        const {apiConnected, apiError, syncError, status} = this.state;
+        const {theme} = this.props;
+        const {apiConnected, apiError, syncError} = this.state;
 
         if (!apiConnected) {
-            let server = apiServer;
-            if (!!!server) {
-                server = "";
-            }
             return (
                 <div
                     style={{backgroundColor: !theme ? "#2a2a2a" : null}}
@@ -218,23 +259,15 @@ class AppInit extends React.Component {
                 >
                     <div id="content-wrapper">
                         <div className="grid-frame vertical">
-                            {!apiError ? (
-                                <LoadingIndicator
-                                    loadingText={
-                                        status ||
-                                        counterpart.translate(
-                                            "app_init.connecting",
-                                            {server: server}
-                                        )
-                                    }
-                                />
-                            ) : syncError ? (
-                                <SyncError />
-                            ) : (
-                                <BodyClassName className={theme}>
+                            <BodyClassName className={theme}>
+                                {!apiError ? (
+                                    this._renderLoadingScreen()
+                                ) : syncError ? (
+                                    <SyncError />
+                                ) : (
                                     <InitError />
-                                </BodyClassName>
-                            )}
+                                )}
+                            </BodyClassName>
                         </div>
                     </div>
                 </div>

@@ -50,7 +50,7 @@ class DashboardPage extends React.Component {
                                     <Tab title="dashboard.starred_markets">
                                         <StarredMarkets />
                                     </Tab>
-                                    {preferredBases.sort().map(q => {
+                                    {preferredBases.map(q => {
                                         let title = (
                                             <span>
                                                 <img

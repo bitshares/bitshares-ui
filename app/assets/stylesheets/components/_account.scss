@@ -237,38 +237,13 @@ a.action-button > span {
     text-transform: lowercase;
 }
 
-div.header-selector {
-    > .filter {
-        margin-right: 1rem;
-        input {
-            margin: 0;
-            height: 2rem;
-            padding: 0 10px;
-        }
+div.voting {
+    div.header-selector {
+        padding: 1rem;
     }
-    > .selector div {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-        cursor: pointer;
-        &:nth-of-type(n + 1) {
-            padding-left: 10px;
-            padding-right: 10px;
-            border-right: 1px solid white; // TODO: FIX
-        }
-        &:hover.inactive {
-            color: inherit;
-        }
-    }
-    > .selector div:last-of-type {
-        border-right: 0px;
-    }
-    > .group-by {
-        float: right;
-        line-height: 32px;
 
-        .text {
-            margin-right: 10px;
-        }
+    span.search-input {
+        width: 220px;
     }
 }
 

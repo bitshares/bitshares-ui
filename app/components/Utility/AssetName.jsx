@@ -23,9 +23,7 @@ class AssetName extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            assetIssuerName: ChainStore.getAccountName(
-                props.asset.get("issuer")
-            )
+            assetIssuerName: null
         };
         this._load();
     }
@@ -207,6 +205,8 @@ AssetName = AssetWrapper(AssetName);
 
 export default class AssetNameWrapper extends React.Component {
     render() {
-        return <AssetName {...this.props} asset={this.props.name} />;
+        return !this.props.name ? null : (
+            <AssetName {...this.props} asset={this.props.name} />
+        );
     }
 }

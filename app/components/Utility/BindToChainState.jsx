@@ -618,13 +618,29 @@ function BindToChainState(Component, options = {}) {
             const props = omit(this.props, this.all_chain_props);
             for (let prop of this.required_props) {
                 if (this.state[prop] === undefined) {
-                    if (typeof options !== "undefined" && options.show_loader) {
-                        return <LoadingIndicator />;
-                    } else if (this.hasErrored) {
+                    if (this.hasErrored) {
                         return (
-                            <span>
-                                Error rendering component, please report
+                            <span style={{color: "red"}}>
+                                Error rendering component, please report (see
+                                browser console for details)
                             </span>
+                        );
+                    } else if (
+                        typeof options !== "undefined" &&
+                        options.show_loader
+                    ) {
+                        console.error(
+                            "Required prop " +
+                                prop +
+                                " isn't given, but still loading, this indicates that the rendering transitions are not well defined"
+                        );
+                        return (
+                            <React.Fragment>
+                                <LoadingIndicator />
+                                <span className="text-center">
+                                    Component re-rendering ...
+                                </span>
+                            </React.Fragment>
                         );
                     } else {
                         // returning a temp component of the desired type prevents invariant violation errors, notably when rendering tr components

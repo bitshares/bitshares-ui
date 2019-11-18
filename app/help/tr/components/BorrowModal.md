@@ -4,3 +4,5 @@ Eğer {debt} borç azaltılırsa {borrower} hesabından düşürülecektir.
 Eğer {debt} borç artarsa  yeterli {collateral} teminat bulunması kaydıyla {borrower} hesabına yatırılacaktır.    
 
 Asgari idame teminatı muhafaza edildiği sürece teminat eklenebilir yada eksiltilebilir.
+
+[Devamını oku & Açıklama Sihirbazı'nı kontrol et](/borrow)

@@ -129,6 +129,18 @@ class MarketsActions {
         return true;
     }
 
+    async getTicker(base, quote) {
+        if (base instanceof Object) {
+            base = base.get("id");
+        }
+        if (quote instanceof Object) {
+            quote = quote.get("id");
+        }
+        return await Apis.instance()
+            .db_api()
+            .exec("get_ticker", [base, quote]);
+    }
+
     subscribeMarket(base, quote, bucketSize, groupedOrderLimit) {
         /*
         * DataFeed will call subscribeMarket with undefined groupedOrderLimit,

@@ -10,22 +10,21 @@ const CopyButton = ({
     tip = "tooltip.copy_tip",
     dataPlace = "right",
     buttonIcon = "clippy",
-    buttonText = ""
+    buttonText = "",
+    useDiv = true
 }) => {
+    const button = (
+        <ClipboardButton data-clipboard-text={text} className={className}>
+            {!buttonText ? (
+                <Icon name={buttonIcon} title={"icons.clippy.copy"} />
+            ) : (
+                buttonText
+            )}
+        </ClipboardButton>
+    );
     return (
         <Tooltip placement={dataPlace} title={counterpart.translate(tip)}>
-            <div>
-                <ClipboardButton
-                    data-clipboard-text={text}
-                    className={className}
-                >
-                    {!buttonText ? (
-                        <Icon name={buttonIcon} title={"icons.clippy.copy"} />
-                    ) : (
-                        buttonText
-                    )}
-                </ClipboardButton>
-            </div>
+            {useDiv ? <div>{button}</div> : <span>{button}</span>}
         </Tooltip>
     );
 };

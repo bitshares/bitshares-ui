@@ -30,10 +30,7 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
-        text = sanitize(text, {
-            whiteList: [], // empty, means filter out all tags
-            stripIgnoreTag: true // filter out all HTML not in the whilelist
-        });
+        text = utils.sanitize(text);
 
         if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0)
             return `<a href="${text}" onclick="_onClickLink(event)"`;
@@ -42,7 +39,9 @@ function adjust_links(str) {
         let page = endsWith(text, ".md")
             ? text.substr(0, text.length - 3)
             : text;
-        if (!page.startsWith("/help")) {
+        if (page.startsWith("/borrow")) {
+            // pass
+        } else if (!page.startsWith("/help")) {
             page = "/help/" + page;
         } else if (page.startsWith("help")) {
             page = "/" + page;
@@ -55,7 +54,7 @@ function adjust_links(str) {
 
 // console.log("-- HelpData -->", HelpData);
 
-class HelpContent extends React.Component {
+class HelpContent extends React.PureComponent {
     static propTypes = {
         path: PropTypes.string.isRequired,
         section: PropTypes.string
@@ -111,10 +110,7 @@ class HelpContent extends React.Component {
             let key = text.substr(1, text.length - 2);
             let value = this.props[key] !== undefined ? this.props[key] : text;
             if (value && typeof value === "string")
-                value = sanitize(value, {
-                    whiteList: [], // empty, means filter out all tags
-                    stripIgnoreTag: true // filter out all HTML not in the whilelist
-                });
+                value = utils.sanitize(value);
             if (value.amount && value.asset)
                 value = utils.format_asset(
                     value.amount,
@@ -140,15 +136,6 @@ class HelpContent extends React.Component {
 
         let value = HelpData[locale][this.props.path];
 
-        if (!value && locale !== "en") {
-            console.warn(
-                `missing path '${
-                    this.props.path
-                }' for locale '${locale}' help files, rolling back to 'en'`
-            );
-            value = HelpData["en"][this.props.path];
-        }
-
         if (!value && this.props.alt_path) {
             console.warn(
                 `missing path '${
@@ -158,6 +145,15 @@ class HelpContent extends React.Component {
                 }'`
             );
             value = HelpData[locale][this.props.alt_path];
+        }
+
+        if (!value && locale !== "en") {
+            console.warn(
+                `missing path '${
+                    this.props.path
+                }' for locale '${locale}' help files, rolling back to 'en'`
+            );
+            value = HelpData["en"][this.props.path];
         }
 
         if (!value && this.props.alt_path && locale != "en") {

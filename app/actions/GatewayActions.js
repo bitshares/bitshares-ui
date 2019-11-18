@@ -143,6 +143,12 @@ class GatewayActions {
             return {};
         }
     }
+
+    temporarilyDisable({backer}) {
+        return dispatch => {
+            dispatch({backer});
+        };
+    }
 }
 
 export default alt.createActions(GatewayActions);
