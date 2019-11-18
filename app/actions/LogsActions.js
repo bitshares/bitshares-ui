@@ -10,7 +10,11 @@ class LogsActions {
     }
     getLogs() {
         return new Promise(resolve => {
-            resolve(JSON.parse(ss.get("logs", [])));
+            try {
+                resolve(JSON.parse(ss.get("logs", [])));
+            } catch (err) {
+                resolve(["Error loading logs from localStorage"]);
+            }
         });
     }
 }

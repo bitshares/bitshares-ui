@@ -346,22 +346,22 @@ class Asset extends React.Component {
 
         // Add market link
         const core_asset = ChainStore.getAsset("1.3.0");
+        const core_asset_symbol =
+            !!core_asset && core_asset.get ? core_asset.get("symbol") : "BTS";
         let preferredMarket = description.market
             ? description.market
-            : core_asset
-                ? core_asset.get("symbol")
-                : "BTS";
+            : core_asset_symbol;
         if (asset.bitasset) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
             );
-            if (preferredMarket) {
+            if (!!preferredMarket && preferredMarket.get) {
                 preferredMarket = preferredMarket.get("symbol");
             } else {
-                preferredMarket = core_asset.get("symbol");
+                preferredMarket = core_asset_symbol;
             }
         }
-        if (asset.symbol === core_asset.get("symbol")) preferredMarket = "USD";
+        if (asset.symbol === core_asset_symbol) preferredMarket = "USD";
         if (urls && urls.length) {
             urls.forEach(url => {
                 let markdownUrl = `<a target="_blank" class="external-link" rel="noopener noreferrer" href="${url}">${url}</a>`;
