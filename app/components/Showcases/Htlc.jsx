@@ -32,7 +32,11 @@ class Htlc extends Component {
     shouldComponentUpdate(np, ns) {
         return (
             this.props.currentAccount !== np.currentAccount ||
-            this.state.htlc_list !== ns.htlc_list
+            JSON.stringify(this.state.htlc_list) !==
+                JSON.stringify(ns.htlc_list) ||
+            this.state.isModalVisible !== ns.isModalVisible ||
+            this.state.tableIsLoading !== ns.tableIsLoading ||
+            this.state.filterString !== ns.filterString
         );
     }
 
@@ -47,10 +51,14 @@ class Htlc extends Component {
         this.setState({
             tableIsLoading: true
         });
-        const htlcs = ChainStore.fetchFullAccount(accountId).get("htlcs");
-
+        const htlc_from =
+            this.props.currentAccount.get("htlcs_from").toJS() || [];
+        const htlc_to = this.props.currentAccount.get("htlcs_to").toJS() || [];
         this.setState({
-            htlc_list: htlcs,
+            htlc_list: htlc_from
+                .concat(htlc_to)
+                .map(_item => ChainStore.getObject(_item))
+                .map(_item => (!!_item.toJS ? _item.toJS() : undefined)),
             tableIsLoading: false
         });
     }
