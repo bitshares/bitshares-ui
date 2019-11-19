@@ -1,10 +1,12 @@
-import {ChainStore, FetchChain} from "bitsharesjs";
+import {FetchChain} from "bitsharesjs";
 import {getConfigurationAsset} from "branding";
 import asset_utils from "common/asset_utils";
-import {availableApis} from "common/gateways";
 
 const _fetchOnChainConfig = async function() {
     let config = getConfigurationAsset();
+    if (!config.symbol) {
+        return {};
+    }
     const assets = [await FetchChain("getAsset", config.symbol)];
     let onChainConfig = {};
     assets.forEach(asset => {
@@ -39,6 +41,9 @@ const _fetchOnChainConfig = async function() {
 
 const getNotifications = async function() {
     const onChainConfig = await _fetchOnChainConfig();
+    if (!onChainConfig.notifications) {
+        return [];
+    }
     let notificationList = [];
     onChainConfig.notifications.forEach(item => {
         notificationList.push(item);
