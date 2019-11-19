@@ -134,14 +134,16 @@ class WalletDb extends BaseStore {
 
         if (
             !passwordLogin &&
+            this.state.wallet &&
             Apis.instance().chain_id !== this.state.wallet.chain_id
-        )
+        ) {
             return Promise.reject(
                 "Mismatched chain_id; expecting " +
                     this.state.wallet.chain_id +
                     ", but got " +
                     Apis.instance().chain_id
             );
+        }
 
         return WalletUnlockActions.unlock()
             .then(() => {

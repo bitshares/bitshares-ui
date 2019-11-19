@@ -28,14 +28,6 @@ import {Route, Switch, Redirect} from "react-router-dom";
 // Nested route components
 import Page404 from "./components/Page404/Page404";
 
-const Exchange = Loadable({
-    loader: () =>
-        import(
-            /* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"
-        ),
-    loading: LoadingIndicator
-});
-
 const Explorer = Loadable({
     loader: () =>
         import(
@@ -437,10 +429,6 @@ class App extends React.Component {
                                 <Route
                                     path="/accounts"
                                     component={DashboardAccountsOnly}
-                                />
-                                <Route
-                                    path="/market/:marketID"
-                                    component={Exchange}
                                 />
                                 <Route
                                     path="/settings/:tab"
