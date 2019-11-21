@@ -1,4 +1,5 @@
 import counterpart from "counterpart";
+import {getWalletName} from "../../branding";
 
 export default class TitleUtils {
     /**
@@ -6,7 +7,7 @@ export default class TitleUtils {
      *  @return string value to be used by document.title or equivalent
      */
     static GetTitleByPath(path) {
-        let title = "BitShares";
+        let title = getWalletName();
         let lastPart = null;
         let prefix = " - ";
 
