@@ -392,7 +392,7 @@ class MenuDataStructure {
                 target: `/account/${state.currentAccount}/vesting`,
                 icon: "hourglass",
                 text: "account.vesting.title",
-                inHeaderBehavior: MenuItemType.Never,
+                inHeaderBehavior: MenuItemType.Dynamic,
                 inDropdownBehavior: MenuItemType.WhenAccount
             }),
             account_vesting_2: state => ({
