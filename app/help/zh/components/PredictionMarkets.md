@@ -1,22 +1,11 @@
-# Prediction Market Assets
+# 预测市场资产
 
-A prediction market asset allows you to agree or disagree with the
-prediction (condition) of the asset and put collateral behind your opinion.
-A prediction market is resolved by its
-issuer after the resolution date to reflect the real world outcome of
-the prediction on-chain.
+预测市场资产允许你赞同或者不赞同预测（条件）资产，并可以在你的意见上使用抵押物。
+预测市场由发行者在判定日期到期后根据真实世界的结果进行判定并反馈到链上。
 
-On the blockchain, a prediction market asset is special kind of SmartCoin
-that anyone can borrow. The total debt and total collateral are always
-equal amounts (borrowing 1:1), margin calls or force settlements are deactivated.
-A prediction market asset has the active market of itself with its collateral.
-Agreeing with the prediction means to buy the prediction market asset, whereas
-disagreeing with the prediction means to borrow it and sell it.
-Resolving a prediction market asset is done by forcing global settlement,
-with a global settlement price given by the issuer.
-After resolution (global settlement), and if the prediction proves true (global settlement price is 1),
- holders of the prediction market asset can instantly force settle it to
- obtain the same amount of the underlying collateral.
-If the prediction is incorrect (global settlement price 0), owners of
-margin positions will automatically get back all the collateral that was locked
- up in the position.
+预测市场资产在区块链上是一种特殊种类的借贷资产。债务与抵押物总是相同数量（借贷 1：1），强平或者强清无效。
+预测市场资产有其及抵押物的活跃市场。
+赞同预测意味着你将要买入预测市场资产，反对预测意味着你将要借入市场预测市场资产并将其出售。
+市场预测资产的判定结束由强制全局清算完成，全局清算的价格由发行人给出。
+在判定结束（全局清算）后，如果预测被证明为真（全局清算价格是 1），预测市场资产持有者会快速的将其强清并得到同等数量的基础抵押物。
+在判定结束（全局清算）后，如果预测被确认为错（全局清算价格是 0），债仓所有者将自动获得在头寸中被锁定的全部抵押物。
