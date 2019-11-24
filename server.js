@@ -40,7 +40,7 @@ app.use(hotMiddleware(compiler));
 //     res.sendFile(path.join(__dirname, "app/assets/index.html"));
 // });
 
-app.use("*", function(req, res, next) {
+app.use("/wallet/*", function(req, res, next) {
     var filename = path.join(compiler.outputPath, "index.html");
     compiler.outputFileSystem.readFile(filename, function(err, result) {
         if (err) {

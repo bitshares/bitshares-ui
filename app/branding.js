@@ -32,7 +32,7 @@ export function getWalletName() {
  * @returns {string}
  */
 export function getWalletURL() {
-    return "https://wallet.tusc.network";
+    return "https://tusc.network/wallet";
 }
 
 /**
@@ -42,7 +42,7 @@ export function getWalletURL() {
  */
 export function getFaucet() {
     return {
-        url: "http://test.swap.tusc.network:5071/",
+        url: "https://faucet.tusc.network/tusc/",
         show: true,
         editable: false
     };

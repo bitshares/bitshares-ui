@@ -2,7 +2,7 @@
     "name": "TUSC-light",
     "version": "0.0.1",
     "description": "Reference UI to showcase all features of the TUSC blockchain.",
-    "homepage": "https://wallet.tusc.network/wallet/",
+    "homepage": "/wallet/",
     "author": "TUSC UI Worker",
     "contributors": [
         "RarelyCharles"

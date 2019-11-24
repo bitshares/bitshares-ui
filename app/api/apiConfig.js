@@ -140,5 +140,5 @@ export const settingsAPIs = {
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
-    TESTNET_FAUCET: "http://test.swap.tusc.network:5071/"
+    TESTNET_FAUCET: "https://faucet.tusc.network/tusc/api/wallet"
 };
