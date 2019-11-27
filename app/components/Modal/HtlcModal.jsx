@@ -21,7 +21,6 @@ import {
     Button,
     Select,
     Input,
-    Icon as AntIcon,
     DatePicker,
     Tooltip,
     Radio
@@ -399,7 +398,7 @@ class HtlcModal extends React.Component {
                 preimage_size,
                 preimage_hash,
                 preimage_cipher,
-                fee_asset: feeAmount
+                fee_asset: feeAmount.asset_id
             })
                 .then(result => {
                     this.props.hideModal();
