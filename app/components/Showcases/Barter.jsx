@@ -43,11 +43,9 @@ export default class Barter extends Component {
                     from_amount: "",
                     from_asset_id: null,
                     from_asset: null,
-                    from_feeAsset: new Asset({amount: 0}),
-                    from_fee_asset_id: null,
+                    from_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     from_hasPoolBalance: null,
-                    from_balanceError: false,
-                    memo: ""
+                    from_balanceError: false
                 }
             ],
             to_barter: [
@@ -56,11 +54,9 @@ export default class Barter extends Component {
                     to_amount: "",
                     to_asset_id: null,
                     to_asset: null,
-                    to_feeAsset: new Asset({amount: 0}),
-                    to_fee_asset_id: null,
+                    to_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     to_hasPoolBalance: null,
-                    to_balanceError: false,
-                    memo: ""
+                    to_balanceError: false
                 }
             ],
             amount_counter: [],
@@ -110,8 +106,7 @@ export default class Barter extends Component {
                     from_amount: "",
                     from_asset_id: null,
                     from_asset: null,
-                    from_feeAsset: new Asset({amount: 0}),
-                    from_fee_asset_id: null,
+                    from_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     from_hasPoolBalance: null,
                     from_balanceError: false
                 }
@@ -137,8 +132,7 @@ export default class Barter extends Component {
                     to_amount: "",
                     to_asset_id: null,
                     to_asset: null,
-                    to_feeAsset: new Asset({amount: 0}),
-                    to_fee_asset_id: null,
+                    to_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     to_hasPoolBalance: null,
                     to_balanceError: false
                 }
@@ -159,9 +153,8 @@ export default class Barter extends Component {
             from_amount: amount,
             from_asset: asset,
             from_asset_id: asset.get("id"),
-            from_feeAsset: asset,
-            from_fee_asset_id: "1.3.0",
-            from_balanceError: false
+            from_balanceError: false,
+            from_feeAsset: from_barter[index].from_feeAsset
         };
 
         this.setState(
@@ -177,7 +170,7 @@ export default class Barter extends Component {
                     asset,
                     index,
                     true,
-                    from_barter[index].from_fee_asset_id,
+                    from_barter[index].from_feeAsset.asset_id,
                     from_barter
                 );
                 this.checkAmountsTotal();
@@ -198,8 +191,7 @@ export default class Barter extends Component {
             to_amount: amount,
             to_asset: asset,
             to_asset_id: asset.get("id"),
-            to_feeAsset: asset,
-            to_fee_asset_id: "1.3.0",
+            to_feeAsset: to_barter[index].to_feeAsset,
             to_balanceError: false
         };
 
@@ -216,7 +208,7 @@ export default class Barter extends Component {
                     asset,
                     index,
                     false,
-                    to_barter[index].to_fee_asset_id,
+                    to_barter[index].to_feeAsset.asset_id,
                     to_barter
                 );
                 this.checkAmountsTotal();
@@ -252,10 +244,8 @@ export default class Barter extends Component {
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
             if (from) {
-                barter[index].from_fee_asset_id = "1.3.0";
                 this.setState({from_barter: barter});
             } else {
-                barter[index].to_fee_asset_id = "1.3.0";
                 this.setState({to_barter: barter});
             }
         }
@@ -327,8 +317,7 @@ export default class Barter extends Component {
             from_amount: "",
             from_asset_id: null,
             from_asset: null,
-            from_feeAsset: new Asset({amount: 0}),
-            from_fee_asset_id: null
+            from_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"})
         });
         this.setState({from_barter: this.state.from_barter});
     }
@@ -338,8 +327,7 @@ export default class Barter extends Component {
             to_amount: "",
             to_asset_id: null,
             to_asset: null,
-            to_feeAsset: new Asset({amount: 0}),
-            to_fee_asset_id: null
+            to_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"})
         });
         this.setState({to_barter: this.state.to_barter});
     }
@@ -349,7 +337,6 @@ export default class Barter extends Component {
         this.setState({from_error: null, to_error: null});
         let sendAmount;
         let transfer_list = [];
-        const {proposal_fee} = this.state;
 
         let proposer = AccountStore.getState().currentAccount;
 
@@ -398,9 +385,7 @@ export default class Barter extends Component {
                     to_account: this.state.escrow_account.get("id"),
                     amount: sendAmount.getAmount(),
                     asset: asset.get("id"),
-                    memo: escrowMemo
-                        ? new Buffer(escrowMemo, "utf-8")
-                        : this.state.memo,
+                    memo: escrowMemo ? new Buffer(escrowMemo, "utf-8") : null,
                     feeAsset: item.from_feeAsset
                         ? item.from_feeAsset.asset_id
                         : "1.3.0"
@@ -458,7 +443,10 @@ export default class Barter extends Component {
             });
         });
 
-        ApplicationApi.transfer_list(transfer_list, proposal_fee);
+        ApplicationApi.transfer_list(
+            transfer_list,
+            this.state.proposal_fee.asset_id
+        );
     }
 
     onTrxIncluded(confirm_store_state) {
@@ -727,23 +715,24 @@ export default class Barter extends Component {
         );
     }
 
-    onFeeChanged(barter = "from_barter", asset) {
-        let _barter = this.state[barter].map(item => {
-            if (barter === "from_barter") {
-                item.from_fee_asset_id = asset.asset_id;
-                item.from_feeAsset = asset;
-            } else {
-                item.to_fee_asset_id = asset.asset_id;
-                item.to_feeAsset = asset;
-            }
-
-            return item;
-        });
-        this.setState({[barter]: _barter});
+    onFeeChangedPeer1CreateProposal(asset) {
+        this.setState({proposal_fee: asset});
     }
 
-    onProposalFeeChanged(asset) {
-        this.setState({proposal_fee: {...asset}});
+    onFeeChangedPeer1InProposal(asset) {
+        let _barter = this.state.from_barter.map(item => {
+            item.to_feeAsset = asset;
+            return item;
+        });
+        this.setState({from_barter: _barter});
+    }
+
+    onFeeChangedPeer2InProposal(asset) {
+        let _barter = this.state.to_barter.map(item => {
+            item.to_feeAsset = asset;
+            return item;
+        });
+        this.setState({to_barter: _barter});
     }
 
     onEscrowFeeChanged(asset) {
@@ -796,6 +785,7 @@ export default class Barter extends Component {
         };
 
         const fee = from => {
+            console.log(from_barter);
             let fee = 0;
             if (from) {
                 fee = fee;
@@ -1216,15 +1206,6 @@ export default class Barter extends Component {
                 )}
             </Card>
         );
-        let addToExecutionFee = 0;
-        // this.state.showEscrow &&
-        // (this.state.escrow_payment_changed
-        //     ? new Asset({real: this.state.escrow_payment}).getAmount()
-        //     : fee(true)) > 0
-        //     ? this.state.from_barter[0].from_feeAmount.getAmount({
-        //           real: true
-        //       })
-        //     : 0;
 
         let totalFeeFrom = (
             <Card style={{borderRadius: "10px"}}>
@@ -1253,9 +1234,8 @@ export default class Barter extends Component {
                                     content: null
                                 }
                             }}
-                            onChange={this.onFeeChanged.bind(
-                                this,
-                                "from_barter"
+                            onChange={this.onFeeChangedPeer1InProposal.bind(
+                                this
                             )}
                             multiplier={from_barter.length}
                         />
@@ -1279,7 +1259,9 @@ export default class Barter extends Component {
                                     content: null
                                 }
                             }}
-                            onChange={this.onProposalFeeChanged.bind(this)}
+                            onChange={this.onFeeChangedPeer1CreateProposal.bind(
+                                this
+                            )}
                         />
                     </div>
                 </Tooltip>
@@ -1324,7 +1306,9 @@ export default class Barter extends Component {
                                     content: null
                                 }
                             }}
-                            onChange={this.onFeeChanged.bind(this, "to_barter")}
+                            onChange={this.onFeeChangedPeer2InProposal.bind(
+                                this
+                            )}
                             multiplier={to_barter.length}
                         />
                     </div>
