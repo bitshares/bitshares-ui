@@ -21,6 +21,11 @@ class GatewayStore {
         return !!this.getState().down.get(backer);
     }
 
+    static getOnChainConfig(gatewayKey) {
+        // call another static method with this
+        return this.getState().onChainGatewayConfig[gatewayKey];
+    }
+
     constructor() {
         this.backedCoins = Immutable.Map(ss.get("backedCoins", {}));
         this.bridgeCoins = Immutable.Map(
@@ -47,11 +52,14 @@ class GatewayStore {
         ];
         this.down = Immutable.Map({});
 
+        this.onChainGatewayConfig = null;
+
         this.bindListeners({
             onFetchCoins: GatewayActions.fetchCoins,
             onFetchCoinsSimple: GatewayActions.fetchCoinsSimple,
             onFetchPairs: GatewayActions.fetchPairs,
-            onTemporarilyDisable: GatewayActions.temporarilyDisable
+            onTemporarilyDisable: GatewayActions.temporarilyDisable,
+            onLoadOnChainGatewayConfig: GatewayActions.loadOnChainGatewayConfig
         });
     }
 
@@ -130,6 +138,11 @@ class GatewayStore {
             this.bridgeCoins = this.bridgeCoins.remove(backer);
             ss.set("bridgeCoins", this.bridgeCoins.toJS());
         }
+    }
+
+    onLoadOnChainGatewayConfig(config) {
+        console.log(config);
+        this.onChainGatewayConfig = config || {};
     }
 }
 

@@ -16,7 +16,7 @@ import {getFinalPrice} from "../Utility/EquivalentPrice";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
-import {getBackedCoin} from "common/gatewayUtils";
+import {getBackedCoin, getAssetAndGateway} from "common/gatewayUtils";
 import {ChainStore} from "bitsharesjs";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
@@ -500,7 +500,6 @@ class AccountPortfolioList extends React.Component {
                 />
             </span>
         );
-
         if (allowed && this.props.isMyAccount) {
             return linkElement;
         } else if (allowed && !this.props.isMyAccount) {
@@ -539,9 +538,27 @@ class AccountPortfolioList extends React.Component {
                 customizable: false,
                 sorter: this.sortFunctions.byKey,
                 render: item => {
+                    const onChainConfig = GatewayStore.getOnChainConfig(
+                        getAssetAndGateway(item.get("symbol")).selectedGateway
+                    );
                     return (
                         <span style={{whiteSpace: "nowrap"}}>
                             <LinkToAssetById asset={item.get("id")} />
+                            {!!onChainConfig &&
+                                !onChainConfig.enabled && (
+                                    <Tooltip
+                                        placement="topLeft"
+                                        title={
+                                            "This is an asset governed by a gateway. This is an external service that has been deactivated or is not functioning correctly in this frontend. " +
+                                            (onChainConfig.comment ||
+                                                "This can be due to several reasons") +
+                                            ". You can find more information and activate/deactivate gateways in the Settings (Entry External Service Providers)"
+                                        }
+                                    >
+                                        &nbsp;
+                                        <AntIcon type="warning" />
+                                    </Tooltip>
+                                )}
                         </span>
                     );
                 }
@@ -1464,7 +1481,6 @@ class AccountPortfolioList extends React.Component {
         );
         const atLeastOneHas = {};
         balanceRows.forEach(_item => {
-            console.log(_item);
             if (!!_item.buy && _item.buy !== "-") {
                 atLeastOneHas.buy = true;
             }

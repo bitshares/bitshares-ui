@@ -91,6 +91,10 @@ const getGatewayConfig = async function(gatewayKey) {
 
     if (!onChainConfig.gateways) return null;
 
+    if (!gatewayKey) {
+        return onChainConfig.gateways;
+    }
+
     if (!onChainConfig.gateways[gatewayKey]) return null;
 
     return onChainConfig.gateways[gatewayKey];

@@ -7,6 +7,7 @@ import {
     getActiveWallets
 } from "common/gatewayMethods";
 import {blockTradesAPIs} from "api/apiConfig";
+import {getGatewayConfig} from "../lib/chain/onChainConfig";
 
 let inProgress = {};
 
@@ -147,6 +148,12 @@ class GatewayActions {
     temporarilyDisable({backer}) {
         return dispatch => {
             dispatch({backer});
+        };
+    }
+
+    loadOnChainGatewayConfig() {
+        return dispatch => {
+            getGatewayConfig().then(config => dispatch(config));
         };
     }
 }

@@ -162,6 +162,7 @@ import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
 import PriceAlertNotifications from "./components/PriceAlertNotifications";
 import GatewaySelectorModal from "./components/Gateways/GatewaySelectorModal";
 import SettingsStore from "./stores/SettingsStore";
+import GatewayActions from "./actions/GatewayActions";
 
 class App extends React.Component {
     constructor() {
@@ -310,6 +311,7 @@ class App extends React.Component {
                 this.setState({incognito});
             }.bind(this)
         );
+        GatewayActions.loadOnChainGatewayConfig();
         this._ensureExternalServices();
     }
 
