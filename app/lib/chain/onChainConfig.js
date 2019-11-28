@@ -70,8 +70,36 @@ const isGatewayTemporarilyDisabled = async function(gatewayKey) {
     return false;
 };
 
+const getGatewayComment = async function(gatewayKey) {
+    // map of all known gateways with additional values
+    // e.g. {OPEN: {enabled: true}}
+    const onChainConfig = await _fetchOnChainConfig();
+
+    if (!onChainConfig.gateways) return null;
+
+    if (!onChainConfig.gateways[gatewayKey]) return null;
+
+    if (!onChainConfig.gateways[gatewayKey].comment) return null;
+
+    return onChainConfig.gateways[gatewayKey].comment;
+};
+
+const getGatewayConfig = async function(gatewayKey) {
+    // map of all known gateways with additional values
+    // e.g. {OPEN: {enabled: true}}
+    const onChainConfig = await _fetchOnChainConfig();
+
+    if (!onChainConfig.gateways) return null;
+
+    if (!onChainConfig.gateways[gatewayKey]) return null;
+
+    return onChainConfig.gateways[gatewayKey];
+};
+
 export {
     getNotifications,
     getPredictionMarketIssuers,
-    isGatewayTemporarilyDisabled
+    isGatewayTemporarilyDisabled,
+    getGatewayComment,
+    getGatewayConfig
 };
