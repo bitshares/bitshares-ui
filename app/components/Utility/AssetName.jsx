@@ -45,14 +45,24 @@ class AssetName extends React.Component {
             FetchChainObjects(ChainStore.getAccountName, [
                 this.props.asset.get("issuer")
             ]).then(result => {
-                // re-render, ChainStore cache now has the object
-                this.setState({assetIssuerName: result[0]});
+                if (this._isMounted) {
+                    // re-render, ChainStore cache now has the object
+                    this.setState({assetIssuerName: result[0]});
+                }
             });
         }
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
     componentDidUpdate() {
         this._load();
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     render() {
