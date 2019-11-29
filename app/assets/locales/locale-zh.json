@@ -758,6 +758,9 @@
                 "hide_function_buttons": "隐藏所有按钮，可以在定制中进行管理。",
                 "increase_chart_height": "增加图标高度",
                 "market_location": "要将垂直订单薄固定在哪一边，并将随市场面板切换位置。",
+                "market_trades": "",
+                "my_trades": "",
+                "open_orders": "",
                 "order_book_grouping": "分组订单将会按照定义的百分比靠齐。",
                 "order_style": "使用垂直订单薄来固定其到边缘面板",
                 "orderbook_auto_scroll": "自动滚动订单薄更新新订单。",
@@ -768,6 +771,7 @@
                 "reduce_scrollbars": "默认禁止滚动条",
                 "reload": "此设置的更改将在人工重载后才会生效",
                 "reverse_order_book": "反转订单薄使买单在顶部",
+                "settlements": "",
                 "show_market_depth": "显示市场深度",
                 "show_price_chart": "显示价格图表",
                 "single_colum_order_form": "强制 单价，数量，成交总额等在一列（不浮动）"
@@ -1148,6 +1152,7 @@
             "open": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
             "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
             "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
+            "win": "",
             "xbtsx": "%(asset)s资产由真实%(backed)s1:1储备背书，可以通过 XBTS 提供的网关服务进行充值提现。"
         },
         "balance": "当前余额",
@@ -2006,6 +2011,7 @@
     },
     "settings": {
         "access": "接入点",
+        "access_text": "",
         "accounts": "账户",
         "accounts_text": "我的账户列表。",
         "activate": "使用",
@@ -2191,7 +2197,8 @@
             },
             "steps_costs": {
                 "text": "一些长文本",
-                "title": "强制清算"
+                "title": "强制清算",
+                "title_within": ""
             },
             "steps_introduction": {
                 "text": "使用比特股区块链原生的dApp来管理存放抵押物与创建智能货币SmartCoins。",
@@ -2659,6 +2666,7 @@
             "rangeNamed": "%(name)s必须在%(min)s到%(max)s范围之内",
             "required": "此字段必填",
             "requiredNamed": "%(name)s必填",
+            "test": "",
             "types": {
                 "array": "此字段必须是数组",
                 "arrayNamed": "%(name)s必须是数组",
