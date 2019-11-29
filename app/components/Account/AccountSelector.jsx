@@ -634,7 +634,7 @@ class AccountSelector extends React.Component {
                     height: this.props.size || 33,
                     width: this.props.size || 33
                 }}
-                account={selectedAccount ? selectedAccount.id : null}
+                account={selectedAccount ? selectedAccount.name : null}
                 custom_image={null}
             />
         );

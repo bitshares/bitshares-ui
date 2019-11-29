@@ -1,10 +1,12 @@
-import {ChainStore, FetchChain} from "bitsharesjs";
+import {FetchChain} from "bitsharesjs";
 import {getConfigurationAsset} from "branding";
 import asset_utils from "common/asset_utils";
-import {availableApis} from "common/gateways";
 
 const _fetchOnChainConfig = async function() {
     let config = getConfigurationAsset();
+    if (!config.symbol) {
+        return {};
+    }
     const assets = [await FetchChain("getAsset", config.symbol)];
     let onChainConfig = {};
     assets.forEach(asset => {
@@ -39,6 +41,9 @@ const _fetchOnChainConfig = async function() {
 
 const getNotifications = async function() {
     const onChainConfig = await _fetchOnChainConfig();
+    if (!onChainConfig.notifications) {
+        return [];
+    }
     let notificationList = [];
     onChainConfig.notifications.forEach(item => {
         notificationList.push(item);
@@ -65,8 +70,40 @@ const isGatewayTemporarilyDisabled = async function(gatewayKey) {
     return false;
 };
 
+const getGatewayComment = async function(gatewayKey) {
+    // map of all known gateways with additional values
+    // e.g. {OPEN: {enabled: true}}
+    const onChainConfig = await _fetchOnChainConfig();
+
+    if (!onChainConfig.gateways) return null;
+
+    if (!onChainConfig.gateways[gatewayKey]) return null;
+
+    if (!onChainConfig.gateways[gatewayKey].comment) return null;
+
+    return onChainConfig.gateways[gatewayKey].comment;
+};
+
+const getGatewayConfig = async function(gatewayKey) {
+    // map of all known gateways with additional values
+    // e.g. {OPEN: {enabled: true}}
+    const onChainConfig = await _fetchOnChainConfig();
+
+    if (!onChainConfig.gateways) return null;
+
+    if (!gatewayKey) {
+        return onChainConfig.gateways;
+    }
+
+    if (!onChainConfig.gateways[gatewayKey]) return null;
+
+    return onChainConfig.gateways[gatewayKey];
+};
+
 export {
     getNotifications,
     getPredictionMarketIssuers,
-    isGatewayTemporarilyDisabled
+    isGatewayTemporarilyDisabled,
+    getGatewayComment,
+    getGatewayConfig
 };

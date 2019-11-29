@@ -168,35 +168,6 @@ class HtlcActions {
         let hash = new Buffer(preimage_hash_calculated).toString("hex");
         return {hash, size};
     }
-
-    async getHTLCs(accountId) {
-        let htlcs = [];
-        for (let i = 1; i < 300; i = i + 10) {
-            let ids = [];
-            for (let j = i; j < i + 10; j++) {
-                ids.push("1.16." + j);
-            }
-            let map = {};
-            let objects = await FetchChainObjects(
-                ChainStore.getObject,
-                ids,
-                undefined,
-                map
-            );
-            objects.forEach(item => {
-                if (item) {
-                    item = item.toJS();
-                    if (
-                        item.transfer.to == accountId ||
-                        item.transfer.from == accountId
-                    ) {
-                        htlcs.push(item);
-                    }
-                }
-            });
-        }
-        return htlcs;
-    }
 }
 
 export default alt.createActions(HtlcActions);

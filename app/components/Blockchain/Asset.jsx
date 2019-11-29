@@ -345,23 +345,22 @@ class Asset extends React.Component {
         let urls = desc.match(urlTest);
 
         // Add market link
-        const core_asset = ChainStore.getAsset("1.3.0");
+        const core_asset = this.props.coreAsset;
+        const core_asset_symbol = core_asset.get("symbol");
         let preferredMarket = description.market
             ? description.market
-            : core_asset
-                ? core_asset.get("symbol")
-                : "BTS";
+            : core_asset_symbol;
         if (asset.bitasset) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
             );
-            if (preferredMarket) {
+            if (!!preferredMarket && preferredMarket.get) {
                 preferredMarket = preferredMarket.get("symbol");
             } else {
-                preferredMarket = core_asset.get("symbol");
+                preferredMarket = core_asset_symbol;
             }
         }
-        if (asset.symbol === core_asset.get("symbol")) preferredMarket = "USD";
+        if (asset.symbol === core_asset_symbol) preferredMarket = "USD";
         if (urls && urls.length) {
             urls.forEach(url => {
                 let markdownUrl = `<a target="_blank" class="external-link" rel="noopener noreferrer" href="${url}">${url}</a>`;
@@ -1026,7 +1025,7 @@ class Asset extends React.Component {
         let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         var options = asset.options;
-        const core = ChainStore.getAsset("1.3.0");
+        const core = this.props.coreAsset;
 
         return (
             <Panel
@@ -2087,6 +2086,13 @@ class Asset extends React.Component {
     }
 
     render() {
+        if (this.props.backingAsset === null) {
+            return <Page404 subtitle="asset_not_found_subtitle" />;
+        }
+        if (!this.props.backingAsset.get || !this.props.coreAsset.get) {
+            return null;
+        }
+
         var asset = this.props.asset.toJS();
         var priceFeed =
             "bitasset" in asset ? this.renderPriceFeed(asset) : null;
@@ -2194,13 +2200,16 @@ Asset = connect(
 );
 
 Asset = AssetWrapper(Asset, {
-    propNames: ["backingAsset"]
+    propNames: ["backingAsset", "coreAsset"]
 });
 
 class AssetContainer extends React.Component {
     render() {
         if (this.props.asset === null) {
             return <Page404 subtitle="asset_not_found_subtitle" />;
+        }
+        if (!this.props.asset.get) {
+            return null;
         }
         let backingAsset = this.props.asset.has("bitasset")
             ? this.props.asset.getIn([
@@ -2209,7 +2218,13 @@ class AssetContainer extends React.Component {
                   "short_backing_asset"
               ])
             : "1.3.0";
-        return <Asset {...this.props} backingAsset={backingAsset} />;
+        return (
+            <Asset
+                {...this.props}
+                backingAsset={backingAsset}
+                coreAsset={"1.3.0"}
+            />
+        );
     }
 }
 AssetContainer = AssetWrapper(AssetContainer, {

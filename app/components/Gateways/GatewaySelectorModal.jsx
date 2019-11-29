@@ -19,13 +19,14 @@ import {getFaucet, allowedGateway} from "../../branding";
 import SettingsActions from "../../actions/SettingsActions";
 import {updateGatewayBackers} from "common/gatewayUtils";
 import ServiceProviderExplanation from "./ServiceProviderExplanation";
+import {getGatewayConfig} from "../../lib/chain/onChainConfig";
 
 class GatewaySelectorModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             showIntroduction: true,
-            onChainDisabled: {}
+            onChainConfig: {}
         };
     }
 
@@ -63,11 +64,14 @@ class GatewaySelectorModal extends React.Component {
                     "external_service_provider.selector.name"
                 ),
                 render: row => {
-                    if (!!this.state.onChainDisabled[row.key]) {
+                    if (!!this.state.onChainConfig[row.key]) {
                         return (
                             <Tooltip
                                 title={
-                                    "This gateway has been deactivated. This can be due to several reasons. If you are the operator of this gateway, please contact us."
+                                    "This gateway has been deactivated or is not functioning correctly. " +
+                                    (this.state.onChainConfig[row.key]
+                                        .comment ||
+                                        "This can be due to several reasons.")
                                 }
                             >
                                 <span style={{whiteSpace: "nowrap"}}>
@@ -76,7 +80,7 @@ class GatewaySelectorModal extends React.Component {
                                         style={{
                                             marginLeft: "0.5rem"
                                         }}
-                                        type="question-circle"
+                                        type="warning"
                                     />
                                 </span>
                             </Tooltip>
@@ -180,18 +184,17 @@ class GatewaySelectorModal extends React.Component {
 
     async _checkOnChainConfig() {
         const all = this._getRows();
-        let onChainDisabled = {};
+        let onChainConfig = {};
         for (let i = 0; i < all.length; i++) {
             if (!(await all[i].isEnabled({onlyOnChainConfig: true})))
-                onChainDisabled[all[i].key] = true;
+                onChainConfig[all[i].key] = await getGatewayConfig(all[i].key);
         }
-        this.setState({onChainDisabled});
+        this.setState({onChainConfig});
     }
 
     _getEnabledRowKeys() {
         return this._getRows().map(
-            item =>
-                this.state.onChainDisabled[item.key] ? undefined : item.key
+            item => (this.state.onChainConfig[item.key] ? undefined : item.key)
         );
     }
 
@@ -305,7 +308,9 @@ class GatewaySelectorModal extends React.Component {
             },
             getCheckboxProps: record => {
                 return {
-                    disabled: this.state.onChainDisabled[record.key],
+                    disabled:
+                        !!this.state.onChainConfig[record.key] &&
+                        !this.state.onChainConfig[record.key].enabled,
                     key: record.key
                 };
             },

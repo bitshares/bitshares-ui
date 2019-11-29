@@ -14,6 +14,7 @@ import {getWalletName} from "branding";
 import {getWalletURL} from "../../branding";
 import {Button} from "bitshares-ui-style-guide";
 import AccountReferralsTable from "./AccountReferralsTable";
+import {settingsAPIs} from "../../api/apiConfig";
 
 class AccountMembership extends React.Component {
     constructor(prop) {
@@ -460,7 +461,8 @@ class AccountMembership extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                {member_status == "lifetime" ? (
+                                {member_status == "lifetime" &&
+                                settingsAPIs.ES_WRAPPER_LIST.length > 0 ? ( // fixme access to ES could be wrapped in a store or something else
                                     <div className="asset-card">
                                         <div className="card-divider">
                                             <Translate content="account.member.ref_distribution" />
