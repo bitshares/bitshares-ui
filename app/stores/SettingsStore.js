@@ -500,7 +500,10 @@ class SettingsStore {
         let save = true;
         switch (payload.setting) {
             case "faucet_address":
-                if (payload.value.indexOf("testnet") === -1) {
+                if (
+                    payload.value.indexOf("testnet") === -1 ||
+                    payload.value.indexOf("test2") === -1
+                ) {
                     this.mainnet_faucet = payload.value;
                     ss.set("mainnet_faucet", payload.value);
                 } else {

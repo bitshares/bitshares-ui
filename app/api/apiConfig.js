@@ -121,9 +121,17 @@ export const settingsAPIs = {
             location: {translate: "settings.api_closest"}
         },
         {
-            url: "wss://test2.api.tusc.network:8091",
+            url: "wss://api.tusc.network:8091",
             location: "Virginia",
             region: "Northern America",
+            country: "U.S.A."
+            //operator: "Witness: openledger-dc",
+            //contact: "telegram:mtopenledger"
+        },
+        {
+            url: "wss://test2.api.tusc.network:8091",
+            location: "Virginia",
+            region: "TESTNET - Northern America",
             country: "U.S.A."
             //operator: "Witness: openledger-dc",
             //contact: "telegram:mtopenledger"
@@ -131,14 +139,14 @@ export const settingsAPIs = {
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "ws://test2.api.tusc.network:8090",
+            url: "wss://test2.api.tusc.network:8091",
             location: "Virginia",
-            region: "Northern America",
+            region: "TESTNET - Northern America",
             country: "U.S.A."
             //operator: "Witness: openledger-dc",
             //contact: "telegram:mtopenledger"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
-    TESTNET_FAUCET: "https://faucet.tusc.network/tusc/api/wallet"
+    TESTNET_FAUCET: "http://3.135.40.183"
 };

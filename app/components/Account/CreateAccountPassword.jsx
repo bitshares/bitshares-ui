@@ -22,9 +22,16 @@ import {withRouter} from "react-router-dom";
 import {scroller} from "react-scroll";
 import {Notification, Tooltip} from "bitshares-ui-style-guide";
 import ReCAPTCHA from "react-google-recaptcha";
-import AccountLoginContainer from "../Login/AccountLogin";
+import SettingsStore from "stores/SettingsStore";
 
 const grecaptchaObject = window.grecaptcha;
+
+function isTestNet(url) {
+    return (
+        !__TESTNET__ &&
+        (url.indexOf("testnet") !== -1 || url.indexOf("test2") !== -1)
+    );
+}
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -70,7 +77,9 @@ class CreateAccountPassword extends React.Component {
         ReactTooltip.rebuild();
         this.scrollToInput();
 
-        fetch("https://faucet.tusc.network/tusc/api/wallet/suggest_brain_key", {
+        let faucetAddress = SettingsStore.getSetting("faucet_address");
+
+        fetch(faucetAddress + "/tusc/api/wallet/suggest_brain_key", {
             method: "get",
             headers: {
                 Accept: "application/json"
@@ -218,8 +227,9 @@ class CreateAccountPassword extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         if (!this.isValid()) return;
+        let faucetAddress = SettingsStore.getSetting("faucet_address");
 
-        fetch("https://faucet.tusc.network/tusc/api/wallet/register_account", {
+        fetch(faucetAddress + "/tusc/api/wallet/register_account", {
             method: "post",
             headers: {
                 Accept: "application/json",
@@ -462,7 +472,7 @@ class CreateAccountPassword extends React.Component {
                     <section>
                         <ReCAPTCHA
                             grecaptcha={grecaptchaObject}
-                            sitekey="6LdYIrgUAAAAAJd1PkRtOdCvZv2jrV8UmQXgtiAr"
+                            sitekey="6LeNLMYUAAAAAHxbrXvi7SM5jIf3QgSUTM78kjjr"
                             onChange={this._onInput.bind(this, "recaptcha")}
                         />
                     </section>

@@ -42,7 +42,7 @@ export function getWalletURL() {
  */
 export function getFaucet() {
     return {
-        url: "https://faucet.tusc.network/tusc/",
+        url: "https://faucet.tusc.network",
         show: true,
         editable: false
     };

@@ -397,7 +397,10 @@ class RouterTransitioner {
     }
 
     _isTestNet(url) {
-        return !__TESTNET__ && url.indexOf("testnet") !== -1;
+        return (
+            !__TESTNET__ &&
+            (url.indexOf("testnet") !== -1 || url.indexOf("test2") !== -1)
+        );
     }
 
     /**

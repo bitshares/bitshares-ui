@@ -192,7 +192,9 @@ class Footer extends React.Component {
 
         const {props} = this;
 
-        const testNet = node.url.indexOf("testnet") !== -1;
+        const testNet =
+            node.url.indexOf("testnet") !== -1 ||
+            node.url.indexOf("test2") !== -1;
 
         let title = node.operator + " " + !!node.location ? node.location : "";
         if ("country" in node) {
