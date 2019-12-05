@@ -370,12 +370,8 @@ class RecentTransactions extends React.Component {
             options = [
                 "all",
                 "transfer",
-                "limit_order_create",
-                "limit_order_cancel",
-                "fill_order",
                 "account_create",
                 "account_update",
-                "asset_create",
                 "witness_withdraw_pay",
                 "vesting_balance_withdraw"
             ].map(type => {
