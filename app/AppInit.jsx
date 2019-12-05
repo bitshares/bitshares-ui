@@ -36,7 +36,7 @@ class RootIntl extends React.Component {
                 formats={intlData.formats}
                 initialNow={Date.now()}
             >
-                <Router basename="/wallet">
+                <Router basename="/wallet" history1={history}>
                     <App {...this.props} />
                 </Router>
             </IntlProvider>

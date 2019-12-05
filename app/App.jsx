@@ -172,6 +172,9 @@ import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
 import PriceAlertNotifications from "./components/PriceAlertNotifications";
+import {createBrowserHistory} from "history";
+const history1 = createBrowserHistory();
+import ReactGA from "react-ga";
 
 class App extends React.Component {
     constructor() {
@@ -323,6 +326,10 @@ class App extends React.Component {
         document.title = titleUtils.GetTitleByPath(
             this.props.location.pathname
         );
+        history1.listen(location => {
+            ReactGA.set({page: location.pathname}); // Update the user's current page
+            ReactGA.pageview(location.pathname); // Record a pageview for the given page
+        });
     }
 
     _onIgnoreIncognitoWarning() {
@@ -400,6 +407,7 @@ class App extends React.Component {
         } else if (__DEPRECATED__) {
             content = <Deprecate {...this.props} />;
         } else {
+            const trackingId = "UA-121317055-2";
             let accountName =
                 AccountStore.getState().currentAccount ||
                 AccountStore.getState().passwordAccount;
@@ -407,6 +415,17 @@ class App extends React.Component {
                 accountName && accountName !== "null"
                     ? accountName
                     : "committee-account";
+
+            ReactGA.initialize(trackingId);
+
+            ReactGA.set({
+                userId: accountName
+            });
+
+            ReactGA.event({
+                category: "Sign Up",
+                action: "User pressed the sign up button"
+            });
             content = (
                 <div className="grid-frame vertical">
                     <NewsHeadline />
@@ -548,6 +567,7 @@ class App extends React.Component {
                     <Footer
                         synced={this.state.synced}
                         history={this.props.history}
+                        history1={history}
                     />
                     <ReactTooltip
                         ref="tooltip"
