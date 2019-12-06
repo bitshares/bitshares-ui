@@ -226,8 +226,6 @@ export default class AssetNameWrapper extends React.Component {
             );
             const isDisabledGatewayAsset =
                 !!onChainConfig && !onChainConfig.enabled;
-            console.log("asdasd");
-            let cc = counterpart;
             postfix = isDisabledGatewayAsset && (
                 <Tooltip
                     placement="topLeft"
