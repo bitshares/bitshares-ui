@@ -1227,10 +1227,8 @@ class PingStrategy {
 
         countryKeys.forEach(_countryKey => {
             if (
-                !(
-                    !!this._nodeTree[regionKey] &&
-                    !!this._nodeTree[regionKey][_countryKey]
-                )
+                !this._nodeTree[regionKey] ||
+                !this._nodeTree[regionKey][_countryKey]
             ) {
                 return;
             }

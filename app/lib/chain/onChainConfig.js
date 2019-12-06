@@ -100,10 +100,28 @@ const getGatewayConfig = async function(gatewayKey) {
     return onChainConfig.gateways[gatewayKey];
 };
 
+const getBlacklists = async function() {
+    const onChainConfig = await _fetchOnChainConfig();
+
+    if (!onChainConfig.blacklists) return {};
+
+    return onChainConfig.blacklists;
+};
+
+const getOnChainConfig = async function() {
+    const onChainConfig = await _fetchOnChainConfig();
+
+    if (!onChainConfig) return {};
+
+    return onChainConfig;
+};
+
 export {
     getNotifications,
     getPredictionMarketIssuers,
     isGatewayTemporarilyDisabled,
     getGatewayComment,
-    getGatewayConfig
+    getGatewayConfig,
+    getBlacklists,
+    getOnChainConfig
 };

@@ -6,6 +6,9 @@ import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import {Popover} from "bitshares-ui-style-guide";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import GatewayStore from "../../stores/GatewayStore";
+import {getAssetAndGateway} from "../../lib/common/gatewayUtils";
+import {Icon, Tooltip} from "bitshares-ui-style-guide";
 
 class AssetName extends React.Component {
     static propTypes = {
@@ -215,8 +218,81 @@ AssetName = AssetWrapper(AssetName);
 
 export default class AssetNameWrapper extends React.Component {
     render() {
+        const gatewaySplit = getAssetAndGateway(this.props.name);
+        let postfix = undefined;
+        if (!!gatewaySplit && !!gatewaySplit.selectedGateway) {
+            const onChainConfig = GatewayStore.getOnChainConfig(
+                getAssetAndGateway(this.props.name).selectedGateway
+            );
+            const isDisabledGatewayAsset =
+                !!onChainConfig && !onChainConfig.enabled;
+            console.log("asdasd");
+            let cc = counterpart;
+            postfix = isDisabledGatewayAsset && (
+                <Tooltip
+                    placement="topLeft"
+                    title={
+                        <span>
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html:
+                                        counterpart.translate(
+                                            "external_service_provider.disabled_asset_1"
+                                        ) + ". "
+                                }}
+                            />
+                            <span>{onChainConfig.comment}</span>
+                            <br />
+                            <br />
+                            <span>
+                                {counterpart.translate(
+                                    "external_service_provider.disabled_asset_2"
+                                )}
+                            </span>
+                        </span>
+                    }
+                >
+                    &nbsp;
+                    <Icon style={{color: "white"}} type="warning" />
+                </Tooltip>
+            );
+        }
+        let warning = undefined;
+        const globalOnChainConfig = GatewayStore.getGlobalOnChainConfig();
+        if (
+            !!globalOnChainConfig &&
+            !!globalOnChainConfig.blacklists &&
+            !!globalOnChainConfig.blacklists.assets
+        ) {
+            if (
+                globalOnChainConfig.blacklists.assets.includes &&
+                globalOnChainConfig.blacklists.assets.includes(this.props.name)
+            ) {
+                warning = (
+                    <Tooltip
+                        placement="topLeft"
+                        title={
+                            <React.Fragment>
+                                <span>
+                                    {counterpart.translate(
+                                        "explorer.assets.blacklisted"
+                                    )}
+                                </span>
+                            </React.Fragment>
+                        }
+                    >
+                        &nbsp;
+                        <Icon style={{color: "white"}} type="warning" />
+                    </Tooltip>
+                );
+            }
+        }
         return !this.props.name ? null : (
-            <AssetName {...this.props} asset={this.props.name} />
+            <React.Fragment>
+                <AssetName {...this.props} asset={this.props.name} />
+                {postfix}
+                {warning}
+            </React.Fragment>
         );
     }
 }
