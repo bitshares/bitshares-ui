@@ -949,6 +949,7 @@
         },
         "assets": {
             "backing_asset": "Backing asset",
+            "blacklisted": "This asset is blacklisted, beware of scam attempts!",
             "id": "ID",
             "issuer": "발행자",
             "market": "스마트코인",
@@ -1072,6 +1073,8 @@
             "short": "Bridge",
             "what_is": "What is a Bridge?"
         },
+        "disabled_asset_1": "This asset is managed by an external service provider (gateway). Currently deposits and withdrawals for this asset are <b>disabled</b>",
+        "disabled_asset_2": "For more information visit Settings -> Entry External Service Providers. For any issues or questions please contact the gateway operator directly.",
         "expect_more": "If you expect to see more deposit and withdraw options for your assets, please check the External Service Providers in Settings > General.",
         "gateway": {
             "description": "Gateways are external service providers that allow you to deposit, trade and withdraw assets into the BitShares Blockchain that are not native to it. For example, you can send your BTC on the Bitcoin Blockchain to a Gateway, who will in turn give you an UIA (user issued asset) on the BitShares Blockchain, with the promise that you can withdraw it again (for a fee of course). While you are holding such an UIA on the BitShares Blockchain, the Gateway becomes the custodian of your funds. As it is external service providers you implicitly agree to their Terms and Conditions by using any of their services or assets.",

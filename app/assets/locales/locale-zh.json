@@ -955,6 +955,7 @@
         },
         "assets": {
             "backing_asset": "抵押物",
+            "blacklisted": "This asset is blacklisted, beware of scam attempts!",
             "id": "ID",
             "issuer": "资产所有者",
             "market": "智能货币",
@@ -1078,6 +1079,8 @@
             "short": "桥接服务",
             "what_is": "什么是桥接服务?"
         },
+        "disabled_asset_1": "This asset is managed by an external service provider (gateway). Currently deposits and withdrawals for this asset are <b>disabled</b>",
+        "disabled_asset_2": "For more information visit Settings -> Entry External Service Providers. For any issues or questions please contact the gateway operator directly.",
         "expect_more": "如果你想有更多的冲/提币选项，请到 通用设置 > 外部服务提供者 处检查。",
         "gateway": {
             "description": "网关是一种外部服务提供者，允许你在BitShares区块链中使用非原生代币进行充币、交易及提币操作。例如，你可以发送BTC链上的BTC到网关，其将会转化你的BTC为UIA（用户发行资产）到BitShares区块链上，其也承诺你可以提出（当然会有手续费）。当你在BitShares区块链上持有这种UIA资产时，网关就如同你资产的托管人。你只要使用他们任何的服务及资产就代表你默认同意他们的条款及协议。",
