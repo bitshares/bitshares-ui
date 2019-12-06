@@ -963,7 +963,8 @@
             "symbol": "Symbol",
             "title": "Assets",
             "units": "Units",
-            "user": "User Issued Assets"
+            "user": "User Issued Assets",
+            "blacklisted": "This asset is blacklisted, beware of scam attempts!"
         },
         "block": {
             "account_upgrade": "Account to upgrade",
@@ -1073,6 +1074,8 @@
         }
     },
     "external_service_provider": {
+        "disabled_asset_1": "This asset is managed by an external service provider (gateway). Currently deposits and withdrawals for this asset are <b>disabled</b>",
+        "disabled_asset_2": "For more information visit Settings -> Entry External Service Providers. For any issues or questions please contact the gateway operator directly.",
         "bridge": {
             "description": "Bridges are external service providers that allow you to swap assets in and out of the BitShares Blockchain. For example, you can send your BTC on the Bitcoin Blockchain to a Bridge, who will swap it and give you an equivalent amount of BTS or another Gateways UIA on the BitShares Blockchain (for a fee of course). Normally, a Bridge does not hold your funds, but trust is required that they send you back the proper amount of the target asset. As it is an external service providers you implicitly agree to their Terms and Conditions by using any of their services or assets.",
             "short": "Bridge",

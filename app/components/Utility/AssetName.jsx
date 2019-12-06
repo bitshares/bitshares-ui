@@ -226,25 +226,30 @@ export default class AssetNameWrapper extends React.Component {
             );
             const isDisabledGatewayAsset =
                 !!onChainConfig && !onChainConfig.enabled;
-
+            console.log("asdasd");
+            let cc = counterpart;
             postfix = isDisabledGatewayAsset && (
                 <Tooltip
                     placement="topLeft"
                     title={
-                        <React.Fragment>
+                        <span>
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html:
+                                        counterpart.translate(
+                                            "external_service_provider.disabled_asset_1"
+                                        ) + ". "
+                                }}
+                            />
+                            <span>{onChainConfig.comment}</span>
+                            <br />
+                            <br />
                             <span>
-                                This asset is managed by an external service
-                                provider (gateway). Currently deposits and
-                                withdrawals for this asset are <b>disabled</b>.{" "}
-                                {onChainConfig.comment}
+                                {counterpart.translate(
+                                    "external_service_provider.disabled_asset_2"
+                                )}
                             </span>
-                            <br />
-                            <br />
-                            For more information visit Settings -> Entry
-                            External Service Providers. For any issues or
-                            questions please contact the gateway operator
-                            directly.
-                        </React.Fragment>
+                        </span>
                     }
                 >
                     &nbsp;
@@ -269,8 +274,9 @@ export default class AssetNameWrapper extends React.Component {
                         title={
                             <React.Fragment>
                                 <span>
-                                    This asset is blacklisted, beware of scam
-                                    attempts!
+                                    {counterpart.translate(
+                                        "explorer.assets.blacklisted"
+                                    )}
                                 </span>
                             </React.Fragment>
                         }
