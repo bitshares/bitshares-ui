@@ -11,8 +11,11 @@
     <title>{{title}}</title>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: https://www.google.com/; worker-src 'self' blob:;
      script-src https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/ https://www.google.com/recaptcha/ 
-     https://www.gstatic.com/recaptcha/ 'self' 'unsafe-eval' 'unsafe-inline';
-      style-src 'self' 'unsafe-inline'; connect-src 'self' *; font-src 'self' data: https://at.alicdn.com https://www.google.com/recaptcha/; img-src 'self' data:;">
+     https://www.gstatic.com/recaptcha/ https://www.google-analytics.com 'self' 'unsafe-eval' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline'; 
+      connect-src https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net 'self' *; 
+      font-src 'self' data: https://at.alicdn.com https://www.google.com/recaptcha/ https://www.google-analytics.com; 
+      img-src 'self' https://www.google-analytics.com www.google-analytics.com https://stats.g.doubleclick.net data:;">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         body {

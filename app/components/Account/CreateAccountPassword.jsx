@@ -21,10 +21,11 @@ import CopyButton from "../Utility/CopyButton";
 import {withRouter} from "react-router-dom";
 import {scroller} from "react-scroll";
 import {Notification, Tooltip} from "bitshares-ui-style-guide";
-import ReCAPTCHA from "react-google-recaptcha";
+import {
+    GoogleReCaptchaProvider,
+    GoogleReCaptcha
+} from "react-google-recaptcha-v3";
 import SettingsStore from "stores/SettingsStore";
-
-const grecaptchaObject = window.grecaptcha;
 
 function isTestNet(url) {
     return (
@@ -470,11 +471,11 @@ class CreateAccountPassword extends React.Component {
                     </section>
                     <br />
                     <section>
-                        <ReCAPTCHA
-                            grecaptcha={grecaptchaObject}
-                            sitekey="6LeNLMYUAAAAAHxbrXvi7SM5jIf3QgSUTM78kjjr"
-                            onChange={this._onInput.bind(this, "recaptcha")}
-                        />
+                        <GoogleReCaptchaProvider reCaptchaKey="6LeNLMYUAAAAAHxbrXvi7SM5jIf3QgSUTM78kjjr">
+                            <GoogleReCaptcha
+                                onVerify={this._onInput.bind(this, "recaptcha")}
+                            />
+                        </GoogleReCaptchaProvider>
                     </section>
                     <br />
 
