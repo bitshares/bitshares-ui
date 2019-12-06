@@ -97,6 +97,10 @@ export function getAssetAndGateway(symbol) {
         selectedGateway = "RUDEX";
         selectedAsset = "PPY";
     }
+    if (!selectedAsset) {
+        selectedAsset = selectedGateway;
+        selectedGateway = undefined;
+    }
     return {selectedGateway, selectedAsset};
 }
 

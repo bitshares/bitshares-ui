@@ -6,6 +6,9 @@ import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import {Popover} from "bitshares-ui-style-guide";
 import {ChainStore, FetchChainObjects} from "bitsharesjs";
+import GatewayStore from "../../stores/GatewayStore";
+import {getAssetAndGateway} from "../../lib/common/gatewayUtils";
+import {Icon, Tooltip} from "bitshares-ui-style-guide";
 
 class AssetName extends React.Component {
     static propTypes = {
@@ -215,8 +218,74 @@ AssetName = AssetWrapper(AssetName);
 
 export default class AssetNameWrapper extends React.Component {
     render() {
+        const gatewaySplit = getAssetAndGateway(this.props.name);
+        let postfix = undefined;
+        if (!!gatewaySplit && !!gatewaySplit.selectedGateway) {
+            const onChainConfig = GatewayStore.getOnChainConfig(
+                getAssetAndGateway(this.props.name).selectedGateway
+            );
+            const isDisabledGatewayAsset =
+                !!onChainConfig && !onChainConfig.enabled;
+
+            postfix = isDisabledGatewayAsset && (
+                <Tooltip
+                    placement="topLeft"
+                    title={
+                        <React.Fragment>
+                            <span>
+                                This asset is managed by an external service
+                                provider (gateway). Currently deposits and
+                                withdrawals for this asset are <b>disabled</b>.{" "}
+                                {onChainConfig.comment}
+                            </span>
+                            <br />
+                            <br />
+                            For more information visit Settings -> Entry
+                            External Service Providers. For any issues or
+                            questions please contact the gateway operator
+                            directly.
+                        </React.Fragment>
+                    }
+                >
+                    &nbsp;
+                    <Icon style={{color: "white"}} type="warning" />
+                </Tooltip>
+            );
+        }
+        let warning = undefined;
+        const globalOnChainConfig = GatewayStore.getGlobalOnChainConfig();
+        if (
+            !!globalOnChainConfig &&
+            !!globalOnChainConfig.blacklists &&
+            !!globalOnChainConfig.blacklists.assets
+        ) {
+            if (
+                globalOnChainConfig.blacklists.assets.includes(this.props.name)
+            ) {
+                warning = (
+                    <Tooltip
+                        placement="topLeft"
+                        title={
+                            <React.Fragment>
+                                <span>
+                                    This asset is blacklisted, beware of scam
+                                    attempts!
+                                </span>
+                            </React.Fragment>
+                        }
+                    >
+                        &nbsp;
+                        <Icon style={{color: "white"}} type="warning" />
+                    </Tooltip>
+                );
+            }
+        }
         return !this.props.name ? null : (
-            <AssetName {...this.props} asset={this.props.name} />
+            <React.Fragment>
+                <AssetName {...this.props} asset={this.props.name} />
+                {postfix}
+                {warning}
+            </React.Fragment>
         );
     }
 }

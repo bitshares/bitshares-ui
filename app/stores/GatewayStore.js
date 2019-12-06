@@ -22,8 +22,20 @@ class GatewayStore {
     }
 
     static getOnChainConfig(gatewayKey) {
+        if (!gatewayKey) {
+            return {};
+        }
         // call another static method with this
-        return this.getState().onChainGatewayConfig[gatewayKey];
+        const onChainConfig = this.getState().onChainGatewayConfig;
+
+        if (!onChainConfig.gateways) return undefined;
+
+        return onChainConfig.gateways[gatewayKey];
+    }
+
+    static getGlobalOnChainConfig() {
+        // call another static method with this
+        return this.getState().onChainGatewayConfig;
     }
 
     constructor() {
@@ -141,7 +153,6 @@ class GatewayStore {
     }
 
     onLoadOnChainGatewayConfig(config) {
-        console.log(config);
         this.onChainGatewayConfig = config || {};
     }
 }
