@@ -471,7 +471,19 @@ class CreateAccountPassword extends React.Component {
                     </section>
                     <br />
                     <section>
-                        <GoogleReCaptchaProvider reCaptchaKey="6LeNLMYUAAAAAHxbrXvi7SM5jIf3QgSUTM78kjjr">
+                        <div>
+                            This site is protected by reCAPTCHA and Google.
+                            <br></br>
+                            <a href="https://policies.google.com/privacy">
+                                Privacy Policy
+                            </a>{" "}
+                            and
+                            <a href="https://policies.google.com/terms">
+                                Terms of Service
+                            </a>{" "}
+                            apply.
+                        </div>
+                        <GoogleReCaptchaProvider reCaptchaKey="6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5">
                             <GoogleReCaptcha
                                 onVerify={this._onInput.bind(this, "recaptcha")}
                             />

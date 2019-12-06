@@ -11,3 +11,7 @@
 @import "themes/all";
 
 @import "shame";
+
+.grecaptcha-badge {
+    visibility: hidden !important;
+}
