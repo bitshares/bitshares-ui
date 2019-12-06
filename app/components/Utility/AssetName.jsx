@@ -260,6 +260,7 @@ export default class AssetNameWrapper extends React.Component {
             !!globalOnChainConfig.blacklists.assets
         ) {
             if (
+                globalOnChainConfig.blacklists.assets.includes &&
                 globalOnChainConfig.blacklists.assets.includes(this.props.name)
             ) {
                 warning = (
