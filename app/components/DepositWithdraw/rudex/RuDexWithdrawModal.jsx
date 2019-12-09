@@ -873,20 +873,4 @@ class RuDexWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(
-    connect(
-        RuDexWithdrawModal,
-        {
-            listenTo() {
-                return [SettingsStore];
-            },
-            getProps(props) {
-                return {
-                    fee_asset_symbol: SettingsStore.getState().settings.get(
-                        "fee_asset"
-                    )
-                };
-            }
-        }
-    )
-);
+export default BindToChainState(RuDexWithdrawModal);

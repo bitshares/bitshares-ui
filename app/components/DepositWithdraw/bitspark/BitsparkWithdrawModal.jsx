@@ -866,20 +866,4 @@ class BitsparkWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(
-    connect(
-        BitsparkWithdrawModal,
-        {
-            listenTo() {
-                return [SettingsStore];
-            },
-            getProps(props) {
-                return {
-                    fee_asset_symbol: SettingsStore.getState().settings.get(
-                        "fee_asset"
-                    )
-                };
-            }
-        }
-    )
-);
+export default BindToChainState(BitsparkWithdrawModal);
