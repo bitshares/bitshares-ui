@@ -121,7 +121,7 @@ export const settingsAPIs = {
             location: {translate: "settings.api_closest"}
         },
         {
-            url: "wss://api.tusc.network:8091",
+            url: "wss://api.tusc.network:8443",
             location: "Virginia",
             region: "Northern America",
             country: "U.S.A."
@@ -129,7 +129,7 @@ export const settingsAPIs = {
             //contact: "telegram:mtopenledger"
         },
         {
-            url: "wss://test2.api.tusc.network:8091",
+            url: "wss://test2.api.tusc.network:8443",
             location: "Virginia",
             region: "TESTNET - Northern America",
             country: "U.S.A."
@@ -139,7 +139,7 @@ export const settingsAPIs = {
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "wss://test2.api.tusc.network:8091",
+            url: "wss://test2.api.tusc.network:8443",
             location: "Virginia",
             region: "TESTNET - Northern America",
             country: "U.S.A."
