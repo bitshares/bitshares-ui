@@ -49,6 +49,15 @@ export function getFaucet() {
     };
 }
 
+export function getTestFaucet() {
+    // fixme should be solved by introducing _isTestnet into getFaucet and fixing the mess in the Settings when fetching faucet address
+    return {
+        url: "https://faucet.testnet.bitshares.eu", // operated as a contribution by BitShares EU
+        show: true,
+        editable: false
+    };
+}
+
 /**
  * Logo that is used throughout the UI
  * @returns {*}

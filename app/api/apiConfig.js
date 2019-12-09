@@ -1,4 +1,4 @@
-import {getFaucet} from "../branding";
+import {getFaucet, getTestFaucet} from "../branding";
 
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
@@ -416,5 +416,5 @@ export const settingsAPIs = {
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
-    TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu"
+    TESTNET_FAUCET: getTestFaucet().url
 };
