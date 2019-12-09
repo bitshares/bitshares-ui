@@ -10,13 +10,13 @@ import {Apis} from "bitsharesjs-ws";
  * @private
  */
 function _isTestnet() {
-    const chainId = (Apis.instance().chain_id || "4018d784").substr(0, 8);
-    if (chainId === "4018d784") {
-        return false;
-    } else {
-        // treat every other chain as testnet, exact would be chainId === "39f5e2ed"
-        return true;
-    }
+    const testnet =
+        "39f5e2ede1f8bc1a3a54a7914414e3779e33193f1f5693510e73cb7a87617447"; // just for the record
+    const mainnet =
+        "4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8";
+
+    // treat every other chain as testnet
+    return Apis.instance().chain_id !== mainnet;
 }
 
 /**
@@ -83,9 +83,15 @@ export function getDefaultLogin() {
 export function getUnits() {
     if (_isTestnet()) {
         return ["TEST"];
-    } else {
-        return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
     }
+    return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
+}
+
+export function getDefaultMarket() {
+    if (_isTestnet()) {
+        return "USD_TEST";
+    }
+    return "USD_BTS";
 }
 
 /**
@@ -93,8 +99,10 @@ export function getUnits() {
  *
  * @returns {[string]}
  */
-
 export function getMyMarketsBases() {
+    if (_isTestnet()) {
+        return ["TEST"];
+    }
     return ["BTS", "BTC", "ETH", "USD", "CNY"];
 }
 
@@ -104,6 +112,9 @@ export function getMyMarketsBases() {
  * @returns {[string]}
  */
 export function getMyMarketsQuotes() {
+    if (_isTestnet()) {
+        return ["TEST"];
+    }
     let tokens = {
         nativeTokens: [
             "BTC",
@@ -239,6 +250,9 @@ export function getMyMarketsQuotes() {
  * @returns {list of string tuples}
  */
 export function getFeaturedMarkets(quotes = []) {
+    if (_isTestnet()) {
+        return [["USD", "TEST"]];
+    }
     return [
         ["USD", "BTS"],
         ["USD", "OPEN.BTC"],
@@ -341,6 +355,9 @@ export function getFeaturedMarkets(quotes = []) {
  * @returns {[string,string,string,string,string,string,string]}
  */
 export function getAssetNamespaces() {
+    if (_isTestnet()) {
+        return [];
+    }
     return [
         "OPEN.",
         "RUDEX.",
