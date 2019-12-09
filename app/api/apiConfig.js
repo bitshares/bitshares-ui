@@ -350,30 +350,6 @@ export const settingsAPIs = {
             operator: "CITADEL",
             contact: "email:citadel.li;support"
         },
-        {
-            url: "wss://eu-central-1.bts.crypto-bridge.org",
-            region: "Western Europe",
-            country: "Netherlands",
-            location: "Amsterdam",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://ap-northeast-1.bts.crypto-bridge.org",
-            region: "Eastern Asia",
-            country: "Japan",
-            location: "Tokyo",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://ap-southeast-3.bts.crypto-bridge.org",
-            region: "Southeastern Asia",
-            country: "Singapore",
-            location: "Singapore",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
 
         // Testnet
         {
