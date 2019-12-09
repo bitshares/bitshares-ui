@@ -1239,6 +1239,7 @@
         "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
         "purchase_notice": "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
         "purchase_notice_memo": "Memo <b>required</b> for proper routing to your account",
+        "purchase_notice_tag": "Tag <b>required</b> for proper routing to your account",
         "receive_account": "Receiving account:",
         "recent_deposit": "Recent deposits",
         "recent_withdraw": "Recent withdrawals",
