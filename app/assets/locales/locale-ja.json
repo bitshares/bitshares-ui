@@ -900,8 +900,8 @@
             "title": "ブロックチェーン",
             "transactions": "トランザクション数",
             "trx": "トランザクション",
-            "trx_per_block": "Trx/block",
-            "trx_per_sec": "Trx/s"
+            "trx_per_block": "Tx/block",
+            "trx_per_sec": "Tx/s"
         },
         "committee_member": {
             "title": "委員"

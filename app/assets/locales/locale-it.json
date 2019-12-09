@@ -900,8 +900,8 @@
             "title": "Blockchain",
             "transactions": "# di transazioni",
             "trx": "Transazioni",
-            "trx_per_block": "Trx/blocco",
-            "trx_per_sec": "Trx/s"
+            "trx_per_block": "Tx/blocco",
+            "trx_per_sec": "Tx/s"
         },
         "committee_member": {
             "title": "Membro del comitato"

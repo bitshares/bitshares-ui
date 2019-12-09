@@ -196,31 +196,31 @@ export default class DropDownMenu extends React.Component {
                         disabled: !showAccountLinks,
                         mainText: "header.payments",
                         mainCallback: this.props.showSend,
-                        subText: "header.payments_legacy",
+                        // subText: "header.payments_legacy",
                         subURL: "/transfer"
-                    },
-                    {
-                        icon: {
-                            name: "deposit",
-                            title: "icons.deposit.deposit"
-                        },
-                        disabled: !enableDepositWithdraw,
-                        mainText: "modal.deposit.submit",
-                        mainCallback: this.props.showDeposit,
-                        subText: "header.deposit_legacy",
-                        subURL: "/deposit-withdraw"
-                    },
-                    {
-                        icon: {
-                            name: "withdraw",
-                            title: "icons.withdraw"
-                        },
-                        disabled: !enableDepositWithdraw,
-                        mainText: "modal.withdraw.submit",
-                        mainCallback: this.props.showWithdraw,
-                        subText: "header.withdraw_legacy",
-                        subURL: "/deposit-withdraw"
                     }
+                    // {
+                    //     icon: {
+                    //         name: "deposit",
+                    //         title: "icons.deposit.deposit"
+                    //     },
+                    //     disabled: !enableDepositWithdraw,
+                    //     mainText: "modal.deposit.submit",
+                    //     mainCallback: this.props.showDeposit,
+                    //     subText: "header.deposit_legacy",
+                    //     subURL: "/deposit-withdraw"
+                    // },
+                    // {
+                    //     icon: {
+                    //         name: "withdraw",
+                    //         title: "icons.withdraw"
+                    //     },
+                    //     disabled: !enableDepositWithdraw,
+                    //     mainText: "modal.withdraw.submit",
+                    //     mainCallback: this.props.showWithdraw,
+                    //     subText: "header.withdraw_legacy",
+                    //     subURL: "/deposit-withdraw"
+                    // }
                 ].map(
                     (
                         {

@@ -686,14 +686,6 @@ class Footer extends React.Component {
                         </a>
                     </div>
                 </div>
-                <div
-                    className="introjs-launcher show-for-small-only"
-                    onClick={() => {
-                        this.launchIntroJS();
-                    }}
-                >
-                    <Translate content="global.help" />
-                </div>
                 <ReportModal
                     showModal={this._showReportModal}
                     hideModal={this._hideReportModal}
