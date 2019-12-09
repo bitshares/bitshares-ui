@@ -571,9 +571,7 @@ class WalletUnlockModal extends React.Component {
                             />
 
                             <Form.Item
-                                label={counterpart.translate(
-                                    "settings.password"
-                                )}
+                                label={"Private Key"}
                                 validateStatus={passwordError ? "error" : ""}
                                 help={passwordError || ""}
                             >
@@ -644,11 +642,8 @@ class WalletUnlockModal extends React.Component {
                                     </div>
                                 )}
                             </div>
-
                             <Form.Item
-                                label={counterpart.translate(
-                                    "wallet.enter_password"
-                                )}
+                                label={"Private Key"}
                                 validateStatus={
                                     errorMessage ? "error" : "success"
                                 }
@@ -657,9 +652,6 @@ class WalletUnlockModal extends React.Component {
                                 <Input
                                     type="password"
                                     value={this.state.password}
-                                    placeholder={counterpart.translate(
-                                        "wallet.enter_password"
-                                    )}
                                     onChange={this.handlePasswordChange}
                                     onPressEnter={this.handleLogin}
                                     ref={input => {

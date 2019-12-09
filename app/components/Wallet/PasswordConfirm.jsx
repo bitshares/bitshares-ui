@@ -70,7 +70,7 @@ export default class PasswordConfirm extends Component {
             <div className={cname({"has-error": errors.size})}>
                 <FormItem
                     label={counterpart.translate(
-                        newPassword ? "wallet.new_password" : "wallet.password"
+                        newPassword ? "Private Key" : "Private Key"
                     )}
                 >
                     <section>

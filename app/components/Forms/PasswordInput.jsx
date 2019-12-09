@@ -181,7 +181,7 @@ class PasswordInput extends Component {
                                 "left-label " + (this.props.labelClass || "")
                             }
                         >
-                            <Translate content="wallet.enter_password" />
+                            {"Private Key"}
                         </label>
                         <div className="generated-password-section">
                             <input
@@ -217,8 +217,8 @@ class PasswordInput extends Component {
                                     score === 5
                                         ? "high"
                                         : score === 4
-                                            ? "medium"
-                                            : "low"
+                                        ? "medium"
+                                        : "low"
                                 }
                                 value={score}
                                 max="5"
@@ -233,7 +233,7 @@ class PasswordInput extends Component {
                     <div className={password_confirmation_class_name}>
                         {/* {noLabel ? null : <Translate component="label" content="wallet.confirm" />} */}
                         <label className="left-label">
-                            <Translate content="wallet.confirm_password" />
+                            {"Confirm Key/Password"}
                         </label>
                         <section
                             style={{position: "relative", maxWidth: "30rem"}}

@@ -221,13 +221,12 @@ class AccountLogin extends React.Component {
 
         return (
             <Form.Item
-                label={"Password"}
+                label={"Private Key"}
                 help={getHelp()}
                 validateStatus={getValidateStatus()}
             >
                 <Input
                     ref={"password"}
-                    placeholder={counterpart.translate("wallet.enter_password")}
                     style={{width: "100%"}}
                     value={this.state.password}
                     onChange={this.handlePasswordChange}

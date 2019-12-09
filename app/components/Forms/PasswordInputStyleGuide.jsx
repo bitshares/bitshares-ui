@@ -224,10 +224,7 @@ class PasswordInput extends Component {
 
         return [
             <Form.Item
-                label={
-                    this.props.label ||
-                    counterpart.translate("wallet.enter_password")
-                }
+                label={"Private Key"}
                 key="password-field"
                 help={getPasswordHelp()}
                 validateStatus={getPasswordValidateStatus()}
@@ -238,7 +235,6 @@ class PasswordInput extends Component {
                     onFocus={this.handlePasswordFocus}
                     type={visible ? "text" : "password"}
                     name="password"
-                    placeholder={counterpart.translate("wallet.enter_password")}
                     ref="password"
                     onChange={this.handlePasswordChange}
                     onKeyDown={this.onKeyDown}
@@ -248,7 +244,7 @@ class PasswordInput extends Component {
                 <Progress percent={score * 20} showInfo={false} />
             </Form.Item>,
             <Form.Item
-                label={counterpart.translate("wallet.confirm")}
+                label={"Confirm Private Key/Password"}
                 key="confirm-password-field"
                 help={getConfirmPasswordHelp()}
                 validateStatus={getConfirmPasswordValidateStatus()}
@@ -259,7 +255,6 @@ class PasswordInput extends Component {
                     onFocus={this.handleConfirmPasswordFocus}
                     type={visible ? "text" : "password"}
                     name="confirmPassword"
-                    placeholder={counterpart.translate("wallet.enter_password")}
                     ref="confirmPassword"
                     onChange={this.handleConfirmPasswordChange}
                     onKeyDown={this.onKeyDown}
