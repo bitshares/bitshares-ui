@@ -136,6 +136,7 @@ export function getMyMarketsQuotes() {
             "SILVER",
             "USD"
         ],
+        iobankerTokens: ["IOB.XRP"],
         bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
         gdexTokens: [
             "GDEX.BTC",
@@ -264,6 +265,8 @@ export function getFeaturedMarkets(quotes = []) {
     }
     return [
         ["USD", "BTS"],
+        ["IOB.XRP", "BTS"],
+        ["BTS", "IOB.XRP"],
         ["USD", "OPEN.BTC"],
         ["USD", "OPEN.USDT"],
         ["USD", "OPEN.ETH"],
@@ -368,6 +371,7 @@ export function getAssetNamespaces() {
         return [];
     }
     return [
+        "IOB.",
         "OPEN.",
         "RUDEX.",
         "BRIDGE.",
@@ -394,6 +398,7 @@ export function getAssetHideNamespaces() {
  */
 export function allowedGateway(gateway) {
     const allowedGateways = [
+        "IOB",
         "TRADE",
         "OPEN",
         "RUDEX",
