@@ -19,57 +19,6 @@ const onGatewayTimeout = (dispatch, gateway) => {
 
 class GatewayActions {
     fetchCoins({
-	backer = "IOB",
-	url = undefined,
-	urlBridge = undefined,
-	urlWallets = undefined
-	} = {}) {
-	if (!inProgress["fetchCoins_" + backer]) {
-		inProgress["fetchCoins_" + backer] = true;
-		return dispatch => {
-			let fetchCoinsTimeout = setTimeout(
-				onGatewayTimeout.bind(null, dispatch, backer),
-				GATEWAY_TIMEOUT
-			);
-			Promise.all([
-				fetchCoins(url),
-				fetchTradingPairs(urlBridge),
-				getActiveWallets(urlWallets)
-			])
-			.then(result => {
-				clearTimeout(fetchCoinsTimeout);
-				delete inProgress["fetchCoins_" + backer];
-				let [coins, tradingPairs, wallets] = result;
-				let backedCoins = getBackedCoins({
-					allCoins: coins,
-					tradingPairs: tradingPairs,
-					backer: backer
-				}).filter(a => !!a.walletType);
-				backedCoins.forEach(a => {
-					a.isAvailable =
-						wallets.indexOf(a.walletType) !== -1;
-				});
-				dispatch({
-					coins,
-					backedCoins,
-					backer
-				});
-			})
-			.catch(() => {
-				clearTimeout(fetchCoinsTimeout);
-				delete inProgress["fetchCoins_" + backer];
-				dispatch({
-					coins: [],
-					backedCoins: [],
-					backer
-				});
-			});
-		};
-	} else {
-		return {};
-	}
-}
-    fetchCoins({
         backer = "OPEN",
         url = undefined,
         urlBridge = undefined,
