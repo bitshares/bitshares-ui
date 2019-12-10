@@ -19,6 +19,7 @@
  * [Trading](dex/trading.md)
  * [Short Selling BitAssets](dex/shorting.md)
  * [Gateways](gateways/introduction.md)
+    * [ioBanker](gateways/iobanker.md)
     * [Citadel](gateways/citadel.md)
     * [OpenLedger](gateways/openledger.md)
     * [Rudex](gateways/rudex.md)
