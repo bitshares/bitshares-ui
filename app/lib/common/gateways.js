@@ -4,6 +4,7 @@
  */
 
 import {
+    iobankerAPIs,
     rudexAPIs,
     bitsparkAPIs,
     openledgerAPIs,
@@ -86,6 +87,22 @@ const _isEnabled = gatewayKey => {
 };
 
 export const availableGateways = {
+    IOB: {
+	id: "IOB",
+	name: "ioBanker",
+	baseAPI: iobankerAPIs,
+	isEnabled: allowedGateway("IOB"),
+	isSimple: true,
+	selected: false,
+	simpleAssetGateway: false,
+	addressValidatorMethod: "POST",
+	options: {
+		enabled: false,
+		selected: false
+	},
+    landing: "https://iobanker.com",
+    wallet: "https://dex.iobanker.com/"
+},
     OPEN: {
         id: "OPEN",
         name: "OpenLedger",
