@@ -74,10 +74,25 @@ class AccountMembership extends React.Component {
 
         let network_fee = account.network_fee_percentage / 100;
         let lifetime_fee = account.lifetime_referrer_fee_percentage / 100;
-        let referrer_total_fee = 100 - network_fee - lifetime_fee;
+
+        let marketing_partner_fee =
+            account.marketing_partner_fee_percentage / 100;
+        let charity_fee = account.charity_fee_percentage / 100;
+        let referrer_total_fee =
+            100 -
+            network_fee -
+            lifetime_fee -
+            marketing_partner_fee -
+            charity_fee;
         let referrer_fee =
             (referrer_total_fee * account.referrer_rewards_percentage) / 10000;
-        let registrar_fee = 100 - referrer_fee - lifetime_fee - network_fee;
+        let registrar_fee =
+            100 -
+            referrer_fee -
+            lifetime_fee -
+            network_fee -
+            marketing_partner_fee -
+            charity_fee;
 
         let lifetime_cost =
             (gprops.getIn([
@@ -200,6 +215,25 @@ class AccountMembership extends React.Component {
                                                             </td>
                                                             <td>
                                                                 {network_fee}%
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <Translate content="account.member.marketing_partner_percentage" />
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    marketing_partner_fee
+                                                                }
+                                                                %
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <Translate content="account.member.charity_percentage" />
+                                                            </td>
+                                                            <td>
+                                                                {charity_fee}%
                                                             </td>
                                                         </tr>
                                                         <tr>

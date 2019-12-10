@@ -127,19 +127,20 @@ export const settingsAPIs = {
             country: "U.S.A."
             //operator: "Witness: openledger-dc",
             //contact: "telegram:mtopenledger"
-        },
-        {
-            url: "wss://test2.api.tusc.network:8443",
-            location: "Virginia",
-            region: "TESTNET - Northern America",
-            country: "U.S.A."
-            //operator: "Witness: openledger-dc",
-            //contact: "telegram:mtopenledger"
         }
+        // , Commented until we get faucet for testnet working properly through gui wallet
+        // {
+        //     url: "wss://testnet.api.tusc.network:8443",
+        //     location: "Virginia",
+        //     region: "TESTNET - Northern America",
+        //     country: "U.S.A."
+        //     //operator: "Witness: openledger-dc",
+        //     //contact: "telegram:mtopenledger"
+        // }
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "wss://test2.api.tusc.network:8443",
+            url: "wss://api.tusc.network:8443",
             location: "Virginia",
             region: "TESTNET - Northern America",
             country: "U.S.A."

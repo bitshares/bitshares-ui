@@ -88,6 +88,8 @@
             "membership": "Membership",
             "membership_expiration": "Membership Expiration",
             "network_percentage": "Network",
+            "marketing_partner_percentage": "Marketing Partner",
+            "charity_percentage": "Charity",
             "referral_link": "Your referral link",
             "referral_text": "Give this to link to people you want to refer to %(wallet_name)s",
             "referrals": "Referrals",
