@@ -863,20 +863,20 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 }
 
-export default BindToChainState(
-    connect(
-        WithdrawModalBlocktrades,
-        {
-            listenTo() {
-                return [SettingsStore];
-            },
-            getProps(props) {
-                return {
-                    fee_asset_symbol: SettingsStore.getState().settings.get(
-                        "fee_asset"
-                    )
-                };
-            }
+WithdrawModalBlocktrades = BindToChainState(WithdrawModalBlocktrades);
+
+export default connect(
+    WithdrawModalBlocktrades,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps(props) {
+            return {
+                fee_asset_symbol: SettingsStore.getState().settings.get(
+                    "fee_asset"
+                )
+            };
         }
-    )
+    }
 );

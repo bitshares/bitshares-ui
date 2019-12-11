@@ -864,20 +864,20 @@ class WithdrawModalCitadel extends React.Component {
     }
 }
 
-export default BindToChainState(
-    connect(
-        WithdrawModalCitadel,
-        {
-            listenTo() {
-                return [SettingsStore];
-            },
-            getProps(props) {
-                return {
-                    fee_asset_symbol: SettingsStore.getState().settings.get(
-                        "fee_asset"
-                    )
-                };
-            }
+WithdrawModalCitadel = BindToChainState(WithdrawModalCitadel);
+
+export default connect(
+    WithdrawModalCitadel,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps(props) {
+            return {
+                fee_asset_symbol: SettingsStore.getState().settings.get(
+                    "fee_asset"
+                )
+            };
         }
-    )
+    }
 );
