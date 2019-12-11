@@ -1,7 +1,5 @@
 import React from "react";
-import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import PasswordInput from "../Forms/PasswordInput";
 import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";

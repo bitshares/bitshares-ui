@@ -28,7 +28,7 @@ class GatewayStore {
         // call another static method with this
         const onChainConfig = this.getState().onChainGatewayConfig;
 
-        if (!onChainConfig.gateways) return undefined;
+        if (!onChainConfig || !onChainConfig.gateways) return undefined;
 
         return onChainConfig.gateways[gatewayKey];
     }

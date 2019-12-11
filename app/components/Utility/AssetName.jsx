@@ -44,7 +44,11 @@ class AssetName extends React.Component {
 
     _load() {
         // cache asset issuer name
-        if (!this.state.assetIssuerName) {
+        if (
+            !this.state.assetIssuerName &&
+            this.props.asset &&
+            this.props.asset.get
+        ) {
             FetchChainObjects(ChainStore.getAccountName, [
                 this.props.asset.get("issuer")
             ]).then(result => {
@@ -226,8 +230,6 @@ export default class AssetNameWrapper extends React.Component {
             );
             const isDisabledGatewayAsset =
                 !!onChainConfig && !onChainConfig.enabled;
-            console.log("asdasd");
-            let cc = counterpart;
             postfix = isDisabledGatewayAsset && (
                 <Tooltip
                     placement="topLeft"

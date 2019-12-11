@@ -33,7 +33,7 @@ import DividerMenuItem from "./DividerMenuItem";
 import MenuItemType from "./MenuItemType";
 import MenuDataStructure from "./MenuDataStructure";
 
-import {getLogo} from "branding";
+import {getDefaultMarket, getLogo} from "branding";
 var logo = getLogo();
 
 // const FlagImage = ({flag, width = 20, height = 20}) => {
@@ -412,7 +412,7 @@ class Header extends React.Component {
 
         let tradeUrl = this.props.lastMarket
             ? `/market/${this.props.lastMarket}`
-            : "/market/USD_BTS";
+            : "/market/" + getDefaultMarket();
 
         // Account selector: Only active inside the exchange
         let account_display_name, accountsList;
