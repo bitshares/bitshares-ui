@@ -122,6 +122,10 @@ class AccountStore extends BaseStore {
             ss.set("referralAccount", referralAccount);
         }
 
+        if (!referralAccount && !!prevRef) {
+            referralAccount = prevRef;
+        }
+
         if (referralAccount) console.log("referralAccount", referralAccount);
         return referralAccount;
     }

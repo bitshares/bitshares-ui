@@ -59,7 +59,7 @@ export default function SearchInput({
 
 SearchInput.propTypes = {
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string, // can be undefined when no user input is present
     placeholder: PropTypes.string,
     style: PropTypes.object,
     className: PropTypes.string,

@@ -18,7 +18,7 @@
  * [Decentralized Exchange](dex/introduction.md)
  * [Trading](dex/trading.md)
  * [Short Selling BitAssets](dex/shorting.md)
- * Gateways
+ * [Gateways](gateways/introduction.md)
     * [Citadel](gateways/citadel.md)
     * [OpenLedger](gateways/openledger.md)
     * [Rudex](gateways/rudex.md)

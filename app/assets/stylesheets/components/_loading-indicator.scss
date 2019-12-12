@@ -30,6 +30,19 @@
     bottom: 0;
 }
 
+.loading-panel--child {
+    width: 340px;
+    height: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    padding-top: 110px;
+    top: 40%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .splash .loading-panel {
     left: -380px;
 }

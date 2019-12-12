@@ -111,11 +111,13 @@ class WorkerList extends React.Component {
                 dataIndex: "description",
                 align: "left",
                 sorter: (a, b) => {
-                    return a.description.name > b.description.name
-                        ? 1
-                        : a.description.name < b.description.name
-                            ? -1
-                            : 0;
+                    if (a.description.name > b.description.name) {
+                        return 1;
+                    }
+                    if (a.description.name < b.description.name) {
+                        return -1;
+                    }
+                    return 0;
                 },
                 render: item => {
                     return (
@@ -170,7 +172,9 @@ class WorkerList extends React.Component {
                 ),
                 dataIndex: "total_votes",
                 align: "right",
-                sorter: (a, b) => a.total_votes - b.total_votes,
+                sorter: (a, b) => {
+                    return a.total_votes - b.total_votes;
+                },
                 render: item => {
                     return (
                         <FormattedAsset
@@ -193,7 +197,9 @@ class WorkerList extends React.Component {
                       ),
                       dataIndex: "missing",
                       align: "right",
-                      sorter: (a, b) => a.missing - b.missing,
+                      sorter: (a, b) => {
+                          return a.missing - b.missing;
+                      },
                       render: item => {
                           return (
                               <span
@@ -222,8 +228,12 @@ class WorkerList extends React.Component {
                 ),
                 dataIndex: "period",
                 align: "right",
-                sorter: (a, b) =>
-                    new Date(a.period.startDate) - new Date(b.period.startDate),
+                sorter: (a, b) => {
+                    return (
+                        new Date(a.period.startDate) -
+                        new Date(b.period.startDate)
+                    );
+                },
                 render: item => {
                     return (
                         <span style={{whiteSpace: "nowrap"}}>
@@ -329,7 +339,9 @@ class WorkerList extends React.Component {
                 ),
                 dataIndex: "daily_pay",
                 align: "right",
-                sorter: (a, b) => a.daily_pay.daily_pay - b.daily_pay.daily_pay,
+                sorter: (a, b) => {
+                    return a.daily_pay.daily_pay - b.daily_pay.daily_pay;
+                },
                 render: item => {
                     return (
                         <span
@@ -489,10 +501,6 @@ class WorkerList extends React.Component {
         let remainingDailyPayout = maxDailyPayout;
         let voteThreshold = undefined;
         let mapped = workers
-            .filter(a => {
-                const name = a.get("name").toLowerCase();
-                return a && name.indexOf(filterSearch) !== -1;
-            })
             .sort((a, b) => {
                 // first sort by votes so payout order is correct
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -522,6 +530,10 @@ class WorkerList extends React.Component {
                     worker.remainingPayout = 0;
                 }
                 return worker;
+            })
+            .filter(a => {
+                const name = a.get("name").toLowerCase();
+                return a && name.indexOf(filterSearch) !== -1;
             })
             .sort((a, b) => {
                 // sort out expired
@@ -669,13 +681,15 @@ class WorkerList extends React.Component {
                 };
             });
         // fixme: don't call setState in render
-        setWorkersLength(
-            newWorkers.length,
-            activeWorkers.length,
-            polls.length,
-            expiredWorkers.length,
-            voteThreshold
-        );
+        setTimeout(() => {
+            setWorkersLength(
+                newWorkers.length,
+                activeWorkers.length,
+                polls.length,
+                expiredWorkers.length,
+                voteThreshold
+            );
+        }, 250);
         const workers =
             workerTableIndex === 0
                 ? newWorkers

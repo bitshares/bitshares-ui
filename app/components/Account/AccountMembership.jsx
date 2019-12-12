@@ -12,40 +12,25 @@ import accountUtils from "common/account_utils";
 import {Tabs, Tab} from "../Utility/Tabs";
 import {getWalletName} from "branding";
 import {getWalletURL} from "../../branding";
-
-class FeeHelp extends React.Component {
-    static propTypes = {
-        dprops: ChainTypes.ChainObject.isRequired
-    };
-    static defaultProps = {
-        dprops: "2.1.0"
-    };
-
-    render() {
-        let {dprops} = this.props;
-
-        return (
-            <HelpContent
-                {...this.props}
-                path="components/AccountMembership"
-                section="fee-division"
-                nextMaintenanceTime={{
-                    time: dprops.get("next_maintenance_time")
-                }}
-            />
-        );
-    }
-}
-FeeHelp = BindToChainState(FeeHelp);
+import {Button} from "bitshares-ui-style-guide";
+import AccountReferralsTable from "./AccountReferralsTable";
+import {settingsAPIs} from "../../api/apiConfig";
 
 class AccountMembership extends React.Component {
+    constructor(prop) {
+        super(prop);
+    }
+
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         gprops: ChainTypes.ChainObject.isRequired,
+        dprops: ChainTypes.ChainObject.isRequired,
         core_asset: ChainTypes.ChainAsset.isRequired
     };
+
     static defaultProps = {
         gprops: "2.0.0",
+        dprops: "2.1.0",
         core_asset: "1.3.0"
     };
 
@@ -58,8 +43,14 @@ class AccountMembership extends React.Component {
         accountUtils.getFinalFeeAsset(this.props.account, "account_upgrade");
     }
 
+    componentWillReceiveProps(np) {
+        if (np.account !== this.props.account) {
+            this.setState({referralsIndex: []});
+        }
+    }
+
     render() {
-        let {gprops, core_asset} = this.props;
+        let {gprops, dprops, core_asset} = this.props;
 
         let account = this.props.account.toJS();
 
@@ -125,207 +116,362 @@ class AccountMembership extends React.Component {
                                     <Translate content={membership} />{" "}
                                     {expiration}
                                 </h3>
-                                {member_status === "lifetime" ? null : (
-                                    <div>
-                                        <div className="large-6 medium-8">
-                                            <HelpContent
-                                                path="components/AccountMembership"
-                                                section="lifetime"
-                                                feesCashback={100 - network_fee}
-                                                price={{
-                                                    amount: lifetime_cost,
-                                                    asset: core_asset
-                                                }}
-                                            />
-                                            <div
-                                                className="button no-margin"
-                                                onClick={this.upgradeAccount.bind(
-                                                    this,
-                                                    account.id,
-                                                    true
-                                                )}
-                                            >
-                                                <Translate content="account.member.upgrade_lifetime" />
-                                            </div>{" "}
-                                            &nbsp; &nbsp;
-                                            {true ||
-                                            member_status ===
-                                                "annual" ? null : (
-                                                <div
-                                                    className="button"
-                                                    onClick={this.upgradeAccount.bind(
-                                                        this,
-                                                        account.id,
-                                                        false
-                                                    )}
-                                                >
-                                                    <Translate content="account.member.subscribe" />
-                                                </div>
-                                            )}
-                                        </div>
-                                        <br />
-                                        <hr />
-                                    </div>
-                                )}
 
                                 <div className="content-block no-margin">
                                     <div className="no-margin grid-block vertical large-horizontal">
-                                        <div className="no-margin grid-block large-5">
+                                        <div className="grid-block large-12">
                                             <div className="grid-content">
-                                                {member_status ===
-                                                "lifetime" ? (
-                                                    <div>
-                                                        <h4>
-                                                            <Translate content="account.member.referral_link" />
-                                                        </h4>
-                                                        <Translate
-                                                            content="account.member.referral_text"
-                                                            wallet_name={getWalletName()}
-                                                        />
-                                                        :
-                                                        <h5>
-                                                            {getWalletURL() +
-                                                                `/?r=${
-                                                                    account.name
-                                                                }`}
-                                                        </h5>
-                                                    </div>
-                                                ) : null}
-                                                <h4>
-                                                    <Translate content="account.member.fee_allocation" />
-                                                </h4>
-                                                <table className="table key-value-table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <Translate content="account.member.network_percentage" />
-                                                            </td>
-                                                            <td>
-                                                                {network_fee}%
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Translate content="account.member.lifetime_referrer" />{" "}
-                                                                &nbsp; (
-                                                                <Link
-                                                                    to={`/account/${
-                                                                        account.lifetime_referrer_name
-                                                                    }`}
-                                                                >
-                                                                    {
-                                                                        account.lifetime_referrer_name
+                                                <div className="grid-content">
+                                                    <div className="grid-block">
+                                                        {member_status ===
+                                                        "lifetime" ? (
+                                                            <div
+                                                                className="small-12 large-6"
+                                                                style={{
+                                                                    paddingRight: 10
+                                                                }}
+                                                            >
+                                                                <div className="asset-card">
+                                                                    <div className="card-divider">
+                                                                        <Translate content="account.member.lifetime_title" />
+                                                                    </div>
+                                                                    <Translate
+                                                                        component="p"
+                                                                        content="account.member.referral_info"
+                                                                        feesCashback={
+                                                                            100 -
+                                                                            network_fee
+                                                                        }
+                                                                    />
+                                                                    <Translate
+                                                                        component="h4"
+                                                                        content="account.member.referral_link"
+                                                                    />
+                                                                    <Translate
+                                                                        component="p"
+                                                                        content="account.member.referral_text"
+                                                                        wallet_name={getWalletName()}
+                                                                    />
+                                                                    <h5>
+                                                                        {getWalletURL() +
+                                                                            `/?r=${
+                                                                                account.name
+                                                                            }`}
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div
+                                                                className="small-12 large-6"
+                                                                style={{
+                                                                    paddingRight:
+                                                                        "10px !important"
+                                                                }}
+                                                            >
+                                                                <HelpContent
+                                                                    path="components/AccountMembership"
+                                                                    section="lifetime"
+                                                                    feesCashback={
+                                                                        100 -
+                                                                        network_fee
                                                                     }
-                                                                </Link>
-                                                                )
-                                                            </td>
-                                                            <td>
-                                                                {lifetime_fee}%
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Translate content="account.member.registrar" />{" "}
-                                                                &nbsp; (
-                                                                <Link
-                                                                    to={`/account/${
-                                                                        account.registrar_name
-                                                                    }`}
+                                                                    price={{
+                                                                        amount: lifetime_cost,
+                                                                        asset: core_asset
+                                                                    }}
+                                                                />
+                                                                <br />
+                                                                <Button
+                                                                    type="primary"
+                                                                    onClick={this.upgradeAccount.bind(
+                                                                        this,
+                                                                        account.id,
+                                                                        true
+                                                                    )}
                                                                 >
-                                                                    {
-                                                                        account.registrar_name
-                                                                    }
-                                                                </Link>
-                                                                )
-                                                            </td>
-                                                            <td>
-                                                                {registrar_fee}%
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Translate content="account.member.referrer" />{" "}
-                                                                &nbsp; (
-                                                                <Link
-                                                                    to={`/account/${
-                                                                        account.referrer_name
-                                                                    }`}
-                                                                >
-                                                                    {
-                                                                        account.referrer_name
-                                                                    }
-                                                                </Link>
-                                                                )
-                                                            </td>
-                                                            <td>
-                                                                {referrer_fee}%
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <Translate content="account.member.membership_expiration" />{" "}
-                                                            </td>
-                                                            <td>
-                                                                {
-                                                                    expiration_date
-                                                                }
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                                    <Translate content="account.member.upgrade_lifetime" />
+                                                                </Button>{" "}
+                                                                &nbsp; &nbsp;
+                                                                {true ||
+                                                                member_status ===
+                                                                    "annual" ? null : (
+                                                                    <Button
+                                                                        type="primary"
+                                                                        onClick={this.upgradeAccount.bind(
+                                                                            this,
+                                                                            account.id,
+                                                                            false
+                                                                        )}
+                                                                    >
+                                                                        <Translate content="account.member.subscribe" />
+                                                                    </Button>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                        <div className="small-12 large-6">
+                                                            <div className="asset-card">
+                                                                <div className="card-divider">
+                                                                    <Translate content="account.member.fee_allocation" />
+                                                                </div>
 
-                                                <h4
-                                                    style={{paddingTop: "1rem"}}
-                                                >
-                                                    <Translate content="account.member.fees_cashback" />
-                                                </h4>
-                                                <table className="table key-value-table">
-                                                    <Statistics
-                                                        stat_object={
-                                                            account.statistics
-                                                        }
-                                                    />
-                                                </table>
+                                                                <table className="table key-value-table">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <Translate content="account.member.network_percentage" />
+                                                                            </td>
+                                                                            <td>
+                                                                                {
+                                                                                    network_fee
+                                                                                }
+
+                                                                                %
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <Translate content="account.member.lifetime_referrer" />{" "}
+                                                                                &nbsp;
+                                                                                (
+                                                                                <Link
+                                                                                    to={`/account/${
+                                                                                        account.lifetime_referrer_name
+                                                                                    }`}
+                                                                                >
+                                                                                    {
+                                                                                        account.lifetime_referrer_name
+                                                                                    }
+                                                                                </Link>
+
+                                                                                )
+                                                                            </td>
+                                                                            <td>
+                                                                                {
+                                                                                    lifetime_fee
+                                                                                }
+
+                                                                                %
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <Translate content="account.member.registrar" />{" "}
+                                                                                &nbsp;
+                                                                                (
+                                                                                <Link
+                                                                                    to={`/account/${
+                                                                                        account.registrar_name
+                                                                                    }`}
+                                                                                >
+                                                                                    {
+                                                                                        account.registrar_name
+                                                                                    }
+                                                                                </Link>
+
+                                                                                )
+                                                                            </td>
+                                                                            <td>
+                                                                                {
+                                                                                    registrar_fee
+                                                                                }
+
+                                                                                %
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <Translate content="account.member.referrer" />{" "}
+                                                                                &nbsp;
+                                                                                (
+                                                                                <Link
+                                                                                    to={`/account/${
+                                                                                        account.referrer_name
+                                                                                    }`}
+                                                                                >
+                                                                                    {
+                                                                                        account.referrer_name
+                                                                                    }
+                                                                                </Link>
+
+                                                                                )
+                                                                            </td>
+                                                                            <td>
+                                                                                {
+                                                                                    referrer_fee
+                                                                                }
+
+                                                                                %
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <Translate content="account.member.membership_expiration" />{" "}
+                                                                            </td>
+                                                                            <td>
+                                                                                {
+                                                                                    expiration_date
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                            <div className="asset-card">
+                                                                <div className="card-divider">
+                                                                    <Translate content="account.member.fees_cashback" />
+                                                                </div>
+                                                                <table className="table key-value-table">
+                                                                    <Statistics
+                                                                        stat_object={
+                                                                            account.statistics
+                                                                        }
+                                                                    />
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="grid-block large-7">
+                                        <div className="grid-block large-12">
                                             <div className="grid-content">
-                                                <FeeHelp
-                                                    account={account_name}
-                                                    networkFee={network_fee}
-                                                    referrerFee={referrer_fee}
-                                                    registrarFee={registrar_fee}
-                                                    lifetimeFee={lifetime_fee}
-                                                    referrerTotalFee={
-                                                        referrer_total_fee
-                                                    }
-                                                    maintenanceInterval={gprops.getIn(
-                                                        [
-                                                            "parameters",
-                                                            "maintenance_interval"
-                                                        ]
-                                                    )}
-                                                    vestingThreshold={{
-                                                        amount: gprops.getIn([
-                                                            "parameters",
-                                                            "cashback_vesting_threshold"
-                                                        ]),
-                                                        asset: core_asset
-                                                    }}
-                                                    vestingPeriod={
-                                                        gprops.getIn([
-                                                            "parameters",
-                                                            "cashback_vesting_period_seconds"
-                                                        ]) /
-                                                        60 /
-                                                        60 /
-                                                        24
-                                                    }
-                                                />
+                                                <div className="grid-content">
+                                                    <div className="grid-block">
+                                                        <div className="small-12 large-6">
+                                                            <div className="asset-card">
+                                                                <div className="card-divider">
+                                                                    <Translate content="account.member.fee_pending" />
+                                                                </div>
+                                                                <Translate
+                                                                    component="p"
+                                                                    content="account.member.fee_pending_text"
+                                                                    account={
+                                                                        account_name
+                                                                    }
+                                                                    maintenanceInterval={gprops.getIn(
+                                                                        [
+                                                                            "parameters",
+                                                                            "maintenance_interval"
+                                                                        ]
+                                                                    )}
+                                                                    nextMaintenanceTime={dprops.get(
+                                                                        "next_maintenance_time"
+                                                                    )}
+                                                                />
+                                                            </div>
+                                                            <div className="asset-card">
+                                                                <div className="card-divider">
+                                                                    <Translate content="account.member.fee_vesting" />
+                                                                </div>
+                                                                <Translate
+                                                                    component="p"
+                                                                    content="account.member.fee_vesting_text"
+                                                                    account={
+                                                                        account_name
+                                                                    }
+                                                                    vestingThresholdAmount={
+                                                                        gprops.getIn(
+                                                                            [
+                                                                                "parameters",
+                                                                                "cashback_vesting_threshold"
+                                                                            ]
+                                                                        ) /
+                                                                        Math.pow(
+                                                                            10,
+                                                                            core_asset.get(
+                                                                                "precision"
+                                                                            )
+                                                                        )
+                                                                    }
+                                                                    vestingThresholdAsset={core_asset.get(
+                                                                        "symbol"
+                                                                    )}
+                                                                    vestingPeriod={
+                                                                        gprops.getIn(
+                                                                            [
+                                                                                "parameters",
+                                                                                "cashback_vesting_period_seconds"
+                                                                            ]
+                                                                        ) /
+                                                                        60 /
+                                                                        60 /
+                                                                        24
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="small-12 large-6">
+                                                            <div className="asset-card">
+                                                                <div className="card-divider">
+                                                                    <Translate content="account.member.fee_division" />
+                                                                </div>
+                                                                <Translate
+                                                                    component="p"
+                                                                    content="account.member.fee_division_text.paragraph_1"
+                                                                    account={
+                                                                        account_name
+                                                                    }
+                                                                    fee_share_network={
+                                                                        network_fee
+                                                                    }
+                                                                    fee_share_ltm={
+                                                                        lifetime_fee
+                                                                    }
+                                                                    fee_share_affiliate={
+                                                                        referrer_fee
+                                                                    }
+                                                                    fee_share_registrar={
+                                                                        registrar_fee
+                                                                    }
+                                                                />
+                                                                <Translate
+                                                                    component="p"
+                                                                    content="account.member.fee_division_text.paragraph_2"
+                                                                    account={
+                                                                        account_name
+                                                                    }
+                                                                    fee_share_network={
+                                                                        network_fee
+                                                                    }
+                                                                    fee_share_ltm={
+                                                                        lifetime_fee
+                                                                    }
+                                                                    fee_share_affiliate={
+                                                                        referrer_fee
+                                                                    }
+                                                                    fee_share_registrar={
+                                                                        registrar_fee
+                                                                    }
+                                                                />
+
+                                                                <Link
+                                                                    to={`/account/${account_name}/vesting`}
+                                                                >
+                                                                    <Translate
+                                                                        component="p"
+                                                                        content="account.member.fee_division_text.paragraph_3"
+                                                                    />
+                                                                </Link>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                {member_status == "lifetime" &&
+                                settingsAPIs.ES_WRAPPER_LIST.length > 0 ? ( // fixme access to ES could be wrapped in a store or something else
+                                    <div className="asset-card">
+                                        <div className="card-divider">
+                                            <Translate content="account.member.ref_distribution" />
+                                        </div>
+                                        <AccountReferralsTable
+                                            account={account_name}
+                                        />
+                                    </div>
+                                ) : null}
                             </Tab>
                         </Tabs>
                     </div>

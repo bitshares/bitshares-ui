@@ -13,18 +13,14 @@ import {
     Alert
 } from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
+import FeeAssetSelector from "components/Utility/FeeAssetSelector";
 import counterpart from "counterpart";
 import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
 import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
-import {
-    checkFeeStatusAsync,
-    checkBalance,
-    shouldPayFeeWithAssetAsync,
-    estimateFeeAsync
-} from "common/trxHelper";
+import {checkBalance} from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import ApplicationApi from "../../api/ApplicationApi";
 import {map} from "lodash-es";
@@ -47,12 +43,9 @@ export default class Barter extends Component {
                     from_amount: "",
                     from_asset_id: null,
                     from_asset: null,
-                    from_feeAmount: new Asset({amount: 0}),
-                    from_feeAsset: null,
-                    from_fee_asset_id: null,
+                    from_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     from_hasPoolBalance: null,
-                    from_balanceError: false,
-                    memo: ""
+                    from_balanceError: false
                 }
             ],
             to_barter: [
@@ -61,12 +54,9 @@ export default class Barter extends Component {
                     to_amount: "",
                     to_asset_id: null,
                     to_asset: null,
-                    to_feeAmount: new Asset({amount: 0}),
-                    to_feeAsset: null,
-                    to_fee_asset_id: null,
+                    to_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     to_hasPoolBalance: null,
-                    to_balanceError: false,
-                    memo: ""
+                    to_balanceError: false
                 }
             ],
             amount_counter: [],
@@ -78,13 +68,17 @@ export default class Barter extends Component {
                 to_barter: [{message: "", shown: false}],
                 escrow: [{message: "", shown: false}]
             },
-            proposal_fee: 0,
+            proposal_fee: {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
             showEscrow: false,
             escrow_account_name: "",
             escrow_account: null,
             send_to_escrow: false,
             escrow_payment: 0,
             escrow_payment_changed: false,
+            escrowFeeAssetId: "1.3.0",
             balanceWarning: {peer1: [], peer2: []}
         };
         this._checkBalance = this._checkBalance.bind(this);
@@ -94,17 +88,6 @@ export default class Barter extends Component {
     componentWillMount() {
         let currentAccount = AccountStore.getState().currentAccount;
         if (!this.state.from_name) this.setState({from_name: currentAccount});
-        estimateFeeAsync("proposal_create").then(fee => {
-            this.setState({
-                proposal_fee: new Asset({amount: fee}).getAmount({real: true})
-            });
-        });
-        // for peer 1 and peer 2 there is also calculation of memo cost (no memo set atm)
-        estimateFeeAsync("transfer").then(fee => {
-            this.setState({
-                transfer_fee: new Asset({amount: fee}).getAmount({real: true})
-            });
-        });
     }
 
     fromChanged(from_name) {
@@ -123,9 +106,7 @@ export default class Barter extends Component {
                     from_amount: "",
                     from_asset_id: null,
                     from_asset: null,
-                    from_feeAmount: new Asset({amount: 0}),
-                    from_feeAsset: null,
-                    from_fee_asset_id: null,
+                    from_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     from_hasPoolBalance: null,
                     from_balanceError: false
                 }
@@ -151,9 +132,7 @@ export default class Barter extends Component {
                     to_amount: "",
                     to_asset_id: null,
                     to_asset: null,
-                    to_feeAmount: new Asset({amount: 0}),
-                    to_feeAsset: null,
-                    to_fee_asset_id: null,
+                    to_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"}),
                     to_hasPoolBalance: null,
                     to_balanceError: false
                 }
@@ -174,10 +153,8 @@ export default class Barter extends Component {
             from_amount: amount,
             from_asset: asset,
             from_asset_id: asset.get("id"),
-            from_feeAmount: new Asset({amount: 0}),
-            from_feeAsset: asset,
-            from_fee_asset_id: "1.3.0",
-            from_balanceError: false
+            from_balanceError: false,
+            from_feeAsset: from_barter[index].from_feeAsset
         };
 
         this.setState(
@@ -187,13 +164,13 @@ export default class Barter extends Component {
             },
             () => {
                 this._checkBalance(
-                    from_barter[index].from_feeAmount,
+                    from_barter[index].from_feeAsset,
                     amount,
                     this.state.from_account,
                     asset,
                     index,
                     true,
-                    from_barter[index].from_fee_asset_id,
+                    from_barter[index].from_feeAsset.asset_id,
                     from_barter
                 );
                 this.checkAmountsTotal();
@@ -214,9 +191,7 @@ export default class Barter extends Component {
             to_amount: amount,
             to_asset: asset,
             to_asset_id: asset.get("id"),
-            to_feeAmount: new Asset({amount: 0}),
-            to_feeAsset: asset,
-            to_fee_asset_id: "1.3.0",
+            to_feeAsset: to_barter[index].to_feeAsset,
             to_balanceError: false
         };
 
@@ -227,13 +202,13 @@ export default class Barter extends Component {
             },
             () => {
                 this._checkBalance(
-                    to_barter[index].to_feeAmount,
+                    to_barter[index].to_feeAsset,
                     amount,
                     this.state.to_account,
                     asset,
                     index,
                     false,
-                    to_barter[index].to_fee_asset_id,
+                    to_barter[index].to_feeAsset.asset_id,
                     to_barter
                 );
                 this.checkAmountsTotal();
@@ -252,14 +227,6 @@ export default class Barter extends Component {
         barter
     ) {
         if (!asset || !account) return;
-        this._updateFee(
-            fee_asset_id,
-            account,
-            asset.get("id"),
-            index,
-            from,
-            barter
-        );
         const balanceID = account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = account.getIn(["balances", feeAmount.asset_id]);
         if (!asset || !account) return;
@@ -277,31 +244,9 @@ export default class Barter extends Component {
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
             if (from) {
-                barter[index].from_fee_asset_id = "1.3.0";
-                this.setState(
-                    {from_barter: barter},
-                    this._updateFee(
-                        barter[index].from_fee_asset_id,
-                        account,
-                        asset.get("id"),
-                        index,
-                        from,
-                        barter
-                    )
-                );
+                this.setState({from_barter: barter});
             } else {
-                barter[index].to_fee_asset_id = "1.3.0";
-                this.setState(
-                    {to_barter: barter},
-                    this._updateFee(
-                        barter[index].to_fee_asset_id,
-                        account,
-                        asset.get("id"),
-                        index,
-                        from,
-                        barter
-                    )
-                );
+                this.setState({to_barter: barter});
             }
         }
         if (!balanceObject || !feeAmount) return;
@@ -328,76 +273,6 @@ export default class Barter extends Component {
             barter[index].to_balanceError = !hasBalance;
             return this.setState({to_barter: barter});
         }
-    }
-
-    _updateFee(fee_asset_id, account, asset_id, index, from, barter) {
-        const {
-            from_fee_asset_types,
-            to_fee_asset_types
-        } = this._getAvailableAssets(this.state);
-        const fee_asset_types = from
-            ? from_fee_asset_types
-            : to_fee_asset_types;
-        if (
-            fee_asset_types.length === 1 &&
-            fee_asset_types[0] !== fee_asset_id
-        ) {
-            fee_asset_id = fee_asset_types[0];
-        }
-        if (!account) return null;
-
-        let memo_state = this.state.memo[from ? "from_barter" : "to_barter"][
-            index
-        ];
-
-        let memo =
-            !!memo_state && memo_state.shown && memo_state.message !== ""
-                ? new Buffer(memo_state.message, "utf-8")
-                : "";
-
-        checkFeeStatusAsync({
-            accountID: account.get("id"),
-            feeID: fee_asset_id,
-            options: ["price_per_kbyte"],
-            data: {
-                type: "memo",
-                content: memo
-            }
-        })
-            .then(({fee, hasBalance, hasPoolBalance}) =>
-                shouldPayFeeWithAssetAsync(account, fee).then(should => {
-                    if (from) {
-                        if (should) {
-                            barter[index].from_fee_asset_id = asset_id;
-                            this.setState({from_barter: barter});
-                        } else {
-                            barter[index].from_feeAmount = fee;
-                            barter[index].from_fee_asset_id = fee.asset_id;
-                            barter[index].from_hasPoolBalance = hasPoolBalance;
-                            this.setState({
-                                from_barter: barter,
-                                from_error: !hasBalance || !hasPoolBalance
-                            });
-                        }
-                    } else {
-                        if (should) {
-                            barter[index].to_fee_asset_id = asset_id;
-                            this.setState({to_barter: barter});
-                        } else {
-                            barter[index].to_feeAmount = fee;
-                            barter[index].to_fee_asset_id = fee.asset_id;
-                            barter[index].to_hasPoolBalance = hasPoolBalance;
-                            this.setState({
-                                to_barter: barter,
-                                to_error: !hasBalance || !hasPoolBalance
-                            });
-                        }
-                    }
-                })
-            )
-            .catch(err => {
-                console.error(err);
-            });
     }
 
     _getAvailableAssets(state = this.state) {
@@ -442,9 +317,7 @@ export default class Barter extends Component {
             from_amount: "",
             from_asset_id: null,
             from_asset: null,
-            from_feeAmount: new Asset({amount: 0}),
-            from_feeAsset: null,
-            from_fee_asset_id: null
+            from_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"})
         });
         this.setState({from_barter: this.state.from_barter});
     }
@@ -454,9 +327,7 @@ export default class Barter extends Component {
             to_amount: "",
             to_asset_id: null,
             to_asset: null,
-            to_feeAmount: new Asset({amount: 0}),
-            to_feeAsset: null,
-            to_fee_asset_id: null
+            to_feeAsset: new Asset({amount: 0, asset_id: "1.3.0"})
         });
         this.setState({to_barter: this.state.to_barter});
     }
@@ -489,7 +360,7 @@ export default class Barter extends Component {
                     amount: escrow_payment,
                     asset: "1.3.0",
                     memo: escrowMemo ? new Buffer(escrowMemo, "utf-8") : null,
-                    feeAsset: "1.3.0",
+                    feeAsset: this.state.escrowFeeAssetId,
                     propose_account: proposer
                 });
             }
@@ -514,11 +385,9 @@ export default class Barter extends Component {
                     to_account: this.state.escrow_account.get("id"),
                     amount: sendAmount.getAmount(),
                     asset: asset.get("id"),
-                    memo: escrowMemo
-                        ? new Buffer(escrowMemo, "utf-8")
-                        : this.state.memo,
+                    memo: escrowMemo ? new Buffer(escrowMemo, "utf-8") : null,
                     feeAsset: item.from_feeAsset
-                        ? item.from_feeAsset.get("id")
+                        ? item.from_feeAsset.asset_id
                         : "1.3.0"
                 });
             }
@@ -532,7 +401,7 @@ export default class Barter extends Component {
                     ? new Buffer(fromBarterMemo, "utf-8")
                     : null,
                 feeAsset: item.from_feeAsset
-                    ? item.from_feeAsset.get("id")
+                    ? item.from_feeAsset.asset_id
                     : "1.3.0",
                 propose_account: proposer
             });
@@ -545,7 +414,7 @@ export default class Barter extends Component {
                 amount: 1,
                 asset: "1.3.0",
                 memo: null,
-                feeAsset: "1.3.0",
+                feeAsset: this.state.escrowFeeAssetId,
                 propose_account: proposer
             });
         }
@@ -568,13 +437,16 @@ export default class Barter extends Component {
                 asset: asset.get("id"),
                 memo: toBarterMemo ? new Buffer(toBarterMemo, "utf-8") : null,
                 feeAsset: item.to_feeAsset
-                    ? item.to_feeAsset.get("id")
+                    ? item.to_feeAsset.asset_id
                     : "1.3.0",
                 propose_account: proposer
             });
         });
 
-        ApplicationApi.transfer_list(transfer_list);
+        ApplicationApi.transfer_list(
+            transfer_list,
+            this.state.proposal_fee.asset_id
+        );
     }
 
     onTrxIncluded(confirm_store_state) {
@@ -582,7 +454,6 @@ export default class Barter extends Component {
             confirm_store_state.included &&
             confirm_store_state.broadcasted_transaction
         ) {
-            // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
         } else if (confirm_store_state.closed) {
@@ -594,37 +465,7 @@ export default class Barter extends Component {
     onMemoChanged = (type, index) => e => {
         const memos = Object.assign({}, this.state.memo);
         memos[type][index] = {message: e.target.value, shown: true};
-        if (type === "from_barter") {
-            let from_barter = this.state.from_barter;
-
-            this.setState(
-                {memo: memos},
-                this._updateFee(
-                    from_barter[index].from_fee_asset_id,
-                    this.state.from_account,
-                    from_barter[index].from_asset_id,
-                    index,
-                    true,
-                    from_barter
-                )
-            );
-        } else if (type === "to_barter") {
-            let to_barter = this.state.to_barter;
-
-            this.setState(
-                {memo: memos},
-                this._updateFee(
-                    to_barter[index].to_fee_asset_id,
-                    this.state.to_account,
-                    to_barter[index].to_asset_id,
-                    index,
-                    false,
-                    to_barter
-                )
-            );
-        } else {
-            this.setState({memo: memos});
-        }
+        this.setState({memo: memos});
     };
 
     renderMemoField(type, index) {
@@ -652,7 +493,7 @@ export default class Barter extends Component {
 
     handleMemoOpen = (type, index) => e => {
         const memos = Object.assign({}, this.state.memo);
-        memos[type][index] = {shown: true};
+        memos[type][index] = {message: "", shown: true};
         this.setState({memo: memos});
     };
 
@@ -874,6 +715,30 @@ export default class Barter extends Component {
         );
     }
 
+    onFeeChangedPeer1CreateProposal(asset) {
+        this.setState({proposal_fee: asset});
+    }
+
+    onFeeChangedPeer1InProposal(asset) {
+        let _barter = this.state.from_barter.map(item => {
+            item.to_feeAsset = asset;
+            return item;
+        });
+        this.setState({from_barter: _barter});
+    }
+
+    onFeeChangedPeer2InProposal(asset) {
+        let _barter = this.state.to_barter.map(item => {
+            item.to_feeAsset = asset;
+            return item;
+        });
+        this.setState({to_barter: _barter});
+    }
+
+    onEscrowFeeChanged(asset) {
+        this.setState({escrowFeeAssetId: asset.asset_id});
+    }
+
     render() {
         let {
             from_name,
@@ -920,15 +785,16 @@ export default class Barter extends Component {
         };
 
         const fee = from => {
+            console.log(from_barter);
             let fee = 0;
             if (from) {
                 fee = fee;
                 from_barter.forEach(item => {
-                    fee += item.from_feeAmount.getAmount({real: true});
+                    fee += item.from_feeAsset._real_amount;
                 });
             } else {
                 to_barter.forEach(item => {
-                    fee += item.to_feeAmount.getAmount({real: true});
+                    fee += item.to_feeAsset._real_amount;
                 });
             }
 
@@ -1340,15 +1206,6 @@ export default class Barter extends Component {
                 )}
             </Card>
         );
-        let addToExecutionFee = 0;
-        // this.state.showEscrow &&
-        // (this.state.escrow_payment_changed
-        //     ? new Asset({real: this.state.escrow_payment}).getAmount()
-        //     : fee(true)) > 0
-        //     ? this.state.from_barter[0].from_feeAmount.getAmount({
-        //           real: true
-        //       })
-        //     : 0;
 
         let totalFeeFrom = (
             <Card style={{borderRadius: "10px"}}>
@@ -1360,28 +1217,27 @@ export default class Barter extends Component {
                             : "showcases.barter.fee_when_proposal_executes_tooltip"
                     )}
                 >
-                    <div>
+                    <div className="barter-fee-selector">
                         {/*needed to render tooltip properly*/}
-                        <AmountSelector
+                        <FeeAssetSelector
                             label={
                                 this.state.send_to_escrow
                                     ? "showcases.barter.fee_due_now"
                                     : "showcases.barter.fee_when_proposal_executes"
                             }
-                            disabled={true}
-                            style={{
-                                marginTop: "0.5rem",
-                                marginBottom: "1rem"
+                            account={from_account}
+                            transaction={{
+                                type: "transfer",
+                                options: ["price_per_kbyte"],
+                                data: {
+                                    type: "memo",
+                                    content: null
+                                }
                             }}
-                            amount={fee(true) + addToExecutionFee}
-                            asset={"1.3.0"}
-                            assets={["1.3.0"]}
-                            error={
-                                this.state.hasPoolBalance === false
-                                    ? "transfer.errors.insufficient"
-                                    : null
-                            }
-                            scroll_length={2}
+                            onChange={this.onFeeChangedPeer1InProposal.bind(
+                                this
+                            )}
+                            multiplier={from_barter.length}
                         />
                     </div>
                 </Tooltip>
@@ -1390,23 +1246,22 @@ export default class Barter extends Component {
                         "showcases.barter.proposal_fee_tooltip"
                     )}
                 >
-                    <div>
+                    <div className="barter-fee-selector">
                         {/*needed to render tooltip properly*/}
-                        <AmountSelector
+                        <FeeAssetSelector
                             label="showcases.barter.proposal_fee"
-                            disabled={true}
-                            amount={this.state.proposal_fee}
-                            style={{
-                                marginBottom: "1rem"
+                            account={from_account}
+                            transaction={{
+                                type: "proposal_create",
+                                options: ["price_per_kbyte"],
+                                data: {
+                                    type: "memo",
+                                    content: null
+                                }
                             }}
-                            asset={"1.3.0"}
-                            assets={["1.3.0"]}
-                            error={
-                                this.state.hasPoolBalance === false
-                                    ? "transfer.errors.insufficient"
-                                    : null
-                            }
-                            scroll_length={2}
+                            onChange={this.onFeeChangedPeer1CreateProposal.bind(
+                                this
+                            )}
                         />
                     </div>
                 </Tooltip>
@@ -1420,7 +1275,9 @@ export default class Barter extends Component {
                             content={"showcases.barter.total_fees"}
                             className="left-label"
                             component="label"
-                            fee={fee(true) + this.state.proposal_fee}
+                            fee={
+                                fee(true) + this.state.proposal_fee._real_amount
+                            }
                             asset={"BTS"}
                         />
                     </span>
@@ -1436,23 +1293,23 @@ export default class Barter extends Component {
                         "showcases.barter.fee_when_proposal_executes_tooltip"
                     )}
                 >
-                    <div>
+                    <div className="barter-fee-selector">
                         {/*needed to render tooltip properly*/}
-                        <AmountSelector
+                        <FeeAssetSelector
                             label="showcases.barter.fee_when_proposal_executes"
-                            disabled={true}
-                            amount={fee(false)}
-                            style={{
-                                marginTop: "0.5rem"
+                            account={to_account}
+                            transaction={{
+                                type: "transfer",
+                                options: ["price_per_kbyte"],
+                                data: {
+                                    type: "memo",
+                                    content: null
+                                }
                             }}
-                            asset={"1.3.0"}
-                            assets={["1.3.0"]}
-                            error={
-                                this.state.hasPoolBalance === false
-                                    ? "transfer.errors.insufficient"
-                                    : null
-                            }
-                            scroll_length={2}
+                            onChange={this.onFeeChangedPeer2InProposal.bind(
+                                this
+                            )}
+                            multiplier={to_barter.length}
                         />
                     </div>
                 </Tooltip>
@@ -1469,23 +1326,21 @@ export default class Barter extends Component {
                             "showcases.barter.fee_when_proposal_executes_tooltip"
                         )}
                     >
-                        <div>
+                        <div className="barter-fee-selector">
                             {/*needed to render tooltip properly*/}
-                            <AmountSelector
+                            <FeeAssetSelector
                                 label="showcases.barter.fee_when_proposal_executes"
-                                disabled={false}
-                                amount={fee(true)}
-                                style={{
-                                    marginTop: "0.5rem"
+                                account={this.state.escrow_account}
+                                transaction={{
+                                    type: "transfer",
+                                    options: ["price_per_kbyte"],
+                                    data: {
+                                        type: "memo",
+                                        content: null
+                                    }
                                 }}
-                                asset={"1.3.0"}
-                                assets={["1.3.0"]}
-                                error={
-                                    this.state.hasPoolBalance === false
-                                        ? "transfer.errors.insufficient"
-                                        : null
-                                }
-                                scroll_length={2}
+                                onChange={this.onEscrowFeeChanged.bind(this)}
+                                multiplier={from_barter.length}
                             />
                         </div>
                     </Tooltip>

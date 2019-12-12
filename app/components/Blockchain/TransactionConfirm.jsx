@@ -18,7 +18,8 @@ import {
     Button,
     Icon as AIcon,
     Alert,
-    Switch
+    Switch,
+    Input
 } from "bitshares-ui-style-guide";
 
 class TransactionConfirm extends React.Component {
@@ -26,19 +27,28 @@ class TransactionConfirm extends React.Component {
         super(props);
 
         this.state = {
-            isModalVisible: false
+            isModalVisible: false,
+            isErrorDetailsVisible: false
         };
 
         this.onCloseClick = this.onCloseClick.bind(this);
 
         this.onConfirmClick = this.onConfirmClick.bind(this);
 
+        this.onShowDetailsClick = this.onShowDetailsClick.bind(this);
+
         this.onKeyUp = this.onKeyUp.bind(this);
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         if (!nextProps.transaction) {
             return false;
+        }
+
+        if (
+            nextState.isErrorDetailsVisible !== this.state.isErrorDetailsVisible
+        ) {
+            return true;
         }
 
         return !utils.are_equal_shallow(nextProps, this.props);
@@ -60,7 +70,8 @@ class TransactionConfirm extends React.Component {
 
     hideModal() {
         this.setState({
-            isModalVisible: false
+            isModalVisible: false,
+            isErrorDetailsVisible: false
         });
     }
 
@@ -95,7 +106,13 @@ class TransactionConfirm extends React.Component {
 
     onCloseClick(e) {
         e.preventDefault();
-        TransactionConfirmActions.close();
+        TransactionConfirmActions.close(this.props.reject);
+    }
+
+    onShowDetailsClick() {
+        this.setState(state => {
+            return {isErrorDetailsVisible: !state.isErrorDetailsVisible};
+        });
     }
 
     onProposeClick() {
@@ -148,12 +165,16 @@ class TransactionConfirm extends React.Component {
 
     render() {
         let {broadcast, broadcasting} = this.props;
+        let {isErrorDetailsVisible} = this.state;
         if (!this.props.transaction || this.props.closed) {
             return null;
         }
         let button_group,
             footer,
             header,
+            error_code,
+            error_data,
+            error_message,
             confirmButtonClass = "button";
         if (this.props.propose && !this.props.fee_paying_account)
             confirmButtonClass += " disabled";
@@ -164,6 +185,38 @@ class TransactionConfirm extends React.Component {
                       message: ""
                   })
                 : counterpart.translate("transaction.transaction_confirmed");
+
+            ({error: error_message, error_code, error_data} = this.props);
+
+            if (error_code) {
+                error_message = error_code + " - " + error_message;
+            }
+            if (error_data instanceof Object) {
+                error_data = JSON.stringify(error_data, null, 4);
+            }
+            error_data = (
+                <div>
+                    <pre>{error_data}</pre>
+                </div>
+            );
+            if (error_data) {
+                error_message = (
+                    <div>
+                        {error_message}
+                        <br />
+                        <a>
+                            <Translate
+                                onClick={this.onShowDetailsClick}
+                                content={
+                                    isErrorDetailsVisible
+                                        ? "transaction.hide"
+                                        : "transaction.show_more"
+                                }
+                            />
+                        </a>
+                    </div>
+                );
+            }
 
             footer = [
                 <Button key={"cancel"} onClick={this.onCloseClick}>
@@ -223,7 +276,7 @@ class TransactionConfirm extends React.Component {
                 >
                     <div className="grid-block vertical no-padding no-margin">
                         {this.props.error ? (
-                            <Alert type="error" message={this.props.error} />
+                            <Alert type="error" message={error_message} />
                         ) : null}
 
                         {this.props.included ? (
@@ -235,6 +288,14 @@ class TransactionConfirm extends React.Component {
                                 description={`#${this.props.trx_id}@${
                                     this.props.trx_block_num
                                 }`}
+                            />
+                        ) : null}
+
+                        {isErrorDetailsVisible ? (
+                            <Alert
+                                type="error"
+                                style={{fontSize: "0.7rem"}}
+                                message={error_data}
                             />
                         ) : null}
 

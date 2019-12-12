@@ -49,6 +49,7 @@ class JoinCommitteeModal extends React.Component {
     }
 
     onClose() {
+        this.props.hideModal();
         this.setState(this.getInitialState(this.props));
     }
 

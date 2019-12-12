@@ -1,12 +1,8 @@
 import alt from "alt-instance";
 import {Apis} from "bitsharesjs-ws";
-import utils from "common/utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import {ChainStore, hash, FetchChainObjects} from "bitsharesjs";
-import big from "bignumber.js";
-import {gatewayPrefixes} from "common/gateways";
-let inProgress = {};
 
 const calculateHash = (cipher, preimage) => {
     let preimage_hash_calculated = null;
@@ -56,8 +52,15 @@ class HtlcActions {
         preimage_cipher,
         preimage = null,
         preimage_hash = null,
-        preimage_size = null
+        preimage_size = null,
+        fee_asset = null
     }) {
+        if (!fee_asset) {
+            fee_asset = "1.3.0";
+        }
+        if (typeof fee_asset !== "string") {
+            fee_asset = fee_asset.get("id");
+        }
         const tr = WalletApi.new_transaction();
 
         let preimage_hash_cipher = getCipherInt(preimage_cipher);
@@ -77,7 +80,7 @@ class HtlcActions {
             to: to_account_id,
             fee: {
                 amount: 0,
-                asset_id: "1.3.0"
+                asset_id: fee_asset
             },
             amount: {
                 amount: amount,
@@ -164,35 +167,6 @@ class HtlcActions {
         const size = preimage_hash_calculated.length;
         let hash = new Buffer(preimage_hash_calculated).toString("hex");
         return {hash, size};
-    }
-
-    async getHTLCs(accountId) {
-        let htlcs = [];
-        for (let i = 1; i < 300; i = i + 10) {
-            let ids = [];
-            for (let j = i; j < i + 10; j++) {
-                ids.push("1.16." + j);
-            }
-            let map = {};
-            let objects = await FetchChainObjects(
-                ChainStore.getObject,
-                ids,
-                undefined,
-                map
-            );
-            objects.forEach(item => {
-                if (item) {
-                    item = item.toJS();
-                    if (
-                        item.transfer.to == accountId ||
-                        item.transfer.from == accountId
-                    ) {
-                        htlcs.push(item);
-                    }
-                }
-            });
-        }
-        return htlcs;
     }
 }
 

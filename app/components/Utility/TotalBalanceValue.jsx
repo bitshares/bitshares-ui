@@ -13,7 +13,6 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import MarketStatsCheck from "./MarketStatsCheck";
 import AssetWrapper from "./AssetWrapper";
-import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import {Tooltip} from "bitshares-ui-style-guide";
 
@@ -55,12 +54,6 @@ class TotalValue extends MarketStatsCheck {
             !utils.are_equal_shallow(np.collateral, this.props.collateral) ||
             !utils.are_equal_shallow(np.debt, this.props.debt)
         );
-    }
-
-    componentDidUpdate() {
-        if (this.props.inHeader) {
-            ReactTooltip.rebuild();
-        }
     }
 
     _convertValue(amount, fromAsset, toAsset, allMarketStats, coreAsset) {
@@ -316,7 +309,9 @@ TotalValue = AssetWrapper(TotalValue, {
 
 class ValueStoreWrapper extends React.Component {
     render() {
-        let preferredUnit = this.props.settings.get("unit") || "1.3.0";
+        let preferredUnit = !this.props.settings.get("unit")
+            ? "1.3.0"
+            : this.props.settings.get("unit");
 
         return <TotalValue {...this.props} toAsset={preferredUnit} />;
     }

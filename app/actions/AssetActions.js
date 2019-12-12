@@ -6,6 +6,7 @@ import WalletDb from "stores/WalletDb";
 import {ChainStore} from "bitsharesjs";
 import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
+import {price} from "bitsharesjs/es/serializer/src/operations";
 let inProgress = {};
 
 class AssetActions {
@@ -197,6 +198,33 @@ class AssetActions {
                 })
                 .catch(error => {
                     console.log("----- claimFees error ----->", error);
+                    dispatch(false);
+                });
+        };
+    }
+
+    assetGlobalSettle(asset, account_id, price) {
+        let tr = WalletApi.new_transaction();
+
+        tr.add_type_operation("asset_global_settle", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
+            issuer: account_id,
+            asset_to_settle: asset.id,
+            settle_price: price
+        });
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log(
+                        "[AssetActions.js:223] ----- assetGlobalSettle error ----->",
+                        error
+                    );
                     dispatch(false);
                 });
         };
@@ -464,6 +492,26 @@ class AssetActions {
                 console.log("----- updateAsset error ----->", error);
                 return false;
             });
+    }
+
+    async loadAssets() {
+        let start = "A";
+        const count = 10;
+
+        let assets = [];
+        let newAssets = null;
+        while (
+            assets.length == 0 ||
+            newAssets == null ||
+            newAssets.length > 0
+        ) {
+            newAssets = await Apis.instance()
+                .db_api()
+                .exec("list_assets", [start, count]);
+            assets = assets.concat(newAssets);
+            start = assets[assets.length - 1].symbol + ".";
+        }
+        console.log("Assets loaded: ", assets.length);
     }
 
     getAssetList(start, count, includeGateways = false) {

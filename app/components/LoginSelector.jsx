@@ -13,7 +13,7 @@ import IntlActions from "actions/IntlActions";
 import CreateAccount from "./Account/CreateAccount";
 import CreateAccountPassword from "./Account/CreateAccountPassword";
 import {Route} from "react-router-dom";
-import {getWalletName, getLogo} from "branding";
+import {getWalletName, getLogo, getAllowedLogins} from "branding";
 import {Select, Row, Col, Icon} from "bitshares-ui-style-guide";
 var logo = getLogo();
 
@@ -163,7 +163,11 @@ class LoginSelector extends React.Component {
                         <div className="grid-block account-login-options">
                             <Link
                                 id="account_login_button"
-                                to="/create-account/password"
+                                to={
+                                    getAllowedLogins().includes("password")
+                                        ? "/create-account/password"
+                                        : "/create-account/wallet"
+                                }
                                 className="button primary"
                                 data-intro={translator.translate(
                                     "walkthrough.create_cloud_wallet"
@@ -188,46 +192,51 @@ class LoginSelector extends React.Component {
                             </span>
                         </div>
 
-                        <div className="additional-account-options">
-                            <h5 style={{textAlign: "center"}}>
-                                <TranslateWithLinks
-                                    string="account.optional.formatter"
-                                    keys={[
-                                        {
-                                            type: "link",
-                                            value: "/wallet/backup/restore",
-                                            translation:
-                                                "account.optional.restore_link",
-                                            dataIntro: translator.translate(
-                                                "walkthrough.restore_account"
-                                            ),
-                                            arg: "restore_link"
-                                        },
-                                        {
-                                            type: "link",
-                                            value: "/create-account/wallet",
-                                            translation:
-                                                "account.optional.restore_form",
-                                            dataIntro: translator.translate(
-                                                "walkthrough.create_local_wallet"
-                                            ),
-                                            arg: "restore_form"
-                                        }
-                                    ]}
-                                />
-                            </h5>
-                        </div>
-
-                        <Route
-                            path="/create-account/wallet"
-                            exact
-                            component={CreateAccount}
-                        />
-                        <Route
-                            path="/create-account/password"
-                            exact
-                            component={CreateAccountPassword}
-                        />
+                        {getAllowedLogins().includes("wallet") && (
+                            <div className="additional-account-options">
+                                <h5 style={{textAlign: "center"}}>
+                                    <TranslateWithLinks
+                                        string="account.optional.formatter"
+                                        keys={[
+                                            {
+                                                type: "link",
+                                                value: "/wallet/backup/restore",
+                                                translation:
+                                                    "account.optional.restore_link",
+                                                dataIntro: translator.translate(
+                                                    "walkthrough.restore_account"
+                                                ),
+                                                arg: "restore_link"
+                                            },
+                                            {
+                                                type: "link",
+                                                value: "/create-account/wallet",
+                                                translation:
+                                                    "account.optional.restore_form",
+                                                dataIntro: translator.translate(
+                                                    "walkthrough.create_local_wallet"
+                                                ),
+                                                arg: "restore_form"
+                                            }
+                                        ]}
+                                    />
+                                </h5>
+                            </div>
+                        )}
+                        {getAllowedLogins().includes("wallet") && (
+                            <Route
+                                path="/create-account/wallet"
+                                exact
+                                component={CreateAccount}
+                            />
+                        )}
+                        {getAllowedLogins().includes("password") && (
+                            <Route
+                                path="/create-account/password"
+                                exact
+                                component={CreateAccountPassword}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

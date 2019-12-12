@@ -7,6 +7,29 @@ import MarketStatsCheck from "./MarketStatsCheck";
 import MarketsStore from "stores/MarketsStore";
 import MarketUtils from "common/market_utils";
 import AssetWrapper from "./AssetWrapper";
+import {ChainStore} from "bitsharesjs";
+
+const getFinalPrice = function(
+    fromAsset,
+    toAsset,
+    coreAsset = null,
+    allMarketStats = null,
+    real = false
+) {
+    try {
+        return MarketUtils.getFinalPrice(
+            coreAsset ? coreAsset : ChainStore.getAsset("1.3.0"),
+            fromAsset,
+            toAsset ? toAsset : ChainStore.getAsset("1.3.0"),
+            allMarketStats
+                ? allMarketStats
+                : MarketsStore.getState().allMarketStats,
+            real
+        );
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 class EquivalentPrice extends MarketStatsCheck {
     static defaultProps = {
@@ -24,21 +47,22 @@ class EquivalentPrice extends MarketStatsCheck {
         );
     }
 
-    getFinalPrice(real = false) {
-        const {coreAsset, fromAsset, toAsset, allMarketStats} = this.props;
-        return MarketUtils.getFinalPrice(
+    render() {
+        const {
             coreAsset,
             fromAsset,
             toAsset,
             allMarketStats,
-            real
+            forceDirection,
+            ...others
+        } = this.props;
+
+        const finalPrice = getFinalPrice(
+            toAsset,
+            fromAsset,
+            coreAsset,
+            allMarketStats
         );
-    }
-
-    render() {
-        const {toAsset, forceDirection, ...others} = this.props;
-
-        const finalPrice = this.getFinalPrice();
 
         if (finalPrice === 1) {
             return <span>1.00</span>;
@@ -92,3 +116,5 @@ export default class EquivalentPriceWrapper extends React.Component {
         );
     }
 }
+
+export {getFinalPrice};
