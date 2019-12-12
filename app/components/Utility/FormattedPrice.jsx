@@ -246,7 +246,7 @@ class FormattedPrice extends React.Component {
                     <Link
                         className="button"
                         to={{
-                            pathname: "/quick-trade",
+                            pathname: "/instant-trade",
                             state: {
                                 preselectedSellAssetId: quote_asset.get("id"),
                                 preselectedReceiveAssetId: base_asset.get("id")
