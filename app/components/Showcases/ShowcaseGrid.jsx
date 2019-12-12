@@ -139,7 +139,7 @@ class ShowcaseGrid extends Component {
             {
                 title: "showcases.instant_trade.title",
                 target: event => {
-                    thiz.props.history.push("/quick-trade");
+                    thiz.props.history.push("/instant-trade");
                 },
                 description: "showcases.instant_trade.description",
                 icon: "instant-trade",

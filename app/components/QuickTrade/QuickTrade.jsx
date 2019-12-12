@@ -113,7 +113,7 @@ class QuickTrade extends Component {
         if (!assetToReceive) {
             receiveRoute = "";
         }
-        let pathName = "/quick-trade/" + sellRoute + "_" + receiveRoute;
+        let pathName = "/instant-trade/" + sellRoute + "_" + receiveRoute;
         if (__DEV__) {
             console.log(
                 "_routeTo: ",
