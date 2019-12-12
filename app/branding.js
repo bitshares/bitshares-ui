@@ -374,7 +374,8 @@ export function getAssetNamespaces() {
         "GDEX.",
         "XBTSX.",
         "SPARKDEX.",
-        "CITADEL."
+        "CITADEL.",
+        "DEEX."
     ];
 }
 
@@ -401,7 +402,8 @@ export function allowedGateway(gateway) {
         "GDEX",
         "XBTSX",
         "SPARKDEX",
-        "CITADEL"
+        "CITADEL",
+        "DEEX"
     ];
     if (!gateway) {
         // answers the question: are any allowed?
