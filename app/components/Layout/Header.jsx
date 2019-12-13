@@ -717,28 +717,28 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("/whitelist") !== -1) {
-            dynamicMenuItem = (
-                <a
-                    style={{flexFlow: "row"}}
-                    className={cnames({
-                        active: active.indexOf("/whitelist") !== -1
-                    })}
-                >
-                    <Icon
-                        size="1_5x"
-                        style={{position: "relative", top: 0, left: -8}}
-                        name="list"
-                        title="icons.list"
-                    />
-                    <Translate
-                        className="column-hide-small"
-                        component="span"
-                        content="account.whitelist.title"
-                    />
-                </a>
-            );
-        }
+        // if (active.indexOf("/whitelist") !== -1) {
+        //     dynamicMenuItem = (
+        //         <a
+        //             style={{flexFlow: "row"}}
+        //             className={cnames({
+        //                 active: active.indexOf("/whitelist") !== -1
+        //             })}
+        //         >
+        //             <Icon
+        //                 size="1_5x"
+        //                 style={{position: "relative", top: 0, left: -8}}
+        //                 name="list"
+        //                 title="icons.list"
+        //             />
+        //             <Translate
+        //                 className="column-hide-small"
+        //                 component="span"
+        //                 content="account.whitelist.title"
+        //             />
+        //         </a>
+        //     );
+        // }
         if (active.indexOf("/permissions") !== -1) {
             dynamicMenuItem = (
                 <a

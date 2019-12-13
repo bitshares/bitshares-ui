@@ -29,9 +29,7 @@ class Settings extends React.Component {
 
         let general = [
             "locale",
-            "unit",
             "browser_notifications",
-            "showSettles",
             "walletLockTimeout",
             "themes",
             "showAssetPercent",
@@ -459,9 +457,7 @@ class Settings extends React.Component {
                                             paddingTop: 5,
                                             marginBottom: 30
                                         }}
-                                        content={`settings.${
-                                            menuEntries[activeSetting]
-                                        }_text`}
+                                        content={`settings.${menuEntries[activeSetting]}_text`}
                                         className="panel-bg-color"
                                     />
                                 )}

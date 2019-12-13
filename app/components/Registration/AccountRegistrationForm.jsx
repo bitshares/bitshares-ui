@@ -159,7 +159,9 @@ class AccountRegistrationForm extends React.Component {
                         noLabel
                     />
                     <Form.Item
-                        label={counterpart.translate("wallet.generated")}
+                        label={counterpart.translate(
+                            "wallet.generated_private"
+                        )}
                     >
                         <Input.TextArea
                             disabled={true}
