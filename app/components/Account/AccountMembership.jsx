@@ -73,23 +73,39 @@ class AccountMembership extends React.Component {
         let account_name = account.name;
 
         let network_fee = account.network_fee_percentage / 100;
+        let marketing_partner_fee =
+            account.marketing_partner_fee_percentage / 100;
+        let charity_fee = account.charity_fee_percentage / 100;
         let lifetime_fee = account.lifetime_referrer_fee_percentage / 100;
-        let referrer_total_fee = 100 - network_fee - lifetime_fee;
+        let referrer_total_fee =
+            100 -
+            network_fee -
+            lifetime_fee -
+            marketing_partner_fee -
+            charity_fee;
         let referrer_fee =
             (referrer_total_fee * account.referrer_rewards_percentage) / 10000;
-        let registrar_fee = 100 - referrer_fee - lifetime_fee - network_fee;
+        let registrar_fee =
+            100 -
+            referrer_fee -
+            lifetime_fee -
+            network_fee -
+            marketing_partner_fee -
+            lifetime_fee;
+
+        let lifetime_op = gprops.getIn([
+            "parameters",
+            "current_fees",
+            "parameters",
+            4,
+            1
+        ]);
+        lifetime_op = lifetime_op.toJS();
 
         let lifetime_cost =
-            (gprops.getIn([
-                "parameters",
-                "current_fees",
-                "parameters",
-                8,
-                1,
-                "membership_lifetime_fee"
-            ]) *
+            (lifetime_op.membership_lifetime_fee *
                 gprops.getIn(["parameters", "current_fees", "scale"])) /
-            10000;
+            1e9;
 
         let member_status = ChainStore.getAccountMemberStatus(
             this.props.account
@@ -131,11 +147,13 @@ class AccountMembership extends React.Component {
                                             <HelpContent
                                                 path="components/AccountMembership"
                                                 section="lifetime"
-                                                feesCashback={100 - network_fee}
-                                                price={{
-                                                    amount: lifetime_cost,
-                                                    asset: core_asset
-                                                }}
+                                                feesCashback={
+                                                    100 -
+                                                    network_fee -
+                                                    marketing_partner_fee -
+                                                    charity_fee
+                                                }
+                                                price={lifetime_cost}
                                             />
                                             <div
                                                 className="button no-margin"
@@ -200,6 +218,25 @@ class AccountMembership extends React.Component {
                                                             </td>
                                                             <td>
                                                                 {network_fee}%
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <Translate content="account.member.marketing_partner_percentage" />
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    marketing_partner_fee
+                                                                }
+                                                                %
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <Translate content="account.member.charity_percentage" />
+                                                            </td>
+                                                            <td>
+                                                                {charity_fee}%
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -285,6 +322,10 @@ class AccountMembership extends React.Component {
                                                 <FeeHelp
                                                     account={account_name}
                                                     networkFee={network_fee}
+                                                    marketingPartnerFee={
+                                                        marketing_partner_fee
+                                                    }
+                                                    charityFee={charity_fee}
                                                     referrerFee={referrer_fee}
                                                     registrarFee={registrar_fee}
                                                     lifetimeFee={lifetime_fee}
