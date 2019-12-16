@@ -80,6 +80,10 @@ class CreateAccountPassword extends React.Component {
 
         let faucetAddress = SettingsStore.getSetting("faucet_address");
 
+        if (this.props.connectedNode && isTestNet(this.props.connectedNode)) {
+            faucetAddress = "http://3.135.40.183";
+        }
+
         fetch(faucetAddress + "/tusc/api/wallet/suggest_brain_key", {
             method: "get",
             headers: {
@@ -229,6 +233,10 @@ class CreateAccountPassword extends React.Component {
         e.preventDefault();
         if (!this.isValid()) return;
         let faucetAddress = SettingsStore.getSetting("faucet_address");
+
+        if (this.props.connectedNode && isTestNet(this.props.connectedNode)) {
+            faucetAddress = "http://3.135.40.183";
+        }
 
         fetch(faucetAddress + "/tusc/api/wallet/register_account", {
             method: "post",
@@ -870,7 +878,11 @@ export default connect(
             return [AccountStore];
         },
         getProps() {
-            return {};
+            return {
+                connectedNode: SettingsStore.getState().settings.get(
+                    "activeNode"
+                )
+            };
         }
     }
 );
