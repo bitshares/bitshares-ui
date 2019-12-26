@@ -1,0 +1,644 @@
+// main colors
+
+$primary-background: #383838 !default;
+$primary-border-color: #535353 !default;
+$primary-background-active: $primary-border-color !default;
+
+$primary-text-color: #bababa !default;
+$primary-text-color-active: #059cce !default;
+
+$layout-top-button-border-color: $primary-border-color !default;
+
+$button-success-color: #fff !default;
+$button-success-border: $primary-text-color-active !default;
+$button-success-background: $primary-text-color-active !default;
+
+$button-default-color: $primary-text-color !default;
+$button-default-border: $primary-background-active !default;
+$button-default-background: $primary-background-active !default;
+
+$button-cancel-color: $primary-text-color !default;
+$button-cancel-border: $primary-background-active !default;
+$button-cancel-background: $primary-background-active !default;
+
+$primary-btn-color: $primary-text-color !default;
+$primary-btn-background: #262626 !default;
+$primary-btn-background-active: #2d2d2d !default;
+$primary-btn-border-active: $primary-background-active !default;
+
+$icon-light-color: $primary-text-color !default;
+$icon-light-color-active: $primary-text-color-active !default;
+
+
+body.chart-page, .loading-indicator {
+  background: $primary-background;
+}
+
+.chart-page .chart-container {
+  border: none;
+  background: $primary-background;
+}
+
+.header-chart-panel .group {
+  margin: 1px 0;
+}
+
+/*Header buttons background color */
+.header-chart-panel .button,
+.symbol-search-dialog .symbol-block input,
+input.symbol-edit,
+.favored-list-container span {
+  background: #9e9e9e21;
+  border: none;
+}
+
+.header-chart-panel .button.disabled {
+  background: #9e9e9e21;
+  border: none;
+  opacity: 50%;
+}
+
+/* Disabled features background color */
+.feature-no-touch .header-chart-panel .button.disabled:active,
+.feature-touch .header-chart-panel .button.disabled:active,
+.header-chart-panel .button.disabled,
+.header-chart-panel .button.disabled.active {
+  /*background: red;*/
+}
+
+/* Small close button */
+.tv-close-panel {
+  display: none;
+  z-index: 999;
+}
+
+.tv-close-panel.top {
+  bottom: -15px;
+  background: $primary-background;
+  border-color: $primary-background;
+  margin-left: -5px;
+  height: 8px;
+}
+
+.tv-close-panel.top:after {
+  display: block;
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 5px 4px 5px;
+  border-color: transparent transparent $icon-light-color transparent;
+  top: 2px;
+  left: 50%;
+  margin-left: -5px;
+}
+
+.favored-list-container span {
+  color: $icon-light-color;
+}
+
+//.header-chart-panel-content .group svg {
+//  fill: #bababa;
+//}
+
+//.header-chart-panel .button, .apply-common-tooltip {
+//  background-color: #262626 !important;
+//}
+
+//.header-chart-panel .intervals-container .interval-dialog-button {
+//  border-right-color: #383838;
+//}
+
+//.header-chart-panel .header-group-indicators .study-template-widget .submenu{
+//  border-left-color: #383838;
+//}
+
+.on-widget .getimage .icon {
+  fill: $icon-light-color !important;
+}
+
+.pane-legend {
+  margin-top: 12px;
+  margin-left: 12px;
+}
+
+.layout__area--top {
+  .header-chart-panel-sizer {
+    height: 42px !important;
+    .header-chart-panel-content {
+      padding: 5px !important;
+      background: $primary-background;
+
+      .button, .apply-common-tooltip {
+        border: 1px solid $layout-top-button-border-color !important;
+        background-color: $primary-btn-background;
+      }
+
+      // template button border
+      .favored-list-container .submenu {
+        border-color: $primary-background;
+      }
+
+    }
+  }
+
+  // header buttons
+  .apply-common-tooltip {
+    cursor: pointer;
+
+    color: $primary-btn-color !important;
+
+    svg {
+      fill: $primary-btn-color !important;
+    }
+
+    i {
+      background-color: $primary-btn-color !important;
+    }
+
+    &:hover {
+      background-color: $primary-btn-background-active;
+      &:before {
+        border-color: transparent !important;
+      }
+
+      color: $icon-light-color-active !important;
+
+      svg {
+        fill: $icon-light-color-active !important;
+      }
+
+      i {
+        background-color: $icon-light-color-active !important;
+      }
+    }
+  }
+
+  // study-template header button
+
+  .study-template-widget {
+    .apply-common-tooltip {
+      border: 0 !important;
+      margin-left: 1px;
+      .tv-caret {
+        margin-left: 7px;
+      }
+    }
+  }
+
+  // chart-style-widget header button
+
+  .chart-style-widget {
+    .apply-common-tooltip {
+      margin-left: 1px;
+      .tv-caret {
+        margin-left: 7px;
+      }
+    }
+  }
+
+  // header group intervals
+  .header-group-intervals {
+    margin-right: 2px;
+    .interval-dialog-button {
+      margin: 0 1px;
+      border-right: none !important;
+    }
+    .tv-caret {
+      margin-left: 7px;
+    }
+  }
+}
+
+// dropdown list styling when user click on some dropdown btn
+
+.charts-popup-list {
+  border: none;
+  background-color: $primary-background;
+
+  .special {
+    color: $primary-text-color-active !important;
+    background-color: $primary-background-active !important;
+  }
+
+  .item, span {
+    color: $primary-text-color !important;
+
+    //hover state
+    &:hover {
+      color: $primary-text-color-active !important;
+
+      background: $primary-background-active !important;
+
+      span {
+        color: $primary-text-color-active !important;
+      }
+    }
+
+    //active state
+    &.active {
+      color: $icon-light-color-active !important;
+
+      background-color: $primary-background-active;
+    }
+
+  }
+
+  .separator {
+    border-color: $primary-border-color;
+  }
+
+}
+
+/* buttons */
+
+.tv-button--default {
+  color: $button-default-color;
+  border-color: $button-default-border;
+  background-color: $button-default-background;
+  &:hover {
+    color: $button-default-color;
+    border-color: lighten($button-default-border, 20%) !important;
+    background-color: lighten($button-default-background, 20%) !important;
+  }
+}
+
+.tv-button--success {
+  color: $button-success-color;
+  border-color: $button-success-border;
+  background-color: $button-success-background;
+  &:hover {
+    color: $button-success-color;
+    border-color: lighten($button-success-border, 20%) !important;
+    background-color: lighten($button-success-background, 20%) !important;
+  }
+}
+
+/* dialogs */
+
+.tv-dialog {
+
+  background-color: $primary-background;
+
+  color: $primary-text-color;
+
+  .js-reset-button, .js-dialog__close {
+    svg {
+      fill: $primary-text-color;
+    }
+  }
+
+  .tv-dialog__title {
+    color: $primary-text-color
+  }
+
+  .tv-dialog__section--title {
+    border-color: $primary-border-color;
+  }
+
+  .tv-search-row {
+    border-color: $primary-border-color;
+    input {
+      background-color: $primary-background;
+      color: $primary-text-color;
+    }
+  }
+
+  .tv-insert-study-item {
+    &:hover {
+      color: $primary-text-color-active;
+      background-color: $primary-background-active;
+    }
+  }
+
+  .tv-text {
+    color: $primary-text-color;
+    p {
+      color: $primary-text-color;
+    }
+  }
+
+  // when user clicks on save template as
+  .tv-control-input {
+    color: $primary-text-color;
+    background-color: $primary-background;
+  }
+
+  .tv-dropdown__body {
+    background-color: $primary-background !important;
+  }
+
+  .tv-autocomplete__dropdown-item {
+    color: $primary-text-color;
+    background-color: $primary-background !important;
+    &:hover {
+      color: $primary-text-color-active;
+    }
+  }
+}
+
+._tv-dialog {
+  border-color: $primary-background-active;
+  background-color: $primary-background;
+
+  * {
+    color: $primary-text-color;
+  }
+
+  .tv-tabs {
+    &:before {
+      background-color: $primary-border-color;
+    }
+  }
+
+  input {
+    border-color: $primary-border-color !important;
+    background-color: $primary-background;
+
+    color: $primary-text-color !important;
+  }
+
+  a {
+    color: $primary-text-color !important;
+    &:hover {
+      color: $primary-text-color-active !important;
+    }
+  }
+
+  label {
+    color: $primary-text-color;
+  }
+
+  /* buttons */
+
+  .dialog-buttons {
+    ._tv-button.tv-left {
+      color: $button-default-color !important;
+      border-color: $button-default-border !important;
+      background-color: $button-default-background !important;
+      &:hover {
+        color: $button-default-color !important;
+        border-color: lighten($button-default-border, 20%) !important;
+        background-color: lighten($button-default-background, 20%) !important;
+      }
+    }
+    ._tv-button.ok {
+      color: $button-success-color !important;
+      border-color: $button-success-border !important;
+      background-color: $button-success-background !important;
+      &:hover {
+        color: $button-success-color !important;
+        border-color: lighten($button-success-border, 20%) !important;
+        background-color: lighten($button-success-background, 20%) !important;
+      }
+    }
+    ._tv-button.cancel {
+      color: $button-cancel-color !important;
+      border-color: $button-cancel-border !important;
+      background-color: $button-cancel-background !important;
+      &:hover {
+        color: $button-cancel-color !important;
+        border-color: lighten($button-cancel-border, 20%) !important;
+        background-color: lighten($button-cancel-background, 20%) !important;
+      }
+    }
+  }
+
+  /* select  */
+  .tv-select-container.dialog {
+    cursor: pointer;
+    background-color: $primary-background !important;
+    color: $primary-text-color !important;
+    border-color: $primary-border-color !important;
+
+    .sbOptions {
+      li, a {
+        background-color: $primary-background;
+        color: $primary-text-color;
+        &:hover {
+          background-color: $primary-background-active;
+          color: $primary-text-color-active;
+        }
+      }
+    }
+
+    .sbToggle, .sbSelector {
+      cursor: pointer;
+    }
+  }
+
+  /* input number */
+  .ticker.tv-text-input.inset.dialog {
+    background-color: $primary-background;
+    color: $primary-text-color;
+    border-color: $primary-border-color;
+  }
+  .tv-ticker {
+    background-color: $primary-background;
+    color: $primary-text-color;
+    .tv-ticker__btn {
+      svg {
+        fill: $primary-text-color;
+      }
+      background-color: $primary-background;
+      border-color: $primary-border-color;
+    }
+  }
+  /* end input number */
+
+  /* color picker */
+  .colorpicker-widget.tvcolorpicker-widget {
+    border-color: $primary-border-color !important;
+  }
+
+  /* custom-select (line selector) */
+  .custom-select {
+    .switcher {
+      cursor: pointer;
+      background-color: $primary-background !important;
+      border-color: $primary-border-color !important;
+      &:hover {
+        border-color: $primary-border-color !important;
+        &:before {
+          border-color: $primary-border-color !important;
+        }
+      }
+    }
+    .items {
+      background-color: $primary-background !important;
+      border-color: $primary-border-color !important;
+      .item {
+        background-color: $primary-background !important;
+        &.selected {
+          background-color: $primary-background-active !important;
+        }
+        &:hover {
+          background-color: $primary-background-active !important;
+        }
+      }
+    }
+  }
+
+  /* font-size selector */
+  .tv-select-container-fontsize {
+    border-color: $primary-border-color !important;
+    ul {
+      border-color: $primary-border-color !important;
+    }
+  }
+
+}
+
+/* end dialogs*/
+
+/* bottom control bar */
+.chart-controls-bar {
+  .apply-common-tooltip {
+    color: $primary-text-color !important;
+    &:hover {
+      background-color: transparent !important;
+      color: $primary-text-color-active !important;
+    }
+  }
+}
+
+/* go to dialog */
+
+[class|=dialog] {
+  background-color: $primary-background;
+  [class|=header] {
+    color: $primary-text-color;
+    border-color: $primary-border-color;
+    [class|=close] {
+      svg {
+        fill: $primary-text-color
+      }
+      &:hover {
+        svg {
+          fill: $primary-text-color-active;
+        }
+      }
+    }
+  }
+  [class|=body] {
+    input {
+      color: $primary-text-color !important;
+      background-color: $primary-background !important;
+      border-color: $primary-border-color !important;
+    }
+  }
+}
+
+
+.layout__area--left {
+  [class|=separator] {
+    background-color: $primary-border-color;
+  }
+  [class|=inner] {
+    background: $primary-background;
+    [class|=buttonIcon] {
+      color: $primary-text-color;
+    }
+    [class|=button] {
+      &:hover {
+        svg {
+          fill: $primary-text-color-active !important;
+        }
+      }
+    }
+    span {
+      svg {
+        fill: $icon-light-color;
+      }
+    }
+    [class|=isActive] {
+      span {
+        svg {
+          fill: $icon-light-color-active;
+        }
+      }
+    }
+  }
+}
+
+.tv-floating-toolbar {
+  border-color: $primary-border-color;
+  background-color: $primary-background;
+
+  .tv-grouped-floating-toolbar__sub-widget {
+    transition: none;
+    border-color: $primary-border-color;
+    background-color: $primary-background;
+    &:hover {
+      border-color: $primary-border-color !important;
+      background-color: $primary-background !important;
+    }
+  }
+
+  .tv-floating-toolbar__content {
+    background-color: $primary-background !important;
+
+    .tv-floating-toolbar__widget {
+      background-color: $primary-background !important;
+      border-color: $primary-border-color;
+
+      .apply-common-tooltip {
+        background-color: $primary-background !important;
+      }
+    }
+
+  }
+
+  &.tv-linetool-properties-toolbar {
+    .tv-linetool-properties-toolbar__color-picker {
+      svg {
+        fill: $primary-background;
+        .bg {
+          fill: $primary-background;
+        }
+        .icon {
+          fill: $primary-text-color;
+        }
+        &:hover {
+          .bg {
+            fill: $primary-background;
+          }
+        }
+      }
+    }
+
+    .tv-linetool-properties-toolbar__icon {
+      svg {
+        path {
+          fill: $primary-text-color !important;
+        }
+      }
+    }
+  }
+}
+
+/* dropdown menu when click on some items
+   on left side menu
+*/
+
+[class|=menuWrap] {
+  [class|=menu] {
+    background-color: $primary-background !important;
+    [class|=item] {
+      cursor: pointer;
+      color: $primary-text-color;
+      background-color: $primary-background !important;
+      [class|=labelRow] {
+        color: $primary-text-color !important;
+      }
+      &:hover {
+        color: $primary-text-color-active;
+        background-color: $primary-background-active !important;
+        [class|=labelRow] {
+          color: $primary-text-color-active !important;
+        }
+      }
+    }
+  }
+}
