@@ -154,14 +154,14 @@ class OpenSettleOrders extends React.Component {
                     return a.isBefore(b) ? -1 : 1;
                 })
                 .map(order => {
-                    return Date.now() < order.settlement_date ? (
+                    return (
                         <SettleOrderRow
                             key={order.id}
                             order={order}
                             base={base}
                             quote={quote}
                         />
-                    ) : null;
+                    );
                 })
                 .toArray();
         }
