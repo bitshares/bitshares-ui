@@ -1227,7 +1227,7 @@ class MarketsStore {
                 1000
             );
 
-            if (flat_bids.length) {
+            if (flat_bids.length > 0) {
                 flat_bids.unshift([0, flat_bids[0][1]]);
             }
 
@@ -1237,7 +1237,8 @@ class MarketsStore {
                 false,
                 1000
             );
-            if (flat_asks.length) {
+
+            if (flat_asks.length > 0) {
                 flat_asks.push([
                     flat_asks[flat_asks.length - 1][0] * 1.5,
                     flat_asks[flat_asks.length - 1][1]
@@ -1287,7 +1288,7 @@ class MarketsStore {
                     1000
                 );
                 if (
-                    flat_asks.length &&
+                    flat_asks.length > 0 &&
                     flat_calls[flat_calls.length - 1][0] <
                         flat_asks[flat_asks.length - 1][0]
                 ) {
@@ -1333,7 +1334,7 @@ class MarketsStore {
 
             if (!this.feedPrice.inverted) {
                 flat_settles.unshift([0, flat_settles[0][1]]);
-            } else {
+            } else if (flat_asks.length > 0) {
                 flat_settles.push([
                     flat_asks[flat_asks.length - 1][0],
                     flat_settles[0][1]
@@ -1381,7 +1382,7 @@ class MarketsStore {
                 1000
             );
 
-            if (flat_bids.length) {
+            if (flat_bids.length > 0) {
                 flat_bids.unshift([0, flat_bids[0][1]]);
             }
 
@@ -1391,7 +1392,7 @@ class MarketsStore {
                 false,
                 1000
             );
-            if (flat_asks.length) {
+            if (flat_asks.length > 0) {
                 flat_asks.push([
                     flat_asks[flat_asks.length - 1][0] * 1.5,
                     flat_asks[flat_asks.length - 1][1]
