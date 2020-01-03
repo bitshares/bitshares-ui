@@ -198,7 +198,7 @@
         "string-similarity": "^2.0.0",
         "tcomb": "2.5.2",
         "tusc-report": "^0.0.8",
-        "tuscjs": "^0.0.8",
+        "tuscjs": "^0.0.10",
         "whatwg-fetch": "^2.0.1",
         "xss": "^1.0.3",
         "zxcvbn-async": "0.0.5"
