@@ -127,6 +127,14 @@ export const settingsAPIs = {
             country: "U.S.A."
             //operator: "Witness: openledger-dc",
             //contact: "telegram:mtopenledger"
+        },
+        {
+            url: "wss://testnet.tusc.network:8443",
+            location: "Virginia",
+            region: "TESTNET - Northern America",
+            country: "U.S.A."
+            //operator: "Witness: openledger-dc",
+            //contact: "telegram:mtopenledger"
         }
         // , Commented until we get faucet for testnet working properly through gui wallet
         // {

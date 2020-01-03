@@ -2,12 +2,12 @@
 ### Get {feesCashback}% Cashback on Fees
 
 Lifetime Members get {feesCashback}% cashback on every transaction fee they pay and
-qualify to earn referral income from users they register with or refer to the network. A Lifetime Membership is just {price}.
+qualify to earn referral income from users they register with or refer to the network. A Lifetime Membership is just {price} TUSC.
 
 [# fee-division]
 #### Fee Division
 Every time {account} pays a transaction fee, that fee is divided among several different accounts.  The network takes
-a {networkFee}% cut, and the Lifetime Member who referred {account} gets a {lifetimeFee}% cut.
+a {networkFee}% cut, the marketing partner takes a {marketingPartnerFee}% cut, a {charityFee}% cut goes to charity, and the Lifetime Member who referred {account} gets a {lifetimeFee}% cut.
 
 The _registrar_ is the account that paid the transaction fee to register {account} with the network.  The registrar gets to decide how to
 divide the remaining {referrerTotalFee}% between themselves and their own _Affiliate Referrer_ program.

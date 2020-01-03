@@ -120,7 +120,7 @@ export default class AccountPermissionsMigrate extends React.Component {
                     noValidate
                 >
                     <label className="left-label">
-                        <Translate content="wallet.generated" />
+                        <Translate content="wallet.generated_private" />
                     </label>
                     <p>{this.state.generatedPassword}</p>
 

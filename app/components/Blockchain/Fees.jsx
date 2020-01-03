@@ -15,15 +15,13 @@ let ops = Object.keys(operations);
 
 // Define groups and their corresponding operation ids
 let fee_grouping = {
-    general: [0, 25, 26, 27, 28, 32, 33, 37, 39, 41, 49, 50, 52],
-    asset: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 38, 43, 44, 47, 48],
-    market: [1, 2, 3, 4, 45, 46],
-    account: [5, 6, 7, 8, 9],
-    business: [20, 21, 22, 23, 24, 29, 30, 31, 34, 35, 36]
+    general: [0, 6, 7, 10, 11, 12, 13, 14, 15, 16, 25, 26, 27, 28, 29, 35],
+    account: [1, 2, 4, 5],
+    business: [8, 9, 17, 18, 19, 20, 21, 22, 23, 24]
 };
 
 // Operations that require LTM
-let ltm_required = [5, 7, 20, 21, 34];
+let ltm_required = [1, 3, 8, 9, 22];
 
 class FeeGroup extends React.Component {
     static propTypes = {
@@ -48,7 +46,6 @@ class FeeGroup extends React.Component {
         const core_asset = ChainStore.getAsset("1.3.0");
 
         let current_fees = globalObject.parameters.current_fees;
-        let network_fee = globalObject.parameters.network_percent_of_fee / 1e4;
         let scale = current_fees.scale;
         let feesRaw = current_fees.parameters;
         let preferredUnit = settings.get("unit") || core_asset.get("symbol");
@@ -72,17 +69,16 @@ class FeeGroup extends React.Component {
             let operation_name = ops[opId];
             let feename = trxTypes[operation_name];
 
-            let feeRateForLTM = network_fee;
-            if (opId === 10) {
-                // See https://github.com/bitshares/bitshares-ui/issues/996
-                feeRateForLTM = 0.5 + 0.5 * network_fee;
-            }
+            let feeRateForLTM = 0.9;
 
             let rows = [];
             let headIncluded = false;
             let labelClass = classNames("label", "info");
 
             for (let key in fee) {
+                if (key == "premium_fee") {
+                    continue;
+                }
                 let amount = (fee[key] * scale) / 1e4;
                 let amountForLTM = amount * feeRateForLTM;
                 let feeTypes = counterpart.translate("transaction.feeTypes");
@@ -130,7 +126,10 @@ class FeeGroup extends React.Component {
                 }
 
                 if (ltm_required.indexOf(opId) < 0) {
-                    if (feeTypes[key] != "Annual Membership") {
+                    if (
+                        key != "membership_annual_fee" &&
+                        key != "membership_lifetime_fee"
+                    ) {
                         rows.push(
                             <tr key={opId.toString() + key}>
                                 {title}
@@ -153,6 +152,23 @@ class FeeGroup extends React.Component {
                                         <span>
                                             &nbsp;/&nbsp;
                                             {equivalentAmountLTM}
+                                        </span>
+                                    ) : null}
+                                </td>
+                            </tr>
+                        );
+                    } else if (key == "membership_lifetime_fee") {
+                        rows.push(
+                            <tr key={opId.toString() + key}>
+                                {title}
+                                <td>{feeTypes[key]}</td>
+                                <td style={{textAlign: "right"}}>
+                                    {assetAmount}
+                                    {amount !== 0 &&
+                                    preferredUnit !== "TUSC" ? (
+                                        <span>
+                                            &nbsp;/&nbsp;
+                                            {equivalentAmount}
                                         </span>
                                     ) : null}
                                 </td>

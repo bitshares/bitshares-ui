@@ -436,7 +436,7 @@ export default class DropDownMenu extends React.Component {
                     </li>
                 ) : null}
 
-                <li
+                {/* <li
                     className={cnames({
                         active: active.indexOf("/whitelist") !== -1,
                         disabled: !showAccountLinks
@@ -452,7 +452,7 @@ export default class DropDownMenu extends React.Component {
                     <div className="table-cell">
                         <Translate content="account.whitelist.title" />
                     </div>
-                </li>
+                </li> */}
 
                 <li
                     className={cnames("divider", {
