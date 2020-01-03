@@ -77,10 +77,6 @@ class AccountMembership extends React.Component {
             account.marketing_partner_fee_percentage / 100;
         let charity_fee = account.charity_fee_percentage / 100;
         let lifetime_fee = account.lifetime_referrer_fee_percentage / 100;
-
-        let marketing_partner_fee =
-            account.marketing_partner_fee_percentage / 100;
-        let charity_fee = account.charity_fee_percentage / 100;
         let referrer_total_fee =
             100 -
             network_fee -
