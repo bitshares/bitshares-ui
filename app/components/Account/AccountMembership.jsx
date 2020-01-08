@@ -91,7 +91,16 @@ class AccountMembership extends React.Component {
             lifetime_fee -
             network_fee -
             marketing_partner_fee -
-            charity_fee;
+            lifetime_fee;
+
+        let lifetime_op = gprops.getIn([
+            "parameters",
+            "current_fees",
+            "parameters",
+            4,
+            1
+        ]);
+        lifetime_op = lifetime_op.toJS();
 
         let lifetime_cost =
             (lifetime_op.membership_lifetime_fee *
