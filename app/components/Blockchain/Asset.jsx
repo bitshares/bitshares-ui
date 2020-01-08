@@ -415,6 +415,36 @@ class Asset extends React.Component {
             </tr>
         ) : null;
 
+        var reservedSupply = dynamic ? (
+            <tr>
+                <td>
+                    <Translate content="explorer.asset.summary.reserved_supply" />
+                </td>
+                <td>
+                    <FormattedAsset
+                        amount={
+                            dynamic.current_max_supply - dynamic.current_supply
+                        }
+                        asset={asset.id}
+                    />
+                </td>
+            </tr>
+        ) : null;
+
+        var maxSupply = dynamic ? (
+            <tr>
+                <td>
+                    <Translate content="explorer.asset.summary.max_supply" />
+                </td>
+                <td>
+                    <FormattedAsset
+                        amount={dynamic.current_max_supply}
+                        asset={asset.id}
+                    />
+                </td>
+            </tr>
+        ) : null;
+
         var stealthSupply = dynamic ? (
             <tr>
                 <td>
@@ -501,6 +531,8 @@ class Asset extends React.Component {
                             </tr>
                         ) : null}
                         {currentSupply}
+                        {reservedSupply}
+                        {maxSupply}
                         {stealthSupply}
                         {marketFee}
                         {marketFeeReferralReward}
@@ -1178,21 +1210,6 @@ class Asset extends React.Component {
             </tr>
         ) : null;
 
-        // options.max_supply initially a string
-        var maxSupply = (
-            <tr>
-                <td>
-                    <Translate content="explorer.asset.permissions.max_supply" />
-                </td>
-                <td>
-                    <FormattedAsset
-                        amount={+options.max_supply}
-                        asset={asset.id}
-                    />
-                </td>
-            </tr>
-        );
-
         var whiteLists = permissionBooleans["white_list"] ? (
             <div>
                 <br />
@@ -1265,10 +1282,7 @@ class Asset extends React.Component {
                     className="table key-value-table table-hover"
                     style={{padding: "1.2rem"}}
                 >
-                    <tbody>
-                        {maxMarketFee}
-                        {maxSupply}
-                    </tbody>
+                    <tbody>{maxMarketFee}</tbody>
                 </table>
 
                 <br />

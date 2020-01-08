@@ -832,7 +832,9 @@
             },
             "summary": {
                 "asset_type": "Asset type",
-                "current_supply": "Current supply",
+                "current_supply": "Current supply (in circulation)",
+                "reserved_supply": "Reserved supply (to pay workers with)",
+                "max_supply": "Current maximum supply",
                 "issuer": "Issuer",
                 "market_fee": "Market fee",
                 "market_fee_referral_reward_percent": "Market fee referral reward",
@@ -857,7 +859,7 @@
             "precision": "Precision",
             "prediction": "Prediction market assets",
             "symbol": "Symbol",
-            "title": "Assets",
+            "title": "TUSC",
             "units": "Units",
             "user": "User Issued Assets"
         },
