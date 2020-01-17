@@ -197,21 +197,10 @@ export const availableGateways = {
         baseAPI: deexAPIs,
         isSimple: true,
         simpleAssetGateway: false,
-        fixedMemo: {prepend: "dex:", append: ""},
-        isEnabled: _isEnabled("DEEX"),
-        addressValidatorMethod: "POST",
-        options: {
-            enabled: false,
-            selected: false
-        }
-    },
-    DEEX: {
-        id: "DEEX",
-        name: "DEEX",
-        baseAPI: deexAPIs,
-        isSimple: true,
-        simpleAssetGateway: false,
-        fixedMemo: {prepend: "dex:", append: ""},
+        fixedMemo: {
+            prepend_default: "dex:",
+            append: ""
+        },
         isEnabled: _isEnabled("DEEX"),
         addressValidatorMethod: "POST",
         options: {
