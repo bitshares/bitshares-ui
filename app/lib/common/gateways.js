@@ -204,6 +204,20 @@ export const availableGateways = {
             enabled: false,
             selected: false
         }
+    },
+    DEEX: {
+        id: "DEEX",
+        name: "DEEX",
+        baseAPI: deexAPIs,
+        isSimple: true,
+        simpleAssetGateway: false,
+        fixedMemo: {prepend: "dex:", append: ""},
+        isEnabled: _isEnabled("DEEX"),
+        addressValidatorMethod: "POST",
+        options: {
+            enabled: false,
+            selected: false
+        }
     }
 };
 
