@@ -55,6 +55,7 @@ class CreateAccountPassword extends React.Component {
                 0,
                 45
             ),
+            refAcct: AccountStore.getState().referralAccount,
             confirm_password: "",
             recaptcha: "",
             understand_1: false,
@@ -232,6 +233,7 @@ class CreateAccountPassword extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         if (!this.isValid()) return;
+        let referralAccount = AccountStore.getState().referralAccount;
         let faucetAddress = SettingsStore.getSetting("faucet_address");
 
         if (this.props.connectedNode && isTestNet(this.props.connectedNode)) {
@@ -247,7 +249,8 @@ class CreateAccountPassword extends React.Component {
             body: JSON.stringify({
                 account_name: this.state.accountName,
                 public_key: this.state.pub_key,
-                recaptcha_response: this.state.recaptcha
+                recaptcha_response: this.state.recaptcha,
+                referrer: referralAccount
             })
         }).then(r =>
             r.json().then(res => {
