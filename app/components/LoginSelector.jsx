@@ -111,7 +111,7 @@ class LoginSelector extends React.Component {
         );
 
         let referralAccount = AccountStore.getState().referralAccount;
-        let showRefferalAccount = referralAccount == "" ? false : true;
+        let showReferralAccount = referralAccount == "" ? false : true;
 
         return (
             <div className="grid-block align-center" id="accountForm">
@@ -140,7 +140,7 @@ class LoginSelector extends React.Component {
                                 component="p"
                             />
 
-                            {showRefferalAccount && (
+                            {showReferralAccount && (
                                 <div className="shrink text-center">
                                     <span>
                                         Referral Account: {referralAccount}
@@ -148,7 +148,7 @@ class LoginSelector extends React.Component {
                                         <br></br>
                                     </span>
                                     <span>
-                                        The refferal account will get 10% of all
+                                        The referral account will get 10% of all
                                         transaction fees paid by referred
                                         accounts.
                                         <br></br>
@@ -158,7 +158,7 @@ class LoginSelector extends React.Component {
                             )}
                         </div>
 
-                        <div className="grid-block account-login-options">
+                        {/* <div className="grid-block account-login-options">
                             <Link
                                 id="account_login_button"
                                 to="/create-account/password"
@@ -184,7 +184,7 @@ class LoginSelector extends React.Component {
                             >
                                 <Translate content="header.unlock_short" />
                             </span>
-                        </div>
+                        </div> */}
 
                         <div className="additional-account-options">
                             <h5 style={{textAlign: "center"}}>
