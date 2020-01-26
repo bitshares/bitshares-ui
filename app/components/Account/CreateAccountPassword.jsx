@@ -313,6 +313,11 @@ class CreateAccountPassword extends React.Component {
             disabled: !valid || (registrar_account && !isLTM)
         });
 
+        let recaptchaCode = "6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5";
+        if (this.props.connectedNode && isTestNet(this.props.connectedNode)) {
+            recaptchaCode = "6LeaLrgUAAAAAItQxCJO21_MTiznWIQR1XO9ll5L";
+        }
+
         return (
             <div style={{textAlign: "left"}}>
                 <form
@@ -494,7 +499,7 @@ class CreateAccountPassword extends React.Component {
                             </a>{" "}
                             apply.
                         </div>
-                        <GoogleReCaptchaProvider reCaptchaKey="6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5">
+                        <GoogleReCaptchaProvider reCaptchaKey={recaptchaCode}>
                             <GoogleReCaptcha
                                 onVerify={this._onInput.bind(this, "recaptcha")}
                             />
