@@ -122,14 +122,14 @@ class CreateAccountPassword extends React.Component {
     }
 
     isValid() {
-        let firstAccount = AccountStore.getMyAccounts().length === 0;
+        // let firstAccount = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) {
             valid = valid && this.state.validPassword;
         }
-        if (!firstAccount) {
-            valid = valid && this.state.registrar_account;
-        }
+        // if (!firstAccount) {
+        //     valid = valid && this.state.registrar_account;
+        // }
         return valid && this.state.understand_1 && this.state.understand_2;
     }
 
@@ -297,7 +297,6 @@ class CreateAccountPassword extends React.Component {
         let {registrar_account} = this.state;
 
         let my_accounts = AccountStore.getMyAccounts();
-        let firstAccount = my_accounts.length === 0;
         let valid = this.isValid();
         let isLTM = false;
         let registrar = registrar_account
@@ -331,7 +330,7 @@ class CreateAccountPassword extends React.Component {
                                 this.accountNameInput = ref.refs.nameInput;
                             }
                         }}
-                        cheapNameOnly={!!firstAccount}
+                        cheapNameOnly={false}
                         onChange={this.onAccountNameChange.bind(this)}
                         accountShouldNotExist={true}
                         placeholder={counterpart.translate(
@@ -651,8 +650,6 @@ class CreateAccountPassword extends React.Component {
 
     _renderAccountCreateText() {
         let my_accounts = AccountStore.getMyAccounts();
-        let firstAccount = my_accounts.length === 0;
-
         return (
             <div>
                 <h4
@@ -679,13 +676,13 @@ class CreateAccountPassword extends React.Component {
                     content="wallet.create_account_text"
                 />
 
-                {firstAccount ? null : (
+                {/* {firstAccount ? null : (
                     <Translate
                         style={{textAlign: "left"}}
                         component="p"
                         content="wallet.not_first_account"
                     />
-                )}
+                )} */}
             </div>
         );
     }
