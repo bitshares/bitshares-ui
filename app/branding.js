@@ -36,6 +36,14 @@ export function getWalletURL() {
 }
 
 /**
+ * Create Account URL of this wallet
+ * @returns {string}
+ */
+export function getCreateAccountURL() {
+    return getWalletURL() + "/create-account/password";
+}
+
+/**
  * Returns faucet information
  *
  * @returns {{url: string, show: boolean}}

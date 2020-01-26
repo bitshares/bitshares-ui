@@ -11,7 +11,7 @@ import HelpContent from "../Utility/HelpContent";
 import accountUtils from "common/account_utils";
 import {Tabs, Tab} from "../Utility/Tabs";
 import {getWalletName} from "branding";
-import {getWalletURL} from "../../branding";
+import {getCreateAccountURL} from "../../branding";
 
 class FeeHelp extends React.Component {
     static propTypes = {
@@ -202,7 +202,7 @@ class AccountMembership extends React.Component {
                                                         />
                                                         :
                                                         <h5>
-                                                            {getWalletURL() +
+                                                            {getCreateAccountURL() +
                                                                 `/?r=${account.name}`}
                                                         </h5>
                                                     </div>

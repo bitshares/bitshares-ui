@@ -110,6 +110,9 @@ class LoginSelector extends React.Component {
             </Select>
         );
 
+        let referralAccount = AccountStore.getState().referralAccount;
+        let showRefferalAccount = referralAccount == "" ? false : true;
+
         return (
             <div className="grid-block align-center" id="accountForm">
                 <div className="grid-block shrink vertical">
@@ -137,27 +140,22 @@ class LoginSelector extends React.Component {
                                 component="p"
                             />
 
-                            <div className="shrink text-center">
-                                <div className="grp-menu-item overflow-visible account-drop-down">
-                                    <div
-                                        className="grp-menu-item overflow-visible login-selector--language-select"
-                                        style={{margin: "0 auto"}}
-                                        data-intro={translator.translate(
-                                            "walkthrough.language_flag"
-                                        )}
-                                    >
-                                        <Row className="login-selector--language-select--wrapper">
-                                            <Col span={4}>
-                                                <Icon
-                                                    type="global"
-                                                    className="login-selector--language-select--icon"
-                                                />
-                                            </Col>
-                                            <Col span={20}>{flagDropdown}</Col>
-                                        </Row>
-                                    </div>
+                            {showRefferalAccount && (
+                                <div className="shrink text-center">
+                                    <span>
+                                        Referral Account: {referralAccount}
+                                        <br></br>
+                                        <br></br>
+                                    </span>
+                                    <span>
+                                        The refferal account will get 10% of all
+                                        transaction fees paid by referred
+                                        accounts.
+                                        <br></br>
+                                        <br></br>
+                                    </span>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         <div className="grid-block account-login-options">
