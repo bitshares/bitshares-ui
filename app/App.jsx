@@ -470,22 +470,6 @@ class App extends React.Component {
                                     component={LoginSelector}
                                 />
                                 <Route path="/login" component={Login} />
-                                <Route
-                                    path="/registration"
-                                    exact
-                                    component={RegistrationSelector}
-                                />
-                                <Route
-                                    path="/registration/local"
-                                    exact
-                                    component={WalletRegistration}
-                                />
-                                <Route
-                                    path="/registration/cloud"
-                                    exact
-                                    component={AccountRegistration}
-                                />
-                                <Route path="/news" exact component={News} />
                                 <Redirect
                                     path={"/voting"}
                                     to={{

@@ -6,6 +6,7 @@ import SettingsActions from "actions/SettingsActions";
 import AccountRegistrationForm from "./AccountRegistrationForm";
 import AccountRegistrationConfirm from "./AccountRegistrationConfirm";
 
+// This component is unused
 class AccountRegistration extends React.Component {
     constructor() {
         super();

@@ -585,7 +585,7 @@ class CreateAccountPassword extends React.Component {
                     </div>
 
                     {/* If this is not the first account, show dropdown for fee payment account */}
-                    {firstAccount ? null : (
+                    {/* {firstAccount ? null : (
                         <div
                             className="full-width-content form-group no-overflow"
                             style={{paddingTop: 30}}
@@ -608,7 +608,7 @@ class CreateAccountPassword extends React.Component {
                                 </div>
                             ) : null}
                         </div>
-                    )}
+                    )} */}
 
                     {/* Submit button */}
                     {this.state.loading ? (
