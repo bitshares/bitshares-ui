@@ -208,7 +208,7 @@ export const availableGateways = {
             selected: false
         },
         landing: "https://deex.one/",
-        wallet: "https://deex.exchnage/"
+        wallet: "https://deex.exchange/"
     }
 };
 
