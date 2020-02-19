@@ -136,7 +136,6 @@ export function getMyMarketsQuotes() {
             "SILVER",
             "USD"
         ],
-        bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
         gdexTokens: [
             "GDEX.BTC",
             "GDEX.BTO",
