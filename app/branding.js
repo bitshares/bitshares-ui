@@ -130,10 +130,8 @@ export function getMyMarketsQuotes() {
             "BTS",
             "CNY",
             "EUR",
-            "GOLD",
             "KRW",
             "RUBLE",
-            "SILVER",
             "USD"
         ],
         bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
