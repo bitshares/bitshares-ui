@@ -368,6 +368,15 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "SPARKDEX.EUR"],
         ["BTS", "SPARKDEX.GBP"],
         ["BTS", "PEG.PHP"]
+        ["BTS", "HONEST.BTC"],
+        ["BTS", "HONEST.ETH"],
+        ["BTS", "HONEST.XRP"],
+        ["HONEST.BTC", "HONEST.ETH1"],
+        ["HONEST.BTC", "HONEST.XRP1"],
+        ["BTS", "HONEST.XAU"],
+        ["BTS", "HONEST.XAG"],
+        ["BTS", "HONEST.USD"],
+        ["BTS", "HONEST.CNY"]   
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -384,6 +393,7 @@ export function getAssetNamespaces() {
         return [];
     }
     return [
+        "HONEST.",
         "OPEN.",
         "RUDEX.",
         "BRIDGE.",
