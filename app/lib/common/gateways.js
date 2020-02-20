@@ -10,7 +10,8 @@ import {
     cryptoBridgeAPIs,
     gdex2APIs,
     xbtsxAPIs,
-    citadelAPIs
+    citadelAPIs,
+    deexAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 import {isGatewayTemporarilyDisabled} from "../chain/onChainConfig";
@@ -189,6 +190,25 @@ export const availableGateways = {
         },
         landing: "https://citadel.li/",
         wallet: "https://citadel.li/wallet/"
+    },
+    DEEX: {
+        id: "DEEX",
+        name: "DEEX",
+        baseAPI: deexAPIs,
+        isSimple: true,
+        simpleAssetGateway: false,
+        fixedMemo: {
+            prepend_default: "dex:",
+            append: ""
+        },
+        isEnabled: _isEnabled("DEEX"),
+        addressValidatorMethod: "POST",
+        options: {
+            enabled: false,
+            selected: false
+        },
+        landing: "https://deex.one/",
+        wallet: "https://deex.exchange/"
     }
 };
 

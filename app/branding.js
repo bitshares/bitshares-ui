@@ -365,7 +365,8 @@ export function getAssetNamespaces() {
         "RUDEX.",
         "GDEX.",
         "XBTSX.",
-        "CITADEL."
+        "CITADEL.",
+        "DEEX."
     ];
 }
 
@@ -390,6 +391,7 @@ export function allowedGateway(gateway) {
         "RUDEX",
         "GDEX",
         "XBTSX",
+        "DEEX",
         "CITADEL"
     ];
     if (!gateway) {
