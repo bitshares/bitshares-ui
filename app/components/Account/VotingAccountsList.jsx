@@ -389,7 +389,7 @@ class VotingAccountsList extends React.Component {
                         rowClassName={this._decideRowClassName.bind(this)}
                         rows={item_rows}
                         header={header}
-                        pageSize={20}
+                        pageSize={100}
                         label="utility.total_x_assets"
                         leftPadding="1.5rem"
                     />
