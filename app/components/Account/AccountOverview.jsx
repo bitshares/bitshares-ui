@@ -29,13 +29,7 @@ class AccountOverview extends React.Component {
             alwaysShowAssets: [
                 "BTS"
                 // "USD",
-                // "CNY",
-                // "OPEN.BTC",
-                // "OPEN.USDT",
-                // "OPEN.ETH",
-                // "OPEN.MAID",
-                // "OPEN.STEEM",
-                // "OPEN.DASH"
+                // "CNY"
             ],
             hideFishingProposals: true,
             question1: false,
