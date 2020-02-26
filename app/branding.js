@@ -136,7 +136,6 @@ export function getMyMarketsQuotes() {
             "SILVER",
             "USD"
         ],
-        bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
         gdexTokens: [
             "GDEX.BTC",
             "GDEX.BTO",
@@ -201,17 +200,6 @@ export function getMyMarketsQuotes() {
             "RUDEX.WLS",
             "RUDEX.SMOKE",
             "RUDEX.GRC"
-        ],
-        sparkTokens: [
-            "ZEPH",
-            "PEG.PHP",
-            "SPARKDEX.ETH",
-            "SPARKDEX.BTC",
-            "SPARKDEX.HKD",
-            "SPARKDEX.SGD",
-            "SPARKDEX.AUD",
-            "SPARKDEX.EUR",
-            "SPARKDEX.GBP"
         ],
         xbtsxTokens: [
             "XBTSX.STH",
@@ -356,18 +344,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.SMOKE"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "XBTSX.WAVES"],
-        ["BTS", "ZEPH"],
         ["BTS", "HERTZ"],
-        ["BTS", "SPARKDEX.BTC"],
-        ["BTS", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.HKD"],
-        ["SPARKDEX.HKD", "SPARKDEX.BTC"],
-        ["SPARKDEX.HKD", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.SGD"],
-        ["BTS", "SPARKDEX.AUD"],
-        ["BTS", "SPARKDEX.EUR"],
-        ["BTS", "SPARKDEX.GBP"],
-        ["BTS", "PEG.PHP"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -386,11 +363,10 @@ export function getAssetNamespaces() {
     return [
         "OPEN.",
         "RUDEX.",
-        "BRIDGE.",
         "GDEX.",
         "XBTSX.",
-        "SPARKDEX.",
-        "CITADEL."
+        "CITADEL.",
+        "DEEX."
     ];
 }
 
@@ -413,10 +389,9 @@ export function allowedGateway(gateway) {
         "TRADE",
         "OPEN",
         "RUDEX",
-        "BRIDGE",
         "GDEX",
         "XBTSX",
-        "SPARKDEX",
+        "DEEX",
         "CITADEL"
     ];
     if (!gateway) {
