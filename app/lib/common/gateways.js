@@ -147,8 +147,8 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        landing: "https://crypto-bridge.org/",
-        wallet: "https://wallet.crypto-bridge.org/"
+        landing: "Shutdown",
+        wallet: "Shutdown"
     },
     GDEX: {
         id: "GDEX",
