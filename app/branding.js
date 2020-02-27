@@ -325,15 +325,21 @@ export function getFeaturedMarkets(quotes = []) {
         ["RUDEX.USDT", "RUDEX.BTC"],
         ["RUDEX.USDT", "RUDEX.ETH"],
         ["RUDEX.USDT", "RUDEX.EOS"],
+        ["RUDEX.USDT", "PPY"],
+        ["RUDEX.USDT", "RUBLE"],
         ["RUDEX.BTC", "RUDEX.ETH"],
         ["RUDEX.BTC", "RUDEX.EOS"],
         ["RUDEX.BTC", "RUDEX.STEEM"],
         ["RUDEX.BTC", "RUDEX.GOLOS"],
         ["RUDEX.BTC", "RUDEX.WLS"],
+        ["RUDEX.BTC", "PPY"],
         ["BTS", "OPEN.MAID"],
         ["BTS", "OPEN.HEAT"],
         ["BTS", "OPEN.INCENT"],
-        ["RUB", "RUDEX.GOLOS"],
+        ["RUBLE", "RUDEX.BTC"],
+        ["RUBLE", "RUDEX.ETH"],
+        ["RUBLE", "RUDEX.USDT"],
+        ["RUBLE", "RUDEX.GOLOS"],
         ["BTS", "RUDEX.GOLOS"],
         ["BTS", "RUDEX.STEEM"],
         ["BTS", "RUDEX.EOS"],
@@ -344,7 +350,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.SMOKE"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "XBTSX.WAVES"],
-        ["BTS", "HERTZ"],
+        ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -360,14 +366,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return [
-        "OPEN.",
-        "RUDEX.",
-        "GDEX.",
-        "XBTSX.",
-        "CITADEL.",
-        "DEEX."
-    ];
+    return ["OPEN.", "RUDEX.", "GDEX.", "XBTSX.", "CITADEL.", "DEEX."];
 }
 
 /**
