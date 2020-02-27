@@ -4,7 +4,7 @@ RuDEX предоставляет сервис шлюза, построенный
 
 ## Веб-сайт
 
-[RuDEX.org](https://rudex.org)
+[market.rudex.org](https://market.rudex.org)
 
 ## Публичный аудит шлюза:
 
