@@ -136,7 +136,6 @@ export function getMyMarketsQuotes() {
             "SILVER",
             "USD"
         ],
-        bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
         gdexTokens: [
             "GDEX.BTC",
             "GDEX.BTO",
@@ -201,17 +200,6 @@ export function getMyMarketsQuotes() {
             "RUDEX.WLS",
             "RUDEX.SMOKE",
             "RUDEX.GRC"
-        ],
-        sparkTokens: [
-            "ZEPH",
-            "PEG.PHP",
-            "SPARKDEX.ETH",
-            "SPARKDEX.BTC",
-            "SPARKDEX.HKD",
-            "SPARKDEX.SGD",
-            "SPARKDEX.AUD",
-            "SPARKDEX.EUR",
-            "SPARKDEX.GBP"
         ],
         xbtsxTokens: [
             "XBTSX.STH",
@@ -337,15 +325,21 @@ export function getFeaturedMarkets(quotes = []) {
         ["RUDEX.USDT", "RUDEX.BTC"],
         ["RUDEX.USDT", "RUDEX.ETH"],
         ["RUDEX.USDT", "RUDEX.EOS"],
+        ["RUDEX.USDT", "PPY"],
+        ["RUDEX.USDT", "RUBLE"],
         ["RUDEX.BTC", "RUDEX.ETH"],
         ["RUDEX.BTC", "RUDEX.EOS"],
         ["RUDEX.BTC", "RUDEX.STEEM"],
         ["RUDEX.BTC", "RUDEX.GOLOS"],
         ["RUDEX.BTC", "RUDEX.WLS"],
+        ["RUDEX.BTC", "PPY"],
         ["BTS", "OPEN.MAID"],
         ["BTS", "OPEN.HEAT"],
         ["BTS", "OPEN.INCENT"],
-        ["RUB", "RUDEX.GOLOS"],
+        ["RUBLE", "RUDEX.BTC"],
+        ["RUBLE", "RUDEX.ETH"],
+        ["RUBLE", "RUDEX.USDT"],
+        ["RUBLE", "RUDEX.GOLOS"],
         ["BTS", "RUDEX.GOLOS"],
         ["BTS", "RUDEX.STEEM"],
         ["BTS", "RUDEX.EOS"],
@@ -356,18 +350,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.SMOKE"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "XBTSX.WAVES"],
-        ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"],
-        ["BTS", "SPARKDEX.BTC"],
-        ["BTS", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.HKD"],
-        ["SPARKDEX.HKD", "SPARKDEX.BTC"],
-        ["SPARKDEX.HKD", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.SGD"],
-        ["BTS", "SPARKDEX.AUD"],
-        ["BTS", "SPARKDEX.EUR"],
-        ["BTS", "SPARKDEX.GBP"],
-        ["BTS", "PEG.PHP"]
+        ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -383,15 +366,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return [
-        "OPEN.",
-        "RUDEX.",
-        "BRIDGE.",
-        "GDEX.",
-        "XBTSX.",
-        "SPARKDEX.",
-        "CITADEL."
-    ];
+    return ["OPEN.", "RUDEX.", "GDEX.", "XBTSX.", "CITADEL.", "DEEX."];
 }
 
 /**
@@ -413,10 +388,9 @@ export function allowedGateway(gateway) {
         "TRADE",
         "OPEN",
         "RUDEX",
-        "BRIDGE",
         "GDEX",
         "XBTSX",
-        "SPARKDEX",
+        "DEEX",
         "CITADEL"
     ];
     if (!gateway) {
