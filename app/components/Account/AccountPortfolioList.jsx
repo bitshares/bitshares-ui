@@ -895,7 +895,7 @@ class AccountPortfolioList extends React.Component {
 
         let balances = [];
         const emptyCell = "-";
-        balanceList.forEach(balance => {
+        (balanceList || []).forEach(balance => {
             let balanceObject = ChainStore.getObject(balance);
             if (!balanceObject) return;
             let asset_type = balanceObject.get("asset_type");
@@ -982,7 +982,7 @@ class AccountPortfolioList extends React.Component {
             // Collateral
             let collateralBalances = [];
 
-            this.props.callOrders.forEach(order => {
+            (this.props.callOrders || []).forEach(order => {
                 let collateralObject = ChainStore.getObject(order);
                 if (
                     collateralObject.getIn([
