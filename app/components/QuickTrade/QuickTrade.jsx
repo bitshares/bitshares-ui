@@ -653,7 +653,7 @@ class QuickTrade extends Component {
                 asset_id: "1.3.0",
                 amount: 0
             },
-            fill_or_kill: true
+            fill_or_kill: false
         });
 
         return MarketsActions.createLimitOrder2(order)
