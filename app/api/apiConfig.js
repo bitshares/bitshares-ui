@@ -139,9 +139,9 @@ export const settingsAPIs = {
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "wss://api.tusc.network:8443",
+            url: "http://elasticsearch.tusc.network",
             location: "Virginia",
-            region: "TESTNET - Northern America",
+            region: "Northern America",
             country: "U.S.A."
             //operator: "Witness: openledger-dc",
             //contact: "telegram:mtopenledger"

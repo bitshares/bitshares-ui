@@ -69,15 +69,6 @@ class AccountHistoryExporter {
                 const data = record.op.data;
 
                 switch (type) {
-                    case "vesting_balance_withdraw":
-                        data.amount = data.amount_;
-                        break;
-
-                    case "transfer":
-                        data.amount = data.amount_;
-                        break;
-                }
-                switch (type) {
                     default:
                         recordData[trx_id] = {
                             timestamp: new Date(record.block_time),
@@ -108,7 +99,7 @@ class AccountHistoryExporter {
         let today = new Date();
         saveAs(
             blob,
-            "bitshares-account-history-" +
+            "tusc-account-history-" +
                 accountName +
                 "-" +
                 today.getFullYear() +
@@ -127,7 +118,7 @@ class AccountHistoryExporter {
         console.log(
             "query",
             esNode +
-                "/get_account_history?account_id=" +
+                "/es/account_history?account_id=" +
                 account_id +
                 "&from_=" +
                 start +
@@ -138,7 +129,7 @@ class AccountHistoryExporter {
         return new Promise((resolve, reject) => {
             fetch(
                 esNode +
-                    "/get_account_history?account_id=" +
+                    "/es/account_history?account_id=" +
                     account_id +
                     "&from_=" +
                     start +
@@ -149,11 +140,19 @@ class AccountHistoryExporter {
                 .then(res => res.json())
                 .then(result => {
                     let opHistory = result.map(r => {
+                        let op_ob;
+                        if (!r.operation_history.op_object) {
+                            let full_op = JSON.parse(r.operation_history.op);
+                            op_ob = full_op[1];
+                        } else {
+                            op_ob = r.operation_history.op_object;
+                        }
+
                         return {
                             id: r.account_history.operation_id,
                             op: {
                                 type: r.operation_type,
-                                data: r.operation_history.op_object
+                                data: op_ob
                             },
                             result: JSON.parse(
                                 r.operation_history.operation_result
