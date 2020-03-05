@@ -139,7 +139,7 @@ export const settingsAPIs = {
     ],
     ES_WRAPPER_LIST: [
         {
-            url: "http://elasticsearch.tusc.network",
+            url: "https://elasticsearch.tusc.network",
             location: "Virginia",
             region: "Northern America",
             country: "U.S.A."
