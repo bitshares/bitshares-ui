@@ -142,16 +142,20 @@ class GatewaySelectorModal extends React.Component {
                 align: "left",
                 render: row => {
                     if (!row.landing) return "-";
-                    return (
-                        <a
-                            target="_blank"
-                            className="external-link"
-                            rel="noopener noreferrer"
-                            href={row.landing}
-                        >
-                            External Link
-                        </a>
-                    );
+                    if (row.landing.startsWith("http")) {
+                        return (
+                            <a
+                                target="_blank"
+                                className="external-link"
+                                rel="noopener noreferrer"
+                                href={row.landing}
+                            >
+                                External Link
+                            </a>
+                        );
+                    } else {
+                        return <span>{row.landing}</span>;
+                    }
                 }
             },
             {
@@ -162,16 +166,20 @@ class GatewaySelectorModal extends React.Component {
                 align: "left",
                 render: row => {
                     if (!row.wallet) return "-";
-                    return (
-                        <a
-                            target="_blank"
-                            className="external-link"
-                            rel="noopener noreferrer"
-                            href={row.wallet}
-                        >
-                            External Link
-                        </a>
-                    );
+                    if (row.wallet.startsWith("http")) {
+                        return (
+                            <a
+                                target="_blank"
+                                className="external-link"
+                                rel="noopener noreferrer"
+                                href={row.wallet}
+                            >
+                                External Link
+                            </a>
+                        );
+                    } else {
+                        return <span>{row.wallet}</span>;
+                    }
                 }
             }
         ];

@@ -213,17 +213,6 @@ export function getMyMarketsQuotes() {
             "RUDEX.SMOKE",
             "RUDEX.GRC"
         ],
-        sparkTokens: [
-            "ZEPH",
-            "PEG.PHP",
-            "SPARKDEX.ETH",
-            "SPARKDEX.BTC",
-            "SPARKDEX.HKD",
-            "SPARKDEX.SGD",
-            "SPARKDEX.AUD",
-            "SPARKDEX.EUR",
-            "SPARKDEX.GBP"
-        ],
         xbtsxTokens: [
             "XBTSX.STH",
             "XBTSX.POST",
@@ -393,7 +382,6 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.SMOKE"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "XBTSX.WAVES"],
-        ["BTS", "ZEPH"],
         ["BTS", "HERTZ"],
         ["BTS", "SPARKDEX.BTC"],
         ["BTS", "SPARKDEX.ETH"],
@@ -410,6 +398,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["XBTSX.BTC", "HONEST.BTC"],
         ["DEEX.BTC", "HONEST.BTC"],
         ["OPEN.BTC", "HONEST.BTC"]
+
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -428,12 +417,13 @@ export function getAssetNamespaces() {
     return [
         "OPEN.",
         "RUDEX.",
-        "BRIDGE.",
         "GDEX.",
         "XBTSX.",
         "SPARKDEX.",
         "CITADEL.",
-        "HONEST."
+        "HONEST.",
+        "CITADEL.",
+        "DEEX."
     ];
 }
 
@@ -456,10 +446,9 @@ export function allowedGateway(gateway) {
         "TRADE",
         "OPEN",
         "RUDEX",
-        "BRIDGE",
         "GDEX",
         "XBTSX",
-        "SPARKDEX",
+        "DEEX",
         "CITADEL"
     ];
     if (!gateway) {
