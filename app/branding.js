@@ -146,7 +146,7 @@ export function getMyMarketsQuotes() {
             "HONEST.XRP",
             "HONEST.XRP1",
             "HONEST.ETH",
-            "HONEST.ETH1",
+            "HONEST.ETH1"
         ],
         gdexTokens: [
             "GDEX.BTC",
@@ -246,7 +246,6 @@ export function getMyMarketsQuotes() {
         otherTokens: [
             "BTWTY",
             "TWENTIX",
-
             "CVCOIN",
             "HERO",
             "OCT",
@@ -410,7 +409,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["GDEX.BTC", "HONEST.BTC"],
         ["XBTSX.BTC", "HONEST.BTC"],
         ["DEEX.BTC", "HONEST.BTC"],
-        ["OPEN.BTC", "HONEST.BTC"],
+        ["OPEN.BTC", "HONEST.BTC"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -433,7 +432,7 @@ export function getAssetNamespaces() {
         "GDEX.",
         "XBTSX.",
         "SPARKDEX.",
-        "CITADEL."
+        "CITADEL.",
         "HONEST."
     ];
 }
