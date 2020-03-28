@@ -116,6 +116,7 @@ class IssueModal extends React.Component {
                                 onAccountChanged={this.onToAccountChanged.bind(
                                     this
                                 )}
+                                typeahead={true}
                                 onChange={this.onToChanged.bind(this)}
                                 account={this.state.to}
                                 tabIndex={tabIndex++}
