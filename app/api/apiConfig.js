@@ -129,6 +129,229 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
+            url: "wss://moscow.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Moscow",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://ru-msk.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Moscow DC2",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://ru-spb.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Saint Petersburg",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://ru-nsk.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Novosibirsk",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://ukraine.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Ukraine",
+            location: "Kyiv",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://germany.walldex.pro/ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Munich",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://netherlands.walldex.pro/ws",
+            region: "Western Europe",
+            country: "Netherlands",
+            location: "Amsterdam",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://finland.walldex.pro/ws",
+            region: "Northern Europe",
+            country: "Finland",
+            location: "Helsinki",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://uk.walldex.pro/ws",
+            region: "Northern Europe",
+            country: "United Kingdom",
+            location: "London",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://poland.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Poland",
+            location: "Warsaw",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://france.walldex.pro/ws",
+            region: "Western Europe",
+            country: "France",
+            location: "Paris",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://spain.walldex.pro/ws",
+            region: "Southern Europe",
+            country: "Spain",
+            location: "Madrid",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://us-va.walldex.pro/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Ashburn, VA",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://us-ca.walldex.pro/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Los Angeles, CA",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://us-mo.walldex.pro/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "St. Louis, MO",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://us-fl.walldex.pro/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Miami, FL",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://us-tx.walldex.pro/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Dallas, TX",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://japan.walldex.pro/ws",
+            region: "Eastern Asia",
+            country: "Japan",
+            location: "Tokyo",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://india.walldex.pro/ws",
+            region: "Southern Asia",
+            country: "India",
+            location: "Mumbai",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://korea.walldex.pro/ws",
+            region: "Eastern Asia",
+            country: "Korea",
+            location: "Seoul",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://hongkong.walldex.pro/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Hong Kong",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://singapore.walldex.pro/ws",
+            region: "Southeastern Asia",
+            country: "Singapore",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://southafrica.walldex.pro/ws",
+            region: "Southern Africa",
+            country: "South Africa",
+            location: "Johannesburg",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://australia.walldex.pro/ws",
+            region: "Australia and New Zealand",
+            country: "Australia",
+            location: "Sydney",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://brazil.walldex.pro/ws",
+            region: "South America",
+            country: "Brazil",
+            location: "São Paulo",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://chile.walldex.pro/ws",
+            region: "South America",
+            country: "Chile",
+            location: "Curico",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://turkey.walldex.pro/ws",
+            region: "Western Europe",
+            country: "Turkey",
+            location: "Istanbul",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
+            url: "wss://israel.walldex.pro/ws",
+            region: "Western Europe",
+            country: "Israel",
+            location: "Tel Aviv",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro"
+        },
+        {
             url: "wss://dex.iobanker.com:9090",
             region: "Western Europe",
             country: "Germany",
