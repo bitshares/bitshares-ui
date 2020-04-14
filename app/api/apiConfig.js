@@ -134,7 +134,7 @@ export const settingsAPIs = {
             country: "Russia",
             location: "Moscow",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://ru-msk.walldex.pro/ws",
@@ -142,7 +142,7 @@ export const settingsAPIs = {
             country: "Russia",
             location: "Moscow DC2",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://ru-spb.walldex.pro/ws",
@@ -150,7 +150,7 @@ export const settingsAPIs = {
             country: "Russia",
             location: "Saint Petersburg",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://ru-nsk.walldex.pro/ws",
@@ -158,7 +158,23 @@ export const settingsAPIs = {
             country: "Russia",
             location: "Novosibirsk",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
+            url: "wss://ru-ekb.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Ekaterinburg",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
+            url: "wss://ru-kha.walldex.pro/ws",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Khabarovsk",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://ukraine.walldex.pro/ws",
@@ -166,7 +182,7 @@ export const settingsAPIs = {
             country: "Ukraine",
             location: "Kyiv",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://germany.walldex.pro/ws",
@@ -174,7 +190,7 @@ export const settingsAPIs = {
             country: "Germany",
             location: "Munich",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://netherlands.walldex.pro/ws",
@@ -182,7 +198,7 @@ export const settingsAPIs = {
             country: "Netherlands",
             location: "Amsterdam",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://finland.walldex.pro/ws",
@@ -190,7 +206,7 @@ export const settingsAPIs = {
             country: "Finland",
             location: "Helsinki",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://uk.walldex.pro/ws",
@@ -198,7 +214,7 @@ export const settingsAPIs = {
             country: "United Kingdom",
             location: "London",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://poland.walldex.pro/ws",
@@ -206,7 +222,7 @@ export const settingsAPIs = {
             country: "Poland",
             location: "Warsaw",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://france.walldex.pro/ws",
@@ -214,7 +230,7 @@ export const settingsAPIs = {
             country: "France",
             location: "Paris",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://spain.walldex.pro/ws",
@@ -222,7 +238,7 @@ export const settingsAPIs = {
             country: "Spain",
             location: "Madrid",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://us-va.walldex.pro/ws",
@@ -230,7 +246,7 @@ export const settingsAPIs = {
             country: "U.S.A.",
             location: "Ashburn, VA",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://us-ca.walldex.pro/ws",
@@ -238,7 +254,7 @@ export const settingsAPIs = {
             country: "U.S.A.",
             location: "Los Angeles, CA",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://us-mo.walldex.pro/ws",
@@ -246,7 +262,7 @@ export const settingsAPIs = {
             country: "U.S.A.",
             location: "St. Louis, MO",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://us-fl.walldex.pro/ws",
@@ -254,7 +270,7 @@ export const settingsAPIs = {
             country: "U.S.A.",
             location: "Miami, FL",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://us-tx.walldex.pro/ws",
@@ -262,7 +278,15 @@ export const settingsAPIs = {
             country: "U.S.A.",
             location: "Dallas, TX",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
+            url: "wss://ca-bc.walldex.pro/ws",
+            region: "Northern America",
+            country: "Canada",
+            location: "Vancouver, BC",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://japan.walldex.pro/ws",
@@ -270,7 +294,7 @@ export const settingsAPIs = {
             country: "Japan",
             location: "Tokyo",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://india.walldex.pro/ws",
@@ -278,7 +302,7 @@ export const settingsAPIs = {
             country: "India",
             location: "Mumbai",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://korea.walldex.pro/ws",
@@ -286,7 +310,7 @@ export const settingsAPIs = {
             country: "Korea",
             location: "Seoul",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://hongkong.walldex.pro/ws",
@@ -294,14 +318,14 @@ export const settingsAPIs = {
             country: "China",
             location: "Hong Kong",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://singapore.walldex.pro/ws",
             region: "Southeastern Asia",
             country: "Singapore",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://southafrica.walldex.pro/ws",
@@ -309,7 +333,7 @@ export const settingsAPIs = {
             country: "South Africa",
             location: "Johannesburg",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://australia.walldex.pro/ws",
@@ -317,7 +341,7 @@ export const settingsAPIs = {
             country: "Australia",
             location: "Sydney",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://brazil.walldex.pro/ws",
@@ -325,7 +349,7 @@ export const settingsAPIs = {
             country: "Brazil",
             location: "São Paulo",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://chile.walldex.pro/ws",
@@ -333,7 +357,7 @@ export const settingsAPIs = {
             country: "Chile",
             location: "Curico",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://turkey.walldex.pro/ws",
@@ -341,7 +365,7 @@ export const settingsAPIs = {
             country: "Turkey",
             location: "Istanbul",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://israel.walldex.pro/ws",
@@ -349,7 +373,7 @@ export const settingsAPIs = {
             country: "Israel",
             location: "Tel Aviv",
             operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro"
+            contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
             url: "wss://dex.iobanker.com:9090",
