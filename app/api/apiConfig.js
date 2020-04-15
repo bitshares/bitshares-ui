@@ -289,6 +289,14 @@ export const settingsAPIs = {
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
+            url: "wss://ca-qc.walldex.pro/ws",
+            region: "Northern America",
+            country: "Canada",
+            location: "Beauharnois, QC",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
             url: "wss://japan.walldex.pro/ws",
             region: "Eastern Asia",
             country: "Japan",
