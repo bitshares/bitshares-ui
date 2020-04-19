@@ -352,6 +352,14 @@ export const settingsAPIs = {
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
+            url: "wss://newzealand.walldex.pro/ws",
+            region: "Australia and New Zealand",
+            country: "New Zealand",
+            location: "Auckland",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
             url: "wss://brazil.walldex.pro/ws",
             region: "South America",
             country: "Brazil",
