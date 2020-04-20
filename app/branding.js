@@ -210,7 +210,6 @@ export function getMyMarketsQuotes() {
             "XBTSX.BCH",
             "XBTSX.LTC",
             "XBTSX.DASH",
-            "XBTSX.XSPEC",
             "XBTSX.NVC",
             "XBTSX.UNI",
             "XBTSX.NMC",
@@ -344,7 +343,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.SMOKE"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "XBTSX.WAVES"],
-        ["BTS", "HERTZ"],
+        ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -360,14 +359,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return [
-        "OPEN.",
-        "RUDEX.",
-        "GDEX.",
-        "XBTSX.",
-        "CITADEL.",
-        "DEEX."
-    ];
+    return ["OPEN.", "RUDEX.", "GDEX.", "XBTSX.", "CITADEL.", "DEEX."];
 }
 
 /**
