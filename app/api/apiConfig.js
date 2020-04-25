@@ -352,6 +352,14 @@ export const settingsAPIs = {
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
+            url: "wss://au-wa.walldex.pro/ws",
+            region: "Australia and New Zealand",
+            country: "Australia",
+            location: "Perth",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
             url: "wss://newzealand.walldex.pro/ws",
             region: "Australia and New Zealand",
             country: "New Zealand",
@@ -372,6 +380,22 @@ export const settingsAPIs = {
             region: "South America",
             country: "Chile",
             location: "Curico",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
+            url: "wss://argentina.walldex.pro/ws",
+            region: "South America",
+            country: "Argentina",
+            location: "Buenos Aires",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
+            url: "wss://colombia.walldex.pro/ws",
+            region: "South America",
+            country: "Colombia",
+            location: "Bogota",
             operator: "Witness: walldex",
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
