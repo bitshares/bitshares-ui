@@ -329,6 +329,30 @@ export const settingsAPIs = {
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
+            url: "wss://cn-bj.walldex.pro/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Beijing",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
+            url: "wss://cn-sh.walldex.pro/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Shanghai",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
+            url: "wss://cn-sc.walldex.pro/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Chengdu",
+            operator: "Witness: walldex",
+            contact: "email:nodes@walldex.pro;telegram:walldex"
+        },
+        {
             url: "wss://singapore.walldex.pro/ws",
             region: "Southeastern Asia",
             country: "Singapore",
