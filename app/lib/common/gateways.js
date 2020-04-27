@@ -91,14 +91,14 @@ export const availableGateways = {
         id: "OPEN",
         name: "OpenLedger",
         baseAPI: openledgerAPIs,
-        isEnabled: _isEnabled("OPEN"),
+        isEnabled: false,
         selected: false,
         options: {
             enabled: false,
             selected: false
         },
-        landing: "http://dex.openledger.io",
-        wallet: "https://openledger.io/"
+        landing: "https://dex.openledger.io/news/ol-dex-is-closing-all-activities/",
+        wallet: "Shutdown"
     },
     RUDEX: {
         id: "RUDEX",
