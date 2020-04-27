@@ -354,7 +354,8 @@ class MyMarkets extends React.Component {
             nextState.activeTab === "find-market" &&
             !nextProps.searchAssets.size
         ) {
-            this._lookupAssets("BTC", true);
+            // disable auto search
+            // this._lookupAssets("BTC", true);
         }
 
         if (this.state.activeTab !== nextState.activeTab) {
@@ -419,7 +420,8 @@ class MyMarkets extends React.Component {
         this._setMinWidth();
 
         if (this.state.activeTab === "find-market") {
-            this._lookupAssets("BTC", true);
+            // disable auto search
+            // this._lookupAssets("BTC", true);
         }
 
         if (this.state.activeTab !== this.props.activeTab) {
