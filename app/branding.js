@@ -217,7 +217,6 @@ export function getFeaturedMarkets(quotes = []) {
     return [
         ["USD", "BTS"],
         ["USD", "GOLD"],
-        ["USD", "HERO"],
         ["USD", "GDEX.BTC"],
         ["USD", "GDEX.ETH"],
         ["USD", "GDEX.EOS"],
@@ -252,8 +251,6 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "PPY"],
         ["BTS", "OBITS"],
         ["BTS", "RUBLE"],
-        ["BTS", "HERO"],
-        ["BTS", "OCT"],
         ["BTS", "SILVER"],
         ["BTS", "GOLD"],
         ["BTS", "GDEX.BTC"],
