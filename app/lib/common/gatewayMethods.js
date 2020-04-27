@@ -2,6 +2,9 @@ import ls from "./localStorage";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
 const blockTradesStorage = new ls("");
+let oidcStorage = new ls(
+    "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
+);
 
 let fetchInProgess = {};
 let fetchCache = {};
@@ -331,6 +334,52 @@ export function requestDepositAddress({
             console.log("fetch error:", err);
             delete depositRequests[body_string];
         });
+}
+
+export function getMappingData(inputCoinType, outputCoinType, outputAddress) {
+    let body = JSON.stringify({
+        inputCoinType,
+        outputCoinType,
+        outputAddress: {
+            address: outputAddress
+        }
+    });
+    let mapping = inputCoinType + outputCoinType + outputAddress;
+    if (blockTradesStorage.has(`history_mapping_${mapping}`)) {
+        return Promise.resolve(
+            blockTradesStorage.get(`history_mapping_${mapping}`)
+        );
+    } else {
+        return new Promise((resolve, reject) => {
+            let headers = {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${oidcStorage.get("")["access_token"]}`
+            };
+            fetch(`${blockTradesAPIs.BASE}/mappings`, {
+                method: "post",
+                headers: headers,
+                body: body
+            })
+                .then(reply => {
+                    reply.json().then(result => {
+                        if (result["inputAddress"]) {
+                            blockTradesStorage.set(
+                                `history_mapping_${mapping}`,
+                                result["inputAddress"]
+                            );
+                            resolve(result && result["inputAddress"]);
+                        } else {
+                            reject();
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.log("Error: ", error);
+                    reject();
+                });
+        });
+    }
 }
 
 export function getBackedCoins({allCoins, tradingPairs, backer}) {
