@@ -298,7 +298,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["OPEN.", "RUDEX.", "GDEX.", "XBTSX.", "CITADEL.", "DEEX."];
+    return ["OPEN.", "RUDEX.", "GDEX.", "XBTSX.", "CITADEL."];
 }
 
 /**
@@ -322,7 +322,6 @@ export function allowedGateway(gateway) {
         "RUDEX",
         "GDEX",
         "XBTSX",
-        "DEEX",
         "CITADEL"
     ];
     if (!gateway) {
