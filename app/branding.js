@@ -141,13 +141,8 @@ export function getMyMarketsQuotes() {
             "GDEX.BTO",
             "GDEX.EOS",
             "GDEX.ETH",
-            "GDEX.BTM",
-            "GDEX.NEO",
-            "GDEX.GAS",
-            "GDEX.QTUM",
             "GDEX.BKBT",
             "GDEX.GXC",
-            "GDEX.HPB",
             "GDEX.SEER",
             "GDEX.FOTA",
             "GDEX.JRC",
@@ -195,6 +190,11 @@ export function getMyMarketsQuotes() {
             "XBTSX.EXR"
         ],
         otherTokens: [
+            "CVCOIN",	
+            "HERO",	
+            "OCT",	
+            "HERTZ",	
+            "YOYOW"
         ]
     };
 
@@ -217,6 +217,7 @@ export function getFeaturedMarkets(quotes = []) {
     return [
         ["USD", "BTS"],
         ["USD", "GOLD"],
+        ["USD", "HERO"],
         ["USD", "GDEX.BTC"],
         ["USD", "GDEX.ETH"],
         ["USD", "GDEX.EOS"],
@@ -231,11 +232,12 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "RUDEX.SMOKE"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
+        ["CNY", "YOYOW"],	
+        ["CNY", "OCT"],
         ["CNY", "GDEX.BTC"],
         ["CNY", "GDEX.ETH"],
         ["CNY", "GDEX.EOS"],
         ["CNY", "GDEX.BTO"],
-        ["CNY", "GDEX.BTM"],
         ["CNY", "GDEX.SEER"],
         ["CNY", "GDEX.BKBT"],
         ["CNY", "GDEX.USDT"],
@@ -249,8 +251,9 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "RUDEX.WLS"],
         ["CNY", "RUDEX.SMOKE"],
         ["BTS", "PPY"],
-        ["BTS", "OBITS"],
         ["BTS", "RUBLE"],
+        ["BTS", "HERO"],	
+        ["BTS", "OCT"],
         ["BTS", "SILVER"],
         ["BTS", "GOLD"],
         ["BTS", "GDEX.BTC"],
@@ -282,7 +285,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.WLS"],
         ["BTS", "RUDEX.SMOKE"],
         ["BTS", "XBTSX.STH"],
-        ["BTS", "XBTSX.WAVES"]
+        ["BTS", "XBTSX.WAVES"],
+        ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
