@@ -83,11 +83,6 @@ export const xbtsxAPIs = {
     COINS_LIST: "/coin"
 };
 
-export const deexAPIs = {
-    BASE: "https://deex.exchange/gateway",
-    COINS_LIST: "/compatibility/get_coins"
-};
-
 export const nodeRegions = [
     // region of the node follows roughly https://en.wikipedia.org/wiki/Subregion#/media/File:United_Nations_geographical_subregions.png
     "Northern Europe",
