@@ -33,6 +33,7 @@ class RuDexGatewayDepositRequest extends React.Component {
         deprecated_message: PropTypes.string,
         action: PropTypes.string,
         supports_output_memos: PropTypes.bool.isRequired,
+        supportsPublicKey: PropTypes.bool.isRequired,
         memoType: PropTypes.string,
         min_amount: PropTypes.number,
         gateFee: PropTypes.number,
@@ -571,6 +572,9 @@ class RuDexGatewayDepositRequest extends React.Component {
                             output_wallet_type={this.props.deposit_wallet_type}
                             output_supports_memos={
                                 this.props.supports_output_memos
+                            }
+                            output_supportsPublicKey={
+                                this.props.supportsPublicKey
                             }
                             memo_prefix={withdraw_memo_prefix}
                             modal_id={withdraw_modal_id}

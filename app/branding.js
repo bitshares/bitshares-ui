@@ -153,9 +153,7 @@ export function getMyMarketsQuotes() {
             "GDEX.NULS",
             "GDEX.USDT"
         ],
-        openledgerTokens: [
-            "OBITS"
-        ],
+        openledgerTokens: ["OBITS"],
         rudexTokens: [
             "PPY",
             "RUDEX.BTC",
@@ -169,7 +167,8 @@ export function getMyMarketsQuotes() {
             "RUDEX.KRM",
             "RUDEX.WLS",
             "RUDEX.SMOKE",
-            "RUDEX.GRC"
+            "RUDEX.GRC",
+            "RUDEX.PZM"
         ],
         xbtsxTokens: [
             "XBTSX.STH",
@@ -189,13 +188,7 @@ export function getMyMarketsQuotes() {
             "XBTSX.ETH",
             "XBTSX.EXR"
         ],
-        otherTokens: [
-            "CVCOIN",	
-            "HERO",	
-            "OCT",	
-            "HERTZ",	
-            "YOYOW"
-        ]
+        otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
     let allTokens = [];
@@ -232,7 +225,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "RUDEX.SMOKE"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
-        ["CNY", "YOYOW"],	
+        ["CNY", "YOYOW"],
         ["CNY", "OCT"],
         ["CNY", "GDEX.BTC"],
         ["CNY", "GDEX.ETH"],
@@ -252,7 +245,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "RUDEX.SMOKE"],
         ["BTS", "PPY"],
         ["BTS", "RUBLE"],
-        ["BTS", "HERO"],	
+        ["BTS", "HERO"],
         ["BTS", "OCT"],
         ["BTS", "SILVER"],
         ["BTS", "GOLD"],
@@ -264,6 +257,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["RUDEX.USDT", "RUDEX.BTC"],
         ["RUDEX.USDT", "RUDEX.ETH"],
         ["RUDEX.USDT", "RUDEX.EOS"],
+        ["RUDEX.USDT", "RUDEX.PZM"],
         ["RUDEX.USDT", "PPY"],
         ["RUDEX.USDT", "RUBLE"],
         ["RUDEX.BTC", "RUDEX.ETH"],
@@ -276,6 +270,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["RUBLE", "RUDEX.ETH"],
         ["RUBLE", "RUDEX.USDT"],
         ["RUBLE", "RUDEX.GOLOS"],
+        ["RUDEX.BTC", "RUDEX.PZM"],
+        ["RUB", "RUDEX.GOLOS"],
         ["BTS", "RUDEX.GOLOS"],
         ["BTS", "RUDEX.STEEM"],
         ["BTS", "RUDEX.EOS"],
@@ -284,6 +280,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.USDT"],
         ["BTS", "RUDEX.WLS"],
         ["BTS", "RUDEX.SMOKE"],
+        ["BTS", "RUDEX.PZM"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "XBTSX.WAVES"],
         ["BTS", "HERTZ"]
