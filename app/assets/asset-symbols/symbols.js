@@ -98,3 +98,4 @@ require("file-loader?name=asset-symbols/[name].png!./rudex.sbd.png");
 require("file-loader?name=asset-symbols/[name].png!./rudex.smoke.png");
 require("file-loader?name=asset-symbols/[name].png!./rudex.steem.png");
 require("file-loader?name=asset-symbols/[name].png!./rudex.wls.png");
+require("file-loader?name=asset-symbols/[name].png!./rudex.pzm.png");
