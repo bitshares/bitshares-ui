@@ -260,7 +260,20 @@ class FeePoolOperation extends React.Component {
             this.state.claimFeesAmountAsset.getAmount() <= unclaimedBalance;
 
         let unclaimedBalanceText = (
-            <span>
+            <span
+                onClick={() => {
+                    this.state.claimFeesAmountAsset.setAmount({
+                        sats: dynamicObject.get("accumulated_fees")
+                    });
+                    this.setState({
+                        claimFeesAmount: this.state.claimFeesAmountAsset.getAmount(
+                            {
+                                real: true
+                            }
+                        )
+                    });
+                }}
+            >
                 <Translate component="span" content="transfer.available" />
                 :&nbsp;
                 <FormattedAsset

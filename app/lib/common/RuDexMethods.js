@@ -81,7 +81,7 @@ export function validateAddress({
         }),
         body: JSON.stringify({address: newAddress})
     })
-        .then(reply => reply.json().then(json => json.isValid))
+        .then(reply => reply.json().then(json => json))
         .catch(err => {
             console.log("validate error:", err);
         });

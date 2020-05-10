@@ -62,6 +62,8 @@ class WithdrawModalNew extends React.Component {
             quantity: 0,
             address: "",
             memo: "",
+            withdraw_publicKey: "",
+            withdraw_publicKey_not_empty: false,
             userEstimate: null,
             addressError: false,
             gatewayStatus: availableGateways,
@@ -581,8 +583,20 @@ class WithdrawModalNew extends React.Component {
                 : null,
             method:
                 gatewayStatus[selectedGateway].addressValidatorMethod || null
-        }).then(isValid => {
-            this.setState({addressError: isValid ? false : true});
+        }).then(json => {
+            if (typeof json === "undefined") {
+                json = {isValid: false};
+            }
+
+            this.setState({addressError: json.isValid ? false : true});
+            this.setState({
+                withdraw_publicKey: json.hasOwnProperty("publicKey")
+                    ? json.publicKey
+                    : "",
+                withdraw_publicKey_not_empty: json.hasOwnProperty("publicKey")
+                    ? true
+                    : false
+            });
         });
     }
 
@@ -598,6 +612,15 @@ class WithdrawModalNew extends React.Component {
 
     onMemoChanged(e) {
         this.setState({memo: e.target.value});
+    }
+
+    onWithdrawPublicKeyChanged(e) {
+        let new_withdraw_publicKey = e.target.value.trim();
+        this.setState({
+            withdraw_publicKey: new_withdraw_publicKey,
+            withdraw_publicKey_not_empty:
+                new_withdraw_publicKey != "" ? true : false
+        });
     }
 
     onClickAvailableBalance(available) {
@@ -714,6 +737,9 @@ class WithdrawModalNew extends React.Component {
                 assetName +
                 ":" +
                 address +
+                (this.state.withdraw_publicKey_not_empty
+                    ? ":" + this.state.withdraw_publicKey
+                    : "") +
                 (memo ? ":" + new Buffer(memo, "utf-8") : "");
             to = intermediateAccount.get("id");
         }
@@ -1173,6 +1199,27 @@ class WithdrawModalNew extends React.Component {
                                     size={60}
                                     error={state.btsAccountError}
                                 />
+                            </div>
+                        ) : null}
+
+                        {/*PUBLIC key - custom field (PRIZM) */}
+                        {backingAsset &&
+                        backingAsset.supportsPublicKey !== undefined ? (
+                            <div style={{marginBottom: "1em"}}>
+                                <label className="left-label">
+                                    <Translate content="modal.withdraw.public_key" />
+                                </label>
+                                {
+                                    <Input.TextArea
+                                        value={state.withdraw_publicKey}
+                                        onChange={this.onWithdrawPublicKeyChanged.bind(
+                                            this
+                                        )}
+                                        onInput={this.onWithdrawPublicKeyChanged.bind(
+                                            this
+                                        )}
+                                    />
+                                }
                             </div>
                         ) : null}
 

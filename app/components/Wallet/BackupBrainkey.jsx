@@ -4,7 +4,8 @@ import Translate from "react-translate-component";
 import WalletActions from "actions/WalletActions";
 import WalletDb from "stores/WalletDb";
 import {hash} from "bitsharesjs";
-import {Card, Input, Button} from "bitshares-ui-style-guide";
+import {Card, Input, Button, Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 export default class BackupBrainkey extends Component {
     constructor() {
@@ -113,20 +114,14 @@ export default class BackupBrainkey extends Component {
                             id="password"
                             onChange={this.onPassword.bind(this)}
                         />
-                        <p>
-                            {this.state.invalid_password ? (
-                                <span className="error">Invalid password</span>
-                            ) : (
-                                <span>
-                                    <Translate content="wallet.pwd4brainkey" />
-                                </span>
-                            )}
-                        </p>
                         <div>
                             {brainkey_backup_time}
                             <br />
                         </div>
-                        <Button type={"primary"}>
+                        <Button
+                            type="primary"
+                            onClick={this.onSubmit.bind(this)}
+                        >
                             <Translate content="wallet.show_brainkey" />
                         </Button>
                     </form>
@@ -165,10 +160,14 @@ export default class BackupBrainkey extends Component {
             var brainkey = WalletDb.getBrainKey();
             if (was_locked) WalletDb.onLock();
             this.setState({brainkey});
-        } else this.setState({invalid_password: true});
+        } else {
+            Notification.error({
+                message: counterpart.translate("notifications.invalid_password")
+            });
+        }
     }
 
     onPassword(event) {
-        this.setState({password: event.target.value, invalid_password: false});
+        this.setState({password: event.target.value});
     }
 }
