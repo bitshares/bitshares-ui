@@ -319,11 +319,12 @@ export function getAssetHideNamespaces() {
 export function allowedGateway(gateway) {
     const allowedGateways = [
         "TRADE",
-        "OPEN",
+        "OPEN", // keep to display the warning icon, permanently disabled in gateways.js
         "RUDEX",
         "GDEX",
         "XBTSX",
-        "CITADEL"
+        "CITADEL",
+        "BRIDGE" // keep to display the warning icon, permanently disabled in gateways.js
     ];
     if (!gateway) {
         // answers the question: are any allowed?
@@ -354,4 +355,8 @@ export function getConfigurationAsset() {
         explanation:
             "This asset is used for decentralized configuration of the BitShares UI placed under bitshares.org."
     };
+}
+
+export function getSteemNewsTag() {
+    return null;
 }

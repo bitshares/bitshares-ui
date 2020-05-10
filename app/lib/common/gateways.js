@@ -90,13 +90,14 @@ export const availableGateways = {
         id: "OPEN",
         name: "OpenLedger",
         baseAPI: openledgerAPIs,
-        isEnabled: false,
+        isEnabled: () => false,
         selected: false,
         options: {
             enabled: false,
             selected: false
         },
-        landing: "https://dex.openledger.io/news/ol-dex-is-closing-all-activities/",
+        landing:
+            "https://dex.openledger.io/news/ol-dex-is-closing-all-activities/",
         wallet: "Shutdown"
     },
     RUDEX: {
@@ -137,7 +138,7 @@ export const availableGateways = {
         id: "BRIDGE",
         name: "CryptoBridge",
         baseAPI: cryptoBridgeAPIs,
-        isEnabled: _isEnabled("BRIDGE"),
+        isEnabled: () => false,
         selected: false,
         singleWallet: true, // Has no coresponging coinType == backingCoinType specific wallet
         addressValidatorAsset: true, // Address validator requires output_asset parameter
