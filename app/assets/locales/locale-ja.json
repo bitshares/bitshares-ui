@@ -1669,6 +1669,7 @@
             "no_assets": "No withdrawable assets available",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
+            "public_key": "Public key",
             "quantity": "数量",
             "submit": "出金",
             "withdraw": "出金"

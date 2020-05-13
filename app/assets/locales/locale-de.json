@@ -1675,6 +1675,7 @@
             "no_assets": "No withdrawable assets available",
             "no_estimate": "Kein geschätzter Wert für diese Anlage verfügbar",
             "no_gateways": "Entschuldigung, aber es gibt kein Gateway, um diese Auszahlung vorzunehmen.",
+            "public_key": "Public key",
             "quantity": "Menge",
             "submit": "Auszahlung",
             "withdraw": "Auszahlung"
