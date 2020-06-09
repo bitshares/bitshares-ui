@@ -350,6 +350,14 @@ export const settingsAPIs = {
             operator: "CITADEL",
             contact: "email:citadel.li;support"
         },
+        {
+            url: "wss://api-bts.liondani.com/ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Falkenstein",
+            operator: "Witness: liondani",
+            contact: "telegram:liondani"
+        },
 
         // Testnet
         {
