@@ -358,6 +358,30 @@ export const settingsAPIs = {
             operator: "Witness: liondani",
             contact: "telegram:liondani"
         },
+        {
+            url: "wss://public.xbts.io/ws",
+            region: "Europe",
+            country: "Germany",
+            location: "Nürnberg",
+            operator: "Witness: xbtsio-wallet",
+            contact: "telegram: xbtsio"
+        },
+        {
+            url: "wss://cloud.xbts.io/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "VG, Ashburn",
+            operator: "Witness: xbtsio-wallet",
+            contact: "telegram: xbtsio"
+        },
+        {
+            url: "wss://node.xbts.io/ws",
+            region: "Europe",
+            country: "Germany",
+            location: "Falkenstein",
+            operator: "Witness: xbtsio-wallet",
+            contact: "telegram: xbtsio"
+        },
 
         // Testnet
         {
@@ -391,6 +415,14 @@ export const settingsAPIs = {
             location: "Fremont, CA",
             operator: "Witness: gbac-ety001",
             contact: "email:work@domyself.me"
+        },
+        {
+            url: "wss://testnet.xbts.io/ws",
+            region: "TESTNET - Europe",
+            country: "Germany",
+            location: "Nürnberg",
+            operator: "Witness: xbtsio-wallet",
+            contact: "telegram: xbtsio"
         }
     ],
     ES_WRAPPER_LIST: [
