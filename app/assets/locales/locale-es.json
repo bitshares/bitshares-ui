@@ -1675,6 +1675,7 @@
             "no_assets": "No withdrawable assets available",
             "no_estimate": "No hay presupuesto disponible para este objeto.",
             "no_gateways": "Lo sentimos, pero no hay puertas de enlace disponibles para manejar este retiro",
+            "public_key": "Public key",
             "quantity": "Cantidad",
             "submit": "Retirar",
             "withdraw": "Retirar"

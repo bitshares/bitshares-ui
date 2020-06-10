@@ -1071,8 +1071,7 @@ class AccountPortfolioList extends React.Component {
             const totalValue =
                 balanceToAsset(balanceObject).amount +
                 (orders[asset.get("id")] ? orders[asset.get("id")] : 0) +
-                this._sumVestingBalances(vestingBalances) +
-                this._sumCollateralBalances(collateralBalances);
+                this._sumVestingBalances(vestingBalances);
 
             balances.push({
                 key: asset.get("symbol"),

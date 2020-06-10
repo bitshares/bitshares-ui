@@ -1675,6 +1675,7 @@
             "no_assets": "无提现资产可用",
             "no_estimate": "此项目无可用估值",
             "no_gateways": "很遗憾,没有网关处理此提币",
+            "public_key": "Public key",
             "quantity": "数量",
             "submit": "提币",
             "withdraw": "提币"

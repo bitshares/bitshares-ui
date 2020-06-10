@@ -4,8 +4,9 @@ import {api} from "steem-js-api";
 import Translate from "react-translate-component";
 import LoadingIndicator from "./LoadingIndicator";
 import utils from "common/utils";
+import {getSteemNewsTag} from "../branding";
 
-const query = {tag: "bitshares.fdn", limit: 20};
+const query = {tag: getSteemNewsTag(), limit: 20};
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -152,6 +153,12 @@ class News extends React.Component {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
+        if (!query.tag) {
+            setTimeout(() => {
+                this.setState({isLoading: false, isWrong: false});
+            }, 100);
+            return;
+        }
         api.getDiscussionsByBlog(query)
             .then(discussions => {
                 this.orderDiscussions(discussions);

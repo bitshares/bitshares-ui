@@ -214,9 +214,10 @@ class GatewaySelectorModal extends React.Component {
                 name: item.name,
                 prefix: item.id,
                 landing: !!item.landing ? item.landing : undefined,
-                wallet: !!item.wallet
-                    ? item.wallet + this._getReferrerLink()
-                    : undefined,
+                wallet:
+                    !!item.wallet && item.wallet.startsWith("http")
+                        ? item.wallet + this._getReferrerLink()
+                        : item.wallet,
                 isEnabled: item.isEnabled
             };
         });
@@ -226,9 +227,10 @@ class GatewaySelectorModal extends React.Component {
                 type: "bridge",
                 name: item.name,
                 landing: !!item.landing ? item.landing : undefined,
-                wallet: !!item.wallet
-                    ? item.wallet + this._getReferrerLink()
-                    : undefined,
+                wallet:
+                    !!item.wallet && item.wallet.startsWith("http")
+                        ? item.wallet + this._getReferrerLink()
+                        : item.wallet,
                 isEnabled: item.isEnabled
             };
         });

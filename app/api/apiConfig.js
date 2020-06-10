@@ -22,7 +22,7 @@ export const openledgerAPIs = {
 };
 
 export const rudexAPIs = {
-    BASE: "https://gateway.rudex.org/api/v3_0",
+    BASE: "https://gateway.rudex.org/api/rudex",
     COINS_LIST: "/coins",
     NEW_DEPOSIT_ADDRESS: "/simple-api/initiate-trade"
 };
@@ -81,11 +81,6 @@ export const gdexAPIs = {
 export const xbtsxAPIs = {
     BASE: "https://apis.xbts.io/api/v1",
     COINS_LIST: "/coin"
-};
-
-export const deexAPIs = {
-    BASE: "https://deex.exchange/gateway",
-    COINS_LIST: "/compatibility/get_coins"
 };
 
 export const nodeRegions = [
@@ -354,6 +349,14 @@ export const settingsAPIs = {
             location: "Reykjavik",
             operator: "CITADEL",
             contact: "email:citadel.li;support"
+        },
+        {
+            url: "wss://api-bts.liondani.com/ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Falkenstein",
+            operator: "Witness: liondani",
+            contact: "telegram:liondani"
         },
 
         // Testnet

@@ -1669,6 +1669,7 @@
             "no_assets": "No withdrawable assets available",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
+            "public_key": "Public key",
             "quantity": "Quantity",
             "submit": "Withdraw",
             "withdraw": "Withdraw"

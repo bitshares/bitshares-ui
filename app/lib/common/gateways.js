@@ -10,8 +10,7 @@ import {
     cryptoBridgeAPIs,
     gdex2APIs,
     xbtsxAPIs,
-    citadelAPIs,
-    deexAPIs
+    citadelAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 import {isGatewayTemporarilyDisabled} from "../chain/onChainConfig";
@@ -91,14 +90,15 @@ export const availableGateways = {
         id: "OPEN",
         name: "OpenLedger",
         baseAPI: openledgerAPIs,
-        isEnabled: _isEnabled("OPEN"),
+        isEnabled: () => false,
         selected: false,
         options: {
             enabled: false,
             selected: false
         },
-        landing: "http://dex.openledger.io",
-        wallet: "https://openledger.io/"
+        landing:
+            "https://dex.openledger.io/news/ol-dex-is-closing-all-activities/",
+        wallet: "Shutdown"
     },
     RUDEX: {
         id: "RUDEX",
@@ -138,7 +138,7 @@ export const availableGateways = {
         id: "BRIDGE",
         name: "CryptoBridge",
         baseAPI: cryptoBridgeAPIs,
-        isEnabled: _isEnabled("BRIDGE"),
+        isEnabled: () => false,
         selected: false,
         singleWallet: true, // Has no coresponging coinType == backingCoinType specific wallet
         addressValidatorAsset: true, // Address validator requires output_asset parameter
@@ -190,25 +190,6 @@ export const availableGateways = {
         },
         landing: "https://citadel.li/",
         wallet: "https://citadel.li/wallet/"
-    },
-    DEEX: {
-        id: "DEEX",
-        name: "DEEX",
-        baseAPI: deexAPIs,
-        isSimple: true,
-        simpleAssetGateway: false,
-        fixedMemo: {
-            prepend_default: "dex:",
-            append: ""
-        },
-        isEnabled: _isEnabled("DEEX"),
-        addressValidatorMethod: "POST",
-        options: {
-            enabled: false,
-            selected: false
-        },
-        landing: "https://deex.one/",
-        wallet: "https://deex.exchange/"
     }
 };
 
