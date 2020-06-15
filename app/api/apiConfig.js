@@ -311,7 +311,23 @@ export const settingsAPIs = {
             country: "France",
             location: "",
             operator: "bitshares.org",
-            contact: "telegram:Zapata_42"
+            contact: ""
+        },
+        {
+            url: "wss://us.api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "France",
+            location: "",
+            operator: "bitshares.org",
+            contact: ""
+        },
+        {
+            url: "wss://asia.api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "France",
+            location: "",
+            operator: "bitshares.org",
+            contact: ""
         },
         {
             url: "wss://citadel.li/node",
