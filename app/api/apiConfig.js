@@ -204,27 +204,6 @@ export const settingsAPIs = {
             contact: "telegram:lzmlam;wechat:lzmlam"
         },
         {
-            url: "wss://eu.nodes.bitshares.ws",
-            region: "Western Europe",
-            country: "Germany",
-            operator: "Infrastructure Worker",
-            contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
-            url: "wss://us.nodes.bitshares.ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            operator: "Infrastructure Worker",
-            contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
-            url: "wss://hk.nodes.bitshares.ws",
-            region: "Eastern Asia",
-            country: "Hong Kong",
-            operator: "Infrastructure Worker",
-            contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
             url: "wss://api.bts.mobi/ws",
             region: "Northern America",
             country: "U.S.A.",
@@ -232,14 +211,6 @@ export const settingsAPIs = {
             operator: "Witness: in.abit",
             contact: "telegram:abitmore"
         },
-        // {
-        //     url: "wss://api.bts.network/", // check
-        //     region: "Northern America",
-        //     country: "U.S.A.",
-        //     location: "Virginia",
-        //     operator: "Witness: fox",
-        //     contact: "telegram:ryanRfox"
-        // },
         {
             url: "wss://btsws.roelandp.nl/ws",
             region: "Northern Europe",
@@ -255,14 +226,6 @@ export const settingsAPIs = {
             operator: "Witness: bhuz",
             contact: "telegram:bhuzor"
         },
-        //{
-        //    url: "wss://bts-api.lafona.net/ws",
-        //    region: "Northern America",
-        //    country: "Canada",
-        //    location: "Montreal",
-        //    operator: "Witness: delegate-1.lafona",
-        //    contact: "telegram:lafona"
-        //},
         {
             url: "wss://kimziv.com/ws",
             region: "Northern America",
@@ -360,9 +323,9 @@ export const settingsAPIs = {
         },
         {
             url: "wss://public.xbts.io/ws",
-            region: "Europe",
+            region: "Western Europe",
             country: "Germany",
-            location: "Nürnberg",
+            location: "Nuremberg",
             operator: "Witness: xbtsio-wallet",
             contact: "telegram: xbtsio"
         },
@@ -376,7 +339,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://node.xbts.io/ws",
-            region: "Europe",
+            region: "Western Europe",
             country: "Germany",
             location: "Falkenstein",
             operator: "Witness: xbtsio-wallet",
@@ -391,14 +354,6 @@ export const settingsAPIs = {
             location: "Frankfurt",
             operator: "BitShares Europe",
             contact: "telegram:xeroc"
-        },
-        {
-            url: "wss://testnet.nodes.bitshares.ws",
-            region: "TESTNET - Western Europe",
-            country: "Germany",
-            location: "Nuremberg",
-            operator: "Infrastructure Worker",
-            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://testnet.dex.trading/",
@@ -420,7 +375,7 @@ export const settingsAPIs = {
             url: "wss://testnet.xbts.io/ws",
             region: "TESTNET - Europe",
             country: "Germany",
-            location: "Nürnberg",
+            location: "Nuremberg",
             operator: "Witness: xbtsio-wallet",
             contact: "telegram: xbtsio"
         }
