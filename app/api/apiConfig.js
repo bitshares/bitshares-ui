@@ -425,7 +425,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://turkey.walldex.pro/ws",
-            region: "Western Europe",
+            region: "Western Asia",
             country: "Turkey",
             location: "Istanbul",
             operator: "Witness: walldex",
@@ -433,7 +433,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://israel.walldex.pro/ws",
-            region: "Western Europe",
+            region: "Western Asia",
             country: "Israel",
             location: "Tel Aviv",
             operator: "Witness: walldex",
