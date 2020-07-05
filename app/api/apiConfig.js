@@ -132,21 +132,6 @@ export const settingsAPIs = {
             contact: "email:admin@iobanker.com"
         },
         {
-            url: "wss://bitshares.openledger.info/ws",
-            location: "Nuremberg",
-            region: "Western Europe",
-            country: "Germany",
-            operator: "Witness: openledger-dc",
-            contact: "telegram:v1pby"
-        },
-        {
-            url: "wss://openledger.hk/ws",
-            region: "Southeastern Asia",
-            country: "Singapore",
-            operator: "Witness: openledger-dc",
-            contact: "telegram:v1pby"
-        },
-        {
             url: "wss://bit.btsabc.org/ws",
             region: "Eastern Asia",
             country: "China",
