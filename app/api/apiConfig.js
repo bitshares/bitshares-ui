@@ -305,6 +305,14 @@ export const settingsAPIs = {
             operator: "Witness: xbtsio-wallet",
             contact: "telegram: xbtsio"
         },
+        {
+            url: "wss://api.gbacenter.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Fremont, CA",
+            operator: "Witness: gbac-ety001",
+            contact: "email:work@domyself.me"
+        },
 
         // Testnet
         {
@@ -322,14 +330,6 @@ export const settingsAPIs = {
             location: "Paris",
             operator: "Witness: zapata42-witness",
             contact: "telegram:Zapata_42"
-        },
-        {
-            url: "wss://api.gbacenter.org/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Fremont, CA",
-            operator: "Witness: gbac-ety001",
-            contact: "email:work@domyself.me"
         },
         {
             url: "wss://testnet.xbts.io/ws",
