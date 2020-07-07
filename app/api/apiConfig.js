@@ -305,6 +305,14 @@ export const settingsAPIs = {
             operator: "Witness: gbac-ety001",
             contact: "email:work@domyself.me"
         },
+        {
+            url: "wss://api.cnvote.vip:888/",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Zhejiang",
+            operator: "Witness: ioex",
+            contact: "wechat:xiaoyuan_409"
+        },
 
         // Testnet
         {
