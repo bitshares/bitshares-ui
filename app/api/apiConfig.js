@@ -156,31 +156,6 @@ export const settingsAPIs = {
             contact: "telegram:btsplusplus"
         },
         {
-            url: "wss://dexnode.net/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Dallas",
-            operator: "Witness: Sahkan",
-            contact: "telegram:Sahkan_bitshares"
-        },
-        {
-            url: "wss://kc-us-dex.xeldal.com/ws", // check
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Kansas City",
-            operator: "Witness: xeldal",
-            contact: "telegram:xeldal"
-        },
-        {
-            url: "wss://api-ru.bts.blckchnd.com",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Moscow",
-            operator: "Witness: blckchnd",
-            contact:
-                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
-        },
-        {
             url: "wss://blockzms.xyz/ws",
             region: "Northern America",
             country: "U.S.A.",
