@@ -313,6 +313,14 @@ export const settingsAPIs = {
             operator: "Witness: ioex",
             contact: "wechat:xiaoyuan_409"
         },
+        {
+            url: "wss://fujian.cnvote.vip:81/",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Fujian",
+            operator: "ptschina",
+            contact: "wechat:planetlife"
+        },
 
         // Testnet
         {
