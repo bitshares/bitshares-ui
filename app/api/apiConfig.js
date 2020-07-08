@@ -132,14 +132,6 @@ export const settingsAPIs = {
             contact: "email:admin@iobanker.com"
         },
         {
-            url: "wss://bit.btsabc.org/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Hong Kong",
-            operator: "Witness: abc123",
-            contact: "QQ:58291;email:58291@qq.com"
-        },
-        {
             url: "wss://ws.gdex.top",
             region: "Eastern Asia",
             country: "China",
@@ -154,31 +146,6 @@ export const settingsAPIs = {
             location: "Hangzhou",
             operator: "Witness: btspp-witness",
             contact: "telegram:btsplusplus"
-        },
-        {
-            url: "wss://dexnode.net/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Dallas",
-            operator: "Witness: Sahkan",
-            contact: "telegram:Sahkan_bitshares"
-        },
-        {
-            url: "wss://kc-us-dex.xeldal.com/ws", // check
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Kansas City",
-            operator: "Witness: xeldal",
-            contact: "telegram:xeldal"
-        },
-        {
-            url: "wss://api-ru.bts.blckchnd.com",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Moscow",
-            operator: "Witness: blckchnd",
-            contact:
-                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
         },
         {
             url: "wss://blockzms.xyz/ws",
@@ -330,6 +297,30 @@ export const settingsAPIs = {
             operator: "Witness: xbtsio-wallet",
             contact: "telegram: xbtsio"
         },
+        {
+            url: "wss://api.gbacenter.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Fremont, CA",
+            operator: "Witness: gbac-ety001",
+            contact: "email:work@domyself.me"
+        },
+        {
+            url: "wss://api.cnvote.vip:888/",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Zhejiang",
+            operator: "Witness: ioex",
+            contact: "wechat:xiaoyuan_409"
+        },
+        {
+            url: "wss://fujian.cnvote.vip:81/",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Fujian",
+            operator: "ptschina",
+            contact: "wechat:planetlife"
+        },
 
         // Testnet
         {
@@ -347,14 +338,6 @@ export const settingsAPIs = {
             location: "Paris",
             operator: "Witness: zapata42-witness",
             contact: "telegram:Zapata_42"
-        },
-        {
-            url: "wss://api.gbacenter.org/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Fremont, CA",
-            operator: "Witness: gbac-ety001",
-            contact: "email:work@domyself.me"
         },
         {
             url: "wss://testnet.xbts.io/ws",
