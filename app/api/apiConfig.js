@@ -137,46 +137,6 @@ export const settingsAPIs = {
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
-            url: "wss://ru-msk.walldex.pro/ws",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Moscow DC2",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://ru-spb.walldex.pro/ws",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Saint Petersburg",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://ru-nsk.walldex.pro/ws",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Novosibirsk",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://ru-ekb.walldex.pro/ws",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Ekaterinburg",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://ru-kha.walldex.pro/ws",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Khabarovsk",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
             url: "wss://ukraine.walldex.pro/ws",
             region: "Eastern Europe",
             country: "Ukraine",
@@ -209,38 +169,6 @@ export const settingsAPIs = {
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
         {
-            url: "wss://uk.walldex.pro/ws",
-            region: "Northern Europe",
-            country: "United Kingdom",
-            location: "London",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://poland.walldex.pro/ws",
-            region: "Eastern Europe",
-            country: "Poland",
-            location: "Warsaw",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://france.walldex.pro/ws",
-            region: "Western Europe",
-            country: "France",
-            location: "Paris",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://spain.walldex.pro/ws",
-            region: "Southern Europe",
-            country: "Spain",
-            location: "Madrid",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
             url: "wss://us-va.walldex.pro/ws",
             region: "Northern America",
             country: "U.S.A.",
@@ -261,14 +189,6 @@ export const settingsAPIs = {
             region: "Northern America",
             country: "U.S.A.",
             location: "St. Louis, MO",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://us-fl.walldex.pro/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Miami, FL",
             operator: "Witness: walldex",
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
@@ -325,30 +245,6 @@ export const settingsAPIs = {
             region: "Eastern Asia",
             country: "China",
             location: "Hong Kong",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://cn-bj.walldex.pro/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Beijing",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://cn-sh.walldex.pro/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Shanghai",
-            operator: "Witness: walldex",
-            contact: "email:nodes@walldex.pro;telegram:walldex"
-        },
-        {
-            url: "wss://cn-sc.walldex.pro/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Chengdu",
             operator: "Witness: walldex",
             contact: "email:nodes@walldex.pro;telegram:walldex"
         },
