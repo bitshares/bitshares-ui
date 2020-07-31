@@ -17,6 +17,7 @@ import AccountStore from "stores/AccountStore";
 import Witnesses from "./Voting/Witnesses";
 import Committee from "./Voting/Committee";
 import Workers from "./Voting/Workers";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 const WITNESSES_KEY = "witnesses";
 const COMMITTEE_KEY = "committee";
@@ -268,6 +269,10 @@ class AccountVoting extends React.Component {
 
     onPublish() {
         this.publish(this.state.proxy_account_id);
+    }
+
+    onCreateTicket() {
+        ApplicationApi.createTicket(this.props.account, "1.3.0", 100000);
     }
 
     publish(new_proxy_id) {
@@ -594,6 +599,39 @@ class AccountVoting extends React.Component {
             this.props.history.push(value);
         };
 
+        const increase_voting_power = (
+            <Tooltip
+                title={counterpart.translate(
+                    "account.votes.cast_votes_through_one_operation"
+                )}
+                mouseEnterDelay={0.5}
+            >
+                <div
+                    style={{
+                        float: "right"
+                    }}
+                >
+                    <Button
+                        type="primary"
+                        onClick={this.onCreateTicket.bind(this)}
+                    >
+                        <TranslateWithLinks
+                            string="voting.create_ticket"
+                            keys={[
+                                {
+                                    type: "asset",
+                                    value: "1.3.0",
+                                    arg: "asset"
+                                }
+                            ]}
+                            noLink={true}
+                            noTop={true}
+                        />
+                    </Button>
+                </div>
+            </Tooltip>
+        );
+
         return (
             <div className="main-content grid-content">
                 <div className="voting">
@@ -602,6 +640,13 @@ class AccountVoting extends React.Component {
                             <Translate content="voting.title" component="h1" />
                             <Translate
                                 content="voting.description"
+                                component="p"
+                            />
+                        </div>
+                        <div className="ticket-row">
+                            {increase_voting_power}
+                            <Translate
+                                content="voting.ticket_explanation"
                                 component="p"
                             />
                         </div>
