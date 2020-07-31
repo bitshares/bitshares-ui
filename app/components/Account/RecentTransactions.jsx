@@ -283,7 +283,10 @@ class RecentTransactions extends React.Component {
                 fetchingAccountHistory: false,
                 accountHistoryError: err,
                 esNodeCustom: false,
-                esNode: settingsAPIs.ES_WRAPPER_LIST[0].url
+                esNode:
+                    settingsAPIs.ES_WRAPPER_LIST.length > 0
+                        ? settingsAPIs.ES_WRAPPER_LIST[0].url
+                        : null
             });
         }
     }

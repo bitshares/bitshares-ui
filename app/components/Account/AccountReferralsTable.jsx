@@ -52,7 +52,7 @@ class AccountReferralsTable extends React.Component {
         if (settingsAPIs.ES_WRAPPER_LIST.length == 0) return;
 
         // fixme access to ES could be wrapped in a store or something else
-        const esNode = settingsAPIs.ES_WRAPPER_LIST[3].url;
+        const esNode = settingsAPIs.ES_WRAPPER_LIST[0].url;
 
         if (isAccountChanged) {
             referralsCount = null;
