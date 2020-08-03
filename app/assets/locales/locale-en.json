@@ -1784,7 +1784,15 @@
         "witness_pay": "Withdrew witness pay to account",
         "witness_receive": "Received witness from witness",
         "witness_update": "{account} update its witness info",
-        "worker_create": "{account} created a worker proposal with daily pay of {pay}"
+        "worker_create": "{account} created a worker proposal with daily pay of {pay}",
+        "ticket_create": "{account} locked away {amount} in a ticket",
+        "ticket_types": {
+            "liquid": "Liquid",
+            "lock_180_days": "Locked for 180 days",
+            "lock_360_days": "Locked for 360 days",
+            "lock_720_days": "Locked for 720 days",
+            "lock_forever": "Locked forever"
+        }
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
@@ -2571,7 +2579,8 @@
             "witness_create": "Create witness",
             "witness_update": "Update witness",
             "witness_withdraw_pay": "Witness pay withdrawal",
-            "worker_create": "Create worker"
+            "worker_create": "Create worker",
+            "ticket_create": "Create ticket"
         },
         "vesting_balance_create": "created vesting balance of",
         "view_json": "Show raw json",
@@ -2697,7 +2706,9 @@
     },
     "voting": {
         "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
-        "title": "Voting"
+        "title": "Voting",
+        "ticket_explanation": "TBD",
+        "create_ticket": "Lock 1 {asset}"
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",

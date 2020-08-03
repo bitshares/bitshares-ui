@@ -132,14 +132,6 @@ export const settingsAPIs = {
             contact: "email:admin@iobanker.com"
         },
         {
-            url: "wss://bit.btsabc.org/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Hong Kong",
-            operator: "Witness: abc123",
-            contact: "QQ:58291;email:58291@qq.com"
-        },
-        {
             url: "wss://ws.gdex.top",
             region: "Eastern Asia",
             country: "China",
@@ -154,31 +146,6 @@ export const settingsAPIs = {
             location: "Hangzhou",
             operator: "Witness: btspp-witness",
             contact: "telegram:btsplusplus"
-        },
-        {
-            url: "wss://dexnode.net/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Dallas",
-            operator: "Witness: Sahkan",
-            contact: "telegram:Sahkan_bitshares"
-        },
-        {
-            url: "wss://kc-us-dex.xeldal.com/ws", // check
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Kansas City",
-            operator: "Witness: xeldal",
-            contact: "telegram:xeldal"
-        },
-        {
-            url: "wss://api-ru.bts.blckchnd.com",
-            region: "Eastern Europe",
-            country: "Russia",
-            location: "Moscow",
-            operator: "Witness: blckchnd",
-            contact:
-                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
         },
         {
             url: "wss://blockzms.xyz/ws",
@@ -291,6 +258,30 @@ export const settingsAPIs = {
             contact: "telegram:Zapata_42"
         },
         {
+            url: "wss://api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "France",
+            location: "",
+            operator: "bitshares.org",
+            contact: ""
+        },
+        {
+            url: "wss://us.api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "France",
+            location: "",
+            operator: "bitshares.org",
+            contact: ""
+        },
+        {
+            url: "wss://asia.api.bitshares.org/ws",
+            region: "Western Europe",
+            country: "France",
+            location: "",
+            operator: "bitshares.org",
+            contact: ""
+        },
+        {
             url: "wss://citadel.li/node",
             region: "Western Europe",
             country: "Iceland",
@@ -330,6 +321,30 @@ export const settingsAPIs = {
             operator: "Witness: xbtsio-wallet",
             contact: "telegram: xbtsio"
         },
+        {
+            url: "wss://api.gbacenter.org/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Fremont, CA",
+            operator: "Witness: gbac-ety001",
+            contact: "email:work@domyself.me"
+        },
+        {
+            url: "wss://api.cnvote.vip:888/",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Zhejiang",
+            operator: "Witness: ioex",
+            contact: "wechat:xiaoyuan_409"
+        },
+        {
+            url: "wss://fujian.cnvote.vip:81/",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Fujian",
+            operator: "ptschina",
+            contact: "wechat:planetlife"
+        },
 
         // Testnet
         {
@@ -349,14 +364,6 @@ export const settingsAPIs = {
             contact: "telegram:Zapata_42"
         },
         {
-            url: "wss://api.gbacenter.org/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Fremont, CA",
-            operator: "Witness: gbac-ety001",
-            contact: "email:work@domyself.me"
-        },
-        {
             url: "wss://testnet.xbts.io/ws",
             region: "TESTNET - Europe",
             country: "Germany",
@@ -366,34 +373,6 @@ export const settingsAPIs = {
         }
     ],
     ES_WRAPPER_LIST: [
-        {
-            url: "https://eu.wrapper.elasticsearch.bitshares.ws",
-            region: "Western Europe",
-            country: "Germany",
-            operator: "Infrastructure Worker",
-            contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
-            url: "https://us.wrapper.elasticsearch.bitshares.ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            operator: "Infrastructure Worker",
-            contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
-            url: "https://hk.wrapper.elasticsearch.bitshares.ws",
-            region: "Hong Kong",
-            country: "China",
-            operator: "Infrastructure Worker",
-            contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
-            url: "https://explorer.bitshares-kibana.info",
-            region: "N/A",
-            country: "N/A",
-            operator: "N/A",
-            contact: "N/A"
-        }
     ],
     DEFAULT_FAUCET: getFaucet().url,
     TESTNET_FAUCET: getTestFaucet().url
