@@ -1787,6 +1787,11 @@
         "worker_create": "{account} created a worker proposal with daily pay of {pay}",
         "ticket_create": "{account} locked away {amount} in a ticket",
         "ticket_types": {
+            "0": "Liquid",
+            "1": "Locked for 180 days",
+            "2": "Locked for 360 days",
+            "3": "Locked for 720 days",
+            "4": "Locked forever",
             "liquid": "Liquid",
             "lock_180_days": "Locked for 180 days",
             "lock_360_days": "Locked for 360 days",
