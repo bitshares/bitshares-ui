@@ -125,16 +125,32 @@ export const settingsAPIs = {
             location: "Virginia",
             region: "Northern America",
             country: "U.S.A."
-            //operator: "Witness: openledger-dc",
-            //contact: "telegram:mtopenledger"
+            //operator: "Witness: ",
+            //contact: "telegram:"
         },
         {
             url: "wss://testnet.tusc.network:8443",
             location: "Virginia",
             region: "TESTNET - Northern America",
             country: "U.S.A."
-            //operator: "Witness: openledger-dc",
-            //contact: "telegram:mtopenledger"
+            //operator: "Witness:",
+            //contact: "telegram:"
+        },
+        {
+            url: "wss://api.readyrhino.one",
+            location: "Virginia",
+            region: "Northern America",
+            country: "U.S.A."
+            //operator: "Witness: readyrhino",
+            //contact: "telegram:RobMcNealy"
+        },
+        {
+            url: "wss://tuscapi.gambitweb.com",
+            location: "Northern California",
+            region: "Northern America",
+            country: "U.S.A."
+            //operator: "Witness: atter-tusc",
+            //contact: "telegram:bendubois26"
         }
     ],
     ES_WRAPPER_LIST: [
@@ -143,8 +159,8 @@ export const settingsAPIs = {
             location: "Virginia",
             region: "Northern America",
             country: "U.S.A."
-            //operator: "Witness: openledger-dc",
-            //contact: "telegram:mtopenledger"
+            //operator: "Witness: ",
+            //contact: "telegram:"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
