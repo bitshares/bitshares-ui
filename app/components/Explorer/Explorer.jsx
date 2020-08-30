@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import Witnesses from "./Witnesses";
 import CommitteeMembers from "./CommitteeMembers";
 import FeesContainer from "../Blockchain/FeesContainer";
@@ -57,7 +58,12 @@ class Explorer extends React.Component {
 
     render() {
         const onChange = value => {
-            this.props.history.push(value);
+            console.log("tab changed value==", value);
+            if (value == "/explorer/assets") {
+                this.props.history.push("/asset/TUSC");
+            } else {
+                this.props.history.push(value);
+            }
         };
 
         return (
@@ -69,7 +75,6 @@ class Explorer extends React.Component {
             >
                 {this.state.tabs.map(tab => {
                     const TabContent = tab.content;
-
                     return (
                         <Tabs.TabPane
                             key={tab.link}

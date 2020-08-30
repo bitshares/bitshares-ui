@@ -1913,12 +1913,12 @@ class Asset extends React.Component {
             <div className="grid-container asset-page">
                 <div className="grid-block page-layout">
                     <div className="grid-block main-content wrap">
-                        <div
+                        {/* <div
                             className="grid-block medium-up-1"
                             style={{width: "100%"}}
                         >
                             {this.renderAboutBox(asset, this.props.asset)}
-                        </div>
+                        </div> */}
 
                         <Tabs
                             setting="assetDataTabs"
@@ -1940,7 +1940,7 @@ class Asset extends React.Component {
                                         {this.renderPermissions(asset)}
                                     </div>
 
-                                    <div className="grid-content small-no-padding">
+                                    {/* <div className="grid-content small-no-padding">
                                         {this.renderFeePool(asset)}
                                     </div>
 
@@ -1960,11 +1960,11 @@ class Asset extends React.Component {
                                         <div className="grid-content small-no-padding">
                                             {this.renderCollateralBid(asset)}
                                         </div>
-                                    ) : null}
+                                    ) : null} */}
                                 </div>
                                 {priceFeedData ? priceFeedData : null}
                             </Tab>
-                            <Tab title="explorer.asset.actions">
+                            {/* <Tab title="explorer.asset.actions">
                                 <div
                                     className="grid-block vertical large-horizontal medium-up-1 large-up-2"
                                     style={{paddingTop: "1rem"}}
@@ -1980,7 +1980,7 @@ class Asset extends React.Component {
                                     {this.state.collateralBids.length > 0 &&
                                         this.renderCollateralBid(asset)}
                                 </div>
-                            </Tab>
+                            </Tab> */}
                         </Tabs>
                     </div>
                 </div>
