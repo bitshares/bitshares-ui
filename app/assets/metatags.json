@@ -1,0 +1,71 @@
+[
+    {
+        "path": "blocks",
+        "title": "TUSC Blockchain Explorer | TUSC Block Explorer & Search Tool",
+        "name": "description",
+        "content": "The TUSC Blockchain Explorer allows you to confirm TUSC transactions, lookup accounts, block producers, account balances, all in an easy to use GUI interface.",
+        "note": "Main Explorer Page"
+    },
+    {
+        "path": "create-account/password",
+        "title": "TUSC Account Creation Form | Create a new TUSC Account",
+        "name": "description",
+        "content": "Online payments are easy and inexpensive with TUSC. Create a TUSC account today, it’s free and takes very little time. Make sure to protect your private keys!",
+        "note": "Wallet Create Account Page"
+    },
+    {
+        "path": "explorer/assets",
+        "title": "TUSC Assets | TUSC - The Universal Settlement Coin",
+        "name": "description",
+        "content": "TUSC asset index page. See all the available TUSC assets in one place."
+    },
+    {
+        "path": "asset/TUSC",
+        "title": "TUSC Supply | TUSC Current Circulating, Reserve & Max Supply",
+        "name": "description",
+        "content": "Review the current TUSC circulating, reserve and maximum supplies all in one place.",
+        "note": "Asset TUSC"
+    },
+    {
+        "path": "explorer/accounts",
+        "title": "TUSC Account Information | Search TUSC Accounts",
+        "name": "description",
+        "content": "Review, serach and confirm all TUSC account balances, history and transactions.",
+        "note": "Accounts"
+    },
+    {
+        "path": "explorer/witnesses",
+        "title": "TUSC Block Producers (Witnesses) | View Active TUSC BPs",
+        "name": "description",
+        "content": "Review active block producers (witnesses) statistics, uptime and missed blocks.",
+        "note": "Witnesses"
+    },
+    {
+        "path": "explorer/committee-members",
+        "title": "TUSC Committee Members | View Current Committee Members",
+        "name": "description",
+        "content": "Research and review active TUSC committee members.",
+        "note": "Committee"
+    },
+    {
+        "path": "explorer/fees",
+        "title": "TUSC Fee Schedule | View Current TUSC Network Fees",
+        "name": "description",
+        "content": "Research and review current TUSC network fees.",
+        "note": "Fee Schedule"
+    },
+    {
+        "path": "voting",
+        "title": "TUSC Voting | Vote for BP's, Committees & Worker Proposals",
+        "name": "description",
+        "content": "Be an active member of the TUSC community by voting in on chain governance. Any TUSC holder can vote for block producers, committee members & worker proposals.",
+        "note": "Voting"
+    },
+    {
+        "path": "voting",
+        "title": "TUSC Web Wallet Login Page | Access Your TUSC Account",
+        "name": "description",
+        "content": "Accessing your TUSC is easy through this non-custodial web wallet.  Protect your private keys and never share them with anyone.",
+        "note": "Login Popup Page (When you click the lock icon)"
+    }
+]

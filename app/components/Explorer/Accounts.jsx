@@ -12,6 +12,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import {Table, Select, Icon as IconStyleGuide} from "bitshares-ui-style-guide";
 import SearchInput from "../Utility/SearchInput";
 import {ChainStore} from "tuscjs";
+import MetaTag from "../Layout/MetaTag";
 
 class Accounts extends React.Component {
     constructor(props) {
@@ -265,6 +266,7 @@ class Accounts extends React.Component {
 
         return (
             <div className="grid-block vertical">
+                <MetaTag path="explorer/accounts" />
                 <div className="grid-block vertical">
                     <div className="grid-block main-content small-12 medium-10 medium-offset-1 main-content vertical">
                         <div className="generic-bordered-box">

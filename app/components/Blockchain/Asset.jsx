@@ -25,6 +25,7 @@ import AssetPublishFeed from "./AssetPublishFeed";
 import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
 import {Tooltip, Icon, Table, Tabs as AntTabs} from "bitshares-ui-style-guide";
+import MetaTag from "../Layout/MetaTag";
 // TODO: Replace remaining old style Tabs with new
 
 class AssetFlag extends React.Component {
@@ -1911,6 +1912,7 @@ class Asset extends React.Component {
 
         return (
             <div className="grid-container asset-page">
+                <MetaTag path="asset/TUSC" />
                 <div className="grid-block page-layout">
                     <div className="grid-block main-content wrap">
                         {/* <div
