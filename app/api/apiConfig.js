@@ -345,6 +345,14 @@ export const settingsAPIs = {
             operator: "ptschina",
             contact: "wechat:planetlife"
         },
+        {
+            url: "wss://api.bitshares.im/ws",
+            region: "Eastern Asia",
+            country: "Japan",
+            location: "Tokyo",
+            operator: "Witness: clone",
+            contact: "telegram: yexiao"
+        },
 
         // Testnet
         {
