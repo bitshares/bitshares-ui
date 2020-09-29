@@ -124,7 +124,7 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
-            url: "wss://dex.iobanker.com:9090",
+            url: "wss://dex.iobanker.com/ws",
             region: "Western Europe",
             country: "Germany",
             location: "Frankfurt",
