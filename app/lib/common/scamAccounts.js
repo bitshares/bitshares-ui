@@ -1229,8 +1229,6 @@ export const scamAccountsOther = [
     "1.2.1589838",
     "committee-security-update",
     "1.2.1592605",
-    "committee-accounr",
-    "1.2.500266",
     "committee-delegate",
     "1.2.1621188",
     "binance-witness",
