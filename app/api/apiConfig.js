@@ -281,14 +281,15 @@ export const settingsAPIs = {
             operator: "bitshares.org",
             contact: ""
         },
-        {
-            url: "wss://citadel.li/node",
-            region: "Western Europe",
-            country: "Iceland",
-            location: "Reykjavik",
-            operator: "CITADEL",
-            contact: "email:citadel.li;support"
-        },
+        // TODO node is out of sync, recheck later
+        //{
+        //    url: "wss://citadel.li/node",
+        //    region: "Western Europe",
+        //    country: "Iceland",
+        //    location: "Reykjavik",
+        //    operator: "CITADEL",
+        //    contact: "email:citadel.li;support"
+        //},
         {
             url: "wss://api-bts.liondani.com/ws",
             region: "Western Europe",
