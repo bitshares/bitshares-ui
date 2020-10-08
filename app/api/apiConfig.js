@@ -217,14 +217,15 @@ export const settingsAPIs = {
             operator: "Witness: delegate.freedom",
             contact: "telegram:eggplant"
         },
-        {
-            url: "wss://api.bts.ai",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Beijing",
-            operator: "Witness: witness.hiblockchain",
-            contact: "telegram:vianull;wechat:strugglingl"
-        },
+        // TODO the owner said it's temporarily closed. Recheck later.
+        //{
+        //    url: "wss://api.bts.ai",
+        //    region: "Eastern Asia",
+        //    country: "China",
+        //    location: "Beijing",
+        //    operator: "Witness: witness.hiblockchain",
+        //    contact: "telegram:vianull;wechat:strugglingl"
+        //},
         {
             url: "wss://bts-seoul.clockwork.gr",
             region: "Southeastern Asia",
@@ -281,14 +282,15 @@ export const settingsAPIs = {
             operator: "bitshares.org",
             contact: ""
         },
-        {
-            url: "wss://citadel.li/node",
-            region: "Western Europe",
-            country: "Iceland",
-            location: "Reykjavik",
-            operator: "CITADEL",
-            contact: "email:citadel.li;support"
-        },
+        // TODO node is out of sync, recheck later
+        //{
+        //    url: "wss://citadel.li/node",
+        //    region: "Western Europe",
+        //    country: "Iceland",
+        //    location: "Reykjavik",
+        //    operator: "CITADEL",
+        //    contact: "email:citadel.li;support"
+        //},
         {
             url: "wss://api-bts.liondani.com/ws",
             region: "Western Europe",
