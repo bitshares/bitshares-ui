@@ -41,6 +41,8 @@ export const scamAccountsBittrex = [
 export const scamAccountsOther = [
     // "blockchainprojectsbv-test-2", for testing
     // "1.2.894879",
+    "aaex-bitcny-deposit-wallet",
+    "1.2.492535",
     "aacoin",
     "1.2.1005892",
     "abucoins",
