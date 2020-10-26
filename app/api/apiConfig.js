@@ -124,6 +124,14 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
+            url: "wss://nexus01.co.uk/ws",
+            region: "Northern Europe",
+            country: "England",
+            location: "Gloucester",
+            operator: "Witness: nexus01",
+            contact: "telegram:rosswlkr"
+        },
+        {
             url: "wss://dex.iobanker.com/ws",
             region: "Western Europe",
             country: "Germany",
