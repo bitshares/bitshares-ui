@@ -24,7 +24,7 @@ function _isTestnet() {
  * @returns {string}
  */
 export function getWalletName() {
-    return "BitShares";
+    return "Evraz";
 }
 
 /**
@@ -63,7 +63,8 @@ export function getTestFaucet() {
  * @returns {*}
  */
 export function getLogo() {
-    return require("assets/logo-ico-blue.png");
+    return require("assets/evraz_big.png");
+    // return "/assets/evraz_big.png";
 }
 
 /**
@@ -93,14 +94,14 @@ export function getUnits() {
     if (_isTestnet()) {
         return ["TEST"];
     }
-    return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
+    return ["EVRAZ", "BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
 }
 
 export function getDefaultMarket() {
     if (_isTestnet()) {
         return "USD_TEST";
     }
-    return "USD_BTS";
+    return "EVRAZ_BTS";
 }
 
 /**
@@ -112,7 +113,7 @@ export function getMyMarketsBases() {
     if (_isTestnet()) {
         return ["TEST"];
     }
-    return ["BTS", "BTC", "ETH", "USD", "CNY"];
+    return ["EVRAZ", "BTS", "BTC", "ETH", "USD", "CNY"];
 }
 
 /**
@@ -208,6 +209,15 @@ export function getFeaturedMarkets(quotes = []) {
         return [["USD", "TEST"]];
     }
     return [
+        ["EVRAZ", "BTS"],
+        ["EVRAZ", "RUBLE"],
+        ["EVRAZ", "EUR"],
+        ["EVRAZ", "CNY"],
+        ["EVRAZ", "HONEST.USD"],
+        ["EVRAZ", "RUDEX.BTC"],
+        ["EVRAZ", "XBTSX.BTC"],
+        ["EVRAZ", "XBTSX.STH"],
+        ["EVRAZ", "CRUDE.NGN"],
         ["USD", "BTS"],
         ["USD", "GOLD"],
         ["USD", "HERO"],

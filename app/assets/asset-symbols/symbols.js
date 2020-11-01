@@ -83,6 +83,7 @@ require("file-loader?name=asset-symbols/[name].png!./exr.png");
 require("file-loader?name=asset-symbols/[name].png!./lcrt.png");
 require("file-loader?name=asset-symbols/[name].png!./nvc.png");
 require("file-loader?name=asset-symbols/[name].png!./nmc.png");
+require("file-loader?name=asset-symbols/[name].png!./evraz.png");
 
 // 3rd party assets (RuDEX)
 require("file-loader?name=asset-symbols/[name].png!./ppy.png");
