@@ -31,6 +31,7 @@ import {
 import AccountStore from "stores/AccountStore";
 import JoinWitnessesModal from "../Modal/JoinWitnessesModal";
 import JoinCommitteeModal from "../Modal/JoinCommitteeModal";
+import MetaTag from "../Layout/MetaTag";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -746,6 +747,7 @@ class AccountVoting extends React.Component {
 
         return (
             <div className="grid-content no-padding page-layout ">
+                <MetaTag path="voting" />
                 <div className="main-content content-block small-12 voting">
                     <div className="padding">
                         <div>

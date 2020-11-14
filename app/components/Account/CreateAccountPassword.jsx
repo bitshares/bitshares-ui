@@ -26,6 +26,7 @@ import {
     GoogleReCaptcha
 } from "react-google-recaptcha-v3";
 import SettingsStore from "stores/SettingsStore";
+import MetaTag from "../Layout/MetaTag";
 
 function isTestNet(url) {
     return (
@@ -846,6 +847,7 @@ class CreateAccountPassword extends React.Component {
                 id="scrollToInput"
                 name="scrollToInput"
             >
+                <MetaTag path="create-account/password" />
                 <div>
                     {step === 2 ? (
                         <p

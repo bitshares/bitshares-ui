@@ -2,6 +2,7 @@ import React from "react";
 import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt-container";
 import Fees from "./Fees";
+import MetaTag from "../Layout/MetaTag";
 
 class FeesContainer extends React.Component {
     render() {
@@ -12,6 +13,7 @@ class FeesContainer extends React.Component {
                     settings: SettingsStore.getState().settings
                 }}
             >
+                <MetaTag path="explorer/fees" />
                 <Fees {...this.props} />
             </AltContainer>
         );

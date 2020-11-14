@@ -15,6 +15,7 @@ import {withRouter} from "react-router-dom";
 import {Table, Icon, Input, Popover} from "bitshares-ui-style-guide";
 import sanitize from "sanitize";
 import SearchInput from "../Utility/SearchInput";
+import MetaTag from "../Layout/MetaTag";
 
 require("./witnesses.scss");
 

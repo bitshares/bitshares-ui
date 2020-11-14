@@ -9,6 +9,7 @@ import AccountsContainer from "./AccountsContainer";
 import counterpart from "counterpart";
 import MarketsContainer from "../Exchange/MarketsContainer";
 import {Tabs} from "bitshares-ui-style-guide";
+import MetaTag from "../Layout/MetaTag";
 
 class Explorer extends React.Component {
     constructor(props) {
@@ -67,26 +68,30 @@ class Explorer extends React.Component {
         };
 
         return (
-            <Tabs
-                activeKey={this.props.location.pathname}
-                animated={false}
-                style={{display: "table", height: "100%", width: "100%"}}
-                onChange={onChange}
-            >
-                {this.state.tabs.map(tab => {
-                    const TabContent = tab.content;
-                    return (
-                        <Tabs.TabPane
-                            key={tab.link}
-                            tab={counterpart.translate(tab.translate)}
-                        >
-                            <div className="padding">
-                                <TabContent />
-                            </div>
-                        </Tabs.TabPane>
-                    );
-                })}
-            </Tabs>
+            <div>
+                <MetaTag path="blocks" />
+                <Tabs
+                    activeKey={this.props.location.pathname}
+                    animated={false}
+                    style={{display: "table", height: "100%", width: "100%"}}
+                    onChange={onChange}
+                >
+                    {this.state.tabs.map(tab => {
+                        const TabContent = tab.content;
+
+                        return (
+                            <Tabs.TabPane
+                                key={tab.link}
+                                tab={counterpart.translate(tab.translate)}
+                            >
+                                <div className="padding">
+                                    <TabContent />
+                                </div>
+                            </Tabs.TabPane>
+                        );
+                    })}
+                </Tabs>
+            </div>
         );
     }
 }
