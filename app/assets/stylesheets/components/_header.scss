@@ -172,16 +172,17 @@ ul.dropdown.header-menu {
     border: none;
     z-index: 1004;
     > li {
-        height: 41px;
+        height: auto;
         padding: 2px 5px 2px 10px;
+        font-size: 14px;
         > div {
             vertical-align: middle;
         }
         > div:first-of-type {
             padding-top: 5px;
             > span.icon > svg {
-                height: 1.5rem;
-                width: 1.5rem;
+                height: 1rem;
+                width: 1rem;
             }
         }
         > div:nth-of-type(2) {
