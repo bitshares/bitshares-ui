@@ -126,20 +126,18 @@ class WalletActions {
                             "Content-type": "application/json"
                         },
                         body: JSON.stringify({
-                            account: {
-                                name: account_name,
-                                owner_key: owner_private
-                                    .toPublicKey()
-                                    .toPublicKeyString(),
-                                active_key: active_private
-                                    .toPublicKey()
-                                    .toPublicKeyString(),
-                                memo_key: memo_private
-                                    .toPublicKey()
-                                    .toPublicKeyString(),
-                                refcode: refcode,
-                                referrer: referrer
-                            }
+                            name: account_name,
+                            owner_key: owner_private
+                                .toPublicKey()
+                                .toPublicKeyString(),
+                            active_key: active_private
+                                .toPublicKey()
+                                .toPublicKeyString(),
+                            memo_key: memo_private
+                                .toPublicKey()
+                                .toPublicKeyString(),
+                            refcode: refcode,
+                            referrer: referrer
                         })
                     }
                 )
@@ -232,21 +230,19 @@ class WalletActions {
                         "Content-type": "application/json"
                     },
                     body: JSON.stringify({
-                        account: {
-                            name: account_name,
-                            owner_key: owner_private.private_key
-                                .toPublicKey()
-                                .toPublicKeyString(),
-                            active_key: active_private.private_key
-                                .toPublicKey()
-                                .toPublicKeyString(),
-                            memo_key: active_private.private_key
-                                .toPublicKey()
-                                .toPublicKeyString(),
-                            //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
-                            refcode: refcode,
-                            referrer: referrer
-                        }
+                        name: account_name,
+                        owner_key: owner_private.private_key
+                            .toPublicKey()
+                            .toPublicKeyString(),
+                        active_key: active_private.private_key
+                            .toPublicKey()
+                            .toPublicKeyString(),
+                        memo_key: active_private.private_key
+                            .toPublicKey()
+                            .toPublicKeyString(),
+                        //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
+                        refcode: refcode,
+                        referrer: referrer
                     })
                 }
             ).then(r => r.json());
