@@ -803,15 +803,7 @@ const ApplicationApi = {
                     amount: amount,
                     asset_id: objects.asset.get("id")
                 },
-                // fixme should be given
-                policy: [
-                    0,
-                    {
-                        begin_timestamp: parseInt(new Date().getTime() / 1000),
-                        vesting_cliff_seconds: 100,
-                        vesting_duration_seconds: 100
-                    }
-                ]
+                policy: policy
             }
         );
 
