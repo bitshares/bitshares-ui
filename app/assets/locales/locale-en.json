@@ -1580,6 +1580,15 @@
             "amount": "Amount to Convert",
             "submit": "Ok"
         },
+        "create_lock": {
+            "amount": "Amount to lock",
+            "from": "Account to lock from",
+            "targetType": "Lock Type",
+            "type_warning": "Please choose a lock type.",
+            "submit": "Lock",
+            "title": "Create Lock",
+            "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
+        },
         "deposit": {
             "address_generation_error": "Unable to generate address",
             "amount": "Amount to Deposit",
@@ -1788,14 +1797,14 @@
         "ticket_create": "{account} locked away {amount} in a ticket",
         "ticket_types": {
             "0": "Liquid",
-            "1": "Locked for 180 days",
-            "2": "Locked for 360 days",
-            "3": "Locked for 720 days",
+            "1": "Claimable 180 days after unlock request",
+            "2": "Claimable 360 days after unlock request",
+            "3": "Claimable 720 days after unlock request",
             "4": "Locked forever",
             "liquid": "Liquid",
-            "lock_180_days": "Locked for 180 days",
-            "lock_360_days": "Locked for 360 days",
-            "lock_720_days": "Locked for 720 days",
+            "lock_180_days": "Claimable 180 days after unlock request",
+            "lock_360_days": "Claimable 360 days after unlock request",
+            "lock_720_days": "Claimable 720 days after unlock request",
             "lock_forever": "Locked forever"
         }
     },
@@ -2712,7 +2721,8 @@
     "voting": {
         "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
         "title": "Voting",
-        "ticket_explanation": "TBD",
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
+        "increase_voting_power": "Create Lock",
         "create_ticket": "Lock 1 {asset}"
     },
     "walkthrough": {
