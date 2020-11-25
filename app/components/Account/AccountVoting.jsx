@@ -627,10 +627,6 @@ class AccountVoting extends React.Component {
                 </div>
             </Tooltip>
         );
-        console.log(
-            this.state.isCreateLockModalVisible,
-            this.state.isCreateLockModalVisibleBefore
-        );
         return (
             <div className="main-content grid-content">
                 <div className="voting">
@@ -726,10 +722,6 @@ class AccountVoting extends React.Component {
                         asset={"1.3.0"}
                         account={this.props.account}
                     />
-                )}
-                {(this.state.isCreateLockModalVisible ||
-                    this.state.isCreateLockModalVisibleBefore) && (
-                    <div>fff fff fff</div>
                 )}
             </div>
         );

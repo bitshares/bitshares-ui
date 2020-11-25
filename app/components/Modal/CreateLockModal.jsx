@@ -88,7 +88,6 @@ class CreateLockModal extends React.Component {
     }
 
     render() {
-        console.log(this.props.asset);
         let assetId = this.props.asset.get("id");
 
         let currentBalance =
@@ -106,120 +105,108 @@ class CreateLockModal extends React.Component {
         }
 
         return (
-            <div>
-                {" "}
-                asd asd
-                <Modal
-                    visible={this.props.visible}
-                    onCancel={this.props.hideModal}
-                    title={counterpart.translate("modal.create_lock.title")}
-                    footer={[
-                        <Button
-                            type="primary"
-                            key="submit"
-                            onClick={this.onSubmit}
-                            disabled={!this.canSubmit()}
-                        >
-                            {counterpart.translate("modal.create_lock.submit")}
-                        </Button>,
-                        <Button onClick={this.props.hideModal} key="cancel">
-                            {counterpart.translate("cancel")}
-                        </Button>
-                    ]}
-                >
-                    <Alert
-                        message={counterpart.translate(
-                            "modal.create_lock.warning_message",
-                            {lock_days: this._getUnlockPeriod()}
-                        )}
-                        type="warning"
-                        showIcon
-                        style={{marginBottom: "2em"}}
-                    />
-                    <Form layout="vertical">
-                        <AmountSelector
-                            label="modal.create_lock.amount"
-                            amount={this.state.amount}
-                            onChange={this.onAmountChanged.bind(this)}
-                            asset={assetId}
-                            assets={[assetId]}
-                            display_balance={
-                                <div
-                                    onClick={() => {
-                                        this.state.amountAsset.setAmount({
-                                            sats: currentBalance
-                                        });
-                                        this.setState({
-                                            amount: this.state.amountAsset.getAmount(
-                                                {real: true}
-                                            )
-                                        });
-                                    }}
-                                >
-                                    <BalanceComponent
-                                        balance={this.props.account.getIn([
-                                            "balances",
-                                            assetId
-                                        ])}
-                                    />
-                                </div>
-                            }
-                            tabIndex={1}
-                        />
-                        <Form.Item
-                            label={counterpart.translate(
-                                "modal.create_lock.targetType"
-                            )}
-                            validateStatus={
-                                !this.state.targetType ? "warning" : ""
-                            }
-                            help={
-                                !this.state.targetType
-                                    ? counterpart.translate(
-                                          "modal.create_lock.type_warning"
-                                      )
-                                    : ""
-                            }
-                        >
-                            <Tooltip
-                                placement="top"
-                                title={counterpart.translate(
-                                    "tooltip.create_lock_periods"
-                                )}
+            <Modal
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+                title={counterpart.translate("modal.create_lock.title")}
+                footer={[
+                    <Button
+                        type="primary"
+                        key="submit"
+                        onClick={this.onSubmit}
+                        disabled={!this.canSubmit()}
+                    >
+                        {counterpart.translate("modal.create_lock.submit")}
+                    </Button>,
+                    <Button onClick={this.props.hideModal} key="cancel">
+                        {counterpart.translate("cancel")}
+                    </Button>
+                ]}
+            >
+                <Alert
+                    message={counterpart.translate(
+                        "modal.create_lock.warning_message",
+                        {lock_days: this._getUnlockPeriod()}
+                    )}
+                    type="warning"
+                    showIcon
+                    style={{marginBottom: "2em"}}
+                />
+                <Form layout="vertical">
+                    <AmountSelector
+                        label="modal.create_lock.amount"
+                        amount={this.state.amount}
+                        onChange={this.onAmountChanged.bind(this)}
+                        asset={assetId}
+                        assets={[assetId]}
+                        display_balance={
+                            <div
+                                onClick={() => {
+                                    this.state.amountAsset.setAmount({
+                                        sats: currentBalance
+                                    });
+                                    this.setState({
+                                        amount: this.state.amountAsset.getAmount(
+                                            {real: true}
+                                        )
+                                    });
+                                }}
                             >
-                                <Select
-                                    value={this.state.targetType}
-                                    onChange={this.onTargetTypeChanged.bind(
-                                        this
-                                    )}
-                                >
-                                    {Object.keys(ChainTypes.ticket_type).map(
-                                        key =>
-                                            ChainTypes.ticket_type[key] != 0 ? (
-                                                <Select.Option
-                                                    key={
-                                                        ChainTypes.ticket_type[
+                                <BalanceComponent
+                                    balance={this.props.account.getIn([
+                                        "balances",
+                                        assetId
+                                    ])}
+                                />
+                            </div>
+                        }
+                        tabIndex={1}
+                    />
+                    <Form.Item
+                        label={counterpart.translate(
+                            "modal.create_lock.targetType"
+                        )}
+                        validateStatus={!this.state.targetType ? "warning" : ""}
+                        help={
+                            !this.state.targetType
+                                ? counterpart.translate(
+                                      "modal.create_lock.type_warning"
+                                  )
+                                : ""
+                        }
+                    >
+                        <Tooltip
+                            placement="top"
+                            title={counterpart.translate(
+                                "tooltip.create_lock_periods"
+                            )}
+                        >
+                            <Select
+                                value={this.state.targetType}
+                                onChange={this.onTargetTypeChanged.bind(this)}
+                            >
+                                {Object.keys(ChainTypes.ticket_type).map(
+                                    key =>
+                                        ChainTypes.ticket_type[key] != 0 ? (
+                                            <Select.Option
+                                                key={
+                                                    ChainTypes.ticket_type[key]
+                                                }
+                                            >
+                                                {ChainTypes.ticket_type[key] +
+                                                    ": " +
+                                                    counterpart.translate(
+                                                        "operation.ticket_types." +
                                                             key
-                                                        ]
-                                                    }
-                                                >
-                                                    {ChainTypes.ticket_type[
-                                                        key
-                                                    ] +
-                                                        ": " +
-                                                        counterpart.translate(
-                                                            "operation.ticket_types." +
-                                                                key
-                                                        )}
-                                                </Select.Option>
-                                            ) : null
-                                    )}
-                                </Select>
-                            </Tooltip>
-                        </Form.Item>
-                    </Form>
-                </Modal>
-            </div>
+                                                    )}
+                                            </Select.Option>
+                                        ) : null
+                                )}
+                            </Select>
+                        </Tooltip>
+                    </Form.Item>
+                </Form>
+            </Modal>
         );
     }
 }
