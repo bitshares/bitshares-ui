@@ -5,7 +5,7 @@ class Api {
         // direct query, circumventing subscription system of ChainStore
         return Apis.instance()
             .db_api()
-            .exec("lookup_accounts", [startChar, limit]);
+            .exec("lookup_accounts", [startChar, limit], false);
     }
     lookupAccountByPublicKey(pubKey) {
         // direct query, circumventing subscription system of ChainStore
