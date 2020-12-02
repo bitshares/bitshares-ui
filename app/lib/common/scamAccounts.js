@@ -1234,5 +1234,15 @@ export const scamAccountsOther = [
     "committee-delegate",
     "1.2.1621188",
     "binance-witness",
-    "1.2.1700190"
+    "1.2.1700190",
+    "binanace-bts-1",
+    "1.2.1593437",
+    "zbbs001",
+    "1.2.886790",
+    "zbbt001",
+    "1.2.886122",
+    "huibi-pro",
+    "1.2.852941",
+    "hubi-pro",
+    "1.2.852641"
 ];
