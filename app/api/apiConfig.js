@@ -156,14 +156,6 @@ export const settingsAPIs = {
             contact: "telegram:btsplusplus"
         },
         {
-            url: "wss://blockzms.xyz/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "New Jersey",
-            operator: "Witness: delegate-zhaomu",
-            contact: "telegram:lzmlam;wechat:lzmlam"
-        },
-        {
             url: "wss://api.bts.mobi/ws",
             region: "Northern America",
             country: "U.S.A.",
@@ -185,14 +177,6 @@ export const settingsAPIs = {
             country: "Canada",
             operator: "Witness: bhuz",
             contact: "telegram:bhuzor"
-        },
-        {
-            url: "wss://kimziv.com/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "New Jersey",
-            operator: "Witness: witness.yao",
-            contact: "telegram:imyao"
         },
         {
             url: "wss://api.btsgo.net/ws",
