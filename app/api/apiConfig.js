@@ -156,14 +156,6 @@ export const settingsAPIs = {
             contact: "telegram:btsplusplus"
         },
         {
-            url: "wss://blockzms.xyz/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "New Jersey",
-            operator: "Witness: delegate-zhaomu",
-            contact: "telegram:lzmlam;wechat:lzmlam"
-        },
-        {
             url: "wss://api.bts.mobi/ws",
             region: "Northern America",
             country: "U.S.A.",
