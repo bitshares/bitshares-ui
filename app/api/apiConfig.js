@@ -179,14 +179,6 @@ export const settingsAPIs = {
             contact: "telegram:bhuzor"
         },
         {
-            url: "wss://kimziv.com/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "New Jersey",
-            operator: "Witness: witness.yao",
-            contact: "telegram:imyao"
-        },
-        {
             url: "wss://api.btsgo.net/ws",
             region: "Southeastern Asia",
             location: "Singapore",
