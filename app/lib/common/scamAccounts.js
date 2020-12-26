@@ -1246,5 +1246,7 @@ export const scamAccountsOther = [
     "hubi-pro",
     "1.2.852641",
     "bts-binance-1",
-    "1.2.1037039"
+    "1.2.1037039",
+    "binance-bts1",
+    "1.2.467722"
 ];
