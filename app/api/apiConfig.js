@@ -371,8 +371,15 @@ export const settingsAPIs = {
             location: "Tokyo",
             operator: "Witness: clone",
             contact: "telegram: yexiao"
+        },
+        {
+            url: "wss://api-test-pub.61bts.com/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Shandong",
+            operator: "Witness: liuye",
+            contact: "email:work@domyself.me"
         }
-        
     ],
     ES_WRAPPER_LIST: [
     ],
