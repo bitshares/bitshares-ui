@@ -373,7 +373,7 @@ export const settingsAPIs = {
             contact: "telegram: yexiao"
         },
         {
-            url: "wss://api-test-pub.61bts.com/ws",
+            url: "wss://api-testnet.61bts.com/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Shandong",
