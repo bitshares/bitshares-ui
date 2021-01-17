@@ -338,7 +338,7 @@ export const settingsAPIs = {
             location: "New York",
             operator: "Witness: clone",
             contact: "telegram: yexiao"
-        },        
+        },
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
@@ -372,9 +372,15 @@ export const settingsAPIs = {
             operator: "Witness: clone",
             contact: "telegram: yexiao"
         }
-        
     ],
     ES_WRAPPER_LIST: [
+        {
+            url: "https://api.bitshares.ws/openexplorer",
+            region: "Western Europe",
+            country: "Germany",
+            operator: "blocksights.info",
+            contact: "bitshares:blocksights"
+        }
     ],
     DEFAULT_FAUCET: getFaucet().url,
     TESTNET_FAUCET: getTestFaucet().url
