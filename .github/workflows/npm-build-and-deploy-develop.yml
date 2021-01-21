@@ -24,7 +24,7 @@ jobs:
             - name: Deploy
               uses: s0/git-publish-subdir-action@master
               env:
-                  REPO: https://github.com/bitshares/develop.bitshares.org.git
+                  REPO: git@github.com:bitshares/develop.bitshares.org.git
                   BRANCH: master
                   FOLDER: build/dist
-                  GITHUB_TOKEN: ${{ secrets.AUTOMATION_GITHUB_TOKEN }}
+                  SSH_PRIVATE_KEY: ${{ secrets.AUTOMATION_UI_DEPLOYMENT_KEY }}
