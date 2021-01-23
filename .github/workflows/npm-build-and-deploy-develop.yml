@@ -21,6 +21,11 @@ jobs:
                   node-version: ${{ matrix.node-version }}
             - run: npm ci
             - run: npm run build
+            - name: Create CNAME file
+              uses: finnp/create-file-action@master
+              env:
+                  FILE_NAME: build/dist/CNAME
+                  FILE_DATA: develop.bitshares.org
             - name: Deploy
               uses: s0/git-publish-subdir-action@master
               env:
