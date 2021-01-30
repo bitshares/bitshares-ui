@@ -1438,5 +1438,7 @@ export const scamAccountsOther = [
     "cni-hotwallet.update",
     "1.2.1674304",
     "abit.committee-delegate",
-    "1.2.1676892"
+    "1.2.1676892",
+    "p3732551",
+    "1.2.397891"
 ];
