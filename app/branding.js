@@ -186,7 +186,18 @@ export function getMyMarketsQuotes() {
             "XBTSX.COF",
             "XBTSX.MDL",
             "XBTSX.ETH",
-            "XBTSX.EXR"
+            "XBTSX.EXR",
+            "XBTSX.USDT",
+            "XBTSX.TUSD",
+            "XBTSX.USDC",
+            "XBTSX.USDN",
+            "XBTSX.USD",
+            "XBTSX.RUB",
+            "XBTSX.EUR",
+            "XBTSX.ATRI",
+            "XBTSX.FIL",
+            "XBTSX.EOS",
+            "XBTSX.BAT",
         ],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
