@@ -7,7 +7,7 @@
 ### Bitshares Chat
 You can chat with other member of the Bitshares community in real time at:
 
-- [Telegram](https://t.me/BitSharesDEX)
+- [Telegram](https://t.me/BitSharesDAC)
 - [Discord](https://discord.gg/GsjQfAJ)
 
 ### Developers

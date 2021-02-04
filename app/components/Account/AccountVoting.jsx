@@ -17,7 +17,7 @@ import AccountStore from "stores/AccountStore";
 import Witnesses from "./Voting/Witnesses";
 import Committee from "./Voting/Committee";
 import Workers from "./Voting/Workers";
-import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import CreateLockModal from "../Modal/CreateLockModal";
 
 const WITNESSES_KEY = "witnesses";
 const COMMITTEE_KEY = "committee";
@@ -54,6 +54,8 @@ class AccountVoting extends React.Component {
             all_committee: Immutable.List(),
             hideLegacyProposals: true,
             filterSearch: "",
+            isCreateLockModalVisible: false,
+            isCreateLockModalVisibleBefore: false,
             tabs: [
                 {
                     name: "witnesses",
@@ -80,6 +82,9 @@ class AccountVoting extends React.Component {
         this.onPublish = this.onPublish.bind(this);
         this.onReset = this.onReset.bind(this);
         this._getVoteObjects = this._getVoteObjects.bind(this);
+
+        this.showCreateLockModal = this.showCreateLockModal.bind(this);
+        this.hideCreateLockModal = this.hideCreateLockModal.bind(this);
     }
 
     componentWillMount() {
@@ -96,6 +101,8 @@ class AccountVoting extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         return (
+            ns.isCreateLockModalVisible !=
+                this.state.isCreateLockModalVisible ||
             np.location.pathname !== this.props.location.pathname ||
             ns.prev_proxy_account_id !== this.state.prev_proxy_account_id ||
             ns.hideLegacyProposals !== this.state.hideLegacyProposals ||
@@ -510,10 +517,13 @@ class AccountVoting extends React.Component {
                 let [lbo] = res;
                 if (lbo === null) {
                     // The object does not exist, the id was too high
-                    this.setState(
-                        {lastBudgetObject: `2.13.${newIDInt - 1}`},
-                        this.getBudgetObject
-                    );
+                    let lastId = `2.13.${newIDInt - 1}`;
+                    if (lastId != lastBudgetObject) {
+                        this.setState(
+                            {lastBudgetObject: `2.13.${newIDInt - 1}`},
+                            this.getBudgetObject
+                        );
+                    }
                 } else {
                     SettingsStore.setLastBudgetObject(newID);
 
@@ -611,27 +621,12 @@ class AccountVoting extends React.Component {
                         float: "right"
                     }}
                 >
-                    <Button
-                        type="primary"
-                        onClick={this.onCreateTicket.bind(this)}
-                    >
-                        <TranslateWithLinks
-                            string="voting.create_ticket"
-                            keys={[
-                                {
-                                    type: "asset",
-                                    value: "1.3.0",
-                                    arg: "asset"
-                                }
-                            ]}
-                            noLink={true}
-                            noTop={true}
-                        />
+                    <Button type="primary" onClick={this.showCreateLockModal}>
+                        <Translate content="voting.increase_voting_power" />
                     </Button>
                 </div>
             </Tooltip>
         );
-
         return (
             <div className="main-content grid-content">
                 <div className="voting">
@@ -718,8 +713,31 @@ class AccountVoting extends React.Component {
                         })}
                     </Tabs>
                 </div>
+                {/* CreateLock Modal */}
+                {(this.state.isCreateLockModalVisible ||
+                    this.state.isCreateLockModalVisibleBefore) && (
+                    <CreateLockModal
+                        visible={this.state.isCreateLockModalVisible}
+                        hideModal={this.hideCreateLockModal}
+                        asset={"1.3.0"}
+                        account={this.props.account}
+                    />
+                )}
             </div>
         );
+    }
+
+    showCreateLockModal() {
+        this.setState({
+            isCreateLockModalVisible: true,
+            isCreateLockModalVisibleBefore: true
+        });
+    }
+
+    hideCreateLockModal() {
+        this.setState({
+            isCreateLockModalVisible: false
+        });
     }
 
     _getBudgets(globalObject) {

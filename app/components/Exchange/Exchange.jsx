@@ -1047,7 +1047,7 @@ class Exchange extends React.Component {
         const inverted = this.props.marketDirections.get(marketName);
         const shouldFlip =
             (inverted && first.get("id") !== this.props.baseAsset.get("id")) ||
-            (!inverted && first.get("id") !== this.props.baseAsset.get("id"));
+            (!inverted && first.get("id") === this.props.baseAsset.get("id"));
         if (shouldFlip) {
             let setting = {};
             setting[marketName] = !inverted;
