@@ -100,7 +100,7 @@ export function getDefaultMarket() {
     if (_isTestnet()) {
         return "USD_TEST";
     }
-    return "USD_BTS";
+    return "BTS_CNY";
 }
 
 /**
@@ -112,7 +112,7 @@ export function getMyMarketsBases() {
     if (_isTestnet()) {
         return ["TEST"];
     }
-    return ["BTS", "BTC", "ETH", "USD", "CNY"];
+    return ["BTS", "BTC", "CNY", "USD", "USDT", "ETH"];
 }
 
 /**
@@ -127,14 +127,20 @@ export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
             "BTC",
+            "BTC1.0",
             "BTS",
             "CNY",
+            "CNY1.0",
             "EUR",
+            "EUR1.0",
             "GOLD",
-            "KRW",
+            "GOLD1.0",
             "RUBLE",
+            "RUB1.0",
             "SILVER",
-            "USD"
+            "SILVER1.0",
+            "USD",
+            "USD1.0"
         ],
         gdexTokens: [
             "GDEX.BTC",
@@ -186,7 +192,14 @@ export function getMyMarketsQuotes() {
             "XBTSX.COF",
             "XBTSX.MDL",
             "XBTSX.ETH",
-            "XBTSX.EXR"
+            "XBTSX.EXR",
+            "XBTSX.USDT",
+            "XBTSX.TUSD",
+            "XBTSX.USDC",
+            "XBTSX.USDN",
+            "XBTSX.USD",
+            "XBTSX.RUB",
+            "XBTSX.EUR"
         ],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
@@ -281,8 +294,17 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.WLS"],
         ["BTS", "RUDEX.SMOKE"],
         ["BTS", "RUDEX.PZM"],
+        ["BTS", "XBTSX.BTC"],
+        ["BTS", "XBTSX.ETH"],
+        ["BTS", "XBTSX.EUR"],
+        ["BTS", "XBTSX.RUB"],
         ["BTS", "XBTSX.STH"],
+        ["BTS", "XBTSX.TUSD"],
         ["BTS", "XBTSX.WAVES"],
+        ["BTS", "XBTSX.USD"],
+        ["BTS", "XBTSX.USDC"],
+        ["BTS", "XBTSX.USDN"],
+        ["BTS", "XBTSX.USDT"],
         ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
