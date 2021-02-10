@@ -127,20 +127,13 @@ export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
             "BTC",
-            "BTC1.0",
             "BTS",
             "CNY",
-            "CNY1.0",
             "EUR",
-            "EUR1.0",
             "GOLD",
-            "GOLD1.0",
             "RUBLE",
-            "RUB1.0",
             "SILVER",
-            "SILVER1.0",
-            "USD",
-            "USD1.0"
+            "USD"
         ],
         gdexTokens: [
             "GDEX.BTC",
