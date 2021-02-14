@@ -23,8 +23,8 @@
     "main": "build/electron/index.js",
     "scripts": {
         "postinstall": "npm run install-charting-library",
-        "compile-tv-css": "node-sass ./charting_library/static/scss/ --output ./charting_library/static/ --output-style compressed",
-        "install-charting-library": "node ./charting_library/install-charting-library.js",
+        "compile-tv-css": "node-sass ./charting_library/scss/ --output ./charting_library/ --output-style compressed",
+        "install-charting-library": "node ./charting_library/install-charting-library.js && npm run compile-tv-css",
         "test:market": "cross-env NODE_ENV=test mocha --require babel-core/register --watch --watch-extensions js ./app/test/marketTests",
         "bench:market": "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./app/test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
         "profile-dev": "webpack --env.dev --env.profile --profile --json > stats-dev.json",
