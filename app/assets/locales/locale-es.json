@@ -1580,6 +1580,15 @@
             "amount": "Cantidad a convertir",
             "submit": "Ok"
         },
+        "create_lock": {
+            "amount": "Amount to lock",
+            "from": "Account to lock from",
+            "submit": "Lock",
+            "targetType": "Lock Type",
+            "title": "Create Lock",
+            "type_warning": "Please choose a lock type.",
+            "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
+        },
         "deposit": {
             "address_generation_error": "No se puede generar la dirección",
             "amount": "Cantidad a depositar",
@@ -1774,6 +1783,19 @@
         "publish_feed": "{account} publicò precio de suministro de {price}",
         "reg_account": "{registrar} Cuenta registrada {new_account}",
         "set_proxy": "{account} set {proxy} como su proxy de voto",
+        "ticket_create": "{account} locked away {amount} in a ticket",
+        "ticket_types": {
+            "0": "Liquid",
+            "1": "Claimable 180 days after unlock request",
+            "2": "Claimable 360 days after unlock request",
+            "3": "Claimable 720 days after unlock request",
+            "4": "Locked forever",
+            "liquid": "Liquid",
+            "lock_180_days": "Claimable 180 days after unlock request",
+            "lock_360_days": "Claimable 360 days after unlock request",
+            "lock_720_days": "Claimable 720 days after unlock request",
+            "lock_forever": "Locked forever"
+        },
         "transfer": "{from} enviado {amount} a {to}",
         "transfer_account": "{account} propiedad transferida a {to}",
         "unlisted_by": "{lister} delistada la cuenta {listee}",
@@ -2559,6 +2581,7 @@
             "proposal_create": "Crear propuesta",
             "proposal_delete": "Eliminar propuesta",
             "proposal_update": "Actualizar propuesta",
+            "ticket_create": "Create ticket",
             "transfer": "Transferencia",
             "transfer_from_blind": "Transferencia desde cuenta cegada",
             "transfer_to_blind": "Transferencia a la cuenta cegada",
@@ -2696,7 +2719,10 @@
         }
     },
     "voting": {
+        "create_ticket": "Lock 1 {asset}",
         "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "increase_voting_power": "Create Lock",
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
         "title": "Voting"
     },
     "walkthrough": {
