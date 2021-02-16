@@ -35,14 +35,14 @@ $icon-light-color-active: $primary-text-color-active !default;
   --tv-color-pane-background-secondary: #{$primary-background-active};
   --tv-color-toolbar-button-background-hover: #{$primary-btn-background-active};
   --tv-color-toolbar-button-background-secondary-hover: #{$primary-btn-background-active};
-  --tv-color-toolbar-button-background-expanded: #{$primary-btn-background};
+  --tv-color-toolbar-button-background-expanded: #{$primary-background};
   --tv-color-toolbar-button-text: #{$primary-btn-color};
   --tv-color-toolbar-button-text-hover: #{$primary-btn-color};
   --tv-color-toolbar-button-text-active: #{$primary-btn-color};
   --tv-color-toolbar-button-text-active-hover: #{$primary-btn-color};
   --tv-color-item-active-text: #{$primary-btn-color};
-  --tv-color-toolbar-toggle-button-background-active: #{$primary-btn-background-active};
-  --tv-color-toolbar-toggle-button-background-active-hover: #{$primary-btn-background-active};
+  --tv-color-toolbar-toggle-button-background-active: #{$primary-background};
+  --tv-color-toolbar-toggle-button-background-active-hover: #{$primary-background-active};
 }
 
 .layout__area--top {
@@ -50,7 +50,7 @@ $icon-light-color-active: $primary-text-color-active !default;
   .apply-common-tooltip {
     cursor: pointer;
 
-    background-color: $primary-btn-background;
+    background-color: $primary-background;
     color: $primary-btn-color !important;
 
     &:hover {
