@@ -350,7 +350,8 @@ export function allowedGateway(gateway) {
         "GDEX",
         "XBTSX",
         "CITADEL",
-        "BRIDGE" // keep to display the warning icon, permanently disabled in gateways.js
+        "BRIDGE", // keep to display the warning icon, permanently disabled in gateways.js
+        "SPARKDEX" // keep to display the warning icon, permanently disabled in gateways.js
     ];
     if (!gateway) {
         // answers the question: are any allowed?
