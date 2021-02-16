@@ -1580,6 +1580,15 @@
             "amount": "Сумма к конвертации",
             "submit": "ОК"
         },
+        "create_lock": {
+            "amount": "Amount to lock",
+            "from": "Account to lock from",
+            "submit": "Lock",
+            "targetType": "Lock Type",
+            "title": "Create Lock",
+            "type_warning": "Please choose a lock type.",
+            "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
+        },
         "deposit": {
             "address_generation_error": "Не удается сгенерировать адрес",
             "amount": "Сумма депозита",
@@ -1774,6 +1783,19 @@
         "publish_feed": "{account} опубликовал котировки {price}",
         "reg_account": "{registrar} зарегистрировал аккаунт {new_account}",
         "set_proxy": "{account} установил {proxy} в качестве своего прокси для голосования",
+        "ticket_create": "{account} locked away {amount} in a ticket",
+        "ticket_types": {
+            "0": "Liquid",
+            "1": "Claimable 180 days after unlock request",
+            "2": "Claimable 360 days after unlock request",
+            "3": "Claimable 720 days after unlock request",
+            "4": "Locked forever",
+            "liquid": "Liquid",
+            "lock_180_days": "Claimable 180 days after unlock request",
+            "lock_360_days": "Claimable 360 days after unlock request",
+            "lock_720_days": "Claimable 720 days after unlock request",
+            "lock_forever": "Locked forever"
+        },
         "transfer": "{from} отправил {amount} на {to}",
         "transfer_account": "Владение {account} передано {to}",
         "unlisted_by": "{lister} удалил аккаунт {listee} из списка",
@@ -2559,6 +2581,7 @@
             "proposal_create": "Создание предложения",
             "proposal_delete": "Удаление предложения",
             "proposal_update": "Обновление предложения",
+            "ticket_create": "Create ticket",
             "transfer": "Перевод",
             "transfer_from_blind": "Перевод со слепого аккаунта",
             "transfer_to_blind": "Перевод на слепой аккаунт",
@@ -2696,7 +2719,10 @@
         }
     },
     "voting": {
+        "create_ticket": "Lock 1 {asset}",
         "description": "Блокчейн BitShares позволяет держателям его базового токена BTS голосовать за производителей блоков (заверителей), членов комитета (управления блокчейном), рабочие предложения (оплата блокчейном задач и стратегических решений через Предложения/Опросы).",
+        "increase_voting_power": "Create Lock",
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
         "title": "Голосование"
     },
     "walkthrough": {

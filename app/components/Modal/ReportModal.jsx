@@ -115,17 +115,6 @@ class ReportModal extends React.Component {
                         <br />
                         <br />
                         <Translate content="modal.report.explanatory_text_4" />
-                        <br />
-                        &nbsp;&nbsp;
-                        <a
-                            href="https://hackthedex.io"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{textAlign: "center", width: "100%"}}
-                            className="external-link"
-                        >
-                            https://hackthedex.io
-                        </a>
                     </p>
                 );
             }

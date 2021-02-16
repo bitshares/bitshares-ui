@@ -1,5 +1,5 @@
 import React from "react";
-const TradingView = require("../../../charting_library/charting_library.min.js");
+const TradingView = require("../../../charting_library/charting_library.esm");
 import colors from "assets/colors";
 import {getResolutionsFromBuckets, getTVTimezone} from "./tradingViewClasses";
 import {Modal, Input, Table, Button, Icon} from "bitshares-ui-style-guide";
@@ -54,7 +54,8 @@ class TradingViewPriceChart extends React.Component {
             "border_around_the_chart",
             "header_symbol_search",
             "header_compare",
-            "header_saveload"
+            "header_saveload",
+            "header_settings"
         ];
 
         let enabled_features = [];
@@ -70,6 +71,7 @@ class TradingViewPriceChart extends React.Component {
             disabled_features.push("chart_events");
             disabled_features.push("footer_share_buttons");
             disabled_features.push("footer_screenshot");
+            disabled_features.push("timeframes_toolbar");
             disabled_features.push("footer_publish_idea_button");
             disabled_features.push("caption_buttons_text_if_possible");
             disabled_features.push("line_tool_templates");
@@ -93,10 +95,24 @@ class TradingViewPriceChart extends React.Component {
         if (__DEV__) console.log("*** Load Chart ***");
         if (__DEV__) console.time("*** Chart load time: ");
 
+        // resolution / interval: length of one bar
+        // frame: total timeframe shown on the chart
+        // (in below list, text is frame)
+        const allTimes = props.buckets.map(bucket => {
+            return {
+                text: getResolutionsFromBuckets([bucket * 250], true)[0],
+                resolution: getResolutionsFromBuckets([bucket])[0]
+            };
+        });
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,
             interval: getResolutionsFromBuckets([props.bucketSize])[0],
+            timeframe: getResolutionsFromBuckets(
+                [props.bucketSize * 250],
+                true
+            )[0],
+            time_frames: allTimes,
             library_path: `${
                 __ELECTRON__ ? __BASE_URL__ : ""
             }/charting_library/`,
@@ -109,15 +125,23 @@ class TradingViewPriceChart extends React.Component {
             autosize: true,
             locale: props.locale,
             timezone: getTVTimezone(),
-            toolbar_bg: themeColors.bgColor,
+            // toolbar_bg: themeColors.bgColor,
+            // theme: (props.theme == "darkTheme") ? "dark" : "light",
             overrides: {
                 "paneProperties.background": themeColors.bgColor,
                 "paneProperties.horzGridProperties.color":
                     themeColors.axisLineColor,
                 "paneProperties.vertGridProperties.color":
-                    themeColors.axisLineColor,
-                "scalesProperties.lineColor": themeColors.axisLineColor,
-                "scalesProperties.textColor": themeColors.textColor
+                    themeColors.axisLineColor
+                // "scalesProperties.lineColor": themeColors.axisLineColor,
+                // "scalesProperties.textColor": themeColors.textColor,
+                // "scalesProperties.backgroundColor": themeColors.bgColor,
+                // "mainSeriesProperties.candleStyle.upColor": "#",
+                // "mainSeriesProperties.candleStyle.downColor": "#",
+                // "mainSeriesProperties.hollowCandleStyle.upColor": "#",
+                // "mainSeriesProperties.hollowCandleStyle.downColor": "#",
+                // "mainSeriesProperties.haStyle.upColor": "#",
+                // "mainSeriesProperties.haStyle.downColor": "#"
             },
             custom_css_url: props.theme + ".css",
             enabled_features: enabled_features,
@@ -125,41 +149,39 @@ class TradingViewPriceChart extends React.Component {
             debug: false,
             preset: this.props.mobile ? "mobile" : ""
         });
-
         this.tvWidget.onChartReady(() => {
+            let widget = this.tvWidget;
             if (__DEV__) console.log("*** Chart Ready ***");
             if (__DEV__) console.timeEnd("*** Chart load time: ");
-            this.tvWidget
-                .createButton()
-                .attr(
-                    "title",
-                    counterpart.translate("exchange.load_custom_charts")
-                )
-                .addClass("apply-common-tooltip")
-                .on("click", () => {
-                    that.setState({showLoadModal: true});
-                })
-                .append(
-                    `<span>${counterpart.translate(
+            if (!this.props.mobile && this.props.chartTools) {
+                widget.headerReady().then(() => {
+                    if (__DEV__) console.log("*** Header Ready ***");
+                    const loadButton = this.tvWidget.createButton();
+                    loadButton.setAttribute(
+                        "title",
+                        counterpart.translate("exchange.load_custom_charts")
+                    );
+                    loadButton.classList.add("apply-common-tooltip");
+                    loadButton.addEventListener("click", () => {
+                        that.setState({showLoadModal: true});
+                    });
+                    loadButton.innerHTML = `<span>${counterpart.translate(
                         "exchange.chart_load"
-                    )}</span>`
-                );
-            this.tvWidget
-                .createButton()
-                .attr(
-                    "title",
-                    counterpart.translate("exchange.save_custom_charts")
-                )
-                .addClass("apply-common-tooltip")
-                .on("click", () => {
-                    that.setState({showSaveModal: true});
-                })
-                .append(
-                    `<span>${counterpart.translate(
+                    )}</span>`;
+                    const saveButton = this.tvWidget.createButton();
+                    saveButton.setAttribute(
+                        "title",
+                        counterpart.translate("exchange.save_custom_charts")
+                    );
+                    saveButton.classList.add("apply-common-tooltip");
+                    saveButton.addEventListener("click", () => {
+                        that.setState({showSaveModal: true});
+                    });
+                    saveButton.innerHTML = `<span>${counterpart.translate(
                         "exchange.chart_save"
-                    )}</span>`
-                );
-
+                    )}</span>`;
+                });
+            }
             dataFeed.update({
                 onMarketChange: this._setSymbol.bind(this)
             });

@@ -4,7 +4,7 @@ import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInputStyleGuide";
-import PasswordInput from "./../Forms/PasswordInputStyleGuide";
+import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import {Link} from "react-router-dom";
 import AccountSelect from "../Forms/AccountSelect";
@@ -284,7 +284,7 @@ class CreateAccount extends React.Component {
                     <PasswordInput
                         ref="password"
                         confirmation={true}
-                        onValidationChange={this.onPasswordChange.bind(this)}
+                        onChange={this.onPasswordChange.bind(this)}
                         noLabel
                         checkStrength
                     />

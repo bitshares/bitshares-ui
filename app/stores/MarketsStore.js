@@ -170,7 +170,7 @@ class MarketsStore {
     }
 
     _getBucketSize() {
-        return parseInt(marketStorage.get("bucketSize", 4 * 3600));
+        return parseInt(marketStorage.get("bucketSize", 3600));
     }
 
     _setBucketSize(size) {
