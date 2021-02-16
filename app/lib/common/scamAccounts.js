@@ -1838,5 +1838,13 @@ export const scamAccountsOther = [
     "mister-hankeh",
     "1.2.593183",
     "ed-tred",
-    "1.2.36103"
+    "1.2.36103",
+    "citizen1983",
+    "1.2.1096445",
+    "ghost-llk",
+    "1.2.1597865",
+    "vezunchik-account",
+    "1.2.462216",
+    "razdacha-bts",
+    "1.2.1646336"
 ];
