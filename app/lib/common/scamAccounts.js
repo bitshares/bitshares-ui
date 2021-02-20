@@ -35,7 +35,9 @@ export const scamAccountsBittrex = [
     "bittrex",
     "1.2.2343",
     "bittrex-deposits",
-    "1.2.161093"
+    "1.2.161093",
+    "bittrexacct1",
+    "1.2.1649570"
 ];
 
 export const scamAccountsOther = [
@@ -1846,5 +1848,7 @@ export const scamAccountsOther = [
     "vezunchik-account",
     "1.2.462216",
     "razdacha-bts",
-    "1.2.1646336"
+    "1.2.1646336",
+    "coinbasebase",
+    "1.2.1603952"
 ];
