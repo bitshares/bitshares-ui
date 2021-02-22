@@ -18,6 +18,7 @@ http.get("https://bitshares.org/assets/" + outputFileName, (response) => {
 }).on("error", (err) => {
     console.error("Failed to download charting_library archive");
     console.error(err);
+    throw (err);
 });
 
 outputFile.on("finish", () => {
