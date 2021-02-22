@@ -9,7 +9,7 @@ function getMD5Digest(file) {
     return hash.toUpperCase();
 }
 
-var outputFileName = "charting_library.17.025.02b61a1c.zip";
+var outputFileName = "charting_library.17.025.wrong-file.zip";
 var outputFilePath = path.join(__dirname, outputFileName);
 const outputFile = fs.createWriteStream(outputFilePath);
 
