@@ -13,7 +13,7 @@ var outputFileName = "charting_library.17.025.02b61a1c.zip";
 var outputFilePath = path.join(__dirname, outputFileName);
 const outputFile = fs.createWriteStream(outputFilePath);
 
-http.get("http://10.255.255.1/assets/" + outputFileName, (response) => {
+http.get("https://10.255.255.1/assets/" + outputFileName, (response) => {
     response.pipe(outputFile);
 }).on("error", (err) => {
     console.error("Failed to download charting_library archive");
