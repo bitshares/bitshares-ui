@@ -527,7 +527,7 @@ class AccountSelector extends React.Component {
                         return null;
                     }
                     if (
-                        account.data.isOwnAccount ||
+                        (this.props.includeMyActiveAccount && account.data.isOwnAccount) ||
                         (!this.props.locked && account.data.isContact) ||
                         (accountName && account.data.name === accountName)
                     ) {
@@ -552,15 +552,13 @@ class AccountSelector extends React.Component {
                             value={account.data.name}
                             disabled={account.data.disabled ? true : undefined}
                         >
-                            {account.data.isOwnAccount ? (
-                                <AntIcon type="user" />
-                            ) : null}
-                            {account.data.isContact ? (
-                                <AntIcon type="star" />
-                            ) : null}
                             {account.data.isKnownScammer ? (
                                 <AntIcon type="warning" />
-                            ) : null}
+                            ) : {account.data.isOwnAccount ? (
+                                <AntIcon type="user" />
+                            ) : {account.data.isContact ? (
+                                <AntIcon type="star" />
+                            ) : null} } }
                             &nbsp;
                             {account.data.name}
                             <span style={{float: "right"}}>
