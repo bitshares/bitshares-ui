@@ -554,11 +554,11 @@ class AccountSelector extends React.Component {
                         >
                             {account.data.isKnownScammer ? (
                                 <AntIcon type="warning" />
-                            ) : {account.data.isContact ? (
+                            ) : (account.data.isContact ? (
                                 <AntIcon type="star" />
-                            ) : {account.data.isOwnAccount ? (
+                            ) : (account.data.isOwnAccount ? (
                                 <AntIcon type="user" />
-                            ) : null} } }
+                            ) : null) ) }
                             &nbsp;
                             {account.data.name}
                             <span style={{float: "right"}}>
