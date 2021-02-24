@@ -458,18 +458,7 @@ class AccountSelector extends React.Component {
             error ||
             disableActionButton;
 
-        if (selectedAccount && selectedAccount.isOwnAccount) {
-            linked_status = (
-                <Tooltip
-                    placement="top"
-                    title={counterpart.translate("tooltip.own_account")}
-                >
-                    <span className="tooltip green">
-                        <AntIcon type="user" />
-                    </span>
-                </Tooltip>
-            );
-        } else if (selectedAccount && selectedAccount.isKnownScammer) {
+        if (selectedAccount && selectedAccount.isKnownScammer) {
             linked_status = (
                 <Tooltip
                     placement="top"
@@ -477,6 +466,17 @@ class AccountSelector extends React.Component {
                 >
                     <span className="tooltip red">
                         <AntIcon type="warning" theme="filled" />
+                    </span>
+                </Tooltip>
+            );
+        } else if (selectedAccount && selectedAccount.isOwnAccount) {
+            linked_status = (
+                <Tooltip
+                    placement="top"
+                    title={counterpart.translate("tooltip.own_account")}
+                >
+                    <span className="tooltip green">
+                        <AntIcon type="user" />
                     </span>
                 </Tooltip>
             );
