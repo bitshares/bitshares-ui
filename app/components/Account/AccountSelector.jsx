@@ -52,6 +52,7 @@ class AccountSelector extends React.Component {
         allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
         typeahead: PropTypes.bool,
         excludeAccounts: PropTypes.array, // array of accounts to exclude from the typeahead
+        includeMyActiveAccounts: PropTypes.bool, // whether to include my active accounts in the list
         focus: PropTypes.bool,
         disabled: PropTypes.bool,
         editable: PropTypes.bool,
@@ -63,6 +64,7 @@ class AccountSelector extends React.Component {
     static defaultProps = {
         autosubscribe: false,
         excludeAccounts: [],
+        includeMyActiveAccounts: true,
         disabled: null,
         editable: null,
         locked: false,
@@ -86,9 +88,11 @@ class AccountSelector extends React.Component {
         if (accountName) {
             this._addThisToIndex(accountName);
         }
-        this.props.myActiveAccounts.map(a => {
-            this._addThisToIndex(a);
-        });
+        if (this.props.includeMyActiveAccounts) {
+            this.props.myActiveAccounts.map(a => {
+                this._addThisToIndex(a);
+            });
+        }
         this.props.contacts.map(a => {
             this._addThisToIndex(a);
         });
