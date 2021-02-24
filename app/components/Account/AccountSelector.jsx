@@ -473,17 +473,6 @@ class AccountSelector extends React.Component {
                     </span>
                 </Tooltip>
             );
-        } else if (selectedAccount && selectedAccount.isOwnAccount) {
-            linked_status = (
-                <Tooltip
-                    placement="top"
-                    title={counterpart.translate("tooltip.own_account")}
-                >
-                    <span className="tooltip green">
-                        <AntIcon type="user" />
-                    </span>
-                </Tooltip>
-            );
         } else if (selectedAccount && selectedAccount.isContact) {
             linked_status = (
                 <Tooltip
@@ -493,6 +482,17 @@ class AccountSelector extends React.Component {
                 >
                     <span className="tooltip green">
                         <AntIcon type="star" theme="filled" />
+                    </span>
+                </Tooltip>
+            );
+        } else if (selectedAccount && selectedAccount.isOwnAccount) {
+            linked_status = (
+                <Tooltip
+                    placement="top"
+                    title={counterpart.translate("tooltip.own_account")}
+                >
+                    <span className="tooltip green">
+                        <AntIcon type="user" />
                     </span>
                 </Tooltip>
             );
@@ -554,10 +554,10 @@ class AccountSelector extends React.Component {
                         >
                             {account.data.isKnownScammer ? (
                                 <AntIcon type="warning" />
-                            ) : {account.data.isOwnAccount ? (
-                                <AntIcon type="user" />
                             ) : {account.data.isContact ? (
                                 <AntIcon type="star" />
+                            ) : {account.data.isOwnAccount ? (
+                                <AntIcon type="user" />
                             ) : null} } }
                             &nbsp;
                             {account.data.name}
