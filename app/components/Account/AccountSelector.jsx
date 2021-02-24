@@ -669,11 +669,11 @@ class AccountSelector extends React.Component {
                     <label
                         className={cnames(
                             "right-label",
-                            selectedAccount.isContact ||
-                            selectedAccount.isOwnAccount
-                                ? "positive"
-                                : null,
-                            selectedAccount.isKnownScammer ? "negative" : null
+                            selectedAccount.isKnownScammer ? "negative" : (
+                                selectedAccount.isContact ||
+                                selectedAccount.isOwnAccount
+                                    ? "positive"
+                                    : null )
                         )}
                         style={{marginTop: -30}}
                     >
