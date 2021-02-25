@@ -1994,8 +1994,6 @@ export const scamAccountsOther = [
     "1.2.1799206",
     "paribuwallet",
     "1.2.1273867",
-    "paribuwallet",
-    "1.2.1273867",
     "probitwallet",
     "1.2.1799207",
     "radardeposit",
