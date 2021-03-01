@@ -90,14 +90,15 @@ export const availableGateways = {
         id: "OPEN",
         name: "OpenLedger",
         baseAPI: openledgerAPIs,
-        isEnabled: _isEnabled("OPEN"),
+        isEnabled: () => false,
         selected: false,
         options: {
             enabled: false,
             selected: false
         },
-        landing: "http://dex.openledger.io",
-        wallet: "https://openledger.io/"
+        landing:
+            "https://dex.openledger.io/news/ol-dex-is-closing-all-activities/",
+        wallet: "Shutdown"
     },
     RUDEX: {
         id: "RUDEX",
@@ -124,20 +125,20 @@ export const availableGateways = {
         id: "SPARKDEX",
         name: "BitSpark",
         baseAPI: bitsparkAPIs,
-        isEnabled: _isEnabled("SPARKDEX"),
+        isEnabled: () => false,
         selected: false,
         options: {
             enabled: false,
             selected: false
         },
-        landing: "https://www.bitspark.io/for-traders",
-        wallet: "https://dex.bitspark.io/"
+        landing: "https://www.bitspark.io/",
+        wallet: "Shutdown"
     },
     BRIDGE: {
         id: "BRIDGE",
         name: "CryptoBridge",
         baseAPI: cryptoBridgeAPIs,
-        isEnabled: _isEnabled("BRIDGE"),
+        isEnabled: () => false,
         selected: false,
         singleWallet: true, // Has no coresponging coinType == backingCoinType specific wallet
         addressValidatorAsset: true, // Address validator requires output_asset parameter
@@ -147,8 +148,8 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        landing: "https://crypto-bridge.org/",
-        wallet: "https://wallet.crypto-bridge.org/"
+        landing: "Shutdown",
+        wallet: "Shutdown"
     },
     GDEX: {
         id: "GDEX",
@@ -180,7 +181,7 @@ export const availableGateways = {
         id: "CITADEL",
         name: "Citadel",
         baseAPI: citadelAPIs,
-        isEnabled: _isEnabled("CITADEL"),
+        isEnabled: () => false,
         selected: false,
         assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
         options: {
@@ -188,7 +189,7 @@ export const availableGateways = {
             selected: false
         },
         landing: "https://citadel.li/",
-        wallet: "https://citadel.li/wallet/"
+        wallet: "Disabled"
     }
 };
 

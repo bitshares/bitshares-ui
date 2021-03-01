@@ -349,7 +349,7 @@ class Exchange extends React.Component {
             chartType: ws.get("chartType", "price_chart"),
             chartHeight: chart_height,
             chartZoom: ws.get("chartZoom", true),
-            chartTools: ws.get("chartTools", true),
+            chartTools: ws.get("chartTools", false),
             hideFunctionButtons: ws.get("hideFunctionButtons", true),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
             showMarketPicker: false,
@@ -1047,7 +1047,7 @@ class Exchange extends React.Component {
         const inverted = this.props.marketDirections.get(marketName);
         const shouldFlip =
             (inverted && first.get("id") !== this.props.baseAsset.get("id")) ||
-            (!inverted && first.get("id") !== this.props.baseAsset.get("id"));
+            (!inverted && first.get("id") === this.props.baseAsset.get("id"));
         if (shouldFlip) {
             let setting = {};
             setting[marketName] = !inverted;
@@ -2754,7 +2754,7 @@ class Exchange extends React.Component {
                 className={"exchange--chart-control"}
                 style={{
                     height: 33,
-                    right: chartType == "price_chart" ? "5rem" : "15rem",
+                    right: chartType == "price_chart" ? "6rem" : "15rem",
                     top: "1px",
                     position: "absolute",
                     zIndex: 1,

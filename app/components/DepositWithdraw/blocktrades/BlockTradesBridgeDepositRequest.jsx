@@ -421,6 +421,7 @@ class ButtonWithdraw extends React.Component {
                         asset={this.props.asset.get("id")}
                         output_coin_name={this.props.output_coin_name}
                         output_coin_symbol={this.props.output_coin_symbol}
+                        input_coin_type={this.props.input_coin_type}
                         output_coin_type={this.props.output_coin_type}
                         output_supports_memos={this.props.output_supports_memos}
                         amount_to_withdraw={this.props.amount_to_withdraw}
@@ -460,6 +461,7 @@ class ButtonWithdrawContainer extends React.Component {
                 asset={this.props.asset}
                 output_coin_name={this.props.output_coin_name}
                 output_coin_symbol={this.props.output_coin_symbol}
+                input_coin_type={this.props.input_coin_type}
                 output_coin_type={this.props.output_coin_type}
                 output_supports_memos={this.props.output_supports_memos}
                 amount_to_withdraw={this.props.amount_to_withdraw}
@@ -2413,6 +2415,9 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                                 this.state.coins_by_type[
                                     this.state.withdraw_output_coin_type
                                 ].symbol
+                            }
+                            input_coin_type={
+                                this.state.withdraw_input_coin_type
                             }
                             output_coin_type={
                                 this.state.withdraw_output_coin_type

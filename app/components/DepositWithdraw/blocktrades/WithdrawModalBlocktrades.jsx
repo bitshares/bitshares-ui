@@ -7,7 +7,11 @@ import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
-import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
+import {
+    validateAddress,
+    WithdrawAddresses,
+    getMappingData
+} from "common/gatewayMethods";
 import {ChainStore} from "bitsharesjs";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {debounce} from "lodash-es";
@@ -272,8 +276,8 @@ class WithdrawModalBlocktrades extends React.Component {
     onSubmit() {
         if (
             !this.state.withdraw_address_check_in_progress &&
-            (this.state.withdraw_address &&
-                this.state.withdraw_address.length) &&
+            this.state.withdraw_address &&
+            this.state.withdraw_address.length &&
             this.state.withdraw_amount !== null
         ) {
             if (!this.state.withdraw_address_is_valid) {
@@ -357,20 +361,24 @@ class WithdrawModalBlocktrades extends React.Component {
                     sendAmount = balanceAmount;
                 }
 
-                AccountActions.transfer(
-                    this.props.account.get("id"),
-                    this.props.issuer.get("id"),
-                    sendAmount.getAmount(),
-                    asset.get("id"),
-                    this.props.output_coin_type +
-                        ":" +
-                        this.state.withdraw_address +
-                        (this.state.memo
-                            ? ":" + new Buffer(this.state.memo, "utf-8")
-                            : ""),
-                    null,
-                    feeAmount ? feeAmount.asset_id : "1.3.0"
-                );
+                getMappingData(
+                    this.props.input_coin_type,
+                    this.props.output_coin_type,
+                    this.state.withdraw_address
+                ).then(result => {
+                    AccountActions.transfer(
+                        this.props.account.get("id"),
+                        this.props.issuer.get("id"),
+                        sendAmount.getAmount(),
+                        asset.get("id"),
+                        result["memo"] +
+                            (this.state.memo
+                                ? ":" + new Buffer(this.state.memo, "utf-8")
+                                : ""),
+                        null,
+                        feeAmount ? feeAmount.asset_id : "1.3.0"
+                    );
+                });
 
                 this.setState({
                     empty_withdraw_value: false
@@ -419,20 +427,24 @@ class WithdrawModalBlocktrades extends React.Component {
 
         const {feeAmount, fee_asset_id} = this.state;
 
-        AccountActions.transfer(
-            this.props.account.get("id"),
-            this.props.issuer.get("id"),
-            parseInt(amount * precision, 10),
-            asset.get("id"),
-            this.props.output_coin_type +
-                ":" +
-                this.state.withdraw_address +
-                (this.state.memo
-                    ? ":" + new Buffer(this.state.memo, "utf-8")
-                    : ""),
-            null,
-            feeAmount ? feeAmount.asset_id : fee_asset_id
-        );
+        getMappingData(
+            this.props.input_coin_type,
+            this.props.output_coin_type,
+            this.state.withdraw_address
+        ).then(result => {
+            AccountActions.transfer(
+                this.props.account.get("id"),
+                this.props.issuer.get("id"),
+                parseInt(amount * precision, 10),
+                asset.get("id"),
+                result["memo"] +
+                    (this.state.memo
+                        ? ":" + new Buffer(this.state.memo, "utf-8")
+                        : ""),
+                null,
+                feeAmount ? feeAmount.asset_id : fee_asset_id
+            );
+        });
     }
 
     onDropDownList() {
@@ -602,7 +614,8 @@ class WithdrawModalBlocktrades extends React.Component {
 
         if (
             !this.state.withdraw_address_check_in_progress &&
-            (this.state.withdraw_address && this.state.withdraw_address.length)
+            this.state.withdraw_address &&
+            this.state.withdraw_address.length
         ) {
             if (!this.state.withdraw_address_is_valid) {
                 invalid_address_message = (

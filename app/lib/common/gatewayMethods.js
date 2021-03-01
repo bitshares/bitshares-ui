@@ -2,6 +2,9 @@ import ls from "./localStorage";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
 const blockTradesStorage = new ls("");
+let oidcStorage = new ls(
+    "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
+);
 
 let fetchInProgess = {};
 let fetchCache = {};
@@ -333,6 +336,52 @@ export function requestDepositAddress({
         });
 }
 
+export function getMappingData(inputCoinType, outputCoinType, outputAddress) {
+    let body = JSON.stringify({
+        inputCoinType,
+        outputCoinType,
+        outputAddress: {
+            address: outputAddress
+        }
+    });
+    let mapping = inputCoinType + outputCoinType + outputAddress;
+    if (blockTradesStorage.has(`history_mapping_${mapping}`)) {
+        return Promise.resolve(
+            blockTradesStorage.get(`history_mapping_${mapping}`)
+        );
+    } else {
+        return new Promise((resolve, reject) => {
+            let headers = {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${oidcStorage.get("")["access_token"]}`
+            };
+            fetch(`${blockTradesAPIs.BASE}/mappings`, {
+                method: "post",
+                headers: headers,
+                body: body
+            })
+                .then(reply => {
+                    reply.json().then(result => {
+                        if (result["inputAddress"]) {
+                            blockTradesStorage.set(
+                                `history_mapping_${mapping}`,
+                                result["inputAddress"]
+                            );
+                            resolve(result && result["inputAddress"]);
+                        } else {
+                            reject();
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.log("Error: ", error);
+                    reject();
+                });
+        });
+    }
+}
+
 export function getBackedCoins({allCoins, tradingPairs, backer}) {
     let gatewayStatus = availableGateways[backer];
     let coins_by_type = {};
@@ -423,7 +472,7 @@ export function validateAddress({
                 "Content-Type": "application/json"
             })
         })
-            .then(reply => reply.json().then(json => json.isValid))
+            .then(reply => reply.json().then(json => json))
             .catch(err => {
                 console.log("validate error:", err);
             });
@@ -436,7 +485,7 @@ export function validateAddress({
             }),
             body: JSON.stringify({address: newAddress})
         })
-            .then(reply => reply.json().then(json => json.isValid))
+            .then(reply => reply.json().then(json => json))
             .catch(err => {
                 console.log("validate error:", err);
             });

@@ -100,7 +100,7 @@ export function getDefaultMarket() {
     if (_isTestnet()) {
         return "USD_TEST";
     }
-    return "USD_BTS";
+    return "BTS_CNY";
 }
 
 /**
@@ -112,7 +112,7 @@ export function getMyMarketsBases() {
     if (_isTestnet()) {
         return ["TEST"];
     }
-    return ["BTS", "BTC", "ETH", "USD", "CNY"];
+    return ["BTS", "BTC", "CNY", "USD", "USDT", "ETH"];
 }
 
 /**
@@ -127,28 +127,28 @@ export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
             "BTC",
+            "BTC1.0",
             "BTS",
             "CNY",
+            "CNY1.0",
             "EUR",
+            "EUR1.0",
             "GOLD",
-            "KRW",
+            "GOLD1.0",
             "RUBLE",
+            "RUB1.0",
             "SILVER",
-            "USD"
+            "SILVER1.0",
+            "USD",
+            "USD1.0"
         ],
-        bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
         gdexTokens: [
             "GDEX.BTC",
             "GDEX.BTO",
             "GDEX.EOS",
             "GDEX.ETH",
-            "GDEX.BTM",
-            "GDEX.NEO",
-            "GDEX.GAS",
-            "GDEX.QTUM",
             "GDEX.BKBT",
             "GDEX.GXC",
-            "GDEX.HPB",
             "GDEX.SEER",
             "GDEX.FOTA",
             "GDEX.JRC",
@@ -159,58 +159,22 @@ export function getMyMarketsQuotes() {
             "GDEX.NULS",
             "GDEX.USDT"
         ],
-        openledgerTokens: [
-            "OBITS",
-            "OPEN.BTC",
-            "OPEN.DASH",
-            "OPEN.DGD",
-            "OPEN.DOGE",
-            "OPEN.EOS",
-            "OPEN.EOSDAC",
-            "OPEN.ETH",
-            "OPEN.EURT",
-            "OPEN.GRC",
-            "OPEN.INCNT",
-            "OPEN.KRM",
-            "OPEN.LISK",
-            "OPEN.LTC",
-            "OPEN.MAID",
-            "OPEN.MKR",
-            "OPEN.NEO",
-            "OPEN.OMG",
-            "OPEN.SBD",
-            "OPEN.STEEM",
-            "OPEN.TUSD",
-            "OPEN.USDT",
-            "OPEN.WAVES",
-            "OPEN.XMR",
-            "OPEN.ZEC",
-            "OPEN.ZRX"
-        ],
+        openledgerTokens: ["OBITS"],
         rudexTokens: [
             "PPY",
-            "RUDEX.GBG",
-            "RUDEX.GOLOS",
-            "RUDEX.KRM",
-            "RUDEX.SBD",
-            "RUDEX.STEEM",
             "RUDEX.BTC",
             "RUDEX.ETH",
+            "RUDEX.USDT",
             "RUDEX.EOS",
+            "RUDEX.GOLOS",
+            "RUDEX.GBG",
+            "RUDEX.STEEM",
+            "RUDEX.SBD",
+            "RUDEX.KRM",
             "RUDEX.WLS",
             "RUDEX.SMOKE",
-            "RUDEX.GRC"
-        ],
-        sparkTokens: [
-            "ZEPH",
-            "PEG.PHP",
-            "SPARKDEX.ETH",
-            "SPARKDEX.BTC",
-            "SPARKDEX.HKD",
-            "SPARKDEX.SGD",
-            "SPARKDEX.AUD",
-            "SPARKDEX.EUR",
-            "SPARKDEX.GBP"
+            "RUDEX.GRC",
+            "RUDEX.PZM"
         ],
         xbtsxTokens: [
             "XBTSX.STH",
@@ -221,7 +185,6 @@ export function getMyMarketsQuotes() {
             "XBTSX.BCH",
             "XBTSX.LTC",
             "XBTSX.DASH",
-            "XBTSX.XSPEC",
             "XBTSX.NVC",
             "XBTSX.UNI",
             "XBTSX.NMC",
@@ -229,21 +192,20 @@ export function getMyMarketsQuotes() {
             "XBTSX.COF",
             "XBTSX.MDL",
             "XBTSX.ETH",
-            "XBTSX.EXR"
+            "XBTSX.EXR",
+            "XBTSX.USDT",
+            "XBTSX.TUSD",
+            "XBTSX.USDC",
+            "XBTSX.USDN",
+            "XBTSX.USD",
+            "XBTSX.RUB",
+            "XBTSX.EUR",
+            "XBTSX.ATRI",
+            "XBTSX.FIL",
+            "XBTSX.EOS",
+            "XBTSX.BAT"
         ],
-        otherTokens: [
-            "BTWTY",
-            "TWENTIX",
-
-            "CVCOIN",
-            "HERO",
-            "OCT",
-            "HERTZ",
-            "ICOO",
-            "SMOKE",
-            "STEALTH",
-            "YOYOW"
-        ]
+        otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
     let allTokens = [];
@@ -264,94 +226,90 @@ export function getFeaturedMarkets(quotes = []) {
     }
     return [
         ["USD", "BTS"],
-        ["USD", "OPEN.BTC"],
-        ["USD", "OPEN.USDT"],
-        ["USD", "OPEN.ETH"],
-        ["USD", "OPEN.DASH"],
         ["USD", "GOLD"],
         ["USD", "HERO"],
         ["USD", "GDEX.BTC"],
         ["USD", "GDEX.ETH"],
         ["USD", "GDEX.EOS"],
         ["USD", "GDEX.BTO"],
-        ["USD", "OPEN.EOSDAC"],
-        ["USD", "RUDEX.BTC"],
+        ["USD", "RUDEX.GOLOS"],
         ["USD", "RUDEX.STEEM"],
         ["USD", "RUDEX.EOS"],
+        ["USD", "RUDEX.BTC"],
+        ["USD", "RUDEX.ETH"],
+        ["USD", "RUDEX.USDT"],
+        ["USD", "RUDEX.WLS"],
+        ["USD", "RUDEX.SMOKE"],
         ["CNY", "BTS"],
-        ["CNY", "OPEN.BTC"],
         ["CNY", "USD"],
-        ["CNY", "OPEN.ETH"],
         ["CNY", "YOYOW"],
         ["CNY", "OCT"],
         ["CNY", "GDEX.BTC"],
         ["CNY", "GDEX.ETH"],
         ["CNY", "GDEX.EOS"],
         ["CNY", "GDEX.BTO"],
-        ["CNY", "GDEX.BTM"],
         ["CNY", "GDEX.SEER"],
         ["CNY", "GDEX.BKBT"],
         ["CNY", "GDEX.USDT"],
         ["CNY", "GDEX.GXC"],
         ["CNY", "RUDEX.GOLOS"],
-        ["CNY", "RUDEX.GBG"],
-        ["CNY", "RUDEX.BTC"],
+        ["CNY", "RUDEX.STEEM"],
         ["CNY", "RUDEX.EOS"],
-        ["OPEN.BTC", "BTS"],
-        ["OPEN.BTC", "OPEN.ETH"],
-        ["OPEN.BTC", "OPEN.DASH"],
-        ["OPEN.BTC", "OPEN.DGD"],
-        ["OPEN.BTC", "OPEN.STEEM"],
-        ["BTS", "OPEN.ETH"],
-        ["BTS", "OPEN.EOS"],
+        ["CNY", "RUDEX.BTC"],
+        ["CNY", "RUDEX.ETH"],
+        ["CNY", "RUDEX.USDT"],
+        ["CNY", "RUDEX.WLS"],
+        ["CNY", "RUDEX.SMOKE"],
         ["BTS", "PPY"],
-        ["BTS", "OPEN.STEEM"],
-        ["BTS", "OBITS"],
         ["BTS", "RUBLE"],
         ["BTS", "HERO"],
         ["BTS", "OCT"],
         ["BTS", "SILVER"],
         ["BTS", "GOLD"],
-        ["BTS", "BTWTY"],
-        ["BTS", "SMOKE"],
         ["BTS", "GDEX.BTC"],
         ["BTS", "GDEX.ETH"],
         ["BTS", "GDEX.EOS"],
         ["BTS", "GDEX.BTO"],
         ["BTS", "GDEX.USDT"],
-        ["BTS", "OPEN.EOSDAC"],
-        ["USD", "OPEN.STEEM"],
-        ["USD", "OPEN.MAID"],
-        ["OPEN.USDT", "OPEN.BTC"],
-        ["OPEN.BTC", "OPEN.MAID"],
-        ["BTS", "OPEN.MAID"],
-        ["BTS", "OPEN.HEAT"],
-        ["BTS", "OPEN.INCENT"],
+        ["RUDEX.USDT", "RUDEX.BTC"],
+        ["RUDEX.USDT", "RUDEX.ETH"],
+        ["RUDEX.USDT", "RUDEX.EOS"],
+        ["RUDEX.USDT", "RUDEX.PZM"],
+        ["RUDEX.USDT", "PPY"],
+        ["RUDEX.USDT", "RUBLE"],
+        ["RUDEX.BTC", "RUDEX.ETH"],
+        ["RUDEX.BTC", "RUDEX.EOS"],
+        ["RUDEX.BTC", "RUDEX.STEEM"],
+        ["RUDEX.BTC", "RUDEX.GOLOS"],
+        ["RUDEX.BTC", "RUDEX.WLS"],
+        ["RUDEX.BTC", "PPY"],
+        ["RUBLE", "RUDEX.BTC"],
+        ["RUBLE", "RUDEX.ETH"],
+        ["RUBLE", "RUDEX.USDT"],
+        ["RUBLE", "RUDEX.GOLOS"],
+        ["RUDEX.BTC", "RUDEX.PZM"],
         ["RUB", "RUDEX.GOLOS"],
-        ["RUB", "RUDEX.GBG"],
+        ["BTS", "RUDEX.GOLOS"],
         ["BTS", "RUDEX.STEEM"],
-        ["BTS", "RUDEX.SBD"],
-        ["BTS", "RUDEX.KRM"],
         ["BTS", "RUDEX.EOS"],
         ["BTS", "RUDEX.BTC"],
         ["BTS", "RUDEX.ETH"],
+        ["BTS", "RUDEX.USDT"],
         ["BTS", "RUDEX.WLS"],
         ["BTS", "RUDEX.SMOKE"],
-        ["BTS", "RUDEX.GRC"],
+        ["BTS", "RUDEX.PZM"],
+        ["BTS", "XBTSX.BTC"],
+        ["BTS", "XBTSX.ETH"],
+        ["BTS", "XBTSX.EUR"],
+        ["BTS", "XBTSX.RUB"],
         ["BTS", "XBTSX.STH"],
+        ["BTS", "XBTSX.TUSD"],
         ["BTS", "XBTSX.WAVES"],
-        ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"],
-        ["BTS", "SPARKDEX.BTC"],
-        ["BTS", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.HKD"],
-        ["SPARKDEX.HKD", "SPARKDEX.BTC"],
-        ["SPARKDEX.HKD", "SPARKDEX.ETH"],
-        ["BTS", "SPARKDEX.SGD"],
-        ["BTS", "SPARKDEX.AUD"],
-        ["BTS", "SPARKDEX.EUR"],
-        ["BTS", "SPARKDEX.GBP"],
-        ["BTS", "PEG.PHP"]
+        ["BTS", "XBTSX.USD"],
+        ["BTS", "XBTSX.USDC"],
+        ["BTS", "XBTSX.USDN"],
+        ["BTS", "XBTSX.USDT"],
+        ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -367,15 +325,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return [
-        "OPEN.",
-        "RUDEX.",
-        "BRIDGE.",
-        "GDEX.",
-        "XBTSX.",
-        "SPARKDEX.",
-        "CITADEL."
-    ];
+    return ["OPEN.", "RUDEX.", "GDEX.", "XBTSX.", "CITADEL."];
 }
 
 /**
@@ -395,13 +345,13 @@ export function getAssetHideNamespaces() {
 export function allowedGateway(gateway) {
     const allowedGateways = [
         "TRADE",
-        "OPEN",
+        "OPEN", // keep to display the warning icon, permanently disabled in gateways.js
         "RUDEX",
-        "BRIDGE",
         "GDEX",
         "XBTSX",
-        "SPARKDEX",
-        "CITADEL"
+        "CITADEL",
+        "BRIDGE", // keep to display the warning icon, permanently disabled in gateways.js
+        "SPARKDEX" // keep to display the warning icon, permanently disabled in gateways.js
     ];
     if (!gateway) {
         // answers the question: are any allowed?
@@ -432,4 +382,8 @@ export function getConfigurationAsset() {
         explanation:
             "This asset is used for decentralized configuration of the BitShares UI placed under bitshares.org."
     };
+}
+
+export function getSteemNewsTag() {
+    return null;
 }

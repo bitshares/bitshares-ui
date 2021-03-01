@@ -1545,6 +1545,40 @@ class Operation {
                 );
 
                 break;
+            case "ticket_create":
+                const ticket_type = Object.keys(
+                    grapheneChainTypes.ticket_type
+                ).find(
+                    key =>
+                        grapheneChainTypes.ticket_type[key] ===
+                        op[1].target_type
+                );
+                column = (
+                    <span>
+                        <TranslateWithLinks
+                            string="operation.ticket_create"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].account,
+                                    arg: "account"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount"
+                                }
+                            ]}
+                        />
+                        &nbsp; (
+                        {counterpart.translate(
+                            "operation.ticket_types." + ticket_type
+                        )}
+                        )
+                    </span>
+                );
+
+                break;
             default:
                 console.log("unimplemented op '" + ops[op[0]] + "':", op);
                 column = (

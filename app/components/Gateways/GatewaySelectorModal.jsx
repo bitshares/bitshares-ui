@@ -142,16 +142,20 @@ class GatewaySelectorModal extends React.Component {
                 align: "left",
                 render: row => {
                     if (!row.landing) return "-";
-                    return (
-                        <a
-                            target="_blank"
-                            className="external-link"
-                            rel="noopener noreferrer"
-                            href={row.landing}
-                        >
-                            External Link
-                        </a>
-                    );
+                    if (row.landing.startsWith("http")) {
+                        return (
+                            <a
+                                target="_blank"
+                                className="external-link"
+                                rel="noopener noreferrer"
+                                href={row.landing}
+                            >
+                                External Link
+                            </a>
+                        );
+                    } else {
+                        return <span>{row.landing}</span>;
+                    }
                 }
             },
             {
@@ -162,16 +166,20 @@ class GatewaySelectorModal extends React.Component {
                 align: "left",
                 render: row => {
                     if (!row.wallet) return "-";
-                    return (
-                        <a
-                            target="_blank"
-                            className="external-link"
-                            rel="noopener noreferrer"
-                            href={row.wallet}
-                        >
-                            External Link
-                        </a>
-                    );
+                    if (row.wallet.startsWith("http")) {
+                        return (
+                            <a
+                                target="_blank"
+                                className="external-link"
+                                rel="noopener noreferrer"
+                                href={row.wallet}
+                            >
+                                External Link
+                            </a>
+                        );
+                    } else {
+                        return <span>{row.wallet}</span>;
+                    }
                 }
             }
         ];
@@ -186,8 +194,12 @@ class GatewaySelectorModal extends React.Component {
         const all = this._getRows();
         let onChainConfig = {};
         for (let i = 0; i < all.length; i++) {
-            if (!(await all[i].isEnabled({onlyOnChainConfig: true})))
+            if (!(await all[i].isEnabled({onlyOnChainConfig: true}))) {
                 onChainConfig[all[i].key] = await getGatewayConfig(all[i].key);
+                if (!onChainConfig[all[i].key]) {
+                    onChainConfig[all[i].key] = {enabled: false};
+                }
+            }
         }
         this.setState({onChainConfig});
     }
@@ -206,9 +218,10 @@ class GatewaySelectorModal extends React.Component {
                 name: item.name,
                 prefix: item.id,
                 landing: !!item.landing ? item.landing : undefined,
-                wallet: !!item.wallet
-                    ? item.wallet + this._getReferrerLink()
-                    : undefined,
+                wallet:
+                    !!item.wallet && item.wallet.startsWith("http")
+                        ? item.wallet + this._getReferrerLink()
+                        : item.wallet,
                 isEnabled: item.isEnabled
             };
         });
@@ -218,9 +231,10 @@ class GatewaySelectorModal extends React.Component {
                 type: "bridge",
                 name: item.name,
                 landing: !!item.landing ? item.landing : undefined,
-                wallet: !!item.wallet
-                    ? item.wallet + this._getReferrerLink()
-                    : undefined,
+                wallet:
+                    !!item.wallet && item.wallet.startsWith("http")
+                        ? item.wallet + this._getReferrerLink()
+                        : item.wallet,
                 isEnabled: item.isEnabled
             };
         });

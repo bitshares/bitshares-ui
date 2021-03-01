@@ -336,8 +336,8 @@ class MyMarkets extends React.Component {
             lookupBase: null,
             inputValue: "",
             minWidth: "100%",
-            findBaseInput: "USD",
-            activeFindBase: "USD"
+            findBaseInput: "BTS",
+            activeFindBase: "BTS"
         };
 
         this._setMinWidth = this._setMinWidth.bind(this);
@@ -348,15 +348,6 @@ class MyMarkets extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        /* Trigger a lookup when switching tabs to find-market */
-        if (
-            this.state.activeTab !== "find-market" &&
-            nextState.activeTab === "find-market" &&
-            !nextProps.searchAssets.size
-        ) {
-            this._lookupAssets("OPEN.", true);
-        }
-
         if (this.state.activeTab !== nextState.activeTab) {
             this._changeTab(nextState.activeTab);
         } else if (
@@ -417,10 +408,6 @@ class MyMarkets extends React.Component {
         Ps.initialize(historyContainer);
 
         this._setMinWidth();
-
-        if (this.state.activeTab === "find-market") {
-            this._lookupAssets("OPEN.", true);
-        }
 
         if (this.state.activeTab !== this.props.activeTab) {
             setTimeout(() => {

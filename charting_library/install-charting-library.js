@@ -9,19 +9,21 @@ function getMD5Digest(file) {
     return hash.toUpperCase();
 }
 
-var outputFilePath = path.join(__dirname, "charting_library.zip");
+var outputFileName = "charting_library.17.025.02b61a1c.zip";
+var outputFilePath = path.join(__dirname, outputFileName);
 const outputFile = fs.createWriteStream(outputFilePath);
 
-http.get("https://bitshares.org/assets/charting_library.zip", (response) => {
-    response.pipe(outputFile);    
+http.get("https://bitshares.org/assets/" + outputFileName, (response) => {
+    response.pipe(outputFile);
 }).on("error", (err) => {
     console.error("Failed to download charting_library archive");
     console.error(err);
+    throw (err);
 });
 
 outputFile.on("finish", () => {
     const actualDigest = getMD5Digest(outputFilePath);
-    const expectedDigest = fs.readFileSync(outputFilePath + ".md5").toString();
+    const expectedDigest = fs.readFileSync(outputFilePath + ".md5").toString().trim();
     if (actualDigest !== expectedDigest) {
         fs.unlinkSync(outputFilePath);
         throw new Error("MD5 of downloaded file (" + actualDigest + ") not matches expected (" + expectedDigest + ")");
