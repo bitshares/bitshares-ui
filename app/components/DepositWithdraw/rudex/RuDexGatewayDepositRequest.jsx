@@ -232,7 +232,16 @@ class RuDexGatewayDepositRequest extends React.Component {
                 // This is a client that uses unique deposit addresses to select the output
                 clipboardText = receive_address.address;
                 deposit_address_fragment = (
-                    <span>{receive_address.address}</span>
+                    <span
+                        style={{
+                            wordBreak: "break-word",
+                            lineHeight: "1.5em",
+                            marginTop: "15px",
+                            display: "block"
+                        }}
+                    >
+                        {receive_address.address}
+                    </span>
                 );
             }
             withdraw_memo_prefix = "";
