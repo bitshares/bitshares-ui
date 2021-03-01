@@ -755,8 +755,6 @@ export const scamAccountsOther = [
     "1.2.787036",
     "lyra",
     "1.2.1000000",
-    "mai1100",
-    "1.2.158598",
     "mark.space",
     "1.2.897148",
     "meet-up",
