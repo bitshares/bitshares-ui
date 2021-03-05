@@ -643,7 +643,7 @@ class AccountOrders extends React.Component {
         return tables;
     }
 
-    _getOrders(keys) {
+    _getSelectedOrders(keys) {
         let orders = this.props.account
             .get("orders")
             .toArray()
@@ -652,14 +652,14 @@ class AccountOrders extends React.Component {
     }
 
     _cancelLimitOrders() {
-        this._getOrders(this.state.selectedOrders).then(orders => {
-            let defaultFeeAssets = orders
+        this._getSelectedOrders(this.state.selectedOrders).then(orders => {
+            let fallbackFeeAssets = orders
                 .toJS()
                 .map(item => item.sell_price.base.asset_id);
             MarketsActions.cancelLimitOrders(
                 this.props.account.get("id"),
                 this.state.selectedOrders,
-                defaultFeeAssets
+                fallbackFeeAssets
             )
                 .then(() => {
                     this.resetSelected();
