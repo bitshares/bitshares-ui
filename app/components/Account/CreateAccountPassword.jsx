@@ -313,9 +313,12 @@ class CreateAccountPassword extends React.Component {
             disabled: !valid || (registrar_account && !isLTM)
         });
 
-        let recaptchaCode = "6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5";
+        //get keys at https://www.google.com/recaptcha/about/
+        //replace site key and secret key below with your own values
+
+        let recaptchaCode = "6Ldp03caA...";
         if (this.props.connectedNode && isTestNet(this.props.connectedNode)) {
-            recaptchaCode = "6LeaLrgUAAAAAItQxCJO21_MTiznWIQR1XO9ll5L";
+            recaptchaCode = "6Ldp03caA...";
         }
 
         return (
@@ -878,18 +881,13 @@ class CreateAccountPassword extends React.Component {
 
 CreateAccountPassword = withRouter(CreateAccountPassword);
 
-export default connect(
-    CreateAccountPassword,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                connectedNode: SettingsStore.getState().settings.get(
-                    "activeNode"
-                )
-            };
-        }
+export default connect(CreateAccountPassword, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            connectedNode: SettingsStore.getState().settings.get("activeNode")
+        };
     }
-);
+});
