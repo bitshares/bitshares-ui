@@ -1,6 +1,6 @@
 import React from "react";
 import {Helmet} from "react-helmet";
-import {getMetaTag} from "../../services/metatags.js";
+import {getMetaTag} from "../../services/MetaTags.js";
 import PropTypes from "prop-types";
 
 class MetaTag extends React.Component {

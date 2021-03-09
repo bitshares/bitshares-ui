@@ -149,8 +149,24 @@ export const settingsAPIs = {
             location: "Northern California",
             region: "Northern America",
             country: "U.S.A."
-            //operator: "Witness: atter-tusc",
+            //operator: "Witness: attero-tusc",
             //contact: "telegram:bendubois26"
+        },
+        {
+            url: "wss://api.cryptotusc.com",
+            location: "Singapore",
+            region: "Asia Pacific",
+            country: "Singapore"
+            //operator: "Witness: attero-tusc",
+            //contact: "telegram: bendubois26"
+        },
+        {
+            url: "wss://testnetapi.cryptotusc.com",
+            location: "Ohio",
+            region: "TESTNET - Northern America",
+            country: "U.S.A."
+            //operator: "Witness: attero-tusc",
+            //contact: "telegram: bendubois26"
         }
     ],
     ES_WRAPPER_LIST: [

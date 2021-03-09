@@ -32,7 +32,9 @@ export function getWalletName() {
  * @returns {string}
  */
 export function getWalletURL() {
-    return "https://tusc.network/wallet";
+    return (
+        window.location.protocol + "//" + window.location.hostname + "/wallet"
+    );
 }
 
 /**
