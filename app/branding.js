@@ -32,6 +32,9 @@ export function getWalletName() {
  * @returns {string}
  */
 export function getWalletURL() {
+    //Use the following line for a fixed URL in the referral URL
+    //return "https://wallet.tusc.network/wallet";
+    //Use the following line for a dynamic URL in the referral URL
     return (
         window.location.protocol + "//" + window.location.hostname + "/wallet"
     );

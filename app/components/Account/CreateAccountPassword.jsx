@@ -314,11 +314,11 @@ class CreateAccountPassword extends React.Component {
         });
 
         //get keys at https://www.google.com/recaptcha/about/
-        //replace site key and secret key below with your own values
+        //The first key is the site key for mainnet. The second is for testnet? not clear on this.
 
-        let recaptchaCode = "6Ldp03caA...";
+        let recaptchaCode = "6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5";
         if (this.props.connectedNode && isTestNet(this.props.connectedNode)) {
-            recaptchaCode = "6Ldp03caA...";
+            recaptchaCode = "6LeaLrgUAAAAAItQxCJO21_MTiznWIQR1XO9ll5L";
         }
 
         return (
