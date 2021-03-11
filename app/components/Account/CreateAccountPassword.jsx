@@ -785,7 +785,7 @@ class CreateAccountPassword extends React.Component {
 
         //get keys at https://www.google.com/recaptcha/about/
         //replace site key and secret key below with your own values
-        const recaptchaCode = "6LfNDHsaAAAAAKCOWSsDm2chejh5a7M-pZKHcCzR";
+        const recaptchaCode = "6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5";
         return (
             <GoogleReCaptchaProvider
                 reCaptchaKey={recaptchaCode}
