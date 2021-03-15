@@ -6,7 +6,7 @@ import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import WalletDb from "stores/WalletDb";
 import {Link} from "react-router-dom";
-import AccountSelect from "../Forms/AccountSelect";
+/*import AccountSelect from "../Forms/AccountSelect";*/
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import Translate from "react-translate-component";
@@ -70,7 +70,7 @@ class CreateAccountPassword extends React.Component {
         this.scrollToInput = this.scrollToInput.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (!WalletDb.getWallet()) {
             SettingsActions.changeSetting({
                 setting: "passwordLogin",
@@ -114,7 +114,7 @@ class CreateAccountPassword extends React.Component {
     }
 
     scrollToInput() {
-        scroller.scrollTo(`scrollToInput`, {
+        scroller.scrollTo("scrollToInput", {
             duration: 1500,
             delay: 100,
             smooth: true,
@@ -131,7 +131,12 @@ class CreateAccountPassword extends React.Component {
         // if (!firstAccount) {
         //     valid = valid && this.state.registrar_account;
         // }
-        return valid && this.state.understand_1 && this.state.understand_2;
+        return (
+            valid &&
+            this.state.understand_1 &&
+            this.state.understand_2 &&
+            this.state.understand_3
+        );
     }
 
     onAccountNameChange(e) {
@@ -272,11 +277,6 @@ class CreateAccountPassword extends React.Component {
         this.setState({registrar_account});
     }
 
-    // showRefcodeInput(e) {
-    //     e.preventDefault();
-    //     this.setState({hide_refcode: false});
-    // }
-
     _onInput(value, e) {
         if (value === "recaptcha") {
             this.setState({[value]: e});
@@ -297,7 +297,7 @@ class CreateAccountPassword extends React.Component {
     _renderAccountCreateForm() {
         let {registrar_account} = this.state;
 
-        let my_accounts = AccountStore.getMyAccounts();
+        /*let my_accounts = AccountStore.getMyAccounts();*/
         let valid = this.isValid();
         let isLTM = false;
         let registrar = registrar_account
@@ -312,14 +312,6 @@ class CreateAccountPassword extends React.Component {
         let buttonClass = classNames("submit-button button no-margin", {
             disabled: !valid || (registrar_account && !isLTM)
         });
-
-        //get keys at https://www.google.com/recaptcha/about/
-        //The first key is the site key for mainnet. The second is for testnet? not clear on this.
-
-        let recaptchaCode = "6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5";
-        if (this.props.connectedNode && isTestNet(this.props.connectedNode)) {
-            recaptchaCode = "6LeaLrgUAAAAAItQxCJO21_MTiznWIQR1XO9ll5L";
-        }
 
         return (
             <div style={{textAlign: "left"}}>
@@ -502,11 +494,6 @@ class CreateAccountPassword extends React.Component {
                             </a>{" "}
                             apply.
                         </div>
-                        <GoogleReCaptchaProvider reCaptchaKey={recaptchaCode}>
-                            <GoogleReCaptcha
-                                onVerify={this._onInput.bind(this, "recaptcha")}
-                            />
-                        </GoogleReCaptchaProvider>
                     </section>
                     <br />
 
@@ -586,33 +573,11 @@ class CreateAccountPassword extends React.Component {
                             </div>
                         </label>
                     </div>
-
-                    {/* If this is not the first account, show dropdown for fee payment account */}
-                    {/* {firstAccount ? null : (
-                        <div
-                            className="full-width-content form-group no-overflow"
-                            style={{paddingTop: 30}}
-                        >
-                            <label>
-                                <Translate content="account.pay_from" />
-                            </label>
-                            <AccountSelect
-                                account_names={my_accounts}
-                                onChange={this.onRegistrarAccountChange.bind(
-                                    this
-                                )}
-                            />
-                            {registrar_account && !isLTM ? (
-                                <div
-                                    style={{textAlign: "left"}}
-                                    className="facolor-error"
-                                >
-                                    <Translate content="wallet.must_be_ltm" />
-                                </div>
-                            ) : null}
-                        </div>
-                    )} */}
-
+                    {valid && (
+                        <GoogleReCaptcha
+                            onVerify={this._onInput.bind(this, "recaptcha")}
+                        />
+                    )}
                     {/* Submit button */}
                     {this.state.loading ? (
                         <LoadingIndicator type="three-bounce" />
@@ -621,39 +586,12 @@ class CreateAccountPassword extends React.Component {
                             <Translate content="account.create_account" />
                         </button>
                     )}
-
-                    {/* Backup restore option */}
-                    {/* <div style={{paddingTop: 40}}>
-                    <label>
-                        <Link to="/existing-account">
-                            <Translate content="wallet.restore" />
-                        </Link>
-                    </label>
-
-                    <label>
-                        <Link to="/create-wallet-brainkey">
-                            <Translate content="settings.backup_brainkey" />
-                        </Link>
-                    </label>
-                </div> */}
-
-                    {/* Skip to step 3 */}
-                    {/* {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
-                    <label>
-                        <a onClick={() => {this.setState({step: 3});}}><Translate content="wallet.go_get_started" /></a>
-                    </label>
-                </div>} */}
                 </form>
-                {/* <br />
-                <p>
-                    <Translate content="wallet.bts_rules" unsafe />
-                </p> */}
             </div>
         );
     }
 
     _renderAccountCreateText() {
-        let my_accounts = AccountStore.getMyAccounts();
         return (
             <div>
                 <h4
@@ -844,37 +782,47 @@ class CreateAccountPassword extends React.Component {
         let {step} = this.state;
         // let my_accounts = AccountStore.getMyAccounts();
         // let firstAccount = my_accounts.length === 0;
+
+        //get keys at https://www.google.com/recaptcha/about/
+        //replace site key and secret key below with your own values
+        const recaptchaCode = "6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5";
         return (
-            <div
-                className="sub-content"
-                id="scrollToInput"
-                name="scrollToInput"
+            <GoogleReCaptchaProvider
+                reCaptchaKey={recaptchaCode}
+                useRecaptchaNet="true"
             >
-                <MetaTag path="create-account/password" />
-                <div>
-                    {step === 2 ? (
-                        <p
-                            style={{
-                                fontWeight: "normal",
-                                fontFamily: "Roboto-Medium, arial, sans-serif",
-                                fontStyle: "normal"
-                            }}
-                        >
-                            <Translate content={"wallet.step_" + step} />
-                        </p>
-                    ) : null}
+                <div
+                    className="sub-content"
+                    id="scrollToInput"
+                    name="scrollToInput"
+                >
+                    <MetaTag path="create-account/password" />
+                    <div>
+                        {step === 2 ? (
+                            <p
+                                style={{
+                                    fontWeight: "normal",
+                                    fontFamily:
+                                        "Roboto-Medium, arial, sans-serif",
+                                    fontStyle: "normal"
+                                }}
+                            >
+                                <Translate content={"wallet.step_" + step} />
+                            </p>
+                        ) : null}
 
-                    {step === 3 ? this._renderGetStartedText() : null}
+                        {step === 3 ? this._renderGetStartedText() : null}
 
-                    {step === 1 ? (
-                        <div>{this._renderAccountCreateForm()}</div>
-                    ) : step === 2 ? (
-                        this._renderBackup()
-                    ) : (
-                        this._renderGetStarted()
-                    )}
+                        {step === 1 ? (
+                            <div>{this._renderAccountCreateForm()}</div>
+                        ) : step === 2 ? (
+                            this._renderBackup()
+                        ) : (
+                            this._renderGetStarted()
+                        )}
+                    </div>
                 </div>
-            </div>
+            </GoogleReCaptchaProvider>
         );
     }
 }
