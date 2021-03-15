@@ -118,7 +118,7 @@
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
-            "formatter": "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "formatter": "This page is protected by an invisible CAPTCHA. Please complete this form in under 2 minutes, or the CAPTCHA will time out and produce an error message. \r\n\r\nDon't write or type out your keys - to avoid mistakes use the blue copy button. \r\n\r\nOptionally, {restore_link} or create an account using the {restore_form}.",
             "restore_form": "advanced form",
             "restore_link": "restore your account"
         },
