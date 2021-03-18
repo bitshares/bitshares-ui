@@ -79,95 +79,49 @@ function BindToChainState(Component, options = {}) {
                 this.required_props = [];
                 this.all_chain_props = this.chain_objects;
             } else {
-                this.chain_objects = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isObjectType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_accounts = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isAccountType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_account_names = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isAccountNameType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_key_refs = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isKeyRefsType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_address_balances = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isAddressBalancesType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_assets = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isAssetType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_objects_list = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isObjectsListType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_accounts_list = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isAccountsListType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_assets_list = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isAssetsListType
-                        )
-                    )
-                    .map(firstEl);
-                this.required_props = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            checkIfRequired
-                        )
-                    )
-                    .map(firstEl);
-                this.all_chain_props = [
-                    ...this.chain_objects,
-                    ...this.chain_accounts,
-                    ...this.chain_account_names,
-                    ...this.chain_key_refs,
-                    ...this.chain_address_balances,
-                    ...this.chain_assets,
-                    ...this.chain_objects_list
-                ];
+                try {
+                    this.chain_objects = prop_types_array
+                        .filter(flow(secondEl, isObjectType))
+                        .map(firstEl);
+                    this.chain_accounts = prop_types_array
+                        .filter(flow(secondEl, isAccountType))
+                        .map(firstEl);
+                    this.chain_account_names = prop_types_array
+                        .filter(flow(secondEl, isAccountNameType))
+                        .map(firstEl);
+                    this.chain_key_refs = prop_types_array
+                        .filter(flow(secondEl, isKeyRefsType))
+                        .map(firstEl);
+                    this.chain_address_balances = prop_types_array
+                        .filter(flow(secondEl, isAddressBalancesType))
+                        .map(firstEl);
+                    this.chain_assets = prop_types_array
+                        .filter(flow(secondEl, isAssetType))
+                        .map(firstEl);
+                    this.chain_objects_list = prop_types_array
+                        .filter(flow(secondEl, isObjectsListType))
+                        .map(firstEl);
+                    this.chain_accounts_list = prop_types_array
+                        .filter(flow(secondEl, isAccountsListType))
+                        .map(firstEl);
+                    this.chain_assets_list = prop_types_array
+                        .filter(flow(secondEl, isAssetsListType))
+                        .map(firstEl);
+                    this.required_props = prop_types_array
+                        .filter(flow(secondEl, checkIfRequired))
+                        .map(firstEl);
+                    this.all_chain_props = [
+                        ...this.chain_objects,
+                        ...this.chain_accounts,
+                        ...this.chain_account_names,
+                        ...this.chain_key_refs,
+                        ...this.chain_address_balances,
+                        ...this.chain_assets,
+                        ...this.chain_objects_list
+                    ];
+                } catch (err) {
+                    this._errored(err);
+                }
             }
             if (options && options.require_all_props) {
                 this.required_props = this.all_chain_props;
