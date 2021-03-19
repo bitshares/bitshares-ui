@@ -141,6 +141,8 @@ export const scamAccountsOther = [
     "1.2.467526",
     "binancecleos",
     "1.2.1017616",
+    "binance-nbs-02",
+    "1.2.1792577",
     "bishengtopex",
     "1.2.1029188",
     "bisq",
