@@ -1505,6 +1505,8 @@ export const scamAccountsOther = [
     "1.2.1799880",
     "huobai-pro",
     "1.2.1799738",
+    "bionance-bts-1",
+    "1.2.1800421",
     "hujoyy-131hk",
     "1.2.1799561",
     "hitxxxrav25",
