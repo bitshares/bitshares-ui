@@ -398,9 +398,9 @@ export const settingsAPIs = {
         },
         {
             url: "wss://api-us-testnet.61bts.com/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Shandong",
+            region: "Northern America",
+            country: "USA",
+            location: "St. Louis",
             operator: "Witness: liuye",
             contact: "email:work@akawa.ink"
         }
