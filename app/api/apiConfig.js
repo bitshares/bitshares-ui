@@ -232,7 +232,15 @@ export const settingsAPIs = {
             country: "China",
             location: "Shandong",
             operator: "Witness: liuye",
-            contact: "email:work@domyself.me"
+            contact: "email:work@akawa.ink"
+        },
+        {
+            url: "wss://api-us.61bts.com",
+            region: "Northern America",
+            country: "USA",
+            location: "St. Louis",
+            operator: "Witness: liuye",
+            contact: "email:work@akawa.ink"
         },
         {
             url: "wss://api.dex.trading/",
@@ -386,7 +394,15 @@ export const settingsAPIs = {
             country: "China",
             location: "Shandong",
             operator: "Witness: liuye",
-            contact: "email:work@domyself.me"
+            contact: "email:work@akawa.ink"
+        },
+        {
+            url: "wss://api-us-testnet.61bts.com/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Shandong",
+            operator: "Witness: liuye",
+            contact: "email:work@akawa.ink"
         }
     ],
     ES_WRAPPER_LIST: [
