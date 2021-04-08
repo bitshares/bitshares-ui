@@ -563,7 +563,7 @@ class AccountSelector extends React.Component {
                         return null;
                     }
                     if (
-                        (this.props.includeMyActiveAccount &&
+                        (this.props.includeMyActiveAccounts &&
                             account.data.isOwnAccount) ||
                         (!this.props.locked && account.data.isContact) ||
                         (accountName && account.data.name === accountName)
