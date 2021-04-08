@@ -723,14 +723,22 @@ class MarketsActions {
         });
     }
 
-    cancelLimitOrders(accountID, orderIDs) {
-        let fee_asset_id = accountUtils.getFinalFeeAsset(
-            accountID,
-            "limit_order_cancel"
-        );
-
-        var tr = WalletApi.new_transaction();
-        orderIDs.forEach(id => {
+    cancelLimitOrders(accountID, orderIDs, fallbackFeeAssets = "1.3.0") {
+        if (__DEV__) {
+            console.log("cancelLimitOrders", accountID, orderIDs);
+        }
+        let tr = WalletApi.new_transaction();
+        for (let i = 0; i < orderIDs.length; i++) {
+            let id = orderIDs[i];
+            let fallbackFeeAsset =
+                typeof fallbackFeeAssets === "string"
+                    ? fallbackFeeAssets
+                    : fallbackFeeAssets[i];
+            let fee_asset_id = accountUtils.getFinalFeeAsset(
+                accountID,
+                "limit_order_cancel",
+                fallbackFeeAsset
+            );
             tr.add_type_operation("limit_order_cancel", {
                 fee: {
                     amount: 0,
@@ -739,8 +747,7 @@ class MarketsActions {
                 fee_paying_account: accountID,
                 order: id
             });
-        });
-
+        }
         return WalletDb.process_transaction(tr, null, true).catch(error => {
             console.log("cancel error:", error);
         });

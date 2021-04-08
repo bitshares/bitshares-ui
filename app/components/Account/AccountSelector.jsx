@@ -186,22 +186,34 @@ class AccountSelector extends React.Component {
                 3000,
                 {}
             ).then(accounts => {
-                accounts.forEach(account => {
+                for (let i = 0; i < accounts.length; i++) {
+                    let account = accounts[i];
                     if (account) {
                         let objectIndex = this._getIndex(
                             account.get("name"),
                             accountIndex
                         );
-
                         let result = this._populateAccountIndex(account);
 
                         if (result) {
                             accountIndex[objectIndex] = result;
                             search_array.splice(account.get("name"));
                         }
-                    }
-                });
+                    } else {
+                        let objectIndex = this._getIndex(
+                            search_array[i],
+                            accountIndex
+                        );
+                        let result = this._populateAccountIndexWithPublicKey(
+                            search_array[i]
+                        );
 
+                        if (result) {
+                            accountIndex[objectIndex] = result;
+                            search_array.splice(search_array[i]);
+                        }
+                    }
+                }
                 search_array.forEach(account_to_find => {
                     let objectIndex = this._getIndex(
                         account_to_find,
@@ -225,6 +237,21 @@ class AccountSelector extends React.Component {
                 }
             });
         }
+    }
+
+    _populateAccountIndexWithPublicKey(publicKey) {
+        let accountType = this.getInputType(publicKey);
+        let rightLabel = "Public Key";
+
+        return {
+            name: publicKey,
+            attempts: 0,
+            data: {
+                name: publicKey,
+                type: accountType,
+                rightLabel: rightLabel
+            }
+        };
     }
 
     _populateAccountIndex(accountResult) {
@@ -453,7 +480,16 @@ class AccountSelector extends React.Component {
                     ? accountIndex[objectIndex].data
                     : null;
         }
+        if (this.props.allowPubKey) {
+            let objectIndex = accountIndex.findIndex(
+                a => a.name === accountName
+            );
 
+            selectedAccount =
+                accountIndex && accountIndex[objectIndex]
+                    ? accountIndex[objectIndex].data
+                    : null;
+        }
         disabledAction =
             !(
                 account ||
@@ -527,7 +563,8 @@ class AccountSelector extends React.Component {
                         return null;
                     }
                     if (
-                        (this.props.includeMyActiveAccounts && account.data.isOwnAccount) ||
+                        (this.props.includeMyActiveAccounts &&
+                            account.data.isOwnAccount) ||
                         (!this.props.locked && account.data.isContact) ||
                         (accountName && account.data.name === accountName)
                     ) {
@@ -554,11 +591,11 @@ class AccountSelector extends React.Component {
                         >
                             {account.data.isKnownScammer ? (
                                 <AntIcon type="warning" />
-                            ) : (account.data.isContact ? (
+                            ) : account.data.isContact ? (
                                 <AntIcon type="star" />
-                            ) : (account.data.isOwnAccount ? (
+                            ) : account.data.isOwnAccount ? (
                                 <AntIcon type="user" />
-                            ) : null) ) }
+                            ) : null}
                             &nbsp;
                             {account.data.name}
                             <span style={{float: "right"}}>
@@ -626,7 +663,7 @@ class AccountSelector extends React.Component {
 
         let accountImageContainer = this.props
             .hideImage ? null : selectedAccount &&
-        selectedAccount.accountType === "pubkey" ? (
+        selectedAccount.type === "pubkey" ? (
             <div className="account-image">
                 <Icon name="key" title="icons.key" size="4x" />
             </div>
@@ -669,18 +706,17 @@ class AccountSelector extends React.Component {
                     <label
                         className={cnames(
                             "right-label",
-                            selectedAccount.isKnownScammer ? "negative" : (
-                                selectedAccount.isContact ||
-                                selectedAccount.isOwnAccount
+                            selectedAccount.isKnownScammer
+                                ? "negative"
+                                : selectedAccount.isContact ||
+                                  selectedAccount.isOwnAccount
                                     ? "positive"
-                                    : null )
+                                    : null
                         )}
                         style={{marginTop: -30}}
                     >
                         <span style={{paddingRight: "0.5rem"}}>
                             {selectedAccount.rightLabel}
-                            &nbsp;
-                            {selectedAccount.displayText}
                         </span>
                         {linked_status}
                     </label>
