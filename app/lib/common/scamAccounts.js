@@ -2124,5 +2124,10 @@ export const scamAccountsOther = [
     "receiver-pro",
     "1.2.1787963",
     "user.dunamu",
-    "1.2.1761235"
+    "1.2.1761235",
+    // BNB
+    "bnb136ns6lfw4zs5hg4n85vdthaad7hq5m4gtkgf23",
+    "1.2.1607940",
+    "bnb1jdy9svxl8jk3s9grsvencvrhx7pt3nvel68uk5",
+    "1.2.1798126"
 ];
