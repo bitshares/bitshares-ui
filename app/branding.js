@@ -42,7 +42,7 @@ export function getWalletURL() {
  */
 export function getFaucet() {
     return {
-        url: "https://faucet.evrazcoin.org", // 2017-12-infrastructure worker proposal
+        url: "https://faucet-evrazdex.org", // 2017-12-infrastructure worker proposal
         show: true,
         editable: false,
         referrer: "evraz"
