@@ -332,6 +332,14 @@ export const settingsAPIs = {
             contact: "wechat:xiaoyuan_409"
         },
         {
+            url: "wss://hongkong.bitshares.im/ws",
+            region: "East Asia",
+            country: "China",
+            location: "Hong Kong",
+            operator: "Witness: clone",
+            contact: "telegram: yexiao"
+        },
+        {
             url: "wss://singapore.bitshares.im/ws",
             region: "Southeast Asia",
             country: "Singapore",
