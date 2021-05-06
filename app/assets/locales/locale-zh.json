@@ -1580,6 +1580,15 @@
             "amount": "兑换数量",
             "submit": "确定"
         },
+        "create_lock": {
+            "amount": "Amount to lock",
+            "from": "Account to lock from",
+            "submit": "Lock",
+            "targetType": "Lock Type",
+            "title": "Create Lock",
+            "type_warning": "Please choose a lock type.",
+            "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
+        },
         "deposit": {
             "address_generation_error": "不能生成地址",
             "amount": "充值数量",
@@ -1774,6 +1783,19 @@
         "publish_feed": "{account} 发布了喂价 {price}",
         "reg_account": "{registrar} 登记了账户 {new_account}",
         "set_proxy": "{account} 将 {proxy} 设置为投票代理",
+        "ticket_create": "{account} locked away {amount} in a ticket",
+        "ticket_types": {
+            "0": "Liquid",
+            "1": "Claimable 180 days after unlock request",
+            "2": "Claimable 360 days after unlock request",
+            "3": "Claimable 720 days after unlock request",
+            "4": "Locked forever",
+            "liquid": "Liquid",
+            "lock_180_days": "Claimable 180 days after unlock request",
+            "lock_360_days": "Claimable 360 days after unlock request",
+            "lock_720_days": "Claimable 720 days after unlock request",
+            "lock_forever": "Locked forever"
+        },
         "transfer": "{from} 将 {amount} 转账给 {to}",
         "transfer_account": "{account} 的账户权限转移给了 {to}",
         "unlisted_by": "{lister} 将 {listee} 移出清单",
@@ -2559,6 +2581,7 @@
             "proposal_create": "创建提案",
             "proposal_delete": "删除提案",
             "proposal_update": "更新提案",
+            "ticket_create": "Create ticket",
             "transfer": "转账",
             "transfer_from_blind": "从隐私账户转出",
             "transfer_to_blind": "向隐私账户转账",
@@ -2696,7 +2719,10 @@
         }
     },
     "voting": {
+        "create_ticket": "Lock 1 {asset}",
         "description": "比特股区块链允许BTS token持有者投票决定区块生产者(见证人), 理事会成员(区块链管理者), 工作提案(任务赏金及BSIPs/Polls战略决策)。",
+        "increase_voting_power": "Create Lock",
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
         "title": "投票"
     },
     "walkthrough": {

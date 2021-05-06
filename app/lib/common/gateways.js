@@ -125,14 +125,14 @@ export const availableGateways = {
         id: "SPARKDEX",
         name: "BitSpark",
         baseAPI: bitsparkAPIs,
-        isEnabled: _isEnabled("SPARKDEX"),
+        isEnabled: () => false,
         selected: false,
         options: {
             enabled: false,
             selected: false
         },
-        landing: "https://www.bitspark.io/for-traders",
-        wallet: "https://dex.bitspark.io/"
+        landing: "https://www.bitspark.io/",
+        wallet: "Shutdown"
     },
     BRIDGE: {
         id: "BRIDGE",
@@ -181,7 +181,7 @@ export const availableGateways = {
         id: "CITADEL",
         name: "Citadel",
         baseAPI: citadelAPIs,
-        isEnabled: _isEnabled("CITADEL"),
+        isEnabled: () => false,
         selected: false,
         assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
         options: {
@@ -189,7 +189,7 @@ export const availableGateways = {
             selected: false
         },
         landing: "https://citadel.li/",
-        wallet: "https://citadel.li/wallet/"
+        wallet: "Disabled"
     }
 };
 

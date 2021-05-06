@@ -6,7 +6,7 @@ import MarketsActions from "actions/MarketsActions";
 import Translate from "react-translate-component";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import SettingsActions from "actions/SettingsActions";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
 import ReactTooltip from "react-tooltip";
 import {Button} from "bitshares-ui-style-guide";
@@ -207,17 +207,31 @@ class MarketOrders extends React.Component {
         }
     }
 
+    _getSelectedOrders(keys) {
+        let orders = this.props.currentAccount
+            .get("orders")
+            .toArray()
+            .filter(item => keys.indexOf(item) != -1);
+        return FetchChain("getObject", orders);
+    }
+
     _cancelLimitOrders() {
-        MarketsActions.cancelLimitOrders(
-            this.props.currentAccount.get("id"),
-            this.state.selectedOrders
-        )
-            .then(() => {
-                this.resetSelected();
-            })
-            .catch(err => {
-                console.log("cancel orders error:", err);
-            });
+        this._getSelectedOrders(this.state.selectedOrders).then(orders => {
+            let fallbackFeeAssets = orders
+                .toJS()
+                .map(item => item.sell_price.base.asset_id);
+            MarketsActions.cancelLimitOrders(
+                this.props.currentAccount.get("id"),
+                this.state.selectedOrders,
+                fallbackFeeAssets
+            )
+                .then(() => {
+                    this.resetSelected();
+                })
+                .catch(err => {
+                    console.log("cancel orders error:", err);
+                });
+        });
     }
 
     _getOrders() {

@@ -34,7 +34,6 @@ of this application.
 
 ## Development
  * [Bitshares UI Github](https://github.com/bitshares/bitshares-ui)
- * [HackTheDEX](introduction/hackthedex.md)
 
 ----------
 [Glossary](glossary.md)

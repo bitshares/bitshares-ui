@@ -194,8 +194,12 @@ class GatewaySelectorModal extends React.Component {
         const all = this._getRows();
         let onChainConfig = {};
         for (let i = 0; i < all.length; i++) {
-            if (!(await all[i].isEnabled({onlyOnChainConfig: true})))
+            if (!(await all[i].isEnabled({onlyOnChainConfig: true}))) {
                 onChainConfig[all[i].key] = await getGatewayConfig(all[i].key);
+                if (!onChainConfig[all[i].key]) {
+                    onChainConfig[all[i].key] = {enabled: false};
+                }
+            }
         }
         this.setState({onChainConfig});
     }

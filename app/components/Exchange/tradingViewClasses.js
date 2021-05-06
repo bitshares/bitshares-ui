@@ -70,36 +70,30 @@ class SymbolInfo {
     }
 }
 
-function getResolutionsFromBuckets(buckets) {
+function getResolutionsFromBuckets(buckets, convertToFrame = false) {
     let resolutions = buckets
         .map(r => {
             let minute = r / 60;
             let day = minute / 60 / 24;
             let week = day / 7;
 
-            if (minute < 1) {
+            if (minute < 1 && !convertToFrame) {
                 // below 1 minute we return Seconds
                 return r + "S";
-            } else if (day < 1 && parseInt(minute, 10) === minute) {
+            } else if (
+                day < 1 &&
+                parseInt(minute, 10) === minute &&
+                !convertToFrame
+            ) {
                 // below 1 day we return Minutes
                 return minute.toString();
-            } else if (week < 1) {
-                // below 1 week we return Days
-                if (day >= 1) {
-                    if (parseInt(day, 10) === day) {
-                        if (day === 1) return "D";
-                        return day + "D";
-                    }
-                }
             } else {
-                // we return weeks
-                if (week >= 1) {
-                    if (parseInt(week, 10) === week) {
-                        return week + "D";
-                    }
-                }
+                // below 1 week we return Days
+                day = parseInt(day, 10);
+                if (day === 1 && !convertToFrame) return "D";
+                if (day === 0) return "1D";
+                return day + "D";
             }
-
             return null;
         })
         .filter(a => !!a);

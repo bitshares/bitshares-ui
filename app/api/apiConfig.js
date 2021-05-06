@@ -232,7 +232,15 @@ export const settingsAPIs = {
             country: "China",
             location: "Shandong",
             operator: "Witness: liuye",
-            contact: "email:work@domyself.me"
+            contact: "email:work@akawa.ink"
+        },
+        {
+            url: "wss://api-us.61bts.com",
+            region: "Northern America",
+            country: "USA",
+            location: "St. Louis",
+            operator: "Witness: liuye",
+            contact: "email:work@akawa.ink"
         },
         {
             url: "wss://api.dex.trading/",
@@ -324,6 +332,14 @@ export const settingsAPIs = {
             contact: "wechat:xiaoyuan_409"
         },
         {
+            url: "wss://hongkong.bitshares.im/ws",
+            region: "East Asia",
+            country: "China",
+            location: "Hong Kong",
+            operator: "Witness: clone",
+            contact: "telegram: yexiao"
+        },
+        {
             url: "wss://singapore.bitshares.im/ws",
             region: "Southeast Asia",
             country: "Singapore",
@@ -379,6 +395,22 @@ export const settingsAPIs = {
             location: "Tokyo",
             operator: "Witness: clone",
             contact: "telegram: yexiao"
+        },
+        {
+            url: "wss://api-testnet.61bts.com/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Shandong",
+            operator: "Witness: liuye",
+            contact: "email:work@akawa.ink"
+        },
+        {
+            url: "wss://api-us-testnet.61bts.com/ws",
+            region: "Northern America",
+            country: "USA",
+            location: "St. Louis",
+            operator: "Witness: liuye",
+            contact: "email:work@akawa.ink"
         }
     ],
     ES_WRAPPER_LIST: [

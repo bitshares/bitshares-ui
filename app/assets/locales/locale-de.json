@@ -1580,6 +1580,15 @@
             "amount": "Betrag zum Tauschen",
             "submit": "Ok"
         },
+        "create_lock": {
+            "amount": "Amount to lock",
+            "from": "Account to lock from",
+            "submit": "Lock",
+            "targetType": "Lock Type",
+            "title": "Create Lock",
+            "type_warning": "Please choose a lock type.",
+            "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
+        },
         "deposit": {
             "address_generation_error": "Adresse konnte nicht genieriert werden.",
             "amount": "Einzahlungsbetrag",
@@ -1774,6 +1783,19 @@
         "publish_feed": "{account} hat eine Preisangabe von {price} veröffentlicht.",
         "reg_account": "{registrar} hat das Konto {newaccount} registriert.",
         "set_proxy": "{account} hat {proxy} als seinen Vertreter eingestellt.",
+        "ticket_create": "{account} locked away {amount} in a ticket",
+        "ticket_types": {
+            "0": "Liquid",
+            "1": "Claimable 180 days after unlock request",
+            "2": "Claimable 360 days after unlock request",
+            "3": "Claimable 720 days after unlock request",
+            "4": "Locked forever",
+            "liquid": "Liquid",
+            "lock_180_days": "Claimable 180 days after unlock request",
+            "lock_360_days": "Claimable 360 days after unlock request",
+            "lock_720_days": "Claimable 720 days after unlock request",
+            "lock_forever": "Locked forever"
+        },
         "transfer": "{from} hat {amount} an {to} überwiesen.",
         "transfer_account": "Konto {account} wurde an {to} übertragen.",
         "unlisted_by": "{lister} hat {listee} von der Liste gestrichen.",
@@ -2559,6 +2581,7 @@
             "proposal_create": "Vorschlag erstellen",
             "proposal_delete": "Vorschlag löschen",
             "proposal_update": "Vorschlag aktualisieren",
+            "ticket_create": "Create ticket",
             "transfer": "Überweisung",
             "transfer_from_blind": "Überweisung von blindem Konto",
             "transfer_to_blind": "Überweisung zu blinden Konten",
@@ -2696,7 +2719,10 @@
         }
     },
     "voting": {
+        "create_ticket": "Lock 1 {asset}",
         "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "increase_voting_power": "Create Lock",
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
         "title": "Voting"
     },
     "walkthrough": {
