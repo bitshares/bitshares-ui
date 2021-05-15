@@ -1549,6 +1549,8 @@ export const scamAccountsOther = [
     "1.2.1799380",
     "subzyng11",
     "1.2.1799563",
+    "ub67",
+    "1.2.1801691",
     "aex-bts-withdrawal-wallet-security",
     "1.2.1694852",
     "citadel-one",
