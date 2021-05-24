@@ -104,7 +104,7 @@ export const availableGateways = {
         id: "RUDEX",
         name: "RuDEX",
         baseAPI: rudexAPIs,
-        isEnabled: _isEnabled("RUDEX"),
+        isEnabled: () => false,
         isSimple: true,
         selected: false,
         simpleAssetGateway: true,
