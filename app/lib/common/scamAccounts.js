@@ -1791,6 +1791,8 @@ export const scamAccountsOther = [
     "1.2.1671745",
     "bitshares.org-update",
     "1.2.1653973",
+    "bitsharesmanagement-group",
+    "1.2.1804143",
     "magicwallet-witness",
     "1.2.1668200",
     "delegate.freedom-witness",
