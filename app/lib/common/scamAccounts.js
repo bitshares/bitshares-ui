@@ -1457,6 +1457,8 @@ export const scamAccountsOther = [
     "1.2.1795566",
     "yykuxxu830905",
     "1.2.1797839",
+    "aex-bitcny-depousit-wallet",
+    "1.2.1804412",
     "aex-bts-depocit-wallet",
     "1.2.1799880",
     "aex-bts-depoesit-wallet",
