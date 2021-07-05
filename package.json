@@ -181,7 +181,7 @@
         "react-dom": "^16.13.1",
         "react-foundation-apps": "git+https://github.com/bitshares/react-foundation-apps.git",
         "react-ga": "^2.7.0",
-        "react-google-recaptcha-v3": "^1.5.2",
+        "react-google-recaptcha": "^2.1.0",
         "react-helmet": "^6.1.0",
         "react-highcharts": "^16.0",
         "react-interpolate-component": "^0.12.0",
