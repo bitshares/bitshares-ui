@@ -55,7 +55,6 @@ class CreateAccountPassword extends React.Component {
             ),
             refAcct: AccountStore.getState().referralAccount,
             confirm_password: "",
-            recaptcha: "",
             understand_1: false,
             understand_2: false,
             understand_3: false
@@ -264,8 +263,6 @@ class CreateAccountPassword extends React.Component {
                         this.props.history.push("/login");
                     } else if (!res || (res && res.error)) {
                         alert(res.error);
-                        console.log(res.error);
-                        reject(res.error);
                     }
                 })
             );
@@ -778,7 +775,7 @@ class CreateAccountPassword extends React.Component {
                 name="scrollToInput"
             >
                 <ReCAPTCHA
-                    sitekey="6Lc8nngbAAAAAAXSCEiW0tLPF9y7QoVWWlF6OHWc"
+                    sitekey="6LfNDHsaAAAAAKCOWSsDm2chejh5a7M-pZKHcCzR"
                     size="invisible"
                     ref={this.recaptchaRef}
                 />
