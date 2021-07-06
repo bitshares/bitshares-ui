@@ -56,8 +56,6 @@ class CreateAccountPassword extends React.Component {
             refAcct: AccountStore.getState().referralAccount,
             confirm_password: "",
             recaptcha: "",
-            recaptcha_expired: false,
-            recaptcha_loaded: false,
             understand_1: false,
             understand_2: false,
             understand_3: false
@@ -245,7 +243,7 @@ class CreateAccountPassword extends React.Component {
             faucetAddress = "http://3.135.40.183";
         }
 
-        if (this.state.recaptcha !== "") {
+        this.recaptchaRef.current.executeAsync().then(token => {
             fetch(faucetAddress + "/tusc/api/wallet/register_account", {
                 method: "post",
                 headers: {
@@ -255,7 +253,7 @@ class CreateAccountPassword extends React.Component {
                 body: JSON.stringify({
                     account_name: this.state.accountName,
                     public_key: this.state.pub_key,
-                    recaptcha_response: this.state.recaptcha,
+                    recaptcha_response: token,
                     referrer: referralAccount
                 })
             }).then(r =>
@@ -271,11 +269,7 @@ class CreateAccountPassword extends React.Component {
                     }
                 })
             );
-        } else {
-            alert(
-                'Missing ReCAPTCHA token. Please press the "Get ReCAPTCHA token" button and follow the prompts before pressing the "Create Account" button.'
-            );
-        }
+        });
     }
 
     onRegistrarAccountChange(registrar_account) {
@@ -296,7 +290,7 @@ class CreateAccountPassword extends React.Component {
     }
 
     _renderAccountCreateForm() {
-        let {registrar_account, recaptcha_loaded, recaptcha} = this.state;
+        let {registrar_account} = this.state;
 
         /*let my_accounts = AccountStore.getMyAccounts();*/
         let valid = this.isValid();
@@ -584,25 +578,6 @@ class CreateAccountPassword extends React.Component {
                         </button>
                     )}
                 </form>
-                <div>
-                    {" "}
-                    <br />
-                    {!recaptcha && (
-                        <button
-                            style={{width: "100%"}}
-                            className={buttonClass}
-                            onClick={this.onSubmitReCAPTCHA}
-                            disabled={!recaptcha_loaded && !valid}
-                        >
-                            Get ReCAPTCHA token
-                        </button>
-                    )}
-                    {recaptcha && (
-                        <div style={{width: "100%"}}>
-                            ReCAPTCHA token acquired
-                        </div>
-                    )}
-                </div>
             </div>
         );
     }
@@ -794,15 +769,6 @@ class CreateAccountPassword extends React.Component {
         );
     }
 
-    handleReCAPTCHAChange = value => {
-        this.setState({recaptcha: value});
-        if (value === null) this.setState({recaptcha_expired: "true"});
-    };
-
-    onSubmitReCAPTCHA = () => {
-        this.recaptchaRef.current.execute();
-    };
-
     render() {
         let {step} = this.state;
         return (
@@ -815,7 +781,6 @@ class CreateAccountPassword extends React.Component {
                     sitekey="6Lc8nngbAAAAAAXSCEiW0tLPF9y7QoVWWlF6OHWc"
                     size="invisible"
                     ref={this.recaptchaRef}
-                    onChange={this.handleReCAPTCHAChange}
                 />
                 <MetaTag path="create-account/password" />
                 <div>
