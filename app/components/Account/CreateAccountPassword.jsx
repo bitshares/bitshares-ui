@@ -775,7 +775,7 @@ class CreateAccountPassword extends React.Component {
                 name="scrollToInput"
             >
                 <ReCAPTCHA
-                    sitekey="6LfNDHsaAAAAAKCOWSsDm2chejh5a7M-pZKHcCzR"
+                    sitekey="6LeOYMYUAAAAADcHiQHtwC_VN7klQGLxnJr4N3x5"
                     size="invisible"
                     ref={this.recaptchaRef}
                 />
