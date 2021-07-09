@@ -1563,6 +1563,8 @@ export const scamAccountsOther = [
     "1.2.1799397",
     "botgate11",
     "1.2.1799462",
+    "costa-rika",
+    "1.2.1799635",
     "hujoyy-131hk",
     "1.2.1799561",
     "hitxxxrav25",
