@@ -1896,7 +1896,7 @@ class Asset extends React.Component {
                 render: item => {
                     return (
                         <FormattedAsset
-                            amount={item.amount}
+                            amount={item.amount * 10}
                             asset={item.asset_id}
                             hide_asset
                         />
@@ -1912,7 +1912,7 @@ class Asset extends React.Component {
                 render: item => {
                     return (
                         <FormattedAsset
-                            amount={item.amount}
+                            amount={item.amount * 10}
                             asset={item.asset_id}
                             hide_asset
                         />
