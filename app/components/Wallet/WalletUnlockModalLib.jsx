@@ -165,7 +165,7 @@ export const WalletSelector = ({
         className="login-select"
     >
         <option value="" hidden>
-            <Translate content="wallet.select_wallet" />
+            {counterpart.translate("wallet.select_wallet")}
         </option>
         {walletNames.map(walletName => (
             <option
@@ -177,7 +177,7 @@ export const WalletSelector = ({
             </option>
         ))}
         <option value="upload.">
-            <Translate content="settings.backup_backup_short" />
+            {counterpart.translate("settings.backup_backup_short")}
         </option>
     </select>
 );
