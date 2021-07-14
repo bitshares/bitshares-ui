@@ -222,7 +222,8 @@ class CreateAccountPassword extends React.Component {
 
     _renderAccountCreateForm() {
         let {registrar_account} = this.state;
-
+        
+        let aboutPassword = counterpart.translate("tooltip.generate");
         let my_accounts = AccountStore.getMyAccounts();
         let firstAccount = my_accounts.length === 0;
         let valid = this.isValid();
@@ -267,10 +268,21 @@ class CreateAccountPassword extends React.Component {
                             <Translate content="wallet.generated" />
                             &nbsp;&nbsp;
                             <Tooltip
-                                title={counterpart.translate(
-                                    "tooltip.generate"
-                                )}
+                                title={
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: aboutPassword
+                                        }}
+                                    />
+                                }
                             >
+                                <span className="tooltip">
+                                    <Icon
+                                        name="question-circle"
+                                        title="icons.question_circle"
+                                    />
+                                </span>
+                            </Tooltip>
                                 <span className="tooltip">
                                     <Icon
                                         name="question-circle"
