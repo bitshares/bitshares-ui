@@ -283,13 +283,6 @@ class CreateAccountPassword extends React.Component {
                                     />
                                 </span>
                             </Tooltip>
-                                <span className="tooltip">
-                                    <Icon
-                                        name="question-circle"
-                                        title="icons.question_circle"
-                                    />
-                                </span>
-                            </Tooltip>
                         </label>
                         <div style={{paddingBottom: "0.5rem"}}>
                             <span className="inline-label">
