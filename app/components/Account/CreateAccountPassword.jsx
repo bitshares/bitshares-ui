@@ -270,7 +270,7 @@ class CreateAccountPassword extends React.Component {
                                 title={
                                     <div
                                         dangerouslySetInnerHTML={{
-                                            __html: counterpart.translate("tooltip.generate")
+                                        __html: counterpart.translate("tooltip.generate")
                                         }}
                                     />
                                 }
