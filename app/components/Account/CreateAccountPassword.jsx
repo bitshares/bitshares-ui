@@ -222,7 +222,7 @@ class CreateAccountPassword extends React.Component {
 
     _renderAccountCreateForm() {
         let {registrar_account} = this.state;
-        
+
         let my_accounts = AccountStore.getMyAccounts();
         let firstAccount = my_accounts.length === 0;
         let valid = this.isValid();
@@ -270,7 +270,7 @@ class CreateAccountPassword extends React.Component {
                                 title={
                                     <div
                                         dangerouslySetInnerHTML={{
-                                            __html: aboutPassword
+                                            __html: counterpart.translate("tooltip.generate")
                                         }}
                                     />
                                 }
@@ -293,9 +293,9 @@ class CreateAccountPassword extends React.Component {
                                     rows="3"
                                     readOnly
                                     disabled
-                                >
-                                    {this.state.generatedPassword}
-                                </textarea>
+                                    value={this.state.generatedPassword}
+                                />
+
                                 <CopyButton
                                     text={this.state.generatedPassword}
                                     tip="tooltip.copy_password"
