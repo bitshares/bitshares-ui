@@ -223,7 +223,6 @@ class CreateAccountPassword extends React.Component {
     _renderAccountCreateForm() {
         let {registrar_account} = this.state;
         
-        let aboutPassword = counterpart.translate("tooltip.generate");
         let my_accounts = AccountStore.getMyAccounts();
         let firstAccount = my_accounts.length === 0;
         let valid = this.isValid();
