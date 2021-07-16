@@ -319,7 +319,7 @@ class GdexGateway extends React.Component {
             memo_rule
         } = this.state;
         let issuer = {
-            ticket: "https://support.gdex.io/",
+            ticket: "https://support.btsdex.top/help/",
             qq: "602573197",
             telgram: "https://t.me/GDEXer"
         };

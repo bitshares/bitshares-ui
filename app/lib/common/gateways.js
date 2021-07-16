@@ -160,7 +160,7 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        wallet: "https://www.gdex.io/"
+        wallet: "https://www.52bts.net/"
     },
     XBTSX: {
         id: "XBTSX",
