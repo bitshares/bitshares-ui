@@ -476,13 +476,13 @@ class Header extends React.Component {
 
         let hamburger = this.state.dropdownActive ? (
             <Icon
-                className="icon-14px"
+                className="icon-18px"
                 name="hamburger-x"
                 title="icons.hamburger_x"
             />
         ) : (
             <Icon
-                className="icon-14px"
+                className="icon-18px"
                 name="hamburger"
                 title="icons.hamburger"
             />
@@ -492,10 +492,10 @@ class Header extends React.Component {
         let clickHandlers = {};
 
         let renderingProps = {
-            currentAccount: currentAccount,
-            tradeUrl: tradeUrl,
-
-            createAccountLink: createAccountLink
+                currentAccount,
+                tradeUrl,
+                poolmartUrl: "/poolmart/liquidity-pools",
+                createAccountLink
         };
 
         let menuDataStructure = MenuDataStructure.getData(
@@ -546,7 +546,7 @@ class Header extends React.Component {
                                                 )}
                                                 className="button outline small"
                                             >
-                                                >
+                                                {">"}
                                             </div>
                                         </div>
                                     </li>
