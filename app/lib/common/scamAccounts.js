@@ -1542,7 +1542,7 @@ export const scamAccountsOther = [
     "zbbst00l",
     "1.2.1800460",
     "zbbtsc001",
-    "1.2.1803896",
+    "1.2.1804011",
     "zbbtst001",
     "1.2.1801124",
     "zbbbts-001",
