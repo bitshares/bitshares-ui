@@ -81,7 +81,6 @@ function BindToChainState(Component, options = {}) {
                 this.chain_objects_list = [];
                 this.chain_accounts_list = [];
                 this.chain_assets_list = [];
-                this.chain_liquidity_pools_list = [];
                 this.required_props = [];
                 this.all_chain_props = this.chain_objects;
             } else {
@@ -162,14 +161,6 @@ function BindToChainState(Component, options = {}) {
                         flow(
                             secondEl,
                             isAssetsListType
-                        )
-                    )
-                    .map(firstEl);
-                this.chain_liquidity_pools_list = prop_types_array
-                    .filter(
-                        flow(
-                            secondEl,
-                            isLiquidityPoolsListType
                         )
                     )
                     .map(firstEl);
@@ -459,7 +450,7 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
-            /* Resolve assets */
+            /* Resolve List of Liquidity Pools By ShareAssets */
             for (let key of this.chain_liquidity_pools) {
                 let prop =
                     props[key] ||
@@ -610,29 +601,7 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
-                            /* Resolve List of Liquidity Pools By ShareAssets */
-            for (let key of this.chain_liquidity_pools_list) {
-                let prop =
-                    props[key] ||
-                    this.dynamic_props[key] ||
-                    this.default_props[key];
-                // console.log("-- Wrapper.update, chain_liquidity_pools_list -->", key, prop);
-                if (prop) {
-                    const pools = await ChainStore.getLiquidityPoolsByShareAsset(
-                        prop,
-                        this.default_props["autosubscribe"]
-                    );
-                    if (pools.size > 0) {
-                        new_state[key] = pools;
-                        ++resolved_objects_counter;
-                    } else {
-                        new_state[key] = null;
-                    }
-                } else {
-                    if (this.state[key]) new_state[key] = null;
-                }
-            }
-
+            
             //console.log("----- Wrapper update ----->", this.all_chain_props, this.all_chain_props.length, all_objects_counter, resolved_objects_counter);
             if (all_objects_counter <= resolved_objects_counter)
                 new_state.resolved = true;
