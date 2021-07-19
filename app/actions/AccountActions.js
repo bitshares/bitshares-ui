@@ -1,14 +1,12 @@
 import alt from "alt-instance";
 import accountUtils from "common/account_utils";
 import AccountApi from "api/accountApi";
-import {Apis} from "bitsharesjs-ws";
 import WalletApi from "api/WalletApi";
 import ApplicationApi from "api/ApplicationApi";
 import WalletDb from "stores/WalletDb";
 import WalletActions from "actions/WalletActions";
 
 let accountSearch = {};
-let inProgress = {};
 
 /**
  *  @brief  Actions that modify linked accounts
