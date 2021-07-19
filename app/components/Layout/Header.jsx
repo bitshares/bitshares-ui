@@ -492,10 +492,9 @@ class Header extends React.Component {
         let clickHandlers = {};
 
         let renderingProps = {
-                currentAccount,
-                tradeUrl,
-                poolmartUrl: "/poolmart/liquidity-pools",
-                createAccountLink
+            currentAccount: currentAccount,
+            tradeUrl: tradeUrl,
+            createAccountLink: createAccountLink
         };
 
         let menuDataStructure = MenuDataStructure.getData(
