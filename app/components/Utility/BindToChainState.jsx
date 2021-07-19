@@ -47,9 +47,6 @@ const isLiquidityPoolType = checkChainType(ChainTypes.ChainLiquidityPool);
 const isObjectsListType = checkChainType(ChainTypes.ChainObjectsList);
 const isAccountsListType = checkChainType(ChainTypes.ChainAccountsList);
 const isAssetsListType = checkChainType(ChainTypes.ChainAssetsList);
-const isLiquidityPoolsListType = checkChainType(
-    ChainTypes.ChainLiquidityPoolsList
-);
 const isAccountNameType = checkChainType(ChainTypes.ChainAccountName);
 
 function checkIfRequired(t) {
