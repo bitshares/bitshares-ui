@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "5.0.210216-rc1",
+    "version": "5.0.20210720-rc1",
     "description": "Reference UI to showcase all features of the BitShares blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Worker <ui-dev@bitshares.org>",
@@ -165,7 +165,7 @@
         "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
         "js-sha256": "^0.2.3",
         "jsonschema": "^1.2.4",
-        "jspdf": "^1.4.1",
+        "jspdf": "^2.3.1",
         "jspdf-autotable": "^3.1.1",
         "lodash-es": "^4.17.10",
         "lzma": "2.1.6",

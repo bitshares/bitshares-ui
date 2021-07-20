@@ -1,7 +1,7 @@
 import React from "react";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs";
 import {LimitOrder, SettleOrder, FeedPrice} from "common/MarketClasses";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
@@ -643,17 +643,31 @@ class AccountOrders extends React.Component {
         return tables;
     }
 
-    _cancelLimitOrders(orderId) {
-        MarketsActions.cancelLimitOrders(
-            this.props.account.get("id"),
-            this.state.selectedOrders
-        )
-            .then(() => {
-                this.resetSelected();
-            })
-            .catch(err => {
-                console.log("cancel orders error:", err);
-            });
+    _getSelectedOrders(keys) {
+        let orders = this.props.account
+            .get("orders")
+            .toArray()
+            .filter(item => keys.indexOf(item) != -1);
+        return FetchChain("getObject", orders);
+    }
+
+    _cancelLimitOrders() {
+        this._getSelectedOrders(this.state.selectedOrders).then(orders => {
+            let fallbackFeeAssets = orders
+                .toJS()
+                .map(item => item.sell_price.base.asset_id);
+            MarketsActions.cancelLimitOrders(
+                this.props.account.get("id"),
+                this.state.selectedOrders,
+                fallbackFeeAssets
+            )
+                .then(() => {
+                    this.resetSelected();
+                })
+                .catch(err => {
+                    console.log("cancel orders error:", err);
+                });
+        });
     }
 
     onFlip(marketId) {

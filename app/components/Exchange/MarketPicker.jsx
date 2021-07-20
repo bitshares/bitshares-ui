@@ -193,7 +193,7 @@ class MarketPickerWrapper extends Component {
                         value={inputValue}
                         onChange={this._onInputName.bind(this, true)}
                         placeholder={counterpart.translate(placeHolderKey)}
-                        maxLength="16"
+                        maxLength={16}
                         tabIndex={2}
                     />
                 </Form.Item>
