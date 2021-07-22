@@ -1509,6 +1509,8 @@ export const scamAccountsOther = [
     "1.2.1800134",
     "gdex-walleet",
     "1.2.1804815",
+    "gdex-wellat",
+    "1.2.1804066",
     "haobi-pro",
     "1.2.1800626",
     "hobui-pro",
