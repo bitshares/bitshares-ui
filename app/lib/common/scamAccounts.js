@@ -1585,6 +1585,8 @@ export const scamAccountsOther = [
     "1.2.1694852",
     "citadel-one",
     "1.2.1701664",
+    "ctadel-gold",
+    "1.2.1701665",
     "account-free",
     "1.2.1700256",
     "huobi-pro-security",
