@@ -1211,10 +1211,6 @@ class Operation {
                 break;
 
             case "committee_member_update_global_parameters":
-                console.log(
-                    "committee_member_update_global_parameters op:",
-                    op
-                );
                 column = (
                     <span>
                         <TranslateWithLinks

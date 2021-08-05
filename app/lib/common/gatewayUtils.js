@@ -92,16 +92,18 @@ export function getBackedCoin(symbol, backedCoins) {
 }
 
 export function getAssetAndGateway(symbol) {
-    let [selectedGateway, selectedAsset] = symbol.split(".");
-    if (symbol === "PPY") {
-        selectedGateway = "RUDEX";
-        selectedAsset = "PPY";
+    if (symbol) {
+        let [selectedGateway, selectedAsset] = symbol.split(".");
+        if (symbol === "PPY") {
+            selectedGateway = "RUDEX";
+            selectedAsset = "PPY";
+        }
+        if (!selectedAsset) {
+            selectedAsset = selectedGateway;
+            selectedGateway = undefined;
+        }
+        return {selectedGateway, selectedAsset};
     }
-    if (!selectedAsset) {
-        selectedAsset = selectedGateway;
-        selectedGateway = undefined;
-    }
-    return {selectedGateway, selectedAsset};
 }
 
 export async function updateGatewayBackers(chain = "4018d784") {

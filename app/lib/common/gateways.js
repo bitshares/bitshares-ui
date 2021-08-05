@@ -104,7 +104,7 @@ export const availableGateways = {
         id: "RUDEX",
         name: "RuDEX",
         baseAPI: rudexAPIs,
-        isEnabled: _isEnabled("RUDEX"),
+        isEnabled: () => false,
         isSimple: true,
         selected: false,
         simpleAssetGateway: true,
@@ -160,7 +160,7 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        wallet: "https://www.gdex.io/"
+        wallet: "https://www.52bts.net/"
     },
     XBTSX: {
         id: "XBTSX",
