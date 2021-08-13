@@ -1979,6 +1979,10 @@ export const scamAccountsOther = [
     "1.2.462216",
     "razdacha-bts",
     "1.2.1646336",
+    "eliza85",
+    "1.2.1796679",
+    "audio0audio",
+    "1.2.1796678",
     // EOS and forks
     "coinbasebase",
     "1.2.1603952",
