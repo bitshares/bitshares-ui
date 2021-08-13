@@ -524,6 +524,7 @@ export default class DepositModal extends React.Component {
     render() {
         return (
             <Modal
+                destroyOnClose={true}
                 title={
                     this.props.account
                         ? counterpart.translate("modal.deposit.header", {
