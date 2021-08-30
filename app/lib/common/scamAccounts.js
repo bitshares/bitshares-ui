@@ -1581,6 +1581,8 @@ export const scamAccountsOther = [
     "1.2.1799380",
     "subzyng11",
     "1.2.1799563",
+    "coincoin77",
+    "1.2.1805513",
     "nl2dinjjx2yjxtauo1f",
     "1.2.1805007",
     "ub67",
