@@ -1471,6 +1471,8 @@ export const scamAccountsOther = [
     "1.2.1801028",
     "aex-bts-dopesit-wallet",
     "1.2.1795663",
+    "aex-bts-withbrawal-wallet",
+    "1.2.1806311",
     "bianance-bts-1",
     "1.2.1801625",
     "bienance-bts-1",
