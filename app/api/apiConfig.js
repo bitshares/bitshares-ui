@@ -355,14 +355,6 @@ export const settingsAPIs = {
             operator: "Witness: clone",
             contact: "telegram: yexiao"
         },
-        {
-            url: "wss://api.iamredbar.com/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Minnesota",
-            operator: "Witness: iamredbar",
-            contact: "telegram: iamredbar"
-        },
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
