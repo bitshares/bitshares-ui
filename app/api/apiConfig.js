@@ -219,14 +219,6 @@ export const settingsAPIs = {
         //    contact: "telegram:vianull;wechat:strugglingl"
         //},
         {
-            url: "wss://bts-seoul.clockwork.gr",
-            region: "Southeastern Asia",
-            country: "Korea",
-            location: "Seoul",
-            operator: "Witness: clockwork",
-            contact: "telegram:clockworkgr"
-        },
-        {
             url: "wss://api.61bts.com",
             region: "Eastern Asia",
             country: "China",
@@ -354,14 +346,6 @@ export const settingsAPIs = {
             location: "New York",
             operator: "Witness: clone",
             contact: "telegram: yexiao"
-        },
-        {
-            url: "wss://api.iamredbar.com/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "Minnesota",
-            operator: "Witness: iamredbar",
-            contact: "telegram: iamredbar"
         },
         // Testnet
         {
