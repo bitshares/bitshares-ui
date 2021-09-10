@@ -308,12 +308,12 @@ export const settingsAPIs = {
             contact: "telegram: xbtsio"
         },
         {
-            url: "wss://api.gbacenter.org/ws",
+            url: "wss://api.pindd.club",
             region: "Northern America",
             country: "U.S.A.",
-            location: "Fremont, CA",
+            location: "Seattle, CA",
             operator: "Witness: gbac-ety001",
-            contact: "email:work@domyself.me"
+            contact: "email:work@akawa.ink"
         },
         {
             url: "wss://api.cnvote.vip:888/",
