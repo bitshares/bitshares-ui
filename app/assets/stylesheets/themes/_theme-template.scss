@@ -2794,7 +2794,7 @@
     min-width: 0; /* or some value */
     .text {
         white-space: nowrap;
-        overflow: hidden;
+        overflow: visible;
         text-overflow: ellipsis;
         text-align: right;
     }
