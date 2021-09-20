@@ -10,7 +10,7 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 BitShares-UI depends node Node.js, we recommend using version 10 and above.
 
-To install NVM for Linux/Ubuntu 20.04.2 LTS, simply copy paste the following in a terminal:
+To install NODE for Linux/Ubuntu 20.04.2 LTS, simply copy paste the following in a terminal:
 
 ```
 apt install curl
