@@ -8,16 +8,14 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 ## Getting started
 
-BitShares-UI depends node Node.js, and version 8+ is required.
+BitShares-UI depends node Node.js, we recommend using version 10 and above.
 
-On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
-
-To install NVM for Linux/OSX, simply copy paste the following in a terminal:
+To install NVM for Linux/Ubuntu 20.04.2 LTS, simply copy paste the following in a terminal:
 
 ```
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-nvm install v9
-nvm use v9
+apt install curl
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+apt install nodejs
 ```
 
 Once you have Node installed, you can clone the repo:
@@ -30,7 +28,8 @@ cd bitshares-ui
 Before launching the GUI you will need to install the npm packages:
 
 ```
-npm install
+npm ci
+npm run install-charting-library
 ```
 
 ## Running the dev server
