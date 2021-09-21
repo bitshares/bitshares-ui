@@ -8,17 +8,17 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 ## Getting started
 
-BitShares-UI depends node Node.js, we recommend using version 10 and above.
+BitShares-UI depends node (Node.js), we recommend using node version 10.
 
-To install NODE for Linux/Ubuntu 20.04.2 LTS, simply copy paste the following in a terminal:
+To install node for Linux/Ubuntu 20.04.2 (LTS), simply copy paste the following in a terminal:
 
 ```
-apt install curl
+apt install curl -y
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-apt install nodejs
+apt install nodejs -y
 ```
 
-Once you have Node installed, you can clone the repo:
+Once you have node installed, you can clone the repo:
 
 ```
 git clone https://github.com/bitshares/bitshares-ui.git
@@ -44,14 +44,6 @@ npm start
 
 Once the compilation is done the GUI will be available in your browser at: `localhost:8080` or `127.0.0.1:8080`. Hot Reloading is enabled so the browser will live update as you edit the source files.
 
-
-## Testnet
-By default bitshares-ui connects to the live BitShares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
-
-The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
-
-![image](https://cloud.githubusercontent.com/assets/6890015/22055747/f8e15e68-dd5c-11e6-84cd-692749b578d8.png)
-
 ## Production
 If you'd like to host your own wallet somewhere, you should create a production build and host it using NGINX or Apache. In order to create a prod bundle, simply run the following command:
 
@@ -59,6 +51,13 @@ If you'd like to host your own wallet somewhere, you should create a production 
 npm run build
 ```
 This will create a bundle in the ./build/dist folder that can be hosted with the web server of your choice.
+
+## Testnet
+By default bitshares-ui connects to the live BitShares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
+
+The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
+
+![image](https://cloud.githubusercontent.com/assets/6890015/22055747/f8e15e68-dd5c-11e6-84cd-692749b578d8.png)
 
 
 ### Installable wallets
