@@ -347,6 +347,14 @@ export const settingsAPIs = {
             operator: "Witness: clone",
             contact: "telegram: yexiao"
         },
+        {
+            url: "wss://api.btslebin.com/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Hong Kong",
+            operator: "Witness: lebin-witness",
+            contact: "telegram: lebinbit"
+        },
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
