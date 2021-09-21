@@ -395,6 +395,14 @@ export const settingsAPIs = {
             location: "St. Louis",
             operator: "Witness: liuye",
             contact: "email:work@akawa.ink"
+        },
+        {
+            url: "wss://api.btslebin.com/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Hong Kong",
+            operator: "Witness: lebin-witness",
+            contact: "telegram: lebinbit"
         }
     ],
     ES_WRAPPER_LIST: [
