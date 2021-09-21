@@ -8,7 +8,7 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 ## Getting started
 
-BitShares-UI depends node (Node.js), we recommend using node version 10.
+BitShares-UI depends on node (Node.js), we recommend using node version 10.
 
 To install node for Linux/Ubuntu 20.04.2 (LTS), simply copy paste the following in a terminal:
 
