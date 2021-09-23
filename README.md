@@ -2,9 +2,10 @@ BitShares-UI
 ============
 [中文版](README_zh.md)
 
-This is the reference wallet of BitShares Blockchain which connects to BitShares Blockchain API provided by *bitshares-core* synced node.
+This is the reference wallet of BitShares Blockchain which connects to BitShares Blockchain nodes (*bitshares-core*).
 
-This reference wallet is a browser based wallet, which means *your keys are stored locally* in your browser and *never leaves it* while using the wallet, you should *never expose your keys to anyone* as the reference wallet of BitShares Blockchain signs transactions locally before transmitting them to BitShares Blockchain API which then broadcasts them to BitShares Blockchain nodes.
+This reference wallet is a browser based wallet, which means *your keys are stored locally* in your browser and *never leaves it* while using the wallet. 
+You should *never expose your keys to anyone* as transactions are signed locally before transmitting them to a node.
 
 ## Getting started
 
