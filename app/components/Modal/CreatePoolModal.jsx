@@ -297,27 +297,9 @@ class CreatePoolModal extends React.Component {
 
 
         if (this.state.assetsA && this.state.assetsB && this.state.takerFee && this.state.unstakeFee){
-            // PoolAction.create_liquidity_pool(
-            //     this.props.name,
-            //     assetsA,
-            //     assetsB,
-            //     takerFee,
-            //     unstakeFee
-            // );
-            console.log("onCreatePool takerFee, unstakeFee: ", this.state.takerFee, this.state.unstakeFee);
-
-            let assetA_id = this.state.assetsA[1]["id"];
-            assetA_id = assetA_id.replace('.', '');
-
-            let assetB_id = this.state.assetsB[1]["id"];
-            assetB_id = assetB_id.replace('.', '');
-
-            console.log("onCreatePool assetA_id: ", assetA_id);
-
-            let nAssetA_id = parseFloat(assetA_id);
-            let nAssetB_id = parseFloat(assetB_id);
-
-            if (nAssetA_id > nAssetB_id)
+            let assetA_id = Number(this.state.assetsA[1]["id"].replace("1.3.", ""));
+            let assetB_id = Number(this.state.assetsB[1]["id"].replace("1.3.", ""));
+            if (assetA_id > assetB_id)
             {
 console.log(this.state.assetsB[1]["quote"], this.state.assetsA[1]["quote"]);
 ApplicationApi.liquidityPoolCreate(this.props.account, this.state.assetsB[1]["quote"], this.state.assetsA[1]["quote"], this.state.poolName, this.state.takerFee * 100.0,
