@@ -1018,9 +1018,15 @@ class AccountAssetCreate extends React.Component {
                                                                     .amount
                                                             }
                                                             assets={[
-                                                        core_exchange_rate.base
-                                                            .asset_id
+                                                                core_exchange_rate.base
+                                                                    .asset_id
                                                     ]}
+                                                    placeholder="0.0"
+                                                    tabIndex={1}
+                                                    style={{
+                                                        width: "100%",
+                                                        paddingLeft: "10px"
+                                                    }}
                                                         />
                                                     </div>
                                                 </div>
@@ -1040,12 +1046,6 @@ class AccountAssetCreate extends React.Component {
                                                         core_exchange_rate.base
                                                              .asset_id
                                                     }
-                                                    placeholder="0.0"
-                                                    tabIndex={1}
-                                                    style={{
-                                                        width: "100%",
-                                                        paddingLeft: "10px"
-                                                    }}
                                                 />
                                             </div>
                                         </div>
