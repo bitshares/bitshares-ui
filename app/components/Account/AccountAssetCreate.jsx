@@ -1012,6 +1012,10 @@ class AccountAssetCreate extends React.Component {
                                                                 this,
                                                                 "quote"
                                                             )}
+                                                            asset={
+                                                                core_exchange_rate.base
+                                                                    .asset_id
+                                                            }
                                                             value={
                                                                 core_exchange_rate
                                                                     .quote
@@ -1032,10 +1036,6 @@ class AccountAssetCreate extends React.Component {
                                                         this,
                                                         "base"
                                                     )}
-                                                    asset={
-                                                        core_exchange_rate.base
-                                                            .asset_id
-                                                    }
                                                     assets={[
                                                         core_exchange_rate.base
                                                             .asset_id
