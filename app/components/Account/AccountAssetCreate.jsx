@@ -1012,15 +1012,15 @@ class AccountAssetCreate extends React.Component {
                                                                 this,
                                                                 "quote"
                                                             )}
-                                                            asset={
-                                                                core_exchange_rate.base
-                                                                    .asset_id
-                                                            }
                                                             value={
                                                                 core_exchange_rate
                                                                     .quote
                                                                     .amount
                                                             }
+                                                            assets={[
+                                                        core_exchange_rate.base
+                                                            .asset_id
+                                                    ]}
                                                         />
                                                     </div>
                                                 </div>
@@ -1036,10 +1036,10 @@ class AccountAssetCreate extends React.Component {
                                                         this,
                                                         "base"
                                                     )}
-                                                    assets={[
+                                                    asset={
                                                         core_exchange_rate.base
-                                                            .asset_id
-                                                    ]}
+                                                             .asset_id
+                                                    }
                                                     placeholder="0.0"
                                                     tabIndex={1}
                                                     style={{
