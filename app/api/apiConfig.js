@@ -140,6 +140,14 @@ export const settingsAPIs = {
             contact: "email:admin@iobanker.com"
         },
         {
+            url: "wss://api.bitshares.rocks/ws",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "AZ, Phoenix",
+            operator: "Vagnavs",
+            contact: "telegram:Maximat00"
+        },
+        {
             url: "wss://ws.gdex.top",
             region: "Eastern Asia",
             country: "China",
