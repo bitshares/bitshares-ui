@@ -7,7 +7,7 @@ This reference wallet is a browser based wallet, which means your keys are store
 BitShares Blockchain Reference wallet users can:
 
 - Login to BitShares Blockchain with their private keys to send and receive core cryptocurrency BTS.
-- Issue new tokens or utalize issued tokens at BitShares Blockchain.
+- Issue new tokens or utilize issued tokens at BitShares Blockchain.
 - Send, receive, burn/issue and freeze/unfreeze issued tokens at BitShares Blockchain.
 - Send memos and Propose transactions for BitShares Blockchain other users.
 
