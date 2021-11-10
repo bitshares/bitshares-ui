@@ -16,8 +16,8 @@ You can chat with other member of the BitShares community in real time at:
 ### Developers
 If you are a software developer, you may contribute to BitShares Blockchain via:
 
-- [Github UI](https://github.com/BitShares/BitShares-ui)
-- [Github Core](https://github.com/BitShares/BitShares-core) 
+- [Github UI](https://github.com/bitshares/bitshares-ui)
+- [Github Core](https://github.com/bitshares/bitshares-core) 
 
 ## Introduction
 Welcome to the worlds fastest decentralized exchange (DEX).
