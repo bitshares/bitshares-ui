@@ -230,17 +230,15 @@ class PoolExchangeModal extends React.Component {
         const taker_fee_percentb = asset_b.getIn(["options", "extensions", "taker_fee_percent"]);
 
         function flagsa() {
-        if (assetaflags % 2 == 0) {
-        return 0;}
-        if (maker_market_fee_percenta === 0) {return Number(max_market_feea);}
+        if (assetaflags % 2 == 0) { return 0;}
+        if (maker_market_fee_percenta === 0) {return 0;}
         if (maker_market_fee_percenta > 0) {
         return Math.min(Number(max_market_feea), Math.ceil((Number(e.amount) * Number(poolamountap)) * (Number(maker_market_fee_percenta) / 10000)))
         }
         }
         function flagsb() {
-        if (assetbflags % 2 == 0) {
-        return 0;}
-        if (maker_market_fee_percentb === 0) {return Number(max_market_feeb);}
+        if (assetbflags % 2 == 0) { return 0;}
+        if (maker_market_fee_percentb === 0) {return 0;}
         if (maker_market_fee_percentb > 0) {
         return Math.min(Number(max_market_feeb), Math.ceil((Number(e.amount) * Number(poolamountbp)) * (Number(maker_market_fee_percentb) / 10000)))
         }
@@ -248,9 +246,10 @@ class PoolExchangeModal extends React.Component {
 
 
         function taker_market_fee_percenta() {
+        if (assetaflags % 2 == 0) { return 0;}
         if (typeof taker_fee_percenta == 'undefined' && maker_market_fee_percenta > 0) {
         return Number(maker_market_fee_percenta) / 10000;}
-        if (maker_market_fee_percenta === 0) { return 0;
+        if (typeof taker_fee_percenta == 'undefined' && maker_market_fee_percenta === 0) { return 0;
         }
         else {
         return Number(taker_fee_percenta) / 10000;
@@ -258,15 +257,16 @@ class PoolExchangeModal extends React.Component {
         }
 
         function taker_market_fee_percentb() {
+        if (assetbflags % 2 == 0) { return 0;}
         if (typeof taker_fee_percentb == 'undefined' && maker_market_fee_percentb > 0) {
         return Number(maker_market_fee_percentb) / 10000;}
-        if (maker_market_fee_percentb === 0) { return 0;
+        if (typeof taker_fee_percentb == 'undefined' && maker_market_fee_percentb === 0) { return 0;
         }
         else {
         return Number(taker_fee_percentb) / 10000;
         }
         }
-
+        
         let tmp_delta_a = Number(poolamounta) - Math.ceil( Number(poolamounta) * Number(poolamountb) / ( Number(poolamountb) + ( (Number(e.amount) * Number(poolamountbp)) - Number(flagsb()))))
         let tmp_delta_b = Number(poolamountb) - Math.ceil( Number(poolamountb) * Number(poolamounta) / ( Number(poolamounta) + ( (Number(e.amount) * Number(poolamountap)) - Number(flagsa()))))
 
@@ -323,18 +323,15 @@ class PoolExchangeModal extends React.Component {
         const taker_fee_percentb = asset_b.getIn(["options", "extensions", "taker_fee_percent"]);
 
         function flagsa() {
-        if (assetaflags % 2 == 0) {
-        return 0;}
-        if (maker_market_fee_percenta === 0) {return Number(max_market_feea);}
+        if (assetaflags % 2 == 0) { return 0;}
+        if (maker_market_fee_percenta === 0) {return 0;}
         if (maker_market_fee_percenta > 0) {
         return Math.min(Number(max_market_feea), Math.ceil((Number(e.amount) * Number(poolamountap)) * (Number(maker_market_fee_percenta) / 10000)))
         }
         }
-
         function flagsb() {
-        if (assetbflags % 2 == 0) {
-        return 0;}
-        if (maker_market_fee_percentb === 0) {return Number(max_market_feeb);}
+        if (assetbflags % 2 == 0) { return 0;}
+        if (maker_market_fee_percentb === 0) {return 0;}
         if (maker_market_fee_percentb > 0) {
         return Math.min(Number(max_market_feeb), Math.ceil((Number(e.amount) * Number(poolamountbp)) * (Number(maker_market_fee_percentb) / 10000)))
         }
@@ -342,9 +339,10 @@ class PoolExchangeModal extends React.Component {
 
 
         function taker_market_fee_percenta() {
+        if (assetaflags % 2 == 0) { return 0;}
         if (typeof taker_fee_percenta == 'undefined' && maker_market_fee_percenta > 0) {
         return Number(maker_market_fee_percenta) / 10000;}
-        if (maker_market_fee_percenta === 0) { return 0;
+        if (typeof taker_fee_percenta == 'undefined' && maker_market_fee_percenta === 0) { return 0;
         }
         else {
         return Number(taker_fee_percenta) / 10000;
@@ -352,9 +350,10 @@ class PoolExchangeModal extends React.Component {
         }
 
         function taker_market_fee_percentb() {
+        if (assetbflags % 2 == 0) { return 0;}
         if (typeof taker_fee_percentb == 'undefined' && maker_market_fee_percentb > 0) {
         return Number(maker_market_fee_percentb) / 10000;}
-        if (maker_market_fee_percentb === 0) { return 0;
+        if (typeof taker_fee_percentb == 'undefined' && maker_market_fee_percentb === 0) { return 0;
         }
         else {
         return Number(taker_fee_percentb) / 10000;
