@@ -51,7 +51,9 @@ class GdexAgreementModal extends React.Component {
                         <h2 style={{textAlign: "center"}}>用户服务协议</h2>
                         <p>
                             OBSIDIAN TECHNOLOGY CO. PTE. LTD.
-                            是一家根据新加坡共和国法律成立的公司，GDEX是由该公司运营的比特股网关(以下称“GDEX”或“本网关”)，主访问入口为https://www.gdex.io，GDEX是一个在比特股平台为用户提供数字资产充提服务（以下称“该服务”或“服务”）的平台。为了本协议表述之方便，公司和该网关在本协议中合称使用“我们”或其他第一人称称呼。使用该服务的自然人或其他主体均为本网关的用户，本协议为表述之便利，以下使用“您”或其他第二人称。我们和您在本协议中合称为“双方”，我们或您单称为“一方”。
+                            是一家根据新加坡共和国法律成立的公司，GDEX是由该公司运营的比特股网关(以下称“GDEX”或“本网关”)，主访问入口为
+                            https://www.52bts.net
+                            ，GDEX是一个在比特股平台为用户提供数字资产充提服务（以下称“该服务”或“服务”）的平台。为了本协议表述之方便，公司和该网关在本协议中合称使用“我们”或其他第一人称称呼。使用该服务的自然人或其他主体均为本网关的用户，本协议为表述之便利，以下使用“您”或其他第二人称。我们和您在本协议中合称为“双方”，我们或您单称为“一方”。
                         </p>
                         <p>重要提示：</p>
                         <p>我们在此特别提醒您：</p>
@@ -352,20 +354,20 @@ class GdexAgreementModal extends React.Component {
                             GDEX (hereinafter referred to as 'GDEX' or 'the
                             Gateway') is a cryptocurrency gateway to Bitshares
                             which is operated by the company. The main access
-                            point for GDEX is https://gdex.io, GDEX is a gateway
-                            that provide cryptocurrency deposit and withdraw
-                            service (hereinafter referred to as 'the Service')
-                            to/from Bitshares. For the convenience of wording in
-                            this Agreement, the Company and the Gateway are
-                            referred to as 'We' or other applicable forms of
-                            first person pronouns in this Agreement. All natural
-                            persons or other subjects who use the Service shall
-                            be users of the Gateway. For the convenience of
-                            wording in this Agreement, the users are referred to
-                            as 'You' or any other applicable forms of the
-                            second-person pronouns. For the convenience of
-                            wording in this Agreement, you and us are
-                            collectively referred to as 'both parties', and
+                            point for GDEX is https://www.52bts.net, GDEX is a
+                            gateway that provide cryptocurrency deposit and
+                            withdraw service (hereinafter referred to as 'the
+                            Service') to/from Bitshares. For the convenience of
+                            wording in this Agreement, the Company and the
+                            Gateway are referred to as 'We' or other applicable
+                            forms of first person pronouns in this Agreement.
+                            All natural persons or other subjects who use the
+                            Service shall be users of the Gateway. For the
+                            convenience of wording in this Agreement, the users
+                            are referred to as 'You' or any other applicable
+                            forms of the second-person pronouns. For the
+                            convenience of wording in this Agreement, you and us
+                            are collectively referred to as 'both parties', and
                             individually as 'one party'.
                         </p>
                         <p>Important reminder:</p>
@@ -459,13 +461,16 @@ class GdexAgreementModal extends React.Component {
     }
 }
 
-export default connect(GdexAgreementModal, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            settings: SettingsStore.getState().settings
-        };
+export default connect(
+    GdexAgreementModal,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                settings: SettingsStore.getState().settings
+            };
+        }
     }
-});
+);

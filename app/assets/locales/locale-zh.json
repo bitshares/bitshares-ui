@@ -1580,6 +1580,15 @@
             "amount": "兑换数量",
             "submit": "确定"
         },
+        "create_lock": {
+            "amount": "Amount to lock",
+            "from": "Account to lock from",
+            "submit": "Lock",
+            "targetType": "Lock Type",
+            "title": "Create Lock",
+            "type_warning": "Please choose a lock type.",
+            "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
+        },
         "deposit": {
             "address_generation_error": "不能生成地址",
             "amount": "充值数量",
@@ -1774,6 +1783,19 @@
         "publish_feed": "{account} 发布了喂价 {price}",
         "reg_account": "{registrar} 登记了账户 {new_account}",
         "set_proxy": "{account} 将 {proxy} 设置为投票代理",
+        "ticket_create": "{account} locked away {amount} in a ticket",
+        "ticket_types": {
+            "0": "Liquid",
+            "1": "Claimable 180 days after unlock request",
+            "2": "Claimable 360 days after unlock request",
+            "3": "Claimable 720 days after unlock request",
+            "4": "Locked forever",
+            "liquid": "Liquid",
+            "lock_180_days": "Claimable 180 days after unlock request",
+            "lock_360_days": "Claimable 360 days after unlock request",
+            "lock_720_days": "Claimable 720 days after unlock request",
+            "lock_forever": "Locked forever"
+        },
         "transfer": "{from} 将 {amount} 转账给 {to}",
         "transfer_account": "{account} 的账户权限转移给了 {to}",
         "unlisted_by": "{lister} 将 {listee} 移出清单",
@@ -2559,6 +2581,7 @@
             "proposal_create": "创建提案",
             "proposal_delete": "删除提案",
             "proposal_update": "更新提案",
+            "ticket_create": "Create ticket",
             "transfer": "转账",
             "transfer_from_blind": "从隐私账户转出",
             "transfer_to_blind": "向隐私账户转账",
@@ -2696,7 +2719,10 @@
         }
     },
     "voting": {
+        "create_ticket": "Lock 1 {asset}",
         "description": "比特股区块链允许BTS token持有者投票决定区块生产者(见证人), 理事会成员(区块链管理者), 工作提案(任务赏金及BSIPs/Polls战略决策)。",
+        "increase_voting_power": "Create Lock",
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
         "title": "投票"
     },
     "walkthrough": {
@@ -2840,8 +2866,8 @@
         "pass_incorrect": "密码错误",
         "pass_length": "密码必须包含至少 %(minLength)s 位字符。理想的密码应为 20 位或更长，并且为数字、字母和特殊符号的组合。",
         "password": "钱包密码",
-        "password_crucial": "现在就请你将密码记下来，无论是写在纸上、使用密码管理软件或是别的什么可以在你忘记密码时能够取回的方法。这一点至关重要。一旦你忘记密码，你就无法再访问账户，<strong>我们没有办法帮助你恢复</strong>。",
-        "password_lose_warning": "<strong>重要：如果你忘记了密码，你将无法登录自己的账户，即不能重置也无法取回密码！确保你已经记住自己的密码或是将其写下安放在合适的地方！</strong>",
+        "password_crucial": "现在就请你将账户名和密码记下来，无论是写在纸上、使用密码管理软件或是别的什么可以在你忘记密码时能够取回的方法。这一点至关重要。一旦你忘记账户名或者密码，你就无法再访问账户，<strong>我们没有办法帮助你恢复</strong>。",
+        "password_lose_warning": "<strong>重要：如果你忘记了账户名或者密码，你将无法登录自己的账户，即不能重置也无法取回密码！确保你已经记住自己的账户名和密码或是将其写下安放在合适的地方！</strong>",
         "password_model": "帐号模式",
         "password_model_1": "帐号模式使用密码和账户名来衍生出私钥。",
         "password_model_2": "你只需要账户名和密码就可以从任意计算机和浏览器上登录自己的账户。但<strong>你的密码将有可能被暴力破解！因此使用长密码非常重要，密码长度最好在 20 位以上！</strong>",

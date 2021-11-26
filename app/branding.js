@@ -100,7 +100,7 @@ export function getDefaultMarket() {
     if (_isTestnet()) {
         return "USD_TEST";
     }
-    return "USD_BTS";
+    return "BTS_CNY";
 }
 
 /**
@@ -112,7 +112,7 @@ export function getMyMarketsBases() {
     if (_isTestnet()) {
         return ["TEST"];
     }
-    return ["BTS", "BTC", "ETH", "USD", "CNY"];
+    return ["BTS", "BTC", "CNY", "USD", "USDT", "ETH"];
 }
 
 /**
@@ -127,14 +127,20 @@ export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
             "BTC",
+            "BTC1.0",
             "BTS",
             "CNY",
+            "CNY1.0",
             "EUR",
+            "EUR1.0",
             "GOLD",
-            "KRW",
+            "GOLD1.0",
             "RUBLE",
+            "RUB1.0",
             "SILVER",
-            "USD"
+            "SILVER1.0",
+            "USD",
+            "USD1.0"
         ],
         gdexTokens: [
             "GDEX.BTC",
@@ -186,7 +192,18 @@ export function getMyMarketsQuotes() {
             "XBTSX.COF",
             "XBTSX.MDL",
             "XBTSX.ETH",
-            "XBTSX.EXR"
+            "XBTSX.EXR",
+            "XBTSX.USDT",
+            "XBTSX.TUSD",
+            "XBTSX.USDC",
+            "XBTSX.USDN",
+            "XBTSX.USD",
+            "XBTSX.RUB",
+            "XBTSX.EUR",
+            "XBTSX.ATRI",
+            "XBTSX.FIL",
+            "XBTSX.EOS",
+            "XBTSX.BAT"
         ],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
@@ -215,14 +232,6 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "GDEX.ETH"],
         ["USD", "GDEX.EOS"],
         ["USD", "GDEX.BTO"],
-        ["USD", "RUDEX.GOLOS"],
-        ["USD", "RUDEX.STEEM"],
-        ["USD", "RUDEX.EOS"],
-        ["USD", "RUDEX.BTC"],
-        ["USD", "RUDEX.ETH"],
-        ["USD", "RUDEX.USDT"],
-        ["USD", "RUDEX.WLS"],
-        ["USD", "RUDEX.SMOKE"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
         ["CNY", "YOYOW"],
@@ -235,15 +244,6 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "GDEX.BKBT"],
         ["CNY", "GDEX.USDT"],
         ["CNY", "GDEX.GXC"],
-        ["CNY", "RUDEX.GOLOS"],
-        ["CNY", "RUDEX.STEEM"],
-        ["CNY", "RUDEX.EOS"],
-        ["CNY", "RUDEX.BTC"],
-        ["CNY", "RUDEX.ETH"],
-        ["CNY", "RUDEX.USDT"],
-        ["CNY", "RUDEX.WLS"],
-        ["CNY", "RUDEX.SMOKE"],
-        ["BTS", "PPY"],
         ["BTS", "RUBLE"],
         ["BTS", "HERO"],
         ["BTS", "OCT"],
@@ -254,35 +254,17 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "GDEX.EOS"],
         ["BTS", "GDEX.BTO"],
         ["BTS", "GDEX.USDT"],
-        ["RUDEX.USDT", "RUDEX.BTC"],
-        ["RUDEX.USDT", "RUDEX.ETH"],
-        ["RUDEX.USDT", "RUDEX.EOS"],
-        ["RUDEX.USDT", "RUDEX.PZM"],
-        ["RUDEX.USDT", "PPY"],
-        ["RUDEX.USDT", "RUBLE"],
-        ["RUDEX.BTC", "RUDEX.ETH"],
-        ["RUDEX.BTC", "RUDEX.EOS"],
-        ["RUDEX.BTC", "RUDEX.STEEM"],
-        ["RUDEX.BTC", "RUDEX.GOLOS"],
-        ["RUDEX.BTC", "RUDEX.WLS"],
-        ["RUDEX.BTC", "PPY"],
-        ["RUBLE", "RUDEX.BTC"],
-        ["RUBLE", "RUDEX.ETH"],
-        ["RUBLE", "RUDEX.USDT"],
-        ["RUBLE", "RUDEX.GOLOS"],
-        ["RUDEX.BTC", "RUDEX.PZM"],
-        ["RUB", "RUDEX.GOLOS"],
-        ["BTS", "RUDEX.GOLOS"],
-        ["BTS", "RUDEX.STEEM"],
-        ["BTS", "RUDEX.EOS"],
-        ["BTS", "RUDEX.BTC"],
-        ["BTS", "RUDEX.ETH"],
-        ["BTS", "RUDEX.USDT"],
-        ["BTS", "RUDEX.WLS"],
-        ["BTS", "RUDEX.SMOKE"],
-        ["BTS", "RUDEX.PZM"],
+        ["BTS", "XBTSX.BTC"],
+        ["BTS", "XBTSX.ETH"],
+        ["BTS", "XBTSX.EUR"],
+        ["BTS", "XBTSX.RUB"],
         ["BTS", "XBTSX.STH"],
+        ["BTS", "XBTSX.TUSD"],
         ["BTS", "XBTSX.WAVES"],
+        ["BTS", "XBTSX.USD"],
+        ["BTS", "XBTSX.USDC"],
+        ["BTS", "XBTSX.USDN"],
+        ["BTS", "XBTSX.USDT"],
         ["BTS", "HERTZ"],
         ["EVRAZ", "BTS"],
         ["EVRAZ", "RUBLE"],
@@ -329,11 +311,12 @@ export function allowedGateway(gateway) {
     const allowedGateways = [
         "TRADE",
         "OPEN", // keep to display the warning icon, permanently disabled in gateways.js
-        "RUDEX",
+        "RUDEX", // keep to display the warning icon, permanently disabled in gateways.js
         "GDEX",
         "XBTSX",
         "CITADEL",
-        "BRIDGE" // keep to display the warning icon, permanently disabled in gateways.js
+        "BRIDGE", // keep to display the warning icon, permanently disabled in gateways.js
+        "SPARKDEX" // keep to display the warning icon, permanently disabled in gateways.js
     ];
     if (!gateway) {
         // answers the question: are any allowed?

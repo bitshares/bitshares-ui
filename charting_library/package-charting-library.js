@@ -4,9 +4,9 @@ var archiver = require("archiver");
 const md5File = require("md5-file");
 
 
-var outputFile = path.join(__dirname, "charting_library.zip");
+var outputFile = path.join(__dirname, "charting_library.17.025.02b61a1c.zip");
 const outFilename = path.basename(outputFile);
-var ignoreFiles = [path.basename(__filename), outFilename, outFilename + ".md5", "install-charting-library.js"];
+var ignoreFiles = [path.basename(__filename), outFilename, outFilename + ".md5", "install-charting-library.js", "scss", "scss/**", "base.css", "darkTheme.css", "midnightTheme.css", "lightTheme.css"];
 
 /**
  * @param {String} source

@@ -1574,6 +1574,15 @@
             "amount": "変換数量",
             "submit": "OK"
         },
+        "create_lock": {
+            "amount": "Amount to lock",
+            "from": "Account to lock from",
+            "submit": "Lock",
+            "targetType": "Lock Type",
+            "title": "Create Lock",
+            "type_warning": "Please choose a lock type.",
+            "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
+        },
         "deposit": {
             "address_generation_error": "アドレスを生成できません",
             "amount": "入金する数量",
@@ -1768,6 +1777,19 @@
         "publish_feed": "{account}はフィード価格 {price}を公開しました",
         "reg_account": "{registrar}は{new_account}のアカウントを登録しました",
         "set_proxy": "{account}は投票代理人に{proxy}を設定しました",
+        "ticket_create": "{account} locked away {amount} in a ticket",
+        "ticket_types": {
+            "0": "Liquid",
+            "1": "Claimable 180 days after unlock request",
+            "2": "Claimable 360 days after unlock request",
+            "3": "Claimable 720 days after unlock request",
+            "4": "Locked forever",
+            "liquid": "Liquid",
+            "lock_180_days": "Claimable 180 days after unlock request",
+            "lock_360_days": "Claimable 360 days after unlock request",
+            "lock_720_days": "Claimable 720 days after unlock request",
+            "lock_forever": "Locked forever"
+        },
         "transfer": "{from}は{amount}を{to}に送りました",
         "transfer_account": "{account}の所有権を{to}に移転しました",
         "unlisted_by": "{lister}は{listee}をリストから外しました",
@@ -2553,6 +2575,7 @@
             "proposal_create": "提案を作成",
             "proposal_delete": "提案を削除",
             "proposal_update": "提案を更新",
+            "ticket_create": "Create ticket",
             "transfer": "転送",
             "transfer_from_blind": "匿名アカウントからの転送",
             "transfer_to_blind": "匿名アカウントに転送",
@@ -2690,7 +2713,10 @@
         }
     },
     "voting": {
+        "create_ticket": "Lock 1 {asset}",
         "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
+        "increase_voting_power": "Create Lock",
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
         "title": "Voting"
     },
     "walkthrough": {

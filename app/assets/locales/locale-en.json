@@ -1583,10 +1583,10 @@
         "create_lock": {
             "amount": "Amount to lock",
             "from": "Account to lock from",
-            "targetType": "Lock Type",
-            "type_warning": "Please choose a lock type.",
             "submit": "Lock",
+            "targetType": "Lock Type",
             "title": "Create Lock",
+            "type_warning": "Please choose a lock type.",
             "warning_message": "Note that locked assets must be requested to unlock, and can only be claimed back after the unlock period has passed. Current unlock period would be %(lock_days)s days"
         },
         "deposit": {
@@ -1783,17 +1783,6 @@
         "publish_feed": "{account} published feed price of {price}",
         "reg_account": "{registrar} registered the account {new_account}",
         "set_proxy": "{account} set {proxy} as their voting proxy",
-        "transfer": "{from} sent {amount} to {to}",
-        "transfer_account": "{account} ownership transferred to {to}",
-        "unlisted_by": "{lister} unlisted the account {listee}",
-        "update_account": "{account} updated their account data {change}",
-        "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",
-        "whitelisted_by": "{lister} whitelisted the account {listee}",
-        "witness_create": "{account} was upgraded to become a witness",
-        "witness_pay": "Withdrew witness pay to account",
-        "witness_receive": "Received witness from witness",
-        "witness_update": "{account} update its witness info",
-        "worker_create": "{account} created a worker proposal with daily pay of {pay}",
         "ticket_create": "{account} locked away {amount} in a ticket",
         "ticket_types": {
             "0": "Liquid",
@@ -1806,7 +1795,18 @@
             "lock_360_days": "Claimable 360 days after unlock request",
             "lock_720_days": "Claimable 720 days after unlock request",
             "lock_forever": "Locked forever"
-        }
+        },
+        "transfer": "{from} sent {amount} to {to}",
+        "transfer_account": "{account} ownership transferred to {to}",
+        "unlisted_by": "{lister} unlisted the account {listee}",
+        "update_account": "{account} updated their account data {change}",
+        "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",
+        "whitelisted_by": "{lister} whitelisted the account {listee}",
+        "witness_create": "{account} was upgraded to become a witness",
+        "witness_pay": "Withdrew witness pay to account",
+        "witness_receive": "Received witness from witness",
+        "witness_update": "{account} update its witness info",
+        "worker_create": "{account} created a worker proposal with daily pay of {pay}"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
@@ -2581,6 +2581,7 @@
             "proposal_create": "Create proposal",
             "proposal_delete": "Delete proposal",
             "proposal_update": "Update proposal",
+            "ticket_create": "Create ticket",
             "transfer": "Transfer",
             "transfer_from_blind": "Transfer from blinded account",
             "transfer_to_blind": "Transfer to blinded account",
@@ -2593,8 +2594,7 @@
             "witness_create": "Create witness",
             "witness_update": "Update witness",
             "witness_withdraw_pay": "Witness pay withdrawal",
-            "worker_create": "Create worker",
-            "ticket_create": "Create ticket"
+            "worker_create": "Create worker"
         },
         "vesting_balance_create": "created vesting balance of",
         "view_json": "Show raw json",
@@ -2719,11 +2719,11 @@
         }
     },
     "voting": {
+        "create_ticket": "Lock 1 {asset}",
         "description": "The BitShares blockchain allows the holders of its core token BTS to vote on block producers (witnesses), committee members (blockchain governance), worker proposals (reimbursement for tasks and strategic decisions through BSIPs/Polls).",
-        "title": "Voting",
-        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
         "increase_voting_power": "Create Lock",
-        "create_ticket": "Lock 1 {asset}"
+        "ticket_explanation": "Obtain voting power by locking away the core token BTS.",
+        "title": "Voting"
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",
@@ -2866,8 +2866,8 @@
         "pass_incorrect": "Incorrect password",
         "pass_length": "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
         "password": "Wallet password",
-        "password_crucial": "In case you haven't already done so, it is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
-        "password_lose_warning": "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+        "password_crucial": "In case you haven't already done so, it is crucial that you take the time to write down your account name and password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget your account name or this password your account will be lost, <strong>we cannot help you get it back</strong>.",
+        "password_lose_warning": "<strong>IMPORTANT: If you forget your account name or pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your account name and password!</strong>",
         "password_model": "Cloud Wallet",
         "password_model_1": "The cloud wallet uses a password in combination with your account name to generate your private keys on the fly. It restricts you to only logging in with one account at a time, in return for ease of use and convenience.",
         "password_model_2": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but <strong> your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!</strong>",
