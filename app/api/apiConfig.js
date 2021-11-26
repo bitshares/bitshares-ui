@@ -414,6 +414,7 @@ export const settingsAPIs = {
             contact: "bitshares:blocksights"
         }
     ],
+    ES_WRAPPER_LIST: [],
     DEFAULT_FAUCET: getFaucet().url,
     TESTNET_FAUCET: getTestFaucet().url
 };

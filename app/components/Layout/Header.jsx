@@ -489,7 +489,9 @@ class Header extends React.Component {
         );
         const hasLocalWallet = !!WalletDb.getWallet();
 
-        let clickHandlers = {};
+        let clickHandlers = {
+            showSend: this._showSend.bind(this)
+        };
 
         let renderingProps = {
             currentAccount: currentAccount,

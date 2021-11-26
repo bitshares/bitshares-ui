@@ -21,7 +21,7 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
-import NewsHeadline from "components/Layout/NewsHeadline";
+// import NewsHeadline from "components/Layout/NewsHeadline";
 
 import {Route, Switch, Redirect} from "react-router-dom";
 
@@ -443,7 +443,7 @@ class App extends React.Component {
                     : "committee-account";
             content = (
                 <div className="grid-frame vertical">
-                    <NewsHeadline />
+                    {/*<NewsHeadline />*/}
                     <Header height={this.state.height} {...others} />
                     <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">
