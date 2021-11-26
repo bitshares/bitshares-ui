@@ -68,7 +68,7 @@ class MenuDataStructure {
     static getHeader() {
         const allItems = MenuDataStructure.getAllEntries();
 
-        return [allItems.dashboard, allItems.market, allItems.explorer];
+        return [allItems.dashboard, allItems.market, allItems.transfer];
     }
 
     static getDropdownMenu() {
@@ -96,7 +96,7 @@ class MenuDataStructure {
         allItems.insight = function(state) {
             let item = oldinsight(state);
             let submenu = [
-                allItems.account_voting,
+                // allItems.account_voting,
                 allItems.account_assets,
                 allItems.account_signedmessages,
                 allItems.account_stats,
@@ -120,19 +120,19 @@ class MenuDataStructure {
             allItems.transfer,
             allItems.deposit,
             allItems.withdraw,
-            allItems.account_voting,
+            // allItems.account_voting,
             allItems.spotlight,
             allItems.insight,
             allItems.divider,
-            // allItems.account_voting,
-            // allItems.account_assets,
-            // allItems.account_signedmessages,
-            // allItems.account_stats,
-            // allItems.account_vesting,
-            // allItems.account_vesting_2,
-            // allItems.account_whitelist,
-            // allItems.account_permissions,
-            // allItems.divider,
+            allItems.account_voting,
+            allItems.account_assets,
+            allItems.account_signedmessages,
+            allItems.account_stats,
+            allItems.account_vesting,
+            allItems.account_vesting_2,
+            allItems.account_whitelist,
+            allItems.account_permissions,
+            allItems.divider,
             allItems.settings,
             allItems.settings_mobile,
             allItems.accounts,
@@ -188,7 +188,7 @@ class MenuDataStructure {
                 icon: "dashboard",
                 text: "header.dashboard",
                 inHeaderBehavior: MenuItemType.WhenAccount,
-                inDropdownBehavior: MenuItemType.WhenAccount
+                inDropdownBehavior: MenuItemType.Never
             }),
             follow: state => ({
                 target: state.clickHandlers.followUnfollow,
@@ -210,7 +210,7 @@ class MenuDataStructure {
                 },
                 text: "header.exchange",
                 inHeaderBehavior: MenuItemType.Always,
-                inDropdownBehavior: MenuItemType.WhenNotInHeader
+                inDropdownBehavior: MenuItemType.Never
             }),
             explorer: state => ({
                 includePattern: "/explorer",
@@ -220,14 +220,15 @@ class MenuDataStructure {
                     size: "2x"
                 },
                 text: "header.explorer",
-                inHeaderBehavior: MenuItemType.Always,
+                inHeaderBehavior: MenuItemType.Dynamic,
                 inDropdownBehavior: MenuItemType.WhenNotInHeader
             }),
             transfer: state => ({
                 target: state.clickHandlers.showSend,
                 icon: "transfer",
                 text: "header.payments",
-                inDropdownBehavior: MenuItemType.WhenAccount
+                inHeaderBehavior: MenuItemType.WhenAccount,
+                inDropdownBehavior: MenuItemType.Never
             }),
             deposit: state => ({
                 target: state.clickHandlers.showDeposit,
@@ -296,7 +297,7 @@ class MenuDataStructure {
                 icon: "insight",
                 text: "header.advanced",
                 inHeaderBehavior: MenuItemType.Never,
-                inDropdownBehavior: MenuItemType.WhenAccount
+                inDropdownBehavior: MenuItemType.Never
             }),
             settings_general: state => ({
                 target: "/settings/general",
