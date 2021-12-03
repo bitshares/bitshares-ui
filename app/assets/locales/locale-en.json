@@ -2369,7 +2369,7 @@
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
         "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
-        "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
+        "generate": "The generated password was created by your browser, locally. No one but you has access to it. Paste it below and save a copy in a safe place",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Click here to hide this asset from this list.",
