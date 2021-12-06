@@ -243,7 +243,6 @@ class PoolmartActions {
                                 tmpAssetIds.push(pool.share_asset);
                             }
                         });
-                        // if (tmpAssetIds.length > 0) {
                             Apis.instance()
                                 .db_api()
                                 .exec("lookup_asset_symbols", [tmpAssetIds])
@@ -284,10 +283,6 @@ class PoolmartActions {
                                     delete inProgress[id];
                                     dispatch({loading: false, liquidityPools});
                                 });
-                        // } else {
-                        //     delete inProgress[id];
-                        //     dispatch({loading: false, liquidityPools: []});
-                        // }
                     })
                     .catch(error => {
                         console.log(
