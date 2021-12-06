@@ -89,7 +89,6 @@ class PoolActions {
             return WalletDb.process_transaction(tr, null, true)
                 .then(result => {
                     // console.log("pool create result:", result);
-                    // this.dispatch(account_id);
                     dispatch(true);
                 })
                 .catch(error => {
