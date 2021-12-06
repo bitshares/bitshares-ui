@@ -597,6 +597,7 @@ class AssetActions {
                         assets.forEach(asset => {
                             ChainStore._updateObject(asset, false);
                             dynamicIDS.push(asset.dynamic_asset_data_id);
+                            });
                         let dynamicPromise = Apis.instance()
                             .db_api()
                             .exec("get_objects", [dynamicIDS]);
