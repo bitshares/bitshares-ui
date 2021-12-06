@@ -28,11 +28,6 @@ class DeletePoolModal extends React.Component {
 
     componentWillReceiveProps(newProps) {
         console.log("DeletePoolModal: ");
-        // if (this.props.isModalVisible !== newProps.isModalVisible) {
-        //     this.setState({
-        //         isModalVisible: newProps.isModalVisible
-        //     });
-        // }
     }
 
     hideModal() {
@@ -81,19 +76,3 @@ class DeletePoolModal extends React.Component {
 }
 
 export default DeletePoolModal;
-// export default connect(
-//     BindToChainState(DeletePoolModal),
-//     {
-//         listenTo() {
-//             return [AccountStore];
-//         },
-
-//         getProps(props) {
-//             console.log("DeletePoolModal: ");
-
-//             return {
-//                 account: AccountStore.getState().currentAccount
-//             };
-//         }
-//     }
-// );
