@@ -606,7 +606,6 @@ class AssetActions {
                                 dispatch({
                                     assets: assets,
                                     dynamic: results[0],
-                                    // bitasset_data: results[1],
                                     loading: false
                                 });
                                 return assets && assets.length;
