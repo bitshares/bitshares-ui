@@ -31,8 +31,6 @@ import {
 import ApplicationApi from "../../api/ApplicationApi"
 import AssetActions from "actions/AssetActions";
 
-
-
 class SearchListItem extends React.Component {
     static propTypes = {
         itemSelect: PropTypes.func,
@@ -144,7 +142,6 @@ class CreatePoolModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.marketPickerAsset !== this.props.marketPickerAsset)
-//            this.setState(this.initialState());
         console.log("componentWillReceiveProps is invoked.");
         if (nextProps.searchList !== this.props.searchList)
         if (this.state.searchAssetA) {
@@ -252,7 +249,6 @@ class CreatePoolModal extends React.Component {
 
     onClose() {
         this.setState(this._getInitialState());
-//        this.onCancel();
     }
 
     onCreatePool() {
@@ -295,7 +291,6 @@ class CreatePoolModal extends React.Component {
             return;
         }
 
-
         if (this.state.assetsA && this.state.assetsB && this.state.takerFee && this.state.unstakeFee){
             let assetA_id = Number(this.state.assetsA[1]["id"].replace("1.3.", ""));
             let assetB_id = Number(this.state.assetsB[1]["id"].replace("1.3.", ""));
@@ -304,33 +299,14 @@ class CreatePoolModal extends React.Component {
 console.log(this.state.assetsB[1]["quote"], this.state.assetsA[1]["quote"]);
 ApplicationApi.liquidityPoolCreate(this.props.account, this.state.assetsB[1]["quote"], this.state.assetsA[1]["quote"], this.state.poolName, this.state.takerFee * 100.0,
 this.state.unstakeFee * 100.0);//.then(() => {
-//if (this.timer) {
-//clearTimeout(this.timer);
-//}
-//this.timer = setTimeout(() => {
-//PoolmartActions.getLiquidityPoolsAccount.defer(this.props.account_name);
-//}, 500);
-//});
 this.props.hideModal();
 }else{
 console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
-
             ApplicationApi.liquidityPoolCreate(this.props.account, this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"], this.state.poolName, this.state.takerFee * 100.0,
             this.state.unstakeFee * 100.0);//.then(() => {
-
-//                if (this.timer) {
-//                    clearTimeout(this.timer);
-//                }
-//                this.timer = setTimeout(() => {
-//                    PoolmartActions.getLiquidityPoolsAccount.defer(this.props.account_name);
-//                }, 500);
-//
-//            });
-
             this.props.hideModal();
         }
 }
-
         this.onCancel();
     }
 
@@ -338,7 +314,6 @@ console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
         this.setState(this.initAlertState());
         let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
-
 
         if (!isValidName) {
             this.setState({
@@ -415,40 +390,9 @@ console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
                 this.setState
             );
         }, 1500);
-
-
-
-
-
-
-        // if (e.target.value) {
-        //     this.setState(
-        //         {
-        //             filterAssetA: e.target.value.toUpperCase()
-        //         },
-        //         () => {
-        //             this.onSetAssetAArray();
-        //         }
-        //     );
-        // } else {
-        //     this.setState({filterAssetA: ""});
-        // }
-
     }
 
     onAssetBSearch(getBackedAssets, e) {
-        // if (e.target.value) {
-        //     this.setState(
-        //         {
-        //             filterAssetB: e.target.value.toUpperCase()
-        //         },
-        //         () => {
-        //             this.onSetAssetBArray();
-        //         }
-        //     );
-        // } else {
-        //     this.setState({filterAssetB: ""});
-        // }
         this.setState(this.initAlertState());
 
         let toFind = e.target.value.trim().toUpperCase();
