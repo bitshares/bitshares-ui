@@ -36,9 +36,6 @@ function assetFilter(
     let assetCount = 0;
     let allMarkets = [];
 
-    // let baseSymbol = baseAsset.get("symbol");
-    // let quoteSymbol = quoteAsset.get("symbol");
-
     if (searchAssets.size && !!inputValue && inputValue.length > 2) {
         searchAssets
             .filter(a => {
@@ -58,29 +55,17 @@ function assetFilter(
                 assetCount++;
 
                 let issuerName = fetchIssuerName(asset.issuer);
-
-                // let base = baseAsset.get("symbol");
-                // let marketID = asset.symbol + "_" + base;
                 let marketID = asset.symbol;
-                // console.log("MarketPickerHelpers baseAsset", baseAsset);
-                // let isQuoteAsset = quoteSymbol == marketPickerAsset;
-                // let includeAsset =
-                //     (isQuoteAsset && asset.symbol != baseSymbol) ||
-                //     (!isQuoteAsset && asset.symbol != quoteSymbol);
-
-                // if (includeAsset) {
                 allMarkets.push([
                     marketID,
                     {
                         id: asset.id,
                         quote: asset.symbol,
-                        /*base: base,*/
                         base: '',
                         issuerId: asset.issuer,
                         issuer: issuerName
                     }
                 ]);
-                // }
             });
     }
 
