@@ -597,23 +597,9 @@ class AssetActions {
                         assets.forEach(asset => {
                             ChainStore._updateObject(asset, false);
                             dynamicIDS.push(asset.dynamic_asset_data_id);
-
-                            // if (asset.bitasset_data_id) {
-                            //     bitAssetIDS.push(asset.bitasset_data_id);
-                            // }
-                        });
-
                         let dynamicPromise = Apis.instance()
                             .db_api()
                             .exec("get_objects", [dynamicIDS]);
-
-                        // let bitAssetPromise =
-                        //     bitAssetIDS.length > 0
-                        //         ? Apis.instance()
-                        //               .db_api()
-                        //               .exec("get_objects", [bitAssetIDS])
-                        //         : null;
-
                         Promise.all([dynamicPromise]).then(
                             results => {
                                 delete inProgress[id];
@@ -650,7 +636,6 @@ class AssetActions {
 
     lookupAsset(symbol, searchID) {
         let asset = ChainStore.getAsset(symbol);
-
         if (asset) {
             return {
                 assets: [asset],
