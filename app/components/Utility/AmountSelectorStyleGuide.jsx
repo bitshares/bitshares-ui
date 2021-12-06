@@ -126,7 +126,7 @@ class AmountSelector extends DecimalChecker {
                         onChange={this._onChange.bind(this)}
                         tabIndex={this.props.tabIndex}
                         onPaste={this.props.onPaste || this.onPaste.bind(this)}
-                        // onKeyPress={this.onKeyPress.bind(this)}
+                        onKeyPress={this.onKeyPress.bind(this)}
                         addonBefore={addonBefore}
                         className="input-group-unbordered-before"
                     />
