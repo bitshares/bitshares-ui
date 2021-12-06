@@ -15,7 +15,6 @@ class LiquidityPoolsList extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("test component");
     }
 
     render() {
