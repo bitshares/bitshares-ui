@@ -4,7 +4,7 @@ import Immutable from "immutable";
 import big from "bignumber.js";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import {Form, Modal, Button, Row, Col, Alert} from "bitshares-ui-style-guide";
+import {Form, Modal, Button, Input, Row, Col, Alert} from "bitshares-ui-style-guide";
 import ApplicationApi from "api/ApplicationApi";
 import AccountStore from "stores/AccountStore";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
