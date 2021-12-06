@@ -87,19 +87,6 @@ class AccountPools extends React.Component {
             clearTimeout(this.timer);
         }
         this.timer = setTimeout(() => {
-            // if (filterShareAsset) {
-            //     PoolmartActions.getLiquidityPoolsByShareAsset.defer(
-            //         filterShareAsset
-            //     );
-            // } else {
-            //     PoolmartActions.getLiquidityPools.defer(
-            //         filterAssetA,
-            //         filterAssetB,
-            //         GetLimit,
-            //         start
-            //     );
-            // }
-
             PoolmartActions.getLiquidityPoolsAccount.defer(this.props.account_name);
         }, 500);
     }
@@ -208,7 +195,6 @@ class AccountPools extends React.Component {
     }
 
     _createButtonClick(account_name) {
-        // this.props.history.push(`/account/${account_name}/create-asset`);
         this.showCreatePoolModal();
     }
 
@@ -561,22 +547,7 @@ class AccountPools extends React.Component {
     }
 }
 
-// LiquidityPools = BindToChainState(LiquidityPools, {show_loader: true});
-// class LiquidityPoolsStoreWrapper extends React.Component {
-//     render() {
-//         return <LiquidityPools {...this.props} />;
-//     }
-// }
-
-
 AccountPools = BindToChainState(AccountPools, {show_loader: true});
-
-
-// AccountPools = AssetWrapper(AccountPools, {
-//     propNames: ["assetsList"],
-//     asList: true,
-//     withDynamic: true
-// });
 
 class AccountPoolsStoreWrapper extends React.Component {
     render() {
@@ -610,29 +581,4 @@ export default connect(
             };
         }
     }
-    // AccountPools,
-    // {
-    //     listenTo() {
-    //         return [PoolmartStore];
-    //     },
-    //     getProps(props) {
-    //         let assets = Map(),
-    //             assetsList = List();
-    //         if (props.account.get("assets", []).size) {
-    //             props.account.get("assets", []).forEach(id => {
-    //                 assetsList = assetsList.push(id);
-    //             });
-    //         }
-    //         assets = AssetStore.getState().assets;
-    //         let liquidityPools = PoolmartStore.getState().liquidityPools;
-
-    //         return {
-    //             liquidityPools: PoolmartStore.getState().liquidityPools,
-    //             liquidityPoolsLoading: PoolmartStore.getState()
-    //                 .liquidityPoolsLoading,
-    //             lastPoolId: PoolmartStore.getState().lastPoolId,
-    //             assets: assets,
-    //             assetsList: assetsList};
-    //     }
-    // }
 );
