@@ -447,8 +447,6 @@ console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
     }
 
     onSetAssetA(e) {
-        // if (e.target.value)
-        //     this.setState({assetsA: e.target.value.toUpperCase()});
         this.setState(this.initialState());
         console.log("onSetAssetA ", e);
         console.log("takerFee: ", this.state.takerFee);
@@ -457,12 +455,9 @@ console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
             activeSearch: false,
             filterAssetA: e[0]
         });
-
     }
 
     onSetAssetB(e) {
-        // if (e.target.value)
-        //     this.setState({assetsB: e.target.value.toUpperCase()});
         this.setState(this.initialState());
         console.log("onSetAssetB ", e);
         this.setState({
@@ -470,8 +465,6 @@ console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
             activeSearch: false,
             filterAssetB: e[0]
         });
-
-
     }
 
     onSetTakerFee(e){
@@ -495,9 +488,6 @@ console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
 
     onSetUnstackFee(e){
         this.setState(this.initAlertState());
-        // this.setState({
-        //     unstakeFee: parseFloat(e.target.value.trim())
-        // });
         this.setState({
             unstakeFee: e.target.value
         });
@@ -708,7 +698,6 @@ console.log(this.state.assetsA[1]["quote"], this.state.assetsB[1]["quote"]);
                                 value={this.state.takerFee}
                                 onChange={this.onSetTakerFee.bind(this)}
                                 onBlur={this.onFormatTakerFee.bind(this)}
-                                // ref={input => this.state.takerFee = input}
                                 addonAfter="Taker Fee %"
                                 maxLength="16"
                             />
