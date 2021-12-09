@@ -1,7 +1,7 @@
 import ls from "./localStorage";
 import {bitsparkAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
-const bitsparkStorage = new ls("");
+const bitsparkStorage = ls("");
 
 let fetchInProgess = {};
 let fetchCache = {};

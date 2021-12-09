@@ -20,8 +20,8 @@ import QueryString from "query-string";
 import ls from "common/localStorage";
 import {UserManager, WebStorageStateStore} from "oidc-client";
 
-let oauthBlocktrades = new ls("__oauthBlocktrades__");
-let oidcStorage = new ls(
+let oauthBlocktrades = ls("__oauthBlocktrades__");
+let oidcStorage = ls(
     "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
 );
 

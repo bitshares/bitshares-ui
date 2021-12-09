@@ -13,7 +13,7 @@ import AccountStore from "stores/AccountStore";
 import ls from "common/localStorage";
 
 const STORAGE_KEY = "__graphene__";
-const ss = new ls(STORAGE_KEY);
+const ss = ls(STORAGE_KEY);
 
 import counterpart from "counterpart";
 

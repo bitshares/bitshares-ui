@@ -1,7 +1,7 @@
 var path = require("path");
 var webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var Clean = require("clean-webpack-plugin");
+var {CleanWebpackPlugin} = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -9,9 +9,9 @@ var locales = require("./app/assets/locales");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /*
-* For staging builds, set the version to the latest commit hash, for
-* production set it to the package version
-*/
+ * For staging builds, set the version to the latest commit hash, for
+ * production set it to the package version
+ */
 let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
 var __VERSION__ =
     branch === "develop" ? git.short() : require("./package.json").version;
@@ -44,10 +44,7 @@ module.exports = function(env) {
             loader: "postcss-loader"
         },
         {
-            loader: "sass-loader",
-            options: {
-                outputStyle: "expanded"
-            }
+            loader: "sass-loader"
         }
     ];
 
@@ -58,9 +55,9 @@ module.exports = function(env) {
     const baseUrl = env.electron ? "./" : "baseUrl" in env ? env.baseUrl : "/";
 
     /*
-    * moment and react-intl include tons of locale files, use a regex and
-    * ContextReplacementPlugin to only include certain locale files
-    */
+     * moment and react-intl include tons of locale files, use a regex and
+     * ContextReplacementPlugin to only include certain locale files
+     */
     let regexString = "";
     locales.forEach((l, i) => {
         regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
@@ -97,22 +94,24 @@ module.exports = function(env) {
             /react-intl[\/\\]locale-data$/,
             localeRegex
         ),
-        new CopyWebpackPlugin([
-            {
-                from: path.join(root_dir, "charting_library"),
-                to: "charting_library"
-            }
-        ])
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.join(root_dir, "charting_library"),
+                    to: "charting_library"
+                }
+            ]
+        })
     ];
     if (env.prod) {
         // PROD OUTPUT PATH
         let outputDir = env.electron
             ? "electron"
             : env.hash
-                ? !baseUrl
-                    ? "hash-history"
-                    : `hash-history_${baseUrl.replace("/", "")}`
-                : "dist";
+            ? !baseUrl
+                ? "hash-history"
+                : `hash-history_${baseUrl.replace("/", "")}`
+            : "dist";
         outputPath = path.join(root_dir, "build", outputDir);
 
         // DIRECTORY CLEANER
@@ -122,31 +121,27 @@ module.exports = function(env) {
         cssLoaders = [
             {loader: MiniCssExtractPlugin.loader},
             {loader: "css-loader"},
-            {
-                loader: "postcss-loader",
-                options: {
-                    minimize: true,
-                    debug: false
-                }
-            }
+            {loader: "postcss-loader"}
         ];
         scssLoaders = [
             {loader: MiniCssExtractPlugin.loader},
             {loader: "css-loader"},
+            {loader: "postcss-loader"},
             {
-                loader: "postcss-loader",
-                options: {
-                    minimize: true,
-                    debug: false
-                }
-            },
-            {loader: "sass-loader", options: {outputStyle: "expanded"}}
+                loader: "sass-loader",
+                options: {sassOptions: {outputStyle: "expanded"}}
+            }
         ];
 
         // PROD PLUGINS
-        plugins.push(new Clean(cleanDirectories, {root: root_dir}));
+        plugins.push(
+            new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: cleanDirectories
+            })
+        );
         plugins.push(
             new webpack.DefinePlugin({
+                "process.env": {NODE_ENV: JSON.stringify("development")},
                 __DEV__: false
             })
         );
@@ -166,8 +161,8 @@ module.exports = function(env) {
     }
 
     plugins.push(
-        new CopyWebpackPlugin(
-            [
+        new CopyWebpackPlugin({
+            patterns: [
                 {
                     from: path.join(
                         root_dir,
@@ -200,9 +195,8 @@ module.exports = function(env) {
                     to: path.join(outputPath, "outdated_browser.css"),
                     toType: "file"
                 }
-            ],
-            {}
-        )
+            ]
+        })
     );
 
     /* Workaround in which the github pages server will find a file when it looks
@@ -211,8 +205,8 @@ module.exports = function(env) {
 
     if (env.hash)
         plugins.push(
-            new CopyWebpackPlugin(
-                [
+            new CopyWebpackPlugin({
+                patterns: [
                     {
                         from: path.join(
                             root_dir,
@@ -229,9 +223,8 @@ module.exports = function(env) {
                         ),
                         toType: "file"
                     }
-                ],
-                {}
-            )
+                ]
+            })
         );
     var config = {
         mode: env.noUgly ? "none" : env.prod ? "production" : "development",
@@ -296,6 +289,12 @@ module.exports = function(env) {
                         {
                             loader: "babel-loader",
                             options: {
+                                presets: [
+                                    [
+                                        "@babel/preset-react",
+                                        {targets: {node: "current"}}
+                                    ]
+                                ],
                                 cacheDirectory: env.prod ? false : true,
                                 plugins: ["react-hot-loader/babel"]
                             }
@@ -316,7 +315,13 @@ module.exports = function(env) {
                             options: {
                                 compact: false,
                                 cacheDirectory: env.prod ? false : true,
-                                plugins: ["react-hot-loader/babel"]
+                                plugins: ["react-hot-loader/babel"],
+                                presets: [
+                                    [
+                                        "@babel/preset-react",
+                                        {targets: {node: "current"}}
+                                    ]
+                                ]
                             }
                         }
                     ]
@@ -329,7 +334,10 @@ module.exports = function(env) {
                 {test: /\.coffee$/, loader: "coffee-loader"},
                 {
                     test: /\.(coffee\.md|litcoffee)$/,
-                    loader: "coffee-loader?literate"
+                    loader: "coffee-loader",
+                    options: {
+                        literate: true
+                    }
                 },
                 {
                     test: /\.css$/,
@@ -384,10 +392,10 @@ module.exports = function(env) {
                             loader: "svgo-loader",
                             options: {
                                 plugins: [
-                                    {cleanupAttrs: true},
-                                    {removeMetadata: true},
-                                    {removeXMLNS: true},
-                                    {removeViewBox: false}
+                                    {name: "cleanupAttrs", active: true},
+                                    {name: "removeMetadata", active: true},
+                                    {name: "removeXMLNS", active: true},
+                                    {name: "removeViewBox", active: false}
                                 ]
                             }
                         }
@@ -398,9 +406,7 @@ module.exports = function(env) {
                     use: [
                         {
                             loader: "html-loader",
-                            options: {
-                                removeAttributeQuotes: false
-                            }
+                            options: {sources: false}
                         },
                         {
                             loader: "markdown-loader",
@@ -431,7 +437,14 @@ module.exports = function(env) {
                 "bitshares-ui-style-guide$": path.resolve(
                     root_dir,
                     "node_modules/bitshares-ui-style-guide/dist/main.js"
-                )
+                ),
+                "react-dom": "@hot-loader/react-dom"
+            },
+            fallback: {
+                crypto: require.resolve("crypto-browserify"),
+                constants: require.resolve("constants-browserify"),
+                stream: require.resolve("stream-browserify"),
+                path: require.resolve("path-browserify")
             }
         },
         plugins: plugins

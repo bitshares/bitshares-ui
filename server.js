@@ -7,7 +7,6 @@ var fs = require("fs");
 
 const perf_dev = process.argv[2] === "perf-dev";
 
-var ProgressPlugin = require("webpack/lib/ProgressPlugin");
 var config = require("./webpack.config.js")({prod: false, perf_dev});
 
 var app = express();
@@ -16,23 +15,13 @@ var compiler = webpack(config);
 var https = require("https");
 var http = require("http");
 
-compiler.apply(
-    new ProgressPlugin(function(percentage, msg) {
-        process.stdout.write(
-            (percentage * 100).toFixed(2) +
-                "% " +
-                msg +
-                "                 \033[0G"
-        );
-    })
-);
+new webpack.ProgressPlugin(function(percentage, msg) {
+    process.stdout.write(
+        (percentage * 100).toFixed(2) + "% " + msg + "                 \033[0G"
+    );
+}).apply(compiler);
 
-app.use(
-    devMiddleware(compiler, {
-        publicPath: config.output.publicPath,
-        historyApiFallback: true
-    })
-);
+app.use(devMiddleware(compiler, {publicPath: config.output.publicPath}));
 
 app.use(hotMiddleware(compiler));
 
