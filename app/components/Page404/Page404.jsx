@@ -4,9 +4,9 @@ import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import Translate from "react-translate-component";
 
-const light = require("assets/logo-404-light.png");
-const dark = require("assets/logo-404-dark.png");
-const midnight = require("assets/logo-404-midnight.png");
+const light = require("assets/logo-404-light.png").default;
+const dark = require("assets/logo-404-dark.png").default;
+const midnight = require("assets/logo-404-midnight.png").default;
 
 class Page404 extends React.Component {
     static defaultProps = {
@@ -54,7 +54,7 @@ class Page404 extends React.Component {
     }
 }
 
-export default (Page404 = connect(Page404, {
+export default Page404 = connect(Page404, {
     listenTo() {
         return [SettingsStore];
     },
@@ -63,4 +63,4 @@ export default (Page404 = connect(Page404, {
             theme: SettingsStore.getState().settings.get("themes")
         };
     }
-}));
+});

@@ -1,12 +1,12 @@
 var path = require("path");
 var webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var {CleanWebpackPlugin} = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 var locales = require("./app/assets/locales");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+var fs = require("fs");
 
 /*
  * For staging builds, set the version to the latest commit hash, for
@@ -114,9 +114,6 @@ module.exports = function(env) {
             : "dist";
         outputPath = path.join(root_dir, "build", outputDir);
 
-        // DIRECTORY CLEANER
-        var cleanDirectories = [outputPath];
-
         // WRAP INTO CSS FILE
         cssLoaders = [
             {loader: MiniCssExtractPlugin.loader},
@@ -135,13 +132,8 @@ module.exports = function(env) {
 
         // PROD PLUGINS
         plugins.push(
-            new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: cleanDirectories
-            })
-        );
-        plugins.push(
             new webpack.DefinePlugin({
-                "process.env": {NODE_ENV: JSON.stringify("development")},
+                "process.env": {NODE_ENV: JSON.stringify("production")},
                 __DEV__: false
             })
         );
@@ -171,7 +163,7 @@ module.exports = function(env) {
                         "locales",
                         "*.json"
                     ),
-                    to: path.join(outputPath, "[name].[ext]"),
+                    to: path.join(outputPath, "[name][ext]"),
                     toType: "template"
                 },
                 {
@@ -226,6 +218,27 @@ module.exports = function(env) {
                 ]
             })
         );
+    var alias = {
+        sanitize$: "xss",
+        moment$: path.resolve(root_dir, "node_modules/moment/moment.js"),
+        bitsharesjs$: path.resolve(root_dir, "node_modules/bitsharesjs/"),
+        "bitshares-ui-style-guide$": path.resolve(
+            root_dir,
+            "node_modules/bitshares-ui-style-guide/dist/main.js"
+        )
+    };
+    if (!env.prod) {
+        alias = Object.assign({}, alias, {
+            "react-dom": "@hot-loader/react-dom"
+        });
+    }
+    var https = false;
+    if (env.https) {
+        https = {
+            key: fs.readFileSync("./ssl/server.key"),
+            cert: fs.readFileSync("./ssl/server.crt")
+        };
+    }
     var config = {
         mode: env.noUgly ? "none" : env.prod ? "production" : "development",
         entry: {
@@ -244,7 +257,22 @@ module.exports = function(env) {
             chunkFilename: env.prod ? "[name].[chunkhash].js" : "[name].js",
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map",
-            globalObject: "this"
+            globalObject: "this",
+            clean: true
+        },
+        devServer: {
+            hot: true,
+            static: {
+                directory: path.join(__dirname, "app/assets/locales"),
+                publicPath: env.prod ? "" : "/"
+            },
+            historyApiFallback: true,
+            https: https,
+            devMiddleware: {
+                index: true,
+                mimeTypes: {phtml: "text/html"},
+                publicPath: env.prod ? "" : "/"
+            }
         },
         optimization: {
             splitChunks: {
@@ -424,22 +452,7 @@ module.exports = function(env) {
             ],
             extensions: [".js", ".jsx", ".coffee", ".json"],
             mainFields: ["module", "jsnext:main", "browser", "main"],
-            alias: {
-                sanitize$: "xss",
-                moment$: path.resolve(
-                    root_dir,
-                    "node_modules/moment/moment.js"
-                ),
-                bitsharesjs$: path.resolve(
-                    root_dir,
-                    "node_modules/bitsharesjs/"
-                ),
-                "bitshares-ui-style-guide$": path.resolve(
-                    root_dir,
-                    "node_modules/bitshares-ui-style-guide/dist/main.js"
-                ),
-                "react-dom": "@hot-loader/react-dom"
-            },
+            alias: alias,
             fallback: {
                 crypto: require.resolve("crypto-browserify"),
                 constants: require.resolve("constants-browserify"),
