@@ -95,8 +95,8 @@ class PoolStakeModal extends React.Component {
                 pool.get("id"),
                 pool.getIn(['asset_a', "symbol"]),
                 pool.getIn(['asset_b', "symbol"]),
-                assetAAmount * assetAPrecision,
-                assetBAmount * assetBPrecision
+                Math.floor(assetAAmount * assetAPrecision),
+                Math.floor(assetBAmount * assetBPrecision)
             )
                 .then(res => {
                     console.log("exchange:", res);
@@ -114,8 +114,8 @@ class PoolStakeModal extends React.Component {
                 shareAssetAmount * sharedAssetPrecision,
                 pool.getIn(['asset_a', "symbol"]),
                 pool.getIn(['asset_b', "symbol"]),
-                assetAAmount * assetAPrecision,
-                assetBAmount * assetBPrecision
+                Math.floor(assetAAmount * assetAPrecision),
+                Math.floor(assetBAmount * assetBPrecision)
 
             )
                 .then(res => {
