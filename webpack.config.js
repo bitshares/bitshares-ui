@@ -162,11 +162,10 @@ module.exports = function(env) {
         new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: path.join(
-                        root_dir,
-                        "app",
-                        "assets",
-                        "locales",
+                    from: path.posix.join(
+                        path
+                            .join(root_dir, "app", "assets", "locales")
+                            .replace(/\\/g, "/"),
                         "*.json"
                     ),
                     to: path.join(outputPath, "[name][ext]"),
