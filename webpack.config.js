@@ -17,7 +17,7 @@ var __VERSION__ =
     branch === "develop" ? git.short() : require("./package.json").version;
 
 // BASE APP DIR
-var root_dir = path.resolve(__dirname);
+var root_dir = path.resolve(__dirname).replace(/\\/g, "/");
 
 module.exports = function(env) {
     // STYLE LOADERS
