@@ -52,7 +52,13 @@ module.exports = function(env) {
     var outputPath = path.join(root_dir, "assets");
 
     // COMMON PLUGINS
-    const baseUrl = env.electron ? "./" : "baseUrl" in env ? env.baseUrl : "/";
+    const baseUrl = env.electron
+        ? "./"
+        : "baseUrl" in env
+        ? env.baseUrl === "false"
+            ? ""
+            : env.baseUrl
+        : "/";
 
     /*
      * moment and react-intl include tons of locale files, use a regex and
