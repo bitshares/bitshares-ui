@@ -11,7 +11,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [10.x]
+                node-version: [16.13.x]
 
         steps:
             - uses: actions/checkout@v2
@@ -19,7 +19,8 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node-version }}
-            - run: npm ci
+            # - run: npm ci
+            - run yarn
             - run: npm run build-hash
             - name: Create CNAME file
               uses: finnp/create-file-action@master
