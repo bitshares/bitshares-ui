@@ -28,7 +28,7 @@
         "test:market": "cross-env NODE_ENV=test mocha --require babel-core/register --watch --watch-extensions js ./app/test/marketTests",
         "bench:market": "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./app/test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
         "profile-dev": "webpack --env dev --env profile --profile --json > stats-dev.json",
-        "profile-build": "cross-env NODE_ENV=production webpack --env prod --env profile --env hash --env baseUrl='' --profile --json > stats-prod.json",
+        "profile-build": "cross-env NODE_ENV=production webpack --env prod --env profile --env hash --env baseUrl=false --profile --json > stats-prod.json",
         "profile-nougly": "cross-env NODE_ENV=production webpack --env prod --env profile --env hash --env noUgly --profile --json > stats-prod-nougly.json",
         "start": "cross-env NODE_ENV=development webpack serve",
         "start-perf": "cross-env NODE_ENV=development webpack serve perf-dev",
@@ -40,8 +40,8 @@
         "postfix-locale-files": "./node_modules/prettier/bin-prettier.js app/assets/locales/locale-*.json --write",
         "build": "cross-env NODE_ENV=production webpack --env prod",
         "build-nougly": "cross-env NODE_ENV=production webpack --env prod --env noUgly",
-        "build-hash": "cross-env NODE_ENV=production webpack --env prod --env hash --env baseUrl=''",
-        "build-hash-nougly": "cross-env NODE_ENV=production webpack --env prod --env hash --env noUgly --env baseUrl=''",
+        "build-hash": "cross-env NODE_ENV=production webpack --env prod --env hash --env baseUrl=false",
+        "build-hash-nougly": "cross-env NODE_ENV=production webpack --env prod --env hash --env noUgly --env baseUrl=false",
         "build-github": "cross-env NODE_ENV=production webpack --env prod --env hash --env.deprecated --env baseUrl='/wallet/'",
         "build-electron": "cross-env NODE_ENV=production webpack --env prod --env electron --env hash",
         "build-electron-nougly": "cross-env NODE_ENV=production webpack --env prod --env electron --env noUgly --env hash --progress --display-error-details --colors",
@@ -52,12 +52,12 @@
         "precommit": "pretty-quick --staged",
         "prepackage": "npm run build-electron",
         "prepackage-no-ugly": "npm run build-electron-nougly",
-        "package": "build -p never",
+        "package": "electron-builder -p never",
         "package-charting-library": "node ./charting_library/package-charting-library.js",
-        "package-no-ugly": "build -p never",
-        "package-deb": "npm run prepackage && build  -p never --linux deb",
-        "package-snap": "npm run prepackage && build  -p never --linux snap",
-        "package-win": "npm run prepackage && build  -p never --windows",
+        "package-no-ugly": "electron-builder -p never",
+        "package-deb": "npm run prepackage && electron-builder  -p never --linux deb",
+        "package-snap": "npm run prepackage && electron-builder  -p never --linux snap",
+        "package-win": "npm run prepackage && electron-builder  -p never --windows",
         "package-mac": "npm run prepackage && electron-builder  -p never --mac dmg",
         "postpackage": "node write_digest.js",
         "scam": "node scamParser.js"
@@ -97,9 +97,11 @@
             "!node_modules"
         ],
         "mac": {
-            "category": "public.app-category.finance"
+            "category": "public.app-category.finance",
+            "artifactName": "${productName}_${version}.${ext}"
         },
         "dmg": {
+            "artifactName": "${productName}_${version}.${ext}",
             "contents": [
                 {
                     "x": 130,
@@ -114,6 +116,7 @@
             ]
         },
         "win": {
+            "artifactName": "${productName}_${version}.${ext}",
             "target": [
                 {
                     "target": "nsis",
@@ -125,6 +128,7 @@
             ]
         },
         "linux": {
+            "artifactName": "${productName}_${version}.${ext}",
             "category": "Finance",
             "target": [
                 "deb",
