@@ -41,10 +41,10 @@ jobs:
                   echo "::set-output name=exehash::${{ hashFiles('build/binaries/**.exe') }}"
             - name: Create Body
               run: |
-                  sed -i -e "s/{TagName}/${{ github.ref_name }}/g" .github/release-drafter.yml
-                  sed -i -e "s/{DmgHash}/${{ steps.calc_hash.outputs.dmghash }}/g" .github/release-drafter.yml
-                  sed -i -e "s/{DebHash}/${{ steps.calc_hash.outputs.debhash }}/g" .github/release-drafter.yml
-                  sed -i -e "s/{ExeHash}/${{ steps.calc_hash.outputs.exehash }}/g" .github/release-drafter.yml
+                  sed -i -e "s/{TagName}/${{ github.ref_name }}/g" ./.github/release-drafter.yml
+                  sed -i -e "s/{DmgHash}/${{ steps.calc_hash.outputs.dmghash }}/g" ./.github/release-drafter.yml
+                  sed -i -e "s/{DebHash}/${{ steps.calc_hash.outputs.debhash }}/g" ./.github/release-drafter.yml
+                  sed -i -e "s/{ExeHash}/${{ steps.calc_hash.outputs.exehash }}/g" ./.github/release-drafter.yml
             - name: Create Release
               id: create_release
               uses: release-drafter/release-drafter@v5
