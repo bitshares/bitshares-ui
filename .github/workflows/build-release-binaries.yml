@@ -41,12 +41,11 @@ jobs:
                   echo "::set-output name=exehash::${{ hashFiles('build/binaries/**.exe') }}"
             - name: Create Body
               run: |
-                  sed -i'.back' "s#{TagName}#${{ github.ref_name }}#g" ./.github/release-drafter.yml
-                  sed -i'.back' "s#{DmgHash}#${{ steps.calc_hash.outputs.dmghash }}#g" ./.github/release-drafter.yml
-                  sed -i'.back' "s#{DebHash}#${{ steps.calc_hash.outputs.debhash }}#g" ./.github/release-drafter.yml
-                  sed -i'.back' "s#{ExeHash}#${{ steps.calc_hash.outputs.exehash }}#g" ./.github/release-drafter.yml
-                  cat ./.github/release-drafter.yml
-                  cat release-drafter.yml
+                  sed -i'.bak' "s#{TagName}#${{ github.ref_name }}#g" ./.github/release-drafter.yml
+                  sed -i'.bak' "s#{DmgHash}#${{ steps.calc_hash.outputs.dmghash }}#g" ./.github/release-drafter.yml
+                  sed -i'.bak' "s#{DebHash}#${{ steps.calc_hash.outputs.debhash }}#g" ./.github/release-drafter.yml
+                  sed -i'.bak' "s#{ExeHash}#${{ steps.calc_hash.outputs.exehash }}#g" ./.github/release-drafter.yml
+                  rm ./.github/release-drafter.yml.bak
             - name: Create Release
               id: create_release
               uses: release-drafter/release-drafter@v5
