@@ -36,9 +36,9 @@ jobs:
             - name: Calc hash
               id: calc_hash
               run: |
-                  echo "::set-output name=dmghash::${{ hashFiles('build/binaries/BitShares_${{ github.ref_name }}.dmg') }}"
-                  echo "::set-output name=debhash::${{ hashFiles('build/binaries/BitShares_${{ github.ref_name }}.deb') }}"
-                  echo "::set-output name=exehash::${{ hashFiles('build/binaries/BitShares_${{ github.ref_name }}.exe') }}"
+                  echo "::set-output name=dmghash::${{ hashFiles('build/binaries/**.dmg') }}"
+                  echo "::set-output name=debhash::${{ hashFiles('build/binaries/**.deb') }}"
+                  echo "::set-output name=exehash::${{ hashFiles('build/binaries/**.exe') }}"
             - name: Create Body
               run: |
                   sed -i -e "s/{TagName}/${{ github.ref_name }}/g" .github/release-drafter.yml
