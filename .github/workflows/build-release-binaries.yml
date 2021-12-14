@@ -46,6 +46,8 @@ jobs:
                   sed -i'.bak' "s#{DebHash}#${{ steps.calc_hash.outputs.debhash }}#g" ./.github/release-drafter.yml
                   sed -i'.bak' "s#{ExeHash}#${{ steps.calc_hash.outputs.exehash }}#g" ./.github/release-drafter.yml
                   rm ./.github/release-drafter.yml.bak
+            - name: Check release config
+              run: cat ./.github/release-drafter.yml
             - name: Create Release
               id: create_release
               uses: release-drafter/release-drafter@v5
