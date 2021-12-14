@@ -96,7 +96,7 @@ $foundation-colors: (
         font-family: $body-font-family;
         font-weight: $body-font-weight;
         font-style: $body-font-style;
-        line-height: 1;
+        line-height: 1.2;
         position: relative;
 
         @if $body-antialiased {
