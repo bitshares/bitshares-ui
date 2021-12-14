@@ -49,10 +49,16 @@ module.exports = function(env) {
     ];
 
     // OUTPUT PATH
-    var outputPath = path.join(root_dir, "assets");
+    var outputPath = path.join(root_dir, "assets").replace(/\\/g, "/");
 
     // COMMON PLUGINS
-    const baseUrl = env.electron ? "./" : "baseUrl" in env ? env.baseUrl : "/";
+    const baseUrl = env.electron
+        ? "./"
+        : "baseUrl" in env
+        ? env.baseUrl === "false"
+            ? ""
+            : env.baseUrl
+        : "/";
 
     /*
      * moment and react-intl include tons of locale files, use a regex and
@@ -156,11 +162,10 @@ module.exports = function(env) {
         new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: path.join(
-                        root_dir,
-                        "app",
-                        "assets",
-                        "locales",
+                    from: path.posix.join(
+                        path
+                            .join(root_dir, "app", "assets", "locales")
+                            .replace(/\\/g, "/"),
                         "*.json"
                     ),
                     to: path.join(outputPath, "[name][ext]"),
