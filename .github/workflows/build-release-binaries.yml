@@ -36,25 +36,22 @@ jobs:
             - name: Calc hash
               id: calc_hash
               run: |
-                  echo "::set-output name=dmghash::${{ hashFiles('build/binaries/**.dmg') }}"
-                  echo "::set-output name=debhash::${{ hashFiles('build/binaries/**.deb') }}"
-                  echo "::set-output name=exehash::${{ hashFiles('build/binaries/**.exe') }}"
+                  echo "::set-output name=dmghash::${{ hashFiles('build/binaries/BitShares_${{ github.ref_name }}.dmg') }}"
+                  echo "::set-output name=debhash::${{ hashFiles('build/binaries/BitShares_${{ github.ref_name }}.deb') }}"
+                  echo "::set-output name=exehash::${{ hashFiles('build/binaries/BitShares_${{ github.ref_name }}.exe') }}"
             - name: Create Body
               run: |
-                  sed -i -e "s/{TagName}/${{ github.ref_name }}/g" release_template.md
-                  sed -i -e "s/{DmgHash}/${{ steps.calc_hash.outputs.dmghash }}/g" release_template.md
-                  sed -i -e "s/{DebHash}/${{ steps.calc_hash.outputs.debhash }}/g" release_template.md
-                  sed -i -e "s/{ExeHash}/${{ steps.calc_hash.outputs.exehash }}/g" release_template.md
+                  sed -i -e "s/{TagName}/${{ github.ref_name }}/g" .github/release-drafter.yml
+                  sed -i -e "s/{DmgHash}/${{ steps.calc_hash.outputs.dmghash }}/g" .github/release-drafter.yml
+                  sed -i -e "s/{DebHash}/${{ steps.calc_hash.outputs.debhash }}/g" .github/release-drafter.yml
+                  sed -i -e "s/{ExeHash}/${{ steps.calc_hash.outputs.exehash }}/g" .github/release-drafter.yml
             - name: Create Release
               id: create_release
-              uses: actions/create-release@v1.1.4
+              uses: release-drafter/release-drafter@v5
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
               with:
-                  tag_name: ${{ github.ref_name }}
-                  release_name: Release ${{ github.ref_name }}
-                  body_path: release_template.md
-                  draft: true
+                  config-name: release-drafter.yml
             - name: Upload dmg
               uses: actions/upload-release-asset@v1.0.2
               env:
