@@ -148,7 +148,7 @@ export const settingsAPIs = {
             contact: "telegram:BrianZhang"
         },
         {
-            url: "wss://api.weaccount.cn",
+            url: "wss://api.bts.btspp.io:10100",
             region: "Eastern Asia",
             country: "China",
             location: "Hangzhou",
