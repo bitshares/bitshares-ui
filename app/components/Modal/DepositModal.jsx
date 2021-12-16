@@ -214,7 +214,21 @@ class DepositModalContent extends DecimalChecker {
                     account +
                     gatewayStatus[selectedGateway].fixedMemo["append"];
             }
-
+            let tagText;
+            if (!!backingAsset.memoType && backingAsset.memoType === "tagid") {
+                let accountMap = ChainStore.getAccount(account, false);
+                tagText =
+                    gatewayStatus[selectedGateway].fixedMemo["prepend_btsid"] +
+                    accountMap.get("id").replace("1.2.", "") +
+                    gatewayStatus[selectedGateway].fixedMemo["append"];
+            } else {
+                tagText =
+                    gatewayStatus[selectedGateway].fixedMemo[
+                        "prepend_default"
+                    ] +
+                    account +
+                    gatewayStatus[selectedGateway].fixedMemo["append"];
+            }
             depositAddress = {
                 address: backingAsset.gatewayWallet,
                 memo: memoText,
