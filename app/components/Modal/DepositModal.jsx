@@ -484,7 +484,7 @@ class DepositModalContent extends DecimalChecker {
                                                 paddingBottom: "0.3rem"
                                             }}
                                             unsafe
-                                            content="gateway.tag"
+                                            content="gateway.purchase_notice_tag"
                                         />
                                         <div
                                             className="modal__highlight"
