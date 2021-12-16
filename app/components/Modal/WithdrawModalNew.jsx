@@ -62,6 +62,7 @@ class WithdrawModalNew extends React.Component {
             quantity: 0,
             address: "",
             memo: "",
+            tag: "",
             withdraw_publicKey: "",
             withdraw_publicKey_not_empty: false,
             userEstimate: null,
@@ -470,6 +471,7 @@ class WithdrawModalNew extends React.Component {
 
         stateObj.estimatedValue = 0;
         stateObj.memo = "";
+        stateObj.tag = "";
         stateObj.address = "";
 
         this.setState(stateObj);
@@ -613,6 +615,10 @@ class WithdrawModalNew extends React.Component {
     onMemoChanged(e) {
         this.setState({memo: e.target.value});
     }
+    
+    onTagChanged(e) {
+        this.setState({tag: e.target.value});
+    }
 
     onWithdrawPublicKeyChanged(e) {
         let new_withdraw_publicKey = e.target.value.trim();
@@ -655,6 +661,7 @@ class WithdrawModalNew extends React.Component {
             isBTS,
             gateFee,
             memo,
+            tag,
             btsAccount,
             feeAmount
         } = this.state;
@@ -740,7 +747,8 @@ class WithdrawModalNew extends React.Component {
                 (this.state.withdraw_publicKey_not_empty
                     ? ":" + this.state.withdraw_publicKey
                     : "") +
-                (memo ? ":" + new Buffer(memo, "utf-8") : "");
+                (memo ? ":" + new Buffer(memo, "utf-8") : "") +
+                (tag ? ":tag:" + new Buffer(tag, "utf-8") : "");
             to = intermediateAccount.get("id");
         }
 
@@ -1236,6 +1244,20 @@ class WithdrawModalNew extends React.Component {
                                 />
                             </div>
                         ) : null}
+                        
+                        {/*TAG*/}
+                        {isBTS ||
+                        (backingAsset && backingAsset.supportsMemos) ? (
+                            <div style={{marginBottom: "1em"}}>
+                                <label className="left-label">
+                                    <Translate content="modal.withdraw.tag" />
+                                </label>
+                                <Input.TextArea
+                                    value={state.tag}
+                                    onChange={this.onTagChanged.bind(this)}
+                                />
+                            </div>
+                        ) : null}
 
                         {/*FEE & GATEWAY FEE*/}
                         {assetAndGateway || isBTS ? (
@@ -1257,6 +1279,9 @@ class WithdrawModalNew extends React.Component {
                                                     this.state.address +
                                                     (this.state.memo
                                                         ? ":" + this.state.memo
+                                                        : "") +
+                                                        (this.state.tag
+                                                        ? ":" + this.state.tag
                                                         : "")
                                             }
                                         }}
