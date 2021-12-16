@@ -217,7 +217,8 @@ class DepositModalContent extends DecimalChecker {
 
             depositAddress = {
                 address: backingAsset.gatewayWallet,
-                memo: memoText
+                memo: memoText,
+                tag: tagText
             };
 
             this.setState({
