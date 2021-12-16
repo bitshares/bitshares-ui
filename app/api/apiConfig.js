@@ -1,7 +1,7 @@
 import {getFaucet, getTestFaucet} from "../branding";
 
 export const ioxbankAPIs = {
-    BASE: "https://ioxbank.com",
+    BASE: "https://api.ioxbank.com",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/active-wallets",
     TRADING_PAIRS: "/trading-pairs",
