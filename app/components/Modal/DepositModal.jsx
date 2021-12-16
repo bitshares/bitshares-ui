@@ -452,6 +452,34 @@ class DepositModalContent extends DecimalChecker {
                                     </div>
                                 </div>
                             ) : null}
+                            {depositAddress.tag ? (
+                                <div className="grid-block container-row">
+                                    <div style={{paddingRight: "1rem"}}>
+                                        <CopyButton
+                                            text={depositAddress.tag}
+                                            className={"copyIcon"}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Translate
+                                            component="div"
+                                            style={{
+                                                fontSize: "0.8rem",
+                                                fontWeight: "bold",
+                                                paddingBottom: "0.3rem"
+                                            }}
+                                            unsafe
+                                            content="gateway.tag"
+                                        />
+                                        <div
+                                            className="modal__highlight"
+                                            style={{wordBreak: "break-all"}}
+                                        >
+                                            {depositAddress.tag}
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : null}
                             {depositConfirmation ? (
                                 <div
                                     style={{
