@@ -1,0 +1,98 @@
+name: Release Bitshares-ui
+
+on:
+    push:
+        tags:
+            - "*.*.*"
+            # branches: [testaction]
+
+jobs:
+    build:
+        runs-on: macOS-latest
+
+        strategy:
+            matrix:
+                node-version: [16.13.x]
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - run: echo "PackageVersion=$(cat package.json | sed 's/,/\n/g' | grep '\"version\":' | sed 's/:/\n/g' | sed '1d' | sed 's/ //g' | sed 's/\"//g' | sed 's/}//g')" >> $GITHUB_ENV
+            - name: Update package.json
+              run: |
+                  sed -i -e "s/${{ env.PackageVersion }}/${{ github.ref_name }}/g" package.json
+            - run: yarn
+            - name: Build package
+              run: npm run prepackage
+            - name: Build dmg
+              run: ./node_modules/.bin/electron-builder -p never --mac dmg
+            - name: Build deb
+              run: ./node_modules/.bin/electron-builder -p never --linux deb
+            - name: Build exe
+              run: ./node_modules/.bin/electron-builder -p never --windows
+            - name: Calc hash
+              id: calc_hash
+              run: |
+                  echo "::set-output name=dmghash::${{ hashFiles('build/binaries/**.dmg') }}"
+                  echo "::set-output name=debhash::${{ hashFiles('build/binaries/**.deb') }}"
+                  echo "::set-output name=exehash::${{ hashFiles('build/binaries/**.exe') }}"
+            - name: Create Body
+              id: create_body
+              uses: xiangxn/generate_release_notes@v1
+              with:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  categories: |
+                      [{"title":"New features","labels":["feature","enhancement"]},{"title":"Bug fixes and improvements","labels":["bug","bugfix"]}]
+                  template: |
+                      Release Notes
+                      _________________________________
+
+                      $CHANGES
+
+                      Binaries for download
+                      --------
+                      | Platform | SHA256 Checksum |
+                      |---|---|
+                      |[Microsoft Windows](https://github.com/bitshares/bitshares-ui/releases/download/${{ github.ref_name }}/BitShares_${{ github.ref_name }}.exe)|`${{steps.calc_hash.outputs.exehash}}`|
+                      |[Mac](https://github.com/bitshares/bitshares-ui/releases/download/${{ github.ref_name }}/BitShares_${{ github.ref_name }}.dmg)|`${{steps.calc_hash.outputs.dmghash}}`|
+                      |[Linux](https://github.com/bitshares/bitshares-ui/releases/download/${{ github.ref_name }}/BitShares_${{ github.ref_name }}.deb)|`${{steps.calc_hash.outputs.debhash}}`|
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1.1.4
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+              with:
+                  tag_name: ${{ github.ref_name }}
+                  release_name: Release ${{ github.ref_name }}
+                  body: ${{ steps.create_body.outputs.body }}
+                  draft: true
+            - name: Upload dmg
+              uses: actions/upload-release-asset@v1.0.2
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./build/binaries/BitShares_${{ github.ref_name }}.dmg
+                  asset_name: BitShares_${{ github.ref_name }}.dmg
+                  asset_content_type: application/octet-stream
+            - name: Upload deb
+              uses: actions/upload-release-asset@v1.0.2
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./build/binaries/BitShares_${{ github.ref_name }}.deb
+                  asset_name: BitShares_${{ github.ref_name }}.deb
+                  asset_content_type: application/x-deb
+            - name: Upload exe
+              uses: actions/upload-release-asset@v1.0.2
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./build/binaries/BitShares_${{ github.ref_name }}.exe
+                  asset_name: BitShares_${{ github.ref_name }}.exe
+                  asset_content_type: application/octet-stream
