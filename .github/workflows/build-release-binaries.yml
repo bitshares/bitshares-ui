@@ -20,7 +20,8 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: ${{ matrix.node-version }}
-            - run: echo "PackageVersion=$(cat package.json | sed 's/,/\n/g' | grep '\"version\":' | sed 's/:/\n/g' | sed '1d' | sed 's/ //g' | sed 's/\"//g' | sed 's/}//g')" >> $GITHUB_ENV
+            - run: brew install jq
+            - run: echo "PackageVersion=$(cat package.json | jq '.version' | sed 's/\"//g')" >> $GITHUB_ENV
             - name: Update package.json
               run: |
                   sed -i -e "s/${{ env.PackageVersion }}/${{ github.ref_name }}/g" package.json
@@ -41,11 +42,17 @@ jobs:
                   echo "::set-output name=exehash::${{ hashFiles('build/binaries/**.exe') }}"
             - name: Create Body
               id: create_body
-              uses: xiangxn/generate_release_notes@v1
+              uses: bitshares/generate_release_notes@v1
               with:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   categories: |
-                      [{"title":"New features","labels":["feature","enhancement"]},{"title":"Bug fixes and improvements","labels":["bug","bugfix"]}]
+                      [{
+                        "title": "New features",
+                        "labels": ["feature", "enhancement"]
+                      }, {
+                        "title": "Bug fixes and improvements",
+                        "labels": ["bug", "bugfix"]
+                      }]
                   template: |
                       Release Notes
                       _________________________________
@@ -61,7 +68,7 @@ jobs:
                       |[Linux](https://github.com/bitshares/bitshares-ui/releases/download/${{ github.ref_name }}/BitShares_${{ github.ref_name }}.deb)|`${{steps.calc_hash.outputs.debhash}}`|
             - name: Create Release
               id: create_release
-              uses: actions/create-release@v1.1.4
+              uses: actions/create-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
               with:
@@ -70,7 +77,7 @@ jobs:
                   body: ${{ steps.create_body.outputs.body }}
                   draft: true
             - name: Upload dmg
-              uses: actions/upload-release-asset@v1.0.2
+              uses: actions/upload-release-asset@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -79,7 +86,7 @@ jobs:
                   asset_name: BitShares_${{ github.ref_name }}.dmg
                   asset_content_type: application/octet-stream
             - name: Upload deb
-              uses: actions/upload-release-asset@v1.0.2
+              uses: actions/upload-release-asset@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -88,7 +95,7 @@ jobs:
                   asset_name: BitShares_${{ github.ref_name }}.deb
                   asset_content_type: application/x-deb
             - name: Upload exe
-              uses: actions/upload-release-asset@v1.0.2
+              uses: actions/upload-release-asset@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
