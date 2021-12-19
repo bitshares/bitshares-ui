@@ -215,6 +215,12 @@ class DepositModalContent extends DecimalChecker {
                     accountMap.get("id").replace("1.2.", "") +
                     gatewayStatus[selectedGateway].fixedMemo["append"];
             } else {
+                memoText =
+                    gatewayStatus[selectedGateway].fixedMemo[
+                        "prepend_default"
+                    ] +
+                    account +
+                    gatewayStatus[selectedGateway].fixedMemo["append"];
                 tagText =
                     gatewayStatus[selectedGateway].fixedMemo[
                         "prepend_default"
