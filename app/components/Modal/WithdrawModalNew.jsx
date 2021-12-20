@@ -1233,7 +1233,7 @@ class WithdrawModalNew extends React.Component {
                         
                         {/*TAG*/}
                         {isBTS ||
-                        (backingAsset && backingAsset.supportsMemos) ? (
+                        (backingAsset && backingAsset.memoType === "tagid") ? (
                             <div style={{marginBottom: "1em"}}>
                                 <label className="left-label">
                                     <Translate content="modal.withdraw.tag" />
