@@ -28,7 +28,6 @@ class Markets extends React.Component {
 
     _setDimensions() {
         let height = this.refs.wrapper.offsetHeight;
-
         if (height !== this.state.height) {
             this.setState({height});
         }
