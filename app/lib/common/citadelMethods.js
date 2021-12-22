@@ -1,7 +1,7 @@
 import ls from "./localStorage";
 import {citadelAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
-const citadelStorage = new ls("");
+const citadelStorage = ls("");
 
 let fetchInProgess = {};
 let fetchCache = {};

@@ -27,7 +27,7 @@ let TRACE = false;
 
 let dictJson, AesWorker;
 if (__ELECTRON__) {
-    AesWorker = require("worker-loader?inline!workers/AesWorker");
+    AesWorker = require("worker-loader?inline=no-fallback!workers/AesWorker");
     dictJson = require("common/dictionary_en.json");
 }
 
