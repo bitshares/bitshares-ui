@@ -5,7 +5,7 @@ import ls from "common/localStorage";
 import {allowedGateway} from "../branding";
 
 const STORAGE_KEY = "__graphene__";
-let ss = new ls(STORAGE_KEY);
+let ss = ls(STORAGE_KEY);
 
 class GatewayStore {
     static isAllowed(backer) {
@@ -114,9 +114,9 @@ class GatewayStore {
                     return (
                         a &&
                         coins_by_type[a.outputCoinType] &&
-                        (coins_by_type[a.outputCoinType].walletType ===
+                        coins_by_type[a.outputCoinType].walletType ===
                             "bitshares2" && // Only use bitshares2 wallet types
-                            this.bridgeInputs.indexOf(a.inputCoinType) !== -1) // Only use coin types defined in bridgeInputs
+                            this.bridgeInputs.indexOf(a.inputCoinType) !== -1 // Only use coin types defined in bridgeInputs
                     );
                 })
                 .forEach(coin => {

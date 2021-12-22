@@ -18,7 +18,7 @@ import {Radio, Table, Select, Icon} from "bitshares-ui-style-guide";
 import {List} from "antd";
 import SearchInput from "../Utility/SearchInput";
 
-let accountStorage = new ls("__graphene__");
+let accountStorage = ls("__graphene__");
 
 class Assets extends React.Component {
     constructor(props) {
@@ -159,8 +159,8 @@ class Assets extends React.Component {
                         return a.symbol > b.symbol
                             ? 1
                             : a.symbol < b.symbol
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: item => {
                         return (
@@ -197,8 +197,8 @@ class Assets extends React.Component {
                         return a.currentSupply > b.currentSupply
                             ? 1
                             : a.currentSupply < b.currentSupply
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: (item, record) => {
                         return (
@@ -243,8 +243,8 @@ class Assets extends React.Component {
                         (description.market
                             ? description.market
                             : coreAsset
-                                ? coreAsset.get("symbol")
-                                : "BTS");
+                            ? coreAsset.get("symbol")
+                            : "BTS");
 
                     dataSource.push({
                         symbol: asset.symbol,
@@ -267,8 +267,8 @@ class Assets extends React.Component {
                         return a.symbol > b.symbol
                             ? 1
                             : a.symbol < b.symbol
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: item => {
                         return (
@@ -305,8 +305,8 @@ class Assets extends React.Component {
                         return a.currentSupply > b.currentSupply
                             ? 1
                             : a.currentSupply < b.currentSupply
-                                ? -1
-                                : 0;
+                            ? -1
+                            : 0;
                     },
                     render: (item, record) => {
                         return (
@@ -352,8 +352,8 @@ class Assets extends React.Component {
                         (description.market
                             ? description.market
                             : coreAsset
-                                ? coreAsset.get("symbol")
-                                : "BTS");
+                            ? coreAsset.get("symbol")
+                            : "BTS");
 
                     dataSource.push({
                         symbol: asset.symbol,
@@ -405,8 +405,8 @@ class Assets extends React.Component {
                         (description.market
                             ? description.market
                             : coreAsset
-                                ? coreAsset.get("symbol")
-                                : "BTS");
+                            ? coreAsset.get("symbol")
+                            : "BTS");
 
                     return {
                         asset,
@@ -500,9 +500,7 @@ class Assets extends React.Component {
                                             actions={[
                                                 <Link
                                                     className="button outline"
-                                                    to={`/market/${
-                                                        item.marketID
-                                                    }`}
+                                                    to={`/market/${item.marketID}`}
                                                 >
                                                     <Translate content="header.exchange" />
                                                 </Link>
@@ -519,10 +517,7 @@ class Assets extends React.Component {
                                                             }}
                                                         >
                                                             <Link
-                                                                to={`/asset/${
-                                                                    item.asset
-                                                                        .symbol
-                                                                }`}
+                                                                to={`/asset/${item.asset.symbol}`}
                                                             >
                                                                 <AssetName
                                                                     name={

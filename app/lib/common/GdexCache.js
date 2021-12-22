@@ -1,6 +1,6 @@
 import ss from "common/localStorage";
 
-const session = new ss("__gdex__user_");
+const session = ss("__gdex__user_");
 
 class GdexCache {
     constructor() {
