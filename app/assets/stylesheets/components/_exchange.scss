@@ -674,28 +674,28 @@ table thead tr th.mymarkets-header {
     padding-right: 0.25rem;
 }
 
-.blue-icon > svg > path {
+.blue-icon > svg path {
     fill: #2196f3 !important;
 }
 
-.gold-star > svg > path {
+.gold-star > svg path {
     fill: #cc9f00 !important;
 }
 
-.grey-star > svg > path,
-.grey-shuffle > svg > path {
+.grey-star > svg path,
+.grey-shuffle > svg path {
     fill: #878787 !important;
 }
 
-.gold-star:hover > svg > path {
+.gold-star:hover > svg path {
     fill: lighten(#cc9f00, 10%) !important;
 }
 
-.shuffle:hover > svg > path {
+.shuffle:hover > svg path {
     fill: lighten(#878787, 20%) !important;
 }
 
-.grey-star:hover > svg > path {
+.grey-star:hover > svg path {
     fill: #cc9f00 !important;
 }
 

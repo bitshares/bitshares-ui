@@ -250,7 +250,6 @@ module.exports = function(env) {
             app: env.prod
                 ? path.resolve(root_dir, "app/Main.js")
                 : [
-                      "webpack-hot-middleware/client",
                       "react-hot-loader/patch",
                       path.resolve(root_dir, "app/Main.js")
                   ]
