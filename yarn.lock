@@ -1016,9 +1016,9 @@
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.6.tgz#d5e0706cf8c6acd8c6032f8d54070af261bbbb2f"
   integrity sha512-ws57AidsDvREKrZKYffXddNkyaF14iHNHm8VQnZH6t99E8gczjNN0GpvcGny0imC80yQ0tHz1xVUKk/KFQSUyA==
 
-"@electron/get@^1.13.0":
+"@electron/get@^1.0.1":
   version "1.13.1"
-  resolved "https://registry.npmjs.org/@electron/get/-/get-1.13.1.tgz#42a0aa62fd1189638bd966e23effaebb16108368"
+  resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.13.1.tgz#42a0aa62fd1189638bd966e23effaebb16108368"
   integrity sha512-U5vkXDZ9DwXtkPqlB45tfYnnYBN8PePp1z/XDCupnSpdrxT8/ThCv9WCwPLf9oqiSGZTkH6dx2jDUPuoXpjkcA==
   dependencies:
     debug "^4.1.1"
@@ -1413,10 +1413,10 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-16.11.12.tgz#ac7fb693ac587ee182c3780c26eb65546a1a3c10"
   integrity sha512-+2Iggwg7PxoO5Kyhvsq9VarmPbIelXP070HMImEpbtGCoyWNINQj4wzjbQCXzdHTRXnqufutJb5KAURZANNBAw==
 
-"@types/node@^14.6.2":
-  version "14.18.0"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.18.0.tgz#98df2397f6936bfbff4f089e40e06fa5dd88d32a"
-  integrity sha512-0GeIl2kmVMXEnx8tg1SlG6Gg8vkqirrW752KqolYo1PHevhhZN3bhJ67qHj+bQaINhX0Ra3TlWwRvMCd9iEfNQ==
+"@types/node@^12.0.12":
+  version "12.20.38"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.38.tgz#74801983c0558a7a31a4ead18bce2edded2b0e2f"
+  integrity sha512-NxmtBRGipjx1B225OeMdI+CQmLbYqvvmYbukDTJGDgzIDgPQ1EcjGmYxGhOk5hTBqeB558S6RgHSpq2iiqifAQ==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -4177,13 +4177,13 @@ electron-to-chromium@^1.3.896:
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.15.tgz#4bd144d9d13f8b375c65e1a593e7f4a90bd01b90"
   integrity sha512-WDw2IUL3k4QpbzInV3JZK+Zd1NjWJPDZ28oUSchWb/kf6AVj7/niaAlgcJlvojFa1d7pJSyQ/KSZsEtq5W7aGQ==
 
-electron@16.0.4:
-  version "16.0.4"
-  resolved "https://registry.npmjs.org/electron/-/electron-16.0.4.tgz#87dfe21d17608537fc6df292c437362297566a73"
-  integrity sha512-IptwmowvMP1SFOmZLh6rrURwfnOxbDBXBRBcaOdfBM5I+B9mgtdNwzNC3ymFFNzEkZUwdOyg9fu3iyjAAQIQgw==
+electron@11.5.0:
+  version "11.5.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-11.5.0.tgz#f1650543b9d8f2047d3807755bdb120153ed210f"
+  integrity sha512-WjNDd6lGpxyiNjE3LhnFCAk/D9GIj1rU3GSDealVShhkkkPR3Vh4q8ErXGDl1OAO/faomVa10KoFPUN/pLbNxg==
   dependencies:
-    "@electron/get" "^1.13.0"
-    "@types/node" "^14.6.2"
+    "@electron/get" "^1.0.1"
+    "@types/node" "^12.0.12"
     extract-zip "^1.0.3"
 
 element-resize-event@^2.0.9:
