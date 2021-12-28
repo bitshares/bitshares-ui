@@ -107,6 +107,12 @@ module.exports = function(env) {
                     to: "charting_library"
                 }
             ]
+        }),
+        new webpack.ProvidePlugin({
+            Buffer: ["buffer", "Buffer"]
+        }),
+        new webpack.ProvidePlugin({
+            process: ["process", "process"]
         })
     ];
     if (env.prod) {
@@ -461,7 +467,8 @@ module.exports = function(env) {
                 crypto: require.resolve("crypto-browserify"),
                 constants: require.resolve("constants-browserify"),
                 stream: require.resolve("stream-browserify"),
-                path: require.resolve("path-browserify")
+                path: require.resolve("path-browserify"),
+                buffer: require.resolve("buffer")
             }
         },
         plugins: plugins
