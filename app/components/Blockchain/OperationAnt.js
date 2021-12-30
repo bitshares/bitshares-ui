@@ -50,6 +50,7 @@ class Operation {
         let column = null,
             color = "info";
         let memoComponent = null;
+        let o = null;
 
         switch (
             ops[op[0]] // For a list of trx types, see chain_types.coffee
@@ -92,7 +93,7 @@ class Operation {
 
             case "limit_order_create":
                 color = "warning";
-                let o = op[1];
+                o = op[1];
                 /*
                 marketName = OPEN.ETH_USD
                 if (!inverted) (default)
@@ -292,8 +293,8 @@ class Operation {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                            ? "whitelisted_by"
-                            : "blacklisted_by";
+                        ? "whitelisted_by"
+                        : "blacklisted_by";
                 column = (
                     <span>
                         <TranslateWithLinks
