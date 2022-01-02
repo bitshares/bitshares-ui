@@ -5,7 +5,7 @@ import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import iconsMap from "../../assets/icons/icons-loader.js";
 
-require("./icon.scss");
+import "./icon.scss";
 
 class Icon extends React.Component {
     shouldComponentUpdate(np) {

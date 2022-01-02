@@ -1,6 +1,6 @@
 import WalletDb from "stores/WalletDb";
 import ls from "common/localStorage";
-const ss = new ls("__bts__");
+const ss = ls("__bts__");
 
 class CitadelDepositAddressCache {
     constructor() {

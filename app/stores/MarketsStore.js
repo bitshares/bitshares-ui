@@ -32,7 +32,7 @@ const nullPrice = {
     }
 };
 
-let marketStorage = new ls("__graphene__");
+let marketStorage = ls("__graphene__");
 
 class MarketsStore {
     constructor() {

@@ -1,6 +1,6 @@
 import ls from "./localStorage";
 import {xbtsxAPIs} from "api/apiConfig";
-const xbtsxStorage = new ls("");
+const xbtsxStorage = ls("");
 
 export function fetchCoinList(url = xbtsxAPIs.BASE + xbtsxAPIs.COINS_LIST) {
     return fetch(url, {method: "post"})
