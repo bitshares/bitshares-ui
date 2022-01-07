@@ -324,14 +324,6 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss://api.cnvote.vip:888/",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Zhejiang",
-            operator: "Witness: ioex",
-            contact: "wechat:xiaoyuan_409"
-        },
-        {
             url: "wss://hongkong.bitshares.im/ws",
             region: "East Asia",
             country: "China",
