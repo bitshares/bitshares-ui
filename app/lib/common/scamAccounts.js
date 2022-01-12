@@ -1871,6 +1871,8 @@ export const scamAccountsOther = [
     "1.2.1620632",
     "update-account",
     "1.2.1679807",
+    "mekong6.protocol-release",
+    "1.2.1809989",
     "bitcoin.com-work",
     "1.2.1682875",
     "condor1",
