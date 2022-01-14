@@ -193,7 +193,6 @@
         "react-autocomplete": "^1.7.2",
         "react-clipboard.js": "^1.0.1",
         "react-copy-to-clipboard": "^5.0.2",
-        "react-datepicker2": "git+https://github.com/bitshares/react-datepicker2.git#9d4c2c28a23c970badcf765c35c5493d5a49afde",
         "react-debounce-render": "^7.0.0",
         "react-dom": "^16.11.0",
         "react-foundation-apps": "git+https://github.com/bitshares/react-foundation-apps.git",

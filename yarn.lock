@@ -3447,7 +3447,7 @@ create-hmac@1.1.7, create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-create-react-class@15.x, create-react-class@^15.5.2, create-react-class@^15.5.3, create-react-class@^15.5.x, create-react-class@^15.6.0, create-react-class@^15.6.3:
+create-react-class@^15.5.2, create-react-class@^15.5.3, create-react-class@^15.6.0, create-react-class@^15.6.3:
   version "15.7.0"
   resolved "https://registry.npmjs.org/create-react-class/-/create-react-class-15.7.0.tgz#7499d7ca2e69bb51d13faf59bd04f0c65a1d6c1e"
   integrity sha512-QZv4sFWG9S5RUvkTYWbflxeZX+JG7Cz0Tn33rQBJ+WFQTqTfUTjMjiv9tnfXazjsO5r0KhPs+AqCjyrQX6h2ng==
@@ -8751,7 +8751,7 @@ raw-loader@~0.5.1:
   resolved "https://registry.npmjs.org/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
   integrity sha1-DD0L6u2KAclm2Xh793goElKpeao=
 
-rc-align@2.x, rc-align@^2.4.0, rc-align@^2.4.1:
+rc-align@^2.4.0, rc-align@^2.4.1:
   version "2.4.5"
   resolved "https://registry.npmjs.org/rc-align/-/rc-align-2.4.5.tgz#c941a586f59d1017f23a428f0b468663fb7102ab"
   integrity sha512-nv9wYUYdfyfK+qskThf4BQUSIadeI/dCsfaMZfNEoxm9HwOIioQ+LyqmMK6jWHAZQgOzMLaqawhuBXlF63vgjw==
@@ -9132,18 +9132,6 @@ rc-tree@~2.1.0:
     react-lifecycles-compat "^3.0.4"
     warning "^4.0.3"
 
-rc-trigger@^1.9.1:
-  version "1.11.5"
-  resolved "https://registry.npmjs.org/rc-trigger/-/rc-trigger-1.11.5.tgz#f88f9f84e0e79f8e0ef1c8d1bf8ac2208b715620"
-  integrity sha512-MBuUPw1nFzA4K7jQOwb7uvFaZFjXGd00EofUYiZ+l/fgKVq8wnLC0lkv36kwqM7vfKyftRo2sh7cWVpdPuNnnw==
-  dependencies:
-    babel-runtime "6.x"
-    create-react-class "15.x"
-    prop-types "15.x"
-    rc-align "2.x"
-    rc-animate "2.x"
-    rc-util "4.x"
-
 rc-trigger@^2.2.0, rc-trigger@^2.2.2, rc-trigger@^2.3.0, rc-trigger@^2.5.1, rc-trigger@^2.5.4, rc-trigger@^2.6.2:
   version "2.6.5"
   resolved "https://registry.npmjs.org/rc-trigger/-/rc-trigger-2.6.5.tgz#140a857cf28bd0fa01b9aecb1e26a50a700e9885"
@@ -9180,7 +9168,7 @@ rc-upload@~2.9.1:
     prop-types "^15.5.7"
     warning "4.x"
 
-rc-util@4.x, rc-util@^4.0.4, rc-util@^4.1.1, rc-util@^4.13.0, rc-util@^4.15.3, rc-util@^4.15.7, rc-util@^4.16.1, rc-util@^4.3.0, rc-util@^4.4.0, rc-util@^4.5.0, rc-util@^4.5.1, rc-util@^4.6.0:
+rc-util@^4.0.4, rc-util@^4.1.1, rc-util@^4.13.0, rc-util@^4.15.3, rc-util@^4.15.7, rc-util@^4.16.1, rc-util@^4.3.0, rc-util@^4.4.0, rc-util@^4.5.0, rc-util@^4.5.1, rc-util@^4.6.0:
   version "4.21.1"
   resolved "https://registry.npmjs.org/rc-util/-/rc-util-4.21.1.tgz#88602d0c3185020aa1053d9a1e70eac161becb05"
   integrity sha512-Z+vlkSQVc1l8O2UjR3WQ+XdWlhj5q9BMQNLk2iOBch75CqPfrJyGtcWMcnhRlNuDu0Ndtt4kLVO8JI8BrABobg==
@@ -9224,17 +9212,6 @@ react-copy-to-clipboard@^5.0.2:
   dependencies:
     copy-to-clipboard "^3"
     prop-types "^15.5.8"
-
-"react-datepicker2@git+https://github.com/bitshares/react-datepicker2.git#9d4c2c28a23c970badcf765c35c5493d5a49afde":
-  version "1.0.0-alpha2"
-  resolved "git+https://github.com/bitshares/react-datepicker2.git#9d4c2c28a23c970badcf765c35c5493d5a49afde"
-  dependencies:
-    classnames "^2.2.5"
-    moment "^2.22.2"
-    prop-types "^15.6.1"
-    rc-trigger "^1.9.1"
-    react-onclickoutside "^5.9.0"
-    react-tether "^0.6.1"
 
 react-debounce-render@^7.0.0:
   version "7.0.0"
@@ -9354,13 +9331,6 @@ react-notification-system@^0.4.0:
     object-assign "^4.0.1"
     prop-types "^15.5.6"
 
-react-onclickoutside@^5.9.0:
-  version "5.11.1"
-  resolved "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-5.11.1.tgz#00314e52567cf55faba94cabbacd119619070623"
-  integrity sha1-ADFOUlZ89V+rqUyrus0RlhkHBiM=
-  dependencies:
-    create-react-class "^15.5.x"
-
 react-perf-devtool@^3.1.8:
   version "3.1.8"
   resolved "https://registry.npmjs.org/react-perf-devtool/-/react-perf-devtool-3.1.8.tgz#ae5c369b3b73f5c71de8afb5257ae6f90c953440"
@@ -9448,14 +9418,6 @@ react-sticky-table@1.2.0:
   integrity sha512-e+1Xly2UwIPG8Fe6WHLkrDwxvc5jispMOXN5MLp6cBUKO2k3rEVopN2iU778pxezDTK1hOU5uZTieQgLYUBl8Q==
   dependencies:
     element-resize-event "^2.0.9"
-
-react-tether@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.npmjs.org/react-tether/-/react-tether-0.6.1.tgz#de64dd81a5e40053a9f275c4fef0beb0877b3e4e"
-  integrity sha512-/1o2d77RyL78S1IjS1+yGMTKSldYMBVtu4H20zNIC9eAGsgA/KMxdLRcE3k32wj4TWCsVMPDnxeTokHuVWNLag==
-  dependencies:
-    prop-types "^15.5.8"
-    tether "^1.4.3"
 
 react-tooltip@^3.11.6:
   version "3.11.6"
@@ -10858,11 +10820,6 @@ tether@^0.6.5:
   version "0.6.5"
   resolved "https://registry.npmjs.org/tether/-/tether-0.6.5.tgz#bb3cd4be15f95ac2b9b4a9952b3b1a95cf5c1242"
   integrity sha1-uzzUvhX5WsK5tKmVKzsalc9cEkI=
-
-tether@^1.4.3:
-  version "1.4.7"
-  resolved "https://registry.npmjs.org/tether/-/tether-1.4.7.tgz#d56a818590d8fe72e387f77a67f93ab96d8e1fb2"
-  integrity sha512-Z0J1aExjoFU8pybVkQAo/vD2wfSO63r+XOPfWQMC5qtf1bI7IWqNk4MiyBcgvvnY8kqnY06dVdvwTK2S3PU/Fw==
 
 text-segmentation@^1.0.2:
   version "1.0.2"
