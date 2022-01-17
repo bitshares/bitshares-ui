@@ -1,3 +1,4 @@
+@use "sass:math";
 /*
   FORMS
   -----
@@ -244,7 +245,7 @@ $meter-radius: 0 !default;
     // Range slider
     // - - - - - - - - - - - - - - - - - - - - - - - - -
     input[type="range"] {
-        $margin: ($slider-thumb-height - $slider-height) / 2;
+        $margin: math.div(($slider-thumb-height - $slider-height), 2);
 
         @include no-appearance;
         display: block;

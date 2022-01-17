@@ -1,3 +1,4 @@
+@use "sass:math";
 // Foundation for Apps
 //
 // BREAKPOINTS
@@ -63,7 +64,7 @@ $breakpoint-classes: (small medium large) !default;
                     @if $next-bp == null {
                         $bpMax: null;
                     } @else {
-                        $bpMax: $next-bp - (1/16);
+                        $bpMax: $next-bp - math.div(1, 16);
                     }
                 }
                 $bp: map-get($breakpoints, $bp);

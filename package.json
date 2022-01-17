@@ -143,12 +143,12 @@
         }
     },
     "dependencies": {
-        "alt": "git+https://github.com/bitshares/alt.git#b6b42ceb790ca321402e9add95b9f77af8a7657d",
-        "alt-container": "git+https://github.com/bitshares/alt-container.git#cf4e2c690a54e49fc9fe2dc99ab8816e6c3e5a86",
-        "alt-react": "git+https://github.com/bitshares/alt-react.git#d91addef51f58e41e9857ebb0dd9177cfbd3b583",
+        "alt": "https://github.com/bitshares/alt.git",
+        "alt-container": "https://github.com/bitshares/alt-container.git",
+        "alt-react": "https://github.com/bitshares/alt-react.git",
         "bignumber.js": "^4.0.0",
-        "bitshares-report": "git+https://github.com/bitshares/bitshares-report.git#bba397fc7b4eb903d1ca109ac33301e9d2e2d753",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#a17a9f6a89932f288a543b1922af0107aea06218",
+        "bitshares-report": "https://github.com/bitshares/bitshares-report.git",
+        "bitshares-ui-style-guide": "https://github.com/bitshares/bitshares-ui-style-guide.git",
         "bitsharesjs": "^5.0.0",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
