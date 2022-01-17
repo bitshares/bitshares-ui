@@ -90,7 +90,7 @@ class InvoicePay extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
+    UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
         if (this.state.pay_from_name == null && this.props.currentAccount) {
             // check if current account has already paid
             let paymentOperation = this._findPayment();
@@ -441,9 +441,7 @@ class InvoicePay extends React.Component {
                 invoice.to !== this.state.pay_from_name
             ) {
                 qrcode =
-                    `bitshares:operation/transfer?to=${invoice.to}&from=${
-                        this.state.pay_from_name
-                    }&asset=${asset}&amount=${total_amount}` +
+                    `bitshares:operation/transfer?to=${invoice.to}&from=${this.state.pay_from_name}&asset=${asset}&amount=${total_amount}` +
                     (invoice.memo ? `&memo=${invoice.memo}` : "");
             }
         }

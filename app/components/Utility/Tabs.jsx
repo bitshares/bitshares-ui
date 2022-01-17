@@ -136,7 +136,7 @@ class Tabs extends React.Component {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let nextSetting = nextProps.viewSettings.get(nextProps.setting);
         if (nextSetting !== this.props.viewSettings.get(this.props.setting)) {
             this.setState({
@@ -261,17 +261,14 @@ class Tabs extends React.Component {
     }
 }
 
-Tabs = connect(
-    Tabs,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {viewSettings: SettingsStore.getState().viewSettings};
-        }
+Tabs = connect(Tabs, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {viewSettings: SettingsStore.getState().viewSettings};
     }
-);
+});
 
 Tabs = withRouter(Tabs);
 

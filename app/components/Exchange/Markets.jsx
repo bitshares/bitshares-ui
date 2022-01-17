@@ -11,7 +11,7 @@ class Markets extends React.Component {
         this._setDimensions = this._setDimensions.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         window.addEventListener("resize", this._setDimensions, {
             capture: false,
             passive: true

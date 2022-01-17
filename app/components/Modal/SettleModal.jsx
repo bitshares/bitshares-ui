@@ -142,7 +142,7 @@ class ModalContent extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             !!np.asset &&
             !!this.props.asset &&

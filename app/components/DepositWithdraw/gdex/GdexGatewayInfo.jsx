@@ -129,11 +129,11 @@ class GdexGatewayInfo extends React.Component {
             });
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.getDepositAddress();
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             np.user_id !== this.props.user_id ||
             np.action !== this.props.action ||

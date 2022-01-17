@@ -30,11 +30,11 @@ class MarketsTable extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.update(nextProps);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.update();
         ChainStore.subscribe(this.update);
     }
@@ -230,8 +230,8 @@ class MarketsTable extends React.Component {
                         parseFloat(record.hour_24) > 0
                             ? "change-up"
                             : parseFloat(record.hour_24) < 0
-                                ? "change-down"
-                                : "";
+                            ? "change-down"
+                            : "";
                     return (
                         <span
                             style={{whiteSpace: "nowrap", textAlign: "right"}}
@@ -582,24 +582,21 @@ class MarketsTable extends React.Component {
     }
 }
 
-export default connect(
-    MarketsTable,
-    {
-        listenTo() {
-            return [SettingsStore, MarketsStore];
-        },
-        getProps() {
-            let {marketDirections, hiddenMarkets} = SettingsStore.getState();
-            return {
-                marketDirections,
-                hiddenMarkets,
-                allMarketStats: MarketsStore.getState().allMarketStats,
-                starredMarkets: SettingsStore.getState().starredMarkets,
-                onlyLiquid: SettingsStore.getState().viewSettings.get(
-                    "onlyLiquid",
-                    true
-                )
-            };
-        }
+export default connect(MarketsTable, {
+    listenTo() {
+        return [SettingsStore, MarketsStore];
+    },
+    getProps() {
+        let {marketDirections, hiddenMarkets} = SettingsStore.getState();
+        return {
+            marketDirections,
+            hiddenMarkets,
+            allMarketStats: MarketsStore.getState().allMarketStats,
+            starredMarkets: SettingsStore.getState().starredMarkets,
+            onlyLiquid: SettingsStore.getState().viewSettings.get(
+                "onlyLiquid",
+                true
+            )
+        };
     }
-);
+});

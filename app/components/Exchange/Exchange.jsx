@@ -504,7 +504,7 @@ class Exchange extends React.Component {
         });
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         window.addEventListener("resize", this._setDimensions, {
             capture: false,
             passive: true
@@ -714,7 +714,7 @@ class Exchange extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this._initPsContainer();
         if (
             nextProps.quoteAsset !== this.props.quoteAsset ||

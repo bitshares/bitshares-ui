@@ -46,7 +46,7 @@ class AccountOverview extends React.Component {
         });
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._checkMarginStatus();
     }
 
@@ -61,7 +61,7 @@ class AccountOverview extends React.Component {
         });
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.account !== this.props.account) {
             this._checkMarginStatus(np);
         }
@@ -183,7 +183,7 @@ class AccountOverview extends React.Component {
                 let balanceObject = ChainStore.getObject(a);
                 if (
                     balanceObject &&
-                    (!balanceObject.get("balance") && !orders[index])
+                    !balanceObject.get("balance") && !orders[index]
                 ) {
                     return false;
                 } else {

@@ -24,7 +24,7 @@ export default class BrainkeyInput extends Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (!__ELECTRON__) {
             fetch(`${__BASE_URL__}dictionary.json`)
                 .then(reply => {

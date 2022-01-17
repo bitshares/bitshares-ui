@@ -52,7 +52,7 @@ class AccountLogin extends React.Component {
         }
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.passwordAccount && !this.state.accountName) {
             this.setState({
                 accountName: np.passwordAccount

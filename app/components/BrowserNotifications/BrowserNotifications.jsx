@@ -16,13 +16,13 @@ class BrowserNotifications extends React.Component {
         settings: PropTypes.object
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (Notify.needsPermission) {
             Notify.requestPermission();
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // if browser notifications disabled on settings we can skip all checks
         if (!nextProps.settings.get("browser_notifications").allow) {
             console.log("browser notifications disabled by settings");
@@ -120,15 +120,15 @@ class BrowserNotifications extends React.Component {
 
     notifyUsingBrowserNotification(params = {}) {
         /*
-        * params.title (string) - title of notification
-        * params.body (string) - body of notification
-        * params.showTimeout (number) - number of seconds to show the notification
-        * params.closeOnClick (boolean) - close the notification when clicked. Useful in chrome where the notification remains open until the timeout or the x is clicked.
-        * params.onNotifyShow (function) - callback when notification is shown
-        * params.onNotifyClose (function) - callback when notification is closed
-        * params.onNotifyClick (function) - callback when notification is clicked
-        * params.onNotifyError (function) - callback when notification throws an error
-        * */
+         * params.title (string) - title of notification
+         * params.body (string) - body of notification
+         * params.showTimeout (number) - number of seconds to show the notification
+         * params.closeOnClick (boolean) - close the notification when clicked. Useful in chrome where the notification remains open until the timeout or the x is clicked.
+         * params.onNotifyShow (function) - callback when notification is shown
+         * params.onNotifyClose (function) - callback when notification is closed
+         * params.onNotifyClick (function) - callback when notification is clicked
+         * params.onNotifyError (function) - callback when notification throws an error
+         * */
 
         if (!params.title && !params.body) return null;
 

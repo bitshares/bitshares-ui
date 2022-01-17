@@ -62,7 +62,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         this.props.hideModal();
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._getDepositAddress(this.props);
     }
 
@@ -71,7 +71,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         this._estimateOutput(this.props);
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             np.inputCoinType !== this.props.inputCoinType ||
             np.outputCoinType !== this.props.outputCoinType
@@ -641,22 +641,19 @@ class StoreWrapper extends React.Component {
     }
 }
 
-StoreWrapper = connect(
-    StoreWrapper,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                preferredBridge: SettingsStore.getState().viewSettings.get(
-                    "preferredBridge",
-                    "btc"
-                )
-            };
-        }
+StoreWrapper = connect(StoreWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            preferredBridge: SettingsStore.getState().viewSettings.get(
+                "preferredBridge",
+                "btc"
+            )
+        };
     }
-);
+});
 
 export default class SimpleDepositBlocktradesBridgeModal extends React.Component {
     render() {

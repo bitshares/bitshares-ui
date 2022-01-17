@@ -51,7 +51,7 @@ class CreateAccountPassword extends React.Component {
         this.scrollToInput = this.scrollToInput.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (!WalletDb.getWallet()) {
             SettingsActions.changeSetting({
                 setting: "passwordLogin",
@@ -270,7 +270,9 @@ class CreateAccountPassword extends React.Component {
                                 title={
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: counterpart.translate("tooltip.generate")
+                                            __html: counterpart.translate(
+                                                "tooltip.generate"
+                                            )
                                         }}
                                     />
                                 }
@@ -588,9 +590,7 @@ class CreateAccountPassword extends React.Component {
                             </td>
                             <td>
                                 <Link
-                                    to={`/account/${
-                                        this.state.accountName
-                                    }/overview`}
+                                    to={`/account/${this.state.accountName}/overview`}
                                 >
                                     <Translate content="wallet.link_account" />
                                 </Link>
@@ -703,14 +703,11 @@ class CreateAccountPassword extends React.Component {
 
 CreateAccountPassword = withRouter(CreateAccountPassword);
 
-export default connect(
-    CreateAccountPassword,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {};
-        }
+export default connect(CreateAccountPassword, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {};
     }
-);
+});

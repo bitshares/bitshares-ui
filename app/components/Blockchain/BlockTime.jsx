@@ -23,7 +23,7 @@ class BlockTime extends React.Component {
         this.state = {time: null};
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (!this.props.blockHeader) {
             BlockchainActions.getHeader.defer(this.props.block_number);
         }
@@ -54,20 +54,17 @@ class BlockTime extends React.Component {
     }
 }
 
-BlockTime = connect(
-    BlockTime,
-    {
-        listenTo() {
-            return [BlockchainStore];
-        },
-        getProps(props) {
-            return {
-                blockHeader: BlockchainStore.getState().blockHeaders.get(
-                    props.block_number
-                )
-            };
-        }
+BlockTime = connect(BlockTime, {
+    listenTo() {
+        return [BlockchainStore];
+    },
+    getProps(props) {
+        return {
+            blockHeader: BlockchainStore.getState().blockHeaders.get(
+                props.block_number
+            )
+        };
     }
-);
+});
 
 export default BlockTime;

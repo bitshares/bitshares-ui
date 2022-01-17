@@ -69,7 +69,7 @@ class HelpContent extends React.PureComponent {
         window._onClickLink = this.onClickLink.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         // Only load helpData for the current locale as well as the fallback 'en'
