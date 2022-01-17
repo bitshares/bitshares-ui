@@ -6,6 +6,7 @@ install:
     - ps: Install-Product node $env:nodejs_version
     # install modules
     # - npm ci
+    - corepack enable
     - yarn
 build: off
 platform:
