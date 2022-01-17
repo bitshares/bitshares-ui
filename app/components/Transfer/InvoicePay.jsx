@@ -19,7 +19,7 @@ import {
     Tooltip,
     Switch
 } from "bitshares-ui-style-guide";
-import sanitize from "sanitize";
+import utils from "common/utils";
 import counterpart from "counterpart";
 import {hasLoaded} from "../Utility/BindToCurrentAccount";
 import Operation from "../Blockchain/Operation";
@@ -116,7 +116,7 @@ class InvoicePay extends React.Component {
 
     async parseInvoiceData(data) {
         try {
-            data = sanitize(data, {
+            data = utils.sanitize(data, {
                 whiteList: [], // empty, means filter out all tags
                 stripIgnoreTag: true // filter out all HTML not in the whilelist
             });
