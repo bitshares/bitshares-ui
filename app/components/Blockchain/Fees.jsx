@@ -44,7 +44,7 @@ class FeeGroup extends React.Component {
 
     render() {
         let {globalObject, settings, opIds, title} = this.props;
-        globalObject = globalObject.toJSON();
+        globalObject = globalObject.toJS();
         const core_asset = ChainStore.getAsset("1.3.0");
 
         let current_fees = globalObject.parameters.current_fees;

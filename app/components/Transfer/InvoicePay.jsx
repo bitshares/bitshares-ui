@@ -8,7 +8,6 @@ import NotificationActions from "actions/NotificationActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {decompress, compress} from "lzma";
 import bs58 from "common/base58";
-import utils from "common/utils";
 import PrintReceiptButton from "./PrintReceiptButton.jsx";
 import Translate from "react-translate-component";
 import {
