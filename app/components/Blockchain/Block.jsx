@@ -82,7 +82,7 @@ class Block extends React.Component {
         });
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.height !== this.props.height) {
             this._getBlock(np.height);
         }

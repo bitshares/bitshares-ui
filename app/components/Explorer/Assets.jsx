@@ -37,8 +37,8 @@ class Assets extends React.Component {
                 typeof accountStorage.get(`totalAssets_${chainID}`) != "object"
                     ? accountStorage.get(`totalAssets_${chainID}`)
                     : chainID && chainID === "4018d784"
-                        ? 3000
-                        : 50, // mainnet has 3000+ assets, other chains may not have that many
+                    ? 3000
+                    : 50, // mainnet has 3000+ assets, other chains may not have that many
             assetsFetched: 0,
             activeFilter: "market",
             filterSearch: props.filterSearch || "",
@@ -57,7 +57,7 @@ class Assets extends React.Component {
         );
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._checkAssets(this.props.assets, true);
     }
 
@@ -107,7 +107,7 @@ class Assets extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.assets !== this.props.assets) {
             this._checkAssets(nextProps.assets);
         }

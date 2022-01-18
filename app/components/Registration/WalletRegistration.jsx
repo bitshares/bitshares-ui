@@ -18,7 +18,7 @@ class WalletRegistration extends React.Component {
         this.toggleConfirmed = this.toggleConfirmed.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         SettingsActions.changeSetting({
             setting: "passwordLogin",
             value: false

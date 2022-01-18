@@ -1,11 +1,12 @@
 version: 1.0.{build}
 environment:
-    nodejs_version: 16
+    nodejs_version: 16.13
 install:
     # Get the latest stable version of Node.js or io.js
     - ps: Install-Product node $env:nodejs_version
     # install modules
     # - npm ci
+    - corepack enable
     - yarn
 build: off
 platform:

@@ -13,7 +13,6 @@ import SettingsStore from "stores/SettingsStore";
 import classNames from "classnames";
 import {withRouter} from "react-router-dom";
 import {Table, Icon, Input, Popover} from "bitshares-ui-style-guide";
-import sanitize from "sanitize";
 import SearchInput from "../Utility/SearchInput";
 import utils from "common/utils";
 
@@ -296,8 +295,8 @@ class WitnessList extends React.Component {
                         ? -1
                         : a.lastConfirmedBlock.timestamp <
                           b.lastConfirmedBlock.timestamp
-                            ? 1
-                            : 0;
+                        ? 1
+                        : 0;
                 }
             },
             {
@@ -320,8 +319,8 @@ class WitnessList extends React.Component {
                     return a.blocksMissed > b.blocksMissed
                         ? 1
                         : a.blocksMissed < b.blocksMissed
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 }
             },
             {
@@ -542,21 +541,18 @@ class WitnessStoreWrapper extends React.Component {
     }
 }
 
-WitnessStoreWrapper = connect(
-    WitnessStoreWrapper,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                cardView: SettingsStore.getState().viewSettings.get("cardView"),
-                filterWitness: SettingsStore.getState().viewSettings.get(
-                    "filterWitness"
-                )
-            };
-        }
+WitnessStoreWrapper = connect(WitnessStoreWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            cardView: SettingsStore.getState().viewSettings.get("cardView"),
+            filterWitness: SettingsStore.getState().viewSettings.get(
+                "filterWitness"
+            )
+        };
     }
-);
+});
 
 export default WitnessStoreWrapper;

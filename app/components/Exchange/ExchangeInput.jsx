@@ -7,7 +7,7 @@ class ExchangeInput extends DecimalChecker {
         super();
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (this.props.value && !np.value) {
             this.refs.input.value = "";
         }

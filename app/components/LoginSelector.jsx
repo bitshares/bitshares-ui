@@ -58,7 +58,7 @@ class LoginSelector extends React.Component {
     //     this.props.history.push("/account/" + this.props.currentAccount);
     // }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         isIncognito(incognito => {
             if (!this.unmounted) {
                 this.setState({incognito});
@@ -244,18 +244,15 @@ class LoginSelector extends React.Component {
     }
 }
 
-export default connect(
-    LoginSelector,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
+export default connect(LoginSelector, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
     }
-);
+});

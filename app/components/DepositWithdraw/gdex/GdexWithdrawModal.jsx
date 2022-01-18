@@ -64,7 +64,7 @@ class GdexWithdrawModal extends React.Component {
         this.hideConfirmationModal = this.hideConfirmationModal.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._updateFee();
         this._checkFeeStatus();
     }
@@ -73,7 +73,7 @@ class GdexWithdrawModal extends React.Component {
         this.unMounted = true;
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.output_coin_name != this.props.output_coin_name) {
             this.setState({
                 withdraw_address: WithdrawAddresses.getLast(
@@ -366,8 +366,7 @@ class GdexWithdrawModal extends React.Component {
     onSubmit() {
         if (
             !this.state.withdraw_address_check_in_progress &&
-            (this.state.withdraw_address &&
-                this.state.withdraw_address.length) &&
+            this.state.withdraw_address && this.state.withdraw_address.length &&
             this.state.withdraw_amount !== null
         ) {
             if (!this.state.withdraw_address_is_valid) {
@@ -651,7 +650,7 @@ class GdexWithdrawModal extends React.Component {
 
         if (
             !this.state.withdraw_address_check_in_progress &&
-            (this.state.withdraw_address && this.state.withdraw_address.length)
+            this.state.withdraw_address && this.state.withdraw_address.length
         ) {
             if (!this.state.withdraw_address_is_valid) {
                 if (this.state.withdraw_address_error_code) {
@@ -962,18 +961,13 @@ class GdexWithdrawModal extends React.Component {
 
 GdexWithdrawModal = BindToChainState(GdexWithdrawModal);
 
-export default connect(
-    GdexWithdrawModal,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps(props) {
-            return {
-                fee_asset_symbol: SettingsStore.getState().settings.get(
-                    "fee_asset"
-                )
-            };
-        }
+export default connect(GdexWithdrawModal, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps(props) {
+        return {
+            fee_asset_symbol: SettingsStore.getState().settings.get("fee_asset")
+        };
     }
-);
+});

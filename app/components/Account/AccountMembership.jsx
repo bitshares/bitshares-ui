@@ -39,11 +39,11 @@ class AccountMembership extends React.Component {
         AccountActions.upgradeAccount(id, lifetime);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "account_upgrade");
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.account !== this.props.account) {
             this.setState({referralsIndex: []});
         }
@@ -154,9 +154,7 @@ class AccountMembership extends React.Component {
                                                                     />
                                                                     <h5>
                                                                         {getWalletURL() +
-                                                                            `/?r=${
-                                                                                account.name
-                                                                            }`}
+                                                                            `/?r=${account.name}`}
                                                                     </h5>
                                                                 </div>
                                                             </div>
@@ -234,9 +232,7 @@ class AccountMembership extends React.Component {
                                                                                 &nbsp;
                                                                                 (
                                                                                 <Link
-                                                                                    to={`/account/${
-                                                                                        account.lifetime_referrer_name
-                                                                                    }`}
+                                                                                    to={`/account/${account.lifetime_referrer_name}`}
                                                                                 >
                                                                                     {
                                                                                         account.lifetime_referrer_name
@@ -259,9 +255,7 @@ class AccountMembership extends React.Component {
                                                                                 &nbsp;
                                                                                 (
                                                                                 <Link
-                                                                                    to={`/account/${
-                                                                                        account.registrar_name
-                                                                                    }`}
+                                                                                    to={`/account/${account.registrar_name}`}
                                                                                 >
                                                                                     {
                                                                                         account.registrar_name
@@ -284,9 +278,7 @@ class AccountMembership extends React.Component {
                                                                                 &nbsp;
                                                                                 (
                                                                                 <Link
-                                                                                    to={`/account/${
-                                                                                        account.referrer_name
-                                                                                    }`}
+                                                                                    to={`/account/${account.referrer_name}`}
                                                                                 >
                                                                                     {
                                                                                         account.referrer_name

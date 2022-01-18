@@ -11,13 +11,13 @@ class ShowcaseGrid extends Component {
         this.state = {currentAccount: null};
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             currentAccount: ChainStore.getAccount(this.props.currentAccount)
         });
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.currentAccount !== this.props.currentAccount) {
             this.setState({
                 currentAccount: ChainStore.getAccount(np.currentAccount)
@@ -189,20 +189,17 @@ class ShowcaseGrid extends Component {
     }
 }
 
-ShowcaseGrid = connect(
-    ShowcaseGrid,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
+ShowcaseGrid = connect(ShowcaseGrid, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
     }
-);
+});
 
 export default ShowcaseGrid;

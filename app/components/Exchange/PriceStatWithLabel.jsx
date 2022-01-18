@@ -26,7 +26,7 @@ export default class PriceStatWithLabel extends React.Component {
         );
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let state = {
             change: 0
         };

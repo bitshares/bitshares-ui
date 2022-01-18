@@ -4,7 +4,6 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import sanitize from "sanitize";
 
 let req = require.context("../../help", true, /\.md/);
 let HelpData = {};
@@ -69,7 +68,7 @@ class HelpContent extends React.PureComponent {
         window._onClickLink = this.onClickLink.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         // Only load helpData for the current locale as well as the fallback 'en'

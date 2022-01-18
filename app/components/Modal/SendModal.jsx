@@ -218,7 +218,7 @@ class SendModal extends React.Component {
         return true;
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             np.currentAccount !== this.state.from_name &&
             np.currentAccount !== this.props.currentAccount
@@ -628,8 +628,8 @@ class SendModal extends React.Component {
                                         asset_types.length > 0 && asset
                                             ? asset.get("id")
                                             : asset_id
-                                                ? asset_id
-                                                : asset_types[0]
+                                            ? asset_id
+                                            : asset_types[0]
                                     }
                                     assets={asset_types}
                                     display_balance={balance}
@@ -702,20 +702,17 @@ class SendModalConnectWrapper extends React.Component {
     }
 }
 
-SendModalConnectWrapper = connect(
-    SendModalConnectWrapper,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps(props) {
-            return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
-                tabIndex: props.tabIndex || 0
-            };
-        }
+SendModalConnectWrapper = connect(SendModalConnectWrapper, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps(props) {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount,
+            tabIndex: props.tabIndex || 0
+        };
     }
-);
+});
 
 export default SendModalConnectWrapper;

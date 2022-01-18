@@ -1,6 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin").default;
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
@@ -343,7 +343,6 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
-                        path.join(root_dir, "node_modules/react-datepicker2"),
                         path.join(root_dir, "node_modules/alt-container"),
                         path.join(root_dir, "node_modules/alt-react")
                     ],

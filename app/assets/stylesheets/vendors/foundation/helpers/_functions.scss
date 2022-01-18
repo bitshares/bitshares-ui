@@ -1,3 +1,4 @@
+@use "sass:math";
 // Foundation for Apps ALPHA
 // by ZURB
 // foundation.zurb.com
@@ -290,7 +291,7 @@ $rem-base: 16px !default;
 ///
 // / @return The same number, sans unit.
 @function strip-unit($num) {
-    @return $num / ($num * 0 + 1);
+    @return math.div($num, ($num * 0 + 1));
 }
 // / Turn to Degrees
 // / Converts a turn unit to the equivalent unit in degrees. 1turn is equal to 360 degrees. Not all browsers support turn, so this function allows us to use turns while outputting a value that all browsers understand.
@@ -308,7 +309,7 @@ $rem-base: 16px !default;
 ///
 // / @return A number in rems, calculated based on the given value and the base pixel value.
 @function convert-to-rem($value, $base-value: $rem-base) {
-    $value: strip-unit($value) / strip-unit($base-value) * 1rem;
+    $value: math.div(strip-unit($value), strip-unit($base-value)) * 1rem;
     @if ($value == 0rem) {
         $value: 0;
     } // Turn 0rem into 0
