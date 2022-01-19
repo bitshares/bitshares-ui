@@ -48,7 +48,7 @@
         "postbuild-electron": "yarn run prepare-electron",
         "postbuild-electron-nougly": "yarn run prepare-electron",
         "build-win32": "cross-env NODE_ENV=production && webpack --env prod --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'",
-        "precommit": "pretty-quick --staged",
+        "precommit": "",
         "prepackage": "yarn run build-electron",
         "prepackage-no-ugly": "yarn run build-electron-nougly",
         "package": "electron-builder -p never",
