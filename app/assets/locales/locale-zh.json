@@ -2594,7 +2594,12 @@
             "witness_create": "创建见证人",
             "witness_update": "更新见证人",
             "witness_withdraw_pay": "领取见证人报酬",
-            "worker_create": "创建预算项目"
+            "worker_create": "创建预算项目",
+            "credit_offer_create": "P2P抵押贷 创建",
+            "credit_offer_delete": "P2P抵押贷 删除",
+            "credit_offer_update": "P2P抵押贷 更新",
+            "credit_offer_accept": "P2P抵押贷 借款",
+            "credit_deal_repay": "P2P抵押贷 还款"
         },
         "vesting_balance_create": "创建待解冻余额",
         "view_json": "显示原始 json",
