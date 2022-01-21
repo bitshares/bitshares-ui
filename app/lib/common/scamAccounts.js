@@ -1873,6 +1873,8 @@ export const scamAccountsOther = [
     "1.2.1679807",
     "mekong6.protocol-release",
     "1.2.1809989",
+    "xbtsio-deposit",
+    "1.2.1810493",
     "bitcoin.com-work",
     "1.2.1682875",
     "condor1",
