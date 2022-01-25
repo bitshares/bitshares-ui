@@ -74,7 +74,8 @@ let icons = [
     "insight",
     "create_account",
     "swap",
-    "instant-trade"
+    "instant-trade",
+    "deployment-unit"
 ];
 
 let iconsMap = {};
