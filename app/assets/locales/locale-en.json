@@ -331,6 +331,8 @@
             "resolve_prediction_text": "The asset prediction can be resolved here.",
             "reward_percent": "Reward percent",
             "reward_percent_tooltip": "If a market fee is set, the reward percent indicates how much of that market fee is shared through the referral rewards program instead of only benefitting the asset owner.",
+            "taker_fee_percent": "Taker Fee percent",
+            "taker_fee_percent_tooltip": "If taker fee is set, the taker percent indicates how much percent is shared with the asset owner.",
             "short": "Short name (max 32 characters)",
             "symbol": "Symbol",
             "to": "Issue to account",
@@ -940,6 +942,7 @@
                 "issuer": "Asset owner",
                 "market_fee": "Market fee",
                 "market_fee_referral_reward_percent": "Market fee referral reward",
+                "market_fee_referral_taker_fee_percent": "Taker fee percent",
                 "stealth_supply": "Stealth supply"
             },
             "title": "Asset",
