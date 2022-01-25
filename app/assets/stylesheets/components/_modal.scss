@@ -94,6 +94,20 @@
     padding: 1rem 2rem 1rem 2rem;
 }
 
+.modal-table {
+    .ant-table {
+        .ant-table-placeholder {
+            min-height: 0;
+        }
+    }
+}
+
+.text-cursor {
+    .ant-calendar-picker-input {
+        cursor: text;
+    }
+}
+
 @media screen and (max-width: 600px) {
     .modal {
         width: 100%;

@@ -223,7 +223,9 @@ class WalletDb extends BaseStore {
                         });
                 });
             })
-            .catch(() => {});
+            .catch(e => {
+                console.error(e);
+            });
     }
 
     transaction_update() {
