@@ -139,13 +139,6 @@ div#CenterContent {
     }
 }
 
-// Mozilla Specific Padding Issues on Sticky Table Wrapper
-@-moz-document url-prefix() {
-    .order-table-container .sticky-table .sticky-table-y-wrapper {
-        padding-right: 0px !important;
-    }
-}
-
 .my-orders {
     width: 48% !important;
     display: inline-table;
@@ -270,9 +263,6 @@ form.order-form {
             padding-bottom: 8px !important;
         }
     }
-    .transition-container {
-        display: table-row-group;
-    }
     .table-container {
         flex-grow: 1;
         width: 100%;
@@ -339,6 +329,9 @@ form.order-form {
     .order-table-container {
         width: 100%;
         height: 100%;
+        .sticky-table-table {
+            box-sizing: content-box;
+        }
     }
     .top-header {
         text-align: right;

@@ -1635,7 +1635,6 @@
         }
     }
     .sticky-table .sticky-table-column,
-    .sticky-table .sticky-table-header,
     .sticky-table .sticky-table-corner {
         @include color($primary-text-color, $bg-color);
     }
@@ -1651,13 +1650,9 @@
     .sticky-table-header {
         width: 100%;
         height: 32px;
-        border-bottom: 1px solid grey;
-        .sticky-table-container {
-            height: 100%;
-            width: 100%;
-        }
-        #sticky-header-row {
-            background-color: $panel-bg-color;
+        > .sticky-table-cell {
+            background-color: $panel-bg-color !important;
+            border-bottom: 1px solid grey !important;
         }
         .sticky-table-row {
             width: 100%;
@@ -1666,6 +1661,9 @@
                 background-color: $panel-bg-color;
             }
         }
+    }
+    .sticky-table-cell {
+        background-color: transparent;
     }
     // .order-table {
     // > tbody > tr:nth-of-type(even) {
