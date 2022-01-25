@@ -206,7 +206,7 @@
         "react-scroll": "^1.8.1",
         "react-sticky-table": "^5.1.11",
         "react-tooltip": "^4.2.21",
-        "react-transition-group": "^1.2.0",
+        "react-transition-group": "^4.4.2",
         "react-translate-component": "^0.15.1",
         "steem-js-api": "^0.7.1",
         "stream-browserify": "^3.0.0",
