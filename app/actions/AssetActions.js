@@ -297,9 +297,13 @@ class AssetActions {
                 blacklist_markets: [],
                 description: description,
                 extensions: {
-                    reward_percent: createObject.reward_percent * 100 || 0,
+                    reward_percent: createObject.reward_percent
+                        ? createObject.reward_percent * 100
+                        : undefined,
                     whitelist_market_fee_sharing: [],
-                    taker_fee_percent: createObject.taker_fee_percent * 100 || 0
+                    taker_fee_percent: createObject.taker_fee_percent
+                        ? createObject.taker_fee_percent * 100
+                        : undefined
                 }
             },
             is_prediction_market: is_prediction_market,
