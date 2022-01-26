@@ -297,8 +297,13 @@ class AssetActions {
                 blacklist_markets: [],
                 description: description,
                 extensions: {
-                    reward_percent: createObject.reward_percent * 100 || 0,
-                    whitelist_market_fee_sharing: []
+                    reward_percent: createObject.reward_percent
+                        ? createObject.reward_percent * 100
+                        : undefined,
+                    whitelist_market_fee_sharing: [],
+                    taker_fee_percent: createObject.taker_fee_percent
+                        ? createObject.taker_fee_percent * 100
+                        : undefined
                 }
             },
             is_prediction_market: is_prediction_market,
@@ -383,7 +388,9 @@ class AssetActions {
             if (auths.whitelist_market_fee_sharing) {
                 extensions.whitelist_market_fee_sharing = auths.whitelist_market_fee_sharing.toJS();
             }
-
+            if (update.taker_fee_percent !== undefined) {
+                extensions.taker_fee_percent = update.taker_fee_percent * 100;
+            }
             let updateObject = {
                 fee: {
                     amount: 0,

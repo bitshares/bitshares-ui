@@ -514,6 +514,25 @@ class Asset extends React.Component {
                     <td> {options.extensions.reward_percent / 100.0} % </td>
                 </tr>
             ) : null;
+            
+        var marketFeeTaker =
+            flagBooleans["charge_market_fee"] &&
+            options.extensions &&
+            options.extensions.taker_fee_percent >= 0 ? (
+                <tr>
+                    <td>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "account.user_issued_assets.taker_fee_percent_tooltip"
+                            )}
+                        >
+                            <Translate content="explorer.asset.summary.market_fee_referral_taker_fee_percent" />{" "}
+                            <Icon type="question-circle" theme="filled" />
+                        </Tooltip>
+                    </td>
+                    <td> {options.extensions.taker_fee_percent / 100.0} % </td>
+                </tr>
+            ) : null;
 
         return (
             <div className="asset-card no-padding">
@@ -562,6 +581,7 @@ class Asset extends React.Component {
                         {stealthSupply}
                         {marketFee}
                         {marketFeeReferralReward}
+                        {marketFeeTaker}
                     </tbody>
                 </table>
                 <br />
