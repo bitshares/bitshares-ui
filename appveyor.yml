@@ -7,7 +7,7 @@ install:
     # install modules
     # - npm ci
     - corepack enable
-    - yarn install --frozen-lockfile
+    - yarn install --network-concurrency 1
 build: off
 platform:
     - x64
