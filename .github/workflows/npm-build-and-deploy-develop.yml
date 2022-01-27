@@ -20,7 +20,7 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
             - run: corepack enable
-            - run: yarn install --frozen-lockfile
+            - run: yarn install --network-concurrency 1
             - run: yarn run build-hash
             - name: Create CNAME file
               uses: finnp/create-file-action@master
