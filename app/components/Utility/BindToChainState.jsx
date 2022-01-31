@@ -455,7 +455,7 @@ function BindToChainState(Component, options = {}) {
                     this.default_props[key];
                 // console.log("-- Wrapper.update, chain_liquidity_pools -->", key, prop);
                 if (prop) {
-                    const pools = await ChainStore.getLiquidityPoolsByShareAsset(
+                    const pools = ChainStore.getLiquidityPoolsByShareAsset(
                         [prop],
                         this.default_props["autosubscribe"]
                     );
