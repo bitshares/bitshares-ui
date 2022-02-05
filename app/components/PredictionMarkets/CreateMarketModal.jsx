@@ -31,6 +31,7 @@ export default class CreateMarketModal extends Modal {
                 market_fee_percent: 0,
                 description: {main: ""},
                 reward_percent: 0,
+                taker_fee_percent: 0,
                 symbol: ""
             },
             showWarning: false,

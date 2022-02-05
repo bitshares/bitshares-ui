@@ -19,19 +19,16 @@ class StarredMarkets extends React.Component {
         );
     }
 }
-StarredMarkets = connect(
-    StarredMarkets,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                starredMarkets: SettingsStore.getState().starredMarkets
-            };
-        }
+StarredMarkets = connect(StarredMarkets, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            starredMarkets: SettingsStore.getState().starredMarkets
+        };
     }
-);
+});
 
 class FeaturedMarkets extends React.Component {
     constructor() {
@@ -56,7 +53,10 @@ class FeaturedMarkets extends React.Component {
             return props.markets;
         } else {
             // assume testnet
-            return [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]];
+            return [
+                ["TEST", "PEG.FAKEUSD"],
+                ["TEST", "BTWTY"]
+            ];
         }
     }
 
@@ -64,11 +64,11 @@ class FeaturedMarkets extends React.Component {
         return !utils.are_equal_shallow(nextProps, this.props);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.update();
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.update(nextProps);
     }
 
@@ -104,29 +104,26 @@ class FeaturedMarkets extends React.Component {
     }
 }
 
-FeaturedMarkets = connect(
-    FeaturedMarkets,
-    {
-        listenTo() {
-            return [MarketsStore, SettingsStore];
-        },
-        getProps() {
-            let userMarkets = SettingsStore.getState().userMarkets;
-            let defaultMarkets = SettingsStore.getState().defaultMarkets;
+FeaturedMarkets = connect(FeaturedMarkets, {
+    listenTo() {
+        return [MarketsStore, SettingsStore];
+    },
+    getProps() {
+        let userMarkets = SettingsStore.getState().userMarkets;
+        let defaultMarkets = SettingsStore.getState().defaultMarkets;
 
-            if (userMarkets.size) {
-                userMarkets.forEach((market, key) => {
-                    if (!defaultMarkets.has(key))
-                        defaultMarkets = defaultMarkets.set(key, market);
-                });
-            }
-
-            return {
-                markets: defaultMarkets
-            };
+        if (userMarkets.size) {
+            userMarkets.forEach((market, key) => {
+                if (!defaultMarkets.has(key))
+                    defaultMarkets = defaultMarkets.set(key, market);
+            });
         }
+
+        return {
+            markets: defaultMarkets
+        };
     }
-);
+});
 
 class TopMarkets extends React.Component {
     render() {

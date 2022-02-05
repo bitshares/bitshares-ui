@@ -23,12 +23,12 @@ class AccountPermissions extends React.Component {
         this.onReset = this.onReset.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.updateAccountData(this.props.account);
         accountUtils.getFinalFeeAsset(this.props.account, "account_update");
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.account !== this.props.account)
             this.updateAccountData(nextProps.account);
     }

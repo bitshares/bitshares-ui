@@ -563,7 +563,7 @@ class CitadelBridgeDepositRequest extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         // check
         let checkUrl = this.state.url;
         this.urlConnection(checkUrl, 0);

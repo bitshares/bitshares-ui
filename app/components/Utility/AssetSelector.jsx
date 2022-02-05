@@ -114,7 +114,7 @@ class AssetSelector extends React.Component {
             this.props.onFound(this.props.asset);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.onFound && newProps.asset !== this.props.asset)
             this.props.onFound(newProps.asset);
     }

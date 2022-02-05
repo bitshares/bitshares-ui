@@ -40,7 +40,7 @@ class AccountRegistrationForm extends React.Component {
         this.accountNameInput = null;
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         SettingsActions.changeSetting({
             setting: "passwordLogin",
             value: true
@@ -296,14 +296,11 @@ class AccountRegistrationForm extends React.Component {
     }
 }
 
-export default connect(
-    AccountRegistrationForm,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {};
-        }
+export default connect(AccountRegistrationForm, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {};
     }
-);
+});

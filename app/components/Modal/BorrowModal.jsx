@@ -119,7 +119,7 @@ class BorrowModalContent extends React.Component {
         );
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const {debtAmount, collateral, collateral_ratio} = this.state;
 
         if (
@@ -550,12 +550,14 @@ class BorrowModalContent extends React.Component {
         };
 
         if (props && props.hasCallOrders && props.call_orders) {
-            currentPosition = props.call_orders.filter(a => !!a).find(a => {
-                return (
-                    a.getIn(["call_price", "quote", "asset_id"]) ===
-                    props.quoteAssetObj.get("id")
-                );
-            });
+            currentPosition = props.call_orders
+                .filter(a => !!a)
+                .find(a => {
+                    return (
+                        a.getIn(["call_price", "quote", "asset_id"]) ===
+                        props.quoteAssetObj.get("id")
+                    );
+                });
 
             currentPosition = !!currentPosition
                 ? currentPosition.toJS()
@@ -831,7 +833,7 @@ export default class ModalWrapper extends React.Component {
         this.props.showModal();
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             smallScreen: window.innerHeight <= 800
         });

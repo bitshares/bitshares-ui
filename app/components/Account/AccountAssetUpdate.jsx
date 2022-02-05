@@ -123,6 +123,13 @@ class AccountAssetUpdate extends React.Component {
             asset.options.extensions.reward_percent /= 100;
         }
 
+        if (
+            asset.options.extensions !== null &&
+            asset.options.extensions.taker_fee_percent !== null
+        ) {
+            asset.options.extensions.taker_fee_percent /= 100;
+        }
+
         let coreRateQuoteAssetName = ChainStore.getAsset(
             core_exchange_rate.quote.asset_id
         ).get("symbol");
@@ -141,6 +148,11 @@ class AccountAssetUpdate extends React.Component {
             "extensions",
             "reward_percent"
         ]);
+        let taker_fee_percent = props.asset.getIn([
+            "options",
+            "extensions",
+            "taker_fee_percent"
+        ]);
 
         return {
             isAssetUpdateConfirmationModalVisible: false,
@@ -151,6 +163,10 @@ class AccountAssetUpdate extends React.Component {
                     reward_percent === undefined
                         ? undefined
                         : asset.options.extensions.reward_percent,
+                taker_fee_percent:
+                    taker_fee_percent === undefined
+                        ? undefined
+                        : asset.options.extensions.taker_fee_percent,
                 market_fee_percent: asset.options.market_fee_percent,
                 description: assetUtils.parseDescription(
                     asset.options.description
@@ -318,7 +334,8 @@ class AccountAssetUpdate extends React.Component {
             JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
             s.update.market_fee_percent !== p.update.market_fee_percent ||
             s.update.max_market_fee !== p.update.max_market_fee ||
-            s.update.reward_percent !== p.update.reward_percent
+            s.update.reward_percent !== p.update.reward_percent ||
+            s.update.taker_fee_percent !== p.update.taker_fee_percent
         )
             tabUpdateIndex["5"] = true;
 
@@ -537,6 +554,9 @@ class AccountAssetUpdate extends React.Component {
             case "reward_percent":
                 update[value] = this._forcePositive(e.target.value);
                 break;
+            case "taker_fee_percent":
+                update[value] = this._forcePositive(e.target.value);
+                break;
             case "max_market_fee":
                 let marketFee = e.amount.replace(/,/g, "");
                 if (
@@ -610,10 +630,10 @@ class AccountAssetUpdate extends React.Component {
                     : new big(parseInt(new_state.max_supply, 10))
                           .times(Math.pow(10, p))
                           .gt(GRAPHENE_MAX_SHARE_SUPPLY)
-                        ? counterpart.translate(
-                              "account.user_issued_assets.too_large"
-                          )
-                        : null;
+                    ? counterpart.translate(
+                          "account.user_issued_assets.too_large"
+                      )
+                    : null;
         } catch (err) {
             console.log("err:", err);
             errors.max_supply = counterpart.translate(
@@ -904,8 +924,8 @@ class AccountAssetUpdate extends React.Component {
                 update.description.visible
                     ? false
                     : update.description.visible === false
-                        ? true
-                        : false
+                    ? true
+                    : false
             )
         );
 
@@ -1480,6 +1500,26 @@ class AccountAssetUpdate extends React.Component {
                                                     marginLeft: "30px"
                                                 }}
                                             >
+                                                <label>
+                                                    <Tooltip
+                                                        title={counterpart.translate(
+                                                            "account.user_issued_assets.taker_fee_percent_tooltip"
+                                                        )}
+                                                    >
+                                                        <Translate content="account.user_issued_assets.taker_fee_percent" />{" "}
+                                                        (%)
+                                                    </Tooltip>
+                                                    <input
+                                                        type="number"
+                                                        value={
+                                                            update.taker_fee_percent
+                                                        }
+                                                        onChange={this._onUpdateInput.bind(
+                                                            this,
+                                                            "taker_fee_percent"
+                                                        )}
+                                                    />
+                                                </label>
                                                 <label>
                                                     <Translate content="account.user_issued_assets.market_fee" />{" "}
                                                     (%)

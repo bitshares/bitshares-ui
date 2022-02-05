@@ -241,7 +241,8 @@ class AccountAssetCreate extends React.Component {
                 max_market_fee: 0,
                 market_fee_percent: 0,
                 description: {main: ""},
-                reward_percent: 0
+                reward_percent: 0,
+                taker_fee_percent: 0
             },
             errors: {
                 max_supply: null
@@ -451,6 +452,9 @@ class AccountAssetCreate extends React.Component {
             case "reward_percent":
                 update[value] = this._forcePositive(target.value);
                 break;
+            case "taker_fee_percent":
+                update[value] = this._forcePositive(target.value);
+                break;
             case "max_market_fee":
                 if (
                     new big(inputValue)
@@ -561,10 +565,10 @@ class AccountAssetCreate extends React.Component {
                     : new big(new_state.max_supply)
                           .times(Math.pow(10, new_state.precision))
                           .gt(GRAPHENE_MAX_SHARE_SUPPLY)
-                        ? counterpart.translate(
-                              "account.user_issued_assets.too_large"
-                          )
-                        : null;
+                    ? counterpart.translate(
+                          "account.user_issued_assets.too_large"
+                      )
+                    : null;
         } catch (err) {
             console.log("err:", err);
             errors.max_supply = counterpart.translate(
@@ -783,8 +787,8 @@ class AccountAssetCreate extends React.Component {
                 update.description.visible
                     ? false
                     : update.description.visible === false
-                        ? true
-                        : false
+                    ? true
+                    : false
             )
         );
 
@@ -1279,6 +1283,20 @@ class AccountAssetCreate extends React.Component {
                                                 }}
                                             >
                                                 <label>
+                                                    <Translate content="account.user_issued_assets.taker_fee_percent" />{" "}
+                                                    (%)
+                                                    <input
+                                                        type="number"
+                                                        value={
+                                                            update.taker_fee_percent
+                                                        }
+                                                        onChange={this._onUpdateInput.bind(
+                                                            this,
+                                                            "taker_fee_percent"
+                                                        )}
+                                                    />
+                                                </label>
+                                                <label>
                                                     <Translate content="account.user_issued_assets.market_fee" />{" "}
                                                     (%)
                                                     <input
@@ -1292,7 +1310,6 @@ class AccountAssetCreate extends React.Component {
                                                         )}
                                                     />
                                                 </label>
-
                                                 <label>
                                                     <Translate content="account.user_issued_assets.max_market_fee" />{" "}
                                                     ({update.symbol})

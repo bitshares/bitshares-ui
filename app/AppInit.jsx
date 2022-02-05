@@ -18,15 +18,15 @@ import counterpart from "counterpart";
 import LogsActions from "actions/LogsActions";
 import NodeSelector from "./components/Utility/NodeSelector";
 /*
-* Electron does not support browserHistory, so we need to use hashHistory.
-* The same is true for servers without configuration options, such as Github Pages
-*/
+ * Electron does not support browserHistory, so we need to use hashHistory.
+ * The same is true for servers without configuration options, such as Github Pages
+ */
 import {HashRouter, BrowserRouter} from "react-router-dom";
 
 const Router = __HASH_HISTORY__ ? HashRouter : BrowserRouter;
 
 class RootIntl extends React.Component {
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         IntlActions.switchLocale(this.props.locale);
     }
 
@@ -155,7 +155,7 @@ class AppInit extends React.Component {
         this.persistentLogEnabled = true;
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (!__DEV__) {
             this._enablePersistingLog();
         }
@@ -277,26 +277,20 @@ class AppInit extends React.Component {
     }
 }
 
-AppInit = connect(
-    AppInit,
-    {
-        listenTo() {
-            return [IntlStore, WalletManagerStore, SettingsStore];
-        },
-        getProps() {
-            return {
-                locale: IntlStore.getState().currentLocale,
-                walletMode:
-                    !SettingsStore.getState().settings.get("passwordLogin") ||
-                    !!WalletManagerStore.getState().current_wallet,
-                theme: SettingsStore.getState().settings.get("themes"),
-                apiServer: SettingsStore.getState().settings.get(
-                    "activeNode",
-                    ""
-                )
-            };
-        }
+AppInit = connect(AppInit, {
+    listenTo() {
+        return [IntlStore, WalletManagerStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            locale: IntlStore.getState().currentLocale,
+            walletMode:
+                !SettingsStore.getState().settings.get("passwordLogin") ||
+                !!WalletManagerStore.getState().current_wallet,
+            theme: SettingsStore.getState().settings.get("themes"),
+            apiServer: SettingsStore.getState().settings.get("activeNode", "")
+        };
     }
-);
+});
 AppInit = supplyFluxContext(alt)(AppInit);
 export default hot(module)(AppInit);

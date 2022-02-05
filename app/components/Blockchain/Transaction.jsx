@@ -25,7 +25,6 @@ import {Link, DirectLink} from "react-scroll";
 import {Tooltip} from "bitshares-ui-style-guide";
 import JSONModal from "components/Modal/JSONModal";
 import asset_utils from "../../lib/common/asset_utils";
-import sanitize from "sanitize";
 
 require("./operations.scss");
 require("./json-inspector.scss");

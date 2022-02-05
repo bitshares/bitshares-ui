@@ -84,7 +84,7 @@ class CitadelGatewayDepositRequest extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         getDepositAddress({
             coin: this.props.receive_coin_type,
             account: this.props.account.get("name"),
@@ -92,7 +92,7 @@ class CitadelGatewayDepositRequest extends React.Component {
         });
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.account !== this.props.account) {
             getDepositAddress({
                 coin: np.receive_coin_type,
@@ -218,8 +218,8 @@ class CitadelGatewayDepositRequest extends React.Component {
 
         if (
             !this.props.isAvailable ||
-            ((isDeposit && !this.props.deposit_account && !receive_address) ||
-                (receive_address && receive_address.address === "unknown"))
+            (isDeposit && !this.props.deposit_account && !receive_address) ||
+            (receive_address && receive_address.address === "unknown")
         ) {
             return (
                 <div>

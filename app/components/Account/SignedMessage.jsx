@@ -77,11 +77,11 @@ class SignedMessage extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._verifyMessage(this.state.message);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let signedMessage = nextProps.message;
         if (
             signedMessage != undefined &&
@@ -202,19 +202,18 @@ class SignedMessage extends React.Component {
                         )}
                     </fieldset>
                 )}
-                {messageGiven &&
-                    this.state.messageParsed == null && (
-                        <fieldset style={{borderColor: "#F00"}}>
-                            <legend
-                                style={{color: "red", weight: "bold"}}
-                                className="error"
-                            >
-                                Error while parsing message, please check syntax
-                                from message below
-                            </legend>
-                            <pre>{this.props.message}</pre>
-                        </fieldset>
-                    )}
+                {messageGiven && this.state.messageParsed == null && (
+                    <fieldset style={{borderColor: "#F00"}}>
+                        <legend
+                            style={{color: "red", weight: "bold"}}
+                            className="error"
+                        >
+                            Error while parsing message, please check syntax
+                            from message below
+                        </legend>
+                        <pre>{this.props.message}</pre>
+                    </fieldset>
+                )}
             </div>
         );
     }

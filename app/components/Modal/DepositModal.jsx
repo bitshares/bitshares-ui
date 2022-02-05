@@ -35,7 +35,7 @@ class DepositModalContent extends DecimalChecker {
         this.props.hideModal();
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let {asset} = this.props;
         this._setDepositAsset(asset);
     }
@@ -465,7 +465,7 @@ class DepositModalContent extends DecimalChecker {
                                     "irreversible" ? (
                                         <Translate content="gateway.gateway_deposit.confirmations.last_irreversible" />
                                     ) : depositConfirmation.type ===
-                                    "blocks" ? (
+                                      "blocks" ? (
                                         <Translate
                                             content="gateway.gateway_deposit.confirmations.n_blocks"
                                             blocks={depositConfirmation.value}
@@ -524,6 +524,7 @@ export default class DepositModal extends React.Component {
     render() {
         return (
             <Modal
+                destroyOnClose={true}
                 title={
                     this.props.account
                         ? counterpart.translate("modal.deposit.header", {

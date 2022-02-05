@@ -47,7 +47,7 @@ class OpenledgerGateway extends React.Component {
         return activeCoin;
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.provider !== this.props.provider) {
             this.setState({
                 activeCoin: this._getActiveCoin(nextProps, this.state.action)
@@ -312,16 +312,13 @@ class OpenledgerGateway extends React.Component {
     }
 }
 
-export default connect(
-    OpenledgerGateway,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                viewSettings: SettingsStore.getState().viewSettings
-            };
-        }
+export default connect(OpenledgerGateway, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
     }
-);
+});

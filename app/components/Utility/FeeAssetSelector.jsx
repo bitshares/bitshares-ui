@@ -168,8 +168,8 @@ class FeeAssetSelector extends React.Component {
         return feeAsset
             ? feeAsset
             : assets && assets.length > 0
-                ? assets[0]
-                : null;
+            ? assets[0]
+            : null;
     }
 
     _getSelectableAssets() {
@@ -265,7 +265,7 @@ class FeeAssetSelector extends React.Component {
         }
     }
 
-    componentWillReceiveProps(np, ns) {
+    UNSAFE_componentWillReceiveProps(np, ns) {
         // don't do async loading in componentWillReceiveProps
     }
 
@@ -289,16 +289,15 @@ class FeeAssetSelector extends React.Component {
         const label = this.props.label ? (
             <div className="amount-selector-field--label">
                 {counterpart.translate(this.props.label)}
-                {this.state.error &&
-                    this.state.error.tooltip && (
-                        <Tooltip
-                            title={counterpart.translate(
-                                "transfer.errors." + this.state.error.tooltip
-                            )}
-                        >
-                            &nbsp; <Icon type="question-circle" />
-                        </Tooltip>
-                    )}
+                {this.state.error && this.state.error.tooltip && (
+                    <Tooltip
+                        title={counterpart.translate(
+                            "transfer.errors." + this.state.error.tooltip
+                        )}
+                    >
+                        &nbsp; <Icon type="question-circle" />
+                    </Tooltip>
+                )}
             </div>
         ) : null;
 
@@ -401,18 +400,14 @@ FeeAssetSelector = AssetWrapper(FeeAssetSelector, {
     propNames: ["defaultFeeAsset"]
 });
 
-export default connect(
-    FeeAssetSelector,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                defaultFeeAsset:
-                    SettingsStore.getState().settings.get("fee_asset") ||
-                    "1.3.0"
-            };
-        }
+export default connect(FeeAssetSelector, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            defaultFeeAsset:
+                SettingsStore.getState().settings.get("fee_asset") || "1.3.0"
+        };
     }
-);
+});

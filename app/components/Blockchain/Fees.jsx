@@ -15,7 +15,26 @@ let ops = Object.keys(operations);
 
 // Define groups and their corresponding operation ids
 let fee_grouping = {
-    general: [0, 25, 26, 27, 28, 32, 33, 37, 39, 41, 49, 50, 52],
+    general: [
+        0,
+        25,
+        26,
+        27,
+        28,
+        32,
+        33,
+        37,
+        39,
+        41,
+        49,
+        50,
+        52,
+        69,
+        70,
+        71,
+        72,
+        73
+    ],
     asset: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 38, 43, 44, 47, 48],
     market: [1, 2, 3, 4, 45, 46],
     account: [5, 6, 7, 8, 9],
@@ -44,7 +63,7 @@ class FeeGroup extends React.Component {
 
     render() {
         let {globalObject, settings, opIds, title} = this.props;
-        globalObject = globalObject.toJSON();
+        globalObject = globalObject.toJS();
         const core_asset = ChainStore.getAsset("1.3.0");
 
         let current_fees = globalObject.parameters.current_fees;

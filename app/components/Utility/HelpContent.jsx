@@ -4,7 +4,6 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import sanitize from "sanitize";
 
 let req = require.context("../../help", true, /\.md/);
 let HelpData = {};
@@ -69,7 +68,7 @@ class HelpContent extends React.PureComponent {
         window._onClickLink = this.onClickLink.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         // Only load helpData for the current locale as well as the fallback 'en'
@@ -85,7 +84,7 @@ class HelpContent extends React.PureComponent {
                 let key = res[2];
                 let help_locale = HelpData[locale];
                 if (!help_locale) HelpData[locale] = help_locale = {};
-                let content = req(filename);
+                let content = req(filename).default;
                 help_locale[key] = split_into_sections(adjust_links(content));
             });
     }
@@ -138,38 +137,28 @@ class HelpContent extends React.PureComponent {
 
         if (!value && this.props.alt_path) {
             console.warn(
-                `missing path '${
-                    this.props.path
-                }' for locale '${locale}' help files, rolling back to alt_path '${
-                    this.props.alt_path
-                }'`
+                `missing path '${this.props.path}' for locale '${locale}' help files, rolling back to alt_path '${this.props.alt_path}'`
             );
             value = HelpData[locale][this.props.alt_path];
         }
 
         if (!value && locale !== "en") {
             console.warn(
-                `missing path '${
-                    this.props.path
-                }' for locale '${locale}' help files, rolling back to 'en'`
+                `missing path '${this.props.path}' for locale '${locale}' help files, rolling back to 'en'`
             );
             value = HelpData["en"][this.props.path];
         }
 
         if (!value && this.props.alt_path && locale != "en") {
             console.warn(
-                `missing alt_path '${
-                    this.props.alt_path
-                }' for locale '${locale}' help files, rolling back to 'en'`
+                `missing alt_path '${this.props.alt_path}' for locale '${locale}' help files, rolling back to 'en'`
             );
             value = HelpData["en"][this.props.alt_path];
         }
 
         if (!value) {
             console.error(
-                `help file not found '${
-                    this.props.path
-                }' for locale '${locale}'`
+                `help file not found '${this.props.path}' for locale '${locale}'`
             );
             return !null;
         }
@@ -189,18 +178,14 @@ class HelpContent extends React.PureComponent {
 
         if (!value) {
             console.error(
-                `help section not found ${this.props.path}#${
-                    this.props.section
-                }`
+                `help section not found ${this.props.path}#${this.props.section}`
             );
             return null;
         }
 
         if (typeof value === "object") {
             console.error(
-                `help section content invalid ${this.props.path}#${
-                    this.props.section
-                }`
+                `help section content invalid ${this.props.path}#${this.props.section}`
             );
             return null;
         }

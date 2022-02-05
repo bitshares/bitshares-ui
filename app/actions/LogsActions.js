@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import ls from "common/localStorage";
 
 const STORAGE_KEY = "__graphene__";
-let ss = new ls(STORAGE_KEY);
+let ss = ls(STORAGE_KEY);
 
 class LogsActions {
     async setLog(log) {

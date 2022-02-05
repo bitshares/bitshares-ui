@@ -84,7 +84,7 @@ class WithdrawModalNew extends React.Component {
         this.handleQrScanSuccess = this.handleQrScanSuccess.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let initialState = {};
 
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(
@@ -132,7 +132,7 @@ class WithdrawModalNew extends React.Component {
         return {selectedAsset, selectedGateway, gateFee};
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         this.setState(this._getAssetPairVariables(np));
 
         if (this.state.address != "") {
@@ -154,7 +154,7 @@ class WithdrawModalNew extends React.Component {
         }
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
         const {preferredCurrency, assets} = nextProps;
         const {selectedAsset, quantity, selectedGateway} = nextState;
 
@@ -1300,21 +1300,18 @@ class WithdrawModalNew extends React.Component {
     }
 }
 
-const ConnectedWithdrawModal = connect(
-    WithdrawModalNew,
-    {
-        listenTo() {
-            return [GatewayStore, AssetStore, SettingsStore, MarketsStore];
-        },
-        getProps() {
-            return {
-                backedCoins: GatewayStore.getState().backedCoins,
-                preferredCurrency: SettingsStore.getSetting("unit"),
-                marketStats: MarketsStore.getState().allMarketStats
-            };
-        }
+const ConnectedWithdrawModal = connect(WithdrawModalNew, {
+    listenTo() {
+        return [GatewayStore, AssetStore, SettingsStore, MarketsStore];
+    },
+    getProps() {
+        return {
+            backedCoins: GatewayStore.getState().backedCoins,
+            preferredCurrency: SettingsStore.getSetting("unit"),
+            marketStats: MarketsStore.getState().allMarketStats
+        };
     }
-);
+});
 
 class WithdrawModalWrapper extends React.Component {
     static propTypes = {
@@ -1366,19 +1363,16 @@ class WithdrawModalWrapper extends React.Component {
     }
 }
 
-const ConnectedWrapper = connect(
-    BindToChainState(WithdrawModalWrapper),
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                account: AccountStore.getState().currentAccount
-            };
-        }
+const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper), {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            account: AccountStore.getState().currentAccount
+        };
     }
-);
+});
 
 export default class WithdrawModal extends React.Component {
     shouldComponentUpdate(np, ns) {

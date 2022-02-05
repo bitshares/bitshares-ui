@@ -7,7 +7,7 @@ import BaseStore from "stores/BaseStore";
 
 let AddressIndexWorker;
 if (__ELECTRON__) {
-    AddressIndexWorker = require("worker-loader?inline!workers/AddressIndexWorker");
+    AddressIndexWorker = require("worker-loader?inline=no-fallback!workers/AddressIndexWorker");
 }
 class AddressIndex extends BaseStore {
     constructor() {

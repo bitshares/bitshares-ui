@@ -85,7 +85,7 @@ export default class Barter extends Component {
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let currentAccount = AccountStore.getState().currentAccount;
         if (!this.state.from_name) this.setState({from_name: currentAccount});
     }
@@ -919,8 +919,8 @@ export default class Barter extends Component {
                                 from_asset_types.length > 0 && item.from_asset
                                     ? item.from_asset.get("id")
                                     : item.from_asset_id
-                                        ? item.from_asset_id
-                                        : from_asset_types[0]
+                                    ? item.from_asset_id
+                                    : from_asset_types[0]
                             }
                             assets={from_asset_types}
                             display_balance={balance(
@@ -983,8 +983,8 @@ export default class Barter extends Component {
                                 to_asset_types.length > 0 && item.to_asset
                                     ? item.to_asset.get("id")
                                     : item.to_asset_id
-                                        ? item.to_asset_id
-                                        : to_asset_types[0]
+                                    ? item.to_asset_id
+                                    : to_asset_types[0]
                             }
                             assets={to_asset_types}
                             display_balance={balance(
