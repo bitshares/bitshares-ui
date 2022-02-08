@@ -470,9 +470,8 @@ function BindToChainState(Component, options = {}) {
                         ++index;
                         if (obj_id) {
                             let new_obj = ChainStore.getLiquidityPoolsByShareAsset(
-                                obj_id,
-                                false,
-                                this.default_props["autosubscribe"]
+                            [prop],
+                            this.default_props["autosubscribe"]
                             );
                             if (new_obj) ++resolved_objects_counter;
                             if (prop_prev_state[index] !== new_obj) {
