@@ -487,13 +487,6 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
-            
-            //console.log("----- Wrapper update ----->", this.all_chain_props, this.all_chain_props.length, all_objects_counter, resolved_objects_counter);
-            if (all_objects_counter <= resolved_objects_counter)
-                new_state.resolved = true;
-
-            let stateChanged = false;
-            
             /* Resolve lists of pure objects */
             for (let key of this.chain_objects_list) {
                 //console.log("-- Wrapper.update -->", this.chain_objects_list);
