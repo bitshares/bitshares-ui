@@ -449,40 +449,23 @@ function BindToChainState(Component, options = {}) {
             }
             /* Resolve List of Liquidity Pools By ShareAssets */
             for (let key of this.chain_liquidity_pools) {
-                //console.log("-- Wrapper.update -->", this.chain_liquidity_pools);
                 let prop =
                     props[key] ||
                     this.dynamic_props[key] ||
                     this.default_props[key];
+                // console.log("-- Wrapper.update, chain_liquidity_pools -->", key, prop);
                 if (prop) {
-                    let prop_prev_state = this.state[key];
-                    let prop_new_state = [];
-                    let changes = false;
-                    if (
-                        !prop_prev_state ||
-                        prop_prev_state.length !== prop.size
-                    ) {
-                        prop_prev_state = [];
-                        changes = true;
-                    }
-                    let index = 0;
-                    prop.forEach(obj_id => {
-                        ++index;
-                        //console.log("-- Wrapper.chain_liquidity_pools item -->", obj_id, index);
-                        if (obj_id) {
-                            let new_obj = ChainStore.getLiquidityPoolsByShareAsset(obj_id);
-                            if (new_obj) ++resolved_objects_counter;
-                            if (prop_prev_state[index] !== new_obj) {
-                                changes = true;
-                                prop_new_state[index] = new_obj;
-                            } else {
-                                prop_new_state[index] = prop_prev_state[index];
-                            }
-                        }
+                    const pools = await ChainStore.getLiquidityPoolsByShareAsset(
+                        [prop],
+                        this.default_props["autosubscribe"]
+                    );
+                    if (pools.size > 0) {
+                        new_state[key] = pools.first();
                         ++all_objects_counter;
-                    });
-                    //console.log("-- Wrapper.chain_liquidity_pools: ", prop_new_state);
-                    if (changes) new_state[key] = prop_new_state;
+                        ++resolved_objects_counter;
+                    } else {
+                        new_state[key] = null;
+                    }
                 } else {
                     if (this.state[key]) new_state[key] = null;
                 }
