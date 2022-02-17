@@ -1,6 +1,8 @@
 import utils from "common/utils";
 import {ChainStore} from "bitsharesjs";
+import {Apis} from "bitsharesjs-ws";
 import {checkFeeStatusAsync} from "common/trxHelper";
+import Immutable from "immutable";
 
 // Returns a list of dicts with keys id, seller amount and price and respective values
 function getOrders(amount, orders, whatAmount) {
@@ -15,8 +17,8 @@ function getOrders(amount, orders, whatAmount) {
             matchedOrders.forEach(({order}) => {
                 totalAmount =
                     whatAmount === "receive"
-                        ? order.total_for_sale.getAmount()
-                        : order.total_to_receive.getAmount();
+                        ? order.totalForSale().getAmount()
+                        : order.totalToReceive().getAmount();
             });
 
             if (totalAmount >= amount) {
@@ -25,7 +27,7 @@ function getOrders(amount, orders, whatAmount) {
                 matchedOrders.push({
                     order: orders[i],
                     amount: orders[i].amountToReceive().amount,
-                    total_amount: orders[i].total_to_receive.amount,
+                    total_amount: orders[i].totalToReceive().amount,
                     price: orders[i].getPrice()
                 });
             }
@@ -33,7 +35,7 @@ function getOrders(amount, orders, whatAmount) {
             matchedOrders.push({
                 order: orders[i],
                 amount: orders[i].amountToReceive().amount,
-                total_amount: orders[i].total_to_receive.amount,
+                total_amount: orders[i].totalToReceive().amount,
                 price: orders[i].getPrice()
             });
         }
@@ -128,4 +130,28 @@ async function checkFeeStatus(assets = [], account) {
         });
 }
 
-export {getOrders, getPrices, getFees, getAssetsToSell};
+async function getLiquidityPools(baseAsset, quoteAsset) {
+    // should be sorted like asset_a has lower id than asset_b
+    const base_is_asset_a =
+        parseInt(baseAsset.get("id").split(".")[2]) <
+        parseInt(quoteAsset.get("id").split(".")[2]);
+    // const liquidityPools = await ChainStore.getLiquidityPoolsByAssets(
+    //     "both",
+    //     base_is_asset_a ? baseAsset.get("id") : quoteAsset.get("id"),
+    //     base_is_asset_a ? quoteAsset.get("id") : baseAsset.get("id"),
+    //     20,
+    //     "1.19.0"
+    // );
+    let pools = await Apis.instance()
+        .db_api()
+        .exec("get_liquidity_pools_by_both_assets", [
+            base_is_asset_a ? baseAsset.get("id") : quoteAsset.get("id"),
+            base_is_asset_a ? quoteAsset.get("id") : baseAsset.get("id"),
+            10,
+            "1.19.0",
+            true
+        ]);
+    return pools.map(pool => Immutable.fromJS(pool));
+}
+
+export {getOrders, getPrices, getFees, getAssetsToSell, getLiquidityPools};

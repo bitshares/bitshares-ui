@@ -603,6 +603,175 @@ class LimitOrder {
     }
 }
 
+class LiquidityPoolOrder {
+    constructor(pool, userWantsToSellAsset, userWantsToSellAmount, assets) {
+        this.pool = pool;
+        this.assets = assets;
+
+        this.id = pool.get("id");
+
+        this.side =
+            userWantsToSellAsset.get("id") === pool.get("asset_a") ? "a" : "b";
+        this.market_base = userWantsToSellAsset.get("id");
+
+        this.sellers = []; // no sellers in LPs, only asset owner of pool asset
+        this.expiration = new Date(Date.now() + 2 * (60 * 60 * 1000)); // fake expiration
+
+        let userWantsToSellInt = userWantsToSellAmount;
+        if (typeof userWantsToSellAmount === "string") {
+            userWantsToSellInt = parseInt(
+                +userWantsToSellAmount *
+                    10 **
+                        this.assets[userWantsToSellAsset.get("id")].get(
+                            "precision"
+                        ),
+                10
+            );
+        }
+
+        let base_id =
+            userWantsToSellAsset.get("id") == pool.get("asset_a")
+                ? pool.get("asset_b")
+                : pool.get("asset_a");
+        let base_amount = this._getAmountOtherSide(
+            this.side,
+            userWantsToSellInt
+        );
+        let base = new Asset({
+            asset_id: base_id,
+            amount: base_amount,
+            precision: this.assets[base_id].precision
+        });
+        let quote_id = userWantsToSellAsset.get("id");
+        let quote = new Asset({
+            asset_id: quote_id,
+            amount: userWantsToSellInt,
+            precision: this.assets[quote_id].precision
+        });
+
+        this.for_sale = base_amount;
+
+        this.sell_price = new Price({
+            base,
+            quote
+        });
+
+        this.fee = 0;
+    }
+
+    _getAmountOtherSide(side, amount) {
+        let virtual_value = parseInt(this.pool.get("virtual_value"));
+        let balance_a = parseInt(this.pool.get("balance_a"));
+        let balance_b = parseInt(this.pool.get("balance_b"));
+
+        if (virtual_value == 0) return 0;
+
+        let pool_pays = 0;
+
+        // calculation without accounting for fees
+        if (side == "a") {
+            let new_balance_a = balance_a + amount;
+            let new_balance_b =
+                (virtual_value + new_balance_a - 1) / new_balance_a;
+            pool_pays = balance_b - new_balance_b;
+        } else {
+            let new_balance_b = balance_b + amount;
+            let new_balance_a =
+                (virtual_value + new_balance_b - 1) / new_balance_b;
+            pool_pays = balance_a - new_balance_a;
+        }
+
+        // account for taker fee
+        let taker_fee_percent = this.pool.get("taker_fee_percent") / 100 / 100;
+        return pool_pays - pool_pays * taker_fee_percent;
+    }
+
+    getPrice(p = this.sell_price) {
+        if (this._real_price) {
+            return this._real_price;
+        }
+        return (this._real_price = p.toReal(
+            p.base.asset_id === this.market_base
+        ));
+    }
+
+    isBid() {
+        return !(this.sell_price.base.asset_id === this.market_base);
+    }
+
+    isCall() {
+        return false;
+    }
+
+    sellPrice() {
+        return this.sell_price;
+    }
+
+    amountForSale() {
+        if (this._for_sale) return this._for_sale;
+        return (this._for_sale = new Asset({
+            asset_id: this.sell_price.base.asset_id,
+            amount: this.for_sale,
+            precision: this.assets[this.sell_price.base.asset_id].precision
+        }));
+    }
+
+    amountToReceive(isBid = this.isBid()) {
+        if (this._to_receive) return this._to_receive;
+        this._to_receive = this.amountForSale().times(this.sell_price, isBid);
+        return this._to_receive;
+    }
+
+    sum(order) {
+        let newOrder = this.clone();
+        if (newOrder.sellers.indexOf(order.seller) === -1) {
+            newOrder.sellers.push(order.seller);
+        }
+        newOrder.for_sale += order.for_sale;
+
+        return newOrder;
+    }
+
+    isMine(id) {
+        return this.sellers.indexOf(id) !== -1;
+    }
+
+    ne(order) {
+        return (
+            this.sell_price.ne(order.sell_price) ||
+            this.for_sale !== order.for_sale
+        );
+    }
+
+    equals(order) {
+        return !this.ne(order);
+    }
+
+    setTotalToReceive(total) {
+        this.total_to_receive = total;
+    }
+
+    setTotalForSale(total) {
+        this.total_for_sale = total;
+        this._total_to_receive = null;
+    }
+
+    totalToReceive({noCache = false} = {}) {
+        if (!noCache && this._total_to_receive) return this._total_to_receive;
+        this._total_to_receive = (
+            this.total_to_receive || this.amountToReceive()
+        ).clone();
+        return this._total_to_receive;
+    }
+
+    totalForSale({noCache = false} = {}) {
+        if (!noCache && this._total_for_sale) return this._total_for_sale;
+        return (this._total_for_sale = (
+            this.total_for_sale || this.amountForSale()
+        ).clone());
+    }
+}
+
 class CallOrder {
     constructor(
         order,
@@ -899,25 +1068,25 @@ class CallOrder {
         let orderDebt = order.iSum
             ? order.debt
             : orderUseCR
-                ? order.max_debt_to_cover.getAmount()
-                : order.amountToReceive().getAmount();
+            ? order.max_debt_to_cover.getAmount()
+            : order.amountToReceive().getAmount();
         let newOrderDebt = newOrder.iSum
             ? newOrder.debt
             : newOrderUseCR
-                ? newOrder.max_debt_to_cover.getAmount()
-                : newOrder.amountToReceive().getAmount();
+            ? newOrder.max_debt_to_cover.getAmount()
+            : newOrder.amountToReceive().getAmount();
 
         /* Determine which collateral values to use */
         let orderCollateral = order.iSum
             ? order.collateral
             : orderUseCR
-                ? order.max_collateral_to_sell.getAmount()
-                : order.amountForSale().getAmount();
+            ? order.max_collateral_to_sell.getAmount()
+            : order.amountForSale().getAmount();
         let newOrderCollateral = newOrder.iSum
             ? newOrder.collateral
             : newOrderUseCR
-                ? newOrder.max_collateral_to_sell.getAmount()
-                : newOrder.amountForSale().getAmount();
+            ? newOrder.max_collateral_to_sell.getAmount()
+            : newOrder.amountForSale().getAmount();
 
         newOrder.debt = newOrderDebt + orderDebt;
         newOrder.collateral = newOrderCollateral + orderCollateral;
@@ -1232,8 +1401,8 @@ class FillOrder {
         this.className = this.isCall
             ? "orderHistoryCall"
             : this.isBid
-                ? "orderHistoryBid"
-                : "orderHistoryAsk";
+            ? "orderHistoryBid"
+            : "orderHistoryAsk";
         this.time = fill.time && new Date(utils.makeISODateString(fill.time));
         this.block = fill.block;
         this.account = fill.op.account || fill.op.account_id;
@@ -1390,6 +1559,7 @@ export {
     limitByPrecision,
     precisionToRatio,
     LimitOrder,
+    LiquidityPoolOrder,
     CallOrder,
     CollateralBid,
     SettleOrder,

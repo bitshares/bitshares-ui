@@ -19,7 +19,9 @@ import {
     getAssetsToSell,
     getPrices,
     getOrders,
-    getFees
+    getFees,
+    getLiquidityPools,
+    getLiquidityPoolsOrders
 } from "./QuickTradeHelper";
 import {ChainStore, FetchChain} from "bitsharesjs";
 import {debounce} from "lodash-es";
@@ -33,6 +35,7 @@ import {Notification} from "bitshares-ui-style-guide";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
 import Translate from "react-translate-component";
+import {LiquidityPoolOrder} from "../../lib/common/MarketClasses";
 
 class QuickTrade extends Component {
     constructor(props) {
@@ -186,7 +189,7 @@ class QuickTrade extends Component {
             this._assetsHaveChanged();
         } else {
             if (this._hasMarketChanged(prevProps)) {
-                this._getOrders();
+                this._updateSwaps();
             }
         }
         if (this.props.searchAssets !== prevProps.searchAssets) {
@@ -292,13 +295,37 @@ class QuickTrade extends Component {
         });
     }
 
-    _getOrders() {
+    _updateSwaps() {
+        this._getOrders();
+    }
+
+    async _getAllAvailableOrders(asset, amount) {
+        // normal orders
+        let orders = [].concat(this.props.marketData.combinedBids);
+
+        // pool orders
+        const {sellAsset, receiveAsset} = this.state;
+
+        if (asset && amount) {
+            const pools = await getLiquidityPools(sellAsset, receiveAsset);
+            pools.forEach(pool => {
+                orders.push(
+                    new LiquidityPoolOrder(pool, asset, amount, {
+                        [sellAsset.get("id")]: sellAsset,
+                        [receiveAsset.get("id")]: receiveAsset
+                    })
+                );
+            });
+        }
+        return orders;
+    }
+
+    async _getOrders() {
         if (!this.state.isSubscribedToMarket) {
             console.log(this.props.marketData);
             // if the user wants to inspect current orders, pause updating
             return;
         }
-        const {combinedBids} = this.props.marketData;
         const {
             sellAsset,
             receiveAsset,
@@ -310,17 +337,34 @@ class QuickTrade extends Component {
             sellAssetPrecision,
             receiveAssetPrecision
         } = this.getAssetsDetails();
+        let allAvailableOrders = null;
+        switch (activeInput) {
+            case "receiveAsset":
+            case "sell":
+                allAvailableOrders = await this._getAllAvailableOrders(
+                    sellAsset,
+                    sellAmount
+                );
+                break;
+            case "sellAsset":
+            case "receive":
+                allAvailableOrders = await this._getAllAvailableOrders(
+                    receiveAsset,
+                    receiveAmount
+                );
+                break;
+        }
         if (__DEV__) {
             console.log("_getOrders", this.props.marketData);
         }
-        if (combinedBids && combinedBids.length) {
+        if (allAvailableOrders && allAvailableOrders.length) {
             if (sellAsset && receiveAsset) {
                 switch (activeInput) {
                     case "receiveAsset":
                         if (sellAmount) {
                             const orders = getOrders(
                                 sellAmount * 10 ** sellAssetPrecision,
-                                combinedBids,
+                                allAvailableOrders,
                                 "sell"
                             );
                             this.setState(
@@ -336,7 +380,7 @@ class QuickTrade extends Component {
                         if (receiveAmount) {
                             const orders = getOrders(
                                 receiveAmount * 10 ** receiveAssetPrecision,
-                                combinedBids,
+                                allAvailableOrders,
                                 "receive"
                             );
                             this.setState(
@@ -352,7 +396,7 @@ class QuickTrade extends Component {
                         if (sellAmount) {
                             const orders = getOrders(
                                 sellAmount * 10 ** sellAssetPrecision,
-                                combinedBids,
+                                allAvailableOrders,
                                 "sell"
                             );
                             this.setState(
@@ -373,7 +417,7 @@ class QuickTrade extends Component {
                         if (receiveAmount) {
                             const orders = getOrders(
                                 receiveAmount * 10 ** receiveAssetPrecision,
-                                combinedBids,
+                                allAvailableOrders,
                                 "receive"
                             );
                             this.setState(
@@ -566,7 +610,7 @@ class QuickTrade extends Component {
                 activeAmountInput: "sell"
             },
             () => {
-                this._getOrders();
+                this._updateSwaps();
             }
         );
     }
@@ -583,7 +627,7 @@ class QuickTrade extends Component {
                 activeAmountInput: "receive"
             },
             () => {
-                this._getOrders();
+                this._updateSwaps();
             }
         );
     }
@@ -699,13 +743,13 @@ class QuickTrade extends Component {
             )[0];
             const lastOrderToReceive =
                 receiveAmount * 10 ** receiveAssetPrecision -
-                penultimateOrder.order.total_for_sale.getAmount();
+                penultimateOrder.order.totalForSale().getAmount();
             const lastOrderForSale =
                 ((lastOrderToReceive / lastOrder.order.getPrice()) *
                     10 ** sellAssetPrecision) /
                 10 ** receiveAssetPrecision;
             const sellAmount = (
-                (penultimateOrder.order.total_to_receive.getAmount() +
+                (penultimateOrder.order.totalToReceive().getAmount() +
                     lastOrderForSale) /
                 10 ** sellAssetPrecision
             ).toFixed(sellAssetPrecision);
@@ -740,14 +784,14 @@ class QuickTrade extends Component {
             )[0];
             const lastOrderForSale =
                 sellAmount * 10 ** sellAssetPrecision -
-                penultimateOrder.order.total_to_receive.getAmount();
+                penultimateOrder.order.totalToReceive().getAmount();
             const lastOrderToReceive =
                 (lastOrderForSale *
                     lastOrder.order.getPrice() *
                     10 ** receiveAssetPrecision) /
                 10 ** sellAssetPrecision;
             const receiveAmount = (
-                (penultimateOrder.order.total_for_sale.getAmount() +
+                (penultimateOrder.order.totalForSale().getAmount() +
                     lastOrderToReceive) /
                 10 ** receiveAssetPrecision
             ).toFixed(receiveAssetPrecision);
@@ -1321,27 +1365,23 @@ class QuickTrade extends Component {
     }
 }
 
-QuickTrade = connect(
-    QuickTrade,
-    {
-        listenTo() {
-            return [AssetStore, MarketsStore];
-        },
-        getProps() {
-            return {
-                searchAssets: AssetStore.getState().assets,
-                assetsLoading: AssetStore.getState().assetsLoading,
-                marketData: MarketsStore.getState().marketData,
-                activeMarketHistory: MarketsStore.getState()
-                    .activeMarketHistory,
-                bucketSize: MarketsStore.getState().bucketSize,
-                currentGroupOrderLimit: MarketsStore.getState()
-                    .currentGroupOrderLimit,
-                feedPrice: MarketsStore.getState().feedPrice,
-                marketLimitOrders: MarketsStore.getState().marketLimitOrders
-            };
-        }
+QuickTrade = connect(QuickTrade, {
+    listenTo() {
+        return [AssetStore, MarketsStore];
+    },
+    getProps() {
+        return {
+            searchAssets: AssetStore.getState().assets,
+            assetsLoading: AssetStore.getState().assetsLoading,
+            marketData: MarketsStore.getState().marketData,
+            activeMarketHistory: MarketsStore.getState().activeMarketHistory,
+            bucketSize: MarketsStore.getState().bucketSize,
+            currentGroupOrderLimit: MarketsStore.getState()
+                .currentGroupOrderLimit,
+            feedPrice: MarketsStore.getState().feedPrice,
+            marketLimitOrders: MarketsStore.getState().marketLimitOrders
+        };
     }
-);
+});
 
-export default (QuickTrade = bindToCurrentAccount(QuickTrade));
+export default QuickTrade = bindToCurrentAccount(QuickTrade);
