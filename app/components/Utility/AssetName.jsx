@@ -127,8 +127,8 @@ class AssetName extends React.Component {
                 prefix && prefix === "bit"
                     ? prefix
                     : !!prefix
-                        ? prefix.toUpperCase()
-                        : prefix;
+                    ? prefix.toUpperCase()
+                    : prefix;
             let assetDiv = (
                 <div
                     className={
@@ -260,34 +260,24 @@ export default class AssetNameWrapper extends React.Component {
             );
         }
         let warning = undefined;
-        const globalOnChainConfig = GatewayStore.getGlobalOnChainConfig();
-        if (
-            !!globalOnChainConfig &&
-            !!globalOnChainConfig.blacklists &&
-            !!globalOnChainConfig.blacklists.assets
-        ) {
-            if (
-                globalOnChainConfig.blacklists.assets.includes &&
-                globalOnChainConfig.blacklists.assets.includes(this.props.name)
-            ) {
-                warning = (
-                    <Tooltip
-                        placement="topLeft"
-                        title={
-                            <React.Fragment>
-                                <span>
-                                    {counterpart.translate(
-                                        "explorer.assets.blacklisted"
-                                    )}
-                                </span>
-                            </React.Fragment>
-                        }
-                    >
-                        &nbsp;
-                        <Icon style={{color: "white"}} type="warning" />
-                    </Tooltip>
-                );
-            }
+        if (GatewayStore.isAssetBlacklisted(this.props.name)) {
+            warning = (
+                <Tooltip
+                    placement="topLeft"
+                    title={
+                        <React.Fragment>
+                            <span>
+                                {counterpart.translate(
+                                    "explorer.assets.blacklisted"
+                                )}
+                            </span>
+                        </React.Fragment>
+                    }
+                >
+                    &nbsp;
+                    <Icon style={{color: "white"}} type="warning" />
+                </Tooltip>
+            );
         }
         return !this.props.name ? null : (
             <React.Fragment>
