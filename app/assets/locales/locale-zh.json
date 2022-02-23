@@ -2604,7 +2604,8 @@
         "vesting_balance_create": "创建待解冻余额",
         "view_json": "显示原始 json",
         "view_qrcode": "显示交易二维码",
-        "title_qrcode": "交易信息二维码",
+        "view_qr": "显示二维码",
+        "title_qrcode": "交易二维码",
         "waiting": "等待确认中…",
         "whitelist_states": {
             "black_listed": "加入黑名单",

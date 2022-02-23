@@ -269,6 +269,24 @@ class TransactionConfirm extends React.Component {
             header = counterpart.translate("transaction.confirm");
 
             footer = [
+                <div
+                    style={{
+                        float: "left",
+                        cursor: "pointer",
+                        marginTop: "4px"
+                    }}
+                    key="scan-qr"
+                    onClick={this._showQrCode.bind(this)}
+                >
+                    <Translate
+                        style={{
+                            marginTop: "3px",
+                            marginLeft: "5px"
+                        }}
+                        content="transaction.view_qr"
+                    />
+                    <Icon name="qr-scan" size={"1_5x"} />
+                </div>,
                 <Button
                     key={"confirm"}
                     type="primary"
@@ -334,12 +352,6 @@ class TransactionConfirm extends React.Component {
                                 index={0}
                                 no_links={true}
                             />
-                            <span onClick={this._showQrCode.bind(this)}>
-                                <Translate
-                                    component="a"
-                                    content="transaction.view_qrcode"
-                                />
-                            </span>
                             {trStr ? (
                                 <Modal
                                     visible={showQrCode}
