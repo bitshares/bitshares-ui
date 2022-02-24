@@ -315,7 +315,7 @@ export const settingsAPIs = {
             contact: "telegram: xbtsio"
         },
         {
-            url: "wss://bts.ohshit.cc",
+            url: "wss://bts.mypi.win",
             region: "Northern America",
             country: "U.S.A.",
             location: "Seattle, CA",
