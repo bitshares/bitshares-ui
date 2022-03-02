@@ -1806,7 +1806,18 @@
         "witness_pay": "将见证人收入提取到账户",
         "witness_receive": "已从见证人处获取见证",
         "witness_update": "{account} 更新了见证人信息",
-        "worker_create": "{account} 创建了工人预算提案，请求日付工资 {pay}"
+        "worker_create": "{account} 创建了工人预算提案，请求日付工资 {pay}",
+        "credit_offer_delete": "{account} 删除P2P抵押贷 #{id}。",
+        "credit_deal_repay": "{account} 归还 {amount} P2P抵押贷借款，手续费：{fee}。",
+        "credit_offer_accept": "{account} 从P2P抵押贷借款 {amount}。",
+        "credit_offer_update": "{account} 更新P2P抵押贷 #{id}。",
+        "credit_offer_create": "{account} 创建 {amount} 的P2P抵押贷，手续费率：{fee}。",
+        "credit_deal_expired": "{account} P2P抵押贷逾期。",
+        "liquidity_pool_create": "{account} 创建流动池：{asset_a}-{asset_b}。",
+        "liquidity_pool_delete": "{account} 删除流动池 #{id}。",
+        "liquidity_pool_deposit": "{account} 增加流动性 #{id}。实际支出 {amount_a}和 {amount_b}。获得 {received}流动性代币。",
+        "liquidity_pool_withdraw": "{account} 减少流动性 #{id}。实际支出 {amount_c}流动性代币。获得 {amount_a}和 {amount_b}。",
+        "liquidity_pool_exchange": "{account} 完成交易，支出 {amount_a}，获得 {amount_b}。"
     },
     "page404": {
         "asset_not_found_subtitle": "此资产不存在",
@@ -2599,7 +2610,13 @@
             "credit_offer_delete": "P2P抵押贷 删除",
             "credit_offer_update": "P2P抵押贷 更新",
             "credit_offer_accept": "P2P抵押贷 借款",
-            "credit_deal_repay": "P2P抵押贷 还款"
+            "credit_deal_repay": "P2P抵押贷 还款",
+            "credit_deal_expired": "P2P抵押贷 逾期",
+            "liquidity_pool_create": "创建流动池",
+            "liquidity_pool_delete": "删除流动池",
+            "liquidity_pool_deposit": "增加流动性",
+            "liquidity_pool_withdraw": "减少流动性",
+            "liquidity_pool_exchange": "流动性交易"
         },
         "vesting_balance_create": "创建待解冻余额",
         "view_json": "显示原始 json",
