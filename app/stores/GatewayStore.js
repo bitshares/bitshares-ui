@@ -34,8 +34,37 @@ class GatewayStore {
     }
 
     static getGlobalOnChainConfig() {
-        // call another static method with this
         return this.getState().onChainGatewayConfig;
+    }
+
+    /**
+     * FIXME: This does not belong into GatewayStore, but only creating a new store for it seems excessive
+     * @param asset
+     * @returns {boolean}
+     */
+    static isAssetBlacklisted(asset) {
+        let symbol = null;
+        if (typeof asset == "object") {
+            if (asset.symbol) {
+                symbol = asset.symbol;
+            } else if (asset.get) {
+                symbol = asset.get("symbol");
+            }
+        } else {
+            // string
+            symbol = asset;
+        }
+        const globalOnChainConfig = this.getState().onChainGatewayConfig;
+        if (
+            !!globalOnChainConfig &&
+            !!globalOnChainConfig.blacklists &&
+            !!globalOnChainConfig.blacklists.assets
+        ) {
+            if (globalOnChainConfig.blacklists.assets.includes) {
+                return globalOnChainConfig.blacklists.assets.includes(symbol);
+            }
+        }
+        return false;
     }
 
     constructor() {
@@ -116,7 +145,7 @@ class GatewayStore {
                         coins_by_type[a.outputCoinType] &&
                         coins_by_type[a.outputCoinType].walletType ===
                             "bitshares2" && // Only use bitshares2 wallet types
-                            this.bridgeInputs.indexOf(a.inputCoinType) !== -1 // Only use coin types defined in bridgeInputs
+                        this.bridgeInputs.indexOf(a.inputCoinType) !== -1 // Only use coin types defined in bridgeInputs
                     );
                 })
                 .forEach(coin => {
