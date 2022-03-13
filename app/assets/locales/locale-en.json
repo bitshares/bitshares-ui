@@ -1810,7 +1810,18 @@
         "witness_pay": "Withdrew witness pay to account",
         "witness_receive": "Received witness from witness",
         "witness_update": "{account} update its witness info",
-        "worker_create": "{account} created a worker proposal with daily pay of {pay}"
+        "worker_create": "{account} created a worker proposal with daily pay of {pay}",
+        "credit_offer_delete": "{account} deleted credit offer #{id}.",
+        "credit_deal_repay": "{account} repays {amount} to credit offer，fee: {fee}.",
+        "credit_offer_accept": "{account} borrows {amount} from credit offer.",
+        "credit_offer_update": "{account} update a credit offer #{id}.",
+        "credit_offer_create": "{account} create a credit offer of {amount}，fee rate: {fee}.",
+        "credit_deal_expired": "{account} credit deal has expired.",
+        "liquidity_pool_create": "{account} create a liquidity pool: {asset_a}-{asset_b}.",
+        "liquidity_pool_delete": "{account} deleted a liquidity pool #{id}.",
+        "liquidity_pool_deposit": "{account} add liquidity #{id}. paid {amount_a} and {amount_b}. received {received}.",
+        "liquidity_pool_withdraw": "{account} remove liquidity #{id}. paid {amount_c}. received {amount_a} and {amount_b}.",
+        "liquidity_pool_exchange": "{account} seal the deal, paid {amount_a}, received {amount_b}."
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
@@ -2603,7 +2614,13 @@
             "credit_offer_delete": "Delete credit offer",
             "credit_offer_update": "Update credit offer",
             "credit_offer_accept": "Accept credit offer",
-            "credit_deal_repay": "Repay credit deal"
+            "credit_deal_repay": "Repay credit deal",
+            "credit_deal_expired": "Credit deal expired",
+            "liquidity_pool_create": "Create liquidity pool",
+            "liquidity_pool_delete": "Delete liquidity pool",
+            "liquidity_pool_deposit": "Add liquidity",
+            "liquidity_pool_withdraw": "Remove liquidity",
+            "liquidity_pool_exchange": "Exchange liquidity"
         },
         "vesting_balance_create": "created vesting balance of",
         "view_json": "Show raw json",

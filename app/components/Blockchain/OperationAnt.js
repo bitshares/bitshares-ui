@@ -1576,6 +1576,275 @@ class Operation {
                 );
 
                 break;
+            case "credit_offer_delete":
+                color = "cancel";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.credit_offer_delete"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].owner_account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].offer_id,
+                                arg: "id"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "credit_deal_repay":
+                color = "success";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.credit_deal_repay"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].repay_amount,
+                                arg: "amount"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].credit_fee,
+                                arg: "fee"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "credit_offer_accept":
+                color = "success";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.credit_offer_accept"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].borrower,
+                                arg: "account"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].borrow_amount,
+                                arg: "amount"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "credit_offer_update":
+                color = "warning";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.credit_offer_update"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].owner_account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].offer_id,
+                                arg: "id"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "credit_offer_create":
+                color = "warning";
+                let amount = {
+                    asset_id: op[1].asset_type,
+                    amount: op[1].balance
+                };
+                column = (
+                    <TranslateWithLinks
+                        string="operation.credit_offer_create"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].owner_account,
+                                arg: "account"
+                            },
+                            {
+                                type: "amount",
+                                value: amount,
+                                arg: "amount"
+                            },
+                            {
+                                value: `${(parseFloat(op[1].fee_rate) /
+                                    1000000) *
+                                    100}%`,
+                                arg: "fee"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "credit_deal_expired":
+                color = "cancel";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.credit_deal_expired"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].borrower,
+                                arg: "account"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "liquidity_pool_create":
+                color = "warning";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.liquidity_pool_create"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
+                            {
+                                type: "asset",
+                                value: op[1].asset_a,
+                                arg: "asset_a"
+                            },
+                            {
+                                type: "asset",
+                                value: op[1].asset_b,
+                                arg: "asset_b"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "liquidity_pool_delete":
+                color = "cancel";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.liquidity_pool_delete"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].pool,
+                                arg: "id"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "liquidity_pool_deposit":
+                color = "warning";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.liquidity_pool_deposit"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].pool,
+                                arg: "id"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].paid[0],
+                                arg: "amount_a"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].paid[1],
+                                arg: "amount_b"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].received[0],
+                                arg: "received"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "liquidity_pool_withdraw":
+                color = "warning";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.liquidity_pool_withdraw"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].pool,
+                                arg: "id"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].received[0],
+                                arg: "amount_a"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].received[1],
+                                arg: "amount_b"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].paid[0],
+                                arg: "amount_c"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "liquidity_pool_exchange":
+                color = "success";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.liquidity_pool_exchange"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].pool,
+                                arg: "id"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].paid[0],
+                                arg: "amount_a"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1].received[1],
+                                arg: "amount_b"
+                            }
+                        ]}
+                    />
+                );
+                break;
             default:
                 console.log("unimplemented op '" + ops[op[0]] + "':", op);
                 column = (
