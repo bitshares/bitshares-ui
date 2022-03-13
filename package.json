@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "5.0.220214-rc1",
+    "version": "5.0.220214-rc2",
     "description": "Reference UI to showcase all features of the BitShares blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Worker <ui-dev@bitshares.org>",
@@ -148,7 +148,7 @@
         "bignumber.js": "^4.0.0",
         "bitshares-report": "https://github.com/bitshares/bitshares-report.git",
         "bitshares-ui-style-guide": "https://github.com/bitshares/bitshares-ui-style-guide.git",
-        "bitsharesjs": "https://github.com/bitshares/bitsharesjs.git#develop",
+        "bitsharesjs": "^6.0.0",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
         "constants-browserify": "^1.0.0",
