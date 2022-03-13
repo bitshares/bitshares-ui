@@ -21,7 +21,7 @@ class InitError extends React.Component {
         this.handleModalClose = this.handleModalClose.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (
             nextProps.rpc_connection_status === "open" &&
             nextProps.apiServer !== this.props.apiServer
@@ -181,22 +181,19 @@ class InitError extends React.Component {
     }
 }
 
-export default connect(
-    InitError,
-    {
-        listenTo() {
-            return [BlockchainStore, SettingsStore];
-        },
-        getProps() {
-            return {
-                rpc_connection_status: BlockchainStore.getState()
-                    .rpc_connection_status,
-                apis: SettingsStore.getState().defaults.apiServer,
-                apiServer: SettingsStore.getState().settings.get("apiServer"),
-                defaultConnection: SettingsStore.getState().defaultSettings.get(
-                    "apiServer"
-                )
-            };
-        }
+export default connect(InitError, {
+    listenTo() {
+        return [BlockchainStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            rpc_connection_status: BlockchainStore.getState()
+                .rpc_connection_status,
+            apis: SettingsStore.getState().defaults.apiServer,
+            apiServer: SettingsStore.getState().settings.get("apiServer"),
+            defaultConnection: SettingsStore.getState().defaultSettings.get(
+                "apiServer"
+            )
+        };
     }
-);
+});

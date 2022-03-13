@@ -63,7 +63,7 @@ export function getTestFaucet() {
  * @returns {*}
  */
 export function getLogo() {
-    return require("assets/logo-ico-blue.png");
+    return require("assets/logo-ico-blue.png").default;
 }
 
 /**
@@ -159,23 +159,8 @@ export function getMyMarketsQuotes() {
             "GDEX.NULS",
             "GDEX.USDT"
         ],
-        openledgerTokens: ["OBITS"],
-        rudexTokens: [
-            "PPY",
-            "RUDEX.BTC",
-            "RUDEX.ETH",
-            "RUDEX.USDT",
-            "RUDEX.EOS",
-            "RUDEX.GOLOS",
-            "RUDEX.GBG",
-            "RUDEX.STEEM",
-            "RUDEX.SBD",
-            "RUDEX.KRM",
-            "RUDEX.WLS",
-            "RUDEX.SMOKE",
-            "RUDEX.GRC",
-            "RUDEX.PZM"
-        ],
+        openledgerTokens: [],
+        rudexTokens: [],
         xbtsxTokens: [
             "XBTSX.STH",
             "XBTSX.POST",
@@ -205,6 +190,7 @@ export function getMyMarketsQuotes() {
             "XBTSX.EOS",
             "XBTSX.BAT"
         ],
+        honestTokens: ["HONEST.BTC", "HONEST.USD"],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
@@ -232,14 +218,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "GDEX.ETH"],
         ["USD", "GDEX.EOS"],
         ["USD", "GDEX.BTO"],
-        ["USD", "RUDEX.GOLOS"],
-        ["USD", "RUDEX.STEEM"],
-        ["USD", "RUDEX.EOS"],
-        ["USD", "RUDEX.BTC"],
-        ["USD", "RUDEX.ETH"],
-        ["USD", "RUDEX.USDT"],
-        ["USD", "RUDEX.WLS"],
-        ["USD", "RUDEX.SMOKE"],
+        ["USD", "HONEST.BTC"],
+        ["USD", "HONEST.USD"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
         ["CNY", "YOYOW"],
@@ -252,15 +232,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "GDEX.BKBT"],
         ["CNY", "GDEX.USDT"],
         ["CNY", "GDEX.GXC"],
-        ["CNY", "RUDEX.GOLOS"],
-        ["CNY", "RUDEX.STEEM"],
-        ["CNY", "RUDEX.EOS"],
-        ["CNY", "RUDEX.BTC"],
-        ["CNY", "RUDEX.ETH"],
-        ["CNY", "RUDEX.USDT"],
-        ["CNY", "RUDEX.WLS"],
-        ["CNY", "RUDEX.SMOKE"],
-        ["BTS", "PPY"],
+        ["CNY", "HONEST.BTC"],
+        ["CNY", "HONEST.USD"],
         ["BTS", "RUBLE"],
         ["BTS", "HERO"],
         ["BTS", "OCT"],
@@ -271,33 +244,6 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "GDEX.EOS"],
         ["BTS", "GDEX.BTO"],
         ["BTS", "GDEX.USDT"],
-        ["RUDEX.USDT", "RUDEX.BTC"],
-        ["RUDEX.USDT", "RUDEX.ETH"],
-        ["RUDEX.USDT", "RUDEX.EOS"],
-        ["RUDEX.USDT", "RUDEX.PZM"],
-        ["RUDEX.USDT", "PPY"],
-        ["RUDEX.USDT", "RUBLE"],
-        ["RUDEX.BTC", "RUDEX.ETH"],
-        ["RUDEX.BTC", "RUDEX.EOS"],
-        ["RUDEX.BTC", "RUDEX.STEEM"],
-        ["RUDEX.BTC", "RUDEX.GOLOS"],
-        ["RUDEX.BTC", "RUDEX.WLS"],
-        ["RUDEX.BTC", "PPY"],
-        ["RUBLE", "RUDEX.BTC"],
-        ["RUBLE", "RUDEX.ETH"],
-        ["RUBLE", "RUDEX.USDT"],
-        ["RUBLE", "RUDEX.GOLOS"],
-        ["RUDEX.BTC", "RUDEX.PZM"],
-        ["RUB", "RUDEX.GOLOS"],
-        ["BTS", "RUDEX.GOLOS"],
-        ["BTS", "RUDEX.STEEM"],
-        ["BTS", "RUDEX.EOS"],
-        ["BTS", "RUDEX.BTC"],
-        ["BTS", "RUDEX.ETH"],
-        ["BTS", "RUDEX.USDT"],
-        ["BTS", "RUDEX.WLS"],
-        ["BTS", "RUDEX.SMOKE"],
-        ["BTS", "RUDEX.PZM"],
         ["BTS", "XBTSX.BTC"],
         ["BTS", "XBTSX.ETH"],
         ["BTS", "XBTSX.EUR"],
@@ -309,6 +255,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "XBTSX.USDC"],
         ["BTS", "XBTSX.USDN"],
         ["BTS", "XBTSX.USDT"],
+        ["BTS", "HONEST.BTC"],
+        ["BTS", "HONEST.USD"],
         ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
@@ -325,7 +273,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["OPEN.", "RUDEX.", "GDEX.", "XBTSX.", "CITADEL."];
+    return ["XBTSX.", "GDEX.", "HONEST."];
 }
 
 /**
@@ -333,7 +281,7 @@ export function getAssetNamespaces() {
  * @returns {[string,string]}
  */
 export function getAssetHideNamespaces() {
-    // e..g "OPEN.", "bit"
+    // e..g "XBTSX.", "bit"
     return [];
 }
 
@@ -346,10 +294,10 @@ export function allowedGateway(gateway) {
     const allowedGateways = [
         "TRADE",
         "OPEN", // keep to display the warning icon, permanently disabled in gateways.js
-        "RUDEX",
+        "RUDEX", // keep to display the warning icon, permanently disabled in gateways.js
         "GDEX",
         "XBTSX",
-        "CITADEL",
+        "CITADEL", // keep to display the warning icon, permanently disabled in gateways.js
         "BRIDGE", // keep to display the warning icon, permanently disabled in gateways.js
         "SPARKDEX" // keep to display the warning icon, permanently disabled in gateways.js
     ];

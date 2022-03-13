@@ -1,11 +1,13 @@
 version: 1.0.{build}
 environment:
-    nodejs_version: 10
+    nodejs_version: 16.13
 install:
     # Get the latest stable version of Node.js or io.js
     - ps: Install-Product node $env:nodejs_version
     # install modules
-    - npm ci
+    # - npm ci
+    - corepack enable
+    - yarn install --network-concurrency 1 --frozen-lockfile
 build: off
 platform:
     - x64
@@ -30,12 +32,10 @@ artifacts:
 deploy:
     provider: GitHub
     release: $(APPVEYOR_REPO_TAG_NAME)
-    description:
-        "Automated release from Travis CI with added files from AppVeyor build"
+    description: "Automated release from Travis CI with added files from AppVeyor build"
     auth_token:
         secure: uS05GMpB0YT6PxlANXE0RK4+QMcgVIzza/sq8FooNp6Qt0cLcxrtbf8FwslpRg5I
-    artifact:
-        WindowsApp, html5_history_dist, hash_history_dist, release-checksums-windows
+    artifact: WindowsApp, html5_history_dist, hash_history_dist, release-checksums-windows
     draft: true
     force_update: true
     on:

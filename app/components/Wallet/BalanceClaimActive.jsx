@@ -16,14 +16,14 @@ import Translate from "react-translate-component";
 import {Notification} from "bitshares-ui-style-guide";
 
 class BalanceClaimActive extends Component {
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let keys = PrivateKeyStore.getState().keys;
         let keySeq = keys.keySeq();
         BalanceClaimActiveActions.setPubkeys(keySeq);
         this.existing_keys = keySeq;
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         let keys = PrivateKeyStore.getState().keys;
         let keySeq = keys.keySeq();
         if (!keySeq.equals(this.existing_keys)) {
@@ -152,18 +152,15 @@ class BalanceClaimActive extends Component {
     }
 }
 
-BalanceClaimActive = connect(
-    BalanceClaimActive,
-    {
-        listenTo() {
-            return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore];
-        },
-        getProps() {
-            let props = BalanceClaimActiveStore.getState();
-            props.account_refs = AccountRefsStore.getAccountRefs();
-            return props;
-        }
+BalanceClaimActive = connect(BalanceClaimActive, {
+    listenTo() {
+        return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore];
+    },
+    getProps() {
+        let props = BalanceClaimActiveStore.getState();
+        props.account_refs = AccountRefsStore.getAccountRefs();
+        return props;
     }
-);
+});
 
 export default BalanceClaimActive;

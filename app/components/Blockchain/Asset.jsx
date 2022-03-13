@@ -24,7 +24,15 @@ import AssetOwnerUpdate from "./AssetOwnerUpdate";
 import AssetPublishFeed from "./AssetPublishFeed";
 import AssetResolvePrediction from "./AssetResolvePrediction";
 import BidCollateralOperation from "./BidCollateralOperation";
-import {Tooltip, Icon, Table, Tabs, Collapse} from "bitshares-ui-style-guide";
+import {
+    Tooltip,
+    Icon,
+    Table,
+    Tabs,
+    Collapse,
+    Alert
+} from "bitshares-ui-style-guide";
+import GatewayStore from "../../stores/GatewayStore";
 const {Panel} = Collapse;
 
 class AssetFlag extends React.Component {
@@ -79,7 +87,7 @@ class Asset extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._getMarginCollateral();
     }
 
@@ -369,8 +377,37 @@ class Asset extends React.Component {
         }
 
         let {name, prefix} = utils.replaceName(originalAsset);
+
+        let warning = undefined;
+        if (GatewayStore.isAssetBlacklisted(asset)) {
+            warning = (
+                <Alert
+                    message={counterpart.translate(
+                        "explorer.assets.blacklisted"
+                    )}
+                    type="error"
+                    showIcon
+                    style={{marginTop: "1em"}}
+                />
+            );
+        }
         return (
             <div style={{overflow: "visible"}}>
+                {asset &&
+                    issuer &&
+                    asset.id != "1.3.0" &&
+                    issuer.get("id") != "1.2.0" && (
+                        <Alert
+                            message={counterpart.translate(
+                                "explorer.asset.asset_owner_responsible"
+                            )}
+                            type="info"
+                            showIcon
+                            style={{marginTop: "1em"}}
+                        />
+                    )}
+                {warning}
+
                 <HelpContent
                     path={"assets/" + asset.symbol}
                     alt_path="assets/Asset"
@@ -515,6 +552,25 @@ class Asset extends React.Component {
                 </tr>
             ) : null;
 
+        var marketFeeTaker =
+            flagBooleans["charge_market_fee"] &&
+            options.extensions &&
+            options.extensions.taker_fee_percent >= 0 ? (
+                <tr>
+                    <td>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "account.user_issued_assets.taker_fee_percent_tooltip"
+                            )}
+                        >
+                            <Translate content="explorer.asset.summary.market_fee_referral_taker_fee_percent" />{" "}
+                            <Icon type="question-circle" theme="filled" />
+                        </Tooltip>
+                    </td>
+                    <td> {options.extensions.taker_fee_percent / 100.0} % </td>
+                </tr>
+            ) : null;
+
         return (
             <div className="asset-card no-padding">
                 <div className="card-divider">
@@ -562,6 +618,7 @@ class Asset extends React.Component {
                         {stealthSupply}
                         {marketFee}
                         {marketFeeReferralReward}
+                        {marketFeeTaker}
                     </tbody>
                 </table>
                 <br />
@@ -1520,8 +1577,8 @@ class Asset extends React.Component {
                                     median_offset > 0
                                         ? "txtlabel success"
                                         : median_offset < 0
-                                            ? "txtlabel warning"
-                                            : "txtlabel"
+                                        ? "txtlabel warning"
+                                        : "txtlabel"
                                 }
                             >
                                 {median_offset}%
@@ -2183,21 +2240,18 @@ class Asset extends React.Component {
     }
 }
 
-Asset = connect(
-    Asset,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
+Asset = connect(Asset, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
     }
-);
+});
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset", "coreAsset"]

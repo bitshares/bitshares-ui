@@ -211,7 +211,7 @@ class GdexGateway extends React.Component {
         });
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._checkIsAgree();
         this._getCoins();
     }
@@ -282,7 +282,7 @@ class GdexGateway extends React.Component {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props.account != nextProps.account) {
             this._checkIsAgree(nextProps.account.get("name"));
         }
@@ -319,7 +319,7 @@ class GdexGateway extends React.Component {
             memo_rule
         } = this.state;
         let issuer = {
-            ticket: "https://support.gdex.io/",
+            ticket: "https://support.btsdex.top/help/",
             qq: "602573197",
             telgram: "https://t.me/GDEXer"
         };
@@ -621,17 +621,14 @@ class GdexGateway extends React.Component {
     }
 }
 
-export default connect(
-    GdexGateway,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                viewSettings: SettingsStore.getState().viewSettings,
-                settings: SettingsStore.getState().settings
-            };
-        }
+export default connect(GdexGateway, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings,
+            settings: SettingsStore.getState().settings
+        };
     }
-);
+});

@@ -88,7 +88,7 @@ class MarketPickerWrapper extends Component {
         this.refs.marketPicker_input.focus();
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.marketPickerAsset !== this.props.marketPickerAsset)
             this.setState(this.initialState());
 
@@ -193,7 +193,7 @@ class MarketPickerWrapper extends Component {
                         value={inputValue}
                         onChange={this._onInputName.bind(this, true)}
                         placeholder={counterpart.translate(placeHolderKey)}
-                        maxLength="16"
+                        maxLength={16}
                         tabIndex={2}
                     />
                 </Form.Item>
@@ -274,13 +274,13 @@ class MarketPicker extends Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             smallScreen: window.innerWidth <= 800
         });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (
             this.props.quoteAsset.get("id") !==
                 nextProps.quoteAsset.get("id") ||
@@ -322,19 +322,16 @@ class MarketPicker extends Component {
     }
 }
 
-MarketPicker = connect(
-    MarketPicker,
-    {
-        listenTo() {
-            return [AssetStore];
-        },
-        getProps() {
-            return {
-                searchAssets: AssetStore.getState().assets,
-                assetsLoading: AssetStore.getState().assetsLoading
-            };
-        }
+MarketPicker = connect(MarketPicker, {
+    listenTo() {
+        return [AssetStore];
+    },
+    getProps() {
+        return {
+            searchAssets: AssetStore.getState().assets,
+            assetsLoading: AssetStore.getState().assetsLoading
+        };
     }
-);
+});
 
 export default MarketPicker;

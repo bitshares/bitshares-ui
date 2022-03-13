@@ -87,7 +87,7 @@ class AccountVoting extends React.Component {
         this.hideCreateLockModal = this.hideCreateLockModal.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "account_update");
         ChainStore.fetchAllWorkers();
         this.getBudgetObject();
@@ -114,7 +114,7 @@ class AccountVoting extends React.Component {
         );
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.account !== this.props.account) {
             const proxyId = np.proxy.get("id");
             let newState = {

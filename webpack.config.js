@@ -1,17 +1,17 @@
 var path = require("path");
 var webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var Clean = require("clean-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin").default;
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 var locales = require("./app/assets/locales");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+var fs = require("fs");
 
 /*
-* For staging builds, set the version to the latest commit hash, for
-* production set it to the package version
-*/
+ * For staging builds, set the version to the latest commit hash, for
+ * production set it to the package version
+ */
 let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
 var __VERSION__ =
     branch === "develop" ? git.short() : require("./package.json").version;
@@ -44,23 +44,26 @@ module.exports = function(env) {
             loader: "postcss-loader"
         },
         {
-            loader: "sass-loader",
-            options: {
-                outputStyle: "expanded"
-            }
+            loader: "sass-loader"
         }
     ];
 
     // OUTPUT PATH
-    var outputPath = path.join(root_dir, "assets");
+    var outputPath = path.join(root_dir, "assets").replace(/\\/g, "/");
 
     // COMMON PLUGINS
-    const baseUrl = env.electron ? "./" : "baseUrl" in env ? env.baseUrl : "/";
+    const baseUrl = env.electron
+        ? "./"
+        : "baseUrl" in env
+        ? env.baseUrl === "false"
+            ? ""
+            : env.baseUrl
+        : "/";
 
     /*
-    * moment and react-intl include tons of locale files, use a regex and
-    * ContextReplacementPlugin to only include certain locale files
-    */
+     * moment and react-intl include tons of locale files, use a regex and
+     * ContextReplacementPlugin to only include certain locale files
+     */
     let regexString = "";
     locales.forEach((l, i) => {
         regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
@@ -97,56 +100,52 @@ module.exports = function(env) {
             /react-intl[\/\\]locale-data$/,
             localeRegex
         ),
-        new CopyWebpackPlugin([
-            {
-                from: path.join(root_dir, "charting_library"),
-                to: "charting_library"
-            }
-        ])
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.join(root_dir, "charting_library"),
+                    to: "charting_library"
+                }
+            ]
+        }),
+        new webpack.ProvidePlugin({
+            Buffer: ["buffer", "Buffer"]
+        }),
+        new webpack.ProvidePlugin({
+            process: ["process", "process"]
+        })
     ];
     if (env.prod) {
         // PROD OUTPUT PATH
         let outputDir = env.electron
             ? "electron"
             : env.hash
-                ? !baseUrl
-                    ? "hash-history"
-                    : `hash-history_${baseUrl.replace("/", "")}`
-                : "dist";
+            ? !baseUrl
+                ? "hash-history"
+                : `hash-history_${baseUrl.replace("/", "")}`
+            : "dist";
         outputPath = path.join(root_dir, "build", outputDir);
-
-        // DIRECTORY CLEANER
-        var cleanDirectories = [outputPath];
 
         // WRAP INTO CSS FILE
         cssLoaders = [
             {loader: MiniCssExtractPlugin.loader},
             {loader: "css-loader"},
-            {
-                loader: "postcss-loader",
-                options: {
-                    minimize: true,
-                    debug: false
-                }
-            }
+            {loader: "postcss-loader"}
         ];
         scssLoaders = [
             {loader: MiniCssExtractPlugin.loader},
             {loader: "css-loader"},
+            {loader: "postcss-loader"},
             {
-                loader: "postcss-loader",
-                options: {
-                    minimize: true,
-                    debug: false
-                }
-            },
-            {loader: "sass-loader", options: {outputStyle: "expanded"}}
+                loader: "sass-loader",
+                options: {sassOptions: {outputStyle: "expanded"}}
+            }
         ];
 
         // PROD PLUGINS
-        plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(
             new webpack.DefinePlugin({
+                "process.env": {NODE_ENV: JSON.stringify("production")},
                 __DEV__: false
             })
         );
@@ -166,17 +165,16 @@ module.exports = function(env) {
     }
 
     plugins.push(
-        new CopyWebpackPlugin(
-            [
+        new CopyWebpackPlugin({
+            patterns: [
                 {
-                    from: path.join(
-                        root_dir,
-                        "app",
-                        "assets",
-                        "locales",
+                    from: path.posix.join(
+                        path
+                            .join(root_dir, "app", "assets", "locales")
+                            .replace(/\\/g, "/"),
                         "*.json"
                     ),
-                    to: path.join(outputPath, "[name].[ext]"),
+                    to: path.join(outputPath, "[name][ext]"),
                     toType: "template"
                 },
                 {
@@ -200,9 +198,8 @@ module.exports = function(env) {
                     to: path.join(outputPath, "outdated_browser.css"),
                     toType: "file"
                 }
-            ],
-            {}
-        )
+            ]
+        })
     );
 
     /* Workaround in which the github pages server will find a file when it looks
@@ -211,8 +208,8 @@ module.exports = function(env) {
 
     if (env.hash)
         plugins.push(
-            new CopyWebpackPlugin(
-                [
+            new CopyWebpackPlugin({
+                patterns: [
                     {
                         from: path.join(
                             root_dir,
@@ -229,17 +226,36 @@ module.exports = function(env) {
                         ),
                         toType: "file"
                     }
-                ],
-                {}
-            )
+                ]
+            })
         );
+    var alias = {
+        sanitize$: "xss",
+        moment$: path.resolve(root_dir, "node_modules/moment/moment.js"),
+        bitsharesjs$: path.resolve(root_dir, "node_modules/bitsharesjs/"),
+        "bitshares-ui-style-guide$": path.resolve(
+            root_dir,
+            "node_modules/bitshares-ui-style-guide/dist/main.js"
+        )
+    };
+    if (!env.prod) {
+        alias = Object.assign({}, alias, {
+            "react-dom": "@hot-loader/react-dom"
+        });
+    }
+    var https = false;
+    if (env.https) {
+        https = {
+            key: fs.readFileSync("./ssl/server.key"),
+            cert: fs.readFileSync("./ssl/server.crt")
+        };
+    }
     var config = {
         mode: env.noUgly ? "none" : env.prod ? "production" : "development",
         entry: {
             app: env.prod
                 ? path.resolve(root_dir, "app/Main.js")
                 : [
-                      "webpack-hot-middleware/client",
                       "react-hot-loader/patch",
                       path.resolve(root_dir, "app/Main.js")
                   ]
@@ -251,7 +267,22 @@ module.exports = function(env) {
             chunkFilename: env.prod ? "[name].[chunkhash].js" : "[name].js",
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map",
-            globalObject: "this"
+            globalObject: "this",
+            clean: true
+        },
+        devServer: {
+            hot: true,
+            static: {
+                directory: path.join(__dirname, "app/assets/locales"),
+                publicPath: env.prod ? "" : "/"
+            },
+            historyApiFallback: true,
+            https: https,
+            devMiddleware: {
+                index: true,
+                mimeTypes: {phtml: "text/html"},
+                publicPath: env.prod ? "" : "/"
+            }
         },
         optimization: {
             splitChunks: {
@@ -296,6 +327,12 @@ module.exports = function(env) {
                         {
                             loader: "babel-loader",
                             options: {
+                                presets: [
+                                    [
+                                        "@babel/preset-react",
+                                        {targets: {node: "current"}}
+                                    ]
+                                ],
                                 cacheDirectory: env.prod ? false : true,
                                 plugins: ["react-hot-loader/babel"]
                             }
@@ -306,7 +343,6 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
-                        path.join(root_dir, "node_modules/react-datepicker2"),
                         path.join(root_dir, "node_modules/alt-container"),
                         path.join(root_dir, "node_modules/alt-react")
                     ],
@@ -316,7 +352,13 @@ module.exports = function(env) {
                             options: {
                                 compact: false,
                                 cacheDirectory: env.prod ? false : true,
-                                plugins: ["react-hot-loader/babel"]
+                                plugins: ["react-hot-loader/babel"],
+                                presets: [
+                                    [
+                                        "@babel/preset-react",
+                                        {targets: {node: "current"}}
+                                    ]
+                                ]
                             }
                         }
                     ]
@@ -329,7 +371,10 @@ module.exports = function(env) {
                 {test: /\.coffee$/, loader: "coffee-loader"},
                 {
                     test: /\.(coffee\.md|litcoffee)$/,
-                    loader: "coffee-loader?literate"
+                    loader: "coffee-loader",
+                    options: {
+                        literate: true
+                    }
                 },
                 {
                     test: /\.css$/,
@@ -384,10 +429,10 @@ module.exports = function(env) {
                             loader: "svgo-loader",
                             options: {
                                 plugins: [
-                                    {cleanupAttrs: true},
-                                    {removeMetadata: true},
-                                    {removeXMLNS: true},
-                                    {removeViewBox: false}
+                                    {name: "cleanupAttrs", active: true},
+                                    {name: "removeMetadata", active: true},
+                                    {name: "removeXMLNS", active: true},
+                                    {name: "removeViewBox", active: false}
                                 ]
                             }
                         }
@@ -398,9 +443,7 @@ module.exports = function(env) {
                     use: [
                         {
                             loader: "html-loader",
-                            options: {
-                                removeAttributeQuotes: false
-                            }
+                            options: {sources: false}
                         },
                         {
                             loader: "markdown-loader",
@@ -418,20 +461,13 @@ module.exports = function(env) {
             ],
             extensions: [".js", ".jsx", ".coffee", ".json"],
             mainFields: ["module", "jsnext:main", "browser", "main"],
-            alias: {
-                sanitize$: "xss",
-                moment$: path.resolve(
-                    root_dir,
-                    "node_modules/moment/moment.js"
-                ),
-                bitsharesjs$: path.resolve(
-                    root_dir,
-                    "node_modules/bitsharesjs/"
-                ),
-                "bitshares-ui-style-guide$": path.resolve(
-                    root_dir,
-                    "node_modules/bitshares-ui-style-guide/dist/main.js"
-                )
+            alias: alias,
+            fallback: {
+                crypto: require.resolve("crypto-browserify"),
+                constants: require.resolve("constants-browserify"),
+                stream: require.resolve("stream-browserify"),
+                path: require.resolve("path-browserify"),
+                buffer: require.resolve("buffer")
             }
         },
         plugins: plugins

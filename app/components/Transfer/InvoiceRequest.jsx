@@ -50,7 +50,7 @@ class InvoiceRequest extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
+    UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
         if (this.state.recipient_name == null && this.props.currentAccount) {
             this.setState({
                 recipient_name: this.props.currentAccount.get("name")

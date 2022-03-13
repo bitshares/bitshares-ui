@@ -8,7 +8,6 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import utils from "common/utils";
 import ReactTooltip from "react-tooltip";
 import {Tooltip} from "bitshares-ui-style-guide";
-import sanitize from "sanitize";
 
 class MemoText extends React.Component {
     static defaultProps = {
@@ -92,16 +91,13 @@ class MemoTextStoreWrapper extends React.Component {
     }
 }
 
-export default connect(
-    MemoTextStoreWrapper,
-    {
-        listenTo() {
-            return [WalletUnlockStore];
-        },
-        getProps() {
-            return {
-                wallet_locked: WalletUnlockStore.getState().locked
-            };
-        }
+export default connect(MemoTextStoreWrapper, {
+    listenTo() {
+        return [WalletUnlockStore];
+    },
+    getProps() {
+        return {
+            wallet_locked: WalletUnlockStore.getState().locked
+        };
     }
-);
+});

@@ -71,7 +71,7 @@ class WithdrawModalBlocktrades extends React.Component {
         this.hideConfirmationModal = this.hideConfirmationModal.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._updateFee();
         this._checkFeeStatus();
     }
@@ -80,7 +80,7 @@ class WithdrawModalBlocktrades extends React.Component {
         this.unMounted = true;
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             np.account !== this.state.from_account &&
             np.account !== this.props.account
@@ -878,18 +878,13 @@ class WithdrawModalBlocktrades extends React.Component {
 
 WithdrawModalBlocktrades = BindToChainState(WithdrawModalBlocktrades);
 
-export default connect(
-    WithdrawModalBlocktrades,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps(props) {
-            return {
-                fee_asset_symbol: SettingsStore.getState().settings.get(
-                    "fee_asset"
-                )
-            };
-        }
+export default connect(WithdrawModalBlocktrades, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps(props) {
+        return {
+            fee_asset_symbol: SettingsStore.getState().settings.get("fee_asset")
+        };
     }
-);
+});

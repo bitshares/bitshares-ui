@@ -143,10 +143,10 @@ class MarketsActions {
 
     subscribeMarket(base, quote, bucketSize, groupedOrderLimit) {
         /*
-        * DataFeed will call subscribeMarket with undefined groupedOrderLimit,
-        * so we keep track of the last value used and use that instead in that
-        * case
-        */
+         * DataFeed will call subscribeMarket with undefined groupedOrderLimit,
+         * so we keep track of the last value used and use that instead in that
+         * case
+         */
         if (typeof groupedOrderLimit === "undefined")
             groupedOrderLimit = currentGroupedOrderLimit;
         else currentGroupedOrderLimit = groupedOrderLimit;
@@ -164,16 +164,16 @@ class MarketsActions {
         return dispatch => {
             let subscription = (marketId, subResult) => {
                 /*
-                ** When switching markets rapidly we might receive sub notifications
-                ** from the previous markets, in that case disregard them
-                */
+                 ** When switching markets rapidly we might receive sub notifications
+                 ** from the previous markets, in that case disregard them
+                 */
                 if (marketId !== currentMarket) {
                     return;
                 }
                 /* In the case of many market notifications arriving at the same time,
-                * we queue them in a batch here and dispatch them all at once at a frequency
-                * defined by "subBatchTime"
-                */
+                 * we queue them in a batch here and dispatch them all at once at a frequency
+                 * defined by "subBatchTime"
+                 */
                 if (!dispatchSubTimeout) {
                     subBatchResults = subBatchResults.concat(subResult);
 
@@ -723,14 +723,22 @@ class MarketsActions {
         });
     }
 
-    cancelLimitOrders(accountID, orderIDs) {
-        let fee_asset_id = accountUtils.getFinalFeeAsset(
-            accountID,
-            "limit_order_cancel"
-        );
-
-        var tr = WalletApi.new_transaction();
-        orderIDs.forEach(id => {
+    cancelLimitOrders(accountID, orderIDs, fallbackFeeAssets = "1.3.0") {
+        if (__DEV__) {
+            console.log("cancelLimitOrders", accountID, orderIDs);
+        }
+        let tr = WalletApi.new_transaction();
+        for (let i = 0; i < orderIDs.length; i++) {
+            let id = orderIDs[i];
+            let fallbackFeeAsset =
+                typeof fallbackFeeAssets === "string"
+                    ? fallbackFeeAssets
+                    : fallbackFeeAssets[i];
+            let fee_asset_id = accountUtils.getFinalFeeAsset(
+                accountID,
+                "limit_order_cancel",
+                fallbackFeeAsset
+            );
             tr.add_type_operation("limit_order_cancel", {
                 fee: {
                     amount: 0,
@@ -739,8 +747,7 @@ class MarketsActions {
                 fee_paying_account: accountID,
                 order: id
             });
-        });
-
+        }
         return WalletDb.process_transaction(tr, null, true).catch(error => {
             console.log("cancel error:", error);
         });
@@ -749,9 +756,9 @@ class MarketsActions {
     cancelLimitOrderSuccess(ids) {
         return dispatch => {
             /* In the case of many cancel orders being issued at the same time,
-            * we batch them here and dispatch them all at once at a frequency
-            * defined by "dispatchCancelTimeout"
-            */
+             * we batch them here and dispatch them all at once at a frequency
+             * defined by "dispatchCancelTimeout"
+             */
             if (!dispatchCancelTimeout) {
                 cancelBatchIDs = cancelBatchIDs.concat(ids);
                 dispatchCancelTimeout = setTimeout(() => {

@@ -62,7 +62,7 @@ class MarketHistory extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.activeTab !== this.props.activeTab) {
             this.changeTab(nextProps.activeTab);
         }
@@ -156,7 +156,7 @@ class MarketHistory extends React.Component {
             activeTab = "history";
         }
 
-        if (activeTab === "my_history" && (myHistory && myHistory.size)) {
+        if (activeTab === "my_history" && myHistory && myHistory.size) {
             // User History
 
             const assets = {
@@ -253,16 +253,13 @@ MarketHistory.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-export default connect(
-    MarketHistory,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                viewSettings: SettingsStore.getState().viewSettings
-            };
-        }
+export default connect(MarketHistory, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
     }
-);
+});

@@ -11,11 +11,11 @@ class Pulsate extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.update(nextProps);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.update(this.props);
     }
 
