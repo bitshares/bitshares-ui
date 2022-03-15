@@ -1838,7 +1838,7 @@ class Operation {
                             },
                             {
                                 type: "amount",
-                                value: result[1].received[1],
+                                value: result[1].received[0],
                                 arg: "amount_b"
                             }
                         ]}
