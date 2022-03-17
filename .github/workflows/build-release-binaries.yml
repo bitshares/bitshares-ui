@@ -1,4 +1,4 @@
-name: Release Bitshares-ui
+name: Build local wallet
 
 on:
     push:
