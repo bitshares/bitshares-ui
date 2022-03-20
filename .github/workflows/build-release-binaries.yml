@@ -1,4 +1,4 @@
-name: Release Bitshares-ui
+name: Build local wallet
 
 on:
     push:
@@ -82,7 +82,8 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./build/binaries/BitShares_${{ github.ref_name }}.dmg
+                  asset_path:
+                      ./build/binaries/BitShares_${{ github.ref_name }}.dmg
                   asset_name: BitShares_${{ github.ref_name }}.dmg
                   asset_content_type: application/octet-stream
             - name: Upload deb
@@ -91,7 +92,8 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./build/binaries/BitShares_${{ github.ref_name }}.deb
+                  asset_path:
+                      ./build/binaries/BitShares_${{ github.ref_name }}.deb
                   asset_name: BitShares_${{ github.ref_name }}.deb
                   asset_content_type: application/x-deb
             - name: Upload exe
@@ -100,6 +102,7 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./build/binaries/BitShares_${{ github.ref_name }}.exe
+                  asset_path:
+                      ./build/binaries/BitShares_${{ github.ref_name }}.exe
                   asset_name: BitShares_${{ github.ref_name }}.exe
                   asset_content_type: application/octet-stream

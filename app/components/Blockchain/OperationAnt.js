@@ -293,8 +293,8 @@ class Operation {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                        ? "whitelisted_by"
-                        : "blacklisted_by";
+                            ? "whitelisted_by"
+                            : "blacklisted_by";
                 column = (
                     <span>
                         <TranslateWithLinks
@@ -1838,8 +1838,133 @@ class Operation {
                             },
                             {
                                 type: "amount",
-                                value: result[1].received[1],
+                                value: result[1].received[0],
                                 arg: "amount_b"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "samet_fund_create":
+                color = "warning";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.samet_fund_create"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].owner_account,
+                                arg: "account"
+                            },
+                            {
+                                type: "amount",
+                                value: {
+                                    asset_id: op[1].asset_type,
+                                    amount: op[1].balance
+                                },
+                                arg: "amount"
+                            },
+                            {
+                                value: `${(parseFloat(op[1].fee_rate) /
+                                    1000000) *
+                                    100}%`,
+                                arg: "fee"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "samet_fund_update":
+                color = "warning";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.samet_fund_update"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].owner_account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].fund_id,
+                                arg: "id"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "samet_fund_delete":
+                color = "cancel";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.samet_fund_delete"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].owner_account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].fund_id,
+                                arg: "id"
+                            },
+                            {
+                                type: "amount",
+                                value: result[1],
+                                arg: "amount"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "samet_fund_borrow":
+                color = "success";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.samet_fund_borrow"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].borrower,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].fund_id,
+                                arg: "id"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].borrow_amount,
+                                arg: "amount"
+                            }
+                        ]}
+                    />
+                );
+                break;
+            case "samet_fund_repay":
+                color = "success";
+                column = (
+                    <TranslateWithLinks
+                        string="operation.samet_fund_repay"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
+                            {
+                                value: op[1].fund_id,
+                                arg: "id"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].repay_amount,
+                                arg: "amount"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].fund_fee,
+                                arg: "fee"
                             }
                         ]}
                     />

@@ -1,0 +1,49 @@
+# This workflow will do a clean install of node dependencies, build the source code and push the binaries to the deployment repository.
+name: Build & deploy web wallet
+
+on:
+    push:
+        branches: [develop, staging, master]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js 16.13.1
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16.13.1
+            - run: corepack enable
+            - run: yarn install --network-concurrency 1 --frozen-lockfile
+            - run: yarn run build-hash
+            - uses: actions/upload-artifact@v3
+              with:
+                  name: build-hash-binaries
+                  path: build/hash-history
+
+    deployment:
+        needs: build
+        runs-on: ubuntu-latest
+        environment:
+            name: ${{ github.ref_name }}
+
+        steps:
+            - uses: actions/download-artifact@v3
+              with:
+                  name: build-hash-binaries
+                  path: build/hash-history
+            - name: Create CNAME file
+              uses: finnp/create-file-action@master
+              env:
+                  FILE_NAME: build/hash-history/CNAME
+                  FILE_DATA: ${{ secrets.DEPLOYMENT_URL }}
+            - name: Push to target repository
+              uses: s0/git-publish-subdir-action@master
+              env:
+                  REPO:
+                      git@github.com:bitshares/${{ secrets.DEPLOYMENT_REPOSITORY }}.git
+                  BRANCH: master
+                  FOLDER: build/hash-history
+                  SSH_PRIVATE_KEY: ${{ secrets.DEPLOYMENT_KEY }}

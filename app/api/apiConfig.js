@@ -193,22 +193,6 @@ export const settingsAPIs = {
             operator: "Witness: magicwallet.witness",
             contact: "telegram:plus_wave"
         },
-        {
-            url: "wss://freedom.bts123.cc:15138/",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Changsha",
-            operator: "Witness: delegate.freedom",
-            contact: "telegram:eggplant"
-        },
-        {
-            url: "wss://bitshares.bts123.cc:15138/",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Hangzhou",
-            operator: "Witness: delegate.freedom",
-            contact: "telegram:eggplant"
-        },
         // TODO the owner said it's temporarily closed. Recheck later.
         //{
         //    url: "wss://api.bts.ai",
