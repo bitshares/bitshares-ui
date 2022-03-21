@@ -6,6 +6,9 @@ on:
             - "*.*.*"
             # branches: [testaction]
 
+permissions:
+    contents: write
+
 jobs:
     build:
         runs-on: macOS-latest
