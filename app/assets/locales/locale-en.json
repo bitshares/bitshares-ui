@@ -1160,7 +1160,8 @@
             "rudex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Rudex.",
             "trade": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
             "win": "",
-            "xbtsx": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by XBTS."
+            "xbtsx": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by XBTS.",
+            "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com."
         },
         "balance": "Current balance",
         "balance_asset": "Current %(asset)s balance",
@@ -1243,6 +1244,7 @@
         "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
         "purchase_notice": "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
         "purchase_notice_memo": "Memo <b>required</b> for proper routing to your account",
+        "purchase_notice_tag": "Tag <b>required</b> for proper routing to your account",
         "receive_account": "Receiving account:",
         "recent_deposit": "Recent deposits",
         "recent_withdraw": "Recent withdrawals",
@@ -1295,6 +1297,13 @@
             "min_amount_error": "Please enter number >= minimum",
             "support_block": "For support, please contact XBTS at:",
             "under_construction": "Under Construction"
+        },
+        "ioxbank": {
+                "coming_soon": "Coming soon",
+                "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+                "min_amount_error": "Please enter number >= minimum",
+                "support_block": "For support, please contact ioxbank at:",
+                "under_construction": "Under Construction"
         },
         "your_account": "Your account"
     },
@@ -1685,6 +1694,7 @@
             "gateway_fee": "Gateway Fee",
             "header": "Withdraw",
             "memo": "Memo",
+            "tag": "tag",
             "no_assets": "No withdrawable assets available",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",

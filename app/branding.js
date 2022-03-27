@@ -191,6 +191,9 @@ export function getMyMarketsQuotes() {
             "XBTSX.BAT"
         ],
         honestTokens: ["HONEST.BTC", "HONEST.USD"],
+        ioxbankTokens: [
+            "IOB.XRP"
+        ],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
@@ -257,6 +260,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "XBTSX.USDT"],
         ["BTS", "HONEST.BTC"],
         ["BTS", "HONEST.USD"],
+        ["BTS", "IOB.XRP"],
         ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
@@ -273,7 +277,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["XBTSX.", "GDEX.", "HONEST."];
+    return ["XBTSX.", "GDEX.", "HONEST.", "IOB."];
 }
 
 /**
@@ -297,6 +301,7 @@ export function allowedGateway(gateway) {
         "RUDEX", // keep to display the warning icon, permanently disabled in gateways.js
         "GDEX",
         "XBTSX",
+        "IOB",
         "CITADEL", // keep to display the warning icon, permanently disabled in gateways.js
         "BRIDGE", // keep to display the warning icon, permanently disabled in gateways.js
         "SPARKDEX" // keep to display the warning icon, permanently disabled in gateways.js
