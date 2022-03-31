@@ -71,3 +71,10 @@ label.ant-checkbox-wrapper {
         text-transform: none !important;
     }
 }
+
+.ant-table-header-column > div {
+    display: table;
+}
+.ant-table-body > table > thead {
+    height: 50px;
+}

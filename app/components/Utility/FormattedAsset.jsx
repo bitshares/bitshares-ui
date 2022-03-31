@@ -46,7 +46,8 @@ class FormattedAsset extends React.Component {
         hide_asset: PropTypes.bool,
         hide_amount: PropTypes.bool,
         asPercentage: PropTypes.bool,
-        assetInfo: PropTypes.node
+        assetInfo: PropTypes.node,
+        trimZero: PropTypes.bool
     };
 
     static defaultProps = {
@@ -56,7 +57,8 @@ class FormattedAsset extends React.Component {
         hide_amount: false,
         asPercentage: false,
         assetInfo: null,
-        replace: true
+        replace: true,
+        trimZero: false
     };
 
     constructor(props) {
@@ -84,7 +86,8 @@ class FormattedAsset extends React.Component {
             hide_asset,
             hide_amount,
             asPercentage,
-            pulsate
+            pulsate,
+            trimZero
         } = this.props;
 
         if (amount === undefined || amount == null) return null; // still loading
@@ -117,23 +120,22 @@ class FormattedAsset extends React.Component {
             asset.options.description
         );
 
-        const currency_popover_body = !hide_asset &&
-            this.props.assetInfo && (
-                <div>
-                    <HelpContent
-                        path={"assets/Asset"}
-                        section="summary"
-                        symbol={asset.symbol}
-                        description={
-                            description.short_name
-                                ? description.short_name
-                                : description.main
-                        }
-                        issuer={issuerName}
-                    />
-                    {this.props.assetInfo}
-                </div>
-            );
+        const currency_popover_body = !hide_asset && this.props.assetInfo && (
+            <div>
+                <HelpContent
+                    path={"assets/Asset"}
+                    section="summary"
+                    symbol={asset.symbol}
+                    description={
+                        description.short_name
+                            ? description.short_name
+                            : description.main
+                    }
+                    issuer={issuerName}
+                />
+                {this.props.assetInfo}
+            </div>
+        );
 
         let formattedValue = null;
         if (!hide_amount) {
@@ -145,6 +147,15 @@ class FormattedAsset extends React.Component {
                     maximumFractionDigits={Math.max(decimals, 0)}
                 />
             );
+            if (trimZero) {
+                formattedValue = (
+                    <FormattedNumber
+                        value={value}
+                        minimumFractionDigits={0}
+                        maximumFractionDigits={Math.max(decimals, 0)}
+                    />
+                );
+            }
 
             if (pulsate) {
                 if (typeof pulsate !== "object") pulsate = {};
