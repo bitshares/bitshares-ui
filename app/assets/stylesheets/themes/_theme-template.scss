@@ -1108,6 +1108,12 @@
             }
         }
     }
+    ul.account-overview.segmented {
+        > li > a {
+            background: $bg-color !important;
+            border-right: none;
+        }
+    }
     ul.button-group.segmented {
         > li.is-active > a {
             background: $input-background;

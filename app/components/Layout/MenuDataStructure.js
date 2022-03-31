@@ -223,7 +223,6 @@ class MenuDataStructure {
                 target: "/lending/p2p",
                 icon: "deployment-unit",
                 text: "header.p2p_lending",
-                inHeaderBehavior: MenuItemType.Always,
                 inDropdownBehavior: MenuItemType.WhenNotInHeader
             }),
             explorer: state => ({

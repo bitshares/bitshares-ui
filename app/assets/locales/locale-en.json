@@ -446,7 +446,7 @@
             "whitelist_authorities": "Whitelist authority",
             "whitelist_market_fee_sharing": "Market fee sharing whitelist"
         },
-        "credit_offer": "Loan management"
+        "credit_offer": "Credit Management"
     },
     "account_browsing_mode": {
         "go_back": "Go back to my account",
@@ -2970,6 +2970,7 @@
         "validity_period": "Expiration",
         "plh_select_validity_period": "Choose an expiration date",
         "list_repay_period": {
+            "period_-1": "No limit",
             "period_0": "12 Hours",
             "period_1": "1 Day",
             "period_2": "3 Days",
@@ -2987,9 +2988,9 @@
         "current_balance": "Available",
         "estimated_fee": "Estimated fee",
         "plh_input_asset_name": "Please enter asset symbol...",
-        "credit_offers": "Credit offers",
-        "credit_rights": "Credit rights",
-        "credit_debts": "Credit debts",
+        "credit_offers": "Credit Offers",
+        "credit_rights": "Credit Rights",
+        "credit_debts": "Credit Debts",
         "status": "Status",
         "active": "Active",
         "closed": "Closed",
