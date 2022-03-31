@@ -1,15 +1,15 @@
-# ioxbank Instant Swap Service
-ioxbank instant swap service is responsible for moving cryptocurrencies between BitShares and other Blockchains. You can easily identify those cryptocurrencies supported by ioxbank, they are prefixed with **IOB.** and marked as featured in dashboard page.
+# ioxbank Instant Gateway Service
+ioxbank instant gateway service is responsible for moving cryptocurrencies between BitShares and other Blockchains. You can easily identify those cryptocurrencies supported by ioxbank, they are prefixed with **IOB.** and can be found under assets explore page.
 
 ## Help Docs
 [https://support.ioxbank.com/docs](https://support.ioxbank.com/docs)
 
-## Support
+## Technical Support
 - [Live Support](https://t.me/ioxbank)
 - [Open a Ticket](https://support.ioxbank.com)
 
 ## IOB.XRP features
-- Instant swap
+- Instant Gateway
 - Min. amount: 20 XRP
 - No KYC
 - No limits
