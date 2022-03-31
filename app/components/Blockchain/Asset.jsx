@@ -1270,24 +1270,26 @@ class Asset extends React.Component {
                                     ) : null}
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <Translate content="explorer.asset.fee_pool.accumulated_collateral_fees" />
-                                </td>
-                                <td>
-                                    {dynamic ? (
-                                        <FormattedAsset
-                                            asset={
-                                                asset.bitasset.options
-                                                    .short_backing_asset
-                                            }
-                                            amount={
-                                                dynamic.accumulated_collateral_fees
-                                            }
-                                        />
-                                    ) : null}
-                                </td>
-                            </tr>
+                            {asset.bitasset && (
+                                <tr>
+                                    <td>
+                                        <Translate content="explorer.asset.fee_pool.accumulated_collateral_fees" />
+                                    </td>
+                                    <td>
+                                        {dynamic ? (
+                                            <FormattedAsset
+                                                asset={
+                                                    asset.bitasset.options
+                                                        .short_backing_asset
+                                                }
+                                                amount={
+                                                    dynamic.accumulated_collateral_fees
+                                                }
+                                            />
+                                        ) : null}
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
