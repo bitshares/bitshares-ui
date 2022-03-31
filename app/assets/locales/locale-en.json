@@ -343,7 +343,14 @@
             "update_owner_text": "The asset owner may change the owner to another account using this form:",
             "visible": "Hide asset from search and markets",
             "white_list": "Require holders to be white-listed",
-            "witness_fed_asset": "Allow witnesses to provide feeds"
+            "witness_fed_asset": "Allow witnesses to provide feeds",
+            "lock_max_supply": "Lock max supply",
+            "disable_new_supply": "Disable new supply",
+            "disable_mcr_update": "Disable owner update MCR",
+            "disable_icr_update": "Disable owner update ICR",
+            "disable_mssr_update": "Disable owner update MSSR",
+            "disable_bsrm_update": "Disable owner update BSRM",
+            "disable_collateral_bidding": "Disable collateral bidding"
         },
         "vesting": {
             "balance_number": "Balance #%(id)s",
@@ -862,7 +869,8 @@
                 "title": "Fee Pool",
                 "unclaimed_issuer_income": "Unclaimed asset owner income",
                 "use_asset_as_default_fee": "Make selected asset default for paying fees",
-                "use_selected_asset": "Use selected asset"
+                "use_selected_asset": "Use selected asset",
+                "accumulated_collateral_fees": "Accumulated collateral fees"
             },
             "feed_producer": "Feed producer",
             "feed_producer_text": "Approved feed producers may publish a new feed using the form below:",
@@ -893,7 +901,7 @@
                 "tooltip_resolution_date": "The resolution date is an informal statement when the asset owner intends to resolve this betting market."
             },
             "price_feed": {
-                "external_feed_price": "Feed price (median of witness feeds)",
+                "external_feed_price": "Feed price (derived from price feeds and other parameters)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
                 "global_settlement_price": "Global settlement Price will be",
@@ -903,7 +911,13 @@
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
                 "min_feeds": "Minimum feeds",
                 "settlement_price": "Force Settlement price",
-                "title": "Price Feed"
+                "title": "Price Feed",
+                "initial_collateral_ratio": "Initial collateral ratio (ICR)",
+                "initial_collateral_ratio2": "Initial collateral ratio (ICR, Set by asset owner)",
+                "maintenance_collateral_ratio2": "Maintenance collateral ratio (MCR, Set by asset owner)",
+                "maximum_short_squeeze_ratio2": "Maximum short squeeze ratio (MSSR, Set by asset owner)",
+                "margin_call_fee_ratio": "Margin Call Fee Ratio (MCFR)",
+                "median_price_feeds": "Median of price feeds"
             },
             "price_feed_data": {
                 "core_exchange_rate": "CER",
@@ -914,7 +928,8 @@
                 "published": "Published",
                 "publisher": "Publisher",
                 "settlement_price": "Force Settlement Price",
-                "title": "Price Feed Data"
+                "title": "Price Feed Data",
+                "initial_collateral_ratio": "ICR"
             },
             "settlement": {
                 "current_settled": "Already settled supply",
@@ -936,7 +951,11 @@
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
                 "settlement_price": "Force Settlement Price",
-                "title": "Settlement"
+                "title": "Settlement",
+                "force_settle_fee_percent": "Force Settlement Fee",
+                "black_swan_response_method": "Black swan response method",
+                "individual_settlement_fund": "Individual settlement fund",
+                "individual_settlement_debt": "Individual settlement debt"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -1300,11 +1319,11 @@
             "under_construction": "Under Construction"
         },
         "ioxbank": {
-                "coming_soon": "Coming soon",
-                "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
-                "min_amount_error": "Please enter number >= minimum",
-                "support_block": "For support, please contact ioxbank at:",
-                "under_construction": "Under Construction"
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact ioxbank at:",
+            "under_construction": "Under Construction"
         },
         "your_account": "Your account"
     },
