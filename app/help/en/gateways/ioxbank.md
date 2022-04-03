@@ -1,5 +1,5 @@
 # ioxbank Instant Gateway Service
-ioxbank instant gateway service is responsible for moving cryptocurrencies between BitShares and other Blockchains. You can easily identify those cryptocurrencies supported by ioxbank, they are prefixed with **IOB.** and can be found under assets explore page.
+ioxbank instant gateway service is connecting cryptocurrencies between BitShares and other Blockchains. Blockchains transactions are being setteled immediently once blocks are confirmed over Blockchains. You can easily identify those cryptocurrencies supported by ioxbank, they are prefixed with **IOB.** and can be found under assets explore page.
 
 ## Help Docs
 [https://support.ioxbank.com/docs](https://support.ioxbank.com/docs)
