@@ -22,3 +22,4 @@
     * [Citadel](gateways/citadel.md)
     * [Rudex](gateways/rudex.md)
     * [Xbts](gateways/xbtsx.md)
+    * [ioxbank](gateways/ioxbank.md)
