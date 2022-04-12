@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes, {instanceOf} from "prop-types";
 import Ps from "perfect-scrollbar";
 import OpenSettleOrders from "./OpenSettleOrders";
 import MarketsActions from "actions/MarketsActions";
@@ -11,6 +11,7 @@ import {LimitOrder, CallOrder} from "common/MarketClasses";
 import ReactTooltip from "react-tooltip";
 import {Button} from "bitshares-ui-style-guide";
 import {MarketsOrderView, MarketOrdersRowView} from "./View/MarketOrdersView";
+import NotificationActions from "actions/NotificationActions";
 
 class MarketOrdersRow extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -229,7 +230,12 @@ class MarketOrders extends React.Component {
                     this.resetSelected();
                 })
                 .catch(err => {
-                    console.log("cancel orders error:", err);
+                    if (
+                        typeof err === "string" &&
+                        err.startsWith("Insufficient balance:")
+                    )
+                        NotificationActions.error(err);
+                    else console.log("cancel orders error:", err);
                 });
         });
     }

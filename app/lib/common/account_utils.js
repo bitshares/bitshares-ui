@@ -7,6 +7,7 @@ import {
     scamAccountsBittrex,
     scamAccountsOther
 } from "./scamAccounts";
+import SettingsStore from "stores/SettingsStore";
 
 export default class AccountUtils {
     /**
@@ -31,6 +32,7 @@ export default class AccountUtils {
 
     static getPossibleFees(account, operation) {
         let core = ChainStore.getAsset("1.3.0");
+
         account =
             !account || account.toJS ? account : ChainStore.getAccount(account);
 
@@ -55,9 +57,9 @@ export default class AccountUtils {
             let balance = balanceObject
                 ? parseInt(balanceObject.get("balance"), 10)
                 : 0;
+
             let hasBalance = false,
                 eqFee;
-
             if (assetID === "1.3.0" && balance >= fee) {
                 hasBalance = true;
             } else if (balance && ChainStore.getAsset(assetID)) {
@@ -90,9 +92,18 @@ export default class AccountUtils {
     }
 
     static getFinalFeeAsset(account, operation, fee_asset_id = "1.3.0") {
+        let default_fee_asset_symbol = SettingsStore.getSetting("fee_asset");
+        let default_fee_asset = ChainStore.getAsset(
+            default_fee_asset_symbol
+        ).toJS();
         let {assets: feeAssets} = this.getPossibleFees(account, operation);
         if (feeAssets.length === 1) {
             fee_asset_id = feeAssets[0];
+        } else if (
+            feeAssets.length > 0 &&
+            feeAssets.indexOf(default_fee_asset.id) !== -1
+        ) {
+            fee_asset_id = default_fee_asset.id;
         } else if (
             feeAssets.length > 0 &&
             feeAssets.indexOf(fee_asset_id) === -1
@@ -100,6 +111,96 @@ export default class AccountUtils {
             fee_asset_id = feeAssets[0];
         }
 
+        return fee_asset_id;
+    }
+
+    static getAccountBalances(account) {
+        account =
+            !account || account.toJS ? account : ChainStore.getAccount(account);
+        let accountBalances = account.get("balances");
+        let balances = {};
+        accountBalances.forEach((balanceID, assetID) => {
+            let balanceObject = ChainStore.getObject(balanceID);
+            let balance = balanceObject
+                ? parseInt(balanceObject.get("balance"), 10)
+                : 0;
+            balances[assetID] = balance;
+        });
+        return balances;
+    }
+
+    static getPossibleFees2(account, operation, balances) {
+        let core = ChainStore.getAsset("1.3.0");
+        account =
+            !account || account.toJS ? account : ChainStore.getAccount(account);
+        if (!account || !core) {
+            return ["1.3.0"];
+        }
+        let assets = [];
+        let globalObject = ChainStore.getObject("2.0.0");
+        let fee = estimateFee(operation, null, globalObject);
+        if (Object.keys(balances).length < 1) {
+            return ["1.3.0"];
+        }
+        Object.keys(balances).forEach(key => {
+            let assetID = key;
+            let balance = balances[assetID];
+            let hasBalance = false,
+                eqFee;
+            if (assetID === "1.3.0" && balance >= fee) {
+                hasBalance = true;
+                balances[assetID] -= fee;
+            } else if (balance && ChainStore.getAsset(assetID)) {
+                let asset = ChainStore.getAsset(assetID);
+                let price = utils.convertPrice(
+                    core,
+                    asset.getIn(["options", "core_exchange_rate"]).toJS(),
+                    null,
+                    asset.get("id")
+                );
+                eqFee = parseInt(
+                    utils.convertValue(price, fee, core, asset),
+                    10
+                );
+                if (parseInt(eqFee, 10) !== eqFee) {
+                    eqFee += 1; // Add 1 to round up;
+                }
+                if (balance >= eqFee && this.checkFeePool(asset, eqFee)) {
+                    hasBalance = true;
+                    balances[assetID] -= eqFee;
+                }
+            }
+            if (hasBalance) {
+                assets.push(assetID);
+            }
+        });
+        return assets;
+    }
+
+    static getFinalFeeAsset2(
+        account,
+        operation,
+        balances,
+        fee_asset_id = "1.3.0"
+    ) {
+        let default_fee_asset_symbol = SettingsStore.getSetting("fee_asset");
+        let default_fee_asset = ChainStore.getAsset(
+            default_fee_asset_symbol
+        ).toJS();
+        let feeAssets = this.getPossibleFees2(account, operation, balances);
+        if (feeAssets.length === 1) {
+            fee_asset_id = feeAssets[0];
+        } else if (
+            feeAssets.length > 0 &&
+            feeAssets.indexOf(default_fee_asset.id) !== -1
+        ) {
+            fee_asset_id = default_fee_asset.id;
+        } else if (
+            feeAssets.length > 0 &&
+            feeAssets.indexOf(fee_asset_id) === -1
+        ) {
+            fee_asset_id = feeAssets[0];
+        }
         return fee_asset_id;
     }
 
