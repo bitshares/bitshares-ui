@@ -77,6 +77,14 @@ class CreditOfferList extends React.Component {
         }
     }
 
+    _getUnits() {
+        return [
+            counterpart.translate("credit_offer.uint_day"),
+            counterpart.translate("credit_offer.uint_hour"),
+            counterpart.translate("credit_offer.uint_minute")
+        ];
+    }
+
     _getColumns() {
         let header = [
             {
@@ -143,10 +151,7 @@ class CreditOfferList extends React.Component {
                 title: counterpart.translate("credit_offer.repay_period"),
                 dataIndex: "max_duration_seconds",
                 render: item => {
-                    let index = listRepayPeriod.indexOf(item);
-                    return counterpart.translate(
-                        "credit_offer.list_repay_period.period_" + index
-                    );
+                    return parsingTime(item, this._getUnits());
                 }
             },
             {
