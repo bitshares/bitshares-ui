@@ -335,7 +335,7 @@ class CreditOfferPage extends React.Component {
                 max_fee_rate: info.fee_rate,
                 min_duration_seconds: info.max_duration_seconds
             };
-            console.log("data: ", data);
+            // console.log("data: ", data);
             CreditOfferActions.accept(data)
                 .then(() => {
                     this.hideAcceptModal();
@@ -361,11 +361,6 @@ class CreditOfferPage extends React.Component {
         }
         let {info, selectAsset} = this.state;
         if (asset && info && selectAsset) {
-            let mortgageAsset = new Asset({
-                asset_id: selectAsset.get("id"),
-                real: amount,
-                precision: selectAsset.get("precision")
-            });
             let index = info.acceptable_collateral.findIndex(
                 v => v[0] == selectAsset.get("id")
             );
@@ -385,12 +380,13 @@ class CreditOfferPage extends React.Component {
 
             let price = new Price({base: baseAsset, quote: quoteAsset});
             // let currentAmount = price.toReal() * mortgageAsset.getAmount();
-            let mortgageAmount =
-                (1.0 / price.toReal()) * mortgageAsset.getAmount(); // Keeping it consistent with the App, this may violate Graphene's price representation convention.
+            let mortgageAmount = parseFloat(amount) * price.toReal(true); // Keeping it consistent with the App, this may violate Graphene's price representation convention.
             if (Number.isNaN(mortgageAmount)) {
                 mortgageAmount = 0;
             } else {
-                mortgageAmount = Math.ceil(mortgageAmount);
+                mortgageAmount = Math.ceil(
+                    mortgageAmount * 10 ** selectAsset.get("precision")
+                );
             }
             let rateAsset = new Asset({
                 asset_id: asset.get("id"),
@@ -407,7 +403,7 @@ class CreditOfferPage extends React.Component {
                     amount,
                     error: null,
                     maxAmount: false,
-                    mortgageAmount,
+                    mortgageAmount: mortgageAmount,
                     rateAmount
                 },
                 this._checkBalance
@@ -649,15 +645,20 @@ class CreditOfferPage extends React.Component {
                                         asset={debtAsset.get("id")}
                                         trimZero
                                     />
-                                    {` (${(parseFloat(info.fee_rate) /
-                                        FEE_RATE_DENOM) *
-                                        100}%)`}
+                                    {` (${(parseFloat(info.fee_rate) * 100) /
+                                        FEE_RATE_DENOM}%)`}
                                 </span>
                             </div>
                         </Form.Item>
                         <FeeAssetSelector
                             account={account}
-                            transaction={{type: "credit_offer_accept"}}
+                            transaction={{
+                                type: "credit_offer_accept",
+                                data: {
+                                    type: "memo",
+                                    content: null
+                                }
+                            }}
                             onChange={this._onFeeChanged.bind(this)}
                         />
                     </Form>
