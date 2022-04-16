@@ -3035,6 +3035,9 @@
             "period_4": "30 Days",
             "period_5": "90 days"
         },
+        "uint_day": "Days",
+        "uint_hour": "Hours",
+        "uint_minute": "Minutes",
         "info_borrow_err": "Can't borrow from oneself ！",
         "asset": "Asset",
         "total_amount": "Total",

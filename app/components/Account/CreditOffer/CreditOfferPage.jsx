@@ -17,7 +17,8 @@ import moment from "moment";
 import utils from "../../../lib/common/utils";
 import CreditOfferActions, {
     FEE_RATE_DENOM,
-    listRepayPeriod
+    listRepayPeriod,
+    parsingTime
 } from "../../../actions/CreditOfferActions";
 
 import AccountStore from "stores/AccountStore";
@@ -149,6 +150,14 @@ class CreditOfferPage extends React.Component {
         return aAsset - bAsset;
     }
 
+    _getUnits() {
+        return [
+            counterpart.translate("credit_offer.uint_day"),
+            counterpart.translate("credit_offer.uint_hour"),
+            counterpart.translate("credit_offer.uint_minute")
+        ];
+    }
+
     _getColumns() {
         return [
             {
@@ -244,10 +253,7 @@ class CreditOfferPage extends React.Component {
                 sorter: (a, b) =>
                     a.max_duration_seconds - b.max_duration_seconds,
                 render: item => {
-                    let index = listRepayPeriod.indexOf(item);
-                    return counterpart.translate(
-                        "credit_offer.list_repay_period.period_" + index
-                    );
+                    return parsingTime(item, this._getUnits());
                 }
             },
             {
@@ -575,11 +581,9 @@ class CreditOfferPage extends React.Component {
                                     width: "100%"
                                 }}
                             >
-                                {counterpart.translate(
-                                    "credit_offer.list_repay_period.period_" +
-                                        listRepayPeriod.indexOf(
-                                            info.max_duration_seconds
-                                        )
+                                {parsingTime(
+                                    info.max_duration_seconds,
+                                    this._getUnits()
                                 )}
                             </div>
                         </Form.Item>

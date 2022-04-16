@@ -3024,6 +3024,9 @@
             "period_4": "30天",
             "period_5": "90天"
         },
+        "uint_day": "天",
+        "uint_hour": "时",
+        "uint_minute": "分",
         "info_borrow_err": "不能向自己借款！",
         "asset": "资产",
         "total_amount": "总数量",
