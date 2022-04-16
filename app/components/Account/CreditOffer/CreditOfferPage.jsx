@@ -361,11 +361,6 @@ class CreditOfferPage extends React.Component {
         }
         let {info, selectAsset} = this.state;
         if (asset && info && selectAsset) {
-            let mortgageAsset = new Asset({
-                asset_id: selectAsset.get("id"),
-                real: amount,
-                precision: selectAsset.get("precision")
-            });
             let index = info.acceptable_collateral.findIndex(
                 v => v[0] == selectAsset.get("id")
             );
@@ -385,13 +380,17 @@ class CreditOfferPage extends React.Component {
 
             let price = new Price({base: baseAsset, quote: quoteAsset});
             // let currentAmount = price.toReal() * mortgageAsset.getAmount();
-            let mortgageAmount =
-                (1.0 / price.toReal()) * mortgageAsset.getAmount(); // Keeping it consistent with the App, this may violate Graphene's price representation convention.
+            let mortgageAmount = (1.0 / price.toReal()) * amount; // Keeping it consistent with the App, this may violate Graphene's price representation convention.
             if (Number.isNaN(mortgageAmount)) {
                 mortgageAmount = 0;
             } else {
                 mortgageAmount = Math.ceil(mortgageAmount);
             }
+            let mortgageAsset = new Asset({
+                asset_id: selectAsset.get("id"),
+                real: mortgageAmount,
+                precision: selectAsset.get("precision")
+            });
             let rateAsset = new Asset({
                 asset_id: asset.get("id"),
                 real: amount,
@@ -407,7 +406,7 @@ class CreditOfferPage extends React.Component {
                     amount,
                     error: null,
                     maxAmount: false,
-                    mortgageAmount,
+                    mortgageAmount: mortgageAsset.getAmount(),
                     rateAmount
                 },
                 this._checkBalance
