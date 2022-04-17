@@ -14,12 +14,13 @@ import CreateModal from "./CreateModal";
 import EditModal from "./EditModal";
 import CreditOfferActions, {
     FEE_RATE_DENOM,
-    listRepayPeriod
+    parsingTime
 } from "../../../actions/CreditOfferActions";
 import CreditOfferStore from "../../../stores/CreditOfferStore";
 import LinkToAssetById from "../../Utility/LinkToAssetById";
 import FormattedAsset from "../../Utility/FormattedAsset";
 import moment from "moment";
+import IntlStore from "stores/IntlStore";
 
 class CreditOfferList extends React.Component {
     constructor(props) {
@@ -75,14 +76,6 @@ class CreditOfferList extends React.Component {
         } else {
             return null;
         }
-    }
-
-    _getUnits() {
-        return [
-            counterpart.translate("credit_offer.uint_day"),
-            counterpart.translate("credit_offer.uint_hour"),
-            counterpart.translate("credit_offer.uint_minute")
-        ];
     }
 
     _getColumns() {
@@ -151,7 +144,7 @@ class CreditOfferList extends React.Component {
                 title: counterpart.translate("credit_offer.repay_period"),
                 dataIndex: "max_duration_seconds",
                 render: item => {
-                    return parsingTime(item, this._getUnits());
+                    return parsingTime(item, this.props.locale);
                 }
             },
             {
@@ -304,13 +297,14 @@ class CreditOfferList extends React.Component {
 
 CreditOfferList = connect(CreditOfferList, {
     listenTo() {
-        return [AccountStore, CreditOfferStore];
+        return [AccountStore, CreditOfferStore, IntlStore];
     },
     getProps(props) {
         return {
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount,
-            listByOwner: CreditOfferStore.getState().listByOwner
+            listByOwner: CreditOfferStore.getState().listByOwner,
+            locale: IntlStore.getState().currentLocale
         };
     }
 });

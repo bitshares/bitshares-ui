@@ -4,19 +4,18 @@ import moment from "moment";
 import {Asset} from "../lib/common/MarketClasses";
 import WalletDb from "../stores/WalletDb";
 import {Apis} from "bitsharesjs-ws";
+import humanizeDuration from "humanize-duration";
 
 export const FEE_RATE_DENOM = 1000000; // Denominator for SameT Fund fee calculation
 export const listRepayPeriod = [43200, 86400, 259200, 604800, 2592000, 7776000];
 
-export const parsingTime = (time, uints = ["day", "hour", "minute"]) => {
-    let str = "";
-    let days = Math.floor(time / 86400);
-    if (days > 0) str = days + uints[0];
-    let hours = Math.floor((time % 86400) / 3600);
-    if (hours > 0) str = str + hours + uints[1];
-    let minute = Math.floor(((time % 86400) % 3600) / 60);
-    if (minute > 0) str = str + minute + uints[2];
-    return str;
+export const parsingTime = (time, locale) => {
+    if (locale === "zh") locale = "zh_CN";
+    return humanizeDuration(parseInt(time) * 1000, {
+        language: locale,
+        delimiter: " ",
+        units: ["d", "h", "m"]
+    });
 };
 
 class CreditOfferActions {
