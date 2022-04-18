@@ -37,7 +37,7 @@ class TransactionConfirmActions {
                         trx_block_num: res[0].block_num,
                         broadcasted_transaction: true
                     });
-                    if (resolve) resolve();
+                    if (resolve) resolve(res);
                 })
                 .catch(error => {
                     console.error(error);

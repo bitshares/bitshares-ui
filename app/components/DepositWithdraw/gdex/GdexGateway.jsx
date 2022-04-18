@@ -331,6 +331,7 @@ class GdexGateway extends React.Component {
                 <Translate content="gateway.support_gdex" />
                 <br />
                 <br />
+                {/*
                 <p>
                     Help:{" "}
                     <a
@@ -342,6 +343,7 @@ class GdexGateway extends React.Component {
                         {issuer.ticket}
                     </a>
                 </p>
+                */}
                 <p>
                     QQ:{" "}
                     <a

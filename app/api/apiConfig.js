@@ -1,5 +1,13 @@
 import {getFaucet, getTestFaucet} from "../branding";
 
+export const ioxbankAPIs = {
+    BASE: "https://api.ioxbank.com/bitshares",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    NEW_DEPOSIT_ADDRESS: "/simple-api/initiate-trade"
+};
+
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
     COINS_LIST: "/coins",
@@ -140,14 +148,6 @@ export const settingsAPIs = {
             contact: "email:admin@iobanker.com"
         },
         {
-            url: "wss://api.bitshares.rocks/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "AZ, Phoenix",
-            operator: "Vagnavs",
-            contact: "telegram:Maximat00"
-        },
-        {
             url: "wss://ws.gdex.top",
             region: "Eastern Asia",
             country: "China",
@@ -200,22 +200,6 @@ export const settingsAPIs = {
             location: "Hangzhou",
             operator: "Witness: magicwallet.witness",
             contact: "telegram:plus_wave"
-        },
-        {
-            url: "wss://freedom.bts123.cc:15138/",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Changsha",
-            operator: "Witness: delegate.freedom",
-            contact: "telegram:eggplant"
-        },
-        {
-            url: "wss://bitshares.bts123.cc:15138/",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Hangzhou",
-            operator: "Witness: delegate.freedom",
-            contact: "telegram:eggplant"
         },
         // TODO the owner said it's temporarily closed. Recheck later.
         //{
@@ -274,15 +258,14 @@ export const settingsAPIs = {
             operator: "bitshares.org",
             contact: ""
         },
-        // TODO node is out of sync, recheck later
-        //{
-        //    url: "wss://citadel.li/node",
-        //    region: "Western Europe",
-        //    country: "Iceland",
-        //    location: "Reykjavik",
-        //    operator: "CITADEL",
-        //    contact: "email:citadel.li;support"
-        //},
+        {
+            url: "wss://eu.nodes.bitshares.ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Nuremberg",
+            operator: "Witness: blocksights",
+            contact: "telegram:blocksights"
+        },
         {
             url: "wss://api-bts.liondani.com/ws",
             region: "Western Europe",
@@ -316,7 +299,7 @@ export const settingsAPIs = {
             contact: "telegram: xbtsio"
         },
         {
-            url: "wss://api.pindd.club",
+            url: "wss://bts.mypi.win",
             region: "Northern America",
             country: "U.S.A.",
             location: "Seattle, CA",
@@ -357,12 +340,12 @@ export const settingsAPIs = {
         },
         // Testnet
         {
-            url: "wss://node.testnet.bitshares.eu",
+            url: "wss://eu.nodes.testnet.bitshares.ws",
             region: "TESTNET - Western Europe",
             country: "Germany",
-            location: "Frankfurt",
-            operator: "BitShares Europe",
-            contact: "telegram:xeroc"
+            location: "Nuremberg",
+            operator: "Witness: blocksights",
+            contact: "telegram:blocksights"
         },
         {
             url: "wss://testnet.dex.trading/",
@@ -411,7 +394,7 @@ export const settingsAPIs = {
             region: "Western Europe",
             country: "Germany",
             operator: "blocksights.info",
-            contact: "bitshares:blocksights"
+            contact: "telegram:blocksights"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
