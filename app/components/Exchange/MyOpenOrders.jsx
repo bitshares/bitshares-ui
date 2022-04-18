@@ -232,7 +232,7 @@ class MarketOrders extends React.Component {
                 .catch(err => {
                     if (
                         typeof err === "string" &&
-                        err.startsWith("Insufficient balance:")
+                        err.startsWith("Insufficient balance")
                     )
                         NotificationActions.error(err);
                     else console.log("cancel orders error:", err);
