@@ -30,7 +30,12 @@ export default class AccountUtils {
         return feePool >= fee;
     }
 
-    static getPossibleFees(account, operation) {
+    /**
+     * Returns all assets that the user can actually use to pay the fee given by the operation.
+     * This estimates the fee in core asset, checks user balance and fee pool of all balances
+     * and decides which one may be used.
+     */
+    static getPossibleFees(account, operation, raiseIfInsufficient = false) {
         let core = ChainStore.getAsset("1.3.0");
 
         account =
@@ -48,16 +53,13 @@ export default class AccountUtils {
         let fee = estimateFee(operation, null, globalObject);
 
         let accountBalances = account.get("balances");
-        if (!accountBalances) {
-            return {assets: ["1.3.0"], fees: {"1.3.0": 0}};
+        if (!accountBalances || Object.keys(accountBalances).length == 0) {
+            return {assets: [], fees: {}};
         }
 
-        accountBalances.forEach((balanceID, assetID) => {
-            let balanceObject = ChainStore.getObject(balanceID);
-            let balance = balanceObject
-                ? parseInt(balanceObject.get("balance"), 10)
-                : 0;
-
+        for (const [assetID, balance] of Object.entries(
+            this.getAccountBalances(account)
+        )) {
             let hasBalance = false,
                 eqFee;
             if (assetID === "1.3.0" && balance >= fee) {
@@ -86,32 +88,55 @@ export default class AccountUtils {
                 assets.push(assetID);
                 fees[assetID] = eqFee ? eqFee : fee;
             }
-        });
+        }
+
+        // if requested, raise exception if no fees found
+        if (raiseIfInsufficient && assets.length == 0) {
+            throw "Insufficient balance for fee";
+        }
 
         return {assets, fees};
     }
 
-    static getFinalFeeAsset(account, operation, fee_asset_id = "1.3.0") {
+    /**
+     * Returns the fee asset id that can be used to pay for the fee.
+     * It will try to use the globally set preference, and if not possible the given
+     * preference (usually defaults to core asset), and if also not possible,
+     * just any asset of the user that has sufficient balance and has a funded feepool.
+     * If nothing is available, it returns the globally set default, or raises an error.
+     */
+    static getFinalFeeAsset(
+        account,
+        operation,
+        feeAssetId = "1.3.0",
+        raiseIfInsufficient = false
+    ) {
+        // user can set a default in the settings
         let default_fee_asset_symbol = SettingsStore.getSetting("fee_asset");
         let default_fee_asset = ChainStore.getAsset(
             default_fee_asset_symbol
         ).toJS();
-        let {assets: feeAssets} = this.getPossibleFees(account, operation);
+        let {assets: feeAssets} = this.getPossibleFees(
+            account,
+            operation,
+            raiseIfInsufficient
+        );
         if (feeAssets.length === 1) {
-            fee_asset_id = feeAssets[0];
+            // if there is only one possible, take it
+            return feeAssets[0];
         } else if (
             feeAssets.length > 0 &&
             feeAssets.indexOf(default_fee_asset.id) !== -1
         ) {
-            fee_asset_id = default_fee_asset.id;
+            return default_fee_asset.id;
         } else if (
             feeAssets.length > 0 &&
-            feeAssets.indexOf(fee_asset_id) === -1
+            feeAssets.indexOf(feeAssetId) === -1
         ) {
-            fee_asset_id = feeAssets[0];
+            return feeAssets[0];
         }
 
-        return fee_asset_id;
+        return default_fee_asset.id;
     }
 
     static getAccountBalances(account) {
@@ -127,81 +152,6 @@ export default class AccountUtils {
             balances[assetID] = balance;
         });
         return balances;
-    }
-
-    static getPossibleFees2(account, operation, balances) {
-        let core = ChainStore.getAsset("1.3.0");
-        account =
-            !account || account.toJS ? account : ChainStore.getAccount(account);
-        if (!account || !core) {
-            return ["1.3.0"];
-        }
-        let assets = [];
-        let globalObject = ChainStore.getObject("2.0.0");
-        let fee = estimateFee(operation, null, globalObject);
-        if (Object.keys(balances).length < 1) {
-            return ["1.3.0"];
-        }
-        Object.keys(balances).forEach(key => {
-            let assetID = key;
-            let balance = balances[assetID];
-            let hasBalance = false,
-                eqFee;
-            if (assetID === "1.3.0" && balance >= fee) {
-                hasBalance = true;
-                balances[assetID] -= fee;
-            } else if (balance && ChainStore.getAsset(assetID)) {
-                let asset = ChainStore.getAsset(assetID);
-                let price = utils.convertPrice(
-                    core,
-                    asset.getIn(["options", "core_exchange_rate"]).toJS(),
-                    null,
-                    asset.get("id")
-                );
-                eqFee = parseInt(
-                    utils.convertValue(price, fee, core, asset),
-                    10
-                );
-                if (parseInt(eqFee, 10) !== eqFee) {
-                    eqFee += 1; // Add 1 to round up;
-                }
-                if (balance >= eqFee && this.checkFeePool(asset, eqFee)) {
-                    hasBalance = true;
-                    balances[assetID] -= eqFee;
-                }
-            }
-            if (hasBalance) {
-                assets.push(assetID);
-            }
-        });
-        return assets;
-    }
-
-    static getFinalFeeAsset2(
-        account,
-        operation,
-        balances,
-        fee_asset_id = "1.3.0"
-    ) {
-        let default_fee_asset_symbol = SettingsStore.getSetting("fee_asset");
-        let default_fee_asset = ChainStore.getAsset(
-            default_fee_asset_symbol
-        ).toJS();
-        let feeAssets = this.getPossibleFees2(account, operation, balances);
-        if (feeAssets.length === 1) {
-            fee_asset_id = feeAssets[0];
-        } else if (
-            feeAssets.length > 0 &&
-            feeAssets.indexOf(default_fee_asset.id) !== -1
-        ) {
-            fee_asset_id = default_fee_asset.id;
-        } else if (
-            feeAssets.length > 0 &&
-            feeAssets.indexOf(fee_asset_id) === -1
-        ) {
-            fee_asset_id = feeAssets[0];
-        }
-        return fee_asset_id;
     }
 
     static isKnownScammer(account) {
