@@ -2665,6 +2665,9 @@
         },
         "vesting_balance_create": "created vesting balance of",
         "view_json": "Show raw json",
+        "view_qrcode": "Show Trx QR code",
+        "view_qr": "Show QR",
+        "title_qrcode": "Transaction QR Code",
         "waiting": "Waiting for confirmation..",
         "whitelist_states": {
             "black_listed": "Blacklisted",
