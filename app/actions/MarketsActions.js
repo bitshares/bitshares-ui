@@ -703,7 +703,9 @@ class MarketsActions {
     }
 
     cancelLimitOrder(accountID, orderID) {
-        // Set the fee asset to use
+        // FIXME we need a global approach how gee asset id is selected,
+        //       this is only doing it for the cancel action, but ideally,
+        //       all fee selection in the UI have the same logic
         let fee_asset_id = accountUtils.getFinalFeeAsset(
             accountID,
             "limit_order_cancel"

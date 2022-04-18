@@ -133,7 +133,7 @@ export default class AccountUtils {
             feeAssets.length > 0 &&
             feeAssets.indexOf(feeAssetId) === -1
         ) {
-            return feeAssets[0];
+            return feeAssets[feeAssets.indexOf(feeAssetId)];
         }
 
         return default_fee_asset.id;
