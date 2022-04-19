@@ -121,22 +121,23 @@ export default class AccountUtils {
             operation,
             raiseIfInsufficient
         );
-        if (feeAssets.length === 1) {
-            // if there is only one possible, take it
-            return feeAssets[0];
-        } else if (
-            feeAssets.length > 0 &&
-            feeAssets.indexOf(default_fee_asset.id) !== -1
-        ) {
+        if (feeAssets.length > 0) {
+            if (
+                feeAssets.indexOf(default_fee_asset.id) !== -1
+            ) {
+                return default_fee_asset.id;
+            } else if (
+                feeAssets.indexOf(feeAssetId) !== -1
+            ) {
+                return feeAssetId;
+            } else {
+                // take any that allows to pay the fee
+                return feeAssets[0];
+            }    
+        } else {
+            // can't pay fee, show user his chosen default
             return default_fee_asset.id;
-        } else if (
-            feeAssets.length > 0 &&
-            feeAssets.indexOf(feeAssetId) === -1
-        ) {
-            return feeAssets[feeAssets.indexOf(feeAssetId)];
         }
-
-        return default_fee_asset.id;
     }
 
     static getAccountBalances(account) {
