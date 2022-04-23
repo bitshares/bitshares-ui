@@ -46,4 +46,4 @@ jobs:
                   BRANCH: master
                   FOLDER: build/hash-history
                   SSH_PRIVATE_KEY: ${{ secrets.DEPLOYMENT_KEY }}
-                  MESSAGE: Automatic build of commit [${{ github.sha }}](https://github.com/bitshares/${{ secrets.DEPLOYMENT_REPOSITORY }}/commit/${{ github.sha }})
+                  MESSAGE: Automatic build of commit https://github.com/bitshares/bitshares-ui/commit/${{ github.sha }}
