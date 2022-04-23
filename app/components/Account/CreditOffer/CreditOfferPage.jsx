@@ -383,8 +383,6 @@ class CreditOfferPage extends React.Component {
             let mortgageAmount = parseFloat(amount) * price.toReal(true); // Keeping it consistent with the App, this may violate Graphene's price representation convention.
             if (Number.isNaN(mortgageAmount)) {
                 mortgageAmount = 0;
-            } else {
-                mortgageAmount = Math.ceil(mortgageAmount);
             }
             let mortgageAsset = new Asset({
                 asset_id: selectAsset.get("id"),
