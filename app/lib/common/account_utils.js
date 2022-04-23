@@ -7,6 +7,7 @@ import {
     scamAccountsBittrex,
     scamAccountsOther
 } from "./scamAccounts";
+import SettingsStore from "stores/SettingsStore";
 
 export default class AccountUtils {
     /**
@@ -29,8 +30,14 @@ export default class AccountUtils {
         return feePool >= fee;
     }
 
-    static getPossibleFees(account, operation) {
+    /**
+     * Returns all assets that the user can actually use to pay the fee given by the operation.
+     * This estimates the fee in core asset, checks user balance and fee pool of all balances
+     * and decides which one may be used.
+     */
+    static getPossibleFees(account, operation, raiseIfInsufficient = false) {
         let core = ChainStore.getAsset("1.3.0");
+
         account =
             !account || account.toJS ? account : ChainStore.getAccount(account);
 
@@ -46,18 +53,15 @@ export default class AccountUtils {
         let fee = estimateFee(operation, null, globalObject);
 
         let accountBalances = account.get("balances");
-        if (!accountBalances) {
-            return {assets: ["1.3.0"], fees: {"1.3.0": 0}};
+        if (!accountBalances || Object.keys(accountBalances).length == 0) {
+            return {assets: [], fees: {}};
         }
 
-        accountBalances.forEach((balanceID, assetID) => {
-            let balanceObject = ChainStore.getObject(balanceID);
-            let balance = balanceObject
-                ? parseInt(balanceObject.get("balance"), 10)
-                : 0;
+        for (const [assetID, balance] of Object.entries(
+            this.getAccountBalances(account)
+        )) {
             let hasBalance = false,
                 eqFee;
-
             if (assetID === "1.3.0" && balance >= fee) {
                 hasBalance = true;
             } else if (balance && ChainStore.getAsset(assetID)) {
@@ -84,23 +88,71 @@ export default class AccountUtils {
                 assets.push(assetID);
                 fees[assetID] = eqFee ? eqFee : fee;
             }
-        });
+        }
+
+        // if requested, raise exception if no fees found
+        if (raiseIfInsufficient && assets.length == 0) {
+            throw "Insufficient balance for fee";
+        }
 
         return {assets, fees};
     }
 
-    static getFinalFeeAsset(account, operation, fee_asset_id = "1.3.0") {
-        let {assets: feeAssets} = this.getPossibleFees(account, operation);
-        if (feeAssets.length === 1) {
-            fee_asset_id = feeAssets[0];
-        } else if (
-            feeAssets.length > 0 &&
-            feeAssets.indexOf(fee_asset_id) === -1
-        ) {
-            fee_asset_id = feeAssets[0];
+    /**
+     * Returns the fee asset id that can be used to pay for the fee.
+     * It will try to use the globally set preference, and if not possible the given
+     * preference (usually defaults to core asset), and if also not possible,
+     * just any asset of the user that has sufficient balance and has a funded feepool.
+     * If nothing is available, it returns the globally set default, or raises an error.
+     */
+    static getFinalFeeAsset(
+        account,
+        operation,
+        feeAssetId = "1.3.0",
+        raiseIfInsufficient = false
+    ) {
+        // user can set a default in the settings
+        let default_fee_asset_symbol = SettingsStore.getSetting("fee_asset");
+        let default_fee_asset = ChainStore.getAsset(
+            default_fee_asset_symbol
+        ).toJS();
+        let {assets: feeAssets} = this.getPossibleFees(
+            account,
+            operation,
+            raiseIfInsufficient
+        );
+        if (feeAssets.length > 0) {
+            if (
+                feeAssets.indexOf(default_fee_asset.id) !== -1
+            ) {
+                return default_fee_asset.id;
+            } else if (
+                feeAssets.indexOf(feeAssetId) !== -1
+            ) {
+                return feeAssetId;
+            } else {
+                // take any that allows to pay the fee
+                return feeAssets[0];
+            }    
+        } else {
+            // can't pay fee, show user his chosen default
+            return default_fee_asset.id;
         }
+    }
 
-        return fee_asset_id;
+    static getAccountBalances(account) {
+        account =
+            !account || account.toJS ? account : ChainStore.getAccount(account);
+        let accountBalances = account.get("balances");
+        let balances = {};
+        accountBalances.forEach((balanceID, assetID) => {
+            let balanceObject = ChainStore.getObject(balanceID);
+            let balance = balanceObject
+                ? parseInt(balanceObject.get("balance"), 10)
+                : 0;
+            balances[assetID] = balance;
+        });
+        return balances;
     }
 
     static isKnownScammer(account) {
