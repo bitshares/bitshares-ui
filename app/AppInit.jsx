@@ -25,6 +25,10 @@ import {HashRouter, BrowserRouter} from "react-router-dom";
 
 const Router = __HASH_HISTORY__ ? HashRouter : BrowserRouter;
 
+// DEPRECATED / WARNING: this is deactivated because there is a race condition for some components when log is saved,
+//                       since it calls setState. If the subcomponent does not have a tailored rerendering logic, this may a WSOD
+const allowPersistentLog = false;
+
 class RootIntl extends React.Component {
     UNSAFE_componentWillMount() {
         IntlActions.switchLocale(this.props.locale);
@@ -67,7 +71,11 @@ class AppInit extends React.Component {
      * @param error
      */
     componentDidCatch(error) {
-        this.saveExtendedLog("error", [error]);
+        if (this.persistentLogEnabled) {
+            this.saveExtendedLog("error", [error]);
+        } else {
+            console.error(error);
+        }
     }
 
     componentDidUpdate(nextProps, nextState) {
@@ -97,6 +105,7 @@ class AppInit extends React.Component {
     }
 
     _enablePersistingLog() {
+        if (!allowPersistentLog) return;
         if (this.persistentLogEnabled) return;
 
         if (!this.state.extendeLogText.length) {
