@@ -373,8 +373,7 @@ class FeedPrice extends Price {
             typeof priceObject !== "object" ||
             !market_base ||
             !assets ||
-            !sqr ||
-            !mcfr
+            !sqr
         ) {
             throw new Error("Invalid FeedPrice inputs");
         }
