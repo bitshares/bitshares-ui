@@ -17,7 +17,7 @@ import moment from "moment";
 import utils from "../../../lib/common/utils";
 import CreditOfferActions, {
     FEE_RATE_DENOM,
-    listRepayPeriod
+    parsingTime
 } from "../../../actions/CreditOfferActions";
 
 import AccountStore from "stores/AccountStore";
@@ -30,6 +30,7 @@ import Translate from "react-translate-component";
 import FeeAssetSelector from "../../Utility/FeeAssetSelector";
 import {checkBalance} from "common/trxHelper";
 import notify from "actions/NotificationActions";
+import IntlStore from "stores/IntlStore";
 
 const getUninitializedFeeAmount = () =>
     new Asset({amount: 0, asset_id: "1.3.0"});
@@ -150,6 +151,8 @@ class CreditOfferPage extends React.Component {
     }
 
     _getColumns() {
+        let {locale} = this.props;
+        if (locale === "zh") locale = "zh_CN";
         return [
             {
                 title: "ID",
@@ -244,10 +247,7 @@ class CreditOfferPage extends React.Component {
                 sorter: (a, b) =>
                     a.max_duration_seconds - b.max_duration_seconds,
                 render: item => {
-                    let index = listRepayPeriod.indexOf(item);
-                    return counterpart.translate(
-                        "credit_offer.list_repay_period.period_" + index
-                    );
+                    return parsingTime(item, locale);
                 }
             },
             {
@@ -388,6 +388,11 @@ class CreditOfferPage extends React.Component {
                     mortgageAmount * 10 ** selectAsset.get("precision")
                 );
             }
+            let mortgageAsset = new Asset({
+                asset_id: selectAsset.get("id"),
+                real: mortgageAmount,
+                precision: selectAsset.get("precision")
+            });
             let rateAsset = new Asset({
                 asset_id: asset.get("id"),
                 real: amount,
@@ -572,11 +577,9 @@ class CreditOfferPage extends React.Component {
                                     width: "100%"
                                 }}
                             >
-                                {counterpart.translate(
-                                    "credit_offer.list_repay_period.period_" +
-                                        listRepayPeriod.indexOf(
-                                            info.max_duration_seconds
-                                        )
+                                {parsingTime(
+                                    info.max_duration_seconds,
+                                    this.props.locale
                                 )}
                             </div>
                         </Form.Item>
@@ -714,13 +717,14 @@ class CreditOfferPage extends React.Component {
 
 CreditOfferPage = connect(CreditOfferPage, {
     listenTo() {
-        return [AccountStore, CreditOfferStore];
+        return [AccountStore, CreditOfferStore, IntlStore];
     },
     getProps(props) {
         return {
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount,
-            allList: CreditOfferStore.getState().allList
+            allList: CreditOfferStore.getState().allList,
+            locale: IntlStore.getState().currentLocale
         };
     }
 });

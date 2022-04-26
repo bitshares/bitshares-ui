@@ -75,6 +75,7 @@ let icons = [
     "create_account",
     "swap",
     "instant-trade",
+    "qr-scan",
     "deployment-unit"
 ];
 
