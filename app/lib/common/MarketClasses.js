@@ -367,13 +367,14 @@ class Price {
 }
 
 class FeedPrice extends Price {
-    constructor({priceObject, assets, market_base, sqr, real = false}) {
+    constructor({priceObject, assets, market_base, sqr, mcfr, real = false}) {
         if (
             !priceObject ||
             typeof priceObject !== "object" ||
             !market_base ||
             !assets ||
-            !sqr
+            !sqr ||
+            !mcfr
         ) {
             throw new Error("Invalid FeedPrice inputs");
         }
@@ -404,6 +405,8 @@ class FeedPrice extends Price {
 
         this.sqr = parseInt(sqr, 10) / 1000;
         this.inverted = inverted;
+        if (!mcfr) this.mcfr = 0;
+        else this.mcfr = parseInt(mcfr, 10) / 1000;
     }
 
     getSqueezePrice({real = false} = {}) {
@@ -411,12 +414,16 @@ class FeedPrice extends Price {
             this._squeeze_price = this.clone();
             if (this.inverted) {
                 this._squeeze_price.base.amount = Math.floor(
-                    this._squeeze_price.base.amount * this.sqr * 1000
+                    this._squeeze_price.base.amount *
+                        (this.sqr - this.mcfr) *
+                        1000
                 );
                 this._squeeze_price.quote.amount *= 1000;
             } else if (!this.inverted) {
                 this._squeeze_price.quote.amount = Math.floor(
-                    this._squeeze_price.quote.amount * this.sqr * 1000
+                    this._squeeze_price.quote.amount *
+                        (this.sqr - this.mcfr) *
+                        1000
                 );
                 this._squeeze_price.base.amount *= 1000;
             }
@@ -899,25 +906,25 @@ class CallOrder {
         let orderDebt = order.iSum
             ? order.debt
             : orderUseCR
-                ? order.max_debt_to_cover.getAmount()
-                : order.amountToReceive().getAmount();
+            ? order.max_debt_to_cover.getAmount()
+            : order.amountToReceive().getAmount();
         let newOrderDebt = newOrder.iSum
             ? newOrder.debt
             : newOrderUseCR
-                ? newOrder.max_debt_to_cover.getAmount()
-                : newOrder.amountToReceive().getAmount();
+            ? newOrder.max_debt_to_cover.getAmount()
+            : newOrder.amountToReceive().getAmount();
 
         /* Determine which collateral values to use */
         let orderCollateral = order.iSum
             ? order.collateral
             : orderUseCR
-                ? order.max_collateral_to_sell.getAmount()
-                : order.amountForSale().getAmount();
+            ? order.max_collateral_to_sell.getAmount()
+            : order.amountForSale().getAmount();
         let newOrderCollateral = newOrder.iSum
             ? newOrder.collateral
             : newOrderUseCR
-                ? newOrder.max_collateral_to_sell.getAmount()
-                : newOrder.amountForSale().getAmount();
+            ? newOrder.max_collateral_to_sell.getAmount()
+            : newOrder.amountForSale().getAmount();
 
         newOrder.debt = newOrderDebt + orderDebt;
         newOrder.collateral = newOrderCollateral + orderCollateral;
@@ -1232,8 +1239,8 @@ class FillOrder {
         this.className = this.isCall
             ? "orderHistoryCall"
             : this.isBid
-                ? "orderHistoryBid"
-                : "orderHistoryAsk";
+            ? "orderHistoryBid"
+            : "orderHistoryAsk";
         this.time = fill.time && new Date(utils.makeISODateString(fill.time));
         this.block = fill.block;
         this.account = fill.op.account || fill.op.account_id;
