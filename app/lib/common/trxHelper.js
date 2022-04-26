@@ -227,34 +227,26 @@ function estimateFee(op_type, options, globalObject, data = {}) {
         return _feeCache[cacheKey];
     }
     let op_code = operations[op_type];
-    let currentFees = globalObject.getIn([
+    let currentFees = null;
+
+    // The data returned by the API is not necessarily continuous.
+    let params = globalObject.getIn([
         "parameters",
         "current_fees",
-        "parameters",
-        op_code,
-        1
+        "parameters"
     ]);
-
-    if (!currentFees) {
-        // The data returned by the API is not necessarily continuous.
-        let params = globalObject.getIn([
+    let index = params.findIndex(item => item.get(0) == op_code);
+    if (index > -1) {
+        currentFees = params.getIn([index, 1]);
+    } else {
+        /* Default to transfer fees if the op is missing in globalObject */
+        currentFees = globalObject.getIn([
             "parameters",
             "current_fees",
-            "parameters"
+            "parameters",
+            0,
+            1
         ]);
-        let index = params.findIndex(item => item.get(0) == op_code);
-        if (index > -1) {
-            currentFees = params.getIn([index, 1]);
-        } else {
-            /* Default to transfer fees if the op is missing in globalObject */
-            currentFees = globalObject.getIn([
-                "parameters",
-                "current_fees",
-                "parameters",
-                0,
-                1
-            ]);
-        }
     }
 
     currentFees = currentFees.toJS();
