@@ -183,13 +183,6 @@ class Asset extends React.Component {
             "maximum_short_squeeze_ratio"
         ]);
 
-        let mcfr = this.props.asset.getIn([
-            "bitasset",
-            "options",
-            "extensions",
-            "margin_call_fee_ratio"
-        ]);
-
         let feedPriceRaw = assetUtils.extractRawFeedPrice(this.props.asset);
 
         // if there has been no feed price, settlePrice has 0 amount
@@ -236,7 +229,6 @@ class Asset extends React.Component {
             priceObject: feedPriceRaw,
             market_base: this.props.asset.get("id"),
             sqr,
-            mcfr,
             assets
         });
 
