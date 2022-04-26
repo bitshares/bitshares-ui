@@ -133,9 +133,9 @@ function checkFeeStatusAsync({
                     let hasValidCER = true;
 
                     /*
-                ** If the fee is to be paid in a non-core asset, check the fee
-                ** pool and convert the amount using the CER
-                */
+                     ** If the fee is to be paid in a non-core asset, check the fee
+                     ** pool and convert the amount using the CER
+                     */
                     if (feeID !== "1.3.0") {
                         // Convert the amount using the CER
                         let cer = feeAsset.getIn([
@@ -157,9 +157,9 @@ function checkFeeStatusAsync({
                         let quote = new Asset(q);
 
                         /*
-                    ** If the CER is incorrectly configured, the multiplication
-                    ** will fail, so catch the error and default to core
-                    */
+                         ** If the CER is incorrectly configured, the multiplication
+                         ** will fail, so catch the error and default to core
+                         */
                         try {
                             let price = new Price({base, quote});
                             fee = fee.times(price, true);
@@ -215,9 +215,9 @@ let _feeCache = {};
 function estimateFee(op_type, options, globalObject, data = {}) {
     // console.time("estimateFee");
     /*
-    * The actual content doesn't matter, only the length of it, so we use a
-    * string of equal length to improve caching
-    */
+     * The actual content doesn't matter, only the length of it, so we use a
+     * string of equal length to improve caching
+     */
     if (!!data.content)
         data.content = new Array(data.content.length + 1).join("a");
     if (!globalObject) return 0;
@@ -234,15 +234,29 @@ function estimateFee(op_type, options, globalObject, data = {}) {
         op_code,
         1
     ]);
-    /* Default to transfer fees if the op is missing in globalObject */
-    if (!currentFees)
-        currentFees = globalObject.getIn([
+
+    if (!currentFees) {
+        // The data returned by the API is not necessarily continuous.
+        let params = globalObject.getIn([
             "parameters",
             "current_fees",
-            "parameters",
-            0,
-            1
+            "parameters"
         ]);
+        let index = params.findIndex(item => item.get(0) == op_code);
+        if (index > -1) {
+            currentFees = params.getIn([index, 1]);
+        } else {
+            /* Default to transfer fees if the op is missing in globalObject */
+            currentFees = globalObject.getIn([
+                "parameters",
+                "current_fees",
+                "parameters",
+                0,
+                1
+            ]);
+        }
+    }
+
     currentFees = currentFees.toJS();
 
     let fee = 0;
