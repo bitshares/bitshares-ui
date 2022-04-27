@@ -510,7 +510,7 @@ class App extends React.Component {
                                     component={Exchange}
                                 />
                                 <Route
-                                    path="/lending/p2p"
+                                    path="/credit-offer"
                                     component={CreditOfferPage}
                                 />
                                 <Route
