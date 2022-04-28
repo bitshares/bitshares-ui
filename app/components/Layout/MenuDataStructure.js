@@ -219,8 +219,8 @@ class MenuDataStructure {
                 inDropdownBehavior: MenuItemType.WhenNotInHeader
             }),
             lending: state => ({
-                includePattern: "/lending",
-                target: "/lending/p2p",
+                includePattern: "/credit-offer",
+                target: "/credit-offer",
                 icon: "deployment-unit",
                 text: "header.p2p_lending",
                 inDropdownBehavior: MenuItemType.WhenNotInHeader
