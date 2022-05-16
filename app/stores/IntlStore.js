@@ -4,7 +4,7 @@ import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
 var locale_en = require("assets/locales/locale-en.json");
 import ls from "common/localStorage";
-let ss = new ls("__graphene__");
+let ss = ls("__graphene__");
 
 counterpart.registerTranslations("en", locale_en);
 counterpart.setFallbackLocale("en");

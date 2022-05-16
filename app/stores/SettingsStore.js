@@ -16,7 +16,7 @@ import {
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
 const STORAGE_KEY = "__graphene__";
-let ss = new ls(STORAGE_KEY);
+let ss = ls(STORAGE_KEY);
 
 /**
  * SettingsStore takes care of maintaining user set settings values and notifies all listeners

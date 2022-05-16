@@ -8,7 +8,6 @@ import NotificationActions from "actions/NotificationActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {decompress, compress} from "lzma";
 import bs58 from "common/base58";
-import utils from "common/utils";
 import PrintReceiptButton from "./PrintReceiptButton.jsx";
 import Translate from "react-translate-component";
 import {
@@ -19,7 +18,7 @@ import {
     Tooltip,
     Switch
 } from "bitshares-ui-style-guide";
-import sanitize from "sanitize";
+import utils from "common/utils";
 import counterpart from "counterpart";
 import {hasLoaded} from "../Utility/BindToCurrentAccount";
 import Operation from "../Blockchain/Operation";
@@ -90,7 +89,7 @@ class InvoicePay extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
+    UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
         if (this.state.pay_from_name == null && this.props.currentAccount) {
             // check if current account has already paid
             let paymentOperation = this._findPayment();
@@ -116,7 +115,7 @@ class InvoicePay extends React.Component {
 
     async parseInvoiceData(data) {
         try {
-            data = sanitize(data, {
+            data = utils.sanitize(data, {
                 whiteList: [], // empty, means filter out all tags
                 stripIgnoreTag: true // filter out all HTML not in the whilelist
             });
@@ -441,9 +440,7 @@ class InvoicePay extends React.Component {
                 invoice.to !== this.state.pay_from_name
             ) {
                 qrcode =
-                    `bitshares:operation/transfer?to=${invoice.to}&from=${
-                        this.state.pay_from_name
-                    }&asset=${asset}&amount=${total_amount}` +
+                    `bitshares:operation/transfer?to=${invoice.to}&from=${this.state.pay_from_name}&asset=${asset}&amount=${total_amount}` +
                     (invoice.memo ? `&memo=${invoice.memo}` : "");
             }
         }

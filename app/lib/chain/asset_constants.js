@@ -8,7 +8,14 @@ module.exports = {
         global_settle: 0x20 /**< allow the bitasset issuer to force a global settling -- this may be set in permissions, but not flags */,
         disable_confidential: 0x40 /**< allow the asset to be used with confidential transactions */,
         witness_fed_asset: 0x80 /**< allow the asset to be fed by witnesses */,
-        committee_fed_asset: 0x100 /**< allow the asset to be fed by the committee */
+        committee_fed_asset: 0x100 /**< allow the asset to be fed by the committee */,
+        lock_max_supply: 0x200, ///< the max supply of the asset can not be updated
+        disable_new_supply: 0x400, ///< unable to create new supply for the asset
+        disable_mcr_update: 0x800, ///< the bitasset owner can not update MCR, permission only
+        disable_icr_update: 0x1000, ///< the bitasset owner can not update ICR, permission only
+        disable_mssr_update: 0x2000, ///< the bitasset owner can not update MSSR, permission only
+        disable_bsrm_update: 0x4000, ///< the bitasset owner can not update BSRM, permission only
+        disable_collateral_bidding: 0x8000 ///< Can not bid collateral after a global settlement
     },
     uia_permission_mask: [
         "charge_market_fee",

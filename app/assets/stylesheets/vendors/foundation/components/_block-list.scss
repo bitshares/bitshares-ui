@@ -1,3 +1,4 @@
+@use "sass:math";
 /*
   BLOCK LIST
   ----------
@@ -221,7 +222,7 @@ $blocklist-check-icons: true !default;
     $item-height: $blocklist-fontsize + get-side($blocklist-item-padding, top) +
         get-side($blocklist-item-padding, top);
     $icon-height: $item-height * $blocklist-item-icon-size;
-    $icon-offset: ($item-height - $icon-height) / 2;
+    $icon-offset: math.div(($item-height - $icon-height), 2);
     #{$item-selector} {
         > a,
         > span,

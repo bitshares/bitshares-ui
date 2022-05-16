@@ -4,6 +4,7 @@
  */
 
 import {
+    ioxbankAPIs,
     rudexAPIs,
     bitsparkAPIs,
     openledgerAPIs,
@@ -86,6 +87,27 @@ const _isEnabled = gatewayKey => {
 };
 
 export const availableGateways = {
+     IOB: {
+	id: "IOB",
+	name: "ioxbank",
+	baseAPI: ioxbankAPIs,
+        isEnabled: _isEnabled("IOB"),
+	isSimple: true,
+	selected: false,
+	simpleAssetGateway: true,
+	    fixedMemo: {	
+            prepend_default: "dex:",	
+            prepend_btsid: "",	
+            append: ""	
+        },
+	addressValidatorMethod: "POST",
+	options: {
+		enabled: false,
+		selected: false
+	},
+    landing: "https://ioxbank.com",
+    wallet: "https://dex.iobanker.com/"
+},
     OPEN: {
         id: "OPEN",
         name: "OpenLedger",
@@ -104,7 +126,7 @@ export const availableGateways = {
         id: "RUDEX",
         name: "RuDEX",
         baseAPI: rudexAPIs,
-        isEnabled: _isEnabled("RUDEX"),
+        isEnabled: () => false,
         isSimple: true,
         selected: false,
         simpleAssetGateway: true,
@@ -160,7 +182,7 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        wallet: "https://www.gdex.io/"
+        wallet: "https://www.52bts.net/"
     },
     XBTSX: {
         id: "XBTSX",

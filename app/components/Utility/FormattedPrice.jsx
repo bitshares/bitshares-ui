@@ -52,7 +52,7 @@ class FormattedPrice extends React.Component {
         this.closePopover = this.closePopover.bind(this);
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             np.base_asset !== this.props.base_asset ||
             np.quote_asset !== this.props.quote_asset

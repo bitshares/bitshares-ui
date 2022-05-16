@@ -1,6 +1,6 @@
 import ls from "./localStorage";
 import {rudexAPIs} from "api/apiConfig";
-const rudexStorage = new ls("");
+const rudexStorage = ls("");
 
 export function fetchCoinList(url = rudexAPIs.BASE + rudexAPIs.COINS_LIST) {
     return fetch(url, {method: "post"})

@@ -11,7 +11,6 @@ import Translate from "react-translate-component";
 import AssetName from "../Utility/AssetName";
 import stringSimilarity from "string-similarity";
 import {hiddenProposals} from "../../lib/common/hideProposals";
-import sanitize from "sanitize";
 
 class WorkerList extends React.Component {
     constructor(props) {
@@ -94,8 +93,8 @@ class WorkerList extends React.Component {
                     return a.assets_id > b.assets_id
                         ? 1
                         : a.assets_id < b.assets_id
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: item => {
                     return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
@@ -431,8 +430,8 @@ class WorkerList extends React.Component {
             let approvalState = vote_ids.has(worker.vote_for)
                 ? true
                 : vote_ids.has(worker.vote_against)
-                    ? false
-                    : null;
+                ? false
+                : null;
 
             let fundedPercent = 0;
 
@@ -694,10 +693,10 @@ class WorkerList extends React.Component {
             workerTableIndex === 0
                 ? newWorkers
                 : workerTableIndex === 1
-                    ? activeWorkers
-                    : workerTableIndex === 2
-                        ? expiredWorkers
-                        : polls;
+                ? activeWorkers
+                : workerTableIndex === 2
+                ? expiredWorkers
+                : polls;
         return (
             <PaginatedList
                 className="table dashboard-table table-hover"

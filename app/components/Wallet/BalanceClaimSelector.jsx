@@ -9,7 +9,7 @@ import FormattedAsset from "components/Utility/FormattedAsset";
 import Translate from "react-translate-component";
 
 class BalanceClaimSelector extends Component {
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.claim_account_name)
             this.onClaimAccount(
                 nextProps.claim_account_name,

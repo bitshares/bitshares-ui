@@ -24,7 +24,7 @@ class CreateLockModal extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             np.asset &&
             this.props.asset &&
@@ -185,22 +185,19 @@ class CreateLockModal extends React.Component {
                                 value={this.state.targetType}
                                 onChange={this.onTargetTypeChanged.bind(this)}
                             >
-                                {Object.keys(ChainTypes.ticket_type).map(
-                                    key =>
-                                        ChainTypes.ticket_type[key] != 0 ? (
-                                            <Select.Option
-                                                key={
-                                                    ChainTypes.ticket_type[key]
-                                                }
-                                            >
-                                                {ChainTypes.ticket_type[key] +
-                                                    ": " +
-                                                    counterpart.translate(
-                                                        "operation.ticket_types." +
-                                                            key
-                                                    )}
-                                            </Select.Option>
-                                        ) : null
+                                {Object.keys(ChainTypes.ticket_type).map(key =>
+                                    ChainTypes.ticket_type[key] != 0 ? (
+                                        <Select.Option
+                                            key={ChainTypes.ticket_type[key]}
+                                        >
+                                            {ChainTypes.ticket_type[key] +
+                                                ": " +
+                                                counterpart.translate(
+                                                    "operation.ticket_types." +
+                                                        key
+                                                )}
+                                        </Select.Option>
+                                    ) : null
                                 )}
                             </Select>
                         </Tooltip>

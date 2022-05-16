@@ -26,7 +26,7 @@ class BlockDate extends React.Component {
         component: "span"
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (!this.props.blockHeader)
             BlockchainActions.getHeader.defer(this.props.block_number);
     }
@@ -61,20 +61,17 @@ class BlockDate extends React.Component {
     }
 }
 
-BlockDate = connect(
-    BlockDate,
-    {
-        listenTo() {
-            return [BlockchainStore];
-        },
-        getProps(props) {
-            return {
-                blockHeader: BlockchainStore.getState().blockHeaders.get(
-                    props.block_number
-                )
-            };
-        }
+BlockDate = connect(BlockDate, {
+    listenTo() {
+        return [BlockchainStore];
+    },
+    getProps(props) {
+        return {
+            blockHeader: BlockchainStore.getState().blockHeaders.get(
+                props.block_number
+            )
+        };
     }
-);
+});
 
 export default BlockDate;

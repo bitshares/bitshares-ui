@@ -7,6 +7,7 @@ import QrcodeModal from "./Modal/QrcodeModal";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import {Modal, Button} from "bitshares-ui-style-guide";
+import QR_IMG from "../assets/qr.png";
 
 export default class PrivateKeyView extends Component {
     static propTypes = {
@@ -122,7 +123,7 @@ export default class PrivateKeyView extends Component {
                                                 >
                                                     <img
                                                         style={{height: 50}}
-                                                        src={require("assets/qr.png")}
+                                                        src={QR_IMG}
                                                     />
                                                 </div>
                                             </div>

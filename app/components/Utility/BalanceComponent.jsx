@@ -13,11 +13,13 @@ class BalanceComponent extends React.Component {
     static propTypes = {
         balance: ChainTypes.ChainObject.isRequired,
         assetInfo: PropTypes.node,
-        hide_asset: PropTypes.bool
+        hide_asset: PropTypes.bool,
+        trimZero: PropTypes.bool
     };
 
     static defaultProps = {
-        hide_asset: false
+        hide_asset: false,
+        trimZero: false
     };
 
     render() {
@@ -39,6 +41,7 @@ class BalanceComponent extends React.Component {
                 assetInfo={this.props.assetInfo}
                 replace={this.props.replace}
                 hide_asset={this.props.hide_asset}
+                trimZero={this.props.trimZero}
             />
         );
     }

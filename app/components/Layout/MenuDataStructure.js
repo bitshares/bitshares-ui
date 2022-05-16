@@ -68,7 +68,12 @@ class MenuDataStructure {
     static getHeader() {
         const allItems = MenuDataStructure.getAllEntries();
 
-        return [allItems.dashboard, allItems.market, allItems.explorer];
+        return [
+            allItems.dashboard,
+            allItems.market,
+            allItems.lending,
+            allItems.explorer
+        ];
     }
 
     static getDropdownMenu() {
@@ -115,6 +120,7 @@ class MenuDataStructure {
             allItems.divider,
             allItems.dashboard,
             allItems.market,
+            allItems.lending,
             allItems.explorer,
             allItems.divider,
             allItems.transfer,
@@ -209,6 +215,14 @@ class MenuDataStructure {
                     title: "icons.trade.exchange"
                 },
                 text: "header.exchange",
+                inHeaderBehavior: MenuItemType.Always,
+                inDropdownBehavior: MenuItemType.WhenNotInHeader
+            }),
+            lending: state => ({
+                includePattern: "/credit-offer",
+                target: "/credit-offer",
+                icon: "deployment-unit",
+                text: "header.p2p_lending",
                 inHeaderBehavior: MenuItemType.Always,
                 inDropdownBehavior: MenuItemType.WhenNotInHeader
             }),

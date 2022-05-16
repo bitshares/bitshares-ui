@@ -114,7 +114,7 @@ class AssetSelector extends React.Component {
             this.props.onFound(this.props.asset);
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.onFound && newProps.asset !== this.props.asset)
             this.props.onFound(newProps.asset);
     }
@@ -184,6 +184,7 @@ class AssetSelector extends React.Component {
                     <div className="input-area">
                         <div className="inline-label input-wrapper">
                             <input
+                                className={this.props.inputClass}
                                 style={this.props.inputStyle}
                                 disabled={this.props.disabled}
                                 type="text"

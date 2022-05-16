@@ -1,0 +1,14 @@
+# Specify a non-default branch for pull requests for pip
+
+version: 2
+updates:
+    - package-ecosystem: "npm"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          # Check for npm updates on Sundays
+          day: "sunday"
+      target-branch: "develop"
+      # Labels on pull requests for security and version updates
+      labels:
+          - "npm dependencies"

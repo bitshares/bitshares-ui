@@ -88,7 +88,7 @@ class PMAssetsContainer extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         getPredictionMarketIssuers().then(whitelistedIssuers => {
             this._getWhitelistedAssets(whitelistedIssuers).then(assets => {
                 const predictionMarkets = assets
@@ -178,22 +178,18 @@ class PMAssetsContainer extends React.Component {
     }
 }
 
-PMAssetsContainer = connect(
-    PMAssetsContainer,
-    {
-        listenTo() {
-            return [AssetStore, MarketsStore];
-        },
-        getProps() {
-            return {
-                assets: AssetStore.getState().assets,
-                bucketSize: MarketsStore.getState().bucketSize,
-                currentGroupOrderLimit: MarketsStore.getState()
-                    .currentGroupLimit,
-                marketLimitOrders: MarketsStore.getState().marketLimitOrders
-            };
-        }
+PMAssetsContainer = connect(PMAssetsContainer, {
+    listenTo() {
+        return [AssetStore, MarketsStore];
+    },
+    getProps() {
+        return {
+            assets: AssetStore.getState().assets,
+            bucketSize: MarketsStore.getState().bucketSize,
+            currentGroupOrderLimit: MarketsStore.getState().currentGroupLimit,
+            marketLimitOrders: MarketsStore.getState().marketLimitOrders
+        };
     }
-);
+});
 
-export default (PMAssetsContainer = bindToCurrentAccount(PMAssetsContainer));
+export default PMAssetsContainer = bindToCurrentAccount(PMAssetsContainer);

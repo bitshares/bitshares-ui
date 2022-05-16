@@ -1,8 +1,8 @@
 import ls from "./localStorage";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
-const blockTradesStorage = new ls("");
-let oidcStorage = new ls(
+const blockTradesStorage = ls("");
+let oidcStorage = ls(
     "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
 );
 

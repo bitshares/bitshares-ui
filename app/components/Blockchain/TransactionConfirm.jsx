@@ -21,6 +21,7 @@ import {
     Switch,
     Input
 } from "bitshares-ui-style-guide";
+import QRCode from "qrcode.react";
 
 class TransactionConfirm extends React.Component {
     constructor(props) {
@@ -28,7 +29,8 @@ class TransactionConfirm extends React.Component {
 
         this.state = {
             isModalVisible: false,
-            isErrorDetailsVisible: false
+            isErrorDetailsVisible: false,
+            showQrCode: false
         };
 
         this.onCloseClick = this.onCloseClick.bind(this);
@@ -46,7 +48,9 @@ class TransactionConfirm extends React.Component {
         }
 
         if (
-            nextState.isErrorDetailsVisible !== this.state.isErrorDetailsVisible
+            nextState.isErrorDetailsVisible !==
+                this.state.isErrorDetailsVisible ||
+            nextState.showQrCode !== this.state.showQrCode
         ) {
             return true;
         }
@@ -124,7 +128,7 @@ class TransactionConfirm extends React.Component {
         TransactionConfirmActions.proposeFeePayingAccount(fee_paying_account);
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.broadcast && np.included && !this.props.included && !np.error) {
             notify.addNotification.defer({
                 children: (
@@ -163,9 +167,29 @@ class TransactionConfirm extends React.Component {
         }
     }
 
+    _showQrCode() {
+        let {transaction} = this.props;
+        let trStr = "";
+        if (transaction.tr_buffer) {
+            trStr = JSON.stringify(transaction.serialize());
+            this.setState({showQrCode: true, trStr});
+        } else {
+            transaction.set_expire_seconds(60);
+            transaction.finalize().then(() => {
+                trStr = JSON.stringify(transaction.serialize());
+                this.setState({showQrCode: true, trStr});
+            });
+        }
+    }
+
+    _hideQrCode() {
+        this.props.transaction.tr_buffer = null;
+        this.setState({showQrCode: false, trStr: ""});
+    }
+
     render() {
         let {broadcast, broadcasting} = this.props;
-        let {isErrorDetailsVisible} = this.state;
+        let {isErrorDetailsVisible, showQrCode, trStr} = this.state;
         if (!this.props.transaction || this.props.closed) {
             return null;
         }
@@ -245,6 +269,24 @@ class TransactionConfirm extends React.Component {
             header = counterpart.translate("transaction.confirm");
 
             footer = [
+                <div
+                    style={{
+                        float: "left",
+                        cursor: "pointer",
+                        marginTop: "4px"
+                    }}
+                    key="scan-qr"
+                    onClick={this._showQrCode.bind(this)}
+                >
+                    <Translate
+                        style={{
+                            marginTop: "3px",
+                            marginLeft: "5px"
+                        }}
+                        content="transaction.view_qr"
+                    />
+                    <Icon name="qr-scan" size={"1_5x"} />
+                </div>,
                 <Button
                     key={"confirm"}
                     type="primary"
@@ -259,7 +301,6 @@ class TransactionConfirm extends React.Component {
                 </Button>
             ];
         }
-
         return (
             <div ref="transactionConfirm" onKeyUp={this.onKeyUp}>
                 <Modal
@@ -285,9 +326,7 @@ class TransactionConfirm extends React.Component {
                                 message={counterpart.translate(
                                     "transaction.transaction_confirmed"
                                 )}
-                                description={`#${this.props.trx_id}@${
-                                    this.props.trx_block_num
-                                }`}
+                                description={`#${this.props.trx_id}@${this.props.trx_block_num}`}
                             />
                         ) : null}
 
@@ -313,6 +352,45 @@ class TransactionConfirm extends React.Component {
                                 index={0}
                                 no_links={true}
                             />
+                            {trStr ? (
+                                <Modal
+                                    visible={showQrCode}
+                                    onCancel={this._hideQrCode.bind(this)}
+                                    footer={
+                                        <Button
+                                            key="cancel"
+                                            onClick={this._hideQrCode.bind(
+                                                this
+                                            )}
+                                        >
+                                            {counterpart.translate("cancel")}
+                                        </Button>
+                                    }
+                                >
+                                    <div className="text-center">
+                                        <div style={{margin: "1.5rem 0"}}>
+                                            <Translate
+                                                component="h4"
+                                                content="transaction.title_qrcode"
+                                            />
+                                        </div>
+                                        <div className="full-width">
+                                            <span
+                                                style={{
+                                                    background: "#fff",
+                                                    padding: ".75rem",
+                                                    display: "inline-block"
+                                                }}
+                                            >
+                                                <QRCode
+                                                    size={256}
+                                                    value={trStr}
+                                                />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Modal>
+                            ) : null}
                         </div>
 
                         {/* P R O P O S E   F R O M */}
@@ -360,16 +438,13 @@ class TransactionConfirm extends React.Component {
     }
 }
 
-TransactionConfirm = connect(
-    TransactionConfirm,
-    {
-        listenTo() {
-            return [TransactionConfirmStore];
-        },
-        getProps() {
-            return TransactionConfirmStore.getState();
-        }
+TransactionConfirm = connect(TransactionConfirm, {
+    listenTo() {
+        return [TransactionConfirmStore];
+    },
+    getProps() {
+        return TransactionConfirmStore.getState();
     }
-);
+});
 
 export default TransactionConfirm;
