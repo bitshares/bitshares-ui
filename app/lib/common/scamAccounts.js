@@ -1513,6 +1513,8 @@ export const scamAccountsOther = [
     "1.2.1806193",
     "binaonce-bts-1",
     "1.2.1803179",
+    "binarnce-bts-1",
+    "1.2.1813126",
     "bincance-bts-1",
     "1.2.1805374",
     "bincnce-bts-1",
