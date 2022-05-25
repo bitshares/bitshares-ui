@@ -2025,6 +2025,8 @@ export const scamAccountsOther = [
     "1.2.1806535",
     "alice0alice",
     "1.2.1812146",
+    "mark302lap",
+    "1.2.1812148",
     "okx-btc",
     "1.2.1810711",
     "okx-bts",
