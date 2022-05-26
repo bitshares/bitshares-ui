@@ -352,7 +352,7 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         serList.push({
-            name: "XBTS (XBTSX.X)",
+            name: "XBTS Native Chains",
             identifier: "XBTSX",
             template: (
                 <div className="content-block">

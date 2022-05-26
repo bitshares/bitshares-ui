@@ -87,7 +87,7 @@ export const gdexAPIs = {
 };
 
 export const xbtsxAPIs = {
-    BASE: "https://apis.xbts.io/api/v1",
+    BASE: "https://apis.xbts.io/api/v2",
     COINS_LIST: "/coin"
 };
 
