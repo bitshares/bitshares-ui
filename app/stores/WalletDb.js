@@ -27,7 +27,8 @@ let TRACE = false;
 
 let dictJson, AesWorker;
 if (__ELECTRON__) {
-    AesWorker = require("worker-loader?inline=no-fallback!workers/AesWorker");
+    AesWorker = require("worker-loader?inline=no-fallback!workers/AesWorker")
+        .default;
     dictJson = require("common/dictionary_en.json");
 }
 
@@ -642,7 +643,7 @@ class WalletDb extends BaseStore {
                 private_plainhex_array.push(private_key_obj.private_plainhex);
             }
             if (!__ELECTRON__) {
-                AesWorker = require("worker-loader!workers/AesWorker");
+                AesWorker = require("worker-loader!workers/AesWorker").default;
             }
             let worker = new AesWorker();
             worker.postMessage({
