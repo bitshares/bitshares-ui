@@ -1724,6 +1724,10 @@ class Operation {
                                 type: "asset",
                                 value: op[1].asset_b,
                                 arg: "asset_b"
+                            },
+                            {
+                                value: op[1].pool,
+                                arg: "id"
                             }
                         ]}
                     />
