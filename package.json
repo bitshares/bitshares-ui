@@ -240,7 +240,7 @@
         "copyfiles": "^1.2.0",
         "cross-env": "^5.0.5",
         "css-loader": "^6.5.1",
-        "electron": "16.0.6",
+        "electron": "16.2.6",
         "electron-builder": "22.14.5",
         "es6-promise": "^3.0.2",
         "eslint": "^8.4.1",
