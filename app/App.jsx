@@ -197,9 +197,11 @@ const QuickTrade = Loadable({
 });
 
 const PoolmartPage = Loadable({
-	    loader: () =>
-	        import(/* webpackChunkName: "poolmart" */ "./components/Poolmart/PoolmartPage"),
-	    loading: LoadingIndicator
+    loader: () =>
+        import(
+            /* webpackChunkName: "poolmart" */ "./components/Poolmart/PoolmartPage"
+        ),
+    loading: LoadingIndicator
 });
 
 import LoginSelector from "./components/LoginSelector";
@@ -644,10 +646,7 @@ class App extends React.Component {
                                     path="/instant-trade/:marketID"
                                     component={QuickTrade}
                                 />
-		                <Route
-		                    path="/poolmart"
-		                    component={PoolmartPage}
-		                />
+                                <Route path="/pools" component={PoolmartPage} />
                                 <Route path="*" component={Page404} />
                             </Switch>
                         </div>

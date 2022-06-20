@@ -79,7 +79,7 @@ let icons = [
     "poolmart",
     "arrow-down-1",
     "arrow-up-down",
-    "pools"
+    "pools",
     "qr-scan",
     "deployment-unit"
 ];

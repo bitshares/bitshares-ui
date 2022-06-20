@@ -219,9 +219,9 @@ class MenuDataStructure {
                 inDropdownBehavior: MenuItemType.WhenNotInHeader
             }),
             poolmart: state => ({
-                includePattern: "/poolmart/",
+                includePattern: "/pools",
                 //target: state.poolmartUrl,
-                target: "/poolmart/liquidity-pools",
+                target: "/pools",
                 icon: {name: "poolmart", title: "icons.poolmart.title"},
                 text: "header.poolmart",
                 inDropdownBehavior: MenuItemType.Always

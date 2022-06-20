@@ -366,7 +366,7 @@
             "stake_status": "Stake/Unstake",
             "title": "Pools",
             "taker_fee": "Taker Fee",
-	    "unstake_fee": "Unstake Fee",
+            "unstake_fee": "Unstake Fee",
             "alert_asset_a": "ID of ASSET A should be greater than ID of ASSET B",
             "alert_asset_b": "ID of ASSET B should be smaller than ID of ASSET A",
             "alert_taker_fee": "",
@@ -1389,7 +1389,7 @@
         "logout": "Logout",
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
-        "poolmart": "Poolmart",
+        "poolmart": "Liquidity Pools",
         "settings": "Settings",
         "showcases": "Spotlight",
         "title": "%(wallet_name)s UI",
@@ -1491,7 +1491,7 @@
             "show_market": "Show market"
         },
         "poolmart": {
-            "title": "Poolmart"
+            "title": "Liquidity Pools"
         },
         "power": "Login",
         "question_circle": "Help",
@@ -1918,7 +1918,7 @@
             "withdrawal_fee_percent": "Withdrawal Fee",
             "stake": "Stake",
             "unstake": "Unstake",
-	    "delete_pool": "Delete",
+            "delete_pool": "Delete",
             "confirm_delete_pool": "Are you sure you want to delete the pool?"
         }
     },

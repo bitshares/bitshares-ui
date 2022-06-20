@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "alt-react";
 import counterpart from "counterpart";
 import {Tabs, Tab} from "../../Utility/Tabs";
-import CreditOfferList from "./CreditOfferList";
+import erList from "./CreditOfferList";
 import CreditDebtList from "./CreditDebtList";
 import CreditRightsList from "./CreditRightsList";
 
