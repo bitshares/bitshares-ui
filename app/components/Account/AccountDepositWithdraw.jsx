@@ -21,6 +21,7 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
+import XbtsFiat from "../DepositWithdraw/XbtsFiat";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
 import PropTypes from "prop-types";
 import DepositModal from "../Modal/DepositModal";
@@ -352,7 +353,7 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         serList.push({
-            name: "XBTS (XBTSX.X)",
+            name: "XBTS Native Chains",
             identifier: "XBTSX",
             template: (
                 <div className="content-block">
@@ -398,9 +399,10 @@ class AccountDepositWithdraw extends React.Component {
                     ) : null}
 
                     {xbtsxService === "fiat" ? (
-                        <div>
-                            <Translate content="gateway.xbtsx.coming_soon" />
-                        </div>
+                        <XbtsFiat
+                            viewSettings={this.props.viewSettings}
+                            account={account}
+                        />
                     ) : null}
                 </div>
             )
