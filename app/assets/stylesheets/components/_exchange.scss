@@ -139,13 +139,6 @@ div#CenterContent {
     }
 }
 
-// Mozilla Specific Padding Issues on Sticky Table Wrapper
-@-moz-document url-prefix() {
-    .order-table-container .sticky-table .sticky-table-y-wrapper {
-        padding-right: 0px !important;
-    }
-}
-
 .my-orders {
     width: 48% !important;
     display: inline-table;
@@ -270,9 +263,6 @@ form.order-form {
             padding-bottom: 8px !important;
         }
     }
-    .transition-container {
-        display: table-row-group;
-    }
     .table-container {
         flex-grow: 1;
         width: 100%;
@@ -339,6 +329,9 @@ form.order-form {
     .order-table-container {
         width: 100%;
         height: 100%;
+        .sticky-table-table {
+            box-sizing: content-box;
+        }
     }
     .top-header {
         text-align: right;
@@ -674,28 +667,28 @@ table thead tr th.mymarkets-header {
     padding-right: 0.25rem;
 }
 
-.blue-icon > svg > path {
+.blue-icon > svg path {
     fill: #2196f3 !important;
 }
 
-.gold-star > svg > path {
+.gold-star > svg path {
     fill: #cc9f00 !important;
 }
 
-.grey-star > svg > path,
-.grey-shuffle > svg > path {
+.grey-star > svg path,
+.grey-shuffle > svg path {
     fill: #878787 !important;
 }
 
-.gold-star:hover > svg > path {
+.gold-star:hover > svg path {
     fill: lighten(#cc9f00, 10%) !important;
 }
 
-.shuffle:hover > svg > path {
+.shuffle:hover > svg path {
     fill: lighten(#878787, 20%) !important;
 }
 
-.grey-star:hover > svg > path {
+.grey-star:hover > svg path {
     fill: #cc9f00 !important;
 }
 

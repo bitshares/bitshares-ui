@@ -23,7 +23,7 @@ export default class ExchangeHeader extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setState({
             selectedMarketPickerAsset: nextProps.selectedMarketPickerAsset
         });

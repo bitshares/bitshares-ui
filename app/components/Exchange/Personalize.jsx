@@ -28,7 +28,7 @@ class Personalize extends React.Component {
         this.setChartHeight = this.setChartHeight.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setState({
             smallScreen: window.innerWidth <= 800
         });
@@ -192,89 +192,85 @@ class Personalize extends React.Component {
                         </div>
                     </div>
 
-                    {!this.props.tinyScreen &&
-                        chartType == "price_chart" && (
-                            <div className="grid-block no-overflow wrap shrink">
-                                <div className="small-6">
-                                    <h6 style={{margin: 9}}>
-                                        <Translate content="exchange.settings.title.chart_tools" />
-                                        &nbsp;
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "exchange.settings.tooltip.chart_tools"
-                                            )}
-                                        >
-                                            <Icon
-                                                type="question-circle"
-                                                theme="filled"
-                                            />
-                                        </Tooltip>
-                                        &nbsp;
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "exchange.settings.tooltip.chart_reload"
-                                            )}
-                                        >
-                                            <Icon
-                                                type="info-circle"
-                                                theme="filled"
-                                            />
-                                        </Tooltip>
-                                    </h6>
-                                </div>
-                                <div className="small-6">
-                                    <Switch
-                                        style={{margin: 6}}
-                                        checked={this.props.chartTools}
-                                        onChange={this.props.onChartTools.bind(
-                                            this
+                    {!this.props.tinyScreen && chartType == "price_chart" && (
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div className="small-6">
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.chart_tools" />
+                                    &nbsp;
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "exchange.settings.tooltip.chart_tools"
                                         )}
-                                    />
-                                </div>
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
+                                    &nbsp;
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "exchange.settings.tooltip.chart_reload"
+                                        )}
+                                    >
+                                        <Icon
+                                            type="info-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
+                                </h6>
                             </div>
-                        )}
+                            <div className="small-6">
+                                <Switch
+                                    style={{margin: 6}}
+                                    checked={this.props.chartTools}
+                                    onChange={this.props.onChartTools.bind(
+                                        this
+                                    )}
+                                />
+                            </div>
+                        </div>
+                    )}
 
-                    {!this.props.tinyScreen &&
-                        chartType == "price_chart" && (
-                            <div className="grid-block no-overflow wrap shrink">
-                                <div className="small-6">
-                                    <h6 style={{margin: 9}}>
-                                        <Translate content="exchange.settings.title.chart_zoom" />
-                                        &nbsp;
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "exchange.settings.tooltip.chart_zoom"
-                                            )}
-                                        >
-                                            <Icon
-                                                type="question-circle"
-                                                theme="filled"
-                                            />
-                                        </Tooltip>
-                                        &nbsp;
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "exchange.settings.tooltip.chart_reload"
-                                            )}
-                                        >
-                                            <Icon
-                                                type="info-circle"
-                                                theme="filled"
-                                            />
-                                        </Tooltip>
-                                    </h6>
-                                </div>
-                                <div className="small-6">
-                                    <Switch
-                                        style={{margin: 6}}
-                                        checked={this.props.chartZoom}
-                                        onChange={this.props.onChartZoom.bind(
-                                            this
+                    {!this.props.tinyScreen && chartType == "price_chart" && (
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div className="small-6">
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.chart_zoom" />
+                                    &nbsp;
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "exchange.settings.tooltip.chart_zoom"
                                         )}
-                                    />
-                                </div>
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
+                                    &nbsp;
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "exchange.settings.tooltip.chart_reload"
+                                        )}
+                                    >
+                                        <Icon
+                                            type="info-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
+                                </h6>
                             </div>
-                        )}
+                            <div className="small-6">
+                                <Switch
+                                    style={{margin: 6}}
+                                    checked={this.props.chartZoom}
+                                    onChange={this.props.onChartZoom.bind(this)}
+                                />
+                            </div>
+                        </div>
+                    )}
 
                     <header>
                         <Translate content="exchange.settings.header.order_options" />
@@ -314,46 +310,45 @@ class Personalize extends React.Component {
                         </div>
                     </div>
 
-                    {!this.props.tinyScreen &&
-                        !this.props.smallScreen && (
-                            <div className="grid-block no-overflow wrap shrink">
-                                <div className="small-6">
-                                    <h6 style={{margin: 9}}>
-                                        <Translate content="exchange.settings.title.order_style" />
-                                        &nbsp;
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "exchange.settings.tooltip.order_style"
-                                            )}
-                                        >
-                                            <Icon
-                                                type="question-circle"
-                                                theme="filled"
-                                            />
-                                        </Tooltip>
-                                    </h6>
-                                </div>
-                                <div className="small-6">
-                                    <Select
-                                        placeholder={counterpart.translate(
-                                            "settings.placeholder_select"
-                                        )}
-                                        style={{width: "100%"}}
-                                        value={this.props.verticalOrderBook.toString()}
-                                        onSelect={this.props.onMoveOrderBook.bind(
-                                            this
+                    {!this.props.tinyScreen && !this.props.smallScreen && (
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div className="small-6">
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.order_style" />
+                                    &nbsp;
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "exchange.settings.tooltip.order_style"
                                         )}
                                     >
-                                        <Select.Option value={"true"}>
-                                            <Translate content="exchange.settings.options.vertical" />
-                                        </Select.Option>
-                                        <Select.Option value={"false"}>
-                                            <Translate content="exchange.settings.options.horizontal" />
-                                        </Select.Option>
-                                    </Select>
-                                </div>
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
+                                </h6>
                             </div>
-                        )}
+                            <div className="small-6">
+                                <Select
+                                    placeholder={counterpart.translate(
+                                        "settings.placeholder_select"
+                                    )}
+                                    style={{width: "100%"}}
+                                    value={this.props.verticalOrderBook.toString()}
+                                    onSelect={this.props.onMoveOrderBook.bind(
+                                        this
+                                    )}
+                                >
+                                    <Select.Option value={"true"}>
+                                        <Translate content="exchange.settings.options.vertical" />
+                                    </Select.Option>
+                                    <Select.Option value={"false"}>
+                                        <Translate content="exchange.settings.options.horizontal" />
+                                    </Select.Option>
+                                </Select>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Orientation Order Form */}
                     {(!this.props.tinyScreen &&
@@ -664,52 +659,48 @@ class Personalize extends React.Component {
                         </header>
                     )}
 
-                    {!this.props.tinyScreen &&
-                        !this.props.smallScreen && (
-                            <div
-                                className="grid-block no-overflow wrap shrink"
-                                style={{paddingBottom: "0.5em"}}
-                            >
-                                <div
-                                    className="small-6"
-                                    style={{paddingRight: 5}}
-                                >
-                                    <h6 style={{margin: 9}}>
-                                        <Translate content="exchange.settings.title.market_location" />
-                                        &nbsp;
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "exchange.settings.tooltip.market_location"
-                                            )}
-                                        >
-                                            <Icon
-                                                type="question-circle"
-                                                theme="filled"
-                                            />
-                                        </Tooltip>
-                                    </h6>
-                                </div>
-                                <div className="small-6">
-                                    <Select
-                                        placeholder={counterpart.translate(
-                                            "settings.placeholder_select"
-                                        )}
-                                        style={{width: "100%"}}
-                                        value={this.props.mirrorPanels.toString()}
-                                        onSelect={this.props.onMirrorPanels.bind(
-                                            this
+                    {!this.props.tinyScreen && !this.props.smallScreen && (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingBottom: "0.5em"}}
+                        >
+                            <div className="small-6" style={{paddingRight: 5}}>
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.market_location" />
+                                    &nbsp;
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "exchange.settings.tooltip.market_location"
                                         )}
                                     >
-                                        <Select.Option value={"false"}>
-                                            <Translate content="settings.left" />
-                                        </Select.Option>
-                                        <Select.Option value={"true"}>
-                                            <Translate content="settings.right" />
-                                        </Select.Option>
-                                    </Select>
-                                </div>
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
+                                </h6>
                             </div>
-                        )}
+                            <div className="small-6">
+                                <Select
+                                    placeholder={counterpart.translate(
+                                        "settings.placeholder_select"
+                                    )}
+                                    style={{width: "100%"}}
+                                    value={this.props.mirrorPanels.toString()}
+                                    onSelect={this.props.onMirrorPanels.bind(
+                                        this
+                                    )}
+                                >
+                                    <Select.Option value={"false"}>
+                                        <Translate content="settings.left" />
+                                    </Select.Option>
+                                    <Select.Option value={"true"}>
+                                        <Translate content="settings.right" />
+                                    </Select.Option>
+                                </Select>
+                            </div>
+                        </div>
+                    )}
 
                     {!this.props.tinyScreen && (
                         <div className="grid-block no-overflow wrap shrink">

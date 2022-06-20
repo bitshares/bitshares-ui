@@ -20,6 +20,7 @@ import AccountPortfolioList from "./AccountPortfolioList";
 import {Input, Icon, Switch, Tooltip, Button} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import SearchInput from "../Utility/SearchInput";
+import CreditOfferAccountPage from "./CreditOffer/CreditOfferAccountPage";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class AccountOverview extends React.Component {
         });
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._checkMarginStatus();
     }
 
@@ -61,7 +62,7 @@ class AccountOverview extends React.Component {
         });
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (np.account !== this.props.account) {
             this._checkMarginStatus(np);
         }
@@ -183,7 +184,8 @@ class AccountOverview extends React.Component {
                 let balanceObject = ChainStore.getObject(a);
                 if (
                     balanceObject &&
-                    (!balanceObject.get("balance") && !orders[index])
+                    !balanceObject.get("balance") &&
+                    !orders[index]
                 ) {
                     return false;
                 } else {
@@ -478,11 +480,20 @@ class AccountOverview extends React.Component {
                                                 <td>{marginValue}</td>
                                                 <td className="column-hide-small" />
                                                 <td className="column-hide-small" />
-                                                <td colSpan="4" />
+                                                <td colSpan="5" />
                                             </tr>
                                         </MarginPositionsTable>
                                     </div>
                                 </div>
+                            </Tab>
+
+                            <Tab
+                                title="account.credit_offer"
+                                subText={hiddenSubText}
+                            >
+                                <CreditOfferAccountPage
+                                    account={this.props.account}
+                                />
                             </Tab>
 
                             <Tab

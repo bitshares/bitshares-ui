@@ -1,7 +1,7 @@
 import ls from "./localStorage";
 import {gdexAPIs} from "api/apiConfig";
 
-const gdexStorage = new ls("");
+const gdexStorage = ls("");
 
 let assetsRequest = {};
 let REQUEST_TIMEOUT = 10000;

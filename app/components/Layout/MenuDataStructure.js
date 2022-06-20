@@ -66,7 +66,12 @@ class MenuDataStructure {
     static getHeader() {
         const allItems = MenuDataStructure.getAllEntries();
 
-        return [allItems.dashboard, allItems.market, allItems.explorer];
+        return [
+            allItems.dashboard,
+            allItems.market,
+            allItems.lending,
+            allItems.explorer
+        ];
     }
 
     static getDropdownMenu() {
@@ -114,6 +119,7 @@ class MenuDataStructure {
             allItems.divider,
             allItems.dashboard,
             allItems.market,
+            allItems.lending,
             allItems.poolmart,
             allItems.explorer,
             allItems.divider,
@@ -218,6 +224,13 @@ class MenuDataStructure {
                 target: "/poolmart/liquidity-pools",
                 icon: {name: "poolmart", title: "icons.poolmart.title"},
                 text: "header.poolmart",
+                inDropdownBehavior: MenuItemType.Always
+            }),
+            lending: state => ({
+                includePattern: "/credit-offer",
+                target: "/credit-offer",
+                icon: "deployment-unit",
+                text: "header.p2p_lending",
                 inHeaderBehavior: MenuItemType.Always,
                 inDropdownBehavior: MenuItemType.WhenNotInHeader
             }),

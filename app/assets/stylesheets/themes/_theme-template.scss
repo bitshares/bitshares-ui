@@ -349,7 +349,7 @@
     .font-secondary {
         color: $secondary-text-color;
     }
-    svg > path {
+    svg path {
         transition: all 0.3s ease 0s;
     }
     #content-wrapper {
@@ -534,12 +534,12 @@
             color: $link-text-color;
         }
     }
-    .icon > svg > path {
+    .icon > svg path {
         fill: $primary-text-color;
     }
     .footer {
         @include color($secondary-text-color, $panel-bg-color);
-        svg > path {
+        svg path {
             fill: $secondary-text-color;
         }
         .logo .version {
@@ -675,12 +675,12 @@
     .header a.button.create-account {
         transition: color 0s !important;
         color: $button-bg-color !important;
-        > span > svg > path {
+        > span > svg path {
             fill: $button-bg-color;
         }
         &:hover {
             color: lighten($button-bg-color, 10%) !important;
-            > span > svg > path {
+            > span > svg path {
                 fill: lighten($button-bg-color, 10%);
             }
         }
@@ -772,7 +772,7 @@
             }
         }
     }
-    .header-container span.icon.lock-unlock > svg > path {
+    .header-container span.icon.lock-unlock > svg path {
         fill: $button-bg-color;
     }
     .header-dropdown-sub-link.enabled {
@@ -812,13 +812,13 @@
                 @include RobotoMedium;
             }
         }
-        svg > path {
+        svg path {
             fill: #fff;
         }
         // svg:hover > path { fill: $primary-text-color; }
     }
     .settings-cog {
-        svg > path {
+        svg path {
             fill: $secondary-text-color;
         }
     }
@@ -1108,6 +1108,12 @@
             }
         }
     }
+    ul.account-overview.segmented {
+        > li > a {
+            background: $bg-color !important;
+            border-right: none;
+        }
+    }
     ul.button-group.segmented {
         > li.is-active > a {
             background: $input-background;
@@ -1351,13 +1357,13 @@
     }
     .icon.success {
         padding-right: 0.5rem;
-        > svg > path {
+        > svg path {
             fill: $success-color;
         }
     }
     .icon.error {
         padding-right: 0.5rem;
-        > svg > path {
+        > svg path {
             fill: $warning-color;
         }
     }
@@ -1525,7 +1531,7 @@
         li {
             > a {
                 color: $account-dimmed;
-                .icon > svg > path {
+                .icon > svg path {
                     fill: $account-dimmed;
                 }
             }
@@ -1533,7 +1539,7 @@
             > a.active {
                 background-color: $bg-color !important;
                 color: $primary-text-color;
-                .icon > svg > path {
+                .icon > svg path {
                     fill: $primary-text-color;
                 }
             }
@@ -1635,7 +1641,6 @@
         }
     }
     .sticky-table .sticky-table-column,
-    .sticky-table .sticky-table-header,
     .sticky-table .sticky-table-corner {
         @include color($primary-text-color, $bg-color);
     }
@@ -1651,13 +1656,9 @@
     .sticky-table-header {
         width: 100%;
         height: 32px;
-        border-bottom: 1px solid grey;
-        .sticky-table-container {
-            height: 100%;
-            width: 100%;
-        }
-        #sticky-header-row {
-            background-color: $panel-bg-color;
+        > .sticky-table-cell {
+            background-color: $panel-bg-color !important;
+            border-bottom: 1px solid grey !important;
         }
         .sticky-table-row {
             width: 100%;
@@ -1666,6 +1667,9 @@
                 background-color: $panel-bg-color;
             }
         }
+    }
+    .sticky-table-cell {
+        background-color: transparent;
     }
     // .order-table {
     // > tbody > tr:nth-of-type(even) {
@@ -1793,13 +1797,13 @@
         }
     }
     .api-node {
-        .icon.shuffle svg > path {
+        .icon.shuffle svg path {
             fill: $button-bg-color !important;
         }
-        .icon.link svg > path {
+        .icon.link svg path {
             fill: $positive-color !important;
         }
-        .icon.minus-circle svg > path {
+        .icon.minus-circle svg path {
             fill: $negative-color !important;
         }
         &:nth-child(odd) {
@@ -2055,7 +2059,7 @@
                     }
                 }
 
-                .icon.locked > svg > path {
+                .icon.locked > svg path {
                     fill: $button-bg-color;
                 }
             }
@@ -2081,13 +2085,13 @@
                 background-color: $account-cells;
                 color: $account-primarytext;
                 border-color: $account-border;
-                .icon > svg > path {
+                .icon > svg path {
                     fill: $account-primarytext;
                 }
-                .icon.locked > svg > path {
+                .icon.locked > svg path {
                     fill: $button-bg-color;
                 }
-                .icon.unlocked > svg > path {
+                .icon.unlocked > svg path {
                     fill: $button-bg-color;
                 }
             }
@@ -2106,7 +2110,7 @@
                     > a {
                         color: grey;
                     }
-                    svg > path {
+                    svg path {
                         fill: grey;
                     }
                 }
@@ -2138,19 +2142,19 @@
     .api-status {
         .low {
             color: $bid-color;
-            > svg > path {
+            > svg path {
                 fill: $bid-color;
             }
         }
         .medium {
             color: $call-color;
-            > svg > path {
+            > svg path {
                 fill: $call-color;
             }
         }
         .high {
             color: $ask-color;
-            > svg > path {
+            > svg path {
                 fill: $ask-color;
             }
         }
@@ -2300,7 +2304,7 @@
     .order-5 .flip-arrow {
         display: none;
     }
-    .order-book-button-h svg > path {
+    .order-book-button-h svg path {
         fill: #fff;
         &:hover {
             fill: $bs-blue;
@@ -2314,77 +2318,11 @@
         .order-book-button-v {
             display: inline-block;
             margin-left: 5px;
-            svg > path {
+            svg path {
                 fill: #fff;
                 &:hover {
                     fill: $bs-blue;
                     cursor: pointer;
-                }
-            }
-        }
-    }
-    .calendarContainer {
-        // restyle of react-datepicker2
-        box-shadow: none;
-        background-color: $panel-bg-color;
-        border: 0;
-        color: $light-text-color;
-        button svg {
-            fill: $light-text-color;
-        }
-        .dayWrapper button:hover {
-            color: $light-text-color;
-            background-color: $button-bg-color;
-        }
-        .dayWrapper button[disabled] {
-            background-color: darken($panel-bg-color, 5%);
-            color: darken(#aaa, 20%);
-        }
-        .monthsList {
-            button {
-                border: 0;
-                background-color: $panel-bg-color;
-                &:hover {
-                    background-color: $input-background;
-                }
-            }
-        }
-        .time-table {
-            line-height: 38px;
-        }
-        input.rc-time-picker-input {
-            background: $input-background;
-            color: $light-text-color;
-            &:hover {
-                border-color: $input-background;
-                background-color: $input-background;
-                color: $light-text-color;
-            }
-            cursor: pointer;
-        }
-        .heading {
-            .title {
-                line-height: 28px;
-                border-color: $panel-bg-color;
-            }
-            > button {
-                line-height: 30px;
-                border-color: $panel-bg-color;
-                &:hover {
-                    border-color: $panel-bg-color;
-                    background-color: $input-background;
-                }
-                &.prev,
-                &.next {
-                    line-height: 28px;
-                }
-                &.prev {
-                    float: left;
-                    transform: rotate(-180deg);
-                }
-                &.next {
-                    float: right;
-                    transform: rotate(-180deg);
                 }
             }
         }
@@ -2657,7 +2595,7 @@
         }
     }
     .icon-fill {
-        svg > path {
+        svg path {
             fill: $light-text-color;
             &:hover {
                 fill: $bs-blue;

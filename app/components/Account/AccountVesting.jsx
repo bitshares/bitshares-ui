@@ -25,7 +25,7 @@ class AccountVesting extends React.Component {
         this.retrieveVestingBalances = this.retrieveVestingBalances.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.retrieveVestingBalances.call(this, this.props.account.get("id"));
     }
 
@@ -208,8 +208,8 @@ class AccountVesting extends React.Component {
                     return a.vestingId > b.vestingId
                         ? 1
                         : a.vestingId < b.vestingId
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 }
             },
             {
@@ -220,8 +220,8 @@ class AccountVesting extends React.Component {
                     return a.vestingType > b.vestingType
                         ? 1
                         : a.vestingType < b.vestingType
-                            ? -1
-                            : 0;
+                        ? -1
+                        : 0;
                 },
                 render: item => {
                     return (

@@ -211,7 +211,7 @@ class GdexGateway extends React.Component {
         });
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._checkIsAgree();
         this._getCoins();
     }
@@ -282,7 +282,7 @@ class GdexGateway extends React.Component {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.props.account != nextProps.account) {
             this._checkIsAgree(nextProps.account.get("name"));
         }
@@ -331,6 +331,7 @@ class GdexGateway extends React.Component {
                 <Translate content="gateway.support_gdex" />
                 <br />
                 <br />
+                {/*
                 <p>
                     Help:{" "}
                     <a
@@ -342,6 +343,7 @@ class GdexGateway extends React.Component {
                         {issuer.ticket}
                     </a>
                 </p>
+                */}
                 <p>
                     QQ:{" "}
                     <a
@@ -621,17 +623,14 @@ class GdexGateway extends React.Component {
     }
 }
 
-export default connect(
-    GdexGateway,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                viewSettings: SettingsStore.getState().viewSettings,
-                settings: SettingsStore.getState().settings
-            };
-        }
+export default connect(GdexGateway, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings,
+            settings: SettingsStore.getState().settings
+        };
     }
-);
+});

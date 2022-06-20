@@ -57,11 +57,11 @@ class GdexHistory extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.getTransactionHistory();
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (
             this.props.recordType != nextProps.recordType ||
             this.props.assetId != nextProps.assetId ||
@@ -236,7 +236,8 @@ class GdexHistory extends React.Component {
                 <td className="column-hide-tiny" />
                 <td />
                 <td style={{textAlign: "center"}}>
-                    &nbsp;{this.state.nextPageEnabled ? (
+                    &nbsp;
+                    {this.state.nextPageEnabled ? (
                         <a onClick={this.getTransactionHistory.bind(this)}>
                             <Icon
                                 name="chevron-down"

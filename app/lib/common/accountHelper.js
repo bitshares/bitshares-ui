@@ -73,6 +73,9 @@ function checkMarginStatus(account) {
                                 sqr:
                                     debtAsset.bitasset.current_feed
                                         .maximum_short_squeeze_ratio,
+                                mcfr:
+                                    debtAsset.bitasset.options.extensions
+                                        .margin_call_fee_ratio,
                                 assets: assetsMap
                             });
                             let current = {

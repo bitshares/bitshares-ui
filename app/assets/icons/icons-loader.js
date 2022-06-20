@@ -80,6 +80,8 @@ let icons = [
     "arrow-down-1",
     "arrow-up-down",
     "pools"
+    "qr-scan",
+    "deployment-unit"
 ];
 
 let iconsMap = {};

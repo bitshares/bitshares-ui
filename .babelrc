@@ -1,8 +1,7 @@
 {
     "presets": [
-        ["env", { "modules": false }],
-        "react",
-        "stage-0"
+        ["@babel/preset-env", { "modules": false,"targets": { "node": "current"} }],
+        ["@babel/preset-react",{ "targets": { "node": "current"}}]
     ],
     "plugins": [
       "react-hot-loader/babel",
@@ -10,7 +9,7 @@
     ],
     "env": {
         "test": {
-            "presets": ["env","react", "stage-0"],
+            "presets": ["@babel/preset-env","@babel/preset-react"],
             "plugins": [
                 [ "babel-plugin-webpack-alias", { "config": "./conf/webpack.config.js" } ]
             ]

@@ -21,6 +21,7 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
+import XbtsFiat from "../DepositWithdraw/XbtsFiat";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
 import PropTypes from "prop-types";
 import DepositModal from "../Modal/DepositModal";
@@ -81,7 +82,7 @@ class AccountDepositWithdraw extends React.Component {
         );
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "transfer");
     }
 
@@ -352,7 +353,7 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         serList.push({
-            name: "XBTS (XBTSX.X)",
+            name: "XBTS Native Chains",
             identifier: "XBTSX",
             template: (
                 <div className="content-block">
@@ -398,9 +399,10 @@ class AccountDepositWithdraw extends React.Component {
                     ) : null}
 
                     {xbtsxService === "fiat" ? (
-                        <div>
-                            <Translate content="gateway.xbtsx.coming_soon" />
-                        </div>
+                        <XbtsFiat
+                            viewSettings={this.props.viewSettings}
+                            account={account}
+                        />
                     ) : null}
                 </div>
             )
@@ -714,8 +716,8 @@ class AccountDepositWithdraw extends React.Component {
                         {currentServiceDown
                             ? null
                             : activeService && services[activeService]
-                                ? services[activeService].template
-                                : services[0].template}
+                            ? services[activeService].template
+                            : services[0].template}
                     </div>
                 </div>
             </div>
@@ -725,7 +727,7 @@ class AccountDepositWithdraw extends React.Component {
 AccountDepositWithdraw = BindToChainState(AccountDepositWithdraw);
 
 class DepositStoreWrapper extends React.Component {
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         updateGatewayBackers();
     }
 
@@ -734,46 +736,43 @@ class DepositStoreWrapper extends React.Component {
     }
 }
 
-export default connect(
-    DepositStoreWrapper,
-    {
-        listenTo() {
-            return [AccountStore, SettingsStore, GatewayStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount,
-                account: AccountStore.getState().currentAccount,
-                viewSettings: SettingsStore.getState().viewSettings,
-                backedCoins: GatewayStore.getState().backedCoins,
-                openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "OPEN",
-                    []
-                ),
-                rudexBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "RUDEX",
-                    []
-                ),
-                bitsparkBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "SPARKDEX",
-                    []
-                ),
-                blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "TRADE",
-                    []
-                ),
-                citadelBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "CITADEL",
-                    []
-                ),
-                xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "XBTSX",
-                    []
-                ),
-                servicesDown: GatewayStore.getState().down || {}
-            };
-        }
+export default connect(DepositStoreWrapper, {
+    listenTo() {
+        return [AccountStore, SettingsStore, GatewayStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount,
+            account: AccountStore.getState().currentAccount,
+            viewSettings: SettingsStore.getState().viewSettings,
+            backedCoins: GatewayStore.getState().backedCoins,
+            openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
+                "OPEN",
+                []
+            ),
+            rudexBackedCoins: GatewayStore.getState().backedCoins.get(
+                "RUDEX",
+                []
+            ),
+            bitsparkBackedCoins: GatewayStore.getState().backedCoins.get(
+                "SPARKDEX",
+                []
+            ),
+            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
+                "TRADE",
+                []
+            ),
+            citadelBackedCoins: GatewayStore.getState().backedCoins.get(
+                "CITADEL",
+                []
+            ),
+            xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(
+                "XBTSX",
+                []
+            ),
+            servicesDown: GatewayStore.getState().down || {}
+        };
     }
-);
+});

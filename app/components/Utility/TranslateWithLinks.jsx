@@ -186,9 +186,9 @@ export default class TranslateWithLinks extends React.Component {
                                         content={"proposal.changes_to_active"}
                                     />
                                     <div style={{marginLeft: "0.5rem"}}>
-                                        {active.keys.plus.length > 0 ||
-                                            (active.accounts.plus.length >
-                                                0 && (
+                                        {(active.keys.plus.length > 0 ||
+                                            active.accounts.plus.length >
+                                                0) && (
                                                 <div>
                                                     {"- " +
                                                         counterpart.translate(
@@ -197,8 +197,10 @@ export default class TranslateWithLinks extends React.Component {
                                                         " "}
                                                     {active.keys.plus.join(
                                                         ", "
-                                                    )}{" "}
-                                                    {active.accounts.plus.map(
+                                                    )}
+                                                    {active.keys.plus.length > 0 && active.accounts.plus.length > 0 && ", "}
+                                                    {active.accounts.plus.length > 0 ?
+                                                    active.accounts.plus.map(
                                                         _tmp => (
                                                             <span key={_tmp}>
                                                                 {this.linkToAccount(
@@ -206,12 +208,14 @@ export default class TranslateWithLinks extends React.Component {
                                                                 )}
                                                             </span>
                                                         )
-                                                    )}
+                                                    ).reduce(
+                                                        (prev, curr) => [ prev, ", ", curr ]
+                                                    ) : ""}
                                                 </div>
-                                            ))}
-                                        {active.keys.minus.length > 0 ||
-                                            (active.accounts.minus.length >
-                                                0 && (
+                                            )}
+                                        {(active.keys.minus.length > 0 ||
+                                            active.accounts.minus.length >
+                                                0) && (
                                                 <div>
                                                     {"- " +
                                                         counterpart.translate(
@@ -220,8 +224,10 @@ export default class TranslateWithLinks extends React.Component {
                                                         " "}
                                                     {active.keys.minus.join(
                                                         ", "
-                                                    )}{" "}
-                                                    {active.accounts.minus.map(
+                                                    )}
+                                                    {active.keys.minus.length > 0 && active.accounts.minus.length > 0 && ", "}
+                                                    {active.accounts.minus.length > 0 ?
+                                                    active.accounts.minus.map(
                                                         _tmp => (
                                                             <span key={_tmp}>
                                                                 {this.linkToAccount(
@@ -229,9 +235,11 @@ export default class TranslateWithLinks extends React.Component {
                                                                 )}
                                                             </span>
                                                         )
-                                                    )}
+                                                    ).reduce(
+                                                        (prev, curr) => [ prev, ", ", curr ]
+                                                    ) : ""}
                                                 </div>
-                                            ))}
+                                            )}
                                         {active.weight_threshold && (
                                             <div>
                                                 {"- " +
@@ -253,16 +261,18 @@ export default class TranslateWithLinks extends React.Component {
                                         content={"proposal.changes_to_owner"}
                                     />
                                     <div style={{marginLeft: "0.5rem"}}>
-                                        {owner.keys.plus.length > 0 ||
-                                            (owner.accounts.plus.length > 0 && (
+                                        {(owner.keys.plus.length > 0 ||
+                                            owner.accounts.plus.length > 0) && (
                                                 <div>
                                                     {"- " +
                                                         counterpart.translate(
                                                             "proposal.add"
                                                         ) +
                                                         " "}
-                                                    {owner.keys.plus.join(", ")}{" "}
-                                                    {owner.accounts.plus.map(
+                                                    {owner.keys.plus.join(", ")}
+                                                    {owner.keys.plus.length > 0 && owner.accounts.plus.length > 0 && ", "}
+                                                    {owner.accounts.plus.length > 0 ?
+                                                    owner.accounts.plus.map(
                                                         _tmp => (
                                                             <span key={_tmp}>
                                                                 {this.linkToAccount(
@@ -270,12 +280,14 @@ export default class TranslateWithLinks extends React.Component {
                                                                 )}
                                                             </span>
                                                         )
-                                                    )}
+                                                    ).reduce(
+                                                        (prev, curr) => [ prev, ", ", curr ]
+                                                    ) : ""}
                                                 </div>
-                                            ))}
-                                        {owner.keys.minus.length > 0 ||
-                                            (owner.accounts.minus.length >
-                                                0 && (
+                                            )}
+                                        {(owner.keys.minus.length > 0 ||
+                                            owner.accounts.minus.length >
+                                                0) && (
                                                 <div>
                                                     {"- " +
                                                         counterpart.translate(
@@ -284,8 +296,10 @@ export default class TranslateWithLinks extends React.Component {
                                                         " "}
                                                     {owner.keys.minus.join(
                                                         ", "
-                                                    )}{" "}
-                                                    {owner.accounts.minus.map(
+                                                    )}
+                                                    {owner.keys.minus.length > 0 && owner.accounts.minus.length > 0 && ", "}
+                                                    {owner.accounts.minus.length > 0 ?
+                                                    owner.accounts.minus.map(
                                                         _tmp => (
                                                             <span key={_tmp}>
                                                                 {this.linkToAccount(
@@ -293,9 +307,11 @@ export default class TranslateWithLinks extends React.Component {
                                                                 )}
                                                             </span>
                                                         )
-                                                    )}
+                                                    ).reduce(
+                                                        (prev, curr) => [ prev, ", ", curr ]
+                                                    ) : ""}
                                                 </div>
-                                            ))}
+                                            )}
                                         {owner.weight_threshold && (
                                             <div>
                                                 {"- " +

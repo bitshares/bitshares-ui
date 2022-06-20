@@ -24,7 +24,15 @@ import AssetOwnerUpdate from "./AssetOwnerUpdate";
 import AssetPublishFeed from "./AssetPublishFeed";
 import AssetResolvePrediction from "./AssetResolvePrediction";
 import BidCollateralOperation from "./BidCollateralOperation";
-import {Tooltip, Icon, Table, Tabs, Collapse} from "bitshares-ui-style-guide";
+import {
+    Tooltip,
+    Icon,
+    Table,
+    Tabs,
+    Collapse,
+    Alert
+} from "bitshares-ui-style-guide";
+import GatewayStore from "../../stores/GatewayStore";
 const {Panel} = Collapse;
 
 class AssetFlag extends React.Component {
@@ -79,7 +87,7 @@ class Asset extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._getMarginCollateral();
     }
 
@@ -175,6 +183,13 @@ class Asset extends React.Component {
             "maximum_short_squeeze_ratio"
         ]);
 
+        let mcfr = this.props.asset.getIn([
+            "bitasset",
+            "options",
+            "extensions",
+            "margin_call_fee_ratio"
+        ]);
+
         let feedPriceRaw = assetUtils.extractRawFeedPrice(this.props.asset);
 
         // if there has been no feed price, settlePrice has 0 amount
@@ -221,6 +236,7 @@ class Asset extends React.Component {
             priceObject: feedPriceRaw,
             market_base: this.props.asset.get("id"),
             sqr,
+            mcfr,
             assets
         });
 
@@ -369,8 +385,37 @@ class Asset extends React.Component {
         }
 
         let {name, prefix} = utils.replaceName(originalAsset);
+
+        let warning = undefined;
+        if (GatewayStore.isAssetBlacklisted(asset)) {
+            warning = (
+                <Alert
+                    message={counterpart.translate(
+                        "explorer.assets.blacklisted"
+                    )}
+                    type="error"
+                    showIcon
+                    style={{marginTop: "1em"}}
+                />
+            );
+        }
         return (
             <div style={{overflow: "visible"}}>
+                {asset &&
+                    issuer &&
+                    asset.id != "1.3.0" &&
+                    issuer.get("id") != "1.2.0" && (
+                        <Alert
+                            message={counterpart.translate(
+                                "explorer.asset.asset_owner_responsible"
+                            )}
+                            type="info"
+                            showIcon
+                            style={{marginTop: "1em"}}
+                        />
+                    )}
+                {warning}
+
                 <HelpContent
                     path={"assets/" + asset.symbol}
                     alt_path="assets/Asset"
@@ -515,6 +560,25 @@ class Asset extends React.Component {
                 </tr>
             ) : null;
 
+        var marketFeeTaker =
+            flagBooleans["charge_market_fee"] &&
+            options.extensions &&
+            options.extensions.taker_fee_percent >= 0 ? (
+                <tr>
+                    <td>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "account.user_issued_assets.taker_fee_percent_tooltip"
+                            )}
+                        >
+                            <Translate content="explorer.asset.summary.market_fee_referral_taker_fee_percent" />{" "}
+                            <Icon type="question-circle" theme="filled" />
+                        </Tooltip>
+                    </td>
+                    <td> {options.extensions.taker_fee_percent / 100.0} % </td>
+                </tr>
+            ) : null;
+
         return (
             <div className="asset-card no-padding">
                 <div className="card-divider">
@@ -562,6 +626,7 @@ class Asset extends React.Component {
                         {stealthSupply}
                         {marketFee}
                         {marketFeeReferralReward}
+                        {marketFeeTaker}
                     </tbody>
                 </table>
                 <br />
@@ -579,12 +644,50 @@ class Asset extends React.Component {
             assetUtils.extractRawFeedPrice(asset)
         );
 
+        var medianFeedPrice = this.formattedPrice(
+            bitAsset.median_feed.settlement_price
+        );
+
         var title = (
             <div>
                 <Translate content="explorer.asset.price_feed.title" />
                 <span className="float-right">{feedPrice}</span>
             </div>
         );
+
+        var icr_item_content =
+            "explorer.asset.price_feed.initial_collateral_ratio";
+        if (
+            "initial_collateral_ratio" in bitAsset.options.extensions &&
+            bitAsset.current_feed.initial_collateral_ratio ==
+                bitAsset.options.extensions.initial_collateral_ratio &&
+            bitAsset.feeds.length >= bitAsset.options.minimum_feeds
+        ) {
+            icr_item_content =
+                "explorer.asset.price_feed.initial_collateral_ratio2";
+        }
+        var mcr_item_content =
+            "explorer.asset.price_feed.maintenance_collateral_ratio";
+        if (
+            "maintenance_collateral_ratio" in bitAsset.options.extensions &&
+            bitAsset.current_feed.maintenance_collateral_ratio ==
+                bitAsset.options.extensions.maintenance_collateral_ratio &&
+            bitAsset.feeds.length >= bitAsset.options.minimum_feeds
+        ) {
+            mcr_item_content =
+                "explorer.asset.price_feed.maintenance_collateral_ratio2";
+        }
+        var mssr_item_content =
+            "explorer.asset.price_feed.maximum_short_squeeze_ratio";
+        if (
+            "maximum_short_squeeze_ratio" in bitAsset.options.extensions &&
+            bitAsset.current_feed.maximum_short_squeeze_ratio ==
+                bitAsset.options.extensions.maximum_short_squeeze_ratio &&
+            bitAsset.feeds.length >= bitAsset.options.minimum_feeds
+        ) {
+            mssr_item_content =
+                "explorer.asset.price_feed.maximum_short_squeeze_ratio2";
+        }
 
         return (
             <Panel header={title}>
@@ -598,6 +701,12 @@ class Asset extends React.Component {
                                 <Translate content="explorer.asset.price_feed.external_feed_price" />
                             </td>
                             <td>{feedPrice}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <Translate content="explorer.asset.price_feed.median_price_feeds" />
+                            </td>
+                            <td>{medianFeedPrice}</td>
                         </tr>
                         <tr>
                             <td>
@@ -615,7 +724,15 @@ class Asset extends React.Component {
                         </tr>
                         <tr>
                             <td>
-                                <Translate content="explorer.asset.price_feed.maintenance_collateral_ratio" />
+                                <Translate content={icr_item_content} />
+                            </td>
+                            <td>
+                                {currentFeed.initial_collateral_ratio / 1000}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <Translate content={mcr_item_content} />
                             </td>
                             <td>
                                 {currentFeed.maintenance_collateral_ratio /
@@ -625,16 +742,30 @@ class Asset extends React.Component {
 
                         <tr>
                             <td>
-                                <Translate content="explorer.asset.price_feed.maximum_short_squeeze_ratio" />
+                                <Translate content={mssr_item_content} />
                             </td>
                             <td>
                                 {currentFeed.maximum_short_squeeze_ratio / 1000}
                             </td>
                         </tr>
+                        {this._renderMCFR(bitAsset.options.extensions)}
                     </tbody>
                 </table>
             </Panel>
         );
+    }
+
+    _renderMCFR(ext) {
+        if ("margin_call_fee_ratio" in ext) {
+            return (
+                <tr>
+                    <td>
+                        <Translate content="explorer.asset.price_feed.margin_call_fee_ratio" />
+                    </td>
+                    <td>{ext.margin_call_fee_ratio / 10.0 + "%"}</td>
+                </tr>
+            );
+        }
     }
 
     _analyzeBids(settlement_fund_debt) {
@@ -800,6 +931,36 @@ class Asset extends React.Component {
             </div>
         );
 
+        var individual_settlement = null;
+        if (bitAsset.options.extensions.black_swan_response_method == 2) {
+            individual_settlement = [
+                <tr key="debt">
+                    <td>
+                        <Translate content="explorer.asset.settlement.individual_settlement_debt" />
+                    </td>
+                    <td>
+                        <FormattedAsset
+                            asset={asset.id}
+                            amount={bitAsset.individual_settlement_debt}
+                        />
+                    </td>
+                </tr>,
+                <tr key="fund">
+                    <td>
+                        <Translate content="explorer.asset.settlement.individual_settlement_fund" />
+                    </td>
+                    <td>
+                        <FormattedAsset
+                            asset={
+                                bitAsset.options.extensions.short_backing_asset
+                            }
+                            amount={bitAsset.individual_settlement_fund}
+                        />
+                    </td>
+                </tr>
+            ];
+        }
+
         return (
             <Panel header={title}>
                 {isGlobalSettle && (
@@ -936,6 +1097,17 @@ class Asset extends React.Component {
                                 </td>
                             </tr>
                             <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.black_swan_response_method" />
+                                </td>
+                                <td>
+                                    {
+                                        bitAsset.options.extensions
+                                            .black_swan_response_method
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
@@ -958,6 +1130,17 @@ class Asset extends React.Component {
                                     )
                                 </td>
                                 <td>{settlePrice}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.force_settle_fee_percent" />
+                                </td>
+                                <td>
+                                    {bitAsset.options.extensions
+                                        .force_settle_fee_percent /
+                                        1000 +
+                                        "%"}
+                                </td>
                             </tr>
                             <tr>
                                 <td>
@@ -1014,6 +1197,9 @@ class Asset extends React.Component {
                                     %
                                 </td>
                             </tr>
+                            {individual_settlement
+                                ? individual_settlement.map(item => item)
+                                : null}
                         </tbody>
                     )}
                 </table>
@@ -1092,6 +1278,26 @@ class Asset extends React.Component {
                                     ) : null}
                                 </td>
                             </tr>
+                            {asset.bitasset && (
+                                <tr>
+                                    <td>
+                                        <Translate content="explorer.asset.fee_pool.accumulated_collateral_fees" />
+                                    </td>
+                                    <td>
+                                        {dynamic ? (
+                                            <FormattedAsset
+                                                asset={
+                                                    asset.bitasset.options
+                                                        .short_backing_asset
+                                                }
+                                                amount={
+                                                    dynamic.accumulated_collateral_fees
+                                                }
+                                            />
+                                        ) : null}
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -1520,8 +1726,8 @@ class Asset extends React.Component {
                                     median_offset > 0
                                         ? "txtlabel success"
                                         : median_offset < 0
-                                            ? "txtlabel warning"
-                                            : "txtlabel"
+                                        ? "txtlabel warning"
+                                        : "txtlabel"
                                 }
                             >
                                 {median_offset}%
@@ -1844,7 +2050,7 @@ class Asset extends React.Component {
         return (
             <Table
                 style={{width: "100%"}}
-                rowKey="feedMargins"
+                rowKey="borrower"
                 columns={columns}
                 dataSource={dataSource}
                 rowClassName="margin-row"
@@ -2183,21 +2389,18 @@ class Asset extends React.Component {
     }
 }
 
-Asset = connect(
-    Asset,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
+Asset = connect(Asset, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
     }
-);
+});
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset", "coreAsset"]

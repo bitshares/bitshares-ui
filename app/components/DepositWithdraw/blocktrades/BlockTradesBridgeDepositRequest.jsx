@@ -20,8 +20,8 @@ import QueryString from "query-string";
 import ls from "common/localStorage";
 import {UserManager, WebStorageStateStore} from "oidc-client";
 
-let oauthBlocktrades = new ls("__oauthBlocktrades__");
-let oidcStorage = new ls(
+let oauthBlocktrades = ls("__oauthBlocktrades__");
+let oidcStorage = ls(
     "oidc.user:https://blocktrades.us/:10ecf048-b982-467b-9965-0b0926330869"
 );
 
@@ -80,7 +80,7 @@ class ButtonConversion extends React.Component {
         return feeID;
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._updateFee();
     }
 
@@ -88,7 +88,7 @@ class ButtonConversion extends React.Component {
         this.unMounted = true;
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (
             !np.amount.equals(this.props.amount) ||
             np.account_id !== this.props.account_id
@@ -1149,7 +1149,7 @@ class BlockTradesBridgeDepositRequest extends React.Component {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         let params = QueryString.parse(this.props.params.search);
         if (params["code"]) {
             this.setState({

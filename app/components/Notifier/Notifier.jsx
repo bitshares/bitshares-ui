@@ -15,7 +15,7 @@ class Notifier extends React.Component {
         account: ChainTypes.ChainAccount.isRequired
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (
             nextProps.account &&
             nextProps.account.size &&

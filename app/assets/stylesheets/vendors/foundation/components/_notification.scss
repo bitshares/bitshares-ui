@@ -1,3 +1,4 @@
+@use "sass:math";
 /*
   NOTIFICATION
   ------------
@@ -74,7 +75,7 @@ $notification-icon-align: top !default;
         left: $offset;
     } @else if $x == middle {
         left: 50%;
-        margin-left: -($size / 2);
+        margin-left: -(math.div($size, 2));
     }
 
     @if $y == top {
