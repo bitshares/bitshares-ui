@@ -3099,7 +3099,7 @@
         "borrow_amount": "Amount",
         "current_balance": "Available",
         "estimated_fee": "Estimated fee",
-        "plh_input_asset_name": "Please enter asset symbol...",
+        "plh_input_asset_name": "Enter asset",
         "credit_offers": "Credit Offers",
         "credit_rights": "Credit Rights",
         "credit_debts": "Credit Debts",
