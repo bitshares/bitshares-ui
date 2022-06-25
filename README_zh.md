@@ -3,7 +3,7 @@ BitShares-UI
 
 这是一个连接 BitShares API 的轻钱包。BitShares API 由 *witness_node* 程序提供。
 
-这个钱包*将所有的密钥存储在本地浏览器上*，*不会把你的密钥暴露给任何人*，因为它会先在本地对交易签名，再传输到 API 服务器上，由服务器广播至区块链网络。钱包由用户选择的密码加密并储存在浏览器数据库中。
+这个钱包**将所有的密钥存储在本地浏览器上**，**不会把你的密钥上传到网络**，因为它会先在本地对交易签名，再传输到 API 服务器上，由服务器广播至区块链网络。钱包由用户选择的密码加密并储存在浏览器数据库中。
 
 ## 项目依赖
 
@@ -43,10 +43,9 @@ yarn start
 
 ## 测试网络
 
-默认情况下，bitshares-ui 将连接到 BitShares 主网。 通过在节点设置中选择 *Testnet* 也可以轻松切换到 testnet。 UI 将刷新并连接到测试网络
+默认情况下，bitshares-ui 将连接到 BitShares 主网。 通过在节点设置中选择 *Testnet* 也可以轻松切换到 testnet。 UI 将刷新并连接到测试网络。
 
-还有一个现成的部署直接连接到测试网
-包括可用的帐户创建 [此处](https://test.xbts.io/)。
+还有一个现成的直接连接到测试网的部署（包括创建测试帐户的功能） [在此](https://test.xbts.io/)。
 
 ![image](https://user-images.githubusercontent.com/33128181/175760811-736c9b21-9122-4160-bd30-465bb755a3a3.png)
 
@@ -63,31 +62,31 @@ yarn run build
 ## 可安装钱包
 我们使用 Electron 提供可安装的钱包，支持 Windows、macOS 和基于 Debian 的 Linux 系统，例如 Ubuntu。
 
-有一个 [GitHub Action](https://github.com/bitshares/bitshares-ui/blob/master/.github/workflows/build-release-binaries.yml#L18) 可用，它显示了构建的所有必要步骤 .
+有一个 [GitHub Action](https://github.com/bitshares/bitshares-ui/blob/master/.github/workflows/build-release-binaries.yml#L18) 可用，它显示了构建的所有必要步骤。
 
-UI 将通过对 Electron 的一些特殊修改进行编译，然后生成可安装的二进制文件并将它们复制到 `build/binaries` 文件夹中。
+编译 UI 时将会针对 Electron 做出一些特殊修改，之后生成可安装的二进制文件，并将文件复制到 `build/binaries` 文件夹中。
 
 ## 发布分支
 
 当前的发布流程由三个分支构成。
 
-＃＃＃ 开发
+### develop（开发版本）
 
-所有 PR 都应该推送到 `develop` 分支。 在每个里程碑结束时，这个分支被推送到`staging`。
+开发期间所有 PR 都应该推送到 `develop` 分支。
 新提交会自动部署到此分支并发布以供审核。
 
-可在 https://develop.bitshares.org 上浏览
+可在 https://develop.bitshares.org 浏览
 
-### 暂存（当前候选版本）
+### staging（当前候选发布版本）
 
-在每个里程碑结束时，`develop` 分支被推送到 staging 并形成候选发布版。 RC 的日期构成名称，即。 190214-RC*。
+在每个里程碑结束时， `develop` 分支被推送到 `staging` 分支并形成候选发布版，版本号为“主版本号.日期-rc序号”格式，如 `5.0.220214-rc1` 。
 
-应用程序中断问题和错误应提交给问题跟踪器，PR 应推送到“暂存”。
+如果发现问题或错误，应提交给问题跟踪器，PR 应推送到 `staging` 分支。
 
-可在 https://staging.bitshares.org 上浏览
+可在 https://staging.bitshares.org 浏览
 
-###大师（稳定）
+### master（稳定版本）
 
-当当前 RC 的所有问题都修复后，`staging` 分支被发布到稳定的`master` 分支。
+当前候选发布版本的所有重大问题都修复后， `staging` 分支被发布到稳定的 `master` 分支。
 
-可在 https://wallet.bitshares.org 浏览，这是 Bitshares 的官方参考钱包。
+可在 https://wallet.bitshares.org 浏览，这是 BitShares 的官方参考钱包。
