@@ -11,7 +11,7 @@ You should *never expose your keys to anyone* as transactions are signed locally
 
 Building BitShares-UI browser based reference wallet depends on node version 16 using a non-root user.
 
-On Ubuntu or OSX, the easiest way to install node is to use [Node Version Manager](https://github.com/creationix/nvm).
+On Ubuntu or macOS, the easiest way to install node is to use [Node Version Manager](https://github.com/creationix/nvm).
 
 Install nvm according to your platforms recommendation and set the version
 
@@ -73,7 +73,7 @@ This will create a bundle in the ./build/dist folder that can be hosted with the
 
 ### Installable (local wallet)
 
-We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. 
+We use Electron to provide installable wallets, available for Windows, macOS and Linux Debian platforms such as Ubuntu. 
 There is a [GitHub Action available](https://github.com/bitshares/bitshares-ui/blob/master/.github/workflows/build-release-binaries.yml#L18) that shows all the steps necessary for this build.
 
 This will compile the UI with some special modifications for use with Electron, generate installable binaries with Electron and copy the result to the root `build/binaries` folder.
@@ -104,14 +104,14 @@ There are three branches that forms the current release process.
 
 ### Develop
 
-All PRs should be pushed to the `develop` branch. At the end of each milestone this branch is pushed to `staging`.
+All PRs should be pushed to the `develop` branch.
 New commits are automatically deployed to this branch and published for review.
 
 Available for browsing on https://develop.bitshares.org
 
 ### Staging (Current Release Candidate)
 
-At the end of each milestone, `develop` branch is pushed to staging and forms the Release Candidate. The date of the RC forms the name, ie. 190214-RC*.
+At the end of each milestone, `develop` branch is pushed to staging and forms the Release Candidate. The date of the RC forms the name, ie. `5.0.220214-rc1`.
 
 Application breaking issues and bugs should be submitted to the issue tracker and PRs should be pushed to `staging`.
 
@@ -119,6 +119,6 @@ Available for browsing on https://staging.bitshares.org
 
 ### Master (stable)
 
-When all issues to the current RC are fixed, `staging` branch is released to the stable `master` branch.
+When all major issues to the current RC are fixed, `staging` branch is released to the stable `master` branch.
 
 Available for browsing on https://wallet.bitshares.org which is the official reference wallet for Bitshares.
