@@ -9,84 +9,78 @@ You should *never expose your keys to anyone* as transactions are signed locally
 
 ## Getting started
 
-Building BitShares-UI browser based reference wallet depends on node version 10.
+Building BitShares-UI browser based reference wallet depends on node version 16 using a non-root user.
 
 On Ubuntu or OSX, the easiest way to install node is to use [Node Version Manager](https://github.com/creationix/nvm).
 
-To install nvm for Ubuntu or OSX, use following commands in terminal using a non-root user:
+Install nvm according to your platforms recommendation and set the version
 
 ```
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-nvm install v10
-nvm use v10
+nvm install v16
+nvm use v16
 ```
 
-Once you have node installed, clone the repo using the following commands using a non-root user:
+Once you have node installed, clone the repository using the following commands:
 
 ```
 git clone https://github.com/bitshares/bitshares-ui.git
 cd bitshares-ui
 ```
 
-Before launching the GUI you will need to install the npm packages using a non-root user:
+Before launching the UI you will need to install the packages using yarn on a non-root user:
 
 ```
-npm install
+yarn install
 ```
 
 ## Running the dev server
 
-The dev server uses Express in combination with Webpack.
-
-Once all the packages have been installed you can start the development server by running:
+Once all the packages have been installed you can start the development 
+server by running:
 
 ```
-npm start
+yarn start
 ```
 
-Once the compilation is done the GUI will be available in your browser at: `localhost:8080` or `127.0.0.1:8080`. Hot Reloading is enabled so the browser will live update as you edit the source files.
+Once the compilation is done the UI will be available in your browser at:
+`localhost:8080` or `127.0.0.1:8080`. Hot Reloading is enabled so the browser 
+will live update as you edit the source files.
 
 ## Testnet
 
-By default bitshares-ui connects to the live BitShares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
+By default bitshares-ui connects to the BitShares mainnet, 
+but it's very easy to switch it to the testnet. 
+To do so, open the UI in a browser, go to Settings, then 
+under Nodes, select the *Testnet* in the dropdown menu. 
+The UI will reload and connect to the testnet.
 
-The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
+There is also a ready-made deployment directly connected to testnet
+including account creation available [here](https://test.xbts.io/).
 
-![image](https://cloud.githubusercontent.com/assets/6890015/22055747/f8e15e68-dd5c-11e6-84cd-692749b578d8.png)
+![image](https://user-images.githubusercontent.com/33128181/175760811-736c9b21-9122-4160-bd30-465bb755a3a3.png)
 
 ## Production
 
-If you'd like to host your own wallet somewhere, you should create a production build and host it using NGINX or Apache. In order to create a prod bundle, simply run the following command:
+If you'd like to host your own UI somewhere, you should create a production 
+build and host it using NGINX or Apache. 
+In order to create a prod bundle, simply run the following command:
 
 ```
-npm run build
+yarn run build
 ```
 
 This will create a bundle in the ./build/dist folder that can be hosted with the web server of your choice.
 
-### Installable wallets
+### Installable (local wallet)
 
-We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. First, make sure your local python version is 2.7.x, as a dependency requires this.
-
-On Linux you will need to install the following packages to handle icon generation:
-
-`sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils`
-
-For building, each architecture has it's own script that you can use to build your native binary:
-
-__Linux__
-`npm run package-deb`  
-__Windows__
-`npm run package-win`  
-__Mac__
-`npm run package-mac`  
+We use Electron to provide installable wallets, available for Windows, OSX and Linux Debian platforms such as Ubuntu. 
+There is a [GitHub Action available](https://github.com/bitshares/bitshares-ui/blob/master/.github/workflows/build-release-binaries.yml#L18) that shows all the steps necessary for this build.
 
 This will compile the UI with some special modifications for use with Electron, generate installable binaries with Electron and copy the result to the root `build/binaries` folder.
 
 ### Docker
 
 Clone this repository, run `docker-compose up` and visit localhost:8080
-
 
 ## Contributing & Coding style guideline
 
@@ -106,7 +100,6 @@ The BitShares UI is integrated with BrowserStack (https://www.browserstack.com) 
 
 ## Release Branches
 
-Development is processed through two week milestones.
 There are three branches that forms the current release process.
 
 ### Develop
@@ -129,6 +122,3 @@ Available for browsing on https://staging.bitshares.org
 When all issues to the current RC are fixed, `staging` branch is released to the stable `master` branch.
 
 Available for browsing on https://wallet.bitshares.org which is the official reference wallet for Bitshares.
-
-
-
