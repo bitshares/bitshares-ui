@@ -293,8 +293,8 @@ class Operation {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                        ? "whitelisted_by"
-                        : "blacklisted_by";
+                            ? "whitelisted_by"
+                            : "blacklisted_by";
                 column = (
                     <span>
                         <TranslateWithLinks
@@ -1724,6 +1724,10 @@ class Operation {
                                 type: "asset",
                                 value: op[1].asset_b,
                                 arg: "asset_b"
+                            },
+                            {
+                                value: result[1].new_objects[0],
+                                arg: "id"
                             }
                         ]}
                     />

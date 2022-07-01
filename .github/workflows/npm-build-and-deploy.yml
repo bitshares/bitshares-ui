@@ -42,7 +42,10 @@ jobs:
             - name: Push to target repository
               uses: s0/git-publish-subdir-action@master
               env:
-                  REPO: git@github.com:bitshares/${{ secrets.DEPLOYMENT_REPOSITORY }}.git
+                  REPO:
+                      git@github.com:bitshares/${{ secrets.DEPLOYMENT_REPOSITORY }}.git
                   BRANCH: master
                   FOLDER: build/hash-history
                   SSH_PRIVATE_KEY: ${{ secrets.DEPLOYMENT_KEY }}
+                  MESSAGE:
+                      Automatic build of commit https://github.com/bitshares/bitshares-ui/commit/${{ github.sha }}

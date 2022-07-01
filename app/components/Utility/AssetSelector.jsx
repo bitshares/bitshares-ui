@@ -184,6 +184,7 @@ class AssetSelector extends React.Component {
                     <div className="input-area">
                         <div className="inline-label input-wrapper">
                             <input
+                                className={this.props.inputClass}
                                 style={this.props.inputStyle}
                                 disabled={this.props.disabled}
                                 type="text"
