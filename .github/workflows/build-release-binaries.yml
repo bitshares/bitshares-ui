@@ -1,5 +1,8 @@
 name: Build local wallet
 
+permissions:
+    contents: write
+
 on:
     push:
         tags:
