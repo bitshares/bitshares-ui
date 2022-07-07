@@ -40,6 +40,12 @@ const Exchange = Loadable({
     loading: LoadingIndicator
 });
 
+const CreditOfferPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "explorer" */ "./components/Account/CreditOffer/CreditOfferPage"),
+    loading: LoadingIndicator
+});
+
 const Explorer = Loadable({
     loader: () =>
         import(/* webpackChunkName: "explorer" */ "./components/Explorer/Explorer"),
@@ -149,6 +155,12 @@ const DirectDebit = Loadable({
 const QuickTrade = Loadable({
     loader: () =>
         import(/* webpackChunkName: "QuickTrade" */ "./components/QuickTrade/QuickTradeRouter"),
+    loading: LoadingIndicator
+});
+
+const PoolmartPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "poolmart" */ "./components/Poolmart/PoolmartPage"),
     loading: LoadingIndicator
 });
 
@@ -466,6 +478,10 @@ class App extends React.Component {
                                     component={Exchange}
                                 />
                                 <Route
+                                    path="/credit-offer"
+                                    component={CreditOfferPage}
+                                />
+                                <Route
                                     path="/settings/:tab"
                                     component={Settings}
                                 />
@@ -590,6 +606,7 @@ class App extends React.Component {
                                     path="/instant-trade/:marketID"
                                     component={QuickTrade}
                                 />
+                                <Route path="/pools" component={PoolmartPage} />
                                 <Route path="*" component={Page404} />
                             </Switch>
                         </div>

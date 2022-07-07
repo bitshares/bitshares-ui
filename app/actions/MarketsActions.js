@@ -703,7 +703,9 @@ class MarketsActions {
     }
 
     cancelLimitOrder(accountID, orderID) {
-        // Set the fee asset to use
+        // FIXME we need a global approach how gee asset id is selected,
+        //       this is only doing it for the cancel action, but ideally,
+        //       all fee selection in the UI have the same logic
         let fee_asset_id = accountUtils.getFinalFeeAsset(
             accountID,
             "limit_order_cancel"
@@ -728,17 +730,27 @@ class MarketsActions {
             console.log("cancelLimitOrders", accountID, orderIDs);
         }
         let tr = WalletApi.new_transaction();
+        let balances = accountUtils.getAccountBalances(accountID);
         for (let i = 0; i < orderIDs.length; i++) {
             let id = orderIDs[i];
             let fallbackFeeAsset =
                 typeof fallbackFeeAssets === "string"
                     ? fallbackFeeAssets
                     : fallbackFeeAssets[i];
+            let {fees} = accountUtils.getPossibleFees(
+                accountID,
+                "limit_order_cancel"
+            );
             let fee_asset_id = accountUtils.getFinalFeeAsset(
                 accountID,
                 "limit_order_cancel",
                 fallbackFeeAsset
             );
+            balances[fee_asset_id] -= fees[fee_asset_id];
+            // check balance
+            Object.keys(balances).forEach(key => {
+                if (balances[key] < 0) throw "Insufficient balance: " + key;
+            });
             tr.add_type_operation("limit_order_cancel", {
                 fee: {
                     amount: 0,

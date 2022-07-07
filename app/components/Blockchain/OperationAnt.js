@@ -1724,6 +1724,10 @@ class Operation {
                                 type: "asset",
                                 value: op[1].asset_b,
                                 arg: "asset_b"
+                            },
+                            {
+                                value: result[1].new_objects[0],
+                                arg: "id"
                             }
                         ]}
                     />

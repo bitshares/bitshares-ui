@@ -7,7 +7,8 @@ import BaseStore from "stores/BaseStore";
 
 let AddressIndexWorker;
 if (__ELECTRON__) {
-    AddressIndexWorker = require("worker-loader?inline=no-fallback!workers/AddressIndexWorker");
+    AddressIndexWorker = require("worker-loader?inline=no-fallback!workers/AddressIndexWorker")
+        .default;
 }
 class AddressIndex extends BaseStore {
     constructor() {
@@ -65,7 +66,8 @@ class AddressIndex extends BaseStore {
             this.loadAddyMap()
                 .then(() => {
                     if (!__ELECTRON__) {
-                        AddressIndexWorker = require("worker-loader!workers/AddressIndexWorker");
+                        AddressIndexWorker = require("worker-loader!workers/AddressIndexWorker")
+                            .default;
                     }
                     let worker = new AddressIndexWorker();
                     worker.postMessage({

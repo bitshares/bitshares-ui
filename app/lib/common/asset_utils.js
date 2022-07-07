@@ -12,7 +12,14 @@ export default class AssetUtils {
             global_settle: false,
             disable_confidential: false,
             witness_fed_asset: false,
-            committee_fed_asset: false
+            committee_fed_asset: false,
+            lock_max_supply: false,
+            disable_new_supply: false,
+            disable_mcr_update: false,
+            disable_icr_update: false,
+            disable_mssr_update: false,
+            disable_bsrm_update: false,
+            disable_collateral_bidding: false
         };
 
         if (mask === "all") {

@@ -1,5 +1,13 @@
 import {getFaucet, getTestFaucet} from "../branding";
 
+export const ioxbankAPIs = {
+    BASE: "https://api.ioxbank.com/bitshares",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    NEW_DEPOSIT_ADDRESS: "/simple-api/initiate-trade"
+};
+
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
     COINS_LIST: "/coins",
@@ -79,7 +87,7 @@ export const gdexAPIs = {
 };
 
 export const xbtsxAPIs = {
-    BASE: "https://apis.xbts.io/api/v1",
+    BASE: "https://apis.xbts.io/api/v2",
     COINS_LIST: "/coin"
 };
 
@@ -378,6 +386,14 @@ export const settingsAPIs = {
             location: "St. Louis",
             operator: "Witness: liuye",
             contact: "email:work@akawa.ink"
+        },
+        {
+            url: "wss://api.bitshares.info",
+            region: "North America",
+            country: "United States",
+            location: "Chicago",
+            operator: "bitshares.info",
+            contact: "telegram:brekyrself"
         }
     ],
     ES_WRAPPER_LIST: [

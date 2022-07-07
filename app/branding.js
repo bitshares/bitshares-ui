@@ -166,31 +166,70 @@ export function getMyMarketsQuotes() {
             "XBTSX.POST",
             "XBTSX.DOGE",
             "XBTSX.BTC",
-            "XBTSX.BTG",
-            "XBTSX.BCH",
             "XBTSX.LTC",
             "XBTSX.DASH",
+            "XBTSX.BTG",
             "XBTSX.NVC",
-            "XBTSX.UNI",
+            "XBTSX.42",
             "XBTSX.NMC",
             "XBTSX.WAVES",
-            "XBTSX.COF",
-            "XBTSX.MDL",
             "XBTSX.ETH",
+            "XBTSX.ONION",
+            "XBTSX.EGC",
+            "XBTSX.BCH",
+            "XBTSX.MDL",
+            "XBTSX.SKY",
+            "XBTSX.SLB",
+            "XBTSX.GRS",
+            "XBTSX.XSM",
+            "XBTSX.XBB",
             "XBTSX.EXR",
-            "XBTSX.USDT",
+            "XBTSX.BCCX",
+            "XBTSX.GUAP",
+            "XBTSX.AXAI",
             "XBTSX.TUSD",
-            "XBTSX.USDC",
+            "XBTSX.USDT",
+            "XBTSX.RVN",
+            "XBTSX.TRD",
+            "XBTSX.SCH",
             "XBTSX.USDN",
-            "XBTSX.USD",
-            "XBTSX.RUB",
-            "XBTSX.EUR",
-            "XBTSX.ATRI",
             "XBTSX.FIL",
             "XBTSX.EOS",
-            "XBTSX.BAT"
+            "XBTSX.RUB",
+            "XBTSX.USD",
+            "XBTSX.EUR",
+            "XBTSX.VTC",
+            "XBTSX.USDC",
+            "XBTSX.BAT",
+            "XBTSX.PING",
+            "XBTSX.ATRI",
+            "XBTSX.BNB",
+            "XBTSX.BUSD",
+            "XBTSX.TRX",
+            "XBTSX.HT",
+            "XBTSX.XRP",
+            "XBTSX.SHU",
+            "XBTSX.UNI",
+            "XBTSX.HIVE",
+            "XBTSX.EMC",
+            "XBTSX.NESS",
+            "XBTSX.PPC",
+            "XBTSX.SHIB",
+            "XBTSX.HBD",
+            "XBTSX.PIVX",
+            "XBTSX.AVAX",
+            "XBTSX.RTM",
+            "XBTSX.XAUT",
+            "XBTSX.TUSC",
+            "XBTSX.MATIC",
+            "XBTSX.HVQ",
+            "XBTSX.TCG",
+            "XBTSX.NCH",
+            "XBTSX.LUNR",
+            "XBTSX.LUNAREUM"
         ],
         honestTokens: ["HONEST.BTC", "HONEST.USD"],
+        ioxbankTokens: ["IOB.XRP"],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
@@ -257,6 +296,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "XBTSX.USDT"],
         ["BTS", "HONEST.BTC"],
         ["BTS", "HONEST.USD"],
+        ["BTS", "IOB.XRP"],
         ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
@@ -273,7 +313,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["XBTSX.", "GDEX.", "HONEST."];
+    return ["XBTSX.", "GDEX.", "HONEST.", "IOB."];
 }
 
 /**
@@ -297,6 +337,7 @@ export function allowedGateway(gateway) {
         "RUDEX", // keep to display the warning icon, permanently disabled in gateways.js
         "GDEX",
         "XBTSX",
+        "IOB",
         "CITADEL", // keep to display the warning icon, permanently disabled in gateways.js
         "BRIDGE", // keep to display the warning icon, permanently disabled in gateways.js
         "SPARKDEX" // keep to display the warning icon, permanently disabled in gateways.js

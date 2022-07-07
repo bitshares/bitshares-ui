@@ -13,6 +13,7 @@ import {Route, Switch, Redirect} from "react-router-dom";
 
 /* Nested routes */
 import AccountAssets from "./AccountAssets";
+import AccountPools from "./AccountPools";
 import {AccountAssetCreate} from "./AccountAssetCreate";
 import AccountAssetUpdate from "./AccountAssetUpdate";
 import AccountMembership from "./AccountMembership";
@@ -116,6 +117,11 @@ class AccountPage extends React.Component {
                     render={() => <AccountAssets {...passOnProps} />}
                 />
                 <Route
+                    path={`/account/${account_name}/pools`}
+                    exact
+                    render={() => <AccountPools {...passOnProps} />}
+                />
+                <Route
                     path={`/account/${account_name}/create-asset`}
                     exact
                     render={() => <AccountAssetCreate {...passOnProps} />}
@@ -173,21 +179,24 @@ class AccountPageStoreWrapper extends React.Component {
     }
 }
 
-export default connect(AccountPageStoreWrapper, {
-    listenTo() {
-        return [AccountStore, SettingsStore, WalletUnlockStore];
-    },
-    getProps() {
-        return {
-            myActiveAccounts: AccountStore.getState().myActiveAccounts,
-            searchAccounts: AccountStore.getState().searchAccounts,
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount,
-            settings: SettingsStore.getState().settings,
-            hiddenAssets: SettingsStore.getState().hiddenAssets,
-            wallet_locked: WalletUnlockStore.getState().locked,
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    AccountPageStoreWrapper,
+    {
+        listenTo() {
+            return [AccountStore, SettingsStore, WalletUnlockStore];
+        },
+        getProps() {
+            return {
+                myActiveAccounts: AccountStore.getState().myActiveAccounts,
+                searchAccounts: AccountStore.getState().searchAccounts,
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount,
+                settings: SettingsStore.getState().settings,
+                hiddenAssets: SettingsStore.getState().hiddenAssets,
+                wallet_locked: WalletUnlockStore.getState().locked,
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);

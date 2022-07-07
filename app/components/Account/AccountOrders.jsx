@@ -67,6 +67,7 @@ class AccountOrders extends React.Component {
             let base = null;
             let quote = null;
             let sqr = null;
+            let mcfr = null;
             let feed_price = null;
             let bitasset_options = null;
 
@@ -103,10 +104,18 @@ class AccountOrders extends React.Component {
                         "maximum_short_squeeze_ratio"
                     ]);
 
+                    mcfr = base.getIn([
+                        "bitasset",
+                        "options",
+                        "extensions",
+                        "margin_call_fee_ratio"
+                    ]);
+
                     feed_price = new FeedPrice({
                         priceObject: feedPriceRaw,
                         market_base: marketBaseId,
                         sqr,
+                        mcfr,
                         assets
                     });
 

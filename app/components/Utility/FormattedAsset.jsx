@@ -46,7 +46,8 @@ class FormattedAsset extends React.Component {
         hide_asset: PropTypes.bool,
         hide_amount: PropTypes.bool,
         asPercentage: PropTypes.bool,
-        assetInfo: PropTypes.node
+        assetInfo: PropTypes.node,
+        trimZero: PropTypes.bool
     };
 
     static defaultProps = {
@@ -56,7 +57,8 @@ class FormattedAsset extends React.Component {
         hide_amount: false,
         asPercentage: false,
         assetInfo: null,
-        replace: true
+        replace: true,
+        trimZero: false
     };
 
     constructor(props) {
@@ -84,7 +86,8 @@ class FormattedAsset extends React.Component {
             hide_asset,
             hide_amount,
             asPercentage,
-            pulsate
+            pulsate,
+            trimZero
         } = this.props;
 
         if (amount === undefined || amount == null) return null; // still loading
@@ -145,6 +148,15 @@ class FormattedAsset extends React.Component {
                     maximumFractionDigits={Math.max(decimals, 0)}
                 />
             );
+            if (trimZero) {
+                formattedValue = (
+                    <FormattedNumber
+                        value={value}
+                        minimumFractionDigits={0}
+                        maximumFractionDigits={Math.max(decimals, 0)}
+                    />
+                );
+            }
 
             if (pulsate) {
                 if (typeof pulsate !== "object") pulsate = {};

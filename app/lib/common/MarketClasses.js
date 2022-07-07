@@ -367,7 +367,7 @@ class Price {
 }
 
 class FeedPrice extends Price {
-    constructor({priceObject, assets, market_base, sqr, real = false}) {
+    constructor({priceObject, assets, market_base, sqr, mcfr, real = false}) {
         if (
             !priceObject ||
             typeof priceObject !== "object" ||
@@ -404,6 +404,8 @@ class FeedPrice extends Price {
 
         this.sqr = parseInt(sqr, 10) / 1000;
         this.inverted = inverted;
+        if (!mcfr) this.mcfr = 0;
+        else this.mcfr = parseInt(mcfr, 10) / 1000;
     }
 
     getSqueezePrice({real = false} = {}) {
@@ -411,12 +413,16 @@ class FeedPrice extends Price {
             this._squeeze_price = this.clone();
             if (this.inverted) {
                 this._squeeze_price.base.amount = Math.floor(
-                    this._squeeze_price.base.amount * this.sqr * 1000
+                    this._squeeze_price.base.amount *
+                        (this.sqr - this.mcfr) *
+                        1000
                 );
                 this._squeeze_price.quote.amount *= 1000;
             } else if (!this.inverted) {
                 this._squeeze_price.quote.amount = Math.floor(
-                    this._squeeze_price.quote.amount * this.sqr * 1000
+                    this._squeeze_price.quote.amount *
+                        (this.sqr - this.mcfr) *
+                        1000
                 );
                 this._squeeze_price.base.amount *= 1000;
             }
