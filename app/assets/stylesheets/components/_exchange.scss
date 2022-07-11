@@ -120,13 +120,13 @@ div#CenterContent {
 
     &.fixed-table {
         table-layout: fixed;
-        text-align: left;
+        text-align: right;
     }
 
     > thead > tr > th {
         font-size: 14px;
         padding: 5px 5px;
-        text-align: left !important;
+        text-align: right !important;
     }
 
     > tbody > tr > td {
