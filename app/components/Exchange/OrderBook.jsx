@@ -1053,7 +1053,7 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div className="market-right-padding-only">
+                            <div className="market-right-padding-only" style={{ paddingRight: "0.6rem" }} >
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {!flipOrderBook ? rightHeader : leftHeader}
                                 </table>
@@ -1213,7 +1213,7 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div className="market-right-padding-only">
+                            <div className="market-right-padding-only" style={{ paddingRight: "0.6rem" }} >
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {flipOrderBook ? rightHeader : leftHeader}
                                 </table>
