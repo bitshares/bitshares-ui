@@ -338,6 +338,14 @@ export const settingsAPIs = {
             operator: "Witness: lebin-witness",
             contact: "telegram: lebinbit"
         },
+        {
+            url: "wss://api.bitshares.info",
+            region: "North America",
+            country: "United States",
+            location: "Chicago",
+            operator: "bitshares.info",
+            contact: "telegram:brekyrself"
+        },
         // Testnet
         {
             url: "wss://eu.nodes.testnet.bitshares.ws",
@@ -386,14 +394,6 @@ export const settingsAPIs = {
             location: "St. Louis",
             operator: "Witness: liuye",
             contact: "email:work@akawa.ink"
-        },
-        {
-            url: "wss://api.bitshares.info",
-            region: "North America",
-            country: "United States",
-            location: "Chicago",
-            operator: "bitshares.info",
-            contact: "telegram:brekyrself"
         },
     ],
     ES_WRAPPER_LIST: [
