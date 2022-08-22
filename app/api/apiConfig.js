@@ -86,6 +86,11 @@ export const gdexAPIs = {
     WITHDRAW_RULE: "/gateway/withdraw/rule"
 };
 
+export const pirateCashAPIs = {
+    BASE: "https://piratecash.net/dexapi",
+    COINS_LIST: "/coins"
+};
+
 export const xbtsxAPIs = {
     BASE: "https://apis.xbts.io/api/v2",
     COINS_LIST: "/coin"
@@ -394,7 +399,7 @@ export const settingsAPIs = {
             location: "St. Louis",
             operator: "Witness: liuye",
             contact: "email:work@akawa.ink"
-        },
+        }
     ],
     ES_WRAPPER_LIST: [
         {

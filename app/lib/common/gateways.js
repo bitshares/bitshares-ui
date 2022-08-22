@@ -10,6 +10,7 @@ import {
     openledgerAPIs,
     cryptoBridgeAPIs,
     gdex2APIs,
+    pirateCashAPIs,
     xbtsxAPIs,
     citadelAPIs
 } from "api/apiConfig";
@@ -183,6 +184,21 @@ export const availableGateways = {
             selected: false
         },
         wallet: "https://www.52bts.net/"
+    },
+    PIRATE: {
+        id: "PIRATE",
+        name: "PirateCash",
+        baseAPI: pirateCashAPIs,
+        isEnabled: _isEnabled("PIRATE"),
+        isSimple: true,
+        selected: false,
+        addressValidatorMethod: "POST",
+        options: {
+            enabled: false,
+            selected: false
+        },
+        landing: "https://piratecash.net",
+        wallet: "https://wallet.piratecash.net/"
     },
     XBTSX: {
         id: "XBTSX",

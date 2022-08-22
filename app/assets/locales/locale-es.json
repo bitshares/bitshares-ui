@@ -1398,6 +1398,13 @@
         "withdraw_placeholder": "Por favor introduzca su direcciòn de %(asset)s ",
         "withdraw_summary": "Resumen de retiros",
         "withdraw_to": "Haga clic en el botón de abajo para abrir un %(asset)s retiro",
+        "piratecash": {
+            "coming_soon": "Viene pronto",
+            "min_amount": "Monto minimo: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Por favor ingrese el número >= minimo",
+            "support_block": "Para soporte, contacte a PirateCash en:",
+            "under_construction": "En construcción"
+        },
         "xbtsx": {
             "coming_soon": "Viene pronto",
             "min_amount": "Monto minimo: %(minAmount)s %(symbol)s",
