@@ -37,9 +37,9 @@ jobs:
             - name: Calc hash
               id: calc_hash
               run: |
-                  echo "::set-output name=dmghash::${{ hashFiles('build/binaries/**.dmg') }}"
-                  echo "::set-output name=debhash::${{ hashFiles('build/binaries/**.deb') }}"
-                  echo "::set-output name=exehash::${{ hashFiles('build/binaries/**.exe') }}"
+                  echo "::set-output name=dmghash::$(sha256sum build/binaries/*.dmg|cut -c-64)"
+                  echo "::set-output name=debhash::$(sha256sum build/binaries/*.deb|cut -c-64)"
+                  echo "::set-output name=exehash::$(sha256sum build/binaries/*.exe|cut -c-64)"
             - name: Create Body
               id: create_body
               uses: bitshares/generate_release_notes@v1
