@@ -169,7 +169,7 @@
         "jspdf-autotable": "^3.1.1",
         "lodash-es": "^4.17.10",
         "lzma": "2.1.6",
-        "moment": "^2.29.2",
+        "moment": "^2.29.4",
         "moment-timezone": "^0.5.16",
         "node-rsa": "^1.1.1",
         "notifyjs": "^3.0.0",
