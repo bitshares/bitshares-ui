@@ -1010,7 +1010,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: 0
                 },
                 account: objects.account.get("id"),
                 pool: liquidityPoolId,
