@@ -505,7 +505,12 @@ class Footer extends React.Component {
                                         </span>
                                     )}
                                 </span>
-
+                                <span>
+                                    {" "}
+                                    -{" "}
+                                    <Link to="/help/disclaimer.md">Legal Disclaimer</Link>
+                                    {" "}
+                                </span>
                                 {state.newVersion && (
                                     <Translate
                                         content="footer.update_available"
