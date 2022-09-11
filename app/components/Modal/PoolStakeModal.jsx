@@ -244,6 +244,17 @@ class PoolStakeModal extends React.Component {
 
                 let poolsupply = Number(pool.getIn(["dynamic_share_asset", "current_supply"])) / Number(new big(10).toPower(precisionPP));
 
+		if (Number(v.amount) > 0){
+this.setState({
+assetBAmount: Math.min(((Number(v.amount)) * (Number(poolamountb) /   Number(poolamountbp))) / (Number(poolamounta) /   Number(poolamountap)))
+})
+}
+if (!v.amount){
+this.setState({
+assetBAmount: 0
+})
+}
+
 
             if (assetBAmount && assetBAmount > 0){
                 this.setState({
@@ -284,7 +295,16 @@ class PoolStakeModal extends React.Component {
                         let poolamountbp = new big(10).toPower(pool.get('asset_b').get("precision"));
 
                 let poolsupply = Number(pool.getIn(["dynamic_share_asset", "current_supply"])) / Number(new big(10).toPower(precisionPP));
-
+                if (Number(v.amount) > 0){
+this.setState({
+assetAAmount: Math.min(((Number(v.amount)) * (Number(poolamounta) /   Number(poolamountap))) / (Number(poolamountb) /   Number(poolamountbp)))
+})
+}
+if (!v.amount){
+this.setState({
+assetAAmount: 0
+})
+}
 
             if (v.amount > 0){
                 this.setState({
