@@ -2,21 +2,45 @@
 
 LEGAL CONSIDERATIONS, RISKS AND DISCLAIMER
 
-This Platform is a browser based decentralized blockchain client module developed on top of the BitShares blockchain.
 
-This Platform is a client interface for BitShares Blockchain which might be subjected to supervision and control by various regulatory bodies around the world.
+## Information Published
 
-This Platform and BitShares Blockchain are not offering any financial service nor any investment, the means behind using it are decided by it's solo BitShares Blockchain user.
+This Website or Software (hereinafter, referred to as the "Platform") provides information and material of a general nature. You are not authorized and nor should you rely on the Platform for legal advice, business advice, or advice of any kind. You act at your own risk in reliance on the contents of this Platform. Should you make a decision to act or not act you should contact a licensed attorney in the relevant jurisdiction in which you want or need help. In no way are the owners of, or contributors to, this Platform responsible for the actions, decisions, or other behavior taken or not taken by you in reliance upon the Platform.
 
-This Platform and BitShares Blockchain are not selling utility tokens, liquidity provider tokens, governance tokens or any issued tokens; any selling or buying orders are just an information and the means of their own creators on the Blockchain.
 
-This Platform and BitShares Blockchain issued assets are not a “surrogate currency”.
+## Information and Material Nature
 
-This Platform and BitShares issued assets are not official or legally binding investment, they are the means of their own solo creator on the Blockchain BitShares. Due to unforeseen circumstances, the objectives described in this document may be amended. Despite the fact that we intend to reach all the points described in this document, all persons and parties involved in the purchase of any token do this at their own risk.
+This Platform is a client interface connecting to BitShares Blockchain API nodes; hence information appearing over the platform are the means of their creators and users over BitShares Blockchain; by using this Platform, you understand and agree that the Platform is only a terminal that is interfacing with BitShares Blockchain "as is", where BitShares Blockchain contents are NOT made by the Platform; but by BitShares Blockchain Users.
 
-Cryptographic issued assets, are still experimental technology. In addition to the risks mentioned in this document, there are additional risks that platform hosting company can not foresee. 
 
-These risks can materialize in other forms of risk than those specified here.
+## General Risks
+
+This Platform will not be responsible for any losses, damages or claims arising from events falling within the scope of the following five categories:
+
+(1) Mistakes made by the user of any BitShares Blockchain related software or service, e.g., forgotten passwords, payments sent to wrong BitShares Blockchain addresses, and accidental deletion of wallets information and credentials.
+
+(2) Platform problems and/or any BitShares Blockchain related software or service, e.g., corrupted wallet file, incorrectly constructed transactions, unsafe cryptographic libraries, malware affecting the Platform and/or any BitShares Blockchain related software or service.
+
+(3) Technical failures in the hardware of the user of any BitShares Blockchain related software or service, e.g., data loss due to a faulty or damaged storage device.
+
+(4) Security problems experienced by the user of any BitShares Blockchain related software or service, e.g., unauthorized access to users' wallets and/or accounts.
+
+(5) Actions or inactions of third parties and/or events experienced by third parties, e.g., bankruptcy of service providers, information security attacks on service providers, and fraud conducted by third parties.
+
+
+## Investment Risks
+
+The investment in BitShares Blockchain can lead to loss of money over short or even long periods. The investors in BitShares Blockchain should expect prices to have large range fluctuations. The information published on the Platform cannot guarantee that the investors in BitShares Blockchain would not lose money.
+
+
+## Compliance with Tax Obligations
+
+The users of the Platform are solely responsible to determinate what, if any, taxes apply to their BitShares Blockchain transactions. The owners of, or contributors to, the Platform are NOT responsible for determining the taxes that apply to BitShares Blockchain transactions.
+
+
+## The Platform does not store, send, or receive any assets
+
+The Platform does not store, send or receive any assets. This is because BitShares Blockchain assets exist only by virtue of the ownership record maintained in the BitShares Blockchain. Any transfer of title in BitShares Blockchain occurs within a decentralized BitShares Blockchain, and not on the Platform; this Platform is a decentralized blockchain client module developed on top of the BitShares blockchain.
 
 
 ## Disclaimer of Warranties
@@ -24,73 +48,33 @@ These risks can materialize in other forms of risk than those specified here.
 You agree that your use or inability to use this Platform and BitShares Blockchain is carried out solely at your own risk and you don't put any responsibility on platform hosting company.
 
 
-## Terms of Use
+## No warranties
 
-Thank you for using this Platform; the browser based decentralized blockchain client module which might be hosted on (the "Site") you are accessing now. The following terms and conditions of service (these "Terms of Service") apply to visitors of the Site and Users of this Platform. You should read these Terms of Service carefully to determine which provisions apply to you. By using any of this Platform, functions, or features offered from time to time on the Site (collectively or individually, the "Services"), the user (referred to herein as "you" or "your") agrees to these Terms of Service.
-
-By using this Site and this Platform, you understand and agree that the Site is only a terminal that is interfacing with a Community Managed BitShares Blockchain as is, where Blockchain contents are NOT made by the Platform; but by the BitShares Blockchain Users.
-
-These Terms of Service constitute the agreement and understanding with respect to the use of any or all of this Platform as a self-hosted browser based platform, and any manner of accessing the Site, between you and Site. For the avoidance of doubt, these Terms of Service have two parties: you and Site owner of this Platform as an internet domain name. Any and all terms, conditions, licences, limitations, and obligations contained within and on the Site platform are incorporated into these Terms by reference, including, without limiting the generality of the foregoing, the following Site policies and pages: the Privacy Policy and the Risk Disclosure Statement. In particular, please note that all transactions of Blockchain Digital Tokens on or off the Site may be subject to fees levied by BitShares Blockchain as set out and updated in the Blockchain Fee Schedule from time to time by the Blockchain Users. In the event of any inconsistency between these Terms of Service and any other pages or policies on the Site, these Terms of Service shall prevail.
-
-By creating BitShares Blockchain wallet using the Site or by using any of this Platform functions, you acknowledge that you have read, understand, and completely agree to these Terms of Service in effect from time to time. If you disagree with these Terms of Service or with any subsequent amendments, changes, or updates, you may not use any of the Platform Functions; your only recourse in the case of disagreement is to stop using all of the Platform Functions.
-
-These Terms of Service may be amended, changed, or updated by this Site at any time and without prior notice to you. You should check back often to confirm that your copy and understanding of these Terms of Service is current and correct. Your non-termination or continued use of any Platform Functions after the effective date of any amendments, changes, or updates constitutes your acceptance of these Terms of Service, as modified by such amendments, changes, or updates.
-
-The use of this Site and this Platform Functions is void where prohibited by applicable law.
+The Platform is provided on an "as is" basis without any warranties of any kind regarding the Platform and/or any content, data, materials and/or services provided on the Platform.
 
 
-## Risk Disclosure Statement
+## Limitation of liability
 
-Trading and financing trades in Digital Tokens entails certain risks. This risk disclosure statement cannot and does not disclose all risks and other aspects involved in holding, trading, or other activities in Digital Tokens. Risks include, but are not limited to, the following:
+Unless otherwise required by law, in no event shall the owners of, or contributors to, the Platform be liable for any damages of any kind, including, but not limited to, loss of use, loss of profits, or loss of data arising out of or in any way connected with the use of the Platform.
 
-1. Market Risk: The market for Digital Tokens is still new and uncertain. No-one should have funds invested in Digital Tokens or speculate in Digital Tokens that she is not prepared to lose entirely. Whether the market for one or more Digital Tokens will move up or down, or whether a particular Digital Token will lose all or substantially all of its value, is unknown. This applies both to traders that are going long and to traders that are shorting the market. Participants should be cautious about holding Digital Tokens.
 
-2. Liquidity and Listing Risk: Markets for Digital Tokens have varying degrees of liquidity. Some are quite liquid while others may be thinner. Thin markets can amplify volatility. There is never a guarantee that there will be an active market for one to sell, buy, or trade Digital Tokens or products derived from or ancillary to them. This Site makes no representations or warranties about whether a Digital Token that may be traded on or through the Site may be traded on or through the Site any point in the future, if at all. Any Digital Token is subject to delisting according to the procedures listed here.
+## Arbitration
 
-3. Legal Risk: The legal status of certain Digital Tokens may be uncertain. This can mean that the legality of holding or trading them is not always clear. Whether and how one or more Digital Tokens constitute property, or assets, or rights of any kind may also seem unclear. Participants are responsible for knowing and understanding how Digital Tokens will be addressed, regulated, and taxed under applicable law.
-
-4. Trading Risk: In addition to liquidity risks, values in any digital token marketplace are volatile and can shift quickly. Participants in any Digital Tokens market are warned that they should pay close attention to their position and holdings, and how they may be impacted by sudden and adverse shifts in trading and other market activities.
-
-5. Risks Associated with Financing Activities: When you finance a purchase or sale of Digital Tokens on a peer-to-peer basis, you run the risk of losing your provided financing. Similarly, when you accept financing to enter a trading agreement, you accept the risk of not being able to repay that financing (e.g., if the market price of the Digital Token you purchased with the financing falls). Participants should know all of the terms of any contracts they enter and how their trading strategies and other market and risk factors can affect their financing obligations.
+The user of the Platform agrees to arbitrate any dispute arising from or in connection with the Platform or this disclaimer, except for disputes related to copyrights, logos, trademarks, trade names, trade secrets or patents.
 
 
 ## About BitShares
 
-BitShares is a decentralized permissionless “Blockchain As Organization” (BAO) network; a powerful beyond Bitcoin innovation in which its core cryptocurrency BTS is being utilized as a decentralized organization proof of stake and utility to satisfy Blockchain users financial and other means in a form of smart transactions fully stored on each node within its decentralized Blockchain network. 
+BitShares Blockchain is a decentralized “Blockchain As Organization” (BAO); an industrial-grade decentralized Web 3.0 platform built to run high-performance financial means and smart contracts. It represents the first decentralized autonomous community that enables its core token holders to decide its future direction and financial products.
 
-BTS core cryptocurrency is also used for BitShares Blockchain development orientations; while BTS core cryptocurrency holders are in power to manage and develop BitShares Blockchain and influence it's future development throught several decentralized integrated functions and tools such as decentralized workers and voting system. 
+BitShares Blockchain is similar to a publicly owned company or open joint-stock companies. Yet, unlike traditional entities, BitShares Blockchain does not require registration in any jurisdiction, because trust between its users is mediated by an artificial intelligence technology running over the internet.
 
-BitShares Blockchain is very similar to public companies and open joint-stock companies yet it's not required to be registered nor trusted. 
-
-BitShares is trustless, permissionless and fully managed on the internet. BitShares had enabled several blockchain built-in functions at its single core node such as (DEX) the decentralized exchange engine, HTLC, Assets Factory, DeFi features and Automated Market Making.
+BitShares Core asset BTS is a utility which is needed to submit transactions at BitShares Blockchain; it is also used for BitShares Blockchain development purposes; while BTS asset shareholders are in power to manage and develop BitShares Blockchain and influence its future using several decentralized Blockchain integrated built-in functions and tools such as worker system, committee members and Blockchain witnesses voting system.
 
 
-## The main focuses for the design of this platform and BitShares Blockchain are:
+BitShares Blockchain enables several financial innovations and functions such as: 
 
-No custody of funds: traders maintain control of their own private keys and core cryptocurrency funds.
-
-High performance: low latency, high throughput for a large user base, and high ability of liquidity trading.
-
-Low cost: in both transaction fees and liquidity trading cost.
-
-Fair trading features: minimize front-running, to the extent possible.
-
-Evolvable: able to develop with forever-improving technology stack, architecture, and ideas.
-
-
-## What can you do with this platform over BitShares Blockchain?
-
-You can:
-
-Login to BitShares Blockchain with your private keys to send and receive BTS.
-
-Issue new tokens or utalize issued tokens on BitShares Blockchain.
-
-Send, receive, burn/issue and freeze/unfreeze your issued tokens on BitShares Blockchain.
-
-Send memos and Propose transactions for BitShares Blockchain other users.
-
-Send orders to buy or sell assets through trading pairs issued by you or other users of BitShares Blockchain.
+Decentralized Exchange (DEX), Decentralized User Issued Asset (UIA), Decentralized Market Pegged Asset (MPA) or Smart Assets (Smart Contracts), Decentralized Finance (DeFi), Decentralized Liquidity Pools (LP) and Automated Market Maker (AMM), Decentralized Prediction Market Engine.
 
 
 ## Development
@@ -105,3 +89,9 @@ Send orders to buy or sell assets through trading pairs issued by you or other u
 You can get help from other members of the community in real time at:
 
 - [BitSharesGroup](https://t.me/BitSharesGroup)
+
+
+## Last amendment
+
+This disclaimer was amended for the last time on Sep 13th, 2022.
+
