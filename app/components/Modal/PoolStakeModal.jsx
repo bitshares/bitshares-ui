@@ -244,7 +244,7 @@ class PoolStakeModal extends React.Component {
 
                 let poolsupply = Number(pool.getIn(["dynamic_share_asset", "current_supply"])) / Number(new big(10).toPower(precisionPP));
 
-		if (Number(v.amount) > 0){
+		if (Number(v.amount) > 0 && poolamounta > 0){
 this.setState({
 assetBAmount: Math.min(((Number(v.amount)) * (Number(poolamountb) /   Number(poolamountbp))) / (Number(poolamounta) /   Number(poolamountap))),
 shareAssetAmount: Math.min( (((Number(poolsupply) * Number(v.amount) * Number(new big(10).toPower(precisionA)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))), ((( Number(poolsupply) * assetBAmount * Number(new big(10).toPower(precisionB)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))) )
@@ -296,7 +296,7 @@ assetBAmount: 0
                         let poolamountbp = new big(10).toPower(pool.get('asset_b').get("precision"));
 
                 let poolsupply = Number(pool.getIn(["dynamic_share_asset", "current_supply"])) / Number(new big(10).toPower(precisionPP));
-                if (Number(v.amount) > 0){
+                if (Number(v.amount) > 0 && poolamountb > 0){
 this.setState({
 assetAAmount: Math.min(((Number(v.amount)) * (Number(poolamounta) /   Number(poolamountap))) / (Number(poolamountb) /   Number(poolamountbp))),
 shareAssetAmount: Math.min( ((( Number(poolsupply) * Number(v.amount) * Number(new big(10).toPower(precisionB)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))), (((Number(poolsupply) * assetAAmount * Number(new big(10).toPower(precisionA)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))) )
