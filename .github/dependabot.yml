@@ -11,4 +11,4 @@ updates:
       target-branch: "develop"
       # Labels on pull requests for security and version updates
       labels:
-          - "npm dependencies"
+          - "dependencies"
