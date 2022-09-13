@@ -9,6 +9,8 @@ updates:
           # Check for npm updates on Sundays
           day: "sunday"
       target-branch: "develop"
+      # Disable version updates (this option should have no impact on security updates)
+      open-pull-requests-limit: 0
       # Labels on pull requests for security and version updates
       labels:
           - "dependencies"
