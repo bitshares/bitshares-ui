@@ -1,17 +1,16 @@
-# Legal Disclaimer
-
-LEGAL CONSIDERATIONS, RISKS AND DISCLAIMER
-
+# Disclaimer
 
 ## Information Published
 
 This Website or Software (hereinafter, referred to as the "Platform") provides information and material of a general nature. You are not authorized and nor should you rely on the Platform for legal advice, business advice, or advice of any kind. You act at your own risk in reliance on the contents of this Platform. Should you make a decision to act or not act you should contact a licensed attorney in the relevant jurisdiction in which you want or need help. In no way are the owners of, or contributors to, this Platform responsible for the actions, decisions, or other behavior taken or not taken by you in reliance upon the Platform.
 
-
 ## Information and Material Nature
 
-This Platform is a client interface connecting to BitShares Blockchain API nodes; hence information appearing over the platform are the means of their creators and users over BitShares Blockchain; by using this Platform, you understand and agree that the Platform is only a terminal that is interfacing with BitShares Blockchain "as is", where BitShares Blockchain contents are NOT made by the Platform; but by BitShares Blockchain Users.
+This Platform is an interface connecting to the BitShares Blockchain, hence information appearing over the platform are the means of their creators and users over BitShares Blockchain. By using this Platform, you understand and agree that the Platform is only a terminal that is interfacing with the BitShares Blockchain "as is", and that contents are NOT made by the Platform, but by BitShares Blockchain Users.
 
+## Translations
+
+The Website may contain translations of the English version of the content available on the Website. These translations are provided only as a convenience. In the event of any conflict between the English language version and the translated version, the English language version shall take precedence. If you notice any inconsistency, please report them on [GitHub](https://github.com/bitshares/bitshares-ui/issues).
 
 ## General Risks
 
@@ -38,19 +37,13 @@ The investment in BitShares Blockchain can lead to loss of money over short or e
 The users of the Platform are solely responsible to determinate what, if any, taxes apply to their BitShares Blockchain transactions. The owners of, or contributors to, the Platform are NOT responsible for determining the taxes that apply to BitShares Blockchain transactions.
 
 
-## The Platform does not store, send, or receive any assets
+## The Platform does not store, send, receive or otherwise manipulate any assets
 
-The Platform does not store, send or receive any assets. This is because BitShares Blockchain assets exist only by virtue of the ownership record maintained in the BitShares Blockchain. Any transfer of title in BitShares Blockchain occurs within a decentralized BitShares Blockchain, and not on the Platform; this Platform is a decentralized blockchain client module developed on top of the BitShares blockchain.
+The Platform does not store, send, receive or otherwise manipulate any assets. This is because BitShares Blockchain assets exist only by virtue of the ownership record maintained in the BitShares Blockchain. Any transaction that affects assets in the BitShares Blockchain occurs within a decentralized BitShares Blockchain, and not on the Platform.
 
+## No Warranties
 
-## Disclaimer of Warranties
-
-You agree that your use or inability to use this Platform and BitShares Blockchain is carried out solely at your own risk and you don't put any responsibility on platform hosting company.
-
-
-## No warranties
-
-The Platform is provided on an "as is" basis without any warranties of any kind regarding the Platform and/or any content, data, materials and/or services provided on the Platform.
+Your use or inability to use this Platform and BitShares Blockchain is carried out solely at your own risk and you don't put any responsibility on platform hosting company. The Platform is provided on an "as is" basis without any warranties of any kind regarding the Platform and/or any content, data, materials and/or services provided on the Platform.
 
 
 ## Limitation of liability
@@ -62,36 +55,6 @@ Unless otherwise required by law, in no event shall the owners of, or contributo
 
 The user of the Platform agrees to arbitrate any dispute arising from or in connection with the Platform or this disclaimer, except for disputes related to copyrights, logos, trademarks, trade names, trade secrets or patents.
 
-
-## About BitShares
-
-BitShares Blockchain is a decentralized “Blockchain As Organization” (BAO); an industrial-grade decentralized Web 3.0 platform built to run high-performance financial means and smart contracts. It represents the first decentralized autonomous community that enables its core token holders to decide its future direction and financial products.
-
-BitShares Blockchain is similar to a publicly owned company or open joint-stock companies. Yet, unlike traditional entities, BitShares Blockchain does not require registration in any jurisdiction, because trust between its users is mediated by an artificial intelligence technology running over the internet.
-
-BitShares Core asset BTS is a utility which is needed to submit transactions at BitShares Blockchain; it is also used for BitShares Blockchain development purposes; while BTS asset shareholders are in power to manage and develop BitShares Blockchain and influence its future using several decentralized Blockchain integrated built-in functions and tools such as worker system, committee members and Blockchain witnesses voting system.
-
-
-BitShares Blockchain enables several financial innovations and functions such as: 
-
-Decentralized Exchange (DEX), Decentralized User Issued Asset (UIA), Decentralized Market Pegged Asset (MPA) or Smart Assets (Smart Contracts), Decentralized Finance (DeFi), Decentralized Liquidity Pools (LP) and Automated Market Maker (AMM), Decentralized Prediction Market Engine.
-
-
-## Development
-
- * [BitShares UI Github](https://github.com/bitshares/bitshares-ui)
- 
- * [BitShares Core Github](https://github.com/bitshares/bitshares-core)
-
-
-## Telegram Chat
-
-You can get help from other members of the community in real time at:
-
-- [BitSharesGroup](https://t.me/BitSharesGroup)
-
-
 ## Last amendment
 
-This disclaimer was amended for the last time on Sep 13th, 2022.
-
+This disclaimer was amended for the last time on Sep 14th, 2022.
