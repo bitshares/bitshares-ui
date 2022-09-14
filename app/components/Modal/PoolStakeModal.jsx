@@ -1,10 +1,9 @@
 import React from "react";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import big from "bignumber.js";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import {Form, Modal, Button, Input, Row, Col, Tabs} from "bitshares-ui-style-guide";
+import {Form, Modal, Button, Row, Col, Tabs} from "bitshares-ui-style-guide";
 import ApplicationApi from "api/ApplicationApi";
 import AccountStore from "stores/AccountStore";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
@@ -18,6 +17,7 @@ class PoolStakeModal extends React.Component {
     static propTypes = {
         pool: ChainTypes.ChainLiquidityPool.isRequired
     };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -50,7 +50,7 @@ class PoolStakeModal extends React.Component {
         );
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.isModalVisible !== newProps.isModalVisible) {
             this.setState({
                 isModalVisible: newProps.isModalVisible
@@ -63,38 +63,33 @@ class PoolStakeModal extends React.Component {
     }
 
     onSubmit() {
-
         const {
             assetAAmount,
             assetBAmount,
             shareAssetAmount,
-            assetAErr,
-            assetBErr,
-            shareAssetErr,
             currentTab
         } = this.state;
 
-
         const {pool, account} = this.props;
 
-
         const assetAPrecision = new big(10).toPower(
-            new big(pool.getIn(['asset_a', 'precision']))
+            new big(pool.getIn(["asset_a", "precision"]))
         );
 
         const assetBPrecision = new big(10).toPower(
-            new big(pool.getIn(['asset_b', 'precision']))
+            new big(pool.getIn(["asset_b", "precision"]))
         );
 
-        const sharedAssetPrecision = new big(10).toPower(pool.getIn(['share_asset','precision']));
+        const sharedAssetPrecision = new big(10).toPower(
+            pool.getIn(["share_asset", "precision"])
+        );
 
         if (currentTab === "stake") {
-
             ApplicationApi.liquidityPoolDeposit(
                 account,
                 pool.get("id"),
-                pool.getIn(['asset_a', "symbol"]),
-                pool.getIn(['asset_b', "symbol"]),
+                pool.getIn(["asset_a", "symbol"]),
+                pool.getIn(["asset_b", "symbol"]),
                 Math.floor(Number(assetAAmount) * Number(assetAPrecision)),
                 Math.floor(Number(assetBAmount) * Number(assetBPrecision))
             )
@@ -105,18 +100,18 @@ class PoolStakeModal extends React.Component {
                 .catch(e => {
                     console.error("exchange:", e);
                 });
-
         } else if (currentTab === "unstake") {
             ApplicationApi.liquidityPoolWithdraw(
                 account,
                 pool.get("id"),
-                pool.getIn(['share_asset', "symbol"]),
-                Math.floor(Number(shareAssetAmount) * Number(sharedAssetPrecision)),
-                pool.getIn(['asset_a', "symbol"]),
-                pool.getIn(['asset_b', "symbol"]),
+                pool.getIn(["share_asset", "symbol"]),
+                Math.floor(
+                    Number(shareAssetAmount) * Number(sharedAssetPrecision)
+                ),
+                pool.getIn(["asset_a", "symbol"]),
+                pool.getIn(["asset_b", "symbol"]),
                 Math.floor(Number(assetAAmount) * Number(assetAPrecision)),
                 Math.floor(Number(assetBAmount) * Number(assetBPrecision))
-
             )
                 .then(res => {
                     console.log("exchange:", res);
@@ -158,28 +153,31 @@ class PoolStakeModal extends React.Component {
     getShareAssetCurrentSupply() {
         const {pool, account} = this.props;
 
-        const shareAsset = pool.get('share_asset');
+        const shareAsset = pool.get("share_asset");
         const precision = shareAsset.get("precision");
 
         const accountObj = ChainStore.getAccount(account);
 
         const balances = accountObj.getIn(["balances", shareAsset.get("id")]);
 
-        if (balances){
+        if (balances) {
             const balObj = ChainStore.getObject(balances);
             const balance = balObj.get("balance");
             return new big(balance).dividedBy(new big(10).toPower(precision));
-        console.log("banace:",big(balance).dividedBy(new big(10).toPower(precision)));
+            console.log(
+                "banace:",
+                big(balance).dividedBy(new big(10).toPower(precision))
+            );
         }
 
         return new big(0);
         console.log(big(0));
     }
 
-    getBalanceA(){
+    getBalanceA() {
         const {pool, account} = this.props;
 
-        const assetA = pool.get('asset_a');
+        const assetA = pool.get("asset_a");
 
         const precision = assetA.get("precision");
 
@@ -187,18 +185,20 @@ class PoolStakeModal extends React.Component {
 
         const balances = accountObj.getIn(["balances", assetA.get("id")]);
 
-        if (balances){
+        if (balances) {
             const balObj = ChainStore.getObject(balances);
-            return new big(balObj.get("balance")).dividedBy(new big(10).toPower(precision));
+            return new big(balObj.get("balance")).dividedBy(
+                new big(10).toPower(precision)
+            );
         }
 
         return new big(0);
     }
 
-    getBalanceB(){
+    getBalanceB() {
         const {pool, account} = this.props;
 
-        const assetB = pool.get('asset_b');
+        const assetB = pool.get("asset_b");
 
         const precision = assetB.get("precision");
 
@@ -206,9 +206,11 @@ class PoolStakeModal extends React.Component {
 
         const balances = accountObj.getIn(["balances", assetB.get("id")]);
 
-        if (balances){
+        if (balances) {
             const balObj = ChainStore.getObject(balances);
-            return new big(balObj.get("balance")).dividedBy(new big(10).toPower(precision));
+            return new big(balObj.get("balance")).dividedBy(
+                new big(10).toPower(precision)
+            );
         }
 
         return new big(0);
@@ -216,7 +218,7 @@ class PoolStakeModal extends React.Component {
 
     onChangeAssetAAmount(v) {
         const {currentTab} = this.state;
-        const {pool, account} = this.props;
+        const {pool} = this.props;
         const currentSupply = this.getShareAssetCurrentSupply();
         if (currentSupply !== undefined) {
             this.setState({
@@ -226,40 +228,74 @@ class PoolStakeModal extends React.Component {
         if (currentTab === "stake") {
             const {assetBAmount} = this.state;
 
-            const assetA = pool.get('asset_a');
+            const assetA = pool.get("asset_a");
 
             const precisionA = assetA.get("precision");
 
-            const assetB = pool.get('asset_b');
+            const assetB = pool.get("asset_b");
 
             const precisionB = assetB.get("precision");
 
-                        const shareAssetPP = pool.get('share_asset');
-                        const precisionPP = shareAssetPP.get("precision");
-                        let poolamounta = pool.get('balance_a');
-                        let poolamountap = new big(10).toPower(pool.get('asset_a').get("precision"));
-                        let poolamountb = pool.get('balance_b');
-                        let poolamountbp = new big(10).toPower(pool.get('asset_b').get("precision"));
+            const shareAssetPP = pool.get("share_asset");
+            const precisionPP = shareAssetPP.get("precision");
+            let poolamounta = pool.get("balance_a");
+            let poolamountap = new big(10).toPower(
+                pool.get("asset_a").get("precision")
+            );
+            let poolamountb = pool.get("balance_b");
+            let poolamountbp = new big(10).toPower(
+                pool.get("asset_b").get("precision")
+            );
 
+            let poolsupply =
+                Number(pool.getIn(["dynamic_share_asset", "current_supply"])) /
+                Number(new big(10).toPower(precisionPP));
 
-                let poolsupply = Number(pool.getIn(["dynamic_share_asset", "current_supply"])) / Number(new big(10).toPower(precisionPP));
-
-		if (Number(v.amount) > 0 && poolamounta > 0){
-this.setState({
-assetBAmount: Math.min(((Number(v.amount)) * (Number(poolamountb) /   Number(poolamountbp))) / (Number(poolamounta) /   Number(poolamountap))),
-shareAssetAmount: Math.min( (((Number(poolsupply) * Number(v.amount) * Number(new big(10).toPower(precisionA)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))), ((( Number(poolsupply) * assetBAmount * Number(new big(10).toPower(precisionB)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))) )
-})
-}
-if (!v.amount){
-this.setState({
-assetBAmount: 0
-})
-}
-
-
-            if (v.amount > 0 && assetBAmount > 0){
+            if (Number(v.amount) > 0 && poolamounta > 0) {
                 this.setState({
-        shareAssetAmount: Math.min( (((Number(poolsupply) * Number(v.amount) * Number(new big(10).toPower(precisionA)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))), ((( Number(poolsupply) * assetBAmount * Number(new big(10).toPower(precisionB)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))) )
+                    assetBAmount: Math.min(
+                        (Number(v.amount) *
+                            (Number(poolamountb) / Number(poolamountbp))) /
+                            (Number(poolamounta) / Number(poolamountap))
+                    ),
+                    shareAssetAmount: Math.min(
+                        (Number(poolsupply) *
+                            Number(v.amount) *
+                            Number(new big(10).toPower(precisionA))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP)),
+                        (Number(poolsupply) *
+                            assetBAmount *
+                            Number(new big(10).toPower(precisionB))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP))
+                    )
+                });
+            }
+            if (!v.amount) {
+                this.setState({
+                    assetBAmount: 0
+                });
+            }
+
+            if (v.amount > 0 && assetBAmount > 0) {
+                this.setState({
+                    shareAssetAmount: Math.min(
+                        (Number(poolsupply) *
+                            Number(v.amount) *
+                            Number(new big(10).toPower(precisionA))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP)),
+                        (Number(poolsupply) *
+                            assetBAmount *
+                            Number(new big(10).toPower(precisionB))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP))
+                    )
                 });
             }
         }
@@ -281,98 +317,168 @@ assetBAmount: 0
         if (currentTab === "stake") {
             const {assetAAmount} = this.state;
 
-            const assetA = pool.get('asset_a');
+            const assetA = pool.get("asset_a");
 
             const precisionA = assetA.get("precision");
 
-            const assetB = pool.get('asset_b');
+            const assetB = pool.get("asset_b");
 
             const precisionB = assetB.get("precision");
-                        const shareAssetPP = pool.get('share_asset');
-                        const precisionPP = shareAssetPP.get("precision");
-                        let poolamounta = pool.get('balance_a');
-                        let poolamountap = new big(10).toPower(pool.get('asset_a').get("precision"));
-                        let poolamountb = pool.get('balance_b');
-                        let poolamountbp = new big(10).toPower(pool.get('asset_b').get("precision"));
+            const shareAssetPP = pool.get("share_asset");
+            const precisionPP = shareAssetPP.get("precision");
+            let poolamounta = pool.get("balance_a");
+            let poolamountap = new big(10).toPower(
+                pool.get("asset_a").get("precision")
+            );
+            let poolamountb = pool.get("balance_b");
+            let poolamountbp = new big(10).toPower(
+                pool.get("asset_b").get("precision")
+            );
 
-                let poolsupply = Number(pool.getIn(["dynamic_share_asset", "current_supply"])) / Number(new big(10).toPower(precisionPP));
-                if (Number(v.amount) > 0 && poolamountb > 0){
-this.setState({
-assetAAmount: Math.min(((Number(v.amount)) * (Number(poolamounta) /   Number(poolamountap))) / (Number(poolamountb) /   Number(poolamountbp))),
-shareAssetAmount: Math.min( ((( Number(poolsupply) * Number(v.amount) * Number(new big(10).toPower(precisionB)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))), (((Number(poolsupply) * assetAAmount * Number(new big(10).toPower(precisionA)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))) )
-})
-}
-if (!v.amount){
-this.setState({
-assetAAmount: 0
-})
-}
-
-            if (v.amount > 0 && assetAAmount > 0){
+            let poolsupply =
+                Number(pool.getIn(["dynamic_share_asset", "current_supply"])) /
+                Number(new big(10).toPower(precisionPP));
+            if (Number(v.amount) > 0 && poolamountb > 0) {
                 this.setState({
-        shareAssetAmount: Math.min( ((( Number(poolsupply) * Number(v.amount) * Number(new big(10).toPower(precisionB)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))), (((Number(poolsupply) * assetAAmount * Number(new big(10).toPower(precisionA)) ) / (Number(poolamounta) / Number(new big(10).toPower(precisionA)))) / Number(new big(10).toPower(precisionPP))) )
-
+                    assetAAmount: Math.min(
+                        (Number(v.amount) *
+                            (Number(poolamounta) / Number(poolamountap))) /
+                            (Number(poolamountb) / Number(poolamountbp))
+                    ),
+                    shareAssetAmount: Math.min(
+                        (Number(poolsupply) *
+                            Number(v.amount) *
+                            Number(new big(10).toPower(precisionB))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP)),
+                        (Number(poolsupply) *
+                            assetAAmount *
+                            Number(new big(10).toPower(precisionA))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP))
+                    )
                 });
-console.log(assetAAmount,precisionA,v.amount,precisionB);
+            }
+            if (!v.amount) {
+                this.setState({
+                    assetAAmount: 0
+                });
+            }
+
+            if (v.amount > 0 && assetAAmount > 0) {
+                this.setState({
+                    shareAssetAmount: Math.min(
+                        (Number(poolsupply) *
+                            Number(v.amount) *
+                            Number(new big(10).toPower(precisionB))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP)),
+                        (Number(poolsupply) *
+                            assetAAmount *
+                            Number(new big(10).toPower(precisionA))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP))
+                    )
+                });
+                console.log(assetAAmount, precisionA, v.amount, precisionB);
             }
         }
     }
 
     onChangeShareAssetAmount(v) {
         const {currentTab} = this.state;
-        const {pool, account} = this.props;
+        const {pool} = this.props;
         const currentSupply = pool.getIn([
             "dynamic_share_asset",
             "current_supply"
         ]);
-        if (currentTab === "stake"){
-            if (currentSupply !== undefined){
+        if (currentTab === "stake") {
+            if (currentSupply !== undefined) {
                 this.setState({
                     shareAssetAmount: v.amount
                 });
             }
-        }
-        else if (currentTab === "unstake") {
-            if (currentSupply !== undefined){
+        } else if (currentTab === "unstake") {
+            if (currentSupply !== undefined) {
                 this.setState({
                     shareAssetAmount: v.amount
                 });
             }
-        let bigSharedAssets = this.getShareAssetCurrentSupply();
-        let bigAssetA = this.getBalanceA();
-        let bigAssetB = this.getBalanceB();
+            let bigSharedAssets = this.getShareAssetCurrentSupply();
+            let bigAssetA = this.getBalanceA();
+            let bigAssetB = this.getBalanceB();
 
-        let amountA = bigAssetA.toNumber();
-        let amountB = bigAssetB.toNumber();
+            let amountA = bigAssetA.toNumber();
+            let amountB = bigAssetB.toNumber();
 
-        let withDrawalPercentFee = pool.get('withdrawal_fee_percent') / 100;
-        let poolamounta = pool.get('balance_a');
-        let poolamountap = new big(10).toPower(pool.get('asset_a').get("precision"));
-        let poolamountb = pool.get('balance_b');
-        let poolamountbp = new big(10).toPower(pool.get('asset_b').get("precision"));
-        const shareAssetPP = pool.get('share_asset');
-        const precisionPP = shareAssetPP.get("precision");
+            let withDrawalPercentFee = pool.get("withdrawal_fee_percent") / 100;
+            let poolamounta = pool.get("balance_a");
+            let poolamountap = new big(10).toPower(
+                pool.get("asset_a").get("precision")
+            );
+            let poolamountb = pool.get("balance_b");
+            let poolamountbp = new big(10).toPower(
+                pool.get("asset_b").get("precision")
+            );
+            const shareAssetPP = pool.get("share_asset");
+            const precisionPP = shareAssetPP.get("precision");
 
-let poolsupply = Number(pool.getIn(["dynamic_share_asset", "current_supply"])) / Number(new big(10).toPower(precisionPP));
+            let poolsupply =
+                Number(pool.getIn(["dynamic_share_asset", "current_supply"])) /
+                Number(new big(10).toPower(precisionPP));
 
-            if (bigSharedAssets.toNumber() == 0){
+            if (bigSharedAssets.toNumber() == 0) {
                 amountA = 0;
                 amountB = 0;
-            }
-            else{
-amountA = ( (((Number(poolamounta) / Number(poolamountap)) * Number(v.amount)) / Number(poolsupply)) - ((((Number(poolamounta) / Number(poolamountap)) * Number(v.amount)) / Number(poolsupply)) * Number(withDrawalPercentFee / 100 )) );
-amountB = ( (((Number(poolamountb) / Number(poolamountbp)) * Number(v.amount)) / Number(poolsupply)) - ((((Number(poolamountb) / Number(poolamountbp)) * Number(v.amount)) / Number(poolsupply)) * Number(withDrawalPercentFee / 100 )) );
+            } else {
+                amountA =
+                    ((Number(poolamounta) / Number(poolamountap)) *
+                        Number(v.amount)) /
+                        Number(poolsupply) -
+                    (((Number(poolamounta) / Number(poolamountap)) *
+                        Number(v.amount)) /
+                        Number(poolsupply)) *
+                        Number(withDrawalPercentFee / 100);
+                amountB =
+                    ((Number(poolamountb) / Number(poolamountbp)) *
+                        Number(v.amount)) /
+                        Number(poolsupply) -
+                    (((Number(poolamountb) / Number(poolamountbp)) *
+                        Number(v.amount)) /
+                        Number(poolsupply)) *
+                        Number(withDrawalPercentFee / 100);
 
-console.log("PoolS:",poolsupply,"AmountA:",(Number(poolamounta) / Number(poolamountap)),"AmountB:",(Number(poolamountb) / Number(poolamountbp)), Number(bigSharedAssets.toNumber()) );
-console.log(( (Number(poolamounta) / Number(poolamountap)) * Number(v.amount)) / Number(bigSharedAssets.toNumber()), Number(withDrawalPercentFee));
-console.log(( (Number(poolamountb) / Number(poolamountbp)) * Number(v.amount)) / Number(bigSharedAssets.toNumber()), Number(withDrawalPercentFee));
+                console.log(
+                    "PoolS:",
+                    poolsupply,
+                    "AmountA:",
+                    Number(poolamounta) / Number(poolamountap),
+                    "AmountB:",
+                    Number(poolamountb) / Number(poolamountbp),
+                    Number(bigSharedAssets.toNumber())
+                );
+                console.log(
+                    ((Number(poolamounta) / Number(poolamountap)) *
+                        Number(v.amount)) /
+                        Number(bigSharedAssets.toNumber()),
+                    Number(withDrawalPercentFee)
+                );
+                console.log(
+                    ((Number(poolamountb) / Number(poolamountbp)) *
+                        Number(v.amount)) /
+                        Number(bigSharedAssets.toNumber()),
+                    Number(withDrawalPercentFee)
+                );
             }
 
             this.setState({
                 assetAAmount: amountA,
                 assetBAmount: amountB
             });
-
         }
     }
 
@@ -450,13 +556,14 @@ console.log(( (Number(poolamountb) / Number(poolamountbp)) * Number(v.amount)) /
                                             <a
                                                 onClick={e => {
                                                     e.preventDefault();
-                                                    console.log('poolstakeModal: ');
+                                                    console.log(
+                                                        "poolstakeModal: "
+                                                    );
 
                                                     this.onChangeAssetAAmount({
                                                         amount: this.getBalanceA().toNumber(),
                                                         asset: null
                                                     });
-
                                                 }}
                                             >
                                                 <AccountBalance
@@ -567,22 +674,43 @@ console.log(( (Number(poolamountb) / Number(poolamountbp)) * Number(v.amount)) /
                                             <a
                                                 onClick={e => {
                                                     e.preventDefault();
-                                                    const precision = pool.get('share_asset').get("precision");
+                                                    const precision = pool
+                                                        .get("share_asset")
+                                                        .get("precision");
 
-                                                    const accountObj = ChainStore.getAccount(account);
+                                                    const accountObj = ChainStore.getAccount(
+                                                        account
+                                                    );
 
-                                                    const balances = accountObj.getIn(["balances", shareAsset.get("id")]);
+                                                    const balances = accountObj.getIn(
+                                                        [
+                                                            "balances",
+                                                            shareAsset.get("id")
+                                                        ]
+                                                    );
                                                     let amount = new big(0);
                                                     if (balances) {
-                                                        const balObj = ChainStore.getObject(balances);
-                                                        const balance = balObj.get("balance");
-                                                        amount = new big(balance).dividedBy(new big(10).toPower(precision));
+                                                        const balObj = ChainStore.getObject(
+                                                            balances
+                                                        );
+                                                        const balance = balObj.get(
+                                                            "balance"
+                                                        );
+                                                        amount = new big(
+                                                            balance
+                                                        ).dividedBy(
+                                                            new big(10).toPower(
+                                                                precision
+                                                            )
+                                                        );
                                                     }
 
-                                                    this.onChangeShareAssetAmount({
-                                                        amount: amount.toNumber(),
-                                                        asset: null
-                                                    });
+                                                    this.onChangeShareAssetAmount(
+                                                        {
+                                                            amount: amount.toNumber(),
+                                                            asset: null
+                                                        }
+                                                    );
                                                 }}
                                             >
                                                 <AccountBalance
@@ -639,16 +767,13 @@ console.log(( (Number(poolamountb) / Number(poolamountbp)) * Number(v.amount)) /
     }
 }
 
-export default connect(
-    BindToChainState(PoolStakeModal),
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps(props) {
-            return {
-                account: AccountStore.getState().currentAccount
-            };
-        }
+export default connect(BindToChainState(PoolStakeModal), {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            account: AccountStore.getState().currentAccount
+        };
     }
-);
+});
