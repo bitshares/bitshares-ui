@@ -105,11 +105,11 @@ class AssetActions {
             },
             bidder: account_id,
             additional_collateral: {
-                amount: coll * core_precision,
+                amount: Math.round(coll * core_precision),
                 asset_id: core.get("id")
             },
             debt_covered: {
-                amount: debt * asset_precision,
+                amount: Math.round(debt * asset_precision),
                 asset_id: asset.get("id")
             },
             extensions: []
