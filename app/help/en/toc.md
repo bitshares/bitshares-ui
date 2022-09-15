@@ -1,6 +1,6 @@
 #### Help
 
- * [Legal Disclaimer](disclaimer.md)
+ * [Disclaimer](disclaimer.md)
  * [BitShares](introduction/bitshares.md)
  * [Wallet](introduction/wallets.md)
  * [Backups](introduction/backups.md)
