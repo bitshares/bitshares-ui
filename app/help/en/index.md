@@ -6,6 +6,7 @@ This help section gives a brief overview and describes the most basic concepts
 of this application.
 
 ## Introduction 
+ * [Disclaimer](disclaimer.md)
  * [BitShares](introduction/bitshares.md)
  * [Wallet](introduction/wallets.md)
  * [Backups](introduction/backups.md)
