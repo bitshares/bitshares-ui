@@ -509,7 +509,7 @@ class Footer extends React.Component {
                                 <span>
                                     {" "}
                                     -{" "}
-                                    <Link to="/help/disclaimer">Legal Disclaimer</Link>
+                                    <Link to="/help/disclaimer">Disclaimer</Link>
                                     {" "}
                                 </span>
                                 {state.newVersion && (
