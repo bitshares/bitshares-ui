@@ -1,5 +1,5 @@
 import WalletUnlockActions from "actions/WalletUnlockActions";
-
+import accountUtils from "common/account_utils";
 import WalletDb from "stores/WalletDb";
 import {
     Aes,
@@ -1010,7 +1010,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: 0
+                    asset_id: accountUtils.getFinalFeeAsset()
                 },
                 account: objects.account.get("id"),
                 pool: liquidityPoolId,
