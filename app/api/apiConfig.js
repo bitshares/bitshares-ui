@@ -395,6 +395,14 @@ export const settingsAPIs = {
             operator: "Witness: liuye",
             contact: "email:work@akawa.ink"
         },
+        {
+            url: "wss://api.iamredbar.com/bts-testnet",
+            region: "Northern America",
+            country: "USA",
+            location: "Atlanta",
+            operator: "Witness: iamredbar",
+            contact: "email:iamredbar@protonmail.com"
+        },
     ],
     ES_WRAPPER_LIST: [
         {
