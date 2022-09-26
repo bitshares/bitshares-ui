@@ -1010,7 +1010,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset()
+                    asset_id: accountUtils.getFinalFeeAsset(account,"liquidity_pool_withdraw")
                 },
                 account: objects.account.get("id"),
                 pool: liquidityPoolId,
