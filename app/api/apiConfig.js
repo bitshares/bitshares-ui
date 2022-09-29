@@ -70,6 +70,14 @@ export const gdex2APIs = {
     TRADING_PAIRS: "/trading-pairs"
 };
 
+export const btwtyAPIs = {
+    BASE: "https://btwty.com/api/v1",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    NEW_DEPOSIT_ADDRESS: "/simple-api/initiate-trade"
+};
+
 // Legacy Deposit/Withdraw
 export const gdexAPIs = {
     BASE: "https://api.52bts.net",
@@ -394,7 +402,7 @@ export const settingsAPIs = {
             location: "St. Louis",
             operator: "Witness: liuye",
             contact: "email:work@akawa.ink"
-        },
+        }
     ],
     ES_WRAPPER_LIST: [
         {
