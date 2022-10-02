@@ -184,7 +184,11 @@ class DepositModalContent extends DecimalChecker {
         this._getDepositConfirmation(backingAsset);
 
         let depositAddress;
-        if (selectedGateway && selectedAsset) {
+        if (
+            selectedGateway &&
+            selectedAsset &&
+            gatewayStatus[selectedGateway].depositCaching
+        ) {
             depositAddress = this.deposit_address_cache.getCachedInputAddress(
                 selectedGateway.toLowerCase(),
                 account,
