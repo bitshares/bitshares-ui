@@ -10,8 +10,6 @@ before broadcasting them. Never expose your keys to anyone.
 
 BitShares Blockchain is a decentralized “Blockchain As Organization” (BAO); an industrial-grade decentralized Web 3.0 platform built to run high-performance financial means and smart contracts. It represents the first decentralized autonomous community that enables its core token holders to decide its future direction and financial products.
 
-BitShares Blockchain is similar to a publicly owned company or open joint-stock companies. Yet, unlike traditional entities, BitShares Blockchain does not require registration in any jurisdiction, because trust between its users is mediated by an artificial intelligence technology running over the internet.
-
 BitShares core asset BTS is a utility which is needed to submit transactions at BitShares Blockchain; it is also used for BitShares Blockchain development purposes; while BTS asset shareholders are in power to manage and develop BitShares Blockchain and influence its future using several decentralized Blockchain integrated built-in functions and tools such as worker system, committee members and Blockchain witnesses voting system.
 
 BitShares Blockchain enables several financial innovations and functions such as:
