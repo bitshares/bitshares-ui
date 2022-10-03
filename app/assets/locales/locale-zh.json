@@ -602,7 +602,10 @@
             "period_2": "3天",
             "period_3": "7天",
             "period_4": "30天",
-            "period_5": "90天"
+            "period_5": "90天",
+            "period_6": "365天",
+            "period_7": "730天",
+            "period_8": "1825天"
         },
         "loan_amount": "借款额度",
         "min_borrow": "最低借款",
