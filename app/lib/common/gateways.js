@@ -119,8 +119,7 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        landing:
-            "https://dex.openledger.io/news/ol-dex-is-closing-all-activities/",
+        landing: "Shutdown",
         wallet: "Shutdown"
     },
     RUDEX: {
@@ -141,8 +140,8 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        landing: "https://rudex.org/",
-        wallet: "https://market.rudex.org/"
+        landing: "Shutdown",
+        wallet: "Shutdown"
     },
     SPARKDEX: {
         id: "SPARKDEX",
@@ -178,12 +177,14 @@ export const availableGateways = {
         id: "GDEX",
         name: "GDEX",
         baseAPI: gdex2APIs,
-        isEnabled: _isEnabled("GDEX"),
+        isEnabled: () => false,
         options: {
             enabled: false,
             selected: false
         },
-        wallet: "https://www.52bts.net/"
+        landing: "https://bitsharestalk.org/index.php?topic=33861",
+        wallet: "Only manual deposit / withdraw",
+        comment: "Only manual deposit / withdraw"
     },
     PIRATE: {
         id: "PIRATE",
@@ -226,8 +227,8 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        landing: "https://citadel.li/",
-        wallet: "Disabled"
+        landing: "Shutdown",
+        wallet: "Shutdown"
     }
 };
 
