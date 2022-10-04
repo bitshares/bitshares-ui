@@ -18,13 +18,13 @@ class PiratecashGateway extends React.Component {
 
         this.state = {
             activeCoin: this._getActiveCoin(props, {action: "deposit"}),
-            action: props.viewSettings.get(`xbtsxAction`, "deposit")
+            action: props.viewSettings.get(`pirateCashAction`, "deposit")
         };
     }
 
     _getActiveCoin(props, state) {
         let cachedCoin = props.viewSettings.get(
-            `activeCoin_xbtsx_${state.action}`,
+            `activeCoin_pirateCash_${state.action}`,
             null
         );
         let firstTimeCoin = null;
@@ -52,7 +52,7 @@ class PiratecashGateway extends React.Component {
         });
 
         let setting = {};
-        setting[`activeCoin_xbtsx_${this.state.action}`] = e.target.value;
+        setting[`activeCoin_pirateCash_${this.state.action}`] = e.target.value;
         SettingsActions.changeViewSetting(setting);
     }
 
@@ -64,7 +64,7 @@ class PiratecashGateway extends React.Component {
             activeCoin: activeCoin
         });
 
-        SettingsActions.changeViewSetting({[`xbtsxAction`]: type});
+        SettingsActions.changeViewSetting({[`pirateCashAction`]: type});
     }
 
     render() {
