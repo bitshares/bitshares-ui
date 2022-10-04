@@ -3,7 +3,7 @@ import WalletDb from "stores/WalletDb";
 class PiratecashDepositAddressCache {
     constructor() {
         // increment this to force generating new addresses for all mappings
-        this.current_xbtsx_address_cache_version_string = "1";
+        this.current_pirateCash_address_cache_version_string = "1";
     }
 
     getIndexForDepositKeyInExchange(
@@ -12,7 +12,7 @@ class PiratecashDepositAddressCache {
         output_coin_type
     ) {
         let args = [
-            this.current_xbtsx_address_cache_version_string,
+            this.current_pirateCash_address_cache_version_string,
             account_name,
             input_coin_type,
             output_coin_type
