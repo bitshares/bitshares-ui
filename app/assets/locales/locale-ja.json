@@ -1395,6 +1395,13 @@
         "withdraw_placeholder": "%(asset)sアドレスを入力してください",
         "withdraw_summary": "出金概要",
         "withdraw_to": "%(asset)sの出金画面を開くには下のボタンをクリックしてください",
+        "piratecash": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、PirateCashまでご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "xbtsx": {
             "coming_soon": "近日公開",
             "min_amount": "最低数量: %(minAmount)s %(symbol)s",

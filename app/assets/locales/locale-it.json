@@ -1395,6 +1395,13 @@
         "withdraw_placeholder": "Per favore inserisci il tuo indirizzo %(asset)s",
         "withdraw_summary": "Riepilogo prelievo",
         "withdraw_to": "Clicca il pulsante sotto per iniziare un prelievo di %(asset)s",
+        "piratecash": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact PirateCash at:",
+            "under_construction": "Under Construction"
+        },
         "xbtsx": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",

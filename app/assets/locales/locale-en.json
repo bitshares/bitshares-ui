@@ -1401,6 +1401,13 @@
         "withdraw_placeholder": "Please enter your %(asset)s address",
         "withdraw_summary": "Withdrawal summary",
         "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
+        "piratecash": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact PirateCash at:",
+            "under_construction": "Under Construction"
+        },
         "xbtsx": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
