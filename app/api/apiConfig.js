@@ -132,28 +132,12 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
-            url: "wss://nexus01.co.uk/ws",
-            region: "Northern Europe",
-            country: "England",
-            location: "Gloucester",
-            operator: "Witness: nexus01",
-            contact: "telegram:rosswlkr"
-        },
-        {
             url: "wss://dex.iobanker.com/ws",
             region: "Western Europe",
             country: "Germany",
             location: "Frankfurt",
             operator: "Witness: iobanker-core",
             contact: "email:admin@iobanker.com"
-        },
-        {
-            url: "wss://ws.gdex.top",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Shanghai",
-            operator: "Witness: gdex-witness",
-            contact: "telegram:BrianZhang"
         },
         {
             url: "wss://api.bts.btspp.io:10100",
@@ -185,13 +169,6 @@ export const settingsAPIs = {
             country: "Canada",
             operator: "Witness: bhuz",
             contact: "telegram:bhuzor"
-        },
-        {
-            url: "wss://api.btsgo.net/ws",
-            region: "Southeastern Asia",
-            location: "Singapore",
-            operator: "Witness: xn-delegate",
-            contact: "wechat:Necklace"
         },
         {
             url: "wss://bts.open.icowallet.net/ws",
@@ -235,44 +212,12 @@ export const settingsAPIs = {
             contact: "telegram:Zapata_42"
         },
         {
-            url: "wss://api.bitshares.org/ws",
-            region: "Western Europe",
-            country: "France",
-            location: "",
-            operator: "bitshares.org",
-            contact: ""
-        },
-        {
-            url: "wss://us.api.bitshares.org/ws",
-            region: "Western Europe",
-            country: "France",
-            location: "",
-            operator: "bitshares.org",
-            contact: ""
-        },
-        {
-            url: "wss://asia.api.bitshares.org/ws",
-            region: "Western Europe",
-            country: "France",
-            location: "",
-            operator: "bitshares.org",
-            contact: ""
-        },
-        {
             url: "wss://eu.nodes.bitshares.ws",
             region: "Western Europe",
             country: "Germany",
             location: "Nuremberg",
             operator: "Witness: blocksights",
             contact: "telegram:blocksights"
-        },
-        {
-            url: "wss://api-bts.liondani.com/ws",
-            region: "Western Europe",
-            country: "Germany",
-            location: "Falkenstein",
-            operator: "Witness: liondani",
-            contact: "telegram:liondani"
         },
         {
             url: "wss://public.xbts.io/ws",
