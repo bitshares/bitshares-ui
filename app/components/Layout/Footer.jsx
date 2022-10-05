@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {Link} from "react-router-dom";
 import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
@@ -505,7 +506,12 @@ class Footer extends React.Component {
                                         </span>
                                     )}
                                 </span>
-
+                                <span>
+                                    {" "}
+                                    -{" "}
+                                    <Link to="/help/disclaimer">Disclaimer</Link>
+                                    {" "}
+                                </span>
                                 {state.newVersion && (
                                     <Translate
                                         content="footer.update_available"
