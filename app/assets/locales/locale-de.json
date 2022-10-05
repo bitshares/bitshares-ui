@@ -1261,6 +1261,7 @@
             "gdex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Gdex bereitgestellt",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch OpenLedger bereitgestellt",
+            "pirate": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch PirateDEX bereitgestellt",
             "rudex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Rudex bereitgestellt",
             "trade": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Blocktrades bereitgestellt",
             "win": "",

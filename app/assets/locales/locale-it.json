@@ -1255,6 +1255,7 @@
             "gdex": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da GDex.",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da OpenLedger.",
+            "pirate": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da PirateDEX.",
             "rudex": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Rudex.",
             "trade": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades.",
             "win": "",
