@@ -1255,6 +1255,7 @@
             "gdex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Gdexによって提供されるゲートウェイサービスによって入出金が可能です。",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、OpenLedgerによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "pirate": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、PirateDEXによって提供されるゲートウェイサービスによって入出金が可能です。",
             "rudex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Rudexによって提供されるゲートウェイサービスによって入出金が可能です。",
             "trade": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
             "win": "",

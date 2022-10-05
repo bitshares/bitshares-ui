@@ -1261,6 +1261,7 @@
             "gdex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 GDEX 提供的网关服务进行充值提现。",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
+            "pirate": "%(asset)s资产由真实%(backed)s1:1储备背书，可以通过 PirateDEX 提供的网关服务进行充值提现。",
             "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
             "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
             "win": "",
