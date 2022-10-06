@@ -2,17 +2,17 @@
 
 This is the reference wallet of BitShares Blockchain which connects to BitShares Blockchain nodes (bitshares-core).
 
-This reference wallet is a browser based wallet. Your keys are stored locally in your browser and never leave it as transactions are signed locally 
+This reference wallet is a browser-based wallet. Your keys are stored locally in your browser and never leave it as transactions are signed locally 
 before broadcasting them. Never expose your keys to anyone. 
 
 
 ## Introduction
 
-BitShares Blockchain is a decentralized “Blockchain As Organization” (BAO); an industrial-grade decentralized Web 3.0 platform built to run high-performance financial means and smart contracts. It represents the first decentralized autonomous community that enables its core token holders to decide its future direction and financial products.
+BitShares Blockchain is a decentralized “Blockchain As Organization” (BAO); an industrial-grade decentralized Web 3.0 platform built to run high-performance financial means and smart contracts. It represents the first decentralized autonomous community that enables its core token holders to decide its future direction along with financial technology products.
 
-BitShares core asset BTS is a utility which is needed to submit transactions at BitShares Blockchain; it is also used for BitShares Blockchain development purposes; while BTS asset shareholders are in power to manage and develop BitShares Blockchain and influence its future using several decentralized Blockchain integrated built-in functions and tools such as worker system, committee members and Blockchain witnesses voting system.
+BitShares core asset BTS is a utility which is needed to submit transactions at BitShares Blockchain; it is also used for BitShares Blockchain development purposes; while BTS asset holders are in power to manage and develop BitShares Blockchain and influence its future using several decentralized Blockchain integrated built-in functions and tools such as worker system, committee members and Blockchain witnesses voting system.
 
-BitShares Blockchain enables several financial innovations and functions such as:
+BitShares Blockchain enables several decentralized financial technology innovations and functions such as:
 
 - Decentralized Exchange (DEX).
 - Decentralized User Issued Asset (UIA).
