@@ -1261,6 +1261,7 @@
             "gdex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por GDex.",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por OpenLedger.",
+            "pirate": "El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por PirateDEX.",
             "rudex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por Rudex.",
             "trade": "El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
             "win": "",
