@@ -374,7 +374,7 @@ class App extends React.Component {
     _ensureExternalServices() {
         setTimeout(() => {
             let hasLoggedIn =
-                AccountStore.getState().myActiveAccounts.length > 0 ||
+                AccountStore.getState().myActiveAccounts.size > 0 ||
                 !!AccountStore.getState().passwordAccount;
             if (!hasLoggedIn) {
                 this._ensureExternalServices();
