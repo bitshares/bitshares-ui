@@ -92,7 +92,6 @@ export const availableGateways = {
         name: "ioxbank",
         baseAPI: ioxbankAPIs,
         isEnabled: _isEnabled("IOB"),
-        depositCaching: true,
         isSimple: true,
         selected: false,
         simpleAssetGateway: true,
@@ -179,7 +178,6 @@ export const availableGateways = {
         name: "GDEX",
         baseAPI: gdex2APIs,
         isEnabled: _isEnabled("GDEX"),
-        depositCaching: true,
         options: {
             enabled: false,
             selected: false
@@ -191,7 +189,6 @@ export const availableGateways = {
         name: "XBTS Native Chains",
         baseAPI: xbtsxAPIs,
         isEnabled: _isEnabled("XBTSX"),
-        depositCaching: true,
         isSimple: true,
         selected: false,
         addressValidatorMethod: "POST",
