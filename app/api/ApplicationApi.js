@@ -38,7 +38,7 @@ const ApplicationApi = {
                 tr.add_type_operation("account_create", {
                     fee: {
                         amount: 0,
-                        asset_id: 0
+                        asset_id: accountUtils.getFinalFeeAsset(account,"account_create")
                     },
                     registrar: chain_registrar.get("id"),
                     referrer: chain_referrer.get("id"),
@@ -199,7 +199,7 @@ const ApplicationApi = {
                 let transfer_op = tr.get_type_operation("transfer", {
                     fee: {
                         amount: 0,
-                        asset_id: fee_asset_id
+                        asset_id: accountUtils.getFinalFeeAsset(account,"transfer")
                     },
                     from: chain_from.get("id"),
                     to: chain_to.get("id"),
@@ -318,7 +318,7 @@ const ApplicationApi = {
                         tr.add_type_operation("proposal_create", {
                             fee: {
                                 amount: 0,
-                                asset_id: proposal_fee
+                                asset_id: accountUtils.getFinalFeeAsset(account,"proposal_create")
                             },
                             proposed_ops: propose,
                             fee_paying_account: proposer.get("id")
@@ -411,7 +411,7 @@ const ApplicationApi = {
             tr.add_type_operation("asset_issue", {
                 fee: {
                     amount: 0,
-                    asset_id: 0
+                    asset_id: accountUtils.getFinalFeeAsset(account,"asset_issue")
                 },
                 issuer: from_account,
                 asset_to_issue: {
@@ -444,7 +444,7 @@ const ApplicationApi = {
                 tr.add_type_operation("worker_create", {
                     fee: {
                         amount: 0,
-                        asset_id: 0
+                        asset_id: accountUtils.getFinalFeeAsset(account,"worker_create")
                     },
                     owner,
                     work_begin_date: options.start,
@@ -541,7 +541,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_create")
                 },
                 withdraw_from_account: objects.from.get("id"),
                 authorized_account: objects.to.get("id"),
@@ -620,7 +620,7 @@ const ApplicationApi = {
                 permission_to_update: withdrawPermissionId,
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_update")
                 },
                 withdraw_from_account: objects.from.get("id"),
                 authorized_account: objects.to.get("id"),
@@ -711,7 +711,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_claim")
                 },
                 withdraw_permission: withdrawPermissionId,
                 withdraw_from_account: objects.from.get("id"),
@@ -754,7 +754,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_delete")
                 },
                 withdrawal_permission: withdrawPermissionId,
                 withdraw_from_account: objects.from.get("id"),
@@ -795,7 +795,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"vesting_balance_create")
                 },
                 creator: objects.creator.get("id"),
                 owner: objects.owner.get("id"),
@@ -836,7 +836,7 @@ const ApplicationApi = {
         let op = transactionBuilder.get_type_operation("ticket_create", {
             fee: {
                 amount: 0,
-                asset_id: objects.feeAsset.get("id")
+                asset_id: accountUtils.getFinalFeeAsset(account,"ticket_create")
             },
             account: objects.account.get("id"),
             target_type: targetType,
@@ -881,7 +881,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"liquidity_pool_create")
                 },
                 account: objects.account.get("id"),
                 asset_a: objects.assetA.get("id"),
@@ -921,7 +921,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"liquidity_pool_delete")
                 },
                 account: objects.account.get("id"),
                 pool: liquidityPoolId,
@@ -963,7 +963,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"liquidity_pool_deposit")
                 },
                 account: objects.account.get("id"),
                 pool: liquidityPoolId,
@@ -1056,7 +1056,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.get("id")
+                    asset_id: accountUtils.getFinalFeeAsset(account,"liquidity_pool_exchange")
                 },
                 account: objects.account.get("id"),
                 pool: liquidityPoolId,
