@@ -38,7 +38,7 @@ const ApplicationApi = {
                 tr.add_type_operation("account_create", {
                     fee: {
                         amount: 0,
-                        asset_id: accountUtils.getFinalFeeAsset(account,"account_create")
+                        asset_id: accountUtils.getFinalFeeAsset(registrar,"account_create")
                     },
                     registrar: chain_registrar.get("id"),
                     referrer: chain_referrer.get("id"),
@@ -199,7 +199,7 @@ const ApplicationApi = {
                 let transfer_op = tr.get_type_operation("transfer", {
                     fee: {
                         amount: 0,
-                        asset_id: accountUtils.getFinalFeeAsset(account,"transfer")
+                        asset_id: accountUtils.getFinalFeeAsset(from_account,"transfer")
                     },
                     from: chain_from.get("id"),
                     to: chain_to.get("id"),
@@ -318,7 +318,7 @@ const ApplicationApi = {
                         tr.add_type_operation("proposal_create", {
                             fee: {
                                 amount: 0,
-                                asset_id: accountUtils.getFinalFeeAsset(account,"proposal_create")
+                                asset_id: accountUtils.getFinalFeeAsset(from_account,"proposal_create")
                             },
                             proposed_ops: propose,
                             fee_paying_account: proposer.get("id")
@@ -411,7 +411,7 @@ const ApplicationApi = {
             tr.add_type_operation("asset_issue", {
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset(account,"asset_issue")
+                    asset_id: accountUtils.getFinalFeeAsset(from_account,"asset_issue")
                 },
                 issuer: from_account,
                 asset_to_issue: {
@@ -541,7 +541,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_create")
+                    asset_id: accountUtils.getFinalFeeAsset(from,"withdraw_permission_create")
                 },
                 withdraw_from_account: objects.from.get("id"),
                 authorized_account: objects.to.get("id"),
@@ -620,7 +620,7 @@ const ApplicationApi = {
                 permission_to_update: withdrawPermissionId,
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_update")
+                    asset_id: accountUtils.getFinalFeeAsset(from,"withdraw_permission_update")
                 },
                 withdraw_from_account: objects.from.get("id"),
                 authorized_account: objects.to.get("id"),
@@ -711,7 +711,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_claim")
+                    asset_id: accountUtils.getFinalFeeAsset(from,"withdraw_permission_claim")
                 },
                 withdraw_permission: withdrawPermissionId,
                 withdraw_from_account: objects.from.get("id"),
@@ -754,7 +754,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset(account,"withdraw_permission_delete")
+                    asset_id: accountUtils.getFinalFeeAsset(from,"withdraw_permission_delete")
                 },
                 withdrawal_permission: withdrawPermissionId,
                 withdraw_from_account: objects.from.get("id"),
@@ -795,7 +795,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset(account,"vesting_balance_create")
+                    asset_id: accountUtils.getFinalFeeAsset(creator,"vesting_balance_create")
                 },
                 creator: objects.creator.get("id"),
                 owner: objects.owner.get("id"),
