@@ -711,7 +711,7 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: accountUtils.getFinalFeeAsset(from,"withdraw_permission_claim")
+                    asset_id: accountUtils.getFinalFeeAsset(to,"withdraw_permission_claim")
                 },
                 withdraw_permission: withdrawPermissionId,
                 withdraw_from_account: objects.from.get("id"),
