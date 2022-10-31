@@ -934,7 +934,7 @@ const ApplicationApi = {
         if (!feeAsset) {
             // use default fee asset selection if none given
             feeAsset = accountUtils.getFinalFeeAsset(
-                from,
+                account,
                 "liquidity_pool_create"
             );
         }
@@ -985,7 +985,7 @@ const ApplicationApi = {
         if (!feeAsset) {
             // use default fee asset selection if none given
             feeAsset = accountUtils.getFinalFeeAsset(
-                from,
+                account,
                 "liquidity_pool_delete"
             );
         }
@@ -1033,7 +1033,7 @@ const ApplicationApi = {
         if (!feeAsset) {
             // use default fee asset selection if none given
             feeAsset = accountUtils.getFinalFeeAsset(
-                from,
+                account,
                 "liquidity_pool_deposit"
             );
         }
@@ -1089,7 +1089,7 @@ const ApplicationApi = {
         if (!feeAsset) {
             // use default fee asset selection if none given
             feeAsset = accountUtils.getFinalFeeAsset(
-                from,
+                account,
                 "liquidity_pool_withdraw"
             );
         }
@@ -1142,7 +1142,7 @@ const ApplicationApi = {
         if (!feeAsset) {
             // use default fee asset selection if none given
             feeAsset = accountUtils.getFinalFeeAsset(
-                from,
+                account,
                 "liquidity_pool_exchange"
             );
         }
