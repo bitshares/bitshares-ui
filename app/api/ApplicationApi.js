@@ -836,7 +836,7 @@ const ApplicationApi = {
         if (!feeAsset) {
             // use default fee asset selection if none given
             feeAsset = accountUtils.getFinalFeeAsset(
-                from,
+                creator,
                 "vesting_balance_create"
             );
         }
