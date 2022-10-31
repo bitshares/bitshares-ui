@@ -602,7 +602,10 @@
             "period_2": "3 Days",
             "period_3": "7 Days",
             "period_4": "30 Days",
-            "period_5": "90 days"
+            "period_5": "90 days",
+            "period_6": "365 days",
+            "period_7": "730 days",
+            "period_8": "1825 days"
         },
         "loan_amount": "Maximum",
         "min_borrow": "Minimum",
@@ -1258,6 +1261,7 @@
             "gdex": " Актив %(asset)s обеспечен в соотношении 1:1 реальными %(backed)s и может быть размещен в депозите или выведен через шлюз, предоставляемый GDex.",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от OpenLedger.",
+            "pirate": "Актив %(asset)s обеспечен реальными %(backed)s в соотношении 1:1 и может быть введён/выведен с помощью сервиса шлюза от PirateDEX.",
             "rudex": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Rudex.",
             "trade": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Blocktrades.",
             "win": "",
@@ -1398,6 +1402,13 @@
         "withdraw_placeholder": "Пожалуйста, введите ваш %(asset)s адрес",
         "withdraw_summary": "Сводка по выводу",
         "withdraw_to": "Нажмите кнопку ниже, чтобы открыть вывод %(asset)s",
+        "piratecash": {
+            "coming_soon": "Скоро",
+            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Пожалуйста, введите число ≥ минимума",
+            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с PirateCash по адресу:",
+            "under_construction": "Технические работы"
+        },
         "xbtsx": {
             "coming_soon": "Скоро",
             "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",

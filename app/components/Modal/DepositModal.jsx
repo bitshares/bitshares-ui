@@ -187,7 +187,9 @@ class DepositModalContent extends DecimalChecker {
         if (
             selectedGateway &&
             selectedAsset &&
-            gatewayStatus[selectedGateway].depositCaching
+            (gatewayStatus[selectedGateway].hasOwnProperty("depositCaching")
+                ? gatewayStatus[selectedGateway].depositCaching
+                : true)
         ) {
             depositAddress = this.deposit_address_cache.getCachedInputAddress(
                 selectedGateway.toLowerCase(),

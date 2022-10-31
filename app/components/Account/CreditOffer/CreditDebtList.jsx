@@ -398,7 +398,7 @@ class CreditDebtList extends React.Component {
         });
         let cAmount = cAsset.getAmount();
         let rate = parseFloat(cAmount) / debtAmount;
-        let cfAmount = fRate * debtAmount * rate;
+        let cfAmount = Math.ceil(fRate * debtAmount * rate);
 
         let data = {
             account,

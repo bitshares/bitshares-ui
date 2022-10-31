@@ -161,6 +161,14 @@ export function getMyMarketsQuotes() {
         ],
         openledgerTokens: [],
         rudexTokens: [],
+        piratecashTockens: [
+            "PIRATE.PIRATE",
+            "PIRATE.BTC",
+            "PIRATE.LTC",
+            "PIRATE.BCC",
+            "PIRATE.DOGE",
+            "PIRATE.COSA"
+        ],
         xbtsxTokens: [
             "XBTSX.STH",
             "XBTSX.POST",
@@ -315,7 +323,8 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["XBTSX.", "GDEX.", "HONEST.", "IOB.", "BTWTY."];
+
+    return ["XBTSX.", "GDEX.", "HONEST.", "IOB.", "PIRATE.", "BTWTY."];
 }
 
 /**
@@ -338,6 +347,7 @@ export function allowedGateway(gateway) {
         "OPEN", // keep to display the warning icon, permanently disabled in gateways.js
         "RUDEX", // keep to display the warning icon, permanently disabled in gateways.js
         "GDEX",
+        "PIRATE",
         "XBTSX",
         "IOB",
         "BTWTY",

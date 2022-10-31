@@ -21,6 +21,7 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
+import PiratecashGateway from "../DepositWithdraw/piratecash/PiratecashGateway";
 import XbtsFiat from "../DepositWithdraw/XbtsFiat";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
 import PropTypes from "prop-types";
@@ -45,6 +46,10 @@ class AccountDepositWithdraw extends React.Component {
             rudexService: props.viewSettings.get("rudexService", "gateway"),
             bitsparkService: props.viewSettings.get(
                 "bitsparkService",
+                "gateway"
+            ),
+            piratecashService: props.viewSettings.get(
+                "piratecashService",
                 "gateway"
             ),
             xbtsxService: props.viewSettings.get("xbtsxService", "gateway"),
@@ -74,6 +79,7 @@ class AccountDepositWithdraw extends React.Component {
             nextState.olService !== this.state.olService ||
             nextState.rudexService !== this.state.rudexService ||
             nextState.bitsparkService !== this.state.bitsparkService ||
+            nextState.piratecashService !== this.state.piratecashService ||
             nextState.xbtsxService !== this.state.xbtsxService ||
             nextState.btService !== this.state.btService ||
             nextState.citadelService !== this.state.citadelService ||
@@ -103,6 +109,16 @@ class AccountDepositWithdraw extends React.Component {
 
         SettingsActions.changeViewSetting({
             rudexService: service
+        });
+    }
+
+    togglePiratecashService(service) {
+        this.setState({
+            piratecashService: service
+        });
+
+        SettingsActions.changeViewSetting({
+            piratecashService: service
         });
     }
 
@@ -170,6 +186,7 @@ class AccountDepositWithdraw extends React.Component {
         openLedgerGatewayCoins,
         rudexGatewayCoins,
         bitsparkGatewayCoins,
+        piratecashGatewayCoins,
         xbtsxGatewayCoins
     ) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
@@ -180,6 +197,7 @@ class AccountDepositWithdraw extends React.Component {
             btService,
             rudexService,
             bitsparkService,
+            piratecashService,
             xbtsxService,
             citadelService
         } = this.state;
@@ -346,6 +364,45 @@ class AccountDepositWithdraw extends React.Component {
                             account={account}
                             coins={bitsparkGatewayCoins}
                             provider="bitspark"
+                        />
+                    ) : null}
+                </div>
+            )
+        });
+
+        serList.push({
+            name: "Pirate DEX",
+            identifier: "PIRATE",
+            template: (
+                <div className="content-block">
+                    <div
+                        className="service-selector"
+                        style={{marginBottom: "2rem"}}
+                    >
+                        <ul className="button-group segmented no-margin">
+                            <li
+                                onClick={this.togglePiratecashService.bind(
+                                    this,
+                                    "gateway"
+                                )}
+                                className={
+                                    piratecashService === "gateway"
+                                        ? "is-active"
+                                        : ""
+                                }
+                            >
+                                <a>
+                                    <Translate content="gateway.gateway" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {piratecashService === "gateway" &&
+                    piratecashGatewayCoins.length ? (
+                        <PiratecashGateway
+                            account={account}
+                            coins={piratecashGatewayCoins}
                         />
                     ) : null}
                 </div>
@@ -550,6 +607,16 @@ class AccountDepositWithdraw extends React.Component {
                 return 0;
             });
 
+        let piratecashGatewayCoins = this.props.piratecashBackedCoins
+            .map(coin => {
+                return coin;
+            })
+            .sort((a, b) => {
+                if (a.symbol < b.symbol) return -1;
+                if (a.symbol > b.symbol) return 1;
+                return 0;
+            });
+
         let xbtsxGatewayCoins = this.props.xbtsxBackedCoins
             .map(coin => {
                 return coin;
@@ -564,6 +631,7 @@ class AccountDepositWithdraw extends React.Component {
             openLedgerGatewayCoins,
             rudexGatewayCoins,
             bitsparkGatewayCoins,
+            piratecashGatewayCoins,
             xbtsxGatewayCoins
         );
 
@@ -766,6 +834,10 @@ export default connect(DepositStoreWrapper, {
             ),
             citadelBackedCoins: GatewayStore.getState().backedCoins.get(
                 "CITADEL",
+                []
+            ),
+            piratecashBackedCoins: GatewayStore.getState().backedCoins.get(
+                "PIRATE",
                 []
             ),
             xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(

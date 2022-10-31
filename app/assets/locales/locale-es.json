@@ -602,7 +602,10 @@
             "period_2": "3 Days",
             "period_3": "7 Days",
             "period_4": "30 Days",
-            "period_5": "90 days"
+            "period_5": "90 days",
+            "period_6": "365 days",
+            "period_7": "730 days",
+            "period_8": "1825 days"
         },
         "loan_amount": "Maximum",
         "min_borrow": "Minimum",
@@ -1258,6 +1261,7 @@
             "gdex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por GDex.",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por OpenLedger.",
+            "pirate": "El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por PirateDEX.",
             "rudex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por Rudex.",
             "trade": "El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
             "win": "",
@@ -1398,6 +1402,13 @@
         "withdraw_placeholder": "Por favor introduzca su direcciòn de %(asset)s ",
         "withdraw_summary": "Resumen de retiros",
         "withdraw_to": "Haga clic en el botón de abajo para abrir un %(asset)s retiro",
+        "piratecash": {
+            "coming_soon": "Viene pronto",
+            "min_amount": "Monto minimo: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Por favor ingrese el número >= minimo",
+            "support_block": "Para soporte, contacte a PirateCash en:",
+            "under_construction": "En construcción"
+        },
         "xbtsx": {
             "coming_soon": "Viene pronto",
             "min_amount": "Monto minimo: %(minAmount)s %(symbol)s",

@@ -602,7 +602,10 @@
             "period_2": "3 Days",
             "period_3": "7 Days",
             "period_4": "30 Days",
-            "period_5": "90 days"
+            "period_5": "90 days",
+            "period_6": "365 days",
+            "period_7": "730 days",
+            "period_8": "1825 days"
         },
         "loan_amount": "Maximum",
         "min_borrow": "Minimum",
@@ -1252,6 +1255,7 @@
             "gdex": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için Gdex tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+            "pirate": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için PirateDEX tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "rudex": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için Rudex tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "trade": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "win": "",
@@ -1392,6 +1396,13 @@
         "withdraw_placeholder": "Please enter your %(asset)s address",
         "withdraw_summary": "İşlem özeti",
         "withdraw_to": "Aşağıdaki butona tıklayarak %(asset)s adlı dijital varlık çekme işlemine başlayın",
+        "piratecash": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact PirateCash at:",
+            "under_construction": "Under Construction"
+        },
         "xbtsx": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",

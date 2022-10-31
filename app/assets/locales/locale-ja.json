@@ -602,7 +602,10 @@
             "period_2": "3 Days",
             "period_3": "7 Days",
             "period_4": "30 Days",
-            "period_5": "90 days"
+            "period_5": "90 days",
+            "period_6": "365 days",
+            "period_7": "730 days",
+            "period_8": "1825 days"
         },
         "loan_amount": "Maximum",
         "min_borrow": "Minimum",
@@ -1252,6 +1255,7 @@
             "gdex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Gdexによって提供されるゲートウェイサービスによって入出金が可能です。",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、OpenLedgerによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "pirate": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、PirateDEXによって提供されるゲートウェイサービスによって入出金が可能です。",
             "rudex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Rudexによって提供されるゲートウェイサービスによって入出金が可能です。",
             "trade": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
             "win": "",
@@ -1392,6 +1396,13 @@
         "withdraw_placeholder": "%(asset)sアドレスを入力してください",
         "withdraw_summary": "出金概要",
         "withdraw_to": "%(asset)sの出金画面を開くには下のボタンをクリックしてください",
+        "piratecash": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、PirateCashまでご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "xbtsx": {
             "coming_soon": "近日公開",
             "min_amount": "最低数量: %(minAmount)s %(symbol)s",

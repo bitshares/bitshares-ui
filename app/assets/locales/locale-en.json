@@ -602,7 +602,10 @@
             "period_2": "3 Days",
             "period_3": "7 Days",
             "period_4": "30 Days",
-            "period_5": "90 days"
+            "period_5": "90 days",
+            "period_6": "365 days",
+            "period_7": "730 days",
+            "period_8": "1825 days"
         },
         "loan_amount": "Maximum",
         "min_borrow": "Minimum",
@@ -1258,6 +1261,7 @@
             "gdex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDEX.",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by OpenLedger.",
+            "pirate": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by PirateDEX.",
             "rudex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Rudex.",
             "trade": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
             "win": "",
@@ -1398,6 +1402,13 @@
         "withdraw_placeholder": "Please enter your %(asset)s address",
         "withdraw_summary": "Withdrawal summary",
         "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
+        "piratecash": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact PirateCash at:",
+            "under_construction": "Under Construction"
+        },
         "xbtsx": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",

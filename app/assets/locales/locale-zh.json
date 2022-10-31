@@ -602,7 +602,10 @@
             "period_2": "3天",
             "period_3": "7天",
             "period_4": "30天",
-            "period_5": "90天"
+            "period_5": "90天",
+            "period_6": "365天",
+            "period_7": "730天",
+            "period_8": "1825天"
         },
         "loan_amount": "借款额度",
         "min_borrow": "最低借款",
@@ -1258,6 +1261,7 @@
             "gdex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 GDEX 提供的网关服务进行充值提现。",
             "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
+            "pirate": "%(asset)s资产由真实%(backed)s1:1储备背书，可以通过 PirateDEX 提供的网关服务进行充值提现。",
             "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
             "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
             "win": "",
@@ -1398,6 +1402,13 @@
         "withdraw_placeholder": "请输入你的 %(asset)s 地址",
         "withdraw_summary": "提币概览",
         "withdraw_to": "点击下方按钮进行 %(asset)s 提币",
+        "piratecash": {
+            "coming_soon": "即将上线",
+            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
+            "min_amount_error": "请输入大于最小金额的数量",
+            "support_block": "请联系 PirateCash 获取客户支持：",
+            "under_construction": "施工中"
+        },
         "xbtsx": {
             "coming_soon": "即将上线",
             "min_amount": "最小金额：%(minAmount)s %(symbol)s",
