@@ -887,7 +887,7 @@ const ApplicationApi = {
 
         if (!feeAsset) {
             // use default fee asset selection if none given
-            feeAsset = accountUtils.getFinalFeeAsset(from, "ticket_create");
+            feeAsset = accountUtils.getFinalFeeAsset(account, "ticket_create");
         }
 
         // ensure all arguments are chain objects
