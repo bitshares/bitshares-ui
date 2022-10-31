@@ -707,7 +707,7 @@ const ApplicationApi = {
         if (!feeAsset) {
             // use default fee asset selection if none given
             feeAsset = accountUtils.getFinalFeeAsset(
-                from,
+                to,
                 "withdraw_permission_claim"
             );
         }
