@@ -137,6 +137,7 @@
         }
     },
     "dependencies": {
+        "@hiveio/hive-js": "^2.0.5",
         "alt": "https://github.com/bitshares/alt.git",
         "alt-container": "https://github.com/bitshares/alt-container.git",
         "alt-react": "https://github.com/bitshares/alt-react.git",
@@ -204,7 +205,6 @@
         "react-tooltip": "^4.2.21",
         "react-transition-group": "^4.4.2",
         "react-translate-component": "^0.15.1",
-        "steem-js-api": "^0.7.1",
         "stream-browserify": "^3.0.0",
         "string-similarity": "^2.0.0",
         "tcomb": "2.5.2",

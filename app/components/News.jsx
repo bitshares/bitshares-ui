@@ -1,12 +1,12 @@
 import React from "react";
 import counterpart from "counterpart";
-import {api} from "steem-js-api";
+import {api} from "@hiveio/hive-js";
 import Translate from "react-translate-component";
 import LoadingIndicator from "./LoadingIndicator";
 import utils from "common/utils";
-import {getSteemNewsTag} from "../branding";
+import {getHiveNewsTag} from "../branding";
 
-const query = {tag: getSteemNewsTag(), limit: 20};
+const query = {tag: getHiveNewsTag(), limit: 20};
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -159,13 +159,12 @@ class News extends React.Component {
             }, 100);
             return;
         }
-        api.getDiscussionsByBlog(query)
-            .then(discussions => {
-                this.orderDiscussions(discussions);
-            })
-            .catch(() => {
-                this.setState({isLoading: false, isWrong: true});
-            });
+        api.getDiscussionsByTrending(query, (err, result) => {
+            if(err) {
+                return this.setState({isLoading: false, isWrong: true});
+            }
+            this.orderDiscussions(result);
+        });
     }
 
     componentWillUnmount() {
