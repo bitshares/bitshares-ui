@@ -5,6 +5,7 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import {ChainStore} from "bitsharesjs";
 import {
+    Alert,
     Tooltip,
     Table,
     Modal,
@@ -46,6 +47,7 @@ class CreateModal extends React.Component {
 
     getInitialState(props) {
         return {
+            createOfferError: null,
             showModal: 0, // 1: create modal 2: add pawn modal 3: add whitelist modal
             account: props.account,
             amount: "",
@@ -323,6 +325,9 @@ class CreateModal extends React.Component {
     }
 
     _onSubmit() {
+        this.setState({
+            createOfferError: null,
+        });
         let {
             account,
             asset_id,
@@ -336,7 +341,10 @@ class CreateModal extends React.Component {
             feeAmount
         } = this.state;
         let asset = ChainStore.getAsset(asset_id);
-        let opData = {
+        let opData;
+        
+        try {
+            opData = {
             owner_account: account.get("id"),
             asset_type: asset_id,
             balance: new Asset({
@@ -380,6 +388,12 @@ class CreateModal extends React.Component {
             }),
             fee_asset: feeAmount
         };
+        } catch (err) {
+            this.setState({
+                createOfferError: err.toString()
+            })
+            return;
+        }
         console.log("obj: ", opData);
         CreditOfferActions.create(opData)
             .then(() => {
@@ -388,6 +402,9 @@ class CreateModal extends React.Component {
             .catch(err => {
                 // todo: visualize error somewhere
                 console.error(err);
+                this.setState({
+                    createOfferError: err.toString()
+                })
             });
     }
 
@@ -670,6 +687,9 @@ class CreateModal extends React.Component {
                             onChange={this.onFeeChanged.bind(this)}
                             tabIndex={tabIndex++}
                         />
+                        { this.state.createOfferError && (
+                            <Alert message={this.state.createOfferError} type="warning"/>
+                        )}
                     </Form>
                 </div>
             </Modal>
