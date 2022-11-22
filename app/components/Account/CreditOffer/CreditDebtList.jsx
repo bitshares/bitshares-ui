@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from "alt-react";
 import counterpart from "counterpart";
+import utils from "common/utils";
 import AccountStore from "../../../stores/AccountStore";
 import CreditOfferStore from "../../../stores/CreditOfferStore";
 import {
@@ -201,6 +202,24 @@ class CreditDebtList extends React.Component {
                                 {this._renderFeeRate()}
                             </div>
                         </Form.Item>
+                        <Form.Item
+                            label={counterpart.translate(
+                                "credit_offer.total_to_repay"
+                            )}
+                            labelCol={{span: 8}}
+                            wrapperCol={{span: 16}}
+                            colon={false}
+                        >
+                            <div
+                                style={{
+                                    textAlign: "right",
+                                    width: "100%",
+                                    color: "#7ed321"
+                                }}
+                            >
+                                {this._renderTotalAmount()}
+                            </div>
+                        </Form.Item>
                         <FeeAssetSelector
                             account={account}
                             transaction={{type: "credit_deal_repay"}}
@@ -250,7 +269,38 @@ class CreditDebtList extends React.Component {
             );
         }
     }
-
+    
+    _renderTotalAmount() {
+        let {feeRate, debtAsset, debtAmount, amount, asset} = this.state;
+        let fRate = parseFloat(feeRate) / FEE_RATE_DENOM;
+        if (asset) {
+            let cAsset = new Asset({
+                asset_id: asset.get("id"),
+                real: amount,
+                precision: asset.get("precision")
+            });
+            let rate = parseFloat(cAsset.getAmount()) / debtAmount;
+            let cAmount = fRate * debtAmount * rate;
+            let realFee = cAmount / utils.get_asset_precision(asset.get('precision'))
+            let realRepay = cAsset.getAmount({ real: true })
+            let realTotal = realFee + realRepay;
+            return (
+                <span>
+                    <FormattedAsset
+                        exact_amount={true}
+                        amount={realTotal}
+                        asset={debtAsset}
+                        trimZero
+                    />
+                </span>
+            );
+        } else {
+            <span>
+                <FormattedAsset amount={0} asset={debtAsset} trimZero />{" "}
+            </span>;
+        }
+    }
+    
     _renderFeeRate() {
         let {feeRate, debtAsset, debtAmount, amount, asset} = this.state;
         let fRate = parseFloat(feeRate) / FEE_RATE_DENOM;

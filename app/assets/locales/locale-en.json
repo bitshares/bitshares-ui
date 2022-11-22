@@ -573,6 +573,7 @@
         }
     },
     "credit_offer": {
+        "total_to_repay": "Repay Total",
         "current_available_balance": "Current Available Balance",
         "accepted_pawn": "Acceptable",
         "account": "Account",
