@@ -268,13 +268,20 @@ class EditModal extends React.Component {
             if (typeof pawn_asset !== "object") {
                 pawn_asset = ChainStore.getAsset(pawn_asset);
             }
-            pawn_assets.push(
-                new Asset({
-                    real: pawn_price,
-                    asset_id: pawn_asset.get("id"),
-                    precision: pawn_asset.get("precision")
-                })
-            );
+            let found = pawn_assets.find((asset) => {
+                return asset.asset_id === pawn_asset.get('id')
+            })
+            if(found) {
+                found.setAmount({ real: pawn_price })
+            } else {
+                pawn_assets.push(
+                    new Asset({
+                        real: pawn_price,
+                        asset_id: pawn_asset.get("id"),
+                        precision: pawn_asset.get("precision")
+                    })
+                );
+            }
             this.setState({pawn_assets: pawn_assets, showModal: 1});
         } else {
             this.setState({showModal: 1});
