@@ -424,13 +424,9 @@ class CreditOfferPage extends React.Component {
                 asset_id: asset.get("id"),
                 precision: asset.get("precision")
             });
-            this.setState(
-                {
-                    maxAmount: true,
-                    amount: balance.getAmount({real: true})
-                },
-                this._checkBalance
-            );
+            this.setState({maxAmount: true});
+            
+            this._onAmountChanged({amount: balance.getAmount({real: true}), asset: asset.get('id')})
         }
     }
 
