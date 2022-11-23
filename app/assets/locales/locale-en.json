@@ -573,6 +573,9 @@
         }
     },
     "credit_offer": {
+        "min_loan_bigger_than_balance": "Min to loan > Total credit offer balance (%(min)s > %(balance)s)",
+        "number_is_to_big": "You have used a big number which caused overflow",
+        "invalid_min_bigger_amount": "Min cannot be bigger than amount",
         "total_to_repay": "Repay Total",
         "current_available_balance": "Current Available Balance",
         "accepted_pawn": "Acceptable",
