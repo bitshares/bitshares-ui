@@ -81,6 +81,11 @@ class EditModal extends React.Component {
             asset_id: itemData.asset_type,
             precision: asset_type_precision
         });
+        let totalBalanceAsset = new Asset({
+            amount: itemData.total_balance,
+            asset_id: itemData.asset_type,
+            precision: asset_type_precision
+        });
         let pawn_assets = itemData.acceptable_collateral.map(v => {
             let bp = ChainStore.getAsset(v[1].base.asset_id).get("precision");
             let qp = ChainStore.getAsset(v[1].quote.asset_id).get("precision");
@@ -120,6 +125,7 @@ class EditModal extends React.Component {
             account: ChainStore.getAccount(itemData.owner_account, false),
             amount: asset.getAmount({real: true}),
             balanceAmount: asset.getAmount({real: true}),
+            totalBalanceAmount: totalBalanceAsset.getAmount({ real: true }),
             asset_id: itemData.asset_type,
             asset: null,
             error: null,
@@ -424,7 +430,8 @@ class EditModal extends React.Component {
             whitelist,
             feeAmount,
             offer_id,
-            balanceAmount
+            balanceAmount,
+            totalBalanceAmount
         } = this.state;
 
         this.setState({
@@ -434,6 +441,17 @@ class EditModal extends React.Component {
         let opData;
 
         try {
+            const updatedBalance = (totalBalanceAmount + (parseInt(amount) - parseInt(balanceAmount)))
+            
+            if(parseInt(min_loan) > updatedBalance) {
+                throw new Error(
+                    counterpart.translate('credit_offer.min_loan_bigger_than_balance', {
+                        min: min_loan,
+                        balance: updatedBalance.toFixed(4)
+                    })
+                )
+            }
+            
             let asset_precision = ChainStore.getAsset(asset_id).get(
                 "precision"
             );
@@ -481,22 +499,29 @@ class EditModal extends React.Component {
                 }),
                 fee_asset: feeAmount
             };
+            
+            if (opData.delta_amount.getAmount({real: true}) === 0) {
+                delete opData.delta_amount;
+            }
+            CreditOfferActions.update(opData)
+                .then(() => {
+                    this.hideModal();
+                })
+                .catch(err => {
+                    console.error(err);
+                });
         } catch (err) {
-            this.setState({
-                submitErr: err.toString()
-            });
+            
+            if(err.toString().indexOf('overflow') >= 0) {
+                this.setState({
+                    submitErr: counterpart.translate('credit_offer.number_is_to_big')
+                })
+            } else {
+                this.setState({
+                    submitErr: err.toString()
+                });
+            }
         }
-        if (opData.delta_amount.getAmount({real: true}) === 0) {
-            delete opData.delta_amount;
-        }
-        CreditOfferActions.update(opData)
-            .then(() => {
-                this.hideModal();
-            })
-            .catch(err => {
-                // todo: visualize error somewhere
-                console.error(err);
-            });
     }
 
     _renderEditModal() {

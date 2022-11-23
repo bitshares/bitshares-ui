@@ -351,58 +351,60 @@ class CreateModal extends React.Component {
         let opData;
         
         try {
+            if(parseInt(min_loan) > parseInt(amount)) {
+                throw new Error(
+                    counterpart.translate('credit_offer.min_loan_bigger_than_balance', {
+                        min: min_loan,
+                        balance: amount
+                    })
+                )
+            }
+            
             opData = {
-            owner_account: account.get("id"),
-            asset_type: asset_id,
-            balance: new Asset({
-                real: amount,
-                asset_id,
-                precision: asset.get("precision")
-            }).getAmount(),
-            fee_rate: (parseFloat(rate) * FEE_RATE_DENOM) / 100,
-            max_duration_seconds: repay_period,
-            min_deal_amount: new Asset({
-                real: min_loan,
-                asset_id,
-                precision: asset.get("precision")
-            }).getAmount(),
-            auto_disable_time: validity_period,
-            acceptable_collateral: pawn_assets.map(v => {
-                let va = ChainStore.getAsset(v.asset_id);
-                let p = new Price({
-                    base: new Asset({
-                        asset_id,
-                        precision: asset.get("precision")
-                    }),
-                    quote: new Asset({
-                        asset_id: v.asset_id,
-                        precision: va.get("precision")
-                    }),
-                    // real: v.getAmount({real: true}),
-                    real: 1 / v.getAmount({real: true}) // Keeping it consistent with the App, this may violate Graphene's price representation convention.
-                });
-                return [v.asset_id, p.toObject()];
-            }),
-            acceptable_borrowers: whitelist.map(v => {
-                return [
-                    v.account.get("id"),
-                    new Asset({
-                        real: v.amount,
-                        asset_id,
-                        precision: asset.get("precision")
-                    }).getAmount()
-                ];
-            }),
-            fee_asset: feeAmount
-        };
-        } catch (err) {
-            this.setState({
-                createOfferError: err.toString()
-            })
-            return;
-        }
-        console.log("obj: ", opData);
-        CreditOfferActions.create(opData)
+                owner_account: account.get("id"),
+                asset_type: asset_id,
+                balance: new Asset({
+                    real: amount,
+                    asset_id,
+                    precision: asset.get("precision")
+                }).getAmount(),
+                fee_rate: (parseFloat(rate) * FEE_RATE_DENOM) / 100,
+                max_duration_seconds: repay_period,
+                min_deal_amount: new Asset({
+                    real: min_loan,
+                    asset_id,
+                    precision: asset.get("precision")
+                }).getAmount(),
+                auto_disable_time: validity_period,
+                acceptable_collateral: pawn_assets.map(v => {
+                    let va = ChainStore.getAsset(v.asset_id);
+                    let p = new Price({
+                        base: new Asset({
+                            asset_id,
+                            precision: asset.get("precision")
+                        }),
+                        quote: new Asset({
+                            asset_id: v.asset_id,
+                            precision: va.get("precision")
+                        }),
+                        // real: v.getAmount({real: true}),
+                        real: 1 / v.getAmount({real: true}) // Keeping it consistent with the App, this may violate Graphene's price representation convention.
+                    });
+                    return [v.asset_id, p.toObject()];
+                }),
+                acceptable_borrowers: whitelist.map(v => {
+                    return [
+                        v.account.get("id"),
+                        new Asset({
+                            real: v.amount,
+                            asset_id,
+                            precision: asset.get("precision")
+                        }).getAmount()
+                    ];
+                }),
+                fee_asset: feeAmount
+            };
+            CreditOfferActions.create(opData)
             .then(() => {
                 this.hideModal();
             })
@@ -413,6 +415,18 @@ class CreateModal extends React.Component {
                     createOfferError: err.toString()
                 })
             });
+        } catch (err) {
+            if(err.toString().indexOf('overflow') >= 0) {
+                this.setState({
+                    createOfferError: counterpart.translate('credit_offer.number_is_to_big')
+                })
+            } else {
+                this.setState({
+                    createOfferError: err.toString()
+                })
+            }
+            return;
+        }
     }
 
     _renderCreateModal() {
