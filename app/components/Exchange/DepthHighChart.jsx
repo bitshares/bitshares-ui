@@ -8,6 +8,7 @@ import Translate from "react-translate-component";
 import colors from "assets/colors";
 import AssetName from "../Utility/AssetName";
 import {didOrdersChange} from "common/MarketClasses";
+import {numberExponentToLarge} from "../../lib/common/numberExplonentConversion";
 
 class DepthHighChart extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -192,10 +193,10 @@ class DepthHighChart extends React.Component {
                 labels: {
                     style: {
                         color: primaryText
+                    },
+                    formatter: function() {
+                        return numberExponentToLarge(this.value);
                     }
-                    // formatter: function() {
-                    //     return this.value / power;
-                    // }
                 },
                 ordinal: false,
                 lineColor: "#000000",
