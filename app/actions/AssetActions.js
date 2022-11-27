@@ -202,6 +202,7 @@ class AssetActions {
                 });
         };
     }
+
     claimCollateralFees(account_id, asset, backingAsset, claimFeesAmountAsset) {
         let tr = WalletApi.new_transaction();
 
@@ -212,11 +213,11 @@ class AssetActions {
             },
             issuer: account_id,
             amount_to_claim: {
-                asset_id: backingAsset.get("id"),
+                asset_id: backingAsset.asset_id,
                 amount: claimFeesAmountAsset.getAmount()
             },
             extensions: {
-                claim_from_asset_id: asset.get("id") 
+                claim_from_asset_id: asset.get("id")
             }
         });
         return dispatch => {
@@ -230,6 +231,7 @@ class AssetActions {
                 });
         };
     }
+
     assetGlobalSettle(asset, account_id, price) {
         let tr = WalletApi.new_transaction();
 
