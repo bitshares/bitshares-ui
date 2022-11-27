@@ -1002,7 +1002,7 @@ class CallOrder {
 
     getStatus() {
         const mr =
-            this.assets[this.debt_id].bitasset.current_feed
+            this.assets[this.debt_id].bitasset.median_feed
                 .maintenance_collateral_ratio / 1000;
         const cr = this.getRatio();
 
