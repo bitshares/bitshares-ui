@@ -238,6 +238,7 @@ export function getMyMarketsQuotes() {
         ],
         honestTokens: ["HONEST.BTC", "HONEST.USD"],
         ioxbankTokens: ["IOB.XRP"],
+        btwtyTokens: ["BTWTY.EOS"],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
@@ -305,7 +306,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "HONEST.BTC"],
         ["BTS", "HONEST.USD"],
         ["BTS", "IOB.XRP"],
-        ["BTS", "HERTZ"]
+        ["BTS", "HERTZ"],
+        ["BTS", "BTWTY.EOS"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -321,7 +323,8 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["XBTSX.", "GDEX.", "HONEST.", "IOB.", "PIRATE."];
+
+    return ["XBTSX.", "GDEX.", "HONEST.", "IOB.", "PIRATE.", "BTWTY."];
 }
 
 /**
@@ -347,6 +350,7 @@ export function allowedGateway(gateway) {
         "PIRATE",
         "XBTSX",
         "IOB",
+        "BTWTY",
         "CITADEL", // keep to display the warning icon, permanently disabled in gateways.js
         "BRIDGE", // keep to display the warning icon, permanently disabled in gateways.js
         "SPARKDEX" // keep to display the warning icon, permanently disabled in gateways.js

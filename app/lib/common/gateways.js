@@ -12,7 +12,8 @@ import {
     gdex2APIs,
     pirateCashAPIs,
     xbtsxAPIs,
-    citadelAPIs
+    citadelAPIs,
+    btwtyAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 import {isGatewayTemporarilyDisabled} from "../chain/onChainConfig";
@@ -108,6 +109,19 @@ export const availableGateways = {
         },
         landing: "https://ioxbank.com",
         wallet: "https://dex.iobanker.com/"
+    },
+    BTWTY: {
+        id: "BTWTY",
+        name: "btwty native gateways",
+        baseAPI: btwtyAPIs,
+        isEnabled: _isEnabled("BTWTY"),
+        selected: false,
+        isSimple: true,
+        depositCaching: false,
+        options: {
+            enabled: false,
+            selected: false
+        }
     },
     OPEN: {
         id: "OPEN",
