@@ -353,6 +353,14 @@ export const settingsAPIs = {
             operator: "Witness: iamredbar",
             contact: "email:iamredbar@protonmail.com"
         },
+        {
+            url: "wss://btstestnet.cybertron.ninja/ws",
+            region: "Northern America",
+            country: "USA",
+            location: "Utah",
+            operator: "Witness: cn-faucet-test",
+            contact: "email:codinheim@protonmail.com"
+        },
     ],
     ES_WRAPPER_LIST: [
         {
