@@ -7,8 +7,10 @@ import {
     Button,
     Table,
     Form,
-    Icon as AntIcon
+    Icon as AntIcon,
+    Alert
 } from "bitshares-ui-style-guide";
+import assetUtils from "common/asset_utils";
 import SearchInput from "../../Utility/SearchInput";
 import LinkToAssetById from "../../Utility/LinkToAssetById";
 import FormattedAsset from "../../Utility/FormattedAsset";
@@ -491,6 +493,13 @@ class CreditOfferPage extends React.Component {
                 </span>
             );
         }
+        
+        const borrowingAsset = selectAsset.toJS();
+        const borrowingAssetPermissions = assetUtils.getFlagBooleans(
+            borrowingAsset.options.flags,
+            !!borrowingAsset.bitasset_data_id,
+        );
+        
         return (
             <Modal
                 wrapClassName="modal--transaction-confirm"
@@ -518,6 +527,11 @@ class CreditOfferPage extends React.Component {
                     </Button>
                 ]}
             >
+                { borrowingAssetPermissions.override_authority && (
+                    <div style={{marginBottom: 12}}>
+                        <Alert message={counterpart.translate('credit_offer.override_authority_warning')}></Alert>
+                    </div>
+                )}
                 <div className="grid-block vertical no-overflow">
                     <Form className="full-width" layout="vertical">
                         <Form.Item

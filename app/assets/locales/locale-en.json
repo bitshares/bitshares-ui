@@ -573,6 +573,9 @@
         }
     },
     "credit_offer": {
+        "override_authority_warning": "Be careful, this asset has an `override_authority` setting, so the owner of the asset could transfer it back to himself with no agreement",
+        "total_to_repay": "Repay Total",
+        "current_available_balance": "Current Available Balance",
         "accepted_pawn": "Acceptable",
         "account": "Account",
         "active": "Active",
@@ -589,7 +592,6 @@
         "credit_offers": "Credit Offers",
         "credit_right_account": "Account",
         "credit_rights": "Credit Rights",
-        "current_available_balance": "Current Available Balance",
         "current_balance": "Available",
         "debt": "Debt",
         "edit": "Modify credit offer",
@@ -631,7 +633,6 @@
         "title_add_pawn": "Add collateral",
         "title_add_whitelist": "Add white account",
         "total_amount": "Total",
-        "total_to_repay": "Repay Total",
         "validity_period": "Expiration",
         "whitelist_account": "Account"
     },
