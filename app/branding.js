@@ -236,7 +236,18 @@ export function getMyMarketsQuotes() {
             "XBTSX.LUNR",
             "XBTSX.LUNAREUM"
         ],
-        honestTokens: ["HONEST.BTC", "HONEST.USD"],
+        honestTokens: [
+            "HONEST.BTC", 
+            "HONEST.USD",
+            "HONEST.BTCSHORT", 
+            "HONEST.USDSHORT",
+            "HONEST.XAG", 
+            "HONEST.XAU",
+            "HONEST.ETH", 
+            "HONEST.ETH1",
+            "HONEST.XRP", 
+            "HONEST.XRP1",
+        ],
         ioxbankTokens: ["IOB.XRP"],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
@@ -266,7 +277,9 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "GDEX.EOS"],
         ["USD", "GDEX.BTO"],
         ["USD", "HONEST.BTC"],
-        ["USD", "HONEST.USD"],
+        ["USD", "HONEST.USD"],        
+        ["USD", "HONEST.BTCSHORT"],
+        ["USD", "HONEST.USDSHORT"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
         ["CNY", "YOYOW"],
@@ -280,7 +293,10 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "GDEX.USDT"],
         ["CNY", "GDEX.GXC"],
         ["CNY", "HONEST.BTC"],
-        ["CNY", "HONEST.USD"],
+        ["CNY", "HONEST.USD"],        
+        ["CNY", "HONEST.BTCSHORT"],
+        ["CNY", "HONEST.USDSHORT"],
+        ["CNY", "HONEST.CNY"],
         ["BTS", "RUBLE"],
         ["BTS", "HERO"],
         ["BTS", "OCT"],
@@ -304,8 +320,13 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "XBTSX.USDT"],
         ["BTS", "HONEST.BTC"],
         ["BTS", "HONEST.USD"],
+        ["BTS", "HONEST.BTCSHORT"],
+        ["BTS", "HONEST.USDSHORT"],
+        ["BTS", "HONEST.CNY"],
+        ["BTS", "HONEST.XAG"],
+        ["BTS", "HONEST.XAU"],
         ["BTS", "IOB.XRP"],
-        ["BTS", "HERTZ"]
+        ["BTS", "HERTZ"],
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
