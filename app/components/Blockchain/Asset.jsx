@@ -1138,7 +1138,7 @@ class Asset extends React.Component {
                                 <td>
                                     {bitAsset.options.extensions
                                         .force_settle_fee_percent /
-                                        1000 +
+                                        100 +
                                         "%"}
                                 </td>
                             </tr>
