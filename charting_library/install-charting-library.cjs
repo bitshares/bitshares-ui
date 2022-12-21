@@ -15,7 +15,7 @@ var outputFilePath = path.join(__dirname, outputFileName);
 // download only if it doesnt exist
 if (!fs.existsSync(outputFilePath)) {
     const outputFile = fs.createWriteStream(outputFilePath);
-    http.get("https://bitshares.org/assets/" + outputFileName, (response) => {
+    http.get("https://explorer.bitshares.ws/" + outputFileName, (response) => {
         response.pipe(outputFile);
     }).on("error", (err) => {
         console.error("Failed to download charting_library archive");
