@@ -203,7 +203,7 @@ class AssetActions {
         };
     }
 
-    claimCollateralFees(account_id, asset, backingAsset, claimFeesAmountAsset) {
+    claimForceSettlementFees(account_id, asset, backingAsset, claimFeesAmountAsset) {
         let tr = WalletApi.new_transaction();
 
         tr.add_type_operation("asset_claim_fees", {
