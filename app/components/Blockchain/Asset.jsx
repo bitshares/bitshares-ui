@@ -1436,13 +1436,13 @@ class Asset extends React.Component {
             </Panel>
         );
     }
-    renderFeesCollateralClaiming(asset) {
+    renderFeesForceSettlementClaiming(asset) {
         let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         return (
             <Panel
                 header={
-                    <Translate content="explorer.asset.fee_pool.accumulated_collateral_fees" />
+                    <Translate content="explorer.asset.settlement.force_settle_fee_percent" />
                 }
             >
                 <FeePoolOperation
@@ -1450,7 +1450,7 @@ class Asset extends React.Component {
                     dynamic={dynamic}
                     funderAccountName={this.props.currentAccount}
                     hideBalance
-                    type="claim_collateral_fees"
+                    type="claim_ForceSettlement_fees"
                 />
             </Panel>
         );
@@ -2386,7 +2386,7 @@ class Asset extends React.Component {
                                     {this.renderFeePoolFunding(asset)}
                                     {this.renderFeePoolClaiming(asset)}
                                     {this.renderFeesClaiming(asset)}
-                                    {this.renderFeesCollateralClaiming(asset)}
+                                    {this.renderFeesForceSettlementClaiming(asset)}
                                     {this.renderAssetOwnerUpdate(asset)}
                                     {"bitasset" in asset &&
                                         !asset.bitasset.is_prediction_market &&
