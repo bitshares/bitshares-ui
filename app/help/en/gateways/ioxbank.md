@@ -15,18 +15,18 @@ ioxbank instant gateway service is connecting cryptocurrencies between BitShares
 
 ## IOB.XRP Features
 - Instant Gateway
-- Min. amount: 20 XRP
+- Min. amount: 50 XRP
 - No KYC
 - No limits
-- 0/0.1% market fee for maker/taker
+- 0% market fee for maker/taker
 - Low withdraw fee
 
 ## IOB.XLM features
 - Instant Gateway
-- Min. amount: 20 XLM
+- Min. amount: 50 XLM
 - No KYC
 - No limits
-- 0/0.1% market fee for maker/taker
+- 0% market fee for maker/taker
 - Low withdraw fee
 
 ### Gateway Methods
