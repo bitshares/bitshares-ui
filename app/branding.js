@@ -248,7 +248,7 @@ export function getMyMarketsQuotes() {
             "HONEST.XRP", 
             "HONEST.XRP1",
         ],
-        ioxbankTokens: ["IOB.XRP"],
+        ioxbankTokens: ["IOB.XRP", "IOB.XLM"],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
@@ -326,6 +326,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "HONEST.XAG"],
         ["BTS", "HONEST.XAU"],
         ["BTS", "IOB.XRP"],
+        ["BTS", "IOB.XLM"],
         ["BTS", "HERTZ"],
     ].filter(a => {
         if (!quotes.length) return true;
