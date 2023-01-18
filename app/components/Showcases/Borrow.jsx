@@ -164,7 +164,11 @@ class Borrow extends Component {
                                     "1.3.5661",  // HONEST.ETH1
                                     "1.3.5662",  // HONEST.XRP1
                                     "1.3.6289",  // HONEST.USDSHORT
-                                    "1.3.6290",  // HONEST.BTCSHORT   
+                                    "1.3.6290",  // HONEST.BTCSHORT
+                                    "1.3.4633", // URTHR
+                                    "1.3.4634", // SKULD
+                                    "1.3.4635", // VERTHANDI
+                                    "1.3.1382", // HERTZ
                                 ]}
                                 value={this.state.selectedAsset}
                                 onChange={this.onAssetChange.bind(this)}

@@ -280,6 +280,10 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "HONEST.USD"],        
         ["USD", "HONEST.BTCSHORT"],
         ["USD", "HONEST.USDSHORT"],
+        ["USD", "HERTZ"],
+        ["USD", "URTHR"],
+        ["USD", "SKULD"],
+        ["USD", "VERTHANDI"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
         ["CNY", "YOYOW"],
@@ -297,6 +301,10 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "HONEST.BTCSHORT"],
         ["CNY", "HONEST.USDSHORT"],
         ["CNY", "HONEST.CNY"],
+        ["CNY", "HERTZ"],
+        ["CNY", "URTHR"],
+        ["CNY", "SKULD"],
+        ["CNY", "VERTHANDI"],
         ["BTS", "RUBLE"],
         ["BTS", "HERO"],
         ["BTS", "OCT"],
@@ -328,6 +336,9 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "IOB.XRP"],
         ["BTS", "IOB.XLM"],
         ["BTS", "HERTZ"],
+        ["BTS", "URTHR"],
+        ["BTS", "SKULD"],
+        ["BTS", "VERTHANDI"],
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
