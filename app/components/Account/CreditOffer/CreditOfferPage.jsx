@@ -92,23 +92,6 @@ class CreditOfferPage extends React.Component {
     }
 
     showAcceptModal(data) {
-        // console.log("TODO:", data);
-        let {currentAccount} = this.props;
-        let account = ChainStore.getAccount(currentAccount);
-        if (account.get("id") == data.owner_account) {
-            notify.addNotification.defer({
-                children: (
-                    <Translate
-                        component="span"
-                        content="credit_offer.info_borrow_err"
-                    />
-                ),
-                level: "error",
-                autoDismiss: 3
-            });
-            return;
-        }
-
         let assetList = data.acceptable_collateral.map(v => v[0]);
         let debtAsset = data.asset_type;
         let selectAsset = assetList[0];
@@ -424,13 +407,12 @@ class CreditOfferPage extends React.Component {
                 asset_id: asset.get("id"),
                 precision: asset.get("precision")
             });
-            this.setState(
-                {
-                    maxAmount: true,
-                    amount: balance.getAmount({real: true})
-                },
-                this._checkBalance
-            );
+            this.setState({maxAmount: true});
+
+            this._onAmountChanged({
+                amount: balance.getAmount({real: true}),
+                asset: asset.get("id")
+            });
         }
     }
 
@@ -472,7 +454,12 @@ class CreditOfferPage extends React.Component {
         let maxReal = maxAssetAmount.getAmount({real: true});
         let maxError = amount > maxReal || maxReal <= 0;
         const isSubmitNotValid =
-            !amount || minError || maxError || !selectAsset || balanceError;
+            !amount ||
+            minError ||
+            maxError ||
+            !selectAsset ||
+            balanceError ||
+            account.get("id") == info.owner_account;
         let _error = maxError ? "has-error" : "";
         if (currentBalance && currentBalance > 0) {
             balance = (
@@ -521,6 +508,13 @@ class CreditOfferPage extends React.Component {
                 overlay={true}
                 onCancel={this.hideAcceptModal}
                 footer={[
+                    (info.owner_account === info.owner_account && (
+                        <Translate
+                            component="span"
+                            content="credit_offer.info_borrow_err"
+                        />
+                    )) ||
+                        null,
                     <Button
                         key={"send"}
                         disabled={isSubmitNotValid}
@@ -715,21 +709,18 @@ class CreditOfferPage extends React.Component {
     }
 }
 
-CreditOfferPage = connect(
-    CreditOfferPage,
-    {
-        listenTo() {
-            return [AccountStore, CreditOfferStore, IntlStore];
-        },
-        getProps(props) {
-            return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
-                allList: CreditOfferStore.getState().allList,
-                locale: IntlStore.getState().currentLocale
-            };
-        }
+CreditOfferPage = connect(CreditOfferPage, {
+    listenTo() {
+        return [AccountStore, CreditOfferStore, IntlStore];
+    },
+    getProps(props) {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount,
+            allList: CreditOfferStore.getState().allList,
+            locale: IntlStore.getState().currentLocale
+        };
     }
-);
+});
 
 export default CreditOfferPage;

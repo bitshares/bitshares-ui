@@ -5,6 +5,7 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import {ChainStore} from "bitsharesjs";
 import {
+    Alert,
     Tooltip,
     Table,
     Modal,
@@ -46,6 +47,7 @@ class CreateModal extends React.Component {
 
     getInitialState(props) {
         return {
+            createOfferError: null,
             showModal: 0, // 1: create modal 2: add pawn modal 3: add whitelist modal
             account: props.account,
             amount: "",
@@ -189,13 +191,20 @@ class CreateModal extends React.Component {
             if (typeof pawn_asset !== "object") {
                 pawn_asset = ChainStore.getAsset(pawn_asset);
             }
-            pawn_assets.push(
-                new Asset({
-                    real: pawn_price,
-                    asset_id: pawn_asset.get("id"),
-                    precision: pawn_asset.get("precision")
-                })
-            );
+            let found = pawn_assets.find(asset => {
+                return asset.asset_id === pawn_asset.get("id");
+            });
+            if (found) {
+                found.setAmount({real: pawn_price});
+            } else {
+                pawn_assets.push(
+                    new Asset({
+                        real: pawn_price,
+                        asset_id: pawn_asset.get("id"),
+                        precision: pawn_asset.get("precision")
+                    })
+                );
+            }
             this.setState({pawn_assets: pawn_assets, showModal: 1});
         } else {
             this.setState({showModal: 1});
@@ -323,6 +332,9 @@ class CreateModal extends React.Component {
     }
 
     _onSubmit() {
+        this.setState({
+            createOfferError: null
+        });
         let {
             account,
             asset_id,
@@ -336,59 +348,90 @@ class CreateModal extends React.Component {
             feeAmount
         } = this.state;
         let asset = ChainStore.getAsset(asset_id);
-        let opData = {
-            owner_account: account.get("id"),
-            asset_type: asset_id,
-            balance: new Asset({
-                real: amount,
-                asset_id,
-                precision: asset.get("precision")
-            }).getAmount(),
-            fee_rate: (parseFloat(rate) * FEE_RATE_DENOM) / 100,
-            max_duration_seconds: repay_period,
-            min_deal_amount: new Asset({
-                real: min_loan,
-                asset_id,
-                precision: asset.get("precision")
-            }).getAmount(),
-            auto_disable_time: validity_period,
-            acceptable_collateral: pawn_assets.map(v => {
-                let va = ChainStore.getAsset(v.asset_id);
-                let p = new Price({
-                    base: new Asset({
-                        asset_id,
-                        precision: asset.get("precision")
-                    }),
-                    quote: new Asset({
-                        asset_id: v.asset_id,
-                        precision: va.get("precision")
-                    }),
-                    // real: v.getAmount({real: true}),
-                    real: 1 / v.getAmount({real: true}) // Keeping it consistent with the App, this may violate Graphene's price representation convention.
+        let opData;
+
+        try {
+            if (parseInt(min_loan) > parseInt(amount)) {
+                throw new Error(
+                    counterpart.translate(
+                        "credit_offer.min_loan_bigger_than_balance",
+                        {
+                            min: min_loan,
+                            balance: amount
+                        }
+                    )
+                );
+            }
+
+            opData = {
+                owner_account: account.get("id"),
+                asset_type: asset_id,
+                balance: new Asset({
+                    real: amount,
+                    asset_id,
+                    precision: asset.get("precision")
+                }).getAmount(),
+                fee_rate: (parseFloat(rate) * FEE_RATE_DENOM) / 100,
+                max_duration_seconds: repay_period,
+                min_deal_amount: new Asset({
+                    real: min_loan,
+                    asset_id,
+                    precision: asset.get("precision")
+                }).getAmount(),
+                auto_disable_time: validity_period,
+                acceptable_collateral: pawn_assets.map(v => {
+                    let va = ChainStore.getAsset(v.asset_id);
+                    let p = new Price({
+                        base: new Asset({
+                            asset_id,
+                            precision: asset.get("precision")
+                        }),
+                        quote: new Asset({
+                            asset_id: v.asset_id,
+                            precision: va.get("precision")
+                        }),
+                        // real: v.getAmount({real: true}),
+                        real: 1 / v.getAmount({real: true}) // Keeping it consistent with the App, this may violate Graphene's price representation convention.
+                    });
+                    return [v.asset_id, p.toObject()];
+                }),
+                acceptable_borrowers: whitelist.map(v => {
+                    return [
+                        v.account.get("id"),
+                        new Asset({
+                            real: v.amount,
+                            asset_id,
+                            precision: asset.get("precision")
+                        }).getAmount()
+                    ];
+                }),
+                fee_asset: feeAmount
+            };
+            CreditOfferActions.create(opData)
+                .then(() => {
+                    this.hideModal();
+                })
+                .catch(err => {
+                    // todo: visualize error somewhere
+                    console.error(err);
+                    this.setState({
+                        createOfferError: err.toString()
+                    });
                 });
-                return [v.asset_id, p.toObject()];
-            }),
-            acceptable_borrowers: whitelist.map(v => {
-                return [
-                    v.account.get("id"),
-                    new Asset({
-                        real: v.amount,
-                        asset_id,
-                        precision: asset.get("precision")
-                    }).getAmount()
-                ];
-            }),
-            fee_asset: feeAmount
-        };
-        console.log("obj: ", opData);
-        CreditOfferActions.create(opData)
-            .then(() => {
-                this.hideModal();
-            })
-            .catch(err => {
-                // todo: visualize error somewhere
-                console.error(err);
-            });
+        } catch (err) {
+            if (err.toString().indexOf("overflow") >= 0) {
+                this.setState({
+                    createOfferError: counterpart.translate(
+                        "credit_offer.number_is_to_big"
+                    )
+                });
+            } else {
+                this.setState({
+                    createOfferError: err.toString()
+                });
+            }
+            return;
+        }
     }
 
     _renderCreateModal() {
@@ -493,8 +536,8 @@ class CreateModal extends React.Component {
                                 asset_types.length > 0 && asset
                                     ? asset.get("id")
                                     : asset_id
-                                        ? asset_id
-                                        : asset_types[0]
+                                    ? asset_id
+                                    : asset_types[0]
                             }
                             assets={asset_types}
                             display_balance={balance}
@@ -670,6 +713,12 @@ class CreateModal extends React.Component {
                             onChange={this.onFeeChanged.bind(this)}
                             tabIndex={tabIndex++}
                         />
+                        {this.state.createOfferError && (
+                            <Alert
+                                message={this.state.createOfferError}
+                                type="warning"
+                            />
+                        )}
                     </Form>
                 </div>
             </Modal>
@@ -875,20 +924,17 @@ class CreateModalConnectWrapper extends React.Component {
     }
 }
 
-CreateModalConnectWrapper = connect(
-    CreateModalConnectWrapper,
-    {
-        listenTo() {
-            return [AccountStore, SettingsStore];
-        },
-        getProps(props) {
-            return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
-                currentLocale: SettingsStore.getState().settings.get("locale")
-            };
-        }
+CreateModalConnectWrapper = connect(CreateModalConnectWrapper, {
+    listenTo() {
+        return [AccountStore, SettingsStore];
+    },
+    getProps(props) {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount,
+            currentLocale: SettingsStore.getState().settings.get("locale")
+        };
     }
-);
+});
 
 export default CreateModalConnectWrapper;

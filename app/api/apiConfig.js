@@ -64,7 +64,7 @@ export const citadelAPIs = {
 };
 
 export const gdex2APIs = {
-    BASE: "https://api.52bts.net/adjust",
+    BASE: "https://openapi.52bts.net/adjust",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/active-wallets",
     TRADING_PAIRS: "/trading-pairs"
@@ -84,6 +84,11 @@ export const gdexAPIs = {
     GET_USER_INFO: "/gateway/user/getUserInfo",
     USER_AGREEMENT: "/gateway/user/isAgree",
     WITHDRAW_RULE: "/gateway/withdraw/rule"
+};
+
+export const pirateCashAPIs = {
+    BASE: "https://piratecash.net/dexapi",
+    COINS_LIST: "/coins"
 };
 
 export const xbtsxAPIs = {
@@ -132,28 +137,12 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
-            url: "wss://nexus01.co.uk/ws",
-            region: "Northern Europe",
-            country: "England",
-            location: "Gloucester",
-            operator: "Witness: nexus01",
-            contact: "telegram:rosswlkr"
-        },
-        {
             url: "wss://dex.iobanker.com/ws",
             region: "Western Europe",
             country: "Germany",
             location: "Frankfurt",
             operator: "Witness: iobanker-core",
             contact: "email:admin@iobanker.com"
-        },
-        {
-            url: "wss://ws.gdex.top",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Shanghai",
-            operator: "Witness: gdex-witness",
-            contact: "telegram:BrianZhang"
         },
         {
             url: "wss://api.bts.btspp.io:10100",
@@ -185,13 +174,6 @@ export const settingsAPIs = {
             country: "Canada",
             operator: "Witness: bhuz",
             contact: "telegram:bhuzor"
-        },
-        {
-            url: "wss://api.btsgo.net/ws",
-            region: "Southeastern Asia",
-            location: "Singapore",
-            operator: "Witness: xn-delegate",
-            contact: "wechat:Necklace"
         },
         {
             url: "wss://bts.open.icowallet.net/ws",
@@ -235,44 +217,12 @@ export const settingsAPIs = {
             contact: "telegram:Zapata_42"
         },
         {
-            url: "wss://api.bitshares.org/ws",
-            region: "Western Europe",
-            country: "France",
-            location: "",
-            operator: "bitshares.org",
-            contact: ""
-        },
-        {
-            url: "wss://us.api.bitshares.org/ws",
-            region: "Western Europe",
-            country: "France",
-            location: "",
-            operator: "bitshares.org",
-            contact: ""
-        },
-        {
-            url: "wss://asia.api.bitshares.org/ws",
-            region: "Western Europe",
-            country: "France",
-            location: "",
-            operator: "bitshares.org",
-            contact: ""
-        },
-        {
             url: "wss://eu.nodes.bitshares.ws",
             region: "Western Europe",
             country: "Germany",
             location: "Nuremberg",
             operator: "Witness: blocksights",
             contact: "telegram:blocksights"
-        },
-        {
-            url: "wss://api-bts.liondani.com/ws",
-            region: "Western Europe",
-            country: "Germany",
-            location: "Falkenstein",
-            operator: "Witness: liondani",
-            contact: "telegram:liondani"
         },
         {
             url: "wss://public.xbts.io/ws",
@@ -338,6 +288,14 @@ export const settingsAPIs = {
             operator: "Witness: lebin-witness",
             contact: "telegram: lebinbit"
         },
+        {
+            url: "wss://api.bitshares.info",
+            region: "North America",
+            country: "United States",
+            location: "Chicago",
+            operator: "bitshares.info",
+            contact: "telegram:brekyrself"
+        },
         // Testnet
         {
             url: "wss://eu.nodes.testnet.bitshares.ws",
@@ -388,12 +346,20 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss://api.bitshares.info",
-            region: "North America",
-            country: "United States",
-            location: "Chicago",
-            operator: "bitshares.info",
-            contact: "telegram:brekyrself"
+            url: "wss://api.iamredbar.com/bts-testnet",
+            region: "Northern America",
+            country: "USA",
+            location: "Atlanta",
+            operator: "Witness: iamredbar",
+            contact: "email:iamredbar@protonmail.com"
+        },
+        {
+            url: "wss://btstestnet.cybertron.ninja/ws",
+            region: "Northern America",
+            country: "USA",
+            location: "Utah",
+            operator: "Witness: cn-faucet-test",
+            contact: "email:codinheim@protonmail.com"
         }
     ],
     ES_WRAPPER_LIST: [

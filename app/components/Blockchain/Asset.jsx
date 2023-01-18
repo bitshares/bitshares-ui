@@ -1138,7 +1138,7 @@ class Asset extends React.Component {
                                 <td>
                                     {bitAsset.options.extensions
                                         .force_settle_fee_percent /
-                                        1000 +
+                                        100 +
                                         "%"}
                                 </td>
                             </tr>
@@ -1436,7 +1436,25 @@ class Asset extends React.Component {
             </Panel>
         );
     }
-
+    renderFeesCollateralClaiming(asset) {
+        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
+        if (dynamic) dynamic = dynamic.toJS();
+        return (
+            <Panel
+                header={
+                    <Translate content="explorer.asset.fee_pool.accumulated_collateral_fees" />
+                }
+            >
+                <FeePoolOperation
+                    asset={asset.symbol}
+                    dynamic={dynamic}
+                    funderAccountName={this.props.currentAccount}
+                    hideBalance
+                    type="claim_collateral_fees"
+                />
+            </Panel>
+        );
+    }
     // TODO: Blacklist Authorities: <Account list like Voting>
     // TODO: Blacklist Market: Base/Market, Base/Market
     renderPermissions(asset) {
@@ -1726,8 +1744,8 @@ class Asset extends React.Component {
                                     median_offset > 0
                                         ? "txtlabel success"
                                         : median_offset < 0
-                                            ? "txtlabel warning"
-                                            : "txtlabel"
+                                        ? "txtlabel warning"
+                                        : "txtlabel"
                                 }
                             >
                                 {median_offset}%
@@ -2368,6 +2386,7 @@ class Asset extends React.Component {
                                     {this.renderFeePoolFunding(asset)}
                                     {this.renderFeePoolClaiming(asset)}
                                     {this.renderFeesClaiming(asset)}
+                                    {this.renderFeesCollateralClaiming(asset)}
                                     {this.renderAssetOwnerUpdate(asset)}
                                     {"bitasset" in asset &&
                                         !asset.bitasset.is_prediction_market &&
@@ -2389,21 +2408,18 @@ class Asset extends React.Component {
     }
 }
 
-Asset = connect(
-    Asset,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
+Asset = connect(Asset, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
     }
-);
+});
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset", "coreAsset"]

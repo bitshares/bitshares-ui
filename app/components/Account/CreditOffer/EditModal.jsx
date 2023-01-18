@@ -13,6 +13,7 @@ import {
     Input,
     Form,
     DatePicker,
+    Alert,
     Icon as AntIcon
 } from "bitshares-ui-style-guide";
 import utils from "common/utils";
@@ -47,6 +48,7 @@ class EditModal extends React.Component {
 
     getInitialState(props) {
         return {
+            submitErr: null,
             showModal: 0, // 1: create modal 2: add pawn modal 3: add whitelist modal
             account: props.account,
             amount: "",
@@ -76,6 +78,11 @@ class EditModal extends React.Component {
         );
         let asset = new Asset({
             amount: itemData.current_balance,
+            asset_id: itemData.asset_type,
+            precision: asset_type_precision
+        });
+        let totalBalanceAsset = new Asset({
+            amount: itemData.total_balance,
             asset_id: itemData.asset_type,
             precision: asset_type_precision
         });
@@ -117,6 +124,8 @@ class EditModal extends React.Component {
             offer_id: itemData.id,
             account: ChainStore.getAccount(itemData.owner_account, false),
             amount: asset.getAmount({real: true}),
+            balanceAmount: asset.getAmount({real: true}),
+            totalBalanceAmount: totalBalanceAsset.getAmount({real: true}),
             asset_id: itemData.asset_type,
             asset: null,
             error: null,
@@ -229,7 +238,7 @@ class EditModal extends React.Component {
         if (!balanceObject || !feeAmount) return;
         if (!amount) return this.setState({balanceError: false});
         const hasBalance = checkBalance(
-            amount,
+            amount - this.state.balanceAmount,
             asset,
             feeAmount,
             balanceObject
@@ -268,13 +277,20 @@ class EditModal extends React.Component {
             if (typeof pawn_asset !== "object") {
                 pawn_asset = ChainStore.getAsset(pawn_asset);
             }
-            pawn_assets.push(
-                new Asset({
-                    real: pawn_price,
-                    asset_id: pawn_asset.get("id"),
-                    precision: pawn_asset.get("precision")
-                })
-            );
+            let found = pawn_assets.find(asset => {
+                return asset.asset_id === pawn_asset.get("id");
+            });
+            if (found) {
+                found.setAmount({real: pawn_price});
+            } else {
+                pawn_assets.push(
+                    new Asset({
+                        real: pawn_price,
+                        asset_id: pawn_asset.get("id"),
+                        precision: pawn_asset.get("precision")
+                    })
+                );
+            }
             this.setState({pawn_assets: pawn_assets, showModal: 1});
         } else {
             this.setState({showModal: 1});
@@ -413,62 +429,105 @@ class EditModal extends React.Component {
             pawn_assets,
             whitelist,
             feeAmount,
-            offer_id
-        } = this.state;
-        let asset_precision = ChainStore.getAsset(asset_id).get("precision");
-        let opData = {
-            owner_account: account.get("id"),
             offer_id,
-            delta_amount: new Asset({
-                real: amount,
-                asset_id,
-                precision: asset_precision
-            }),
-            fee_rate: (parseFloat(rate) * FEE_RATE_DENOM) / 100,
-            max_duration_seconds: repay_period,
-            min_deal_amount: new Asset({
-                real: min_loan,
-                asset_id,
-                precision: asset_precision
-            }).getAmount(),
-            enabled: true,
-            auto_disable_time: validity_period,
-            acceptable_collateral: pawn_assets.map(v => {
-                let v_precision = ChainStore.getAsset(v.asset_id).get(
-                    "precision"
+            balanceAmount,
+            totalBalanceAmount
+        } = this.state;
+
+        this.setState({
+            submitErr: null
+        });
+
+        let opData;
+
+        try {
+            const updatedBalance =
+                totalBalanceAmount +
+                (parseInt(amount) - parseInt(balanceAmount));
+
+            if (parseInt(min_loan) > updatedBalance) {
+                throw new Error(
+                    counterpart.translate(
+                        "credit_offer.min_loan_bigger_than_balance",
+                        {
+                            min: min_loan,
+                            balance: updatedBalance.toFixed(4)
+                        }
+                    )
                 );
-                let p = new Price({
-                    base: new Asset({asset_id, precision: asset_precision}),
-                    quote: new Asset({
-                        asset_id: v.asset_id,
-                        precision: v_precision
-                    }),
-                    // real: v.getAmount({real: true}),
-                    real: 1 / v.getAmount({real: true}) //Keeping it consistent with the App, this may violate Graphene's price representation convention.
+            }
+
+            let asset_precision = ChainStore.getAsset(asset_id).get(
+                "precision"
+            );
+            opData = {
+                owner_account: account.get("id"),
+                offer_id,
+                delta_amount: new Asset({
+                    real: parseInt(amount) - parseInt(balanceAmount),
+                    asset_id,
+                    precision: asset_precision
+                }),
+                fee_rate: (parseFloat(rate) * FEE_RATE_DENOM) / 100,
+                max_duration_seconds: repay_period,
+                min_deal_amount: new Asset({
+                    real: min_loan,
+                    asset_id,
+                    precision: asset_precision
+                }).getAmount(),
+                enabled: true,
+                auto_disable_time: validity_period,
+                acceptable_collateral: pawn_assets.map(v => {
+                    let v_precision = ChainStore.getAsset(v.asset_id).get(
+                        "precision"
+                    );
+                    let p = new Price({
+                        base: new Asset({asset_id, precision: asset_precision}),
+                        quote: new Asset({
+                            asset_id: v.asset_id,
+                            precision: v_precision
+                        }),
+                        // real: v.getAmount({real: true}),
+                        real: 1 / v.getAmount({real: true}) //Keeping it consistent with the App, this may violate Graphene's price representation convention.
+                    });
+                    return [v.asset_id, p.toObject()];
+                }),
+                acceptable_borrowers: whitelist.map(v => {
+                    return [
+                        v.account.get ? v.account.get("id") : v.account,
+                        new Asset({
+                            real: v.amount,
+                            asset_id,
+                            precision: asset_precision
+                        }).getAmount()
+                    ];
+                }),
+                fee_asset: feeAmount
+            };
+
+            if (opData.delta_amount.getAmount({real: true}) === 0) {
+                delete opData.delta_amount;
+            }
+            CreditOfferActions.update(opData)
+                .then(() => {
+                    this.hideModal();
+                })
+                .catch(err => {
+                    console.error(err);
                 });
-                return [v.asset_id, p.toObject()];
-            }),
-            acceptable_borrowers: whitelist.map(v => {
-                return [
-                    v.account.get ? v.account.get("id") : v.account,
-                    new Asset({
-                        real: v.amount,
-                        asset_id,
-                        precision: asset_precision
-                    }).getAmount()
-                ];
-            }),
-            fee_asset: feeAmount
-        };
-        // console.log("obj: ", opData);
-        CreditOfferActions.update(opData)
-            .then(() => {
-                this.hideModal();
-            })
-            .catch(err => {
-                // todo: visualize error somewhere
-                console.error(err);
-            });
+        } catch (err) {
+            if (err.toString().indexOf("overflow") >= 0) {
+                this.setState({
+                    submitErr: counterpart.translate(
+                        "credit_offer.number_is_to_big"
+                    )
+                });
+            } else {
+                this.setState({
+                    submitErr: err.toString()
+                });
+            }
+        }
     }
 
     _renderEditModal() {
@@ -549,7 +608,7 @@ class EditModal extends React.Component {
                 <div className="grid-block vertical no-overflow">
                     <Form className="full-width" layout="vertical">
                         <AmountSelector
-                            label="transfer.amount"
+                            label="credit_offer.current_available_balance"
                             amount={amount}
                             onChange={this.onAmountChanged.bind(this)}
                             asset={asset_id}
@@ -728,6 +787,9 @@ class EditModal extends React.Component {
                         />
                     </Form>
                 </div>
+                {this.state.submitErr && (
+                    <Alert message={this.state.submitErr} type="warning" />
+                )}
             </Modal>
         );
     }
@@ -931,20 +993,17 @@ class EditModalConnectWrapper extends React.Component {
     }
 }
 
-EditModalConnectWrapper = connect(
-    EditModalConnectWrapper,
-    {
-        listenTo() {
-            return [AccountStore, SettingsStore];
-        },
-        getProps(props) {
-            return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
-                currentLocale: SettingsStore.getState().settings.get("locale")
-            };
-        }
+EditModalConnectWrapper = connect(EditModalConnectWrapper, {
+    listenTo() {
+        return [AccountStore, SettingsStore];
+    },
+    getProps(props) {
+        return {
+            currentAccount: AccountStore.getState().currentAccount,
+            passwordAccount: AccountStore.getState().passwordAccount,
+            currentLocale: SettingsStore.getState().settings.get("locale")
+        };
     }
-);
+});
 
 export default EditModalConnectWrapper;

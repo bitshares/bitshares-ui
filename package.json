@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "5.0.220701-rc1",
+    "version": "5.0.230113-rc1",
     "description": "Reference UI to showcase all features of the BitShares blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Devs <ui-dev@bitshares.org>",
@@ -137,6 +137,7 @@
         }
     },
     "dependencies": {
+        "@hiveio/hive-js": "^2.0.5",
         "alt": "https://github.com/bitshares/alt.git",
         "alt-container": "https://github.com/bitshares/alt-container.git",
         "alt-react": "https://github.com/bitshares/alt-react.git",
@@ -169,8 +170,8 @@
         "jspdf-autotable": "^3.1.1",
         "lodash-es": "^4.17.10",
         "lzma": "2.1.6",
-        "moment": "^2.29.2",
-        "moment-timezone": "^0.5.16",
+        "moment": "^2.29.4",
+        "moment-timezone": "^0.5.35",
         "node-rsa": "^1.1.1",
         "notifyjs": "^3.0.0",
         "numeral": "2.0.4",
@@ -204,7 +205,6 @@
         "react-tooltip": "^4.2.21",
         "react-transition-group": "^4.4.2",
         "react-translate-component": "^0.15.1",
-        "steem-js-api": "^0.7.1",
         "stream-browserify": "^3.0.0",
         "string-similarity": "^2.0.0",
         "tcomb": "2.5.2",

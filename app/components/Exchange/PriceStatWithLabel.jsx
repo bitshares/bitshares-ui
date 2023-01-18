@@ -17,7 +17,10 @@ export default class PriceStatWithLabel extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.volume2 && nextProps.volume2 !== this.props.volume2) {
+        if (
+            (nextProps.volume2 && nextProps.volume2 !== this.props.volume2) ||
+            nextProps.base !== this.props.base
+        ) {
             return true;
         }
         return (

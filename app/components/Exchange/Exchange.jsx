@@ -43,6 +43,7 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
 import counterpart from "counterpart";
+import {numberExponentToLarge} from "../../lib/common/numberExplonentConversion";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -2154,9 +2155,9 @@ class Exchange extends React.Component {
                             this,
                             "bid"
                         )}
-                        amount={bid.toReceiveText}
-                        price={bid.priceText}
-                        total={bid.forSaleText}
+                        amount={numberExponentToLarge(bid.toReceiveText)}
+                        price={numberExponentToLarge(bid.priceText)}
+                        total={numberExponentToLarge(bid.forSaleText)}
                         quote={quote}
                         base={base}
                         amountChange={this._onInputReceive.bind(
@@ -2311,9 +2312,9 @@ class Exchange extends React.Component {
                         }}
                         type="ask"
                         hideHeader={true}
-                        amount={ask.forSaleText}
-                        price={ask.priceText}
-                        total={ask.toReceiveText}
+                        amount={numberExponentToLarge(ask.forSaleText)}
+                        price={numberExponentToLarge(ask.priceText)}
+                        total={numberExponentToLarge(ask.toReceiveText)}
                         quote={quote}
                         base={base}
                         expirationType={expirationType["ask"]}

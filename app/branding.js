@@ -161,6 +161,14 @@ export function getMyMarketsQuotes() {
         ],
         openledgerTokens: [],
         rudexTokens: [],
+        piratecashTockens: [
+            "PIRATE.PIRATE",
+            "PIRATE.BTC",
+            "PIRATE.LTC",
+            "PIRATE.BCC",
+            "PIRATE.DOGE",
+            "PIRATE.COSA"
+        ],
         xbtsxTokens: [
             "XBTSX.STH",
             "XBTSX.POST",
@@ -228,8 +236,19 @@ export function getMyMarketsQuotes() {
             "XBTSX.LUNR",
             "XBTSX.LUNAREUM"
         ],
-        honestTokens: ["HONEST.BTC", "HONEST.USD"],
-        ioxbankTokens: ["IOB.XRP"],
+        honestTokens: [
+            "HONEST.BTC",
+            "HONEST.USD",
+            "HONEST.BTCSHORT",
+            "HONEST.USDSHORT",
+            "HONEST.XAG",
+            "HONEST.XAU",
+            "HONEST.ETH",
+            "HONEST.ETH1",
+            "HONEST.XRP",
+            "HONEST.XRP1"
+        ],
+        ioxbankTokens: ["IOB.XRP", "IOB.XLM"],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
@@ -259,6 +278,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "GDEX.BTO"],
         ["USD", "HONEST.BTC"],
         ["USD", "HONEST.USD"],
+        ["USD", "HONEST.BTCSHORT"],
+        ["USD", "HONEST.USDSHORT"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
         ["CNY", "YOYOW"],
@@ -273,6 +294,9 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "GDEX.GXC"],
         ["CNY", "HONEST.BTC"],
         ["CNY", "HONEST.USD"],
+        ["CNY", "HONEST.BTCSHORT"],
+        ["CNY", "HONEST.USDSHORT"],
+        ["CNY", "HONEST.CNY"],
         ["BTS", "RUBLE"],
         ["BTS", "HERO"],
         ["BTS", "OCT"],
@@ -296,7 +320,13 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "XBTSX.USDT"],
         ["BTS", "HONEST.BTC"],
         ["BTS", "HONEST.USD"],
+        ["BTS", "HONEST.BTCSHORT"],
+        ["BTS", "HONEST.USDSHORT"],
+        ["BTS", "HONEST.CNY"],
+        ["BTS", "HONEST.XAG"],
+        ["BTS", "HONEST.XAU"],
         ["BTS", "IOB.XRP"],
+        ["BTS", "IOB.XLM"],
         ["BTS", "HERTZ"]
     ].filter(a => {
         if (!quotes.length) return true;
@@ -313,7 +343,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["XBTSX.", "GDEX.", "HONEST.", "IOB."];
+    return ["XBTSX.", "GDEX.", "HONEST.", "IOB.", "PIRATE."];
 }
 
 /**
@@ -336,6 +366,7 @@ export function allowedGateway(gateway) {
         "OPEN", // keep to display the warning icon, permanently disabled in gateways.js
         "RUDEX", // keep to display the warning icon, permanently disabled in gateways.js
         "GDEX",
+        "PIRATE",
         "XBTSX",
         "IOB",
         "CITADEL", // keep to display the warning icon, permanently disabled in gateways.js
@@ -373,6 +404,6 @@ export function getConfigurationAsset() {
     };
 }
 
-export function getSteemNewsTag() {
-    return null;
+export function getHiveNewsTag() {
+    return "bitshares";
 }

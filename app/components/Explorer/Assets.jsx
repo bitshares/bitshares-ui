@@ -612,7 +612,7 @@ class Assets extends React.Component {
                                     )}
                                     pagination={{
                                         position: "bottom",
-                                        pageSize: 6
+                                        pageSize: this.state.rowsOnPage
                                     }}
                                 />
                             ) : (
@@ -621,6 +621,10 @@ class Assets extends React.Component {
                                     rowKey="symbol"
                                     columns={columns}
                                     dataSource={dataSource}
+                                    pagination={{
+                                        pageSize: this.state.rowsOnPage,
+                                        total: dataSource.length
+                                    }}
                                 />
                             )}
                         </div>
