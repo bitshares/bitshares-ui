@@ -989,7 +989,7 @@
                 "tooltip_resolution_date": "The resolution date is an informal statement when the asset owner intends to resolve this betting market."
             },
             "price_feed": {
-                "external_feed_price": "Feed price (derived from price feeds and other parameters)",
+                "external_feed_price": "Settlement price (derived from price feeds and other parameters)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
                 "global_settlement_price": "Global settlement price will be",
