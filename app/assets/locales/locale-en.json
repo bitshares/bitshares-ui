@@ -573,6 +573,8 @@
         }
     },
     "credit_offer": {
+        "override_authority_warning_p1": "%(symbol)s is controlled by its issuer",
+        "override_authority_warning_p2": "Do your own due diligence when using ",
         "override_authority_warning": "Be careful, this asset has an `override_authority` setting, so the owner of the asset could transfer it back to himself with no agreement",
         "total_to_repay": "Repay Total",
         "current_available_balance": "Current Available Balance",
