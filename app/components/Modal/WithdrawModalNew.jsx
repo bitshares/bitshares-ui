@@ -901,7 +901,7 @@ class WithdrawModalNew extends React.Component {
               !address ||
               !canCoverWithdrawal ||
               addressError ||
-              quantity < minWithdraw;
+              quantity <= minWithdraw;
 
         let storedAddresses = WithdrawAddresses.get(
             selectedAsset.toLowerCase()
