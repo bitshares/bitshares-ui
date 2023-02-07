@@ -589,12 +589,14 @@
         "credit_offers": "Credit Offers",
         "credit_right_account": "Account",
         "credit_rights": "Credit Rights",
+        "current_available_balance": "Current Available Balance",
         "current_balance": "Available",
         "debt": "Debt",
         "edit": "Modify credit offer",
         "estimated_fee": "Estimated fee",
         "fee_rate": "Rate",
         "info_borrow_err": "Can't borrow from oneself ！",
+        "invalid_min_bigger_amount": "Min cannot be bigger than amount",
         "list_repay_period": {
             "period_-1": "No limit",
             "period_0": "12 Hours",
@@ -609,8 +611,10 @@
         },
         "loan_amount": "Maximum",
         "min_borrow": "Minimum",
+        "min_loan_bigger_than_balance": "Min to loan > Total credit offer balance (%(min)s > %(balance)s)",
         "mortgage_assets": "Collateral",
         "my_debt": "My debt",
+        "number_is_to_big": "You have used a big number which caused overflow",
         "operate": "Action",
         "operate_delete": "Delete",
         "operate_edit": "Modify",
@@ -627,6 +631,7 @@
         "title_add_pawn": "Add collateral",
         "title_add_whitelist": "Add white account",
         "total_amount": "Total",
+        "total_to_repay": "Repay Total",
         "validity_period": "Expiration",
         "whitelist_account": "Account"
     },
@@ -1344,6 +1349,13 @@
         "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "Limit Reached",
         "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
+        "piratecash": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact PirateCash at:",
+            "under_construction": "Under Construction"
+        },
         "please_generate_address": "Please, get new address ",
         "purchase": "Purchase %(asset)s",
         "purchase_1": "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
@@ -1396,13 +1408,6 @@
         "withdraw_placeholder": "Please enter your %(asset)s address",
         "withdraw_summary": "Withdrawal summary",
         "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
-        "piratecash": {
-            "coming_soon": "Coming soon",
-            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
-            "min_amount_error": "Please enter number >= minimum",
-            "support_block": "For support, please contact PirateCash at:",
-            "under_construction": "Under Construction"
-        },
         "xbtsx": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",

@@ -589,12 +589,14 @@
         "credit_offers": "P2P抵押贷列表",
         "credit_right_account": "债权账号",
         "credit_rights": "P2P债权列表",
+        "current_available_balance": "Current Available Balance",
         "current_balance": "剩余可借",
         "debt": "负债",
         "edit": "修改P2P抵押贷",
         "estimated_fee": "预估手续费",
         "fee_rate": "手续费率",
         "info_borrow_err": "不能向自己借款！",
+        "invalid_min_bigger_amount": "Min cannot be bigger than amount",
         "list_repay_period": {
             "period_-1": "No limit",
             "period_0": "12小时",
@@ -609,8 +611,10 @@
         },
         "loan_amount": "借款额度",
         "min_borrow": "最低借款",
+        "min_loan_bigger_than_balance": "Min to loan > Total credit offer balance (%(min)s > %(balance)s)",
         "mortgage_assets": "抵押资产",
         "my_debt": "我的负债",
+        "number_is_to_big": "You have used a big number which caused overflow",
         "operate": "操作",
         "operate_delete": "删除",
         "operate_edit": "修改",
@@ -627,6 +631,7 @@
         "title_add_pawn": "添加可抵押资产",
         "title_add_whitelist": "添加白名单",
         "total_amount": "总数量",
+        "total_to_repay": "Repay Total",
         "validity_period": "有效期",
         "whitelist_account": "白名单账号"
     },
@@ -1350,6 +1355,13 @@
         "min_deposit_warning_asset": "重要：仅可发送%(coin)s到此充值地址，此区块链上的核心代币为%(coin)s。发送少于%(minDeposit)s%(coin)s或者其它种类虚拟货币到此地址将会导致充值失败并无法追回。",
         "over_limit": "到达上限",
         "phase_out_warning": "建议使用新的{deposit_modal_link} 及 {withdraw_modal_link}模式 ，此页面将逐步淘汰。",
+        "piratecash": {
+            "coming_soon": "即将上线",
+            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
+            "min_amount_error": "请输入大于最小金额的数量",
+            "support_block": "请联系 PirateCash 获取客户支持：",
+            "under_construction": "施工中"
+        },
         "please_generate_address": "请使用新地址",
         "purchase": "购买 %(asset)s",
         "purchase_1": "快速简便地从外部钱包使用 %(inputAsset)s 购买 %(outputAsset)s 。这项服务由 <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> 提供",
@@ -1402,13 +1414,6 @@
         "withdraw_placeholder": "请输入你的 %(asset)s 地址",
         "withdraw_summary": "提币概览",
         "withdraw_to": "点击下方按钮进行 %(asset)s 提币",
-        "piratecash": {
-            "coming_soon": "即将上线",
-            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
-            "min_amount_error": "请输入大于最小金额的数量",
-            "support_block": "请联系 PirateCash 获取客户支持：",
-            "under_construction": "施工中"
-        },
         "xbtsx": {
             "coming_soon": "即将上线",
             "min_amount": "最小金额：%(minAmount)s %(symbol)s",
