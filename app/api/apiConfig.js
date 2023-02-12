@@ -289,7 +289,7 @@ export const settingsAPIs = {
             contact: "telegram: lebinbit"
         },
         {
-            url: "wss://api.bitshares.info",
+            url: "wss://bitsharesapi.loclx.io",
             region: "North America",
             country: "United States",
             location: "Chicago",
