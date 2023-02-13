@@ -950,6 +950,7 @@
                 "accumulated_collateral_fees": "Accumulated collateral fees",
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
+                "claim_collateral_fees": "Claim fees",
                 "claim_pool_text": "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text": "The asset owner may claim any accumulated fees here.",
                 "core_exchange_rate": "Core exchange rate (CER)",
