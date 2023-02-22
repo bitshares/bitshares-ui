@@ -161,6 +161,14 @@ export function getMyMarketsQuotes() {
         ],
         openledgerTokens: [],
         rudexTokens: [],
+        piratecashTockens: [
+            "PIRATE.PIRATE",
+            "PIRATE.BTC",
+            "PIRATE.LTC",
+            "PIRATE.BCC",
+            "PIRATE.DOGE",
+            "PIRATE.COSA"
+        ],
         xbtsxTokens: [
             "XBTSX.STH",
             "XBTSX.POST",
@@ -228,8 +236,59 @@ export function getMyMarketsQuotes() {
             "XBTSX.LUNR",
             "XBTSX.LUNAREUM"
         ],
-        honestTokens: ["HONEST.BTC", "HONEST.USD"],
-        ioxbankTokens: ["IOB.XRP"],
+        honestTokens: [
+            "HONEST",
+            "HONEST.MONEY",
+            "HONEST.AGORISM",
+            "HONEST.DEV",
+            "HONEST.CNY",
+            "HONEST.USD",
+            "HONEST.BTC",
+            "HONEST.XAU",
+            "HONEST.XAG",
+            "HONEST.ETH",
+            "HONEST.XRP",
+            "HONEST.XRP1",
+            "HONEST.ETH1",
+            "HONEST.USDSHORT",
+            "HONEST.BTCSHORT",
+            "HONEST.ADA",
+            "HONEST.DOT",
+            "HONEST.LTC",
+            "HONEST.SOL",
+            "HONEST.XMR",
+            "HONEST.ATOM",
+            "HONEST.XLM",
+            "HONEST.ALGO",
+            "HONEST.FIL",
+            "HONEST.EOS",
+            "HONEST.RUB",
+            "HONEST.EUR",
+            "HONEST.GBP",
+            "HONEST.JPY",
+            "HONEST.KRW",
+            "HONEST.ADASHORT",
+            "HONEST.DOTSHORT",
+            "HONEST.LTCSHORT",
+            "HONEST.SOLSHORT",
+            "HONEST.XMRSHORT",
+            "HONEST.ATOMSHORT",
+            "HONEST.XLMSHORT",
+            "HONEST.ALGOSHORT",
+            "HONEST.FILSHORT",
+            "HONEST.EOSSHORT",
+            "HONEST.RUBSHORT",
+            "HONEST.EURSHORT",
+            "HONEST.GBPSHORT",
+            "HONEST.JPYSHORT",
+            "HONEST.KRWSHORT",
+            "HONEST.XRPSHORT",
+            "HONEST.ETHSHORT",
+            "HONEST.XAUSHORT",
+            "HONEST.XAGSHORT",
+            "HONEST.CNYSHORT"
+        ],
+        ioxbankTokens: ["IOB.XRP", "IOB.XLM"],
         otherTokens: ["CVCOIN", "HERO", "OCT", "HERTZ", "YOYOW"]
     };
 
@@ -259,6 +318,12 @@ export function getFeaturedMarkets(quotes = []) {
         ["USD", "GDEX.BTO"],
         ["USD", "HONEST.BTC"],
         ["USD", "HONEST.USD"],
+        ["USD", "HONEST.BTCSHORT"],
+        ["USD", "HONEST.USDSHORT"],
+        ["USD", "HERTZ"],
+        ["USD", "URTHR"],
+        ["USD", "SKULD"],
+        ["USD", "VERTHANDI"],
         ["CNY", "BTS"],
         ["CNY", "USD"],
         ["CNY", "YOYOW"],
@@ -273,6 +338,13 @@ export function getFeaturedMarkets(quotes = []) {
         ["CNY", "GDEX.GXC"],
         ["CNY", "HONEST.BTC"],
         ["CNY", "HONEST.USD"],
+        ["CNY", "HONEST.BTCSHORT"],
+        ["CNY", "HONEST.USDSHORT"],
+        ["CNY", "HONEST.CNY"],
+        ["CNY", "HERTZ"],
+        ["CNY", "URTHR"],
+        ["CNY", "SKULD"],
+        ["CNY", "VERTHANDI"],
         ["BTS", "RUBLE"],
         ["BTS", "HERO"],
         ["BTS", "OCT"],
@@ -294,10 +366,62 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "XBTSX.USDC"],
         ["BTS", "XBTSX.USDN"],
         ["BTS", "XBTSX.USDT"],
-        ["BTS", "HONEST.BTC"],
+        ["BTS", "HONEST"],
+        ["BTS", "HONEST.MONEY"],
+        ["BTS", "HONEST.AGORISM"],
+        ["BTS", "HONEST.DEV"],
+        ["BTS", "HONEST.CNY"],
         ["BTS", "HONEST.USD"],
+        ["BTS", "HONEST.BTC"],
+        ["BTS", "HONEST.XAU"],
+        ["BTS", "HONEST.XAG"],
+        ["BTS", "HONEST.ETH"],
+        ["BTS", "HONEST.XRP"],
+        ["BTS", "HONEST.XRP1"],
+        ["BTS", "HONEST.ETH1"],
+        ["BTS", "HONEST.USDSHORT"],
+        ["BTS", "HONEST.BTCSHORT"],
+        ["BTS", "HONEST.ADA"],
+        ["BTS", "HONEST.DOT"],
+        ["BTS", "HONEST.LTC"],
+        ["BTS", "HONEST.SOL"],
+        ["BTS", "HONEST.XMR"],
+        ["BTS", "HONEST.ATOM"],
+        ["BTS", "HONEST.XLM"],
+        ["BTS", "HONEST.ALGO"],
+        ["BTS", "HONEST.FIL"],
+        ["BTS", "HONEST.EOS"],
+        ["BTS", "HONEST.RUB"],
+        ["BTS", "HONEST.EUR"],
+        ["BTS", "HONEST.GBP"],
+        ["BTS", "HONEST.JPY"],
+        ["BTS", "HONEST.KRW"],
+        ["BTS", "HONEST.ADASHORT"],
+        ["BTS", "HONEST.DOTSHORT"],
+        ["BTS", "HONEST.LTCSHORT"],
+        ["BTS", "HONEST.SOLSHORT"],
+        ["BTS", "HONEST.XMRSHORT"],
+        ["BTS", "HONEST.ATOMSHORT"],
+        ["BTS", "HONEST.XLMSHORT"],
+        ["BTS", "HONEST.ALGOSHORT"],
+        ["BTS", "HONEST.FILSHORT"],
+        ["BTS", "HONEST.EOSSHORT"],
+        ["BTS", "HONEST.RUBSHORT"],
+        ["BTS", "HONEST.EURSHORT"],
+        ["BTS", "HONEST.GBPSHORT"],
+        ["BTS", "HONEST.JPYSHORT"],
+        ["BTS", "HONEST.KRWSHORT"],
+        ["BTS", "HONEST.XRPSHORT"],
+        ["BTS", "HONEST.ETHSHORT"],
+        ["BTS", "HONEST.XAUSHORT"],
+        ["BTS", "HONEST.XAGSHORT"],
+        ["BTS", "HONEST.CNYSHORT"],
         ["BTS", "IOB.XRP"],
-        ["BTS", "HERTZ"]
+        ["BTS", "IOB.XLM"],
+        ["BTS", "HERTZ"],
+        ["BTS", "URTHR"],
+        ["BTS", "SKULD"],
+        ["BTS", "VERTHANDI"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -313,7 +437,7 @@ export function getAssetNamespaces() {
     if (_isTestnet()) {
         return [];
     }
-    return ["XBTSX.", "GDEX.", "HONEST.", "IOB."];
+    return ["XBTSX.", "GDEX.", "HONEST.", "IOB.", "PIRATE."];
 }
 
 /**
@@ -336,6 +460,7 @@ export function allowedGateway(gateway) {
         "OPEN", // keep to display the warning icon, permanently disabled in gateways.js
         "RUDEX", // keep to display the warning icon, permanently disabled in gateways.js
         "GDEX",
+        "PIRATE",
         "XBTSX",
         "IOB",
         "CITADEL", // keep to display the warning icon, permanently disabled in gateways.js
@@ -373,6 +498,6 @@ export function getConfigurationAsset() {
     };
 }
 
-export function getSteemNewsTag() {
-    return null;
+export function getHiveNewsTag() {
+    return "bitshares";
 }

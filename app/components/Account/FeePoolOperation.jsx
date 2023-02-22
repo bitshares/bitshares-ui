@@ -35,6 +35,13 @@ class FeePoolOperation extends React.Component {
         });
     }
 
+    onClaimCollateralInput(key, {amount}) {
+        this.state[key + "Asset"].setAmount({real: amount});
+        this.setState({
+            [key]: amount
+        });
+    }
+
     onFundPool = () =>
         AssetActions.fundPool(
             this.state.newFunderAccount
@@ -68,8 +75,35 @@ class FeePoolOperation extends React.Component {
             amount: 0,
             precision: this.props.asset.get("precision"),
             asset_id: this.props.asset.get("id")
+        }),
+        claimCollateralFeesAmount: 0,
+        claimCollateralFeesAmountAsset: new Asset({
+            amount: 0,
+            precision: this.props.asset.get("precision"),
+            asset_id: this.props.asset.get("id")
+        }),
+        backingAsset: new Asset({
+            amount: 0,
+            asset_id: this.props.asset.has("bitasset")
+                ? this.props.asset.getIn([
+                      "bitasset",
+                      "options",
+                      "short_backing_asset"
+                  ])
+                : "1.3.0"
         })
     });
+
+    onClaimCollateralFees() {
+        let account = ChainStore.getAccount(this.props.funderAccountName);
+        if (!account) return;
+        AssetActions.claimCollateralFees(
+            account.get("id"),
+            this.props.asset,
+            this.state.backingAsset,
+            this.state.claimCollateralFeesAmountAsset
+        );
+    }
 
     onClaimFees() {
         let account = ChainStore.getAccount(this.props.funderAccountName);
@@ -333,6 +367,107 @@ class FeePoolOperation extends React.Component {
         );
     }
 
+    renderClaimCollateralFees() {
+        const {props} = this;
+        const {claimCollateralFeesAmount} = this.state;
+        const {asset, getDynamicObject} = props;
+        let dynamicObject = getDynamicObject(
+            asset.get("dynamic_asset_data_id")
+        );
+        console.log(dynamicObject);
+        let backingAsset = this.props.asset.has("bitasset")
+            ? this.props.asset.getIn([
+                  "bitasset",
+                  "options",
+                  "short_backing_asset"
+              ])
+            : "1.3.0";
+        let unclaimedCollateralBalance = dynamicObject
+            ? dynamicObject.get("accumulated_collateral_fees")
+            : 0;
+        let validClaim =
+            claimCollateralFeesAmount > 0 &&
+            this.state.claimCollateralFeesAmountAsset.getAmount() <=
+                unclaimedCollateralBalance;
+
+        let unclaimedCollateralBalanceText = (
+            <span
+                onClick={() => {
+                    this.state.claimCollateralFeesAmountAsset.setAmount({
+                        sats: dynamicObject.get("accumulated_collateral_fees")
+                    });
+                    this.setState({
+                        claimCollateralFeesAmount: this.state.claimCollateralFeesAmountAsset.getAmount(
+                            {
+                                real: true
+                            }
+                        )
+                    });
+                }}
+            >
+                <Translate component="span" content="transfer.available" />
+                :&nbsp;
+                <FormattedAsset
+                    amount={unclaimedCollateralBalance}
+                    asset={backingAsset}
+                />
+            </span>
+        );
+        return (
+            <div>
+                <Translate
+                    component="p"
+                    content="explorer.asset.fee_pool.claim_text"
+                    asset={backingAsset}
+                />
+                <div style={{paddingBottom: "1rem"}}>
+                    <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />
+                    :&nbsp;
+                    {dynamicObject ? (
+                        <FormattedAsset
+                            amount={dynamicObject.get(
+                                "accumulated_collateral_fees"
+                            )}
+                            asset={backingAsset}
+                        />
+                    ) : null}
+                </div>
+
+                <AmountSelector
+                    label="transfer.amount"
+                    display_balance={unclaimedCollateralBalanceText}
+                    amount={claimCollateralFeesAmount}
+                    onChange={this.onClaimCollateralInput.bind(
+                        this,
+                        "claimCollateralFeesAmount"
+                    )}
+                    asset={backingAsset}
+                    assets={[backingAsset]}
+                    placeholder="0.0"
+                    tabIndex={1}
+                    style={{width: "100%", paddingTop: 16}}
+                />
+
+                <div style={{paddingTop: "1rem"}} className="button-group">
+                    <button
+                        className={classnames("button", {
+                            disabled: !validClaim
+                        })}
+                        onClick={this.onClaimCollateralFees.bind(this)}
+                    >
+                        <Translate content="explorer.asset.fee_pool.claim_collateral_fees" />
+                    </button>
+                    <button
+                        className="button outline"
+                        onClick={this.reset.bind(this)}
+                    >
+                        <Translate content="account.perm.reset" />
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     render() {
         if (this.props.type === "fund") {
             return this.renderFundPool();
@@ -340,6 +475,8 @@ class FeePoolOperation extends React.Component {
             return this.renderClaimPool();
         } else if (this.props.type === "claim_fees") {
             return this.renderClaimFees();
+        } else if (this.props.type === "claim_collateral_fees") {
+            return this.renderClaimCollateralFees();
         }
     }
 }

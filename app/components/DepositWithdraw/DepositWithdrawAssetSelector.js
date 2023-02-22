@@ -97,7 +97,7 @@ class DepositWithdrawAssetSelector extends React.Component {
         let {onChange} = this.props;
         let asset = this.getSelectedAssetArray(selectedAsset);
 
-        if (onChange) {
+        if (onChange && asset && asset.id) {
             onChange(asset.id);
         }
     }
@@ -124,9 +124,9 @@ class DepositWithdrawAssetSelector extends React.Component {
                 showSearch
                 style={{width: "100%"}}
             >
-                {/* 
+                {/*
                     NOTE
-                    On Deposit, it would be useful to view Min Deposit 
+                    On Deposit, it would be useful to view Min Deposit
                     and Gateway Fee to the right of the selection so the
                     user doesn't have to select a specific gateway to view
                     this information.
@@ -153,16 +153,13 @@ class DepositWithdrawAssetSelector extends React.Component {
 }
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
 
-export default connect(
-    DepositWithdrawAssetSelector,
-    {
-        listenTo() {
-            return [GatewayStore];
-        },
-        getProps() {
-            return {
-                backedCoins: GatewayStore.getState().backedCoins
-            };
-        }
+export default connect(DepositWithdrawAssetSelector, {
+    listenTo() {
+        return [GatewayStore];
+    },
+    getProps() {
+        return {
+            backedCoins: GatewayStore.getState().backedCoins
+        };
     }
-);
+});

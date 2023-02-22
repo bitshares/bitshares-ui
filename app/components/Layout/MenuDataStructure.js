@@ -224,6 +224,7 @@ class MenuDataStructure {
                 target: "/pools",
                 icon: {name: "poolmart", title: "icons.poolmart.title"},
                 text: "header.poolmart",
+                inHeaderBehavior: MenuItemType.Always,
                 inDropdownBehavior: MenuItemType.Always
             }),
             lending: state => ({

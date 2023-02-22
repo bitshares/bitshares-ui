@@ -7,7 +7,17 @@ import {Apis} from "bitsharesjs-ws";
 import humanizeDuration from "humanize-duration";
 
 export const FEE_RATE_DENOM = 1000000; // Denominator for SameT Fund fee calculation
-export const listRepayPeriod = [43200, 86400, 259200, 604800, 2592000, 7776000];
+export const listRepayPeriod = [
+    43200,
+    86400,
+    259200,
+    604800,
+    2592000,
+    7776000,
+    31536000,
+    63072000,
+    157680000
+];
 
 export const parsingTime = (time, locale) => {
     if (locale === "zh") locale = "zh_CN";

@@ -1,5 +1,5 @@
 import WalletUnlockActions from "actions/WalletUnlockActions";
-
+import accountUtils from "common/account_utils";
 import WalletDb from "stores/WalletDb";
 import {
     Aes,
@@ -38,7 +38,10 @@ const ApplicationApi = {
                 tr.add_type_operation("account_create", {
                     fee: {
                         amount: 0,
-                        asset_id: 0
+                        asset_id: accountUtils.getFinalFeeAsset(
+                            registrar,
+                            "account_create"
+                        )
                     },
                     registrar: chain_registrar.get("id"),
                     referrer: chain_referrer.get("id"),
@@ -118,10 +121,18 @@ const ApplicationApi = {
         propose_account = null, // should be called memo_sender, but is not for compatibility reasons with transfer. Is set to "from_account" for non proposals
         encrypt_memo = true,
         optional_nonce = null,
-        fee_asset_id = "1.3.0",
+        fee_asset_id = null,
         transactionBuilder = null
     }) {
         let unlock_promise = WalletUnlockActions.unlock();
+
+        if (!fee_asset_id) {
+            // use default fee asset selection if none given
+            fee_asset_id = accountUtils.getFinalFeeAsset(
+                from_account,
+                "transfer"
+            );
+        }
 
         let memo_sender_account = propose_account || from_account;
         return Promise.all([
@@ -170,8 +181,8 @@ const ApplicationApi = {
                                       memo
                                   )
                                 : Buffer.isBuffer(memo)
-                                    ? memo.toString("utf-8")
-                                    : memo
+                                ? memo.toString("utf-8")
+                                : memo
                         };
                     }
                 }
@@ -238,7 +249,7 @@ const ApplicationApi = {
         encrypt_memo = true,
         optional_nonce = null,
         propose_account = null,
-        fee_asset_id = "1.3.0",
+        fee_asset_id = null,
         transactionBuilder = null
     }) {
         if (transactionBuilder == null) {
@@ -287,12 +298,6 @@ const ApplicationApi = {
     },
 
     transfer_list(list_of_transfers, proposal_fee = null) {
-        if (!proposal_fee) {
-            proposal_fee = "1.3.0";
-        }
-        if (typeof proposal_fee !== "string") {
-            proposal_fee = proposal_fee.get("id");
-        }
         return WalletUnlockActions.unlock().then(() => {
             let proposer = null;
             let transfers = [];
@@ -309,6 +314,15 @@ const ApplicationApi = {
                             if (list_of_transfers[idx].propose_account) {
                                 if (proposer == null) {
                                     proposer = item.chain_propose_account;
+                                    if (!proposal_fee) {
+                                        proposal_fee = accountUtils.getFinalFeeAsset(
+                                            proposer,
+                                            "proposal_create"
+                                        );
+                                    }
+                                    if (typeof proposal_fee !== "string") {
+                                        proposal_fee = proposal_fee.get("id");
+                                    }
                                 }
                                 propose.push({op: item.transfer_op});
                             } else {
@@ -402,8 +416,8 @@ const ApplicationApi = {
                               memo
                           )
                         : Buffer.isBuffer(memo)
-                            ? memo.toString("utf-8")
-                            : memo
+                        ? memo.toString("utf-8")
+                        : memo
                 };
             }
 
@@ -411,7 +425,10 @@ const ApplicationApi = {
             tr.add_type_operation("asset_issue", {
                 fee: {
                     amount: 0,
-                    asset_id: 0
+                    asset_id: accountUtils.getFinalFeeAsset(
+                        from_account,
+                        "asset_issue"
+                    )
                 },
                 issuer: from_account,
                 asset_to_issue: {
@@ -444,7 +461,10 @@ const ApplicationApi = {
                 tr.add_type_operation("worker_create", {
                     fee: {
                         amount: 0,
-                        asset_id: 0
+                        asset_id: accountUtils.getFinalFeeAsset(
+                            account,
+                            "worker_create"
+                        )
                     },
                     owner,
                     work_begin_date: options.start,
@@ -513,7 +533,7 @@ const ApplicationApi = {
         periodInSeconds,
         periodsUntilExpiration,
         periodStartTime = null,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // default is now
@@ -526,6 +546,14 @@ const ApplicationApi = {
 
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                from,
+                "withdraw_permission_create"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -591,7 +619,7 @@ const ApplicationApi = {
         periodInSeconds,
         periodsUntilExpiration,
         periodStartTime = null,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // default is now
@@ -604,6 +632,14 @@ const ApplicationApi = {
 
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                from,
+                "withdraw_permission_update"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -662,11 +698,19 @@ const ApplicationApi = {
         claimAsset,
         claimAssetAmount,
         memo = null,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                to,
+                "withdraw_permission_claim"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -699,8 +743,8 @@ const ApplicationApi = {
                               memo
                           )
                         : Buffer.isBuffer(memo)
-                            ? memo.toString("utf-8")
-                            : memo
+                        ? memo.toString("utf-8")
+                        : memo
                 };
             }
         }
@@ -735,11 +779,19 @@ const ApplicationApi = {
         withdrawPermissionId,
         from,
         to,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                from,
+                "withdraw_permission_delete"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -775,11 +827,19 @@ const ApplicationApi = {
         asset,
         amount,
         policy,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                creator,
+                "vesting_balance_create"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -819,11 +879,16 @@ const ApplicationApi = {
         asset,
         amount,
         targetType = ChainTypes.ticket_type.lock_forever,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(account, "ticket_create");
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -860,11 +925,19 @@ const ApplicationApi = {
         shareAsset,
         takerFeePercent,
         withdrawalFeePercent,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                account,
+                "liquidity_pool_create"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -903,11 +976,19 @@ const ApplicationApi = {
     async liquidityPoolDelete(
         account,
         liquidityPoolId,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                account,
+                "liquidity_pool_delete"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -943,11 +1024,19 @@ const ApplicationApi = {
         assetB,
         amountA,
         amountB,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                account,
+                "liquidity_pool_deposit"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -991,11 +1080,19 @@ const ApplicationApi = {
         liquidityPoolId,
         shareAsset,
         shareAmount,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                account,
+                "liquidity_pool_withdraw"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {
@@ -1036,11 +1133,19 @@ const ApplicationApi = {
         amountToSell,
         receiveAsset,
         minToReceive,
-        feeAsset = "1.3.0",
+        feeAsset = null,
         broadcast = true
     ) {
         // account must be unlocked
         await WalletUnlockActions.unlock();
+
+        if (!feeAsset) {
+            // use default fee asset selection if none given
+            feeAsset = accountUtils.getFinalFeeAsset(
+                account,
+                "liquidity_pool_exchange"
+            );
+        }
 
         // ensure all arguments are chain objects
         let objects = {

@@ -1,18 +1,9 @@
 import React from "react";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import big from "bignumber.js";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import {
-    Form,
-    Modal,
-    Button,
-    Input,
-    Row,
-    Col,
-    Tabs
-} from "bitshares-ui-style-guide";
+import {Form, Modal, Button, Row, Col, Tabs} from "bitshares-ui-style-guide";
 import ApplicationApi from "api/ApplicationApi";
 import AccountStore from "stores/AccountStore";
 import AmountSelector from "../Utility/AmountSelectorStyleGuide";
@@ -26,6 +17,7 @@ class PoolStakeModal extends React.Component {
     static propTypes = {
         pool: ChainTypes.ChainLiquidityPool.isRequired
     };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -58,7 +50,7 @@ class PoolStakeModal extends React.Component {
         );
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (this.props.isModalVisible !== newProps.isModalVisible) {
             this.setState({
                 isModalVisible: newProps.isModalVisible
@@ -75,9 +67,6 @@ class PoolStakeModal extends React.Component {
             assetAAmount,
             assetBAmount,
             shareAssetAmount,
-            assetAErr,
-            assetBErr,
-            shareAssetErr,
             currentTab
         } = this.state;
 
@@ -118,11 +107,7 @@ class PoolStakeModal extends React.Component {
                 pool.getIn(["share_asset", "symbol"]),
                 Math.floor(
                     Number(shareAssetAmount) * Number(sharedAssetPrecision)
-                ),
-                pool.getIn(["asset_a", "symbol"]),
-                pool.getIn(["asset_b", "symbol"]),
-                Math.floor(Number(assetAAmount) * Number(assetAPrecision)),
-                Math.floor(Number(assetBAmount) * Number(assetBPrecision))
+                )
             )
                 .then(res => {
                     console.log("exchange:", res);
@@ -229,7 +214,7 @@ class PoolStakeModal extends React.Component {
 
     onChangeAssetAAmount(v) {
         const {currentTab} = this.state;
-        const {pool, account} = this.props;
+        const {pool} = this.props;
         const currentSupply = this.getShareAssetCurrentSupply();
         if (currentSupply !== undefined) {
             this.setState({
@@ -262,7 +247,36 @@ class PoolStakeModal extends React.Component {
                 Number(pool.getIn(["dynamic_share_asset", "current_supply"])) /
                 Number(new big(10).toPower(precisionPP));
 
-            if (assetBAmount && assetBAmount > 0) {
+            if (Number(v.amount) > 0 && poolamounta > 0) {
+                this.setState({
+                    assetBAmount: Math.min(
+                        (Number(v.amount) *
+                            (Number(poolamountb) / Number(poolamountbp))) /
+                            (Number(poolamounta) / Number(poolamountap))
+                    ),
+                    shareAssetAmount: Math.min(
+                        (Number(poolsupply) *
+                            Number(v.amount) *
+                            Number(new big(10).toPower(precisionA))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP)),
+                        (Number(poolsupply) *
+                            assetBAmount *
+                            Number(new big(10).toPower(precisionB))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP))
+                    )
+                });
+            }
+            if (!v.amount) {
+                this.setState({
+                    assetBAmount: 0
+                });
+            }
+
+            if (v.amount > 0 && assetBAmount > 0) {
                 this.setState({
                     shareAssetAmount: Math.min(
                         (Number(poolsupply) *
@@ -320,8 +334,36 @@ class PoolStakeModal extends React.Component {
             let poolsupply =
                 Number(pool.getIn(["dynamic_share_asset", "current_supply"])) /
                 Number(new big(10).toPower(precisionPP));
+            if (Number(v.amount) > 0 && poolamountb > 0) {
+                this.setState({
+                    assetAAmount: Math.min(
+                        (Number(v.amount) *
+                            (Number(poolamounta) / Number(poolamountap))) /
+                            (Number(poolamountb) / Number(poolamountbp))
+                    ),
+                    shareAssetAmount: Math.min(
+                        (Number(poolsupply) *
+                            Number(v.amount) *
+                            Number(new big(10).toPower(precisionB))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP)),
+                        (Number(poolsupply) *
+                            assetAAmount *
+                            Number(new big(10).toPower(precisionA))) /
+                            (Number(poolamounta) /
+                                Number(new big(10).toPower(precisionA))) /
+                            Number(new big(10).toPower(precisionPP))
+                    )
+                });
+            }
+            if (!v.amount) {
+                this.setState({
+                    assetAAmount: 0
+                });
+            }
 
-            if (v.amount > 0) {
+            if (v.amount > 0 && assetAAmount > 0) {
                 this.setState({
                     shareAssetAmount: Math.min(
                         (Number(poolsupply) *
@@ -345,7 +387,7 @@ class PoolStakeModal extends React.Component {
 
     onChangeShareAssetAmount(v) {
         const {currentTab} = this.state;
-        const {pool, account} = this.props;
+        const {pool} = this.props;
         const currentSupply = pool.getIn([
             "dynamic_share_asset",
             "current_supply"
@@ -721,16 +763,13 @@ class PoolStakeModal extends React.Component {
     }
 }
 
-export default connect(
-    BindToChainState(PoolStakeModal),
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps(props) {
-            return {
-                account: AccountStore.getState().currentAccount
-            };
-        }
+export default connect(BindToChainState(PoolStakeModal), {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            account: AccountStore.getState().currentAccount
+        };
     }
-);
+});

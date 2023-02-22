@@ -86,9 +86,9 @@ class PoolExchangeModal extends React.Component {
             account,
             pool.get("id"),
             pool.getIn([`asset_${amountToSellTag}`, "symbol"]),
-            parseFloat(amountToSell) * amountToSellPrecision,
+            Math.round(parseFloat(amountToSell) * amountToSellPrecision),
             pool.getIn([`asset_${minToReceiveTag}`, "symbol"]),
-            parseFloat(minToReceive) * minToReceivePrecision
+            Math.round(parseFloat(minToReceive) * minToReceivePrecision)
         )
             .then(() => {
                 console.log("exchange:");
@@ -741,16 +741,13 @@ class PoolExchangeModal extends React.Component {
     }
 }
 
-export default connect(
-    BindToChainState(PoolExchangeModal),
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps(props) {
-            return {
-                account: AccountStore.getState().currentAccount
-            };
-        }
+export default connect(BindToChainState(PoolExchangeModal), {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps(props) {
+        return {
+            account: AccountStore.getState().currentAccount
+        };
     }
-);
+});

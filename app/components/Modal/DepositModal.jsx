@@ -184,7 +184,13 @@ class DepositModalContent extends DecimalChecker {
         this._getDepositConfirmation(backingAsset);
 
         let depositAddress;
-        if (selectedGateway && selectedAsset) {
+        if (
+            selectedGateway &&
+            selectedAsset &&
+            (gatewayStatus[selectedGateway].hasOwnProperty("depositCaching")
+                ? gatewayStatus[selectedGateway].depositCaching
+                : true)
+        ) {
             depositAddress = this.deposit_address_cache.getCachedInputAddress(
                 selectedGateway.toLowerCase(),
                 account,
@@ -507,7 +513,7 @@ class DepositModalContent extends DecimalChecker {
                                     "irreversible" ? (
                                         <Translate content="gateway.gateway_deposit.confirmations.last_irreversible" />
                                     ) : depositConfirmation.type ===
-                                    "blocks" ? (
+                                      "blocks" ? (
                                         <Translate
                                             content="gateway.gateway_deposit.confirmations.n_blocks"
                                             blocks={depositConfirmation.value}

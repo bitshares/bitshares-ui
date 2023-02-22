@@ -105,11 +105,11 @@ class AssetActions {
             },
             bidder: account_id,
             additional_collateral: {
-                amount: coll * core_precision,
+                amount: Math.round(coll * core_precision),
                 asset_id: core.get("id")
             },
             debt_covered: {
-                amount: debt * asset_precision,
+                amount: Math.round(debt * asset_precision),
                 asset_id: asset.get("id")
             },
             extensions: []
@@ -189,6 +189,35 @@ class AssetActions {
             amount_to_claim: {
                 asset_id: asset.get("id"),
                 amount: amount.getAmount()
+            }
+        });
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log("----- claimFees error ----->", error);
+                    dispatch(false);
+                });
+        };
+    }
+
+    claimCollateralFees(account_id, asset, backingAsset, claimFeesAmountAsset) {
+        let tr = WalletApi.new_transaction();
+
+        tr.add_type_operation("asset_claim_fees", {
+            fee: {
+                amount: 0,
+                asset_id: 0
+            },
+            issuer: account_id,
+            amount_to_claim: {
+                asset_id: backingAsset.asset_id,
+                amount: claimFeesAmountAsset.getAmount()
+            },
+            extensions: {
+                claim_from_asset_id: asset.get("id")
             }
         });
         return dispatch => {
