@@ -573,11 +573,6 @@
         }
     },
     "credit_offer": {
-        "override_authority_warning_p1": "%(symbol)s is controlled by its issuer",
-        "override_authority_warning_p2": "Do your own due diligence when using ",
-        "override_authority_warning": "Be careful, this asset has an `override_authority` setting, so the owner of the asset could transfer it back to himself with no agreement",
-        "total_to_repay": "Repay Total",
-        "current_available_balance": "Current Available Balance",
         "accepted_pawn": "Acceptable",
         "account": "Account",
         "active": "Active",
@@ -594,6 +589,7 @@
         "credit_offers": "Credit Offers",
         "credit_right_account": "Account",
         "credit_rights": "Credit Rights",
+        "current_available_balance": "Current Available Balance",
         "current_balance": "Available",
         "debt": "Debt",
         "edit": "Modify credit offer",
@@ -622,6 +618,9 @@
         "operate": "Action",
         "operate_delete": "Delete",
         "operate_edit": "Modify",
+        "override_authority_warning": "Be careful, this asset has an `override_authority` setting, so the owner of the asset could transfer it back to himself with no agreement",
+        "override_authority_warning_p1": "%(symbol)s is controlled by its issuer",
+        "override_authority_warning_p2": "Do your own due diligence when using ",
         "pawn_amount": "Amount",
         "plh_input_asset_name": "Enter asset",
         "plh_select_validity_period": "Choose an expiration date",
@@ -635,6 +634,7 @@
         "title_add_pawn": "Add collateral",
         "title_add_whitelist": "Add white account",
         "total_amount": "Total",
+        "total_to_repay": "Repay Total",
         "validity_period": "Expiration",
         "whitelist_account": "Account"
     },
@@ -949,8 +949,8 @@
             "fee_pool": {
                 "accumulated_collateral_fees": "Accumulated collateral fees",
                 "claim_balance": "Claim fee pool balance",
-                "claim_fees": "Claim fees",
                 "claim_collateral_fees": "Claim fees",
+                "claim_fees": "Claim fees",
                 "claim_pool_text": "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text": "The asset owner may claim any accumulated fees here.",
                 "core_exchange_rate": "Core exchange rate (CER)",
