@@ -18,8 +18,6 @@ jobs:
                 node-version: [16.13.x]
 
         steps:
-            - name: Install coreutils for macOS
-              run: brew install coreutils
             - uses: actions/checkout@v2
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v1
@@ -39,6 +37,8 @@ jobs:
               run: ./node_modules/.bin/electron-builder -p never --linux deb
             - name: Build exe
               run: ./node_modules/.bin/electron-builder -p never --windows
+            - name: Install coreutils for macOS hash
+              run: brew install coreutils
             - name: Calc hash
               id: calc_hash
               run: |
