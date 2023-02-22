@@ -7,8 +7,10 @@ import {
     Button,
     Table,
     Form,
-    Icon as AntIcon
+    Icon as AntIcon,
+    Alert
 } from "bitshares-ui-style-guide";
+import assetUtils from "common/asset_utils";
 import SearchInput from "../../Utility/SearchInput";
 import LinkToAssetById from "../../Utility/LinkToAssetById";
 import FormattedAsset from "../../Utility/FormattedAsset";
@@ -499,6 +501,37 @@ class CreditOfferPage extends React.Component {
                 </span>
             );
         }
+
+        const borrowingAsset = selectAsset.toJS();
+        const borrowingAssetPermissions = assetUtils.getFlagBooleans(
+            borrowingAsset.options.flags,
+            !!borrowingAsset.bitasset_data_id
+        );
+
+        const issuer = ChainStore.getObject(
+            borrowingAsset.issuer,
+            false,
+            false
+        );
+        const issuerName = issuer ? issuer.get("name") : "";
+
+        let overrideAuthorityMessage = [
+            counterpart.translate(
+                "credit_offer.override_authority_warning_p1",
+                {symbol: borrowingAsset.symbol}
+            ),
+            " ",
+            <a target="_blank" href={`/account/${issuerName}`}>
+                {issuerName}
+            </a>,
+            <br />,
+            counterpart.translate("credit_offer.override_authority_warning_p2"),
+            " ",
+            <a target="_blank" href={`/asset/${borrowingAsset.symbol}`}>
+                {borrowingAsset.symbol}
+            </a>
+        ];
+
         return (
             <Modal
                 wrapClassName="modal--transaction-confirm"
@@ -527,6 +560,11 @@ class CreditOfferPage extends React.Component {
                     </Button>
                 ]}
             >
+                {borrowingAssetPermissions.override_authority && (
+                    <div style={{marginBottom: 12}}>
+                        <Alert message={overrideAuthorityMessage}></Alert>
+                    </div>
+                )}
                 <div className="grid-block vertical no-overflow">
                     <Form className="full-width" layout="vertical">
                         <Form.Item

@@ -455,7 +455,7 @@ class FeePoolOperation extends React.Component {
                         })}
                         onClick={this.onClaimCollateralFees.bind(this)}
                     >
-                        <Translate content="explorer.asset.fee_pool.claim_fees" />
+                        <Translate content="explorer.asset.fee_pool.claim_collateral_fees" />
                     </button>
                     <button
                         className="button outline"

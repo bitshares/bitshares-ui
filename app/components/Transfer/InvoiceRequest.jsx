@@ -28,7 +28,19 @@ class InvoiceRequest extends React.Component {
             recipient_name: null,
             recipient_name_account: null,
             currency: "BTS",
-            defaultAssets: ["BTS", "CNY", "USD"]
+            defaultAssets: [
+                "BTS",
+                "CNY",
+                "USD",
+                "XBTSX.USDT",
+                "HONEST.USD",
+                "GDEX.USDT",
+                "HONEST.CNY",
+                "URTHR",
+                "SKULD",
+                "VERTHANDI",
+                "HERTZ"
+            ]
         };
     }
 
