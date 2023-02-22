@@ -497,7 +497,7 @@ class WithdrawModalNew extends React.Component {
             }
             input = parseFloat(pasteValue.replace(",", "")) || 0;
         }
-        this.setState({quantity: input});
+        this.setState({quantity: Number(input)});
     }
 
     onEstimateChanged(e) {
@@ -630,7 +630,7 @@ class WithdrawModalNew extends React.Component {
     }
 
     onClickAvailableBalance(available) {
-        this.setState({quantity: available});
+        this.setState({quantity: Number(available)});
     }
 
     onDropDownList() {
