@@ -37,12 +37,14 @@ jobs:
               run: ./node_modules/.bin/electron-builder -p never --linux deb
             - name: Build exe
               run: ./node_modules/.bin/electron-builder -p never --windows
+            - name: Install coreutils for macOS hash
+              run: brew install coreutils
             - name: Calc hash
               id: calc_hash
               run: |
-                  echo "::set-output name=dmghash::$(sha256sum build/binaries/*.dmg|cut -c-64)"
-                  echo "::set-output name=debhash::$(sha256sum build/binaries/*.deb|cut -c-64)"
-                  echo "::set-output name=exehash::$(sha256sum build/binaries/*.exe|cut -c-64)"
+                  echo "dmghash=$(sha256sum build/binaries/*.dmg|cut -c-64)" >> $GITHUB_OUTPUT
+                  echo "debhash=$(sha256sum build/binaries/*.deb|cut -c-64)" >> $GITHUB_OUTPUT
+                  echo "exehash=$(sha256sum build/binaries/*.exe|cut -c-64)" >> $GITHUB_OUTPUT
             - name: Create Body
               id: create_body
               uses: bitshares/generate_release_notes@v1
