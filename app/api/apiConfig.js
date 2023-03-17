@@ -346,14 +346,6 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss://api.iamredbar.com/bts-testnet",
-            region: "Northern America",
-            country: "USA",
-            location: "Atlanta",
-            operator: "Witness: iamredbar",
-            contact: "email:iamredbar@protonmail.com"
-        },
-        {
             url: "wss://btstestnet.cybertron.ninja/ws",
             region: "Northern America",
             country: "USA",
