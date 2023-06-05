@@ -205,6 +205,8 @@ export const scamAccountsOther = [
     "1.2.787078",
     "bisq.network",
     "1.2.787079",
+    "bit-shares-1-promo",
+    "1.2.1822787",
     "bitarg",
     "1.2.878042",
     "bitasiaex",
