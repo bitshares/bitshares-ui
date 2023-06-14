@@ -259,6 +259,8 @@ export const scamAccountsOther = [
     "1.2.1823005",
     "binance-bts-1-partnership",
     "1.2.1823004",
+    "binance-bts-1-pool",
+    "1.2.1823038",
     "binance-bts-1-pos",
     "1.2.1823035",
     "binance-bts-1-pow",
