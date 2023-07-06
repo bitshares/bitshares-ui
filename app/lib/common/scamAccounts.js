@@ -2489,6 +2489,25 @@ export const scamAccountsOther = [
     "binance-bts-1-tuta",
     // BATCH END 2023-06-21
 
+    // BATCH START 2023-07-06
+    "1.2.1823696",
+    "testnet1010",
+    "1.2.1823715",
+    "support-team-chain",
+    "1.2.1823575",
+    "bit-shares-1",
+    "1.2.1823586",
+    "bybit-wallet-1",
+    "1.2.1702891",
+    "aw023swiecv432",
+    "1.2.1823622",
+    "geniosdf-27",
+    "1.2.1823249",
+    "avatar-1-1",
+    "1.2.1823837",
+    "support-team1",
+    // BATCH END 2023-07-06
+
     // EOS and forks
     "coinbasebase",
     "1.2.1603952",
