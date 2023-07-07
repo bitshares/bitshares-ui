@@ -4831,6 +4831,8 @@ export const scamAccountsOther = [
     "kukoin-wallet-1",
     "1.2.1823325",
     "trc20-network",
+    "1.2.1823907",
+    "mar-network-1",
     // BATCH END 2023-07-07
 
     // EOS and forks
