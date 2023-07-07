@@ -4825,6 +4825,8 @@ export const scamAccountsOther = [
     "binance-bts-1-prt11",
     "1.2.1823878",
     "binance-bts-1-lux",
+    "1.2.1823506",
+    "bybit-network-1",
     "1.2.1823612",
     "kukoin-wallet-1",
     "1.2.1823325",
