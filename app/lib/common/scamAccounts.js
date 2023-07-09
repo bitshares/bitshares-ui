@@ -5041,6 +5041,18 @@ export const scamAccountsOther = [
     "binance-bts-1-miner",
     "1.2.1823750",
     "binance-bts-1-minning",
+    "1.2.1824064",
+    "binance-bts-1-iceteam",
+    "1.2.1824063",
+    "binance-bts-1-ice",
+    "1.2.1824062",
+    "binance-bts-1-selltobuy",
+    "1.2.1824059",
+    "binance-bts-1-first",
+    "1.2.1824055",
+    "binance-bts-1-chain",
+    "1.2.1824060",
+    "binance-bts-1-promoactions",
     // BATCH END 2023-07-09
 
     // EOS and forks
