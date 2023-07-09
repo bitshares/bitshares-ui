@@ -5029,6 +5029,10 @@ export const scamAccountsOther = [
     "rewards-binance-bts-1",
     "1.2.1824046",
     "binance-bts-1-testnaebka",
+    "1.2.1824026",
+    "jonson-1839",
+    "1.2.1824053",
+    "binance-bts-1-recovery",
     // BATCH END 2023-07-09
 
     // EOS and forks
