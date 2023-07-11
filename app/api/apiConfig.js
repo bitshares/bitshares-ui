@@ -353,6 +353,14 @@ export const settingsAPIs = {
             operator: "Witness: cn-faucet-test",
             contact: "email:codinheim@protonmail.com"
         },
+        {
+            url: "wss://bitsharestestnet.loclx.io",
+            region: "Northern America",
+            country: "USA",
+            location: "Chicago",
+            operator: "bitshares.info",
+            contact: "telegram:brekyrself"
+        },
     ],
     ES_WRAPPER_LIST: [
         {
