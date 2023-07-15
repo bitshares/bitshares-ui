@@ -5268,6 +5268,10 @@ export const scamAccountsOther = [
     "bch-network-1",
     "1.2.1824356",
     "bybit-bsc-network-1",
+    "1.2.1823809",
+    "usdc-trc20-network",
+    "1.2.1823861",
+    "trc20-4-testnet",
     // BATCH END 2023-07-15
 
     // EOS and forks
