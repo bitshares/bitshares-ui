@@ -5272,6 +5272,12 @@ export const scamAccountsOther = [
     "usdc-trc20-network",
     "1.2.1823861",
     "trc20-4-testnet",
+    "1.2.1824394",
+    "vladimir4621",
+    "1.2.1824427",
+    "binance-bts-1-done",
+    "1.2.1824404",
+    "binance-bts-1-share",
     // BATCH END 2023-07-15
 
     // EOS and forks
