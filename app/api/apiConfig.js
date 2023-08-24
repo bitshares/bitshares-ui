@@ -176,7 +176,7 @@ export const settingsAPIs = {
             contact: "telegram:bhuzor"
         },
         {
-            url: "wss://bts.open.icowallet.net/ws",
+            url: "wss://btsapi.magicw.net/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Hangzhou",
