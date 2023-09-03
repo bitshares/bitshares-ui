@@ -1955,7 +1955,8 @@
         "witness_pay": "アカウントに証人報酬を引き出しました",
         "witness_receive": "証人から証人を受け取りました",
         "witness_update": "{account}は証人情報を更新しました",
-        "worker_create": "{account}は日当{pay}でワーカー提案を作成しました"
+        "worker_create": "{account}は日当{pay}でワーカー提案を作成しました",
+        "unknown_operation": "不明な操作"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",

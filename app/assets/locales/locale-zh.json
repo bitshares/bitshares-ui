@@ -1961,7 +1961,8 @@
         "witness_pay": "将见证人收入提取到账户",
         "witness_receive": "已从见证人处获取见证",
         "witness_update": "{account} 更新了见证人信息",
-        "worker_create": "{account} 创建了工人预算提案，请求日付工资 {pay}"
+        "worker_create": "{account} 创建了工人预算提案，请求日付工资 {pay}",
+        "unknown_operation": "未知操作"
     },
     "page404": {
         "asset_not_found_subtitle": "此资产不存在",

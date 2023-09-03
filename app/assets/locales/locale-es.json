@@ -1961,7 +1961,8 @@
         "witness_pay": "Retiró el pago de testigos a la cuenta",
         "witness_receive": "Recibido testigo de testigo",
         "witness_update": "{account} actualizar su información de testigo",
-        "worker_create": "{account} creó una propuesta de trabajador con pago diario de {pay}"
+        "worker_create": "{account} creó una propuesta de trabajador con pago diario de {pay}",
+        "unknown_operation": "Operación desconocida"
     },
     "page404": {
         "asset_not_found_subtitle": "Ese activo no existe",

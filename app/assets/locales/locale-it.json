@@ -1955,7 +1955,8 @@
         "witness_pay": "Ha ritirato il salario di witness verso l'account",
         "witness_receive": "Ha ricevuto la witness dalla witness",
         "witness_update": "{account} ha aggiornato i suoi dati di witness",
-        "worker_create": "{account} ha creato una worker proposal con un salario giornaliero di {pay}"
+        "worker_create": "{account} ha creato una worker proposal con un salario giornaliero di {pay}",
+        "unknown_operation": "Operazione sconosciuta"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",

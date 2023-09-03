@@ -1,11 +1,11 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import counterpart from "counterpart";
 
-export const DefaultOperation = ({op, block}) => {
+export const DefaultOperation = ({op}) => {
     console.log("unimplemented op:", op);
     return (
         <span>
-            <Link to={`/block/${block}`}>#{block}</Link>
+            {counterpart.translate("operation.unknown_operation")} {op[0]}
         </span>
     );
 };
