@@ -1961,7 +1961,8 @@
         "witness_pay": "{account} hat Zeugen-Guthaben eingezogen.",
         "witness_receive": "Hat den Zeugen von {witness} erhalten.",
         "witness_update": "{account} hat seinen Zeugen aktualisiert.",
-        "worker_create": "{account} hat einen Arbeitervorschlag mit einer täglichen Bezahlung von {pay} BTS/Tag erstellt."
+        "worker_create": "{account} hat einen Arbeitervorschlag mit einer täglichen Bezahlung von {pay} BTS/Tag erstellt.",
+        "unknown_operation": "Unbekannte Operation"
     },
     "page404": {
         "asset_not_found_subtitle": "Diese Anlage existert nicht.",

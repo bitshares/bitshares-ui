@@ -1955,7 +1955,8 @@
         "witness_pay": "Tanık ödemesi çekildi.",
         "witness_receive": "Tanık alındı.",
         "witness_update": "{account} tanık bilgilerini güncelledi.",
-        "worker_create": "{account} günlük {pay} ödemeli bir geliştirme teklifi sundu."
+        "worker_create": "{account} günlük {pay} ödemeli bir geliştirme teklifi sundu.",
+        "unknown_operation": "Bilinmeyen operasyon"
     },
     "page404": {
         "asset_not_found_subtitle": "Bu varlık mevcut değil",
