@@ -2369,6 +2369,8 @@ export const scamAccountsOther = [
     "1.2.1810602",
     "okx-wallet",
     "1.2.1810603",
+    "blockchain-prize",
+    "1.2.1827123",
 
     // BATCH START 2023-06-21
     "1.2.1822947",
