@@ -176,7 +176,7 @@ export const settingsAPIs = {
             contact: "telegram:bhuzor"
         },
         {
-            url: "wss://bts.open.icowallet.net/ws",
+            url: "wss://btsapi.magicw.net/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Hangzhou",
@@ -346,20 +346,20 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss://api.iamredbar.com/bts-testnet",
-            region: "Northern America",
-            country: "USA",
-            location: "Atlanta",
-            operator: "Witness: iamredbar",
-            contact: "email:iamredbar@protonmail.com"
-        },
-        {
             url: "wss://btstestnet.cybertron.ninja/ws",
             region: "Northern America",
             country: "USA",
             location: "Utah",
             operator: "Witness: cn-faucet-test",
             contact: "email:codinheim@protonmail.com"
+        },
+        {
+            url: "wss://bitsharestestnet.loclx.io",
+            region: "Northern America",
+            country: "USA",
+            location: "Chicago",
+            operator: "bitshares.info",
+            contact: "telegram:brekyrself"
         }
     ],
     ES_WRAPPER_LIST: [

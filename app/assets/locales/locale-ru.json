@@ -1268,7 +1268,7 @@
             "bitcny": "bitCNY может быть депонирован или выведен в соотношении 1:1 к реальному юаню с помощью сервиса шлюза от Magic Wallet. Подробную информацию можно найти здесь https://www.magicw.net/",
             "bridge": " Актив %(asset)s обеспечен в соотношении 1:1 реальными %(backed)s и может быть размещен в депозите или выведен через шлюз, предоставляемый CryptoBridge.",
             "gdex": " Актив %(asset)s обеспечен в соотношении 1:1 реальными %(backed)s и может быть размещен в депозите или выведен через шлюз, предоставляемый GDex.",
-            "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
+            "iob": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от OpenLedger.",
             "pirate": "Актив %(asset)s обеспечен реальными %(backed)s в соотношении 1:1 и может быть введён/выведен с помощью сервиса шлюза от PirateDEX.",
             "rudex": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Rudex.",
@@ -1338,7 +1338,7 @@
         "info": "Информация",
         "intermediate": "Промежуточный аккаунт",
         "inventory": "Инвентарь",
-        "ioxbank": {
+        "iob": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
             "min_amount_error": "Please enter number >= minimum",
@@ -1953,6 +1953,7 @@
         },
         "transfer": "{from} отправил {amount} на {to}",
         "transfer_account": "Владение {account} передано {to}",
+        "unknown_operation": "Неизвестная операция",
         "unlisted_by": "{lister} удалил аккаунт {listee} из списка",
         "update_account": "{account} обновил данные своего аккаунта {change}",
         "vesting_balance_withdraw": "{account} вывел с вестингового баланса {amount}",

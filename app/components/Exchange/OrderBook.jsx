@@ -784,11 +784,11 @@ class OrderBook extends React.Component {
                 });
             } else {
                 let maxBid = tempBids.length
-                    ? tempBids[tempBids.length - 1].totalToReceive().getAmount()
+                    ? tempBids[tempBids.length - 1].totalForSale().getAmount()
                     : 0;
 
                 bidRows = tempBids.map((order, index) => {
-                    const value = order.totalToReceive().getAmount();
+                    const value = order.totalForSale().getAmount();
                     const percentage = Math.ceil((value * 100) / maxBid);
                     return horizontal ? (
                         <OrderBookRowHorizontal
@@ -825,11 +825,11 @@ class OrderBook extends React.Component {
                 });
 
                 let maxAsk = tempAsks.length
-                    ? tempAsks[tempAsks.length - 1].totalToReceive().getAmount()
+                    ? tempAsks[tempAsks.length - 1].totalForSale().getAmount()
                     : 0;
 
                 askRows = tempAsks.map((order, index) => {
-                    const value = order.totalToReceive().getAmount();
+                    const value = order.totalForSale().getAmount();
                     const percentage = Math.ceil((value * 100) / maxAsk);
                     return horizontal ? (
                         <OrderBookRowHorizontal
