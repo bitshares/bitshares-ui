@@ -1953,6 +1953,7 @@
         },
         "transfer": "{from} sent {amount} to {to}",
         "transfer_account": "{account} ownership transferred to {to}",
+        "unknown_operation": "Unknown operation",
         "unlisted_by": "{lister} unlisted the account {listee}",
         "update_account": "{account} updated their account data {change}",
         "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",
@@ -1961,8 +1962,7 @@
         "witness_pay": "Withdrew witness pay to account",
         "witness_receive": "Received witness from witness",
         "witness_update": "{account} update its witness info",
-        "worker_create": "{account} created a worker proposal with daily pay of {pay}",
-        "unknown_operation": "Unknown operation"
+        "worker_create": "{account} created a worker proposal with daily pay of {pay}"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
