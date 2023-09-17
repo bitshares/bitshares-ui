@@ -2786,21 +2786,21 @@ bindings@^1.5.0:
     react-dom "16.14.0"
     react-router-dom "^5.1.2"
 
-bitsharesjs-ws@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/bitsharesjs-ws/-/bitsharesjs-ws-6.0.0.tgz#88f5f2014b355ea20ddfdcee6494a8db0596ad15"
-  integrity sha512-hIsFcGggV6jkgCKrVE7Pmm8AgJMbBc2pthOx1/9he436gfehtbMvjn7J5G3rWhPu0VONROI//LAX/qhhhIieaA==
+bitsharesjs-ws@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/bitsharesjs-ws/-/bitsharesjs-ws-6.0.2.tgz#3b068af0a9b4b97429c7b8897882f228f7b6e385"
+  integrity sha512-NkmCx9wnBAnu2DU2miSdIl6AxN0PnfSessUwZwkUN7v5KZWaBtfjUGtxr0zUPi2wUGkOCuJOVBH9OUG3TiMwZg==
   dependencies:
     isomorphic-ws "^4.0.1"
     ws "^8.4.0"
 
-bitsharesjs@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/bitsharesjs/-/bitsharesjs-6.0.0.tgz#1de869e6e9c9f5ba17b7a3c4baf67e9f78b9bb82"
-  integrity sha512-KSYvLvbRLNZ+cdzAiQ6YuryZx1b7yXnz7pOBzbRt5yz+7KIh7OUFUJBQ45G6wwBIc3kqnxcZVOsISwl7hLoGFQ==
+bitsharesjs@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/bitsharesjs/-/bitsharesjs-6.0.2.tgz#0fcae6b9f6113a91d06fc000523255f3e1dade00"
+  integrity sha512-BrzlQic/lRyy2JQmz8sPcIlBMTFDhKlpGR+3vln12jOGlm4nDMFne7iFWzgN39NKu49yFD6ufZFe7uNdDgje6A==
   dependencies:
     bigi "^1.4.2"
-    bitsharesjs-ws "^6.0.0"
+    bitsharesjs-ws "^6.0.2"
     bs58 "^4.0.1"
     bytebuffer "^5.0.1"
     create-hash "^1.2.0"
