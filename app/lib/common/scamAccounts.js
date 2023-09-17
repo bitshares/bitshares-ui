@@ -2371,6 +2371,10 @@ export const scamAccountsOther = [
     "1.2.1810603",
     "blockchain-prize",
     "1.2.1827123",
+    "bin-node-rst1",
+    "1.2.1825454",
+    "tat-trade999",
+    "1.2.1827646",
 
     // BATCH START 2023-06-21
     "1.2.1822947",
