@@ -1268,7 +1268,7 @@
             "bitcny": "bitCNY kann 1:1 zum echten Yuan ein- oder ausbezahlt werden, indem die Gateway des Magic Wallet Dienstes benutzt wird.  Mehr Informationen auf https://www.magicw.net/",
             "bridge": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch CryptoBridge bereitgestellt",
             "gdex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Gdex bereitgestellt",
-            "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
+            "iob": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch OpenLedger bereitgestellt",
             "pirate": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch PirateDEX bereitgestellt",
             "rudex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Rudex bereitgestellt",
@@ -1338,7 +1338,7 @@
         "info": "Info",
         "intermediate": "Zwischenglied Konto",
         "inventory": "Inventar",
-        "ioxbank": {
+        "iob": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
             "min_amount_error": "Please enter number >= minimum",
@@ -1953,6 +1953,7 @@
         },
         "transfer": "{from} hat {amount} an {to} überwiesen.",
         "transfer_account": "Konto {account} wurde an {to} übertragen.",
+        "unknown_operation": "Unbekannte Operation",
         "unlisted_by": "{lister} hat {listee} von der Liste gestrichen.",
         "update_account": "{account} hat seine Kontodetails aktualisiert.",
         "vesting_balance_withdraw": "{account} hat Sperrfristguthaben {amount} beansprucht.",

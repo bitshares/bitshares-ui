@@ -1268,7 +1268,7 @@
             "bitcny": "bitCNY 通常可与真实CNY1：1兑换，可以通过例如 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/",
             "bridge": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 CryptoBridge 提供的网关服务进行充值提现。",
             "gdex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 GDEX 提供的网关服务进行充值提现。",
-            "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
+            "iob": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
             "pirate": "%(asset)s资产由真实%(backed)s1:1储备背书，可以通过 PirateDEX 提供的网关服务进行充值提现。",
             "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
@@ -1338,7 +1338,7 @@
         "info": "交易信息",
         "intermediate": "中间账户",
         "inventory": "库存",
-        "ioxbank": {
+        "iob": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
             "min_amount_error": "Please enter number >= minimum",
@@ -1953,6 +1953,7 @@
         },
         "transfer": "{from} 将 {amount} 转账给 {to}",
         "transfer_account": "{account} 的账户权限转移给了 {to}",
+        "unknown_operation": "未知操作",
         "unlisted_by": "{lister} 将 {listee} 移出清单",
         "update_account": "{account} 更新了账户信息",
         "vesting_balance_withdraw": "{account} 提取了解冻金额 {amount}",

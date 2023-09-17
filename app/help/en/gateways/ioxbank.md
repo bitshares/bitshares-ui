@@ -72,10 +72,6 @@ BitShares Memo Format Examples
 - xlm:**GCYDZS45X25IKBOOV7PJNYKH5RNGVGSDUH4TTYGXHFBBQMVHG7GVUHMH**:tag:**485738**:thanks ioxbank
 - xlm:**GCYDZS45X25IKBOOV7PJNYKH5RNGVGSDUH4TTYGXHFBBQMVHG7GVUHMH**
 
-
-## Help Docs
-[https://support.ioxbank.com/docs](https://support.ioxbank.com/docs)
-
 ## Technical Support
 - [Live Support](https://t.me/ioxbank)
 - [Open a Ticket](https://support.ioxbank.com)

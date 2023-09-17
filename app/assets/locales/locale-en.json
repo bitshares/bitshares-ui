@@ -993,7 +993,7 @@
                 "tooltip_resolution_date": "The resolution date is an informal statement when the asset owner intends to resolve this betting market."
             },
             "price_feed": {
-                "external_feed_price": "Feed price (derived from price feeds and other parameters)",
+                "external_feed_price": "Settlement price (derived from price feeds and other parameters)",
                 "feed_lifetime": "Feed lifetime (hours)",
                 "feed_price": "Feed price",
                 "global_settlement_price": "Global settlement price will be",
@@ -1268,7 +1268,7 @@
             "bitcny": "bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/",
             "bridge": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
             "gdex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDEX.",
-            "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
+            "iob": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by OpenLedger.",
             "pirate": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by PirateDEX.",
             "rudex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Rudex.",
@@ -1338,7 +1338,7 @@
         "info": "Info",
         "intermediate": "Intermediate account",
         "inventory": "Inventory",
-        "ioxbank": {
+        "iob": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
             "min_amount_error": "Please enter number >= minimum",
@@ -1953,6 +1953,7 @@
         },
         "transfer": "{from} sent {amount} to {to}",
         "transfer_account": "{account} ownership transferred to {to}",
+        "unknown_operation": "Unknown operation",
         "unlisted_by": "{lister} unlisted the account {listee}",
         "update_account": "{account} updated their account data {change}",
         "vesting_balance_withdraw": "{account} withdrew vesting balance of {amount}",

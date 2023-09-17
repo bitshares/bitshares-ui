@@ -1268,7 +1268,7 @@
             "bitcny": "bitCNY se puede depositar o retirar 1:1 a Yuan real mediante un servicio de puerta de enlace como Magic Wallet. Para más información, consulte https://www.magicw.net/",
             "bridge": "El activo %(asset)s es respaldado 1:1 por real %(backed)s y puede ser depositado or retiado usando el servico de porton proporcionado por CryptoBridge.",
             "gdex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por GDex.",
-            "ioxbank": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
+            "iob": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by ioxbank.com.",
             "open": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por OpenLedger.",
             "pirate": "El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por PirateDEX.",
             "rudex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por Rudex.",
@@ -1338,7 +1338,7 @@
         "info": "Información",
         "intermediate": "Cuenta intermedia",
         "inventory": "Inventario",
-        "ioxbank": {
+        "iob": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
             "min_amount_error": "Please enter number >= minimum",
@@ -1953,6 +1953,7 @@
         },
         "transfer": "{from} enviado {amount} a {to}",
         "transfer_account": "{account} propiedad transferida a {to}",
+        "unknown_operation": "Operación desconocida",
         "unlisted_by": "{lister} delistada la cuenta {listee}",
         "update_account": "{account} actualizado sus datos de cuenta",
         "vesting_balance_withdraw": "{account} retiro del saldo de adquisición de {amount}",
