@@ -144,7 +144,7 @@
         "bignumber.js": "^4.0.0",
         "bitshares-report": "https://github.com/bitshares/bitshares-report.git",
         "bitshares-ui-style-guide": "https://github.com/bitshares/bitshares-ui-style-guide.git",
-        "bitsharesjs": "^6.0.2",
+        "bitsharesjs": "^6.0.3",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
         "constants-browserify": "^1.0.0",
