@@ -2377,6 +2377,8 @@ export const scamAccountsOther = [
     "1.2.1825454",
     "tat-trade999",
     "1.2.1827646",
+    "git0",
+    "1.2.1828014",
 
     // BATCH START 2023-06-21
     "1.2.1822947",
