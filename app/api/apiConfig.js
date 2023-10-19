@@ -257,28 +257,25 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss://hongkong.bitshares.im/ws",
-            region: "East Asia",
-            country: "China",
-            location: "Hong Kong",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
+            url: "wss:///tel_aviv.bitshares.im/ws",
+            region: "West Asia",
+            country: "Israel",
+            location: "Tel_Aviv",
+            operator: "Witness: clone"
         },
         {
-            url: "wss://singapore.bitshares.im/ws",
-            region: "Southeast Asia",
-            country: "Singapore",
-            location: "Singapore",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
+            url: "wss://tokyo.bitshares.im/ws",
+            region: "East Asia",
+            country: "Japan",
+            location: "Tokyo",
+            operator: "Witness: clone"
         },
         {
             url: "wss://newyork.bitshares.im/ws",
             region: "Northern America",
             country: "U.S.A.",
             location: "New York",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
+            operator: "Witness: clone"
         },
         {
             url: "wss://api.btslebin.com/ws",
