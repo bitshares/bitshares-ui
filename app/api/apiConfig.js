@@ -261,21 +261,24 @@ export const settingsAPIs = {
             region: "West Asia",
             country: "Israel",
             location: "Tel_Aviv",
-            operator: "Witness: clone"
+            operator: "Witness: clone",
+            contact: "telegram: yexiao"
         },
         {
             url: "wss://tokyo.bitshares.im/ws",
             region: "East Asia",
             country: "Japan",
             location: "Tokyo",
-            operator: "Witness: clone"
+            operator: "Witness: clone",
+            contact: "telegram: yexiao"
         },
         {
             url: "wss://newyork.bitshares.im/ws",
             region: "Northern America",
             country: "U.S.A.",
             location: "New York",
-            operator: "Witness: clone"
+            operator: "Witness: clone",
+            contact: "telegram: yexiao"
         },
         {
             url: "wss://api.btslebin.com/ws",
