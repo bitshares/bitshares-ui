@@ -257,7 +257,7 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss:///tel_aviv.bitshares.im/ws",
+            url: "wss://tel_aviv.bitshares.im/ws",
             region: "West Asia",
             country: "Israel",
             location: "Tel_Aviv",
