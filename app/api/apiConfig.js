@@ -169,13 +169,6 @@ export const settingsAPIs = {
             contact: "telegram:roelandp"
         },
         {
-            url: "wss://api.bitshares.bhuz.info/ws",
-            region: "Northern America",
-            country: "Canada",
-            operator: "Witness: bhuz",
-            contact: "telegram:bhuzor"
-        },
-        {
             url: "wss://btsapi.magicw.net/ws",
             region: "Eastern Asia",
             country: "China",
