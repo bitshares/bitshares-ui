@@ -2429,6 +2429,8 @@ export const scamAccountsOther = [
     "1.2.1827380",
     "binance.settlement",
     "1.2.1830014",
+    "coinex-bst-11",
+    "1.2.1830064",
 
     // BATCH START 2023-06-21
     "1.2.1822947",
