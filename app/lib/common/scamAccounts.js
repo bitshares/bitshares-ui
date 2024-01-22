@@ -893,6 +893,8 @@ export const scamAccountsOther = [
     "1.2.1830065",
     "gate-io-btc",
     "1.2.730836",
+    "gate-io-btx66",
+    "1.2.1830066",
     "gateio",
     "1.2.797076",
     "gateiowallet",
