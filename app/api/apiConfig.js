@@ -176,15 +176,6 @@ export const settingsAPIs = {
             operator: "Witness: magicwallet.witness",
             contact: "telegram:plus_wave"
         },
-        // TODO the owner said it's temporarily closed. Recheck later.
-        //{
-        //    url: "wss://api.bts.ai",
-        //    region: "Eastern Asia",
-        //    country: "China",
-        //    location: "Beijing",
-        //    operator: "Witness: witness.hiblockchain",
-        //    contact: "telegram:vianull;wechat:strugglingl"
-        //},
         {
             url: "wss://api.61bts.com",
             region: "Eastern Asia",
@@ -250,30 +241,6 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss://tel-aviv.bitshares.im/ws",
-            region: "West Asia",
-            country: "Israel",
-            location: "Tel_Aviv",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
-        },
-        {
-            url: "wss://tokyo.bitshares.im/ws",
-            region: "East Asia",
-            country: "Japan",
-            location: "Tokyo",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
-        },
-        {
-            url: "wss://newyork.bitshares.im/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "New York",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
-        },
-        {
             url: "wss://api.btslebin.com/ws",
             region: "Eastern Asia",
             country: "China",
@@ -313,14 +280,6 @@ export const settingsAPIs = {
             location: "Nuremberg",
             operator: "Witness: xbtsio-wallet",
             contact: "telegram: xbtsio"
-        },
-        {
-            url: "wss://testnet.bitshares.im/ws",
-            region: "Eastern Asia",
-            country: "Japan",
-            location: "Tokyo",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
         },
         {
             url: "wss://api-testnet.61bts.com/ws",
