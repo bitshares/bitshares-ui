@@ -1903,6 +1903,8 @@ export const scamAccountsOther = [
     "1.2.1795665",
     "houabi-pro",
     "1.2.1802143",
+    "houboi-pro",
+    "1.2.1831311",
     "houbui-pro",
     "1.2.1795489",
     "houdi-pro",
