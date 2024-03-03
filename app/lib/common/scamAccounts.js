@@ -2447,6 +2447,8 @@ export const scamAccountsOther = [
     "1.2.1830064",
     "qate-io-bts66",
     "1.2.1829998",
+    "witnesses-security",
+    "1.2.1831730",
 
     // BATCH START 2023-06-21
     "1.2.1822947",
