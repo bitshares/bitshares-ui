@@ -79,7 +79,7 @@ class FeePoolOperation extends React.Component {
         claimCollateralFeesAmount: 0,
         claimCollateralFeesAmountAsset: new Asset({
             amount: 0,
-            precision: this.props.asset.get("precision"),
+            precision: this.props.core.get("precision"),
             asset_id: this.props.asset.get("id")
         }),
 	backingAsset: new Asset({
