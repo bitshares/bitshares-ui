@@ -145,7 +145,7 @@ export const settingsAPIs = {
             contact: "email:admin@iobanker.com"
         },
         {
-            url: "wss://api.bts.btspp.io:10100",
+            url: "wss://mainnet-node.btspp.io",
             region: "Eastern Asia",
             country: "China",
             location: "Hangzhou",
