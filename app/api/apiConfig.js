@@ -169,14 +169,6 @@ export const settingsAPIs = {
             contact: "telegram:roelandp"
         },
         {
-            url: "wss://btsapi.magicw.net/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Hangzhou",
-            operator: "Witness: magicwallet.witness",
-            contact: "telegram:plus_wave"
-        },
-        {
             url: "wss://api.61bts.com",
             region: "Eastern Asia",
             country: "China",
