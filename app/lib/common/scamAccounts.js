@@ -2465,6 +2465,8 @@ export const scamAccountsOther = [
     "1.2.1834767",
     "onomy1xlqhrkrw54jp2gnf6eanvxw35em48j93dnq6zf",
     "1.2.1834353",
+    "mxccom-3",
+    "1.2.1830706",
 
     // BATCH START 2023-06-21
     "1.2.1822947",
