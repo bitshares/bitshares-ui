@@ -2471,6 +2471,8 @@ export const scamAccountsOther = [
     "1.2.1830266",
     "polo-walet-03",
     "1.2.1830689",
+    "xion12gp2q7rfvyux3gew2hnu7f2wefsmsamqrm4p4e",
+    "1.2.1836359",
 
     // BATCH START 2023-06-21
     "1.2.1822947",
