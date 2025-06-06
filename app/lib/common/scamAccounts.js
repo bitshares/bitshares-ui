@@ -511,6 +511,8 @@ export const scamAccountsOther = [
     "1.2.1000006",
     "bitshares.app",
     "1.2.1000008",
+    "bitsharesmanagement.group",
+    "1.2.1803999",
     "bitspark-hold",
     "1.2.1032019",
     "bitun",
