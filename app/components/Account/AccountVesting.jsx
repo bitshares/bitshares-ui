@@ -82,7 +82,7 @@ class AccountVesting extends React.Component {
                 balance = item.balance.amount;
                 cvbAsset = ChainStore.getAsset(item.balance.asset_id);
 
-                if (item.policy && item.policy[0] !== 2) {
+                if (item.policy && item.policy[0] === 1) { // cdd_vesting_policy (coin days destroyed)
                     let start = Math.floor(
                         new Date(item.policy[1].start_claim + "Z").getTime() /
                             1000
@@ -163,6 +163,27 @@ class AccountVesting extends React.Component {
                             2
                         );
                     }
+                } else if (item.policy && item.policy[0] === 0) { // linear_vesting_policy
+                    let start = Math.floor(
+                        new Date(item.policy[1].begin_timestamp + "Z").getTime() /
+                            1000
+                    );
+                    let now = Math.floor(new Date().getTime() / 1000);
+                    let seconds_earned = Math.max(now - start, 0);
+                    let seconds_period = item.policy[1].vesting_duration_seconds;
+                    let seconds_cliff = item.policy[1].vesting_cliff_seconds;
+                    let begin_balance = item.policy[1].begin_balance;
+                    let claimed_percentage = 1 - balance / begin_balance;
+                    let seconds_remaining = Math.max(seconds_period - seconds_earned, 0);
+                    days_remaining = utils.format_number(seconds_remaining / 86400, 2);
+
+                    let vested_percentage =
+                        seconds_earned >= seconds_period
+                            ? 1
+                            : ( (seconds_earned < seconds_cliff) ? 0 : (seconds_earned / seconds_period) );
+
+                    available_percentage = Math.max(vested_percentage - claimed_percentage, 0);
+
                 } else {
                     if (canClaim) {
                         available_percentage = 1;
