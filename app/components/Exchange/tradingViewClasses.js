@@ -261,9 +261,19 @@ class DataFeed {
                 ).then(() => {
                     let bars = this._getHistory();
                     this.latestBar = bars[bars.length - 1];
-                    bars = bars.filter(a => {
-                        return a.time >= from && a.time <= to;
+                    let barsInTimeRange = bars.filter(a => {
+                        return a.time >= from && a.time < to;
                     });
+                    if (barsInTimeRange.length >= countBack) {
+                        bars = barsInTimeRange;
+                    } else {
+                        bars = bars
+                            .filter(a => {
+                                return a.time < from;
+                            })
+                            .slice(barsInTimeRange.length - countBack)
+                            .concat(barsInTimeRange);
+                    }
                     this.interval = resolution;
                     if (!bars.length)
                         return onHistoryCallback(bars, {noData: true});
