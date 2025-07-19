@@ -117,7 +117,7 @@ class TradingViewPriceChart extends React.Component {
                 __ELECTRON__ ? __BASE_URL__ : ""
             }/charting_library/`,
             datafeed: dataFeed,
-            container_id: "tv_chart",
+            container: "tv_chart",
             charts_storage_url: "https://saveload.tradingview.com",
             charts_storage_api_version: "1.1",
             client_id: "tradingview.com",
