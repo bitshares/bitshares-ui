@@ -104,6 +104,17 @@ module.exports = function(env) {
             patterns: [
                 {
                     from: path.join(root_dir, "charting_library"),
+                    globOptions: {
+                        ignore: [
+                            "**/*.zip",
+                            "**/*.md5",
+                            "**/*.swp",
+                            "**/package.json",
+                            "**/scss/**",
+                            "**/package-charting-library.js",
+                            "**/install-charting-library.cjs"
+                        ]
+                    },
                     to: "charting_library"
                 }
             ]
