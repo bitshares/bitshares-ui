@@ -111,7 +111,7 @@ module.exports = function(env) {
                             "**/*.swp",
                             "**/package.json",
                             "**/scss/**",
-                            "**/package-charting-library.js",
+                            "**/package-charting-library.cjs",
                             "**/install-charting-library.cjs"
                         ]
                     },

@@ -47,7 +47,7 @@
         "prepackage": "yarn run build-electron",
         "prepackage-no-ugly": "yarn run build-electron-nougly",
         "package": "electron-builder -p never",
-        "package-charting-library": "node ./charting_library/package-charting-library.js",
+        "package-charting-library": "node ./charting_library/package-charting-library.cjs",
         "package-no-ugly": "electron-builder -p never",
         "package-deb": "yarn run prepackage && electron-builder  -p never --linux deb",
         "package-snap": "yarn run prepackage && electron-builder  -p never --linux snap",
@@ -280,5 +280,6 @@
         "webpack-dev-server": "^4.6.0",
         "webpack-hot-middleware": "^2.25.1",
         "worker-loader": "^3.0.8"
-    }
+    },
+    "packageManager": "yarn@1.22.22"
 }
