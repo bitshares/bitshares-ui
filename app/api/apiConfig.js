@@ -87,7 +87,7 @@ export const gdexAPIs = {
 };
 
 export const pirateCashAPIs = {
-    BASE: "https://piratecash.net/dexapi",
+    BASE: "https://pirate.cash/dexapi",
     COINS_LIST: "/coins"
 };
 
@@ -145,7 +145,7 @@ export const settingsAPIs = {
             contact: "email:admin@iobanker.com"
         },
         {
-            url: "wss://api.bts.btspp.io:10100",
+            url: "wss://mainnet-node.btspp.io",
             region: "Eastern Asia",
             country: "China",
             location: "Hangzhou",
@@ -168,30 +168,6 @@ export const settingsAPIs = {
             operator: "Witness: roelandp",
             contact: "telegram:roelandp"
         },
-        {
-            url: "wss://api.bitshares.bhuz.info/ws",
-            region: "Northern America",
-            country: "Canada",
-            operator: "Witness: bhuz",
-            contact: "telegram:bhuzor"
-        },
-        {
-            url: "wss://btsapi.magicw.net/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Hangzhou",
-            operator: "Witness: magicwallet.witness",
-            contact: "telegram:plus_wave"
-        },
-        // TODO the owner said it's temporarily closed. Recheck later.
-        //{
-        //    url: "wss://api.bts.ai",
-        //    region: "Eastern Asia",
-        //    country: "China",
-        //    location: "Beijing",
-        //    operator: "Witness: witness.hiblockchain",
-        //    contact: "telegram:vianull;wechat:strugglingl"
-        //},
         {
             url: "wss://api.61bts.com",
             region: "Eastern Asia",
@@ -257,30 +233,6 @@ export const settingsAPIs = {
             contact: "email:work@akawa.ink"
         },
         {
-            url: "wss://hongkong.bitshares.im/ws",
-            region: "East Asia",
-            country: "China",
-            location: "Hong Kong",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
-        },
-        {
-            url: "wss://singapore.bitshares.im/ws",
-            region: "Southeast Asia",
-            country: "Singapore",
-            location: "Singapore",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
-        },
-        {
-            url: "wss://newyork.bitshares.im/ws",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "New York",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
-        },
-        {
             url: "wss://api.btslebin.com/ws",
             region: "Eastern Asia",
             country: "China",
@@ -320,14 +272,6 @@ export const settingsAPIs = {
             location: "Nuremberg",
             operator: "Witness: xbtsio-wallet",
             contact: "telegram: xbtsio"
-        },
-        {
-            url: "wss://testnet.bitshares.im/ws",
-            region: "Eastern Asia",
-            country: "Japan",
-            location: "Tokyo",
-            operator: "Witness: clone",
-            contact: "telegram: yexiao"
         },
         {
             url: "wss://api-testnet.61bts.com/ws",

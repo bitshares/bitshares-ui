@@ -212,8 +212,8 @@ export function BorrowModalView({
                             (errors.below_maintenance
                                 ? "has-error"
                                 : errors.close_maintenance
-                                    ? "has-warning"
-                                    : "")
+                                ? "has-warning"
+                                : "")
                         }
                     >
                         <span className="borrow-price-label">
@@ -276,15 +276,15 @@ export function BorrowModalView({
                                         errors.close_maintenance
                                             ? "warning"
                                             : errors.below_maintenance
-                                                ? "error"
-                                                : null
+                                            ? "error"
+                                            : null
                                     }
                                     help={
                                         errors.close_maintenance
                                             ? errors.close_maintenance
                                             : errors.below_maintenance
-                                                ? errors.below_maintenance
-                                                : null
+                                            ? errors.below_maintenance
+                                            : null
                                     }
                                 >
                                     <Input
@@ -370,7 +370,7 @@ export function BorrowModalView({
                             <Slider
                                 step={0.01}
                                 min={0}
-                                max={maintenanceRatio * 12}
+                                max={maintenanceRatio * 100}
                                 value={collateral_ratio}
                                 onChange={onRatioChange.bind(this)}
                             />

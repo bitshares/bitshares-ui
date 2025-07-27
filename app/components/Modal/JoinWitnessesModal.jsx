@@ -7,6 +7,7 @@ import {Modal, Button, Input, Select, Form} from "bitshares-ui-style-guide";
 import Icon from "../Icon/Icon";
 import {PublicKey} from "bitsharesjs";
 import utils from "common/utils";
+import {ChainStore} from "bitsharesjs";
 
 class JoinWitnessesModal extends React.Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class JoinWitnessesModal extends React.Component {
     getInitialState(props) {
         return {
             witnessAccount: props.account,
+            witnessObject: null,
             signingKey: "",
             url: ""
         };
@@ -27,19 +29,52 @@ class JoinWitnessesModal extends React.Component {
             this.state.url !== ns.visible ||
             this.props.visible !== np.visible ||
             this.state.signingKey !== ns.signingKey ||
-            this.state.witnessAccount !== ns.witnessAccount
+            this.state.witnessAccount !== ns.witnessAccount ||
+            this.props.updateOrCreate !== np.updateOrCreate
         );
+    }
+
+    componentDidUpdate(prevProps) {
+        let oldId = prevProps.account.get("id");
+        let newId = this.props.account.get("id");
+        if (newId !== oldId || this.state.witnessObject == null) {
+            ChainStore.fetchWitnessByAccount(this.props.account.get("id")).then(
+                response => {
+                    if (response == null) {
+                        this.props.hideModal();
+                        this.setState({
+                            witnessObject: {}
+                        });
+                    } else {
+                        this.setState({
+                            witnessObject: response,
+                            url: response.get("url"),
+                            signingKey: response.get("signing_key"),
+                            witness_id: response.get("id")
+                        });
+                    }
+                }
+            );
+        }
     }
 
     onAddWitness() {
         const {witnessAccount, signingKey, url} = this.state;
-
         if (witnessAccount && signingKey) {
-            AccountActions.createWitness({
-                account: witnessAccount,
-                url,
-                signingKey
-            });
+            if (this.props.updateOrCreate) {
+                AccountActions.updateWitness({
+                    account: witnessAccount,
+                    url: this.state.url,
+                    signingKey: this.state.signingKey,
+                    witness_id: this.state.witnessObject.get("id")
+                });
+            } else {
+                AccountActions.createWitness({
+                    account: witnessAccount,
+                    url,
+                    signingKey
+                });
+            }
         }
         this.props.hideModal();
     }
