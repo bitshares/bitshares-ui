@@ -18,7 +18,7 @@ jobs:
             - run: corepack enable
             - run: yarn install --network-concurrency 1 --frozen-lockfile
             - run: yarn run build-hash
-            - uses: actions/upload-artifact@v3
+            - uses: actions/upload-artifact@v4
               with:
                   name: build-hash-binaries
                   path: build/hash-history
@@ -30,7 +30,7 @@ jobs:
             name: ${{ github.ref_name }}
 
         steps:
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: build-hash-binaries
                   path: build/hash-history
@@ -42,10 +42,8 @@ jobs:
             - name: Push to target repository
               uses: s0/git-publish-subdir-action@master
               env:
-                  REPO:
-                      git@github.com:bitshares/${{ secrets.DEPLOYMENT_REPOSITORY }}.git
+                  REPO: git@github.com:bitshares/${{ secrets.DEPLOYMENT_REPOSITORY }}.git
                   BRANCH: master
                   FOLDER: build/hash-history
                   SSH_PRIVATE_KEY: ${{ secrets.DEPLOYMENT_KEY }}
-                  MESSAGE:
-                      Automatic build of commit https://github.com/bitshares/bitshares-ui/commit/${{ github.sha }}
+                  MESSAGE: Automatic build of commit https://github.com/bitshares/bitshares-ui/commit/${{ github.sha }}

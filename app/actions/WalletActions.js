@@ -260,10 +260,10 @@ class WalletActions {
                 })
                 .catch(error => {
                     /*
-                * Since the account creation failed, we need to decrement the
-                * sequence used to generate private keys from the brainkey. Three
-                * keys were generated, so we decrement three times.
-                */
+                     * Since the account creation failed, we need to decrement the
+                     * sequence used to generate private keys from the brainkey. Three
+                     * keys were generated, so we decrement three times.
+                     */
                     WalletDb.decrementBrainKeySequence();
                     WalletDb.decrementBrainKeySequence();
                     WalletDb.decrementBrainKeySequence();
@@ -277,9 +277,11 @@ class WalletActions {
 
         let balance;
         let available_percentage;
+        let available_amount;
 
         if (vb) {
             balance = vb.balance.amount;
+            available_amount = balance;
 
             // Vesting is 100% available if:
             // - policy[0] is set to 2
@@ -293,7 +295,8 @@ class WalletActions {
                     : 0;
 
             // Vesting percentage needs to be checked further
-            if (!available_percentage && vb.policy && vb.policy[0] !== 2) {
+            if (!available_percentage && vb.policy && vb.policy[0] === 1) {
+                // cdd_vesting_policy
                 let start = Math.floor(
                     new Date(vb.policy[1].start_claim + "Z").getTime() / 1000
                 );
@@ -337,6 +340,34 @@ class WalletActions {
                     available_percentage =
                         available_percentage > 1 ? 1 : available_percentage;
                 }
+                available_amount = Math.floor(balance * available_percentage);
+            } else if (
+                !available_percentage &&
+                vb.policy &&
+                vb.policy[0] === 0
+            ) {
+                // linear_vesting_policy
+                let start = Math.floor(
+                    new Date(vb.policy[1].begin_timestamp + "Z").getTime() /
+                        1000
+                );
+                let now = Math.floor(new Date().getTime() / 1000);
+                let seconds_earned = Math.max(now - start, 0);
+                let seconds_period = vb.policy[1].vesting_duration_seconds;
+                let seconds_cliff = vb.policy[1].vesting_cliff_seconds;
+                let vested_percentage =
+                    seconds_earned >= seconds_period
+                        ? 1
+                        : seconds_earned < seconds_cliff
+                        ? 0
+                        : seconds_earned / seconds_period;
+                let begin_balance = vb.policy[1].begin_balance;
+                let claimed_amount = begin_balance - balance;
+                available_amount = Math.max(
+                    Math.floor(begin_balance * vested_percentage) -
+                        claimed_amount,
+                    0
+                );
             }
         }
 
@@ -345,7 +376,7 @@ class WalletActions {
             owner: account,
             vesting_balance: vb.id,
             amount: {
-                amount: Math.floor(balance * available_percentage),
+                amount: available_amount,
                 asset_id: vb.balance.asset_id
             }
         });

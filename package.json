@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "5.0.230907-rc1",
+    "version": "5.0.250727-rc1",
     "description": "Reference UI to showcase all features of the BitShares blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "BitShares UI Devs <ui-dev@bitshares.org>",
@@ -47,7 +47,7 @@
         "prepackage": "yarn run build-electron",
         "prepackage-no-ugly": "yarn run build-electron-nougly",
         "package": "electron-builder -p never",
-        "package-charting-library": "node ./charting_library/package-charting-library.js",
+        "package-charting-library": "node ./charting_library/package-charting-library.cjs",
         "package-no-ugly": "electron-builder -p never",
         "package-deb": "yarn run prepackage && electron-builder  -p never --linux deb",
         "package-snap": "yarn run prepackage && electron-builder  -p never --linux snap",
@@ -166,7 +166,7 @@
         "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
         "js-sha256": "^0.2.3",
         "jsonschema": "^1.2.4",
-        "jspdf": "^2.3.1",
+        "jspdf": "^3.0.1",
         "jspdf-autotable": "^3.1.1",
         "lodash-es": "^4.17.10",
         "lzma": "2.1.6",
@@ -241,7 +241,7 @@
         "eslint": "^8.4.1",
         "eslint-plugin-json": "^3.1.0",
         "eslint-plugin-react": "^7.27.1",
-        "express": "^4.17.1",
+        "express": "^4.20.0",
         "express-history-api-fallback": "^2.1.0",
         "extract-zip": "^1.6.7",
         "file-loader": "^6.2.0",
@@ -259,7 +259,7 @@
         "mocha": "^5.1.1",
         "node-libs-browser": "^1.0.0",
         "null-loader": "^4.0.1",
-        "postcss": "^8.4.4",
+        "postcss": "^8.4.31",
         "postcss-loader": "^6.2.1",
         "prettier": "^1.10.2",
         "pretty-quick": "^1.4.1",
@@ -275,10 +275,11 @@
         "svgo": "^2.8.0",
         "svgo-loader": "^3.0.0",
         "url-loader": "^4.1.1",
-        "webpack": "^5.76.0",
+        "webpack": "^5.94.0",
         "webpack-cli": "^4.9.1",
         "webpack-dev-server": "^4.6.0",
         "webpack-hot-middleware": "^2.25.1",
         "worker-loader": "^3.0.8"
-    }
+    },
+    "packageManager": "yarn@1.22.22"
 }

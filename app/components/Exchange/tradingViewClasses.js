@@ -16,10 +16,10 @@ class SymbolInfo {
             quoteGateway === baseGateway
                 ? quoteGateway
                 : quoteGateway && !baseGateway
-                    ? quoteGateway
-                    : !quoteGateway && baseGateway
-                        ? baseGateway
-                        : `${quoteGateway} / ${baseGateway}`;
+                ? quoteGateway
+                : !quoteGateway && baseGateway
+                ? baseGateway
+                : `${quoteGateway} / ${baseGateway}`;
 
         let {name: baseSymbol, prefix: basePrefix} = utils.replaceName(
             options.baseAsset
@@ -208,19 +208,41 @@ class DataFeed {
     getBars(
         symbolInfo,
         resolution,
-        from,
-        to,
+        periodParams,
         onHistoryCallback,
-        onErrorCallback,
-        firstDataRequest
+        onErrorCallback
     ) {
+        // https://www.tradingview.com/charting-library-docs/latest/connecting_data/Datafeed-API/#correct-amount-of-data
+        //
+        // It is more important to pass the required number of bars than to match the [from, to) time range.
+        // Your response should always include all the existing data for the requested range.
+        // If the number of bars in the requested range is less than the countBack value,
+        //   you should include earlier bars until the countBack count is reached.
+        // In the unlikely case that the number of bars in the requested range is larger than the countBack value,
+        //   then you should return all the bars in that range instead of truncating it to the countBack length.
+
+        let from = periodParams.from;
+        let to = periodParams.to;
+        let countBack = periodParams.countBack;
+        let firstDataRequest = periodParams.firstDataRequest;
+
         from *= 1000;
         to *= 1000;
         let bars = this._getHistory();
         this.latestBar = bars[bars.length - 1];
-        bars = bars.filter(a => {
-            return a.time >= from && a.time <= to;
+        let barsInTimeRange = bars.filter(a => {
+            return a.time >= from && a.time < to;
         });
+        if (barsInTimeRange.length >= countBack) {
+            bars = barsInTimeRange;
+        } else {
+            bars = bars
+                .filter(a => {
+                    return a.time < from;
+                })
+                .slice(barsInTimeRange.length - countBack)
+                .concat(barsInTimeRange);
+        }
 
         if (this.interval !== resolution) {
             if (!firstDataRequest) return;
@@ -239,9 +261,19 @@ class DataFeed {
                 ).then(() => {
                     let bars = this._getHistory();
                     this.latestBar = bars[bars.length - 1];
-                    bars = bars.filter(a => {
-                        return a.time >= from && a.time <= to;
+                    let barsInTimeRange = bars.filter(a => {
+                        return a.time >= from && a.time < to;
                     });
+                    if (barsInTimeRange.length >= countBack) {
+                        bars = barsInTimeRange;
+                    } else {
+                        bars = bars
+                            .filter(a => {
+                                return a.time < from;
+                            })
+                            .slice(barsInTimeRange.length - countBack)
+                            .concat(barsInTimeRange);
+                    }
                     this.interval = resolution;
                     if (!bars.length)
                         return onHistoryCallback(bars, {noData: true});
@@ -307,12 +339,12 @@ class DataFeed {
 
     unsubscribeBars() {
         /*
-        * This is ALWAYS called after subscribeBars for some reason, but
-        * sometimes it executes BEFORE the subscribe call in subscribeBars and
-        * sometimes AFTER. This causes the callback to be cleared and we stop
-        * receiving updates from the MarketStore. Unless we find it causes bugs,
-        * it's best to just not use this.
-        */
+         * This is ALWAYS called after subscribeBars for some reason, but
+         * sometimes it executes BEFORE the subscribe call in subscribeBars and
+         * sometimes AFTER. This causes the callback to be cleared and we stop
+         * receiving updates from the MarketStore. Unless we find it causes bugs,
+         * it's best to just not use this.
+         */
         // MarketsStore.unsubscribe("subscribeBars");
         // this.latestBar = null;
     }
@@ -387,9 +419,7 @@ function getTVTimezone() {
             if (zoneTime.format() === actual) {
                 if (__DEV__)
                     console.log(
-                        `Found a match for ${current} timezone, using ${
-                            supportedTimeZones[i]
-                        }`
+                        `Found a match for ${current} timezone, using ${supportedTimeZones[i]}`
                     );
                 // Found a match, return that zone
                 return supportedTimeZones[i];

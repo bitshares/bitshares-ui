@@ -198,8 +198,8 @@ export const availableGateways = {
             enabled: false,
             selected: false
         },
-        landing: "https://piratecash.net",
-        wallet: "https://wallet.piratecash.net/"
+        landing: "https://pirate.cash/",
+        wallet: "https://wallet.pirate.cash/"
     },
     XBTSX: {
         id: "XBTSX",
