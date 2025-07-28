@@ -23,5 +23,5 @@ app/test/MarketClasses.js
 charting_library/*
 !charting_library/scss
 !charting_library/charting_library.17.025.02b61a1c.zip.md5
-!charting_library/package-charting-library.js
+!charting_library/package-charting-library.cjs
 !charting_library/install-charting-library.cjs
