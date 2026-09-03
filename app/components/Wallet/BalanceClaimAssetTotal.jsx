@@ -31,6 +31,7 @@ class BalanceClaimAssetTotals extends Component {
                             />
                         </div>
                     ))
+                    .valueSeq()
                     .toArray()}
             </div>
         );

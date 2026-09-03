@@ -270,6 +270,7 @@ class AccountAssets extends React.Component {
                     </tr>
                 );
             })
+            .valueSeq()
             .toArray();
 
         return (

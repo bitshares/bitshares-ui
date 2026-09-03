@@ -947,9 +947,7 @@ class MarketsStore {
                 .sort((a, b) => {
                     return a.getPrice() - b.getPrice();
                 })
-                .map(order => {
-                    return order;
-                })
+                .valueSeq()
                 .toArray();
 
             // Sum bids at same price
@@ -972,9 +970,7 @@ class MarketsStore {
                 .sort((a, b) => {
                     return a.getPrice() - b.getPrice();
                 })
-                .map(order => {
-                    return order;
-                })
+                .valueSeq()
                 .toArray();
 
             // Sum asks at same price
@@ -1076,6 +1072,7 @@ class MarketsStore {
                 .sort((a, b) => {
                     return a.getPrice() - b.getPrice();
                 })
+                .valueSeq()
                 .map(order => {
                     if (this.invertedCalls) {
                         this.lowestCallPrice = !this.lowestCallPrice
