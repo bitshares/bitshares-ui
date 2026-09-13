@@ -704,6 +704,7 @@ class MyMarkets extends React.Component {
                     }
                 })
                 .filter(a => !!a)
+                .valueSeq()
                 .take(myMarketTab ? 100 : 20)
                 .toArray();
             return {otherMarkets: others.concat(otherMarkets), baseGroups};
@@ -781,6 +782,7 @@ class MyMarkets extends React.Component {
                 }
             })
             .filter(a => !!a)
+            .valueSeq()
             .toArray();
 
         bases = bases.concat(

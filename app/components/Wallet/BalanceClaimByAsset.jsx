@@ -68,6 +68,7 @@ class BalanceClaimByAsset extends Component {
                                 />
                             </div>
                         ))
+                        .valueSeq()
                         .toArray()}
                     {this.props.children}
                 </span>

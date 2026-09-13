@@ -44,6 +44,7 @@ class BalanceClaimSelector extends Component {
                     </thead>
                     <tbody>
                         {this.props.total_by_account_asset
+                            .valueSeq()
                             .map((r, name_asset) => (
                                 <tr key={++index}>
                                     <td>

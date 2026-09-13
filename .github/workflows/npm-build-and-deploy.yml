@@ -4,6 +4,7 @@ name: Build & deploy web wallet
 on:
     push:
         branches: [develop, staging, master]
+    workflow_dispatch:
 
 jobs:
     build:

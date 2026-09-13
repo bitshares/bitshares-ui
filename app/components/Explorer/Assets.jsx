@@ -414,6 +414,7 @@ class Assets extends React.Component {
                         marketID
                     };
                 })
+                .valueSeq()
                 .toArray();
         }
 

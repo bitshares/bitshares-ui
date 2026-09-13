@@ -49,6 +49,7 @@ class MarketsTable extends React.Component {
 
         if (props.markets && props.markets.size > 0) {
             let markets = props.markets
+                .valueSeq()
                 .toArray()
                 .map(market => {
                     let quote = ChainStore.getAsset(market.quote);
