@@ -201,7 +201,7 @@ export const settingsAPIs = {
             contact: "telegram: xbtsio"
         },
         {
-            url: "wss://api.btslebin.com/ws",
+            url: "wss://api.bitsharesle.com:8443/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Hong Kong",
