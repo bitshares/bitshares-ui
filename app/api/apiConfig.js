@@ -152,14 +152,14 @@ export const settingsAPIs = {
             operator: "Witness: in.abit",
             contact: "telegram:abitmore"
         },
-        {
-            url: "wss://btsws.roelandp.nl/ws",
-            region: "Northern Europe",
-            country: "Finland",
-            location: "Helsinki",
-            operator: "Witness: roelandp",
-            contact: "telegram:roelandp"
-        },
+        //{
+        //    url: "wss://btsws.roelandp.nl/ws",
+        //    region: "Northern Europe",
+        //    country: "Finland",
+        //    location: "Helsinki",
+        //    operator: "Witness: roelandp",
+        //    contact: "telegram:roelandp"
+        //},
         {
             url: "wss://api.dex.trading/",
             region: "Western Europe",
