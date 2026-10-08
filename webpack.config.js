@@ -287,7 +287,9 @@ module.exports = function(env) {
                 directory: path.join(__dirname, "app/assets/locales"),
                 publicPath: env.prod ? "" : "/"
             },
-            historyApiFallback: true,
+            historyApiFallback: {
+                disableDotRule: true
+            },
             https: https,
             devMiddleware: {
                 index: true,

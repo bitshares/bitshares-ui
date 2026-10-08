@@ -126,16 +126,16 @@ class TradingViewPriceChart extends React.Component {
             locale: props.locale,
             timezone: getTVTimezone(),
             // toolbar_bg: themeColors.bgColor,
-            // theme: (props.theme == "darkTheme") ? "dark" : "light",
+            theme: props.theme === "lightTheme" ? "light" : "dark",
             overrides: {
                 "paneProperties.background": themeColors.bgColor,
                 "paneProperties.horzGridProperties.color":
                     themeColors.axisLineColor,
                 "paneProperties.vertGridProperties.color":
-                    themeColors.axisLineColor
-                // "scalesProperties.lineColor": themeColors.axisLineColor,
-                // "scalesProperties.textColor": themeColors.textColor,
-                // "scalesProperties.backgroundColor": themeColors.bgColor,
+                    themeColors.axisLineColor,
+                "scalesProperties.lineColor": themeColors.axisLineColor,
+                "scalesProperties.textColor": themeColors.textColor,
+                "scalesProperties.backgroundColor": themeColors.bgColor
                 // "mainSeriesProperties.candleStyle.upColor": "#",
                 // "mainSeriesProperties.candleStyle.downColor": "#",
                 // "mainSeriesProperties.hollowCandleStyle.upColor": "#",
@@ -151,6 +151,7 @@ class TradingViewPriceChart extends React.Component {
         });
         this.tvWidget.onChartReady(() => {
             let widget = this.tvWidget;
+            that._applyThemeVars();
             if (__DEV__) console.log("*** Chart Ready ***");
             if (__DEV__) console.timeEnd("*** Chart load time: ");
             if (!this.props.mobile && this.props.chartTools) {
@@ -227,9 +228,16 @@ class TradingViewPriceChart extends React.Component {
             state.showSaveModal !== this.state.showSaveModal ||
             np.chartHeight !== this.props.chartHeight ||
             this.props.charts.size !== np.charts.size ||
+            np.theme !== this.props.theme ||
             !this.tvWidget ||
             np.marketReady
         );
+    }
+
+    componentDidUpdate(pp) {
+        if (pp.theme !== this.props.theme && this.tvWidget) {
+            this._applyThemeVars();
+        }
     }
 
     _onWheel(e) {
@@ -290,6 +298,59 @@ class TradingViewPriceChart extends React.Component {
                     chart.enabled
             );
         chart[0] && this.tvWidget.load(chart[0].object);
+    }
+
+    _applyThemeVars() {
+        const themeVars = {
+            lightTheme: null,
+            darkTheme: {
+                "--themed-color-text-primary": "#ffffff",
+                "--themed-color-text-secondary": "#b2b5be",
+                "--themed-color-chart-page-bg": "#2a2a2a",
+                "--themed-color-pane-bg": "#2a2a2a",
+                "--themed-color-bg-primary": "#262626",
+                "--themed-color-border": "#4a4a4a",
+                "--themed-color-divider": "#4a4a4a",
+                "--themed-color-toolbar-button-text": "#bababa"
+            },
+            midnightTheme: {
+                "--themed-color-text-primary": "#e0e0e0",
+                "--themed-color-text-secondary": "#b2b5be",
+                "--themed-color-chart-page-bg": "#191a1f",
+                "--themed-color-pane-bg": "#191a1f",
+                "--themed-color-bg-primary": "#262626",
+                "--themed-color-border": "#4a4a4a",
+                "--themed-color-divider": "#4a4a4a",
+                "--themed-color-toolbar-button-text": "#b6bab7"
+            }
+        };
+        const vars = themeVars[this.props.theme];
+
+        const container = document.getElementById("tv_chart");
+        const iframe =
+            container && container.getElementsByTagName("iframe")[0];
+        const doc =
+            iframe && (iframe.contentDocument || iframe.contentWindow.document);
+        if (!doc) return;
+
+        const existing = doc.getElementById("tv-theme-vars");
+        if (!vars) {
+            if (existing) existing.parentNode.removeChild(existing);
+            return;
+        }
+
+        let style = existing;
+        if (!style) {
+            style = doc.createElement("style");
+            style.id = "tv-theme-vars";
+            doc.head.appendChild(style);
+        }
+        style.textContent =
+            ":root{" +
+            Object.keys(vars)
+                .map(key => `${key}:${vars[key]}`)
+                .join(";") +
+            "}";
     }
 
     render() {
