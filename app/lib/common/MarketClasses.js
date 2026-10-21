@@ -411,20 +411,25 @@ class FeedPrice extends Price {
     getSqueezePrice({real = false} = {}) {
         if (!this._squeeze_price) {
             this._squeeze_price = this.clone();
+            let squeezeFactor = new BigNumber(this.sqr)
+                .minus(this.mcfr)
+                .times(1000);
             if (this.inverted) {
-                this._squeeze_price.base.amount = Math.floor(
-                    this._squeeze_price.base.amount *
-                        (this.sqr - this.mcfr) *
-                        1000
+                this._squeeze_price.base.amount = parseInt(
+                    squeezeFactor
+                        .times(this._squeeze_price.base.amount)
+                        .toFixed(0, BigNumber.ROUND_FLOOR)
                 );
-                this._squeeze_price.quote.amount *= 1000;
+                this._squeeze_price.quote.amount =
+                    this._squeeze_price.quote.amount * 1000;
             } else if (!this.inverted) {
-                this._squeeze_price.quote.amount = Math.floor(
-                    this._squeeze_price.quote.amount *
-                        (this.sqr - this.mcfr) *
-                        1000
+                this._squeeze_price.quote.amount = parseInt(
+                    squeezeFactor
+                        .times(this._squeeze_price.quote.amount)
+                        .toFixed(0, BigNumber.ROUND_FLOOR)
                 );
-                this._squeeze_price.base.amount *= 1000;
+                this._squeeze_price.base.amount =
+                    this._squeeze_price.base.amount * 1000;
             }
         }
 
@@ -812,25 +817,18 @@ class CallOrder {
     assignMaxDebtAndCollateral() {
         if (!this.target_collateral_ratio) return;
         let match_price = this._getMatchPrice();
-        let max_debt_to_cover = this._getMaxDebtToCover(),
-            max_debt_to_cover_int;
-        /*
-         * We may calculate like this: if max_debt_to_cover has no fractional
-         * component (e.g. 5.00 as opposed to 5.23), plus it by one Satoshi;
-         * otherwise, round it up. An effectively same approach is to round
-         * down then add one Satoshi onto the result:
-         */
-        if (Math.round(max_debt_to_cover) !== max_debt_to_cover) {
-            max_debt_to_cover_int = Math.floor(max_debt_to_cover) + 1;
-        }
+        let max_debt_to_cover = this._getMaxDebtToCover();
+        let max_debt_to_cover_int = Math.floor(max_debt_to_cover) + 1;
 
         /*
          * With max_debt_to_cover_int in integer, max_amount_to_sell_int in
          * integer can be calculated as: max_amount_to_sell_int =
          * round_up(max_debt_to_cover_int / match_price)
          */
-        let max_collateral_to_sell_int = Math.ceil(
-            max_debt_to_cover_int / match_price
+        let max_collateral_to_sell_int = parseInt(
+            new BigNumber(max_debt_to_cover_int)
+                .div(match_price)
+                .toFixed(0, BigNumber.ROUND_CEIL)
         );
 
         /* Assign to Assets */
