@@ -486,10 +486,15 @@ class EditModal extends React.Component {
                         quote: new Asset({
                             asset_id: v.asset_id,
                             precision: v_precision
-                        }),
-                        // real: v.getAmount({real: true}),
-                        real: 1 / v.getAmount({real: true}) //Keeping it consistent with the App, this may violate Graphene's price representation convention.
+                        })
                     });
+                    let rateSat = v.getAmount();
+                    let oneDebtSat = Math.pow(10, asset_precision);
+                    let g = (function gcd(a, b) {
+                        return b ? gcd(b, a % b) : a;
+                    })(rateSat, oneDebtSat);
+                    p.base.setAmount({sats: oneDebtSat / g});
+                    p.quote.setAmount({sats: rateSat / g});
                     return [v.asset_id, p.toObject()];
                 }),
                 acceptable_borrowers: whitelist.map(v => {
