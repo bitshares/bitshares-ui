@@ -23,6 +23,7 @@ import AmountSelector from "../../Utility/AmountSelectorStyleGuide";
 import FeeAssetSelector from "../../Utility/FeeAssetSelector";
 import {checkBalance} from "common/trxHelper";
 import {ChainStore} from "bitsharesjs";
+
 import {Asset} from "../../../lib/common/MarketClasses";
 import BalanceComponent from "../../Utility/BalanceComponent";
 
@@ -441,15 +442,16 @@ class CreditDebtList extends React.Component {
             feeAmount
         } = this.state;
         let {account} = this.props;
-        let fRate = parseFloat(feeRate) / FEE_RATE_DENOM;
         let cAsset = new Asset({
             asset_id: asset.get("id"),
             real: amount,
             precision: asset.get("precision")
         });
         let cAmount = cAsset.getAmount();
-        let rate = parseFloat(cAmount) / debtAmount;
-        let cfAmount = Math.ceil(fRate * debtAmount * rate);
+        let cfAmount = Math.floor(
+            (parseInt(feeRate, 10) * cAmount + FEE_RATE_DENOM - 1) /
+                FEE_RATE_DENOM
+        );
 
         let data = {
             account,

@@ -192,6 +192,7 @@ class QuickTrade extends Component {
         if (this.props.searchAssets !== prevProps.searchAssets) {
             this.setState({activeSearch: true});
             let filteredAssets = this.props.searchAssets
+                .valueSeq()
                 .toArray()
                 .filter(a => a.symbol.indexOf(this.state.lookupQuote) !== -1);
             this._checkAndUpdateMarketList(filteredAssets);

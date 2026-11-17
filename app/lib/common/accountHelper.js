@@ -1,4 +1,5 @@
 import {FetchChain} from "bitsharesjs";
+import {BigNumber} from "bignumber.js";
 import {FeedPrice, Asset} from "./MarketClasses";
 import asset_utils from "./asset_utils";
 
@@ -79,10 +80,12 @@ function checkMarginStatus(account) {
                                 assets: assetsMap
                             });
                             let current = {
-                                ratio:
-                                    collateral.getAmount({real: true}) /
-                                    (debt.getAmount({real: true}) /
-                                        price.toReal())
+                                ratio: new BigNumber(
+                                    collateral.getAmount({real: true})
+                                )
+                                    .times(price.toReal())
+                                    .div(debt.getAmount({real: true}))
+                                    .toNumber()
                             };
                             if (isNaN(current.ratio)) return null;
                             if (current.ratio < mr) {
